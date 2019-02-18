@@ -1,0 +1,13 @@
+{
+  "id": "brocade",
+  "name": "Grondag's Modeling Library",
+  "description": "Mesh generation and texturing functions for Minecraft Fabric mods",
+  "version": "1.0.0",
+  "side": "client",
+  "initializer": "grondag.brocade.Brocade",
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+  }
+}
