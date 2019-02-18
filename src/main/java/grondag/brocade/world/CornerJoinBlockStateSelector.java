@@ -1,6 +1,7 @@
 package grondag.brocade.world;
 
-import grondag.brocade.world.NeighborBlocks.NeighborTestResults;
+import grondag.brocade.world.borked.NeighborBlocks;
+import grondag.brocade.world.borked.SimpleJoin;
 import grondag.fermion.varia.DirectionHelper;
 import net.minecraft.util.math.Direction;
 

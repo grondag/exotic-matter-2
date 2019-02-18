@@ -1,5 +1,7 @@
 package grondag.brocade.world;
 
+import grondag.brocade.world.borked.CornerJoinFaceState;
+import grondag.brocade.world.borked.SimpleJoin;
 import net.minecraft.util.math.Direction;
 
 public class CornerJoinBlockState

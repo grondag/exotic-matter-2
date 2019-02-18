@@ -1,6 +1,6 @@
 package grondag.brocade.world;
 
-import grondag.fermion.varia.DirectionHelper;
+import grondag.brocade.world.borked.NeighborBlocks;
 import grondag.fermion.world.Rotation;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;

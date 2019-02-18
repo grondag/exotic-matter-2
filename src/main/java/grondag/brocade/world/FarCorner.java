@@ -1,5 +1,6 @@
 package grondag.brocade.world;
 
+import grondag.brocade.world.borked.NeighborBlocks;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
