@@ -1,7 +1,7 @@
 package grondag.brocade.primitives.stream;
 
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.polygon.IStreamReaderPolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.polygon.IStreamReaderPolygon;
 
 public interface IPolyStream
 {

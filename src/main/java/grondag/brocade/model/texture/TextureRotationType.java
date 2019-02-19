@@ -1,6 +1,6 @@
 package grondag.brocade.model.texture;
 
-import grondag.exotic_matter.world.Rotation;
+import grondag.fermion.world.Rotation;
 
 public enum TextureRotationType
 {

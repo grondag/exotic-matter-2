@@ -1,6 +1,6 @@
 package grondag.brocade.primitives.vertex;
 
-import grondag.exotic_matter.model.primitives.polygon.PolygonAccessor.VertexLayer;
+import grondag.brocade.primitives.polygon.PolygonAccessor.VertexLayer;
 
 public abstract class AbstractVertex<T extends AbstractVertex<T>> implements IMutableVertex
 {

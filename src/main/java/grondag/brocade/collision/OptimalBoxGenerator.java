@@ -1,18 +1,18 @@
 package grondag.brocade.collision;
 
-import static grondag.exotic_matter.model.collision.octree.OctreeCoordinates.ALL_EMPTY;
+import static grondag.brocade.collision.octree.OctreeCoordinates.ALL_EMPTY;
 
 import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.ConfigXM;
-import grondag.exotic_matter.model.collision.octree.OctreeCoordinates;
-import grondag.exotic_matter.model.collision.octree.VoxelVolume16;
-import grondag.exotic_matter.model.primitives.TriangleBoxTest;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
-import net.minecraft.util.math.AxisAlignedBB;
+import grondag.fermion.config.FermionConfig;
+import grondag.brocade.collision.octree.OctreeCoordinates;
+import grondag.brocade.collision.octree.VoxelVolume16;
+import grondag.brocade.primitives.TriangleBoxTest;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.vertex.IVec3f;
+import net.minecraft.util.math.BoundingBox;
 
 public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<IPolygon>
 {
@@ -294,7 +294,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
 //        builder.clear();
 //    }
     
-    public final ImmutableList<AxisAlignedBB> build()
+    public final ImmutableList<BoundingBox> build()
     {
         builder.clear();
         bf.outputBoxes(builder);

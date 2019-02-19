@@ -1,18 +1,14 @@
 package grondag.brocade.model.render;
 
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraftforge.client.model.pipeline.LightUtil;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.vertex.IVec3f;
+import grondag.fermion.world.Rotation;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.texture.Sprite;
 
-@SideOnly(Side.CLIENT)
 public class QuadBakery
 {
     //Still fuzzy on how the lightmap coordinates work, but this does the job.
@@ -29,11 +25,11 @@ public class QuadBakery
     static
     {
         ITEM_ALTERNATE = new VertexFormat();
-        ITEM_ALTERNATE.addElement(DefaultVertexFormats.POSITION_3F);
-        ITEM_ALTERNATE.addElement(DefaultVertexFormats.COLOR_4UB);
-        ITEM_ALTERNATE.addElement(DefaultVertexFormats.NORMAL_3B);
-        ITEM_ALTERNATE.addElement(DefaultVertexFormats.PADDING_1B);
-        ITEM_ALTERNATE.addElement(DefaultVertexFormats.TEX_2F);
+        ITEM_ALTERNATE.add(VertexFormats.POSITION_ELEMENT);
+        ITEM_ALTERNATE.add(VertexFormats.COLOR_ELEMENT);
+        ITEM_ALTERNATE.add(VertexFormats.NORMAL_ELEMENT);
+        ITEM_ALTERNATE.add(VertexFormats.PADDING_ELEMENT);
+        ITEM_ALTERNATE.add(VertexFormats.UV_ELEMENT);
     }
     
     private static class Workspace
@@ -117,12 +113,13 @@ public class QuadBakery
      * Any transformation to alpha or lightmap that uses glow bits should already
      * be applied by painer before this is called.
      */
+    @SuppressWarnings("unused")
     public static BakedQuad createBakedQuad(int layerIndex, IPolygon raw, boolean forceItemFormat)
     {
         final float spanU = raw.getMaxU(layerIndex) - raw.getMinU(layerIndex);
         final float spanV = raw.getMaxV(layerIndex) - raw.getMinV(layerIndex);
         
-        final TextureAtlasSprite textureSprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(raw.getTextureName(layerIndex));
+        final Sprite textureSprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(raw.getTextureName(layerIndex));
         
         final Workspace w = workspace.get();
         
@@ -178,72 +175,74 @@ public class QuadBakery
         VertexFormat format = forceItemFormat || glowBits == 0
 //                ? net.minecraft.client.renderer.vertex.DefaultVertexFormats.ITEM
                 ? ITEM_ALTERNATE
-                : net.minecraft.client.renderer.vertex.DefaultVertexFormats.BLOCK;
+                : VertexFormats.POSITION_COLOR_UV_LMAP;
         
         final float spriteMinU = textureSprite.getMinU();
         final float spriteSpanU = textureSprite.getMaxU() - spriteMinU;
         final float spriteMinV = textureSprite.getMinV();
         final float spriteSpanV = textureSprite.getMaxV() - spriteMinV;
         
-        for(int v = 0; v < 4; v++)
-        {
-            for(int e = 0; e < format.getElementCount(); e++)
-            {
-                switch(format.getElement(e).getUsage())
-                {
-                case POSITION:
-                    raw.getPos(v).toArray(packData);
-                    LightUtil.pack(packData, vertexData, format, v, e);
-                    break;
-
-                case NORMAL: 
-                {
-                    LightUtil.pack(normalData[v], vertexData, format, v, e);
-                    break;
-                }
-                case COLOR:
-                {
-                    final int color = raw.getVertexColor(layerIndex, v);
-                    packData[0] = ((float) (color >> 16 & 0xFF)) / 255f;
-                    packData[1] = ((float) (color >> 8 & 0xFF)) / 255f;
-                    packData[2] = ((float) (color  & 0xFF)) / 255f;
-                    packData[3] = ((float) (color >> 24 & 0xFF)) / 255f;
-                    LightUtil.pack(packData, vertexData, format, v, e);
-                    break;
-                }
-                case UV: 
-                    if(format.getElement(e).getIndex() == 0)
-                    {
-                        // This block handles the normal case: texture UV coordinates
-                        // doing interpolation here vs using sprite methods to avoid wasteful multiply and divide by 16
-                        packData[0] = spriteMinU + uvData[v][0] * spriteSpanU;
-                        packData[1] = spriteMinV + uvData[v][1] * spriteSpanV;
-                        LightUtil.pack(packData, vertexData, format, v, e);
-                    }
-                    else
-                    {
-                        // There are 2 UV elements when we are using a BLOCK vertex format
-                        // The 2nd accepts pre-baked lightmaps.  
-                        final float glow = (float)(((glowBits >> (v * 4)) & 0xF) * 0x20) / 0xFFFF;
-                                
-                        packData[0] = glow;
-                        packData[1] = glow;
-
-                        LightUtil.pack(packData, vertexData, format, v, e);
-                    }
-                    break;
-
-                default:
-                    // NOOP, padding or weirdness
-                }
-            }
-        }
-        
-        BakedQuad quad = format == ITEM_ALTERNATE
-                ? new CachedBakedQuad(vertexData, -1, raw.getActualFace(), textureSprite, true, format)
-                : new LitBakedQuad(vertexData, normalData, -1, raw.getActualFace(), textureSprite, true, format, glowBits);
-        
-        return QuadCache.INSTANCE.getCachedQuad(quad);
+        // Convert this to Fabric Rebder API
+//        for(int v = 0; v < 4; v++)
+//        {
+//            for(int e = 0; e < format.getElementCount(); e++)
+//            {
+//                switch(format.getElement(e).getType())
+//                {
+//                case POSITION:
+//                    raw.getPos(v).toArray(packData);
+//                    LightUtil.pack(packData, vertexData, format, v, e);
+//                    break;
+//
+//                case NORMAL: 
+//                {
+//                    LightUtil.pack(normalData[v], vertexData, format, v, e);
+//                    break;
+//                }
+//                case COLOR:
+//                {
+//                    final int color = raw.getVertexColor(layerIndex, v);
+//                    packData[0] = ((float) (color >> 16 & 0xFF)) / 255f;
+//                    packData[1] = ((float) (color >> 8 & 0xFF)) / 255f;
+//                    packData[2] = ((float) (color  & 0xFF)) / 255f;
+//                    packData[3] = ((float) (color >> 24 & 0xFF)) / 255f;
+//                    LightUtil.pack(packData, vertexData, format, v, e);
+//                    break;
+//                }
+//                case UV: 
+//                    if(format.getElement(e).getIndex() == 0)
+//                    {
+//                        // This block handles the normal case: texture UV coordinates
+//                        // doing interpolation here vs using sprite methods to avoid wasteful multiply and divide by 16
+//                        packData[0] = spriteMinU + uvData[v][0] * spriteSpanU;
+//                        packData[1] = spriteMinV + uvData[v][1] * spriteSpanV;
+//                        LightUtil.pack(packData, vertexData, format, v, e);
+//                    }
+//                    else
+//                    {
+//                        // There are 2 UV elements when we are using a BLOCK vertex format
+//                        // The 2nd accepts pre-baked lightmaps.  
+//                        final float glow = (float)(((glowBits >> (v * 4)) & 0xF) * 0x20) / 0xFFFF;
+//                                
+//                        packData[0] = glow;
+//                        packData[1] = glow;
+//
+//                        LightUtil.pack(packData, vertexData, format, v, e);
+//                    }
+//                    break;
+//
+//                default:
+//                    // NOOP, padding or weirdness
+//                }
+//            }
+//        }
+//        
+//        BakedQuad quad = format == ITEM_ALTERNATE
+//                ? new CachedBakedQuad(vertexData, -1, raw.getActualFace(), textureSprite, true, format)
+//                : new LitBakedQuad(vertexData, normalData, -1, raw.getActualFace(), textureSprite, true, format, glowBits);
+//        
+//        return QuadCache.INSTANCE.getCachedQuad(quad);
+        return null;
     }
     
     /**
@@ -257,47 +256,49 @@ public class QuadBakery
      * Borrowed from Forge as implemented by Fry in UnpackedBakedQuad.build().
      * Array dimensions are vertex 0-3, u/v 0-1
      */
-    public static void contractUVs(TextureAtlasSprite textureSprite, float[][] uvData)
+    public static void contractUVs(Sprite textureSprite, float[][] uvData)
     {
-        float tX = textureSprite.getOriginX() / textureSprite.getMinU();
-        float tY = textureSprite.getOriginY() / textureSprite.getMinV();
-        float tS = tX > tY ? tX : tY;
-        float ep = 1f / (tS * 0x100);
-
-        //uve refers to the uv element number in the format
-        //we will always have uv data directly
-        float center[] = new float[2];
-
-        for(int v = 0; v < 4; v++)
-        {
-            center[0] += uvData[v][0] / 4;
-            center[1] += uvData[v][1] / 4;
-        }
-
-        for(int v = 0; v < 4; v++)
-        {
-            for (int i = 0; i < 2; i++)
-            {
-                float uo = uvData[v][i];
-                float un = uo * (1 - UV_EPS) + center[i] * UV_EPS;
-                float ud = uo - un;
-                float aud = ud;
-                if(aud < 0) aud = -aud;
-                if(aud < ep) // not moving a fraction of a pixel
-                {
-                    float udc = uo - center[i];
-                    if(udc < 0) udc = -udc;
-                    if(udc < 2 * ep) // center is closer than 2 fractions of a pixel, don't move too close
-                    {
-                        un = (uo + center[i]) / 2;
-                    }
-                    else // move at least by a fraction
-                    {
-                        un = uo + (ud < 0 ? ep : -ep);
-                    }
-                }
-                uvData[v][i] = un;
-            }
-        }
+        //TODO: reimplement or scrap
+        
+//        float tX = textureSprite.getOriginX() / textureSprite.getMinU();
+//        float tY = textureSprite.getOriginY() / textureSprite.getMinV();
+//        float tS = tX > tY ? tX : tY;
+//        float ep = 1f / (tS * 0x100);
+//
+//        //uve refers to the uv element number in the format
+//        //we will always have uv data directly
+//        float center[] = new float[2];
+//
+//        for(int v = 0; v < 4; v++)
+//        {
+//            center[0] += uvData[v][0] / 4;
+//            center[1] += uvData[v][1] / 4;
+//        }
+//
+//        for(int v = 0; v < 4; v++)
+//        {
+//            for (int i = 0; i < 2; i++)
+//            {
+//                float uo = uvData[v][i];
+//                float un = uo * (1 - UV_EPS) + center[i] * UV_EPS;
+//                float ud = uo - un;
+//                float aud = ud;
+//                if(aud < 0) aud = -aud;
+//                if(aud < ep) // not moving a fraction of a pixel
+//                {
+//                    float udc = uo - center[i];
+//                    if(udc < 0) udc = -udc;
+//                    if(udc < 2 * ep) // center is closer than 2 fractions of a pixel, don't move too close
+//                    {
+//                        un = (uo + center[i]) / 2;
+//                    }
+//                    else // move at least by a fraction
+//                    {
+//                        un = uo + (ud < 0 ? ep : -ep);
+//                    }
+//                }
+//                uvData[v][i] = un;
+//            }
+//        }
     }
 }

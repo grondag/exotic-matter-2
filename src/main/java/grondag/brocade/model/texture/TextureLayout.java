@@ -1,15 +1,13 @@
 package grondag.brocade.model.texture;
 
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NONE;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.MinecraftClient;
 
 public enum TextureLayout
 {
@@ -25,7 +23,6 @@ public enum TextureLayout
         }
         
         @Override
-        @SideOnly(Side.CLIENT)
         public void prestitch(TexturePallette texture, Consumer<String> stitcher)
         {
             for (int i = 0; i < texture.textureVersionCount; i++)
@@ -58,7 +55,6 @@ public enum TextureLayout
         }
         
         @Override
-        @SideOnly(Side.CLIENT)
         public void prestitch(TexturePallette texture, Consumer<String> stitcher)
         {          
             // last texture (no border) only needed if indicated
@@ -95,7 +91,6 @@ public enum TextureLayout
         }
         
         @Override
-        @SideOnly(Side.CLIENT)
         public void prestitch(TexturePallette texture, Consumer<String> stitcher)
         {
             for (int i = 0; i < texture.textureVersionCount; i++)
@@ -177,7 +172,6 @@ public enum TextureLayout
                     : (texture.textureBaseName + "_" + version));
     }
 
-    @SideOnly(Side.CLIENT)
     public void prestitch(TexturePallette texture, Consumer<String> stitcher)
     {
         for (int i = 0; i < texture.textureVersionCount; i++)
@@ -196,10 +190,9 @@ public enum TextureLayout
      * texture in the sample. It's always the whole texture. Doesn't matter in most cases, but
      * potentially a future enhancement.
      */
-    @SideOnly(Side.CLIENT)
     public EnhancedSprite createSampleSprite(TexturePallette texture)
     {
-        EnhancedSprite result = (EnhancedSprite)Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(sampleTextureName(texture));
+        EnhancedSprite result = (EnhancedSprite)MinecraftClient.getInstance().getSpriteAtlas().getSprite(sampleTextureName(texture));
         return result;
     }
 }

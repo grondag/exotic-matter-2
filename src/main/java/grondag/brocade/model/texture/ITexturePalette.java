@@ -2,8 +2,8 @@ package grondag.brocade.model.texture;
 
 import java.util.function.Consumer;
 
-import grondag.exotic_matter.IGrondagMod;
-import grondag.exotic_matter.model.texture.TextureRotationType.TextureRotationSetting;
+import grondag.brocade.model.texture.TextureRotationType.TextureRotationSetting;
+import grondag.fermion.IGrondagMod;
 
 public interface ITexturePalette
 {

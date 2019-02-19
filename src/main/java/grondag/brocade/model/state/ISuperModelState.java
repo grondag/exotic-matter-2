@@ -2,39 +2,33 @@ package grondag.brocade.model.state;
 
 import java.util.List;
 
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Matrix4f;
-
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.ISuperBlockAccess;
-import grondag.exotic_matter.model.color.ColorMap;
-import grondag.exotic_matter.model.color.ColorMap.EnumColorMap;
-import grondag.exotic_matter.model.mesh.BlockOrientationType;
-import grondag.exotic_matter.model.mesh.ModelShape;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.painting.VertexProcessor;
-import grondag.exotic_matter.model.primitives.Transform;
-import grondag.exotic_matter.model.render.RenderLayout;
-import grondag.exotic_matter.model.render.RenderLayoutProducer;
-import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
-import grondag.exotic_matter.model.varia.SideShape;
-import grondag.exotic_matter.serialization.IMessagePlus;
-import grondag.exotic_matter.serialization.IReadWriteNBT;
-import grondag.exotic_matter.terrain.TerrainState;
-import grondag.exotic_matter.world.CornerJoinBlockState;
-import grondag.exotic_matter.world.Rotation;
-import grondag.exotic_matter.world.SimpleJoin;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.ISuperBlockAccess;
+import grondag.brocade.mesh.BlockOrientationType;
+import grondag.brocade.mesh.ModelShape;
+import grondag.brocade.model.render.RenderLayout;
+import grondag.brocade.model.render.RenderLayoutProducer;
+import grondag.brocade.model.texture.ITexturePalette;
+import grondag.brocade.model.varia.SideShape;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.painting.VertexProcessor;
+import grondag.brocade.terrain.TerrainState;
+import grondag.brocade.world.CornerJoinBlockState;
+import grondag.brocade.world.borked.SimpleJoin;
+import grondag.fermion.color.ColorMap;
+import grondag.fermion.color.ColorMap.EnumColorMap;
+import grondag.fermion.serialization.IReadWriteNBT;
+import grondag.fermion.world.Rotation;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public interface ISuperModelState extends IReadWriteNBT, IMessagePlus
+public interface ISuperModelState extends IReadWriteNBT
 {
-
     int[] serializeToInts();
 
     /** 
@@ -51,7 +45,7 @@ public interface ISuperModelState extends IReadWriteNBT, IMessagePlus
     int hashCode();
 
     /** returns self as convenience method */
-    ISuperModelState refreshFromWorld(IBlockState state, ISuperBlockAccess world, BlockPos pos);
+    ISuperModelState refreshFromWorld(BlockState state, ISuperBlockAccess world, BlockPos pos);
 
     ModelShape<?> getShape();
 
@@ -82,9 +76,9 @@ public interface ISuperModelState extends IReadWriteNBT, IMessagePlus
      */
     BlockOrientationType orientationType();
 
-    EnumFacing.Axis getAxis();
+    Direction.Axis getAxis();
 
-    void setAxis(EnumFacing.Axis axis);
+    void setAxis(Direction.Axis axis);
 
     boolean isAxisInverted();
 
@@ -235,7 +229,7 @@ public interface ISuperModelState extends IReadWriteNBT, IMessagePlus
     /** True if shape can be placed on itself to grow */
     boolean isAdditive();
 
-    SideShape sideShape(EnumFacing side);
+    SideShape sideShape(Direction side);
 
     /** returns true if geometry is a full 1x1x1 cube. */
     boolean isCube();
@@ -245,7 +239,7 @@ public interface ISuperModelState extends IReadWriteNBT, IMessagePlus
      * Return true if successful. 
      * @param blockState 
      */
-    boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block);
+    boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block);
 
     /** 
      * How much of the sky is occluded by the shape of this block?
@@ -277,12 +271,12 @@ public interface ISuperModelState extends IReadWriteNBT, IMessagePlus
     /**
      * Returns a list of collision boxes offset to the given world position 
      */
-    List<AxisAlignedBB> collisionBoxes(BlockPos offset);
+    List<BoundingBox> collisionBoxes(BlockPos offset);
 
     /**
      * See {@link Transform#rotateFace(ModelState, EnumFacing)}
      */
-    EnumFacing rotateFace(EnumFacing face);
+    Direction rotateFace(Direction face);
 
     /**
      * Find appropriate transformation assuming base model is oriented to Y orthogonalAxis, positive.
@@ -291,13 +285,9 @@ public interface ISuperModelState extends IReadWriteNBT, IMessagePlus
      */
     Matrix4f getMatrix4f();
 
-    /** for compatibility with double-valued raw quad vertices */
-    Matrix4d getMatrix4d();
-
-    
     ISuperModelState clone();
 
-    default AxisAlignedBB getCollisionBoundingBox()
+    default BoundingBox getCollisionBoundingBox()
     {
         return this.getShape().meshFactory().collisionHandler().getCollisionBoundingBox(this);
     }

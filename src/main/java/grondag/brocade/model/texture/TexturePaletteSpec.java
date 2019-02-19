@@ -1,8 +1,8 @@
 package grondag.brocade.model.texture;
 
-import grondag.exotic_matter.IGrondagMod;
-import grondag.exotic_matter.model.texture.TextureRotationType.TextureRotationSetting;
-import grondag.exotic_matter.world.Rotation;
+import grondag.brocade.model.texture.TextureRotationType.TextureRotationSetting;
+import grondag.fermion.IGrondagMod;
+import grondag.fermion.world.Rotation;
 
 /**
  * Container holding mutable values for the various parameters that go

@@ -1,8 +1,8 @@
 package grondag.brocade.primitives.vertex;
 
-import grondag.exotic_matter.model.primitives.QuadHelper;
-import grondag.exotic_matter.varia.Useful;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.primitives.QuadHelper;
+import grondag.fermion.varia.Useful;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
 public interface IVec3f
@@ -48,7 +48,7 @@ public interface IVec3f
      * Returns a signed distance to the plane of the given face.
      * Positive numbers mean in front of face, negative numbers in back.
      */
-    public default float distanceToFacePlane(EnumFacing face)
+    public default float distanceToFacePlane(Direction face)
     {
         // could use dot product, but exploiting special case for less math
         switch(face)
@@ -77,7 +77,7 @@ public interface IVec3f
         }
     }
 
-    public default boolean isOnFacePlane(EnumFacing face, float tolerance)
+    public default boolean isOnFacePlane(Direction face, float tolerance)
     {
         return Math.abs(this.distanceToFacePlane(face)) < tolerance;
     }

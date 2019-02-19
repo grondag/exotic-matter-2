@@ -1,10 +1,8 @@
 package grondag.brocade.primitives.vertex;
 
-import javax.annotation.Nullable;
-
-import grondag.exotic_matter.model.primitives.PolyFactory;
-import grondag.exotic_matter.model.primitives.polygon.IPrimitiveFactory;
-import grondag.exotic_matter.varia.ColorHelper;
+import grondag.brocade.primitives.PolyFactory;
+import grondag.brocade.primitives.polygon.IPrimitiveFactory;
+import grondag.fermion.color.ColorHelper;
 
 public interface IMutableVertex extends IVec3f
 {
@@ -18,7 +16,7 @@ public interface IMutableVertex extends IVec3f
      * WARNING: Will always return an immutable reference to ensure safety.
      * Do not use on mutable instances to avoid memory allocation overhead.
      */
-    public @Nullable Vec3f normal();
+    public Vec3f normal();
     
     public float normalX();
     
@@ -31,7 +29,7 @@ public interface IMutableVertex extends IVec3f
     /**
      * Will not retain a reference to normal if it is mutable.
      */
-    public void setNormal(@Nullable Vec3f normal);
+    public void setNormal(Vec3f normal);
     
     public void setNormal(float x, float y, float z);
     

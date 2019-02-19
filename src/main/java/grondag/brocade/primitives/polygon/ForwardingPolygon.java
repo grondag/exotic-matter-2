@@ -1,10 +1,10 @@
 package grondag.brocade.primitives.polygon;
 
-import grondag.exotic_matter.model.painting.Surface;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.painting.Surface;
+import grondag.brocade.primitives.vertex.Vec3f;
+import grondag.fermion.world.Rotation;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.math.Direction;
 
 public class ForwardingPolygon implements IPolygon
 {
@@ -71,7 +71,7 @@ public class ForwardingPolygon implements IPolygon
     }
 
     @Override
-    public EnumFacing getNominalFace()
+    public Direction getNominalFace()
     {
         return wrapped.getNominalFace();
     }
@@ -230,12 +230,6 @@ public class ForwardingPolygon implements IPolygon
     public boolean isEmissive(int textureLayerIndex)
     {
         return wrapped.isEmissive(textureLayerIndex);
-    }
-
-    @Override
-    public int getPipelineIndex()
-    {
-        return wrapped.getPipelineIndex();
     }
 
     @Override

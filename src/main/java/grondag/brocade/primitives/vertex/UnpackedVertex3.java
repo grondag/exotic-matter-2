@@ -1,8 +1,7 @@
 package grondag.brocade.primitives.vertex;
 
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.model.primitives.polygon.PolygonAccessor.VertexLayer;
+import grondag.brocade.primitives.polygon.PolygonAccessor.VertexLayer;
 
 public class UnpackedVertex3 extends AbstractVertex<UnpackedVertex3> implements IMutableVertex
 {
@@ -143,7 +142,7 @@ public class UnpackedVertex3 extends AbstractVertex<UnpackedVertex3> implements 
     }
 
     @Override
-    public void setNormal(@Nullable Vec3f normal)
+    public void setNormal(Vec3f normal)
     {
         if(normal == null)
         {

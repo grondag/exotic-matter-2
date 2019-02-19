@@ -1,27 +1,21 @@
 package grondag.brocade.primitives.polygon;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector4f;
-
-import com.google.common.collect.ImmutableList;
-
-import grondag.acuity.api.IRenderPipeline;
-import grondag.exotic_matter.model.painting.Surface;
-import grondag.exotic_matter.model.primitives.FaceVertex;
-import grondag.exotic_matter.model.primitives.QuadHelper;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon.Helper.UVLocker;
-import grondag.exotic_matter.model.primitives.vertex.IMutableVertex;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
-import grondag.exotic_matter.model.primitives.vertex.UnpackedVertex3;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.painting.Surface;
+import grondag.brocade.primitives.FaceVertex;
+import grondag.brocade.primitives.QuadHelper;
+import grondag.brocade.primitives.polygon.IMutablePolygon.Helper.UVLocker;
+import grondag.brocade.primitives.vertex.IMutableVertex;
+import grondag.brocade.primitives.vertex.IVec3f;
+import grondag.brocade.primitives.vertex.UnpackedVertex3;
+import grondag.brocade.primitives.vertex.Vec3f;
+import grondag.fermion.world.Rotation;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
@@ -39,19 +33,19 @@ public interface IMutablePolygon extends IPolygon
         
         static
         {
-            UVLOCKERS[EnumFacing.EAST.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, 1 - p.getVertexZ(v), 1 - p.getVertexY(v));
+            UVLOCKERS[Direction.EAST.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, 1 - p.getVertexZ(v), 1 - p.getVertexY(v));
             
-            UVLOCKERS[EnumFacing.WEST.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexZ(v), 1 - p.getVertexY(v));
+            UVLOCKERS[Direction.WEST.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexZ(v), 1 - p.getVertexY(v));
             
-            UVLOCKERS[EnumFacing.NORTH.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, 1 - p.getVertexX(v), 1 - p.getVertexY(v));
+            UVLOCKERS[Direction.NORTH.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, 1 - p.getVertexX(v), 1 - p.getVertexY(v));
             
-            UVLOCKERS[EnumFacing.SOUTH.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v), 1 - p.getVertexY(v));
+            UVLOCKERS[Direction.SOUTH.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v), 1 - p.getVertexY(v));
             
-            UVLOCKERS[EnumFacing.DOWN.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v), 1 - p.getVertexZ(v));
+            UVLOCKERS[Direction.DOWN.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v), 1 - p.getVertexZ(v));
             
             // our default semantic for UP is different than MC
             // "top" is north instead of south
-            UVLOCKERS[EnumFacing.UP.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v), p.getVertexZ(v));
+            UVLOCKERS[Direction.UP.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v), p.getVertexZ(v));
         }
         
         static class ListAdapter implements Consumer<IMutablePolygon>
@@ -65,7 +59,7 @@ public interface IMutablePolygon extends IPolygon
             }
             
             @Override
-            public void accept(@SuppressWarnings("null") IMutablePolygon t)
+            public void accept(IMutablePolygon t)
             {
                 wrapped.add(t);
             }
@@ -86,9 +80,6 @@ public interface IMutablePolygon extends IPolygon
         }
         
         final ListAdapter listAdapter = new ListAdapter();
-        final VertexAdapter.Mutable mutableAdapter = new VertexAdapter.Mutable();
-        final VertexAdapter.Fixed fromAdapter = new VertexAdapter.Fixed();
-        final VertexAdapter.Fixed toAdapter = new VertexAdapter.Fixed();
         final Vector4f transform = new Vector4f();
         final IMutableVertex swapVertex = new UnpackedVertex3();
     }
@@ -168,7 +159,7 @@ public interface IMutablePolygon extends IPolygon
      * Prefer value-passing, floats.
      */
     @Deprecated
-    default IMutablePolygon setVertex(int vertexIndex, Vec3d pos, double u, double v, int color, @Nullable Vec3d normal)
+    default IMutablePolygon setVertex(int vertexIndex, Vec3d pos, double u, double v, int color, Vec3d normal)
     {
         IMutablePolygon result = setVertex(vertexIndex, (float)pos.x, (float)pos.y, (float)pos.z, (float)u, (float)v, color, 0);
         return normal == null ? result : result.setVertexNormal(vertexIndex, (float)normal.x, (float)normal.y, (float)normal.z);
@@ -197,7 +188,7 @@ public interface IMutablePolygon extends IPolygon
      */
     IMutablePolygon setVertexGlow(int vertexIndex, int glow);
     
-    IMutablePolygon setVertexNormal(int vertexIndex,  @Nullable Vec3f normal);
+    IMutablePolygon setVertexNormal(int vertexIndex, Vec3f normal);
     
     default IMutablePolygon setVertexNormal(int vertexIndex, IVec3f normal)
     {
@@ -206,22 +197,23 @@ public interface IMutablePolygon extends IPolygon
     
     IMutablePolygon setVertexNormal(int vertexIndex, float x, float y, float z);
     
-    default IMutablePolygon setPipeline(@Nullable IRenderPipeline pipeline)
-    {
-        setPipelineIndex(pipeline == null ? 0 : pipeline.getIndex());
-        return this;
-    }
-    
-    IMutablePolygon setPipelineIndex(int pipelineIndex);
+    //TODO: use materials
+//    default IMutablePolygon setPipeline( IRenderPipeline pipeline)
+//    {
+//        setPipelineIndex(pipeline == null ? 0 : pipeline.getIndex());
+//        return this;
+//    }
+//    
+//    IMutablePolygon setPipelineIndex(int pipelineIndex);
     
     IMutablePolygon clearFaceNormal();
 
     /**
-     * Same as {@link #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex, EnumFacing)}
+     * Same as {@link #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex, Direction)}
      * except also sets nominal face to the given face in the start parameter. 
      * Returns self for convenience.
      */
-    default IMutablePolygon setupFaceQuad(EnumFacing side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, FaceVertex tv3, @Nullable EnumFacing topFace)
+    default IMutablePolygon setupFaceQuad(Direction side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, FaceVertex tv3, Direction topFace)
     {
         assert(vertexCount() == 4);
         setNominalFace(side);
@@ -241,10 +233,10 @@ public interface IMutablePolygon extends IPolygon
      * UV coordinates will be based on where rotated vertices project onto the nominal 
      * face for this quad (effectively lockedUV) unless face vertexes have UV coordinates.
      */
-    default IMutablePolygon setupFaceQuad(FaceVertex vertexIn0, FaceVertex vertexIn1, FaceVertex vertexIn2, FaceVertex vertexIn3, @Nullable EnumFacing topFace)
+    default IMutablePolygon setupFaceQuad(FaceVertex vertexIn0, FaceVertex vertexIn1, FaceVertex vertexIn2, FaceVertex vertexIn3, Direction topFace)
     {
         assert vertexCount() <= 4;
-        EnumFacing defaultTop = QuadHelper.defaultTopOf(this.getNominalFace());
+        Direction defaultTop = QuadHelper.defaultTopOf(this.getNominalFace());
         if(topFace == null) topFace = defaultTop;
         
         FaceVertex rv0;
@@ -338,9 +330,9 @@ public interface IMutablePolygon extends IPolygon
      * 
      * Returns self for convenience.<br><br>
      * 
-     * @see #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex, EnumFacing)
+     * @see #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex, Direction)
      */
-    default IMutablePolygon setupFaceQuad(float x0, float y0, float x1, float y1, float depth, @Nullable EnumFacing topFace)
+    default IMutablePolygon setupFaceQuad(float x0, float y0, float x1, float y1, float depth, Direction topFace)
     {
         // PERF: garbage factory
         return setupFaceQuad(
@@ -352,11 +344,11 @@ public interface IMutablePolygon extends IPolygon
     }
 
     /**
-     * Same as {@link #setupFaceQuad(double, double, double, double, double, EnumFacing)}
+     * Same as {@link #setupFaceQuad(double, double, double, double, double, Direction)}
      * but also sets nominal face with given face in start parameter.  
      * Returns self as convenience.
      */
-    default IMutablePolygon setupFaceQuad(EnumFacing face, float x0, float y0, float x1, float y1, float depth, @Nullable EnumFacing topFace)
+    default IMutablePolygon setupFaceQuad(Direction face, float x0, float y0, float x1, float y1, float depth, Direction topFace)
     {
         setNominalFace(face);
         return setupFaceQuad(x0, y0, x1, y1, depth, topFace);
@@ -364,15 +356,15 @@ public interface IMutablePolygon extends IPolygon
     
     //PERF use float version
     @Deprecated
-    public default IMutablePolygon setupFaceQuad(EnumFacing face, double x0, double y0, double x1, double y1, double depth, @Nullable EnumFacing topFace)
+    public default IMutablePolygon setupFaceQuad(Direction face, double x0, double y0, double x1, double y1, double depth, Direction topFace)
     {
         return this.setupFaceQuad(face, (float)x0, (float)y0, (float)x1, (float)y1, (float)depth, topFace);
     }
 
     /**
-     * Triangular version of {@link #setupFaceQuad(EnumFacing, FaceVertex, FaceVertex, FaceVertex, EnumFacing)}
+     * Triangular version of {@link #setupFaceQuad(Direction, FaceVertex, FaceVertex, FaceVertex, Direction)}
      */
-    default IMutablePolygon setupFaceQuad(EnumFacing side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, @Nullable EnumFacing topFace)
+    default IMutablePolygon setupFaceQuad(Direction side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, Direction topFace)
     {
         assert(vertexCount() == 3);
         setNominalFace(side);
@@ -380,84 +372,59 @@ public interface IMutablePolygon extends IPolygon
     }
     
     /**
-     * Triangular version of {@link #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex, EnumFacing)}
+     * Triangular version of {@link #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex, Direction)}
      */
-    default IMutablePolygon setupFaceQuad(FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, @Nullable EnumFacing topFace)
+    default IMutablePolygon setupFaceQuad(FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, Direction topFace)
     {
         assert(vertexCount() == 3);
         return setupFaceQuad(tv0, tv1, tv2, tv2, topFace);
     }
 
-    public IMutablePolygon setNominalFace(EnumFacing face);
+    public IMutablePolygon setNominalFace(Direction face);
     
     /**
      * Reverses winding order, clears face normal and flips vertex normals if present.
      * Used by CSG.
-     * TODO: eliminate use of IMutableVertex and then remove them
+     * TODO: Do this with streams
      */
     default IMutablePolygon flip()
     {
 
-        final Helper help = Helper.get();
-        final IMutableVertex swapVertex = help.swapVertex;
-        final VertexAdapter.Mutable adapter = help.mutableAdapter;
-        
-        final int vCount = this.vertexCount();
-        final int midPoint = (vCount + 1) / 2;
-        for(int low = 0; low < midPoint; low++)
-        {
-            final int high = vCount - low - 1;
-
-            // flip low vertex normal, or mid-point on odd-numbered polys
-            if(hasVertexNormal(low))
-                setVertexNormal(low, -getVertexNormalX(low), -getVertexNormalY(low), -getVertexNormalZ(low));
-            
-            if(low != high)
-            {
-                // flip high vertex normal, or mid-point on odd-numbered polys
-                if(hasVertexNormal(high))
-                    setVertexNormal(high, -getVertexNormalX(high), -getVertexNormalY(high), -getVertexNormalZ(high));
-                
-                // swap low with high
-                adapter.prepare(this, low);
-                swapVertex.copyFrom(adapter);
-                copyVertexFrom(low, this, high);
-                copyVertexFrom(high, swapVertex);
-            }
-        }
-        
-        clearFaceNormal();
+//        final Helper help = Helper.get();
+//        final IMutableVertex swapVertex = help.swapVertex;
+//      //  final VertexAdapter.Mutable adapter = help.mutableAdapter;
+//        
+//        final int vCount = this.vertexCount();
+//        final int midPoint = (vCount + 1) / 2;
+//        for(int low = 0; low < midPoint; low++)
+//        {
+//            final int high = vCount - low - 1;
+//
+//            // flip low vertex normal, or mid-point on odd-numbered polys
+//            if(hasVertexNormal(low))
+//                setVertexNormal(low, -getVertexNormalX(low), -getVertexNormalY(low), -getVertexNormalZ(low));
+//            
+//            if(low != high)
+//            {
+//                // flip high vertex normal, or mid-point on odd-numbered polys
+//                if(hasVertexNormal(high))
+//                    setVertexNormal(high, -getVertexNormalX(high), -getVertexNormalY(high), -getVertexNormalZ(high));
+//                
+//                // swap low with high
+//                adapter.prepare(this, low);
+//                swapVertex.copyFrom(adapter);
+//                copyVertexFrom(low, this, high);
+//                copyVertexFrom(high, swapVertex);
+//            }
+//        }
+//        
+//        clearFaceNormal();
         
         return this;
     }
     
     IMutablePolygon setSurface(Surface surface);
 
-    /**
-     * WARNING: releases all polys in the input collection. <br>
-     * DO NOT RETAIN REFERENCES TO ANY INPUTS. <br>
-     * Returns a new Does NOT split non-quads to quads.
-     */
-    static ImmutableList<IPolygon> paintAndRelease(Collection<IMutablePolygon> from)
-    {
-        ImmutableList.Builder<IPolygon> builder = ImmutableList.builder();
-
-        for(IMutablePolygon p : from)
-        {
-            builder.add(p.toPainted());
-            p.release();
-        }
-        return builder.build();
-    }
-    
-    static void releaseAll(Collection<IMutablePolygon> targets)
-    {
-        for(IMutablePolygon p : targets)
-        {
-            p.release();
-        }
-    }
-    
     /**
      * Adds given offsets to u,v values of each vertex.
      */
@@ -492,12 +459,14 @@ public interface IMutablePolygon extends IPolygon
      */
     public default IMutablePolygon copyInterpolatedVertexFrom(int targetIndex, IPolygon from, int fromIndex, IPolygon to, int toIndex, float toWeight)
     {
-        Helper help = Helper.get();
+        //TODO: convert to streams or remove
         
-        help.fromAdapter.prepare(from, fromIndex).interpolate(
-                help.toAdapter.prepare(to, toIndex), 
-                toWeight, 
-                help.mutableAdapter.prepare(this, targetIndex));
+//        Helper help = Helper.get();
+//        
+//        help.fromAdapter.prepare(from, fromIndex).interpolate(
+//                help.toAdapter.prepare(to, toIndex), 
+//                toWeight, 
+//                help.mutableAdapter.prepare(this, targetIndex));
         
         return this;
     }
@@ -508,7 +477,8 @@ public interface IMutablePolygon extends IPolygon
      */
     public default IMutablePolygon copyVertexFrom(int vertexIndex, IMutableVertex source)
     {
-        Helper.get().mutableAdapter.prepare(this, vertexIndex).copyFrom(source);
+        //TODO: convert to streams or remove
+//        Helper.get().mutableAdapter.prepare(this, vertexIndex).copyFrom(source);
         return this;
     }
     
@@ -525,119 +495,7 @@ public interface IMutablePolygon extends IPolygon
         
         return this;
     }
-
-    //TODO: remove in favor of stream operations
-    @Deprecated
-    public default IPolygon toPainted()
-    {
-        return factory().toPainted(this);
-    }
-
-    //TODO: remove in favor of stream operations
-    /**
-     * Wraps list as a consumer and calls {@link #toPaintableQuads(Consumer)}
-     */
-    @Deprecated
-    public default boolean toPaintableQuads(List<IMutablePolygon> list)
-    {
-        return toPaintableQuads(Helper.get().listAdapter.prepare(list));
-    }
     
-    //TODO: remove in favor of stream operations
-    /**
-     * If this poly is a tri or a convex quad, simply passes to consumer and returns false.<p>
-     * 
-     * If it a concave quad or higher-order polygon, generates new paintables that split this poly
-     * into convex quads or tris. If a split occurs, returns true. This instance will be unmodified.<p>
-     * 
-     * Return value of true signals to release this poly if it is no longer needed for processing.
-     */
-    @Deprecated
-    public default boolean toPaintableQuads(Consumer<IMutablePolygon> consumer)
-    {
-        if(vertexCount() <= 4 && this.isConvex())
-        {
-            consumer.accept(this);
-            return false;
-        }
-
-        int head = vertexCount() - 1;
-        int tail = 2;
-        IMutablePolygon work = claimCopy(4);
-        work.copyVertexFrom(0, this, head);
-        work.copyVertexFrom(1, this, 0);
-        work.copyVertexFrom(2, this, 1);
-        work.copyVertexFrom(3, this, tail);
-        consumer.accept(work);
-
-        while(head - tail > 1)
-        {
-            work = claimCopy(head - tail == 2 ? 3 : 4);
-            work.copyVertexFrom(0, this, head);
-            work.copyVertexFrom(1, this, tail);
-            work.copyVertexFrom(2, this, ++tail);
-            if(head - tail > 1)
-            {
-                work.copyVertexFrom(3, this,--head);
-            }
-            if(!work.isConvex())
-            {
-                if(work.toPaintableTris(consumer))
-                    work.release();
-                else
-                    assert false : "Tri split should have returned true to signal quad release.";
-            }
-            else 
-                consumer.accept(work);
-        }
-        return true;
-    }
-
-    /**
-     * If this poly is a tri, simply passes to consumer and returns false.<p>
-     * 
-     * If it a higher-order polygon, generates new paintables that split this poly
-     * into tris. If a split occurs, returns true. This instance will be unmodified.<p>
-     * 
-     * Return value of true signals to release this poly if it is no longer needed for processing.
-     */
-    public default boolean toPaintableTris(Consumer<IMutablePolygon> consumer)
-    {
-        if(this.vertexCount() == 3)
-        {
-            consumer.accept(this);
-            return false;
-        }
-        
-        int head = this.vertexCount() - 1;
-        int tail = 1;
-
-        IMutablePolygon work = claimCopy(3);
-        work.copyVertexFrom(0, this, head);
-        work.copyVertexFrom(1, this, 0);
-        work.copyVertexFrom(2, this, tail);
-        consumer.accept(work);
-
-        while(head - tail > 1)
-        {
-            work = claimCopy(3);
-            work.copyVertexFrom(0, this, head);
-            work.copyVertexFrom(1, this, tail);
-            work.copyVertexFrom(2, this, ++tail);
-            consumer.accept(work);
-
-            if(head - tail > 1)
-            {
-                work = claimCopy(3);
-                work.copyVertexFrom(0, this, head);
-                work.copyVertexFrom(1, this, tail);
-                work.copyVertexFrom(2, this, --head);
-                consumer.accept(work);
-            }
-        }
-        return true;
-    }
-
     /**
      *  if lockUV is on, derive UV coords by projection
      *  of vertex coordinates on the plane of the quad's face
@@ -661,15 +519,15 @@ public interface IMutablePolygon extends IPolygon
         for(int i = 0; i < vertexCount; i++)
         {
             vec4.set(getVertexX(i), getVertexZ(i), getVertexZ(i), 1);
-            matrix.transform(vec4);
-            this.setVertexPos(i, vec4.x, vec4.y, vec4.z);
+            vec4.multiply(matrix);
+            this.setVertexPos(i, vec4.x(), vec4.y(), vec4.z());
             
             if(this.hasVertexNormal(i))
             {
                 vec4.set(getVertexNormalX(i), getVertexNormalZ(i), getVertexNormalZ(i), 1);
-                matrix.transform(vec4);
-                float normScale = (float) (1f / Math.sqrt(vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z));
-                this.setVertexNormal(i, vec4.x * normScale, vec4.y * normScale, vec4.z * normScale);
+                vec4.multiply(matrix);
+                float normScale = (float) (1f / Math.sqrt(vec4.x() * vec4.x() + vec4.y() * vec4.y() + vec4.z() * vec4.z()));
+                this.setVertexNormal(i, vec4.x() * normScale, vec4.y() * normScale, vec4.z() * normScale);
             }
         }
         
@@ -677,13 +535,11 @@ public interface IMutablePolygon extends IPolygon
         // our matrix transform has block center as its origin,
         // so need to translate face vectors to/from block center 
         // origin before/applying matrix.
-        final EnumFacing nomFace = this.getNominalFace();
-        final Vec3i curNorm = nomFace.getDirectionVec();
+        final Direction nomFace = this.getNominalFace();
+        final Vec3i curNorm = nomFace.getVector();
         vec4.set(curNorm.getX() + 0.5f, curNorm.getY() + 0.5f, curNorm.getZ() + 0.5f, 1);
-        matrix.transform(vec4);
-        vec4.x -= 0.5;
-        vec4.y -= 0.5;
-        vec4.z -= 0.5;
+        vec4.multiply(matrix);
+        vec4.set(vec4.x() - 0.5f, vec4.y() - 0.5f, vec4.z() - 0.5f, vec4.w());
         this.setNominalFace(QuadHelper.computeFaceForNormal(vec4));
         return this;
     }

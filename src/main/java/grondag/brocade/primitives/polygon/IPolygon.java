@@ -1,33 +1,26 @@
 package grondag.brocade.primitives.polygon;
 
-import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList.Builder;
 
-import grondag.acuity.api.IPipelinedQuad;
-import grondag.acuity.api.IPipelinedVertexConsumer;
-import grondag.acuity.api.IRenderPipeline;
-import grondag.exotic_matter.ClientProxy;
-import grondag.exotic_matter.model.painting.Surface;
-import grondag.exotic_matter.model.primitives.PolyFactory;
-import grondag.exotic_matter.model.primitives.QuadHelper;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
-import grondag.exotic_matter.model.primitives.vertex.IVertexCollection;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
-import grondag.exotic_matter.model.render.QuadBakery;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+import grondag.brocade.model.render.QuadBakery;
+import grondag.brocade.painting.Surface;
+import grondag.brocade.primitives.QuadHelper;
+import grondag.brocade.primitives.vertex.IVec3f;
+import grondag.brocade.primitives.vertex.IVertexCollection;
+import grondag.brocade.primitives.vertex.Vec3f;
+import grondag.fermion.world.Rotation;
+import net.fabricmc.fabric.api.client.model.fabric.ModelHelper;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPolygon
+public interface IPolygon extends IVertexCollection, IStreamPolygon//, IPipelinedQuad
 {
     public Vec3f getFaceNormal();
     
@@ -46,9 +39,9 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
         return getFaceNormal().z();
     }
     
-    public EnumFacing getNominalFace();
+    public Direction getNominalFace();
 
-    public default AxisAlignedBB getAABB()
+    public default BoundingBox getAABB()
     {
         IVec3f p0 = getPos(0);
         IVec3f p1 = getPos(1);
@@ -63,7 +56,7 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
         double maxY = Math.max(Math.max(p0.y(), p1.y()), Math.max(p2.y(), p3.y()));
         double maxZ = Math.max(Math.max(p0.z(), p1.z()), Math.max(p2.z(), p3.z()));
 
-        return new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ);
+        return new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     public static final int VERTEX_NOT_FOUND = -1;
@@ -87,9 +80,9 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
         return QuadHelper.isConvex(this);
     }
 
-    public default boolean isOrthogonalTo(EnumFacing face)
+    public default boolean isOrthogonalTo(Direction face)
     {
-        Vec3i dv = face.getDirectionVec();
+        Vec3i dv = face.getVector();
         float dot = this.getFaceNormal().dotProduct(dv.getX(), dv.getY(), dv.getZ());
         return Math.abs(dot) <= QuadHelper.EPSILON;
     }
@@ -120,7 +113,7 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
         return true;
     }
 
-    public default boolean isOnFace(@Nullable EnumFacing face, float tolerance)
+    public default boolean isOnFace(Direction face, float tolerance)
     {
         if(face == null) return false;
         for(int i = 0; i < this.vertexCount(); i++)
@@ -261,7 +254,7 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
      * Based on which way face points. 
      * Never null
      */
-    public default EnumFacing getNormalFace()
+    public default Direction getNormalFace()
     {
         return QuadHelper.computeFaceForNormal(this.getFaceNormal());
     }
@@ -271,16 +264,16 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
      * Null if not fully on one of the faces.
      * Fudges a bit because painted quads can be slightly offset from the plane.
      */
-    public default @Nullable EnumFacing getActualFace()
+    public default Direction getActualFace()
     {
-        EnumFacing nominalFace = this.getNominalFace();
+        Direction nominalFace = this.getNominalFace();
         
         // semantic face will be right most of the time
         if(this.isOnFace(nominalFace, QuadHelper.EPSILON)) return nominalFace;
 
         for(int i = 0; i < 6; i++)
         {
-            final EnumFacing f = EnumFacing.VALUES[i];
+            final Direction f = ModelHelper.faceFromIndex(i);
             if(f != nominalFace && this.isOnFace(f, QuadHelper.EPSILON)) return f;
         }
         return null;
@@ -336,22 +329,13 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
                || (count == 3 && getRenderLayer(2) == layer);
     }
     
-    /**
-     * This is Acuity-only.  Acuity assumes quad has only a single render layer.
-     */
-    @Override
-    public default BlockRenderLayer getRenderLayer()
-    {
-        return getRenderLayer(0);
-    }
-    
     BlockRenderLayer getRenderLayer(int layerIndex);
     
     /**
      * Adds all quads that belong in the given layer.
      * If layer is null, outputs all quads.
      */
-    public default void addBakedQuadsToBuilder(@Nullable BlockRenderLayer layer, Builder<BakedQuad> builder, boolean isItem)
+    public default void addBakedQuadsToBuilder(BlockRenderLayer layer, Builder<BakedQuad> builder, boolean isItem)
     {
         final int limit = this.layerCount();
         if(limit == 1)
@@ -377,93 +361,74 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
     
     boolean isEmissive(int layerIndex);
     
-    int getPipelineIndex();
+    // Use materials instead
+//    int getPipelineIndex();
+//    
+//    @Override
+//    default IRenderPipeline getPipeline()
+//    {
+//        return ClientProxy.acuityPipeline(getPipelineIndex());
+//    }
     
-    @Override
-    default IRenderPipeline getPipeline()
-    {
-        return ClientProxy.acuityPipeline(getPipelineIndex());
-    }
-    
-    //TODO: retire in favor of streams
-    /**
-     * Same vertex count. Includes vertex data.
-     */
-    @Deprecated
-    default IMutablePolygon claimCopy()
-    {
-        return factory().claimCopy(this);
-    }
-    
-    //TODO: retire in favor of streams
-    /**
-     * Copies non-vertex attributes.  Will include vertex data only if vertex counts match.
-     */
-    @Deprecated
-    public default IMutablePolygon claimCopy(int vertexCount)
-    {
-        return factory().claimCopy(this, vertexCount);
-    }
-    
-    @Override
-    @SideOnly(value = Side.CLIENT)
-    public default void produceVertices(@SuppressWarnings("null") IPipelinedVertexConsumer vertexLighter)
-    {
-        float[][][] uvData = AcuityHelper.getUVData(this);
-        int lastGlow = 0;
-        final int layerCount = layerCount();
-        
-        vertexLighter.setEmissive(0, isEmissive(0));
-        if(layerCount > 1)
-        {
-            vertexLighter.setEmissive(1, isEmissive(1));
-            if(layerCount == 3)
-                vertexLighter.setEmissive(2, isEmissive(2));
-        }
-        
-        for(int i = 0; i < 4; i++)
-        {
-            // passing layer 0 glow as an extra data point (for lava)
-            int currentGlow = this.getVertexGlow(i);
-            if(currentGlow != lastGlow)
-            {
-                final int g = currentGlow * 17;
-                
-                vertexLighter.setBlockLightMap(g, g, g, 255);
-                lastGlow = currentGlow;
-            }
-            
-            switch(layerCount)
-            {
-            case 1:
-                vertexLighter.acceptVertex(
-                        getVertexX(i), getVertexY(i), getVertexZ(i), 
-                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
-                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1]);
-                break;
-                
-            case 2:
-                vertexLighter.acceptVertex(
-                        getVertexX(i), getVertexY(i), getVertexZ(i), 
-                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
-                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1],
-                        getVertexColor(1, i), uvData[1][i][0], uvData[1][i][1]);
-                break;
-            
-            case 3:
-                vertexLighter.acceptVertex(
-                        getVertexX(i), getVertexY(i), getVertexZ(i), 
-                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
-                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1],
-                        getVertexColor(1, i), uvData[1][i][0], uvData[1][i][1],
-                        getVertexColor(2, i), uvData[2][i][0], uvData[2][i][1]);
-                break;
-            
-            default:
-                throw new ArrayIndexOutOfBoundsException();
-            }
-        }
-    }
+    // TODO: convert to Fabric Renderer API
+//    @Override
+//    public default void produceVertices(@SuppressWarnings("null") IPipelinedVertexConsumer vertexLighter)
+//    {
+//        float[][][] uvData = AcuityHelper.getUVData(this);
+//        int lastGlow = 0;
+//        final int layerCount = layerCount();
+//        
+//        vertexLighter.setEmissive(0, isEmissive(0));
+//        if(layerCount > 1)
+//        {
+//            vertexLighter.setEmissive(1, isEmissive(1));
+//            if(layerCount == 3)
+//                vertexLighter.setEmissive(2, isEmissive(2));
+//        }
+//        
+//        for(int i = 0; i < 4; i++)
+//        {
+//            // passing layer 0 glow as an extra data point (for lava)
+//            int currentGlow = this.getVertexGlow(i);
+//            if(currentGlow != lastGlow)
+//            {
+//                final int g = currentGlow * 17;
+//                
+//                vertexLighter.setBlockLightMap(g, g, g, 255);
+//                lastGlow = currentGlow;
+//            }
+//            
+//            switch(layerCount)
+//            {
+//            case 1:
+//                vertexLighter.acceptVertex(
+//                        getVertexX(i), getVertexY(i), getVertexZ(i), 
+//                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
+//                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1]);
+//                break;
+//                
+//            case 2:
+//                vertexLighter.acceptVertex(
+//                        getVertexX(i), getVertexY(i), getVertexZ(i), 
+//                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
+//                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1],
+//                        getVertexColor(1, i), uvData[1][i][0], uvData[1][i][1]);
+//                break;
+//            
+//            case 3:
+//                vertexLighter.acceptVertex(
+//                        getVertexX(i), getVertexY(i), getVertexZ(i), 
+//                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
+//                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1],
+//                        getVertexColor(1, i), uvData[1][i][0], uvData[1][i][1],
+//                        getVertexColor(2, i), uvData[2][i][0], uvData[2][i][1]);
+//                break;
+//            
+//            default:
+//                throw new ArrayIndexOutOfBoundsException();
+//            }
+//        }
+//    }
     
     class AcuityHelper
     {
@@ -490,7 +455,7 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
             
             for(int l = 0; l < layerCount; l++)
             {
-                final TextureAtlasSprite textureSprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(poly.getTextureName(l));
+                final Sprite textureSprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(poly.getTextureName(l));
                 
                 final float minU = poly.getMinU(l);
                 final float minV = poly.getMinV(l);
@@ -534,35 +499,6 @@ public interface IPolygon extends IVertexCollection, IPipelinedQuad, IStreamPoly
             }
             return uvData;
         }
-    }
-    
-    //TODO: retire in favor of streams
-    /**
-     * Allocation manager for this instance. May or may not be
-     * a pooled allocation manager. If it is pooled, then can 
-     * be used to allocate instances in the same pool
-     * and (if supported) discover and inspect allocated objects
-     * in the same pool.  Not generally intended to be used directly.
-     */
-    @Deprecated
-    default IPrimitiveFactory factory()
-    {
-        return PolyFactory.COMMON_POOL;
-    }
-    
-    //TODO: retire in favor of streams
-    /**
-     * Signals to allocation manager this instance is being referenced
-     * by something other than the original requester and will prevent
-     * the object from being recycled if the original allocator releases it.<p>
-     * 
-     * Note that retain count is always 1 when an object is first created,
-     * so if the object is held by the originator there is no need to call this.
-     */
-    @Deprecated
-    default void retain()
-    {
-        
     }
     
     /**

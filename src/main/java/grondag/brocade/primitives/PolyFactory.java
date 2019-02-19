@@ -1,23 +1,23 @@
 package grondag.brocade.primitives;
 
-import grondag.exotic_matter.model.primitives.polygon.AbstractPolygon;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPrimitiveFactory;
-import grondag.exotic_matter.model.primitives.polygon.MutablePolygon3x3;
-import grondag.exotic_matter.model.primitives.polygon.MutablePolygon3x4;
-import grondag.exotic_matter.model.primitives.polygon.MutablePolygonNxN;
-import grondag.exotic_matter.model.primitives.polygon.Polygon1x3;
-import grondag.exotic_matter.model.primitives.polygon.Polygon1x4;
-import grondag.exotic_matter.model.primitives.polygon.Polygon1xN;
-import grondag.exotic_matter.model.primitives.polygon.Polygon2x3;
-import grondag.exotic_matter.model.primitives.polygon.Polygon2x4;
-import grondag.exotic_matter.model.primitives.polygon.Polygon2xN;
-import grondag.exotic_matter.model.primitives.polygon.Polygon3x3;
-import grondag.exotic_matter.model.primitives.polygon.Polygon3x4;
-import grondag.exotic_matter.model.primitives.polygon.Polygon3xN;
-import grondag.exotic_matter.model.primitives.vertex.IMutableVertex;
-import grondag.exotic_matter.model.primitives.vertex.UnpackedVertex3;
+import grondag.brocade.primitives.polygon.AbstractPolygon;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.polygon.IPrimitiveFactory;
+import grondag.brocade.primitives.polygon.MutablePolygon3x3;
+import grondag.brocade.primitives.polygon.MutablePolygon3x4;
+import grondag.brocade.primitives.polygon.MutablePolygonNxN;
+import grondag.brocade.primitives.polygon.Polygon1x3;
+import grondag.brocade.primitives.polygon.Polygon1x4;
+import grondag.brocade.primitives.polygon.Polygon1xN;
+import grondag.brocade.primitives.polygon.Polygon2x3;
+import grondag.brocade.primitives.polygon.Polygon2x4;
+import grondag.brocade.primitives.polygon.Polygon2xN;
+import grondag.brocade.primitives.polygon.Polygon3x3;
+import grondag.brocade.primitives.polygon.Polygon3x4;
+import grondag.brocade.primitives.polygon.Polygon3xN;
+import grondag.brocade.primitives.vertex.IMutableVertex;
+import grondag.brocade.primitives.vertex.UnpackedVertex3;
 import net.minecraft.util.math.MathHelper;
 
 public class PolyFactory
@@ -41,7 +41,7 @@ public class PolyFactory
                     ? new MutablePolygon3x4().prepare(layerCount)
                     : vertexCount == 3
                         ? new MutablePolygon3x3().prepare(layerCount)
-                        : new MutablePolygonNxN(MathHelper.log2DeBruijn(vertexCount)).prepare(layerCount, vertexCount);
+                        : new MutablePolygonNxN(MathHelper.log2DeBrujin(vertexCount)).prepare(layerCount, vertexCount);
         }
         
         @Override

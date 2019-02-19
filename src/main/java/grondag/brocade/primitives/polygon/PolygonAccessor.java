@@ -1,8 +1,6 @@
 package grondag.brocade.primitives.polygon;
 
-import javax.annotation.Nullable;
-
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
+import grondag.brocade.primitives.vertex.Vec3f;
 
 public class PolygonAccessor
 {
@@ -53,7 +51,7 @@ public class PolygonAccessor
     @FunctionalInterface
     public static interface NullableObjectGetter<T, V>
     {
-        @Nullable V get(T input);
+        V get(T input);
     }
     
     @FunctionalInterface
@@ -65,7 +63,7 @@ public class PolygonAccessor
     @FunctionalInterface
     public static interface NullableObjectSetter<T, V>
     {
-        void set(T input, @Nullable V value);
+        void set(T input, V value);
     }
     
     public static class Layer<T>

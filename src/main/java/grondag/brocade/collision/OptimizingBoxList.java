@@ -1,34 +1,32 @@
 package grondag.brocade.collision;
 
-import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.ConfigXM;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.varia.Useful;
-import net.minecraft.util.math.AxisAlignedBB;
+import grondag.fermion.config.FermionConfig;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.fermion.varia.Useful;
+import net.minecraft.util.math.BoundingBox;
 
 public class OptimizingBoxList implements Runnable
 {
     // singleton is fine because called from a single thread
     private static final OptimalBoxGenerator boxGen = new OptimalBoxGenerator();
     
-    private ImmutableList<AxisAlignedBB> wrapped;
-    private @Nullable ISuperModelState modelState;
+    private ImmutableList<BoundingBox> wrapped;
+    private ISuperModelState modelState;
     
-    OptimizingBoxList(ImmutableList<AxisAlignedBB> initialList, ISuperModelState modelState)
+    OptimizingBoxList(ImmutableList<BoundingBox> initialList, ISuperModelState modelState)
     {
         this.wrapped = initialList;
         this.modelState = modelState;
     }
     
-    protected ImmutableList<AxisAlignedBB> getList()
+    protected ImmutableList<BoundingBox> getList()
     {
         return wrapped;
     }
 
-    @SuppressWarnings("null")
     @Override
     public void run()
     {
@@ -44,7 +42,7 @@ public class OptimizingBoxList implements Runnable
             assert oldSize == 0 : "Fast collision box non-empty but detailed is empty";
         else if(trueVolume != -1)
         {
-            if(oldSize > ConfigXM.BLOCKS.collisionBoxBudget || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2)
+            if(oldSize > FermionConfig.BLOCKS.collisionBoxBudget || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2)
                 wrapped = generator.build();
         }
 //        if((CollisionBoxDispatcher.QUEUE.size() & 0xFF) == 0)

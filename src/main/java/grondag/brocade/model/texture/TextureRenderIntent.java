@@ -1,6 +1,6 @@
 package grondag.brocade.model.texture;
 
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.block.BlockRenderLayer;
 
 /**
  * Describes if/how this texture can be rendered in alpha or cutout modes.
@@ -62,7 +62,7 @@ public enum TextureRenderIntent
         case CUTOUT:
             return false;
             
-        case CUTOUT_MIPPED:
+        case MIPPED_CUTOUT:
             return this == BASE_ONLY || this == BASE_OR_OVERLAY_CUTOUT_OKAY;
             
         case SOLID:

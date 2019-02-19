@@ -1,19 +1,16 @@
 package grondag.brocade.mesh;
 
-import java.util.Collection;
 import java.util.function.Consumer;
 
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.model.collision.ICollisionHandler;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.state.StateFormat;
-import grondag.exotic_matter.model.varia.SideShape;
-import grondag.exotic_matter.varia.structures.SimpleUnorderedArrayList;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.collision.ICollisionHandler;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.StateFormat;
+import grondag.brocade.model.varia.SideShape;
+import grondag.brocade.primitives.polygon.IPolygon;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 
@@ -110,9 +107,9 @@ public abstract class ShapeMeshGenerator
      */
     public boolean isAxisOrthogonalToPlacementFace() { return false; }
     
-    public abstract boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block, ISuperModelState modelState);
+    public abstract boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block, ISuperModelState modelState);
 
-    public abstract SideShape sideShape(ISuperModelState modelState, EnumFacing side);
+    public abstract SideShape sideShape(ISuperModelState modelState, Direction side);
     
     public int getStateFlags(ISuperModelState modelState)
     {

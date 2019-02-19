@@ -8,14 +8,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.cache.ObjectSimpleCacheLoader;
-import grondag.exotic_matter.cache.ObjectSimpleLoadingCache;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import net.minecraft.util.math.AxisAlignedBB;
+import grondag.fermion.cache.ObjectSimpleCacheLoader;
+import grondag.fermion.cache.ObjectSimpleLoadingCache;
+import net.minecraft.util.math.BoundingBox;
+import grondag.brocade.model.state.ISuperModelState;
 
 public class CollisionBoxDispatcher
 {
@@ -27,7 +26,7 @@ public class CollisionBoxDispatcher
             {
                 private AtomicInteger count = new AtomicInteger(1);
                 @Override
-                public Thread newThread(@Nullable Runnable r)
+                public Thread newThread(Runnable r)
                 {
                     Thread thread = new Thread(r, "Exotic Matter Collision Box Optimizer - " + count.getAndIncrement());
                     thread.setDaemon(true);
@@ -55,7 +54,7 @@ public class CollisionBoxDispatcher
         }
     };
     
-    public static ImmutableList<AxisAlignedBB> getCollisionBoxes(ISuperModelState modelState)
+    public static ImmutableList<BoundingBox> getCollisionBoxes(ISuperModelState modelState)
     {
         return modelBounds.get(modelState.geometricState()).getList();
     }

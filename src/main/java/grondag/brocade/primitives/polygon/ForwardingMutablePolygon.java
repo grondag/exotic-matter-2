@@ -1,13 +1,11 @@
 package grondag.brocade.primitives.polygon;
 
-import javax.annotation.Nullable;
-
-import grondag.exotic_matter.model.painting.Surface;
-import grondag.exotic_matter.model.primitives.FaceVertex;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.painting.Surface;
+import grondag.brocade.primitives.FaceVertex;
+import grondag.brocade.primitives.vertex.Vec3f;
+import grondag.fermion.world.Rotation;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.math.Direction;
 
 public class ForwardingMutablePolygon extends ForwardingPolygon implements IMutablePolygon
 {
@@ -145,7 +143,7 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
     }
 
     @Override
-    public IMutablePolygon setVertexNormal(int vertexIndex, @Nullable Vec3f normal)
+    public IMutablePolygon setVertexNormal(int vertexIndex, Vec3f normal)
     {
         ((IMutablePolygon)wrapped).setVertexNormal(vertexIndex, normal);
         return this;
@@ -158,12 +156,13 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
         return this;
     }
 
-    @Override
-    public IMutablePolygon setPipelineIndex(int pipelineIndex)
-    {
-        ((IMutablePolygon)wrapped).setPipelineIndex(pipelineIndex);
-        return this;
-    }
+    //TODO: switch to materials
+//    @Override
+//    public IMutablePolygon setPipelineIndex(int pipelineIndex)
+//    {
+//        ((IMutablePolygon)wrapped).setPipelineIndex(pipelineIndex);
+//        return this;
+//    }
 
     @Override
     public IMutablePolygon clearFaceNormal()
@@ -173,49 +172,49 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
     }
 
     @Override
-    public IMutablePolygon setupFaceQuad(EnumFacing side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, FaceVertex tv3, @Nullable EnumFacing topFace)
+    public IMutablePolygon setupFaceQuad(Direction side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, FaceVertex tv3, Direction topFace)
     {
         ((IMutablePolygon)wrapped).setupFaceQuad(side, tv0, tv1, tv2, tv3, topFace);
         return this;
     }
 
     @Override
-    public IMutablePolygon setupFaceQuad(FaceVertex vertexIn0, FaceVertex vertexIn1, FaceVertex vertexIn2, FaceVertex vertexIn3, @Nullable EnumFacing topFace)
+    public IMutablePolygon setupFaceQuad(FaceVertex vertexIn0, FaceVertex vertexIn1, FaceVertex vertexIn2, FaceVertex vertexIn3, Direction topFace)
     {
         ((IMutablePolygon)wrapped).setupFaceQuad(vertexIn0, vertexIn1, vertexIn2, vertexIn3, topFace);
         return this;
     }
 
     @Override
-    public IMutablePolygon setupFaceQuad(float x0, float y0, float x1, float y1, float depth, @Nullable EnumFacing topFace)
+    public IMutablePolygon setupFaceQuad(float x0, float y0, float x1, float y1, float depth, Direction topFace)
     {
         ((IMutablePolygon)wrapped).setupFaceQuad(x0, y0, x1, y1, depth, topFace);
         return this;
     }
 
     @Override
-    public IMutablePolygon setupFaceQuad(EnumFacing face, float x0, float y0, float x1, float y1, float depth, @Nullable EnumFacing topFace)
+    public IMutablePolygon setupFaceQuad(Direction face, float x0, float y0, float x1, float y1, float depth, Direction topFace)
     {
         ((IMutablePolygon)wrapped).setupFaceQuad(face, x0, y0, x1, y1, depth, topFace);
         return this;
     }
 
     @Override
-    public IMutablePolygon setupFaceQuad(EnumFacing side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, @Nullable EnumFacing topFace)
+    public IMutablePolygon setupFaceQuad(Direction side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, Direction topFace)
     {
         ((IMutablePolygon)wrapped).setupFaceQuad(side, tv0, tv1, tv2, topFace);
         return this;
     }
 
     @Override
-    public IMutablePolygon setupFaceQuad(FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, @Nullable EnumFacing topFace)
+    public IMutablePolygon setupFaceQuad(FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, Direction topFace)
     {
         ((IMutablePolygon)wrapped).setupFaceQuad(tv0, tv1, tv2, topFace);
         return this;
     }
 
     @Override
-    public IMutablePolygon setNominalFace(EnumFacing face)
+    public IMutablePolygon setNominalFace(Direction face)
     {
         ((IMutablePolygon)wrapped).setNominalFace(face);
         return this;

@@ -2,16 +2,11 @@ package grondag.brocade.model.texture;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+import grondag.brocade.model.state.ModelStateData;
+import grondag.brocade.model.texture.TextureRotationType.TextureRotationSetting;
+import grondag.fermion.IGrondagMod;
+import net.minecraft.client.resource.language.I18n;
 
-import grondag.exotic_matter.IGrondagMod;
-import grondag.exotic_matter.model.state.ModelStateData;
-import grondag.exotic_matter.model.texture.TextureRotationType.TextureRotationSetting;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-@SuppressWarnings("deprecation")
 class TexturePallette implements ITexturePalette
 {
     public final IGrondagMod mod;
@@ -104,7 +99,6 @@ class TexturePallette implements ITexturePalette
     }
     
     @Override
-    @SideOnly(Side.CLIENT)
     public void prestitch(Consumer<String> stitcher)
     {
         this.textureLayout.prestitch(this, stitcher);
@@ -119,12 +113,9 @@ class TexturePallette implements ITexturePalette
     /**
      * See {@link #getSampleSprite()}
      */
-    @SideOnly(Side.CLIENT)
-    @Nullable
     private EnhancedSprite sampleSprite;
     
     @Override
-    @SideOnly(Side.CLIENT)
     public EnhancedSprite getSampleSprite()
     {
         EnhancedSprite result = sampleSprite;
@@ -156,14 +147,14 @@ class TexturePallette implements ITexturePalette
     {
         // trim off the .zoom suffixes to get the localization string
         final String token = "texture." + this.systemName.replaceAll(".zoom", "");
-        final String texName = I18n.translateToLocal(token.toLowerCase());
+        final String texName = I18n.translate(token.toLowerCase());
                 
         switch(this.zoomLevel)
         {
             case 1:
-                return I18n.translateToLocalFormatted("texture.zoom2x_format", texName);
+                return I18n.translate("texture.zoom2x_format", texName);
             case 2:
-                return I18n.translateToLocalFormatted("texture.zoom4x_format", texName);
+                return I18n.translate("texture.zoom4x_format", texName);
             default:
                 return texName;
         }

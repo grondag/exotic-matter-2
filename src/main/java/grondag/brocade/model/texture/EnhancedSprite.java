@@ -1,13 +1,13 @@
 package grondag.brocade.model.texture;
 
-import grondag.exotic_matter.model.render.QuadBakery;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import grondag.brocade.model.render.QuadBakery;
+import net.minecraft.client.texture.Sprite;
 
 /**
  * Adds a few extra for convenience / performance.
  *
  */
-public class EnhancedSprite extends TextureAtlasSprite
+public class EnhancedSprite extends Sprite
 {
     /**
      * Same as minU but with addition of safety margin to prevent bleeding.

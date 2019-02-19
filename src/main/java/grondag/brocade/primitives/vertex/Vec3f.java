@@ -1,8 +1,6 @@
 package grondag.brocade.primitives.vertex;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
 public class Vec3f implements IVec3f
@@ -16,15 +14,15 @@ public class Vec3f implements IVec3f
 
     static
     {
-        FACES[EnumFacing.UP.ordinal()] = create(EnumFacing.UP.getDirectionVec());
-        FACES[EnumFacing.DOWN.ordinal()] = create(EnumFacing.DOWN.getDirectionVec());
-        FACES[EnumFacing.EAST.ordinal()] = create(EnumFacing.EAST.getDirectionVec());
-        FACES[EnumFacing.WEST.ordinal()] = create(EnumFacing.WEST.getDirectionVec());
-        FACES[EnumFacing.NORTH.ordinal()] = create(EnumFacing.NORTH.getDirectionVec());
-        FACES[EnumFacing.SOUTH.ordinal()] = create(EnumFacing.SOUTH.getDirectionVec());
+        FACES[Direction.UP.ordinal()] = create(Direction.UP.getVector());
+        FACES[Direction.DOWN.ordinal()] = create(Direction.DOWN.getVector());
+        FACES[Direction.EAST.ordinal()] = create(Direction.EAST.getVector());
+        FACES[Direction.WEST.ordinal()] = create(Direction.WEST.getVector());
+        FACES[Direction.NORTH.ordinal()] = create(Direction.NORTH.getVector());
+        FACES[Direction.SOUTH.ordinal()] = create(Direction.SOUTH.getVector());
     }
     
-    public static Vec3f forFace(EnumFacing face)
+    public static Vec3f forFace(Direction face)
     {
         return FACES[face.ordinal()];
     }
@@ -198,7 +196,7 @@ public class Vec3f implements IVec3f
     }
 
     @Override
-    public boolean equals(@Nullable Object obj)
+    public boolean equals(Object obj)
     {
         if(obj == this)
             return true;

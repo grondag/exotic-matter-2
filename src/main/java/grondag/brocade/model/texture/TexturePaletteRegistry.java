@@ -1,8 +1,8 @@
 package grondag.brocade.model.texture;
 
-import static grondag.exotic_matter.model.texture.TextureRotationType.FIXED;
-import static grondag.exotic_matter.model.texture.TextureRotationType.RANDOM;
-import static grondag.exotic_matter.world.Rotation.ROTATE_NONE;
+import static grondag.brocade.model.texture.TextureRotationType.FIXED;
+import static grondag.brocade.model.texture.TextureRotationType.RANDOM;
+import static grondag.fermion.world.Rotation.ROTATE_NONE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,12 +12,12 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.ConfigXM;
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.IGrondagMod;
-import grondag.exotic_matter.init.SubstanceConfig;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.varia.structures.NullHandler;
+import grondag.brocade.Brocade;
+import grondag.brocade.init.SubstanceConfig;
+import grondag.brocade.painting.PaintLayer;
+import grondag.fermion.IGrondagMod;
+import grondag.fermion.config.FermionConfig;
+import grondag.fermion.structures.NullHandler;
 
 public class TexturePaletteRegistry implements Iterable<ITexturePalette>
 {
@@ -37,7 +37,7 @@ public class TexturePaletteRegistry implements Iterable<ITexturePalette>
      * For DETAIL and OVERLAY layers, indicates those layers are disabled. 
      */
      public static final ITexturePalette NONE = addTexturePallette("none", "noise_moderate", 
-            new TexturePaletteSpec(ExoticMatter.INSTANCE).withVersionCount(4).withScale(TextureScale.SINGLE).withLayout(TextureLayout.SPLIT_X_8)
+            new TexturePaletteSpec(Brocade.INSTANCE).withVersionCount(4).withScale(TextureScale.SINGLE).withLayout(TextureLayout.SPLIT_X_8)
             .withRotation(RANDOM.with(ROTATE_NONE)).withRenderIntent(TextureRenderIntent.BASE_ONLY).withGroups(TextureGroup.ALWAYS_HIDDEN));
     
     
@@ -98,7 +98,7 @@ public class TexturePaletteRegistry implements Iterable<ITexturePalette>
         case CUT:
         case LAMP:
             searchFlags = TextureGroup.STATIC_TILES.bitFlag | TextureGroup.DYNAMIC_TILES.bitFlag;
-            if(ConfigXM.BLOCKS.showHiddenTextures) searchFlags |= TextureGroup.HIDDEN_TILES.bitFlag;
+            if(FermionConfig.BLOCKS.showHiddenTextures) searchFlags |= TextureGroup.HIDDEN_TILES.bitFlag;
             break;
     
         case MIDDLE:
@@ -106,7 +106,7 @@ public class TexturePaletteRegistry implements Iterable<ITexturePalette>
             searchFlags = TextureGroup.STATIC_DETAILS.bitFlag | TextureGroup.DYNAMIC_DETAILS.bitFlag
                          | TextureGroup.STATIC_BORDERS.bitFlag | TextureGroup.DYNAMIC_BORDERS.bitFlag;
             
-            if(ConfigXM.BLOCKS.showHiddenTextures) 
+            if(FermionConfig.BLOCKS.showHiddenTextures) 
                     searchFlags |= (TextureGroup.HIDDEN_DETAILS.bitFlag | TextureGroup.HIDDEN_BORDERS.bitFlag);
             
             break;

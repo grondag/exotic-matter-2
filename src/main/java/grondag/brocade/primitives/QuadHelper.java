@@ -2,18 +2,17 @@ package grondag.brocade.primitives;
 
 import java.util.List;
 
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector4f;
-
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
-import grondag.exotic_matter.model.primitives.vertex.IVertexCollection;
-import grondag.exotic_matter.model.primitives.vertex.Vec3Function;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.primitives.vertex.IVec3f;
+import grondag.brocade.primitives.vertex.IVertexCollection;
+import grondag.brocade.primitives.vertex.Vec3Function;
+import grondag.brocade.primitives.vertex.Vec3f;
+import net.fabricmc.fabric.api.client.model.fabric.ModelHelper;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.util.math.Quaternion;
+import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
 public class QuadHelper
@@ -53,16 +52,16 @@ public class QuadHelper
         return glOrder ? red  | green << 8 | blue << 16 | alpha << 24 : red << 16 | green << 8 | blue | alpha << 24;
     }
     
-    public static EnumFacing computeFaceForNormal(final float x, final float y, final float z)
+    public static Direction computeFaceForNormal(final float x, final float y, final float z)
     {
-        EnumFacing result = null;
+        Direction result = null;
         
         double minDiff = 0.0F;
     
         for(int i = 0; i < 6; i++)
         {
-            final EnumFacing f = EnumFacing.VALUES[i];
-            Vec3i faceNormal = f.getDirectionVec();
+            final Direction f = ModelHelper.faceFromIndex(i);
+            Vec3i faceNormal = f.getVector();
             float diff = Vec3Function.dotProduct(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ(), x, y, z);
     
             if (diff >= 0.0 && diff > minDiff)
@@ -74,7 +73,7 @@ public class QuadHelper
     
         if (result == null)
         {
-            return EnumFacing.UP;
+            return Direction.UP;
         }
         else
         {
@@ -82,54 +81,54 @@ public class QuadHelper
         }
     }
 
-    public static EnumFacing computeFaceForNormal(Vec3f normal)
+    public static Direction computeFaceForNormal(Vec3f normal)
     {
         return computeFaceForNormal(normal.x(), normal.y(), normal.z());
     }
     
-    public static EnumFacing computeFaceForNormal(Vector4f normal)
+    public static Direction computeFaceForNormal(Vector4f normal)
     {
-        return computeFaceForNormal(normal.x, normal.y, normal.z);
+        return computeFaceForNormal(normal.x(), normal.y(), normal.z());
     }
 
     /** returns the face that is normally the "top" of the given face */
-    public static EnumFacing defaultTopOf(EnumFacing faceIn)
+    public static Direction defaultTopOf(Direction faceIn)
     {
         switch(faceIn)
         {
         case UP:
-            return EnumFacing.NORTH;
+            return Direction.NORTH;
         case DOWN:
-            return EnumFacing.SOUTH;
+            return Direction.SOUTH;
         default:
-            return EnumFacing.UP;
+            return Direction.UP;
         }
     }
 
-    public static EnumFacing bottomOf(EnumFacing faceIn, EnumFacing topFace)
+    public static Direction bottomOf(Direction faceIn, Direction topFace)
        {
            return topFace.getOpposite();
        }
 
-    public static EnumFacing getAxisTop(EnumFacing.Axis axis)
+    public static Direction getAxisTop(Direction.Axis axis)
        {
            switch(axis)
            {
            case Y: 
-               return EnumFacing.UP;
+               return Direction.UP;
            case X:
-               return EnumFacing.EAST;
+               return Direction.EAST;
            default:
-               return EnumFacing.NORTH;
+               return Direction.NORTH;
            }
        }
 
-    public static EnumFacing leftOf(EnumFacing faceIn, EnumFacing topFace)
+    public static Direction leftOf(Direction faceIn, Direction topFace)
        {
            return QuadHelper.rightOf(faceIn, topFace).getOpposite();
        }
 
-    public static EnumFacing rightOf(EnumFacing faceIn, EnumFacing topFace)
+    public static Direction rightOf(Direction faceIn, Direction topFace)
        {
            switch (faceIn)
            {
@@ -137,80 +136,80 @@ public class QuadHelper
                    switch (topFace)
                    {
                        case UP:
-                           return EnumFacing.WEST;
+                           return Direction.WEST;
                        case EAST:
-                           return EnumFacing.UP;
+                           return Direction.UP;
                        case DOWN:
-                           return EnumFacing.EAST;
+                           return Direction.EAST;
                        case WEST:
                        default:
-                           return EnumFacing.DOWN;
+                           return Direction.DOWN;
                    }
                case SOUTH:
                    switch (topFace)
                    {
                        case UP:
-                           return EnumFacing.EAST;
+                           return Direction.EAST;
                        case EAST:
-                           return EnumFacing.DOWN;
+                           return Direction.DOWN;
                        case DOWN:
-                           return EnumFacing.WEST;
+                           return Direction.WEST;
                        case WEST:
                        default:
-                           return EnumFacing.UP;
+                           return Direction.UP;
                    }
                case EAST:
                    switch (topFace)
                    {
                        case UP:
-                           return EnumFacing.NORTH;
+                           return Direction.NORTH;
                        case NORTH:
-                           return EnumFacing.DOWN;
+                           return Direction.DOWN;
                        case DOWN:
-                           return EnumFacing.SOUTH;
+                           return Direction.SOUTH;
                        case SOUTH:
                        default:
-                           return EnumFacing.UP;
+                           return Direction.UP;
                    }
                case WEST:
                    switch (topFace)
                    {
                        case UP:
-                           return EnumFacing.SOUTH;
+                           return Direction.SOUTH;
                        case NORTH:
-                           return EnumFacing.UP;
+                           return Direction.UP;
                        case DOWN:
-                           return EnumFacing.NORTH;
+                           return Direction.NORTH;
                        case SOUTH:
                        default:
-                           return EnumFacing.DOWN;
+                           return Direction.DOWN;
                    }
                case UP:
                    switch (topFace)
                    {
                        case NORTH:
-                           return EnumFacing.EAST;
+                           return Direction.EAST;
                        case EAST:
-                           return EnumFacing.SOUTH;
+                           return Direction.SOUTH;
                        case SOUTH:
-                           return EnumFacing.WEST;
+                           return Direction.WEST;
                        case WEST:
                        default:
-                           return EnumFacing.NORTH;
+                           return Direction.NORTH;
                    }
                case DOWN:
                default:
                    switch (topFace)
                    {
                        case NORTH:
-                           return EnumFacing.WEST;
+                           return Direction.WEST;
                        case EAST:
-                           return EnumFacing.NORTH;
+                           return Direction.NORTH;
                        case SOUTH:
-                           return EnumFacing.EAST;
+                           return Direction.EAST;
                        case WEST:
                        default:
-                           return EnumFacing.SOUTH;
+                           return Direction.SOUTH;
                    }
            }
        }
@@ -218,9 +217,9 @@ public class QuadHelper
     /**
         * Builds the appropriate quaternion to rotate around the given orthogonalAxis.
         */
-       public static Quat4f rotationForAxis(EnumFacing.Axis axis, double degrees)
+       public static Quaternion rotationForAxis(Direction.Axis axis, double degrees)
        {
-       	Quat4f retVal = new Quat4f();
+           Quaternion retVal = new Quaternion();
        	switch (axis) {
        	case X:
        		retVal.set(new AxisAngle4d(1, 0, 0, Math.toRadians(degrees)));

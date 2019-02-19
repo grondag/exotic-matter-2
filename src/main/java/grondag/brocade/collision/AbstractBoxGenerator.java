@@ -2,8 +2,8 @@ package grondag.brocade.collision;
 
 import java.util.function.Consumer;
 
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.vertex.IVec3f;
 
 public abstract class AbstractBoxGenerator implements Consumer<IPolygon>
 {
@@ -32,7 +32,6 @@ public abstract class AbstractBoxGenerator implements Consumer<IPolygon>
     static final float CLOW4 = CLOW3 * 0.5f;
     static final float CHIGH4 = CLOW4 + D4;
     
-    @SuppressWarnings("null")
     @Override
     public final void accept(IPolygon poly)
     {
