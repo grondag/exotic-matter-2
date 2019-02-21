@@ -4,14 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import grondag.exotic_matter.ExoticMatter;
 
-class VoxelVolume8Test
-{
+class VoxelVolume8Test {
 
     @Test
-    void test()
-    {
+    void test() {
         long[] data = new long[16];
-        
+
         // 00000000
         // 00011100
         // 00100010
@@ -21,7 +19,7 @@ class VoxelVolume8Test
         // 01001000
         // 01111100
         final long section = 0b0000000000011100001000100100000110000010100011000100100001111100L;
-        
+
         // 00000000
         // 00011100
         // 00111110
@@ -31,7 +29,7 @@ class VoxelVolume8Test
         // 01111000
         // 01111100
         final long cap = 0b0000000000011100001111100111111111111110111111000111100001111100L;
-        
+
         data[0] = 0;
         data[1] = cap;
         data[2] = section;
@@ -40,7 +38,7 @@ class VoxelVolume8Test
         data[5] = section;
         data[6] = section;
         data[7] = cap;
-        
+
         VoxelVolume8.fillVolume(data);
         outputCarvedLayers(data);
         assert data[8] == 0;
@@ -51,17 +49,15 @@ class VoxelVolume8Test
         assert data[13] == cap;
         assert data[14] == cap;
         assert data[15] == cap;
-        
+
     }
-    
-    void outputCarvedLayers(long[] data)
-    {
-        for(int i = 8; i < 16; i++)
+
+    void outputCarvedLayers(long[] data) {
+        for (int i = 8; i < 16; i++)
             outputLayer(data, i);
     }
-    
-    void outputLayer(long[] data, int index)
-    {
+
+    void outputLayer(long[] data, int index) {
         ExoticMatter.INSTANCE.info("LAYER %d", index);
         long bits = data[index];
         ExoticMatter.INSTANCE.info(Long.toBinaryString(bits & 0xFFL));

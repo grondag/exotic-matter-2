@@ -21,35 +21,32 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 
 @SuppressWarnings("deprecation")
-public abstract class CommonProxy 
-{
- 
+public abstract class CommonProxy {
+
     /**
-     * Will error if accessed on physical server.
-     * Should only be used on logical client.
+     * Will error if accessed on physical server. Should only be used on logical
+     * client.
      */
     abstract public IWorldStateCache clientWorldStateCache();
-    
-    public void preInit(FMLPreInitializationEvent event) 
-    {
+
+    public void preInit(FMLPreInitializationEvent event) {
         ExoticMatter.setLog(event.getModLog());
         ConfigXM.recalcDerived();
         ModTileEntities.preInit(event);
-        
+
         ForgeChunkManager.setForcedChunkLoadingCallback(ExoticMatter.INSTANCE, Simulator.RAW_INSTANCE_DO_NOT_USE);
 
-        CapabilityManager.INSTANCE.register(ModifierKeys.class,new Capability.IStorage<ModifierKeys>()
-        {
+        CapabilityManager.INSTANCE.register(ModifierKeys.class, new Capability.IStorage<ModifierKeys>() {
 
             @Override
-            public @Nullable NBTBase writeNBT(@Nullable Capability<ModifierKeys> capability, @Nullable ModifierKeys instance, @Nullable EnumFacing side) 
-            {
+            public @Nullable NBTBase writeNBT(@Nullable Capability<ModifierKeys> capability,
+                    @Nullable ModifierKeys instance, @Nullable EnumFacing side) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
-            public void readNBT(@Nullable Capability<ModifierKeys> capability, @Nullable ModifierKeys instance, @Nullable EnumFacing side, @Nullable NBTBase nbt)
-            {
+            public void readNBT(@Nullable Capability<ModifierKeys> capability, @Nullable ModifierKeys instance,
+                    @Nullable EnumFacing side, @Nullable NBTBase nbt) {
                 throw new UnsupportedOperationException();
             }
 
@@ -59,35 +56,29 @@ public abstract class CommonProxy
 
     }
 
-    public void init(FMLInitializationEvent event) 
-    {
+    public void init(FMLInitializationEvent event) {
         Base32Namer.loadBadNames(I18n.translateToLocal("misc.offensive"));
     }
 
-    public void postInit(FMLPostInitializationEvent event) 
-    {
+    public void postInit(FMLPostInitializationEvent event) {
     }
 
-    public void serverStarting(FMLServerStartingEvent event)
-    {
+    public void serverStarting(FMLServerStartingEvent event) {
         Simulator.loadSimulatorIfNotLoaded();
     }
 
-    public void serverStopping(FMLServerStoppingEvent event)
-    {
+    public void serverStopping(FMLServerStoppingEvent event) {
         Simulator.instance().stop();
     }
 
-    public void serverAboutToStart(FMLServerAboutToStartEvent event)
-    {
+    public void serverAboutToStart(FMLServerAboutToStartEvent event) {
 
     }
 
     /**
      * Always false on server side.
      */
-    public boolean isAcuityEnabled()
-    {
+    public boolean isAcuityEnabled() {
         return false;
     }
 }

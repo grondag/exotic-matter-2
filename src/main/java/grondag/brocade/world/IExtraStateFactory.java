@@ -1,4 +1,4 @@
-package grondag.brocade.world.borked;
+package grondag.brocade.world;
 
 import javax.annotation.Nullable;
 
@@ -7,16 +7,13 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-public interface IExtraStateFactory
-{
-    public static final IExtraStateFactory NONE = new IExtraStateFactory() 
-    {
+public interface IExtraStateFactory {
+    public static final IExtraStateFactory NONE = new IExtraStateFactory() {
         @Override
-        public @Nullable ISuperModelState get(IBlockAccess worldIn, BlockPos pos, IBlockState state)
-        {
+        public @Nullable ISuperModelState get(IBlockAccess worldIn, BlockPos pos, IBlockState state) {
             return null;
         }
     };
-            
+
     public @Nullable ISuperModelState get(IBlockAccess worldIn, BlockPos pos, IBlockState state);
 }

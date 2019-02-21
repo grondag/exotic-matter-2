@@ -28,23 +28,20 @@ import org.apache.logging.log4j.Logger;
 import grondag.fermion.IGrondagMod;
 import net.fabricmc.api.ModInitializer;
 
-public class Brocade implements ModInitializer, IGrondagMod
-{
-	public static Brocade INSTANCE = new Brocade();
-	
-	@Override
-    public void onInitialize()
-    {
-    }
-	
-    private static Logger log;
-    
+public class Brocade implements ModInitializer, IGrondagMod {
+    public static Brocade INSTANCE = new Brocade();
+
     @Override
-    public Logger getLog()
-    {
+    public void onInitialize() {
+        System.out.println("boop");
+    }
+
+    private static Logger log;
+
+    @Override
+    public Logger getLog() {
         Logger result = log;
-        if(result == null)
-        {
+        if (result == null) {
             result = LogManager.getLogger("Brocade");
             log = result;
         }

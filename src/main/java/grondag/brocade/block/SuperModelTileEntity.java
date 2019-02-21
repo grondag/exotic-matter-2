@@ -2,63 +2,56 @@ package grondag.brocade.block;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public class SuperModelTileEntity extends SuperTileEntity
-{
-    
+public class SuperModelTileEntity extends SuperTileEntity {
+
     ////////////////////////////////////////////////////////////////////////
-    //  INSTANCE MEMBERS
+    // INSTANCE MEMBERS
     ////////////////////////////////////////////////////////////////////////
-    
+
     /** non-zero if block emits light */
     private byte lightValue = 0;
 
     private BlockSubstance substance = BlockSubstance.DEFAULT;
-    
+
     @Override
-    public void writeModNBT(NBTTagCompound compound)
-    {
+    public void writeModNBT(NBTTagCompound compound) {
         super.writeModNBT(compound);
-        if(this.substance != null) this.substance.serializeNBT(compound);
-        compound.setByte(SuperBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE, (byte)this.lightValue);
+        if (this.substance != null)
+            this.substance.serializeNBT(compound);
+        compound.setByte(SuperBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE, (byte) this.lightValue);
     }
 
     @Override
-    public void readModNBT(NBTTagCompound compound)
-    {
+    public void readModNBT(NBTTagCompound compound) {
         super.readModNBT(compound);
         this.substance = BlockSubstance.deserializeNBT(compound);
         this.lightValue = compound == null ? 0 : compound.getByte(SuperBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
     }
 
-    public byte getLightValue()
-    {
+    public byte getLightValue() {
         return this.lightValue;
     }
 
-    public void setLightValue(byte lightValue)
-    {
-        if(this.lightValue != lightValue)
-        {
+    public void setLightValue(byte lightValue) {
+        if (this.lightValue != lightValue) {
             this.lightValue = lightValue;
-            if(this.world != null && this.world.isRemote)
+            if (this.world != null && this.world.isRemote)
                 this.world.checkLight(this.pos);
             else
                 this.markDirty();
-            
+
         }
     }
-    
-    public BlockSubstance getSubstance()
-    {
+
+    public BlockSubstance getSubstance() {
         return this.substance;
     }
-    
-    public void setSubstance(BlockSubstance substance)
-    {
-        if(this.substance != substance)
-        {
+
+    public void setSubstance(BlockSubstance substance) {
+        if (this.substance != substance) {
             this.substance = substance;
-            if(!(this.world == null || this.world.isRemote)) this.markDirty();
+            if (!(this.world == null || this.world.isRemote))
+                this.markDirty();
         }
     }
 }

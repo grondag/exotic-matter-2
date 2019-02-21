@@ -9,21 +9,20 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 
-public class QuadBakery
-{
-    //Still fuzzy on how the lightmap coordinates work, but this does the job.
-    //It mimics the lightmap that would be returned from a block in full brightness.
+public class QuadBakery {
+    // Still fuzzy on how the lightmap coordinates work, but this does the job.
+    // It mimics the lightmap that would be returned from a block in full
+    // brightness.
     public static final int MAX_LIGHT = 15 * 0x20;
-    public static final float MAX_LIGHT_FLOAT = (float)MAX_LIGHT / 0xFFFF;
-    public static final float[] LIGHTMAP_FULLBRIGHT = {MAX_LIGHT_FLOAT, MAX_LIGHT_FLOAT};
-    
+    public static final float MAX_LIGHT_FLOAT = (float) MAX_LIGHT / 0xFFFF;
+    public static final float[] LIGHTMAP_FULLBRIGHT = { MAX_LIGHT_FLOAT, MAX_LIGHT_FLOAT };
+
     /**
      * Temporary Workaround for Forge #5073
      */
     private static final VertexFormat ITEM_ALTERNATE;
-    
-    static
-    {
+
+    static {
         ITEM_ALTERNATE = new VertexFormat();
         ITEM_ALTERNATE.add(VertexFormats.POSITION_ELEMENT);
         ITEM_ALTERNATE.add(VertexFormats.COLOR_ELEMENT);
@@ -31,157 +30,146 @@ public class QuadBakery
         ITEM_ALTERNATE.add(VertexFormats.PADDING_ELEMENT);
         ITEM_ALTERNATE.add(VertexFormats.UV_ELEMENT);
     }
-    
-    private static class Workspace
-    {
-        //Dimensions are vertex 0-4 and u/v 0-1.
+
+    private static class Workspace {
+        // Dimensions are vertex 0-4 and u/v 0-1.
         final float[][] uvData = new float[4][2];
         final float[][] normalData = new float[4][3];
-        
+
         /**
          * Generic holder
          */
         final float[] packData = new float[4];
     }
-    
-    private static final ThreadLocal<Workspace> workspace = new ThreadLocal<Workspace>()
-    {
+
+    private static final ThreadLocal<Workspace> workspace = new ThreadLocal<Workspace>() {
         @Override
-        protected Workspace initialValue()
-        {
+        protected Workspace initialValue() {
             return new Workspace();
         }
     };
-    
-    public static void applyTextureRotation(Rotation rotation, float[][] uvData)
-    {
-       switch(rotation)
-       {
-       case ROTATE_NONE:
-       default:
-           break;
-           
-       case ROTATE_90:
-           for(int i = 0; i < 4; i++)
-           {
-               float uOld = uvData[i][0];
-               float vOld = uvData[i][1];
-               uvData[i][0] = vOld;
-               uvData[i][1] = 1 - uOld;
-           }
-           break;
 
-       case ROTATE_180:
-           for(int i = 0; i < 4; i++)
-           {
-               float uOld = uvData[i][0];
-               float vOld = uvData[i][1];
-               uvData[i][0] = 1 - uOld;
-               uvData[i][1] = 1 - vOld;
-           }
-           break;
-       
-       case ROTATE_270:
-           for(int i = 0; i < 4; i++)
-           {
-               float uOld = uvData[i][0];
-               float vOld = uvData[i][1];
-               uvData[i][0] = 1 - vOld;
-               uvData[i][1] = uOld;
-           }
-        break;
-       
-       }
+    public static void applyTextureRotation(Rotation rotation, float[][] uvData) {
+        switch (rotation) {
+        case ROTATE_NONE:
+        default:
+            break;
+
+        case ROTATE_90:
+            for (int i = 0; i < 4; i++) {
+                float uOld = uvData[i][0];
+                float vOld = uvData[i][1];
+                uvData[i][0] = vOld;
+                uvData[i][1] = 1 - uOld;
+            }
+            break;
+
+        case ROTATE_180:
+            for (int i = 0; i < 4; i++) {
+                float uOld = uvData[i][0];
+                float vOld = uvData[i][1];
+                uvData[i][0] = 1 - uOld;
+                uvData[i][1] = 1 - vOld;
+            }
+            break;
+
+        case ROTATE_270:
+            for (int i = 0; i < 4; i++) {
+                float uOld = uvData[i][0];
+                float vOld = uvData[i][1];
+                uvData[i][0] = 1 - vOld;
+                uvData[i][1] = uOld;
+            }
+            break;
+
+        }
     }
 
     /**
-     * Like {@link #createBakedQuad(int, IPolygon, boolean)} but assumes layerIndex 0;
+     * Like {@link #createBakedQuad(int, IPolygon, boolean)} but assumes layerIndex
+     * 0;
      */
-    public static BakedQuad createBakedQuad(IPolygon raw, boolean forceItemFormat)
-    {
+    public static BakedQuad createBakedQuad(IPolygon raw, boolean forceItemFormat) {
         return createBakedQuad(0, raw, forceItemFormat);
     }
-    
+
     /**
-     * Creates a baked quad - does not mutate the given instance.
-     * Will use ITEM vertex format if forceItemFormat is true.
-     * Use this for item models.  Doing so will disable pre-baked lighting
-     * and cause the quad to include normals.<p>
+     * Creates a baked quad - does not mutate the given instance. Will use ITEM
+     * vertex format if forceItemFormat is true. Use this for item models. Doing so
+     * will disable pre-baked lighting and cause the quad to include normals.
+     * <p>
      * 
-     * Expects that lightmaps are represented by vertex glow bits.
-     * For example, if the quad is full brightness, then glow should be 255 for all vertices.
-     * Any transformation to alpha or lightmap that uses glow bits should already
-     * be applied by painer before this is called.
+     * Expects that lightmaps are represented by vertex glow bits. For example, if
+     * the quad is full brightness, then glow should be 255 for all vertices. Any
+     * transformation to alpha or lightmap that uses glow bits should already be
+     * applied by painer before this is called.
      */
     @SuppressWarnings("unused")
-    public static BakedQuad createBakedQuad(int layerIndex, IPolygon raw, boolean forceItemFormat)
-    {
+    public static BakedQuad createBakedQuad(int layerIndex, IPolygon raw, boolean forceItemFormat) {
         final float spanU = raw.getMaxU(layerIndex) - raw.getMinU(layerIndex);
         final float spanV = raw.getMaxV(layerIndex) - raw.getMinV(layerIndex);
-        
-        final Sprite textureSprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(raw.getTextureName(layerIndex));
-        
+
+        final Sprite textureSprite = MinecraftClient.getInstance().getSpriteAtlas()
+                .getSprite(raw.getTextureName(layerIndex));
+
         final Workspace w = workspace.get();
-        
+
         final float[][] uvData = w.uvData;
         final float[][] normalData = w.normalData;
         final float[] packData = w.packData;
-        
-        int glowBits =  0;
-        for(int v = 0; v < 4; v++)
-        {   
+
+        int glowBits = 0;
+        for (int v = 0; v < 4; v++) {
             int g = raw.isEmissive(layerIndex) ? 255 : raw.getVertexGlow(v);
-            if(g != 0)
-            { 
+            if (g != 0) {
                 // round to nearest 0-15
                 g = (g + 9) / 17;
                 glowBits |= (g << (v * 4));
             }
-            
+
             uvData[v][0] = raw.getVertexU(layerIndex, v);
             uvData[v][1] = raw.getVertexV(layerIndex, v);
-            
+
             IVec3f normal = raw.getVertexNormal(v);
-            if(normal == null)
+            if (normal == null)
                 normal = raw.getFaceNormal();
             normal.toArray(normalData[v]);
         }
-        
+
         // apply texture rotation
         applyTextureRotation(raw.getRotation(layerIndex), uvData);
-        
+
         // scale UV coordinates to size of texture sub-region
-        for(int v = 0; v < 4; v++)
-        {
+        for (int v = 0; v < 4; v++) {
             uvData[v][0] = raw.getMinU(layerIndex) + spanU * uvData[v][0];
             uvData[v][1] = raw.getMinV(layerIndex) + spanV * uvData[v][1];
         }
 
-        if(raw.shouldContractUVs(layerIndex))
-        {
+        if (raw.shouldContractUVs(layerIndex)) {
             contractUVs(textureSprite, uvData);
         }
 
         int[] vertexData = new int[28];
 
         /**
-         * The item vertex consumer expects to get Item vertex format. (Includes normal.)
-         * But to render lightmap we have to use Block format, which uses two bytes that
-         * would normally be used for normals to contain brightness information.
-         * Note that this means any per-vertex normals generated by meshes will 
-         * not be used if the quad is full brightness and not being rendered as an item.
-         * This should be OK, because we generally don't care about shading for full-brightness render.
+         * The item vertex consumer expects to get Item vertex format. (Includes
+         * normal.) But to render lightmap we have to use Block format, which uses two
+         * bytes that would normally be used for normals to contain brightness
+         * information. Note that this means any per-vertex normals generated by meshes
+         * will not be used if the quad is full brightness and not being rendered as an
+         * item. This should be OK, because we generally don't care about shading for
+         * full-brightness render.
          */
         VertexFormat format = forceItemFormat || glowBits == 0
 //                ? net.minecraft.client.renderer.vertex.DefaultVertexFormats.ITEM
                 ? ITEM_ALTERNATE
                 : VertexFormats.POSITION_COLOR_UV_LMAP;
-        
+
         final float spriteMinU = textureSprite.getMinU();
         final float spriteSpanU = textureSprite.getMaxU() - spriteMinU;
         final float spriteMinV = textureSprite.getMinV();
         final float spriteSpanV = textureSprite.getMaxV() - spriteMinV;
-        
+
         // Convert this to Fabric Rebder API
 //        for(int v = 0; v < 4; v++)
 //        {
@@ -244,22 +232,21 @@ public class QuadBakery
 //        return QuadCache.INSTANCE.getCachedQuad(quad);
         return null;
     }
-    
+
     /**
      * UV shrinkage amount to prevent visible seams
      */
     public static final float UV_EPS = 1f / 0x100;
-    
-     /**
-     * Prevents visible seams along quad boundaries due to slight overlap
-     * with neighboring textures or empty texture buffer.
-     * Borrowed from Forge as implemented by Fry in UnpackedBakedQuad.build().
-     * Array dimensions are vertex 0-3, u/v 0-1
+
+    /**
+     * Prevents visible seams along quad boundaries due to slight overlap with
+     * neighboring textures or empty texture buffer. Borrowed from Forge as
+     * implemented by Fry in UnpackedBakedQuad.build(). Array dimensions are vertex
+     * 0-3, u/v 0-1
      */
-    public static void contractUVs(Sprite textureSprite, float[][] uvData)
-    {
-        //TODO: reimplement or scrap
-        
+    public static void contractUVs(Sprite textureSprite, float[][] uvData) {
+        // TODO: reimplement or scrap
+
 //        float tX = textureSprite.getOriginX() / textureSprite.getMinU();
 //        float tY = textureSprite.getOriginY() / textureSprite.getMinV();
 //        float tS = tX > tY ? tX : tY;

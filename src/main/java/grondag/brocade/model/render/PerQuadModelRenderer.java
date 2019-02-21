@@ -21,30 +21,26 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Selects lighter based on isShaded value of each individual quad, 
- * vs. determining it at model level.
+ * Selects lighter based on isShaded value of each individual quad, vs.
+ * determining it at model level.
  *
  */
 @SideOnly(Side.CLIENT)
-public class PerQuadModelRenderer extends BlockModelRenderer
-{
- 
-    public static final PerQuadModelRenderer INSTANCE = new PerQuadModelRenderer(Minecraft.getMinecraft().getBlockColors());
-    
-    private final ThreadLocal<VertexLighterFlat> lighterFlat = new ThreadLocal<VertexLighterFlat>()
-    {
+public class PerQuadModelRenderer extends BlockModelRenderer {
+
+    public static final PerQuadModelRenderer INSTANCE = new PerQuadModelRenderer(
+            Minecraft.getMinecraft().getBlockColors());
+
+    private final ThreadLocal<VertexLighterFlat> lighterFlat = new ThreadLocal<VertexLighterFlat>() {
         @Override
-        protected VertexLighterFlat initialValue()
-        {
+        protected VertexLighterFlat initialValue() {
             return new VertexLighterFlat(colors);
         }
     };
 
-    private final ThreadLocal<VertexLighterSmoothAo> lighterSmooth = new ThreadLocal<VertexLighterSmoothAo>()
-    {
+    private final ThreadLocal<VertexLighterSmoothAo> lighterSmooth = new ThreadLocal<VertexLighterSmoothAo>() {
         @Override
-        protected VertexLighterSmoothAo initialValue()
-        {
+        protected VertexLighterSmoothAo initialValue() {
             return new VertexLighterSmoothAo(colors);
         }
     };
@@ -55,19 +51,17 @@ public class PerQuadModelRenderer extends BlockModelRenderer
     private final ThreadLocal<BufferBuilder> lastRendererSmooth = new ThreadLocal<>();
 
     private final BlockColors colors;
-    
-    public PerQuadModelRenderer(BlockColors colors)
-    {
+
+    public PerQuadModelRenderer(BlockColors colors) {
         super(colors);
         this.colors = colors;
     }
-    
+
     /** always returns true for convenience */
-    private VertexLighterFlat setupFlat(IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos, BufferBuilder buffer)
-    {
+    private VertexLighterFlat setupFlat(IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos,
+            BufferBuilder buffer) {
         VertexLighterFlat lighter = this.lighterFlat.get();
-        if(buffer != this.lastRendererFlat.get())
-        {
+        if (buffer != this.lastRendererFlat.get()) {
             this.lastRendererFlat.set(buffer);
             VertexBufferConsumer newCons = new VertexBufferConsumer(buffer);
             this.wrFlat.set(newCons);
@@ -80,13 +74,12 @@ public class PerQuadModelRenderer extends BlockModelRenderer
         lighter.updateBlockInfo();
         return lighter;
     }
-    
+
     /** always returns true for convenience */
-    private VertexLighterFlat setupSmooth(IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos, BufferBuilder buffer)
-    {
+    private VertexLighterFlat setupSmooth(IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos,
+            BufferBuilder buffer) {
         VertexLighterFlat lighter = this.lighterSmooth.get();
-        if(buffer != this.lastRendererSmooth.get())
-        {
+        if (buffer != this.lastRendererSmooth.get()) {
             this.lastRendererSmooth.set(buffer);
             VertexBufferConsumer newCons = new VertexBufferConsumer(buffer);
             this.wrSmooth.set(newCons);
@@ -99,53 +92,45 @@ public class PerQuadModelRenderer extends BlockModelRenderer
         lighter.updateBlockInfo();
         return lighter;
     }
-    
+
     @Override
-    public boolean renderModel(@Nonnull IBlockAccess world, @Nonnull IBakedModel model, @Nonnull IBlockState state, @Nonnull BlockPos pos, @Nonnull BufferBuilder buffer, boolean checkSides, long rand)
-    {
+    public boolean renderModel(@Nonnull IBlockAccess world, @Nonnull IBakedModel model, @Nonnull IBlockState state,
+            @Nonnull BlockPos pos, @Nonnull BufferBuilder buffer, boolean checkSides, long rand) {
 
         boolean isEmpty = true;
         VertexLighterFlat flatLighter = null;
         VertexLighterFlat smoothLighter = null;
-        
+
         List<BakedQuad> quads = model.getQuads(state, null, rand);
-        if(!quads.isEmpty())
-        {
+        if (!quads.isEmpty()) {
             isEmpty = false;
-            for(BakedQuad quad : quads)
-            {
-                if(quad.shouldApplyDiffuseLighting())
-                {
-                    if(smoothLighter == null) smoothLighter = this.setupSmooth(world, model, state, pos, buffer);
+            for (BakedQuad quad : quads) {
+                if (quad.shouldApplyDiffuseLighting()) {
+                    if (smoothLighter == null)
+                        smoothLighter = this.setupSmooth(world, model, state, pos, buffer);
                     quad.pipe(smoothLighter);
-                }
-                else
-                {
-                    if(flatLighter == null) flatLighter = this.setupFlat(world, model, state, pos, buffer);
+                } else {
+                    if (flatLighter == null)
+                        flatLighter = this.setupFlat(world, model, state, pos, buffer);
                     quad.pipe(flatLighter);
                 }
             }
         }
-        
-        for(int i = 0; i < 6; i++)
-        {
+
+        for (int i = 0; i < 6; i++) {
             final EnumFacing side = EnumFacing.VALUES[i];
             quads = model.getQuads(state, side, rand);
-            if(!quads.isEmpty())
-            {
-                if(!checkSides || state.shouldSideBeRendered(world, pos, side))
-                {
+            if (!quads.isEmpty()) {
+                if (!checkSides || state.shouldSideBeRendered(world, pos, side)) {
                     isEmpty = false;
-                    for(BakedQuad quad : quads)
-                    {
-                        if(quad.shouldApplyDiffuseLighting())
-                        {
-                            if(smoothLighter == null) smoothLighter = this.setupSmooth(world, model, state, pos, buffer);
+                    for (BakedQuad quad : quads) {
+                        if (quad.shouldApplyDiffuseLighting()) {
+                            if (smoothLighter == null)
+                                smoothLighter = this.setupSmooth(world, model, state, pos, buffer);
                             quad.pipe(smoothLighter);
-                        }
-                        else
-                        {
-                            if(flatLighter == null) flatLighter = this.setupFlat(world, model, state, pos, buffer);
+                        } else {
+                            if (flatLighter == null)
+                                flatLighter = this.setupFlat(world, model, state, pos, buffer);
                             quad.pipe(flatLighter);
                         }
                     }

@@ -6,8 +6,7 @@ import net.minecraftforge.common.config.Config.RangeDouble;
 import net.minecraftforge.common.config.Config.RangeInt;
 import net.minecraftforge.common.config.Config.RequiresMcRestart;
 
-public class SubstanceConfig
-{
+public class SubstanceConfig {
     @RequiresMcRestart
     @Comment("Material hardness. 2 is typical for things like rock, wood. Anything above 10 is extreme. -1 is unbreakable")
     @RangeInt(min = -1, max = 2000)
@@ -35,7 +34,7 @@ public class SubstanceConfig
     @RequiresMcRestart
     @Comment("If non-zero, can catch flame and spread. Numbers are typically small (1 or 2)")
     public int flammability = 0;
-    
+
     @RequiresMcRestart
     @Comment("If true, will damage and set fire to colliding entities.")
     public boolean isBurning = false;
@@ -44,29 +43,26 @@ public class SubstanceConfig
     @Comment("Determeins AI handling for this block. Normal value is BLOCKED.")
     public ConfigPathNodeType pathNodeType = ConfigPathNodeType.BLOCKED;
 
-    public SubstanceConfig(int hardness, BlockHarvestTool harvestTool, int harvestLevel, int resistance, double walkSpeedFactor)
-    {
+    public SubstanceConfig(int hardness, BlockHarvestTool harvestTool, int harvestLevel, int resistance,
+            double walkSpeedFactor) {
         this.hardness = hardness;
         this.harvestTool = harvestTool;
         this.harvestLevel = harvestLevel;
         this.resistance = resistance;
         this.walkSpeedFactor = walkSpeedFactor;
     }
-    
-    public SubstanceConfig withFlammability(int flammability)
-    {
+
+    public SubstanceConfig withFlammability(int flammability) {
         this.flammability = flammability;
         return this;
     }
-    
-    public SubstanceConfig setBurning()
-    {
+
+    public SubstanceConfig setBurning() {
         this.isBurning = true;
         return this;
     }
-    
-    public SubstanceConfig withPathNodeType(ConfigPathNodeType pathNodeType)
-    {
+
+    public SubstanceConfig withPathNodeType(ConfigPathNodeType pathNodeType) {
         this.pathNodeType = pathNodeType;
         return this;
     }

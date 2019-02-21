@@ -1,63 +1,50 @@
 package grondag.brocade.block;
 
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.world.PackedBlockPos;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import grondag.brocade.Brocade;
+import grondag.fermion.world.PackedBlockPos;
+import net.minecraft.block.BlockState;
+import net.minecraft.world.ExtendedBlockView;
 
-public class SuperBlockWorldAccess
-{
-    private static ThreadLocal<ISuperBlockAccess> localAccess = new ThreadLocal<ISuperBlockAccess>()
-    {
+public class SuperBlockWorldAccess {
+    private static ThreadLocal<ISuperBlockAccess> localAccess = new ThreadLocal<ISuperBlockAccess>() {
         @Override
-        protected ISuperBlockAccess initialValue()
-        {
-            return FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER
-                    ? new PassthruWrapper()
+        protected ISuperBlockAccess initialValue() {
+            return FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER ? new PassthruWrapper()
                     : ExoticMatter.proxy.clientWorldStateCache();
         }
     };
-    
-    public static ISuperBlockAccess access(IBlockAccess access)
-    {
-        if(access instanceof ISuperBlockAccess)
-            return (ISuperBlockAccess)access;
-        
+
+    public static ISuperBlockAccess access(ExtendedBlockView access) {
+        if (access instanceof ISuperBlockAccess)
+            return (ISuperBlockAccess) access;
+
         ISuperBlockAccess result = localAccess.get();
-        if(result instanceof PassthruWrapper)
-            ((PassthruWrapper)result).wrap(access);
-        
+        if (result instanceof PassthruWrapper)
+            ((PassthruWrapper) result).wrap(access);
+
         return result;
     }
-    
-    private static class PassthruWrapper implements ISuperBlockAccess
-    {
+
+    private static class PassthruWrapper implements ISuperBlockAccess {
         @SuppressWarnings("null")
-        private IBlockAccess wrapped;
-        
-        private void wrap(IBlockAccess toWrap)
-        {
+        private ExtendedBlockView wrapped;
+
+        private void wrap(ExtendedBlockView toWrap) {
             wrapped = toWrap;
         }
-        
+
         @Override
-        public IBlockState getBlockState(BlockPos pos)
-        {
+        public BlockState getBlockState(BlockPos pos) {
             return wrapped.getBlockState(pos);
         }
 
         @Override
-        public IBlockAccess wrapped()
-        {
+        public ExtendedBlockView wrapped() {
             return wrapped;
         }
 
         @Override
-        public IBlockState getBlockState(long packedBlockPos)
-        {
+        public BlockState getBlockState(long packedBlockPos) {
             return wrapped.getBlockState(PackedBlockPos.unpack(packedBlockPos));
         }
     }

@@ -1,7 +1,6 @@
 package grondag.brocade.model.state;
 
-public enum StateFormat
-{
+public enum StateFormat {
     /** use for flowing terrain shapes */
     FLOW,
     /** use for single blocks */

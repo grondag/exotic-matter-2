@@ -12,20 +12,17 @@ public class ModelStateProperty implements IUnlistedProperty<ISuperModelState> {
     }
 
     @Override
-    public final boolean isValid(@Nullable ISuperModelState value)
-    {
+    public final boolean isValid(@Nullable ISuperModelState value) {
         return true;
     }
 
     @Override
-    public final String valueToString(@Nullable ISuperModelState value)
-    {
+    public final String valueToString(@Nullable ISuperModelState value) {
         return value.toString();
     }
 
     @Override
-    public final Class<ISuperModelState> getType()
-    {
+    public final Class<ISuperModelState> getType() {
         return ISuperModelState.class;
     }
 }

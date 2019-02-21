@@ -8,40 +8,32 @@ import javax.imageio.stream.ImageInputStreamImpl;
 
 import org.apache.commons.io.IOUtils;
 
-public class InMemoryImageInputStream extends ImageInputStreamImpl 
-{
+public class InMemoryImageInputStream extends ImageInputStreamImpl {
     private final byte[] streamData;
     final int length;
-    
-    public InMemoryImageInputStream(InputStream stream) throws IOException
-    {
+
+    public InMemoryImageInputStream(InputStream stream) throws IOException {
         this(IOUtils.toByteArray(stream));
     }
-    
-    public InMemoryImageInputStream(byte[] streamData)
-    {
+
+    public InMemoryImageInputStream(byte[] streamData) {
         this.streamData = streamData;
         this.length = this.streamData.length;
         this.streamPos = 0;
     }
-    
+
     @Override
     public int read() throws IOException {
-        if (streamPos == length) 
-        { 
+        if (streamPos == length) {
             return -1;
-        } 
-        else 
-        {
+        } else {
             return streamData[(int) streamPos++];
         }
     }
 
     @Override
-    public int read(@Nullable byte[] b, int off, int len) throws IOException 
-    {
-        if (streamPos == length) 
-        {
+    public int read(@Nullable byte[] b, int off, int len) throws IOException {
+        if (streamPos == length) {
             return -1;
         }
 
@@ -52,20 +44,17 @@ public class InMemoryImageInputStream extends ImageInputStreamImpl
     }
 
     @Override
-    public long length() 
-    {
+    public long length() {
         return this.length();
     }
 
     @Override
-    public void seek(long pos) throws IOException 
-    {
+    public void seek(long pos) throws IOException {
         streamPos = pos;
     }
 
     @Override
-    protected void finalize() throws Throwable 
-    {
+    protected void finalize() throws Throwable {
         // Empty finalizer (for improved performance; no need to call
         // super.finalize() in this case)
     }

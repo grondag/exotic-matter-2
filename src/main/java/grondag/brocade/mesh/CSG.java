@@ -41,14 +41,15 @@ import grondag.exotic_matter.model.primitives.stream.PolyStreams;
 /**
  * Access point for CSG operations.<br>
  * <em>Heavily</em> modified from original source.<br>
- * Uses polystreams and threadlocals to minimize garbage collection. 
+ * Uses polystreams and threadlocals to minimize garbage collection.
  */
-public abstract class CSG
-{
+public abstract class CSG {
     /**
      * Output a new mesh solid representing the difference of the two input meshes.
      *
-     * <blockquote><pre>
+     * <blockquote>
+     * 
+     * <pre>
      * A.difference(B)
      *
      * +-------+            +-------+
@@ -59,34 +60,34 @@ public abstract class CSG
      *      |   B   |
      *      |       |
      *      +-------+
-     * </pre></blockquote>
+     * </pre>
+     * 
+     * </blockquote>
      */
-    public static void difference(IPolyStream a, IPolyStream b, IWritablePolyStream output)
-    {
+    public static void difference(IPolyStream a, IPolyStream b, IWritablePolyStream output) {
         CsgPolyStream aCSG = PolyStreams.claimCSG(a);
         CsgPolyStream bCSG = PolyStreams.claimCSG(b);
-        
+
         difference(aCSG, bCSG, output);
-        
+
         aCSG.release();
         bCSG.release();
     }
-    
+
     /**
-     * Version of {@link #difference(IPolyStream, IPolyStream, IWritablePolyStream)} to use
-     * when you've already built CSG streams. Marks the streams complete but does not release them.
-     * Both input streams are modified.
+     * Version of {@link #difference(IPolyStream, IPolyStream, IWritablePolyStream)}
+     * to use when you've already built CSG streams. Marks the streams complete but
+     * does not release them. Both input streams are modified.
      */
-    public static void difference(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output)
-    {
+    public static void difference(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
         a.complete();
         b.complete();
-        
+
         // A outside of B bounds can be passed directly to output
-        if(outputDisjointA(a, b, output))
+        if (outputDisjointA(a, b, output))
             // if A is empty there is nothing to subtract from
             return;
-        
+
         // add portions of A within B bounds but not inside B mesh
         a.invert();
         a.clipTo(b);
@@ -94,15 +95,17 @@ public abstract class CSG
         b.invert();
         b.clipTo(a);
         a.invert();
-        
+
         a.outputRecombinedQuads(output);
         b.outputRecombinedQuads(output);
     }
-    
+
     /**
      * Output a new mesh representing the intersection of two input meshes.
      *
-     * <blockquote><pre>
+     * <blockquote>
+     * 
+     * <pre>
      *     A.intersect(B)
      *
      *     +-------+
@@ -113,13 +116,14 @@ public abstract class CSG
      *          |   B   |
      *          |       |
      *          +-------+
-     * </pre></blockquote>     
+     * </pre>
+     * 
+     * </blockquote>
      */
-    public static void intersect(IPolyStream a, IPolyStream b, IWritablePolyStream output)
-    {
+    public static void intersect(IPolyStream a, IPolyStream b, IWritablePolyStream output) {
         CsgPolyStream aCSG = PolyStreams.claimCSG(a);
         CsgPolyStream bCSG = PolyStreams.claimCSG(b);
-        
+
         intersect(aCSG, bCSG, output);
 
         aCSG.release();
@@ -127,35 +131,36 @@ public abstract class CSG
     }
 
     /**
-     * Version of {@link #intersect(IPolyStream, IPolyStream, IWritablePolyStream)} to use
-     * when you've already built CSG streams. Marks the streams complete but does not release them.
-     * Both input streams are modified.
+     * Version of {@link #intersect(IPolyStream, IPolyStream, IWritablePolyStream)}
+     * to use when you've already built CSG streams. Marks the streams complete but
+     * does not release them. Both input streams are modified.
      */
-    public static void intersect(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output)
-    {
+    public static void intersect(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
         a.complete();
         b.complete();
-        
+
         a.complete();
         b.complete();
-        
+
         a.invert();
         b.clipTo(a);
         b.invert();
         a.clipTo(b);
         b.clipTo(a);
-        
+
         a.invert();
         b.invert();
-        
+
         a.outputRecombinedQuads(output);
         b.outputRecombinedQuads(output);
     }
-    
+
     /**
      * Output a new mesh representing the union of the input meshes.
      *
-     * <blockquote><pre>
+     * <blockquote>
+     * 
+     * <pre>
      *    A.union(B)
      *
      *    +-------+            +-------+
@@ -166,89 +171,80 @@ public abstract class CSG
      *         |   B   |            |       |
      *         |       |            |       |
      *         +-------+            +-------+
-     * </pre></blockquote>
+     * </pre>
+     * 
+     * </blockquote>
      *
      */
-    public static void union(IPolyStream a, IPolyStream b, IWritablePolyStream output)
-    {
+    public static void union(IPolyStream a, IPolyStream b, IWritablePolyStream output) {
         CsgPolyStream aCSG = PolyStreams.claimCSG(a);
         CsgPolyStream bCSG = PolyStreams.claimCSG(b);
-        
+
         union(aCSG, bCSG, output);
-        
+
         aCSG.release();
         bCSG.release();
     }
-    
+
     /**
-     * Version of {@link #union(IPolyStream, IPolyStream, IWritablePolyStream)} to use
-     * when you've already built CSG streams. Marks the streams complete but does not release them.
-     * Both input streams are modified.
+     * Version of {@link #union(IPolyStream, IPolyStream, IWritablePolyStream)} to
+     * use when you've already built CSG streams. Marks the streams complete but
+     * does not release them. Both input streams are modified.
      */
-    public static void union(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output)
-    {
+    public static void union(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
         a.complete();
         b.complete();
-        
+
         // A outside of B bounds can be passed directly to output
-        if(outputDisjointA(a, b, output))
-        {
+        if (outputDisjointA(a, b, output)) {
             // A and B bounds don't overlap, so output all of original b
             output.appendAll(b);
-        }
-        else
-        {
+        } else {
             // some potential overlap
-            // add union of the overlapping bits, 
+            // add union of the overlapping bits,
             // which will include any parts of B that need to be included
             a.clipTo(b);
             b.clipTo(a);
             b.invert();
             b.clipTo(a);
             b.invert();
-            
+
             a.outputRecombinedQuads(output);
             b.outputRecombinedQuads(output);
         }
     }
-    
+
     /**
-     * Polygons in A that do not intersect with B are sent to output and then deleted.
-     * Returns true if A is empty, either because it was empty at the start, or 
-     * because all A polygons have been deleted.
+     * Polygons in A that do not intersect with B are sent to output and then
+     * deleted. Returns true if A is empty, either because it was empty at the
+     * start, or because all A polygons have been deleted.
      */
-    private static boolean outputDisjointA(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output)
-    {
-        if(a.origin()) 
-        {
-            if(b.origin())
+    private static boolean outputDisjointA(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
+        if (a.origin()) {
+            if (b.origin())
                 // nominal case
                 return outputDisjointAInner(a, b, output);
-            else 
-            {
+            else {
                 // B is empty, A is not, therefore output all of A and return false
                 final IPolygon p = a.reader();
-                do
-                {
+                do {
                     output.appendCopy(p);
                     p.setDeleted();
-                } while(a.next());
+                } while (a.next());
                 return false;
             }
-        }
-        else
+        } else
             // A already empty
             return false;
     }
-    
+
     /**
-     * Handles nominal case when both A and B are non-empty.
-     * Assumes A and B are at origin.
+     * Handles nominal case when both A and B are non-empty. Assumes A and B are at
+     * origin.
      */
-    private static boolean outputDisjointAInner(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output)
-    {
+    private static boolean outputDisjointAInner(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
         boolean aIsEmpty = true;
-        
+
         // compute B mesh bounds
         float bMinX = Float.MAX_VALUE;
         float bMinY = Float.MAX_VALUE;
@@ -256,87 +252,83 @@ public abstract class CSG
         float bMaxX = Float.MIN_VALUE;
         float bMaxY = Float.MIN_VALUE;
         float bMaxZ = Float.MIN_VALUE;
-        
+
         // scoping
         {
             final IPolygon p = b.reader();
-            do
-            {
+            do {
                 final int vCount = p.vertexCount();
-                for(int i = 1; i < vCount; i++)
-                {
+                for (int i = 1; i < vCount; i++) {
                     final float x = p.getVertexX(i);
-                    if(x < bMinX)  
+                    if (x < bMinX)
                         bMinX = x;
-                    else if(x > bMaxX)
+                    else if (x > bMaxX)
                         bMaxX = x;
-                    
+
                     final float y = p.getVertexY(i);
-                    if(y < bMinY)  
+                    if (y < bMinY)
                         bMinY = y;
-                    else if(y > bMaxY)
+                    else if (y > bMaxY)
                         bMaxY = y;
-                    
+
                     final float z = p.getVertexZ(i);
-                    if(z < bMinZ)  
+                    if (z < bMinZ)
                         bMinZ = z;
-                    else if(z > bMaxZ)
+                    else if (z > bMaxZ)
                         bMaxZ = z;
                 }
-            } while(b.next());
+            } while (b.next());
         }
-        
+
         final IPolygon p = a.reader();
-        do
-        {
+        do {
             // Note we don't do a point-by-point test here
             // and instead compute a bounding box for the polygon.
             // This correctly handles case when all poly points
             // are outside the mesh box but plane of poly intersects.
             // Considered using SAT tests developed for collisions boxes
             // but those require tris and re-packing of vertex data. Not worth.
-            
+
             float pMinX = p.getVertexX(0);
             float pMinY = p.getVertexY(0);
             float pMinZ = p.getVertexZ(0);
             float pMaxX = pMinX;
             float pMaxY = pMinY;
             float pMaxZ = pMinZ;
-            
+
             final int vCount = p.vertexCount();
-            for(int i = 1; i < vCount; i++)
-            {
+            for (int i = 1; i < vCount; i++) {
                 final float x = p.getVertexX(i);
-                if(x < pMinX)  
+                if (x < pMinX)
                     pMinX = x;
-                else if(x > pMaxX)
+                else if (x > pMaxX)
                     pMaxX = x;
-                
+
                 final float y = p.getVertexY(i);
-                if(y < pMinY)  
+                if (y < pMinY)
                     pMinY = y;
-                else if(y > pMaxY)
+                else if (y > pMaxY)
                     pMaxY = y;
-                
+
                 final float z = p.getVertexZ(i);
-                if(z < pMinZ)  
+                if (z < pMinZ)
                     pMinZ = z;
-                else if(z > pMaxZ)
+                else if (z > pMaxZ)
                     pMaxZ = z;
             }
-            
-            // For CSG operations we consider a point on the edge to be intersecting.  
-            if (bMinX <= pMaxX && bMaxX >= pMinX && bMinY <= pMaxY && bMaxY >= pMinY && bMinZ <= pMaxZ && bMaxZ >= pMinZ)
+
+            // For CSG operations we consider a point on the edge to be intersecting.
+            if (bMinX <= pMaxX && bMaxX >= pMinX && bMinY <= pMaxY && bMaxY >= pMinY && bMinZ <= pMaxZ
+                    && bMaxZ >= pMinZ)
                 // potentially intersecting
                 aIsEmpty = false;
-            else
-            {
+            else {
                 // disjoint
                 output.appendCopy(p);
                 p.setDeleted();
             }
-        } while(a.next());
-        
+        } while (a.next());
+
         return aIsEmpty;
     }
 }

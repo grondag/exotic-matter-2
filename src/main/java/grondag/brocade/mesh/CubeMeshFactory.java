@@ -26,36 +26,30 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CubeMeshFactory extends ShapeMeshGenerator
-{
+public class CubeMeshFactory extends ShapeMeshGenerator {
     private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.CUBIC)
-            .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP)
-            .build();
-    
+            .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
+
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
-    
-    public CubeMeshFactory()
-    {
+
+    public CubeMeshFactory() {
         super(StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = getCubeQuads();
     }
 
     @Override
-    public void produceShapeQuads(ISuperModelState modelState, Consumer<IPolygon> target)
-    {
-        if(cachedQuads.origin())
-        {
+    public void produceShapeQuads(ISuperModelState modelState, Consumer<IPolygon> target) {
+        if (cachedQuads.origin()) {
             IPolygon reader = cachedQuads.reader();
-            
+
             do
                 target.accept(reader);
-            while(cachedQuads.next());
+            while (cachedQuads.next());
         }
     }
-    
-    private IPolyStream getCubeQuads()
-    {
+
+    private IPolyStream getCubeQuads() {
         CubeInputs cube = new CubeInputs();
         cube.color = 0xFFFFFFFF;
         cube.textureRotation = Rotation.ROTATE_NONE;
@@ -66,7 +60,7 @@ public class CubeMeshFactory extends ShapeMeshGenerator
         cube.v1 = 1;
         cube.isOverlay = false;
         cube.surfaceInstance = SURFACE_MAIN;
-        
+
         IWritablePolyStream stream = PolyStreams.claimWritable();
         cube.appendFace(stream, EnumFacing.DOWN);
         cube.appendFace(stream, EnumFacing.UP);
@@ -74,49 +68,43 @@ public class CubeMeshFactory extends ShapeMeshGenerator
         cube.appendFace(stream, EnumFacing.WEST);
         cube.appendFace(stream, EnumFacing.NORTH);
         cube.appendFace(stream, EnumFacing.SOUTH);
-        
+
         IPolyStream result = stream.releaseAndConvertToReader();
-        
+
         result.origin();
         assert result.reader().vertexCount() == 4;
-        
+
         return result;
     }
 
-
     @Override
-    public boolean isCube(ISuperModelState modelState)
-    {
+    public boolean isCube(ISuperModelState modelState) {
         return true;
     }
 
     @Override
-    public boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block, ISuperModelState modelState)
-    {
+    public boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block,
+            ISuperModelState modelState) {
         return false;
     }
 
     @Override
-    public int geometricSkyOcclusion(ISuperModelState modelState)
-    {
+    public int geometricSkyOcclusion(ISuperModelState modelState) {
         return 255;
     }
 
     @Override
-    public @Nonnull ICollisionHandler collisionHandler()
-    {
+    public @Nonnull ICollisionHandler collisionHandler() {
         return CubeCollisionHandler.INSTANCE;
     }
 
     @Override
-    public SideShape sideShape(ISuperModelState modelState, EnumFacing side)
-    {
+    public SideShape sideShape(ISuperModelState modelState, EnumFacing side) {
         return SideShape.SOLID;
     }
 
     @Override
-    public boolean hasLampSurface(ISuperModelState modelState)
-    {
+    public boolean hasLampSurface(ISuperModelState modelState) {
         return true;
     }
 }

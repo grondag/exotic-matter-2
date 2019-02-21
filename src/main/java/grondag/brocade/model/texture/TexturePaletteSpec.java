@@ -1,36 +1,38 @@
 package grondag.brocade.model.texture;
 
-import grondag.brocade.model.texture.TextureRotationType.TextureRotationSetting;
+import grondag.brocade.api.TextureGroup;
+import grondag.brocade.api.TextureLayout;
+import grondag.brocade.api.TextureRenderIntent;
+import grondag.brocade.api.TextureRotation;
+import grondag.brocade.api.TextureScale;
+import grondag.brocade.api.TextureRotation.TextureRotationSetting;
 import grondag.fermion.IGrondagMod;
 import grondag.fermion.world.Rotation;
 
 /**
- * Container holding mutable values for the various parameters that go
- * into constructing a texture palette.
+ * Container holding mutable values for the various parameters that go into
+ * constructing a texture palette.
  *
  */
-public class TexturePaletteSpec
-{
+public class TexturePaletteSpec {
     public IGrondagMod mod;
     public int textureVersionCount = 1;
-    public TextureScale textureScale = TextureScale.SINGLE; 
-    public TextureLayout layout = TextureLayout.SIMPLE; 
-    public TextureRotationSetting rotation = TextureRotationType.CONSISTENT.with(Rotation.ROTATE_NONE);
-    public TextureRenderIntent renderIntent = TextureRenderIntent.BASE_ONLY; 
+    public TextureScale textureScale = TextureScale.SINGLE;
+    public TextureLayout layout = TextureLayout.SIMPLE;
+    public TextureRotationSetting rotation = TextureRotation.CONSISTENT.with(Rotation.ROTATE_NONE);
+    public TextureRenderIntent renderIntent = TextureRenderIntent.BASE_ONLY;
     public int textureGroupFlags = TextureGroup.ALWAYS_HIDDEN.bitFlag;
     public int zoomLevel = 0;
     /** number of ticks to display each frame */
     public int ticksPerFrame = 2;
     /** for border-layout textures, controls if "no border" texture is rendered */
     public boolean renderNoBorderAsTile = false;
-    
-    public TexturePaletteSpec(IGrondagMod mod)
-    {
+
+    public TexturePaletteSpec(IGrondagMod mod) {
         this.mod = mod;
     }
-    
-    public TexturePaletteSpec(ITexturePalette source)
-    {
+
+    public TexturePaletteSpec(ITexturePalette source) {
         this.mod = source.mod();
         this.textureVersionCount = source.textureVersionCount();
         this.textureScale = source.textureScale();
@@ -46,77 +48,68 @@ public class TexturePaletteSpec
     /**
      * @see TexturePallette#textureVersionCount
      */
-    public TexturePaletteSpec withVersionCount(int textureVersionCount)
-    {
+    public TexturePaletteSpec withVersionCount(int textureVersionCount) {
         this.textureVersionCount = textureVersionCount;
         return this;
     }
-    
+
     /**
      * @see TexturePallette#textureScale
      */
-    public TexturePaletteSpec withScale(TextureScale textureScale)
-    {
+    public TexturePaletteSpec withScale(TextureScale textureScale) {
         this.textureScale = textureScale;
         return this;
     }
-    
+
     /**
      * @see TexturePallette#layout
      */
-    public TexturePaletteSpec withLayout(TextureLayout layout)
-    {
+    public TexturePaletteSpec withLayout(TextureLayout layout) {
         this.layout = layout;
         return this;
     }
-    
+
     /**
      * @see TexturePallette#rotation
      */
-    public TexturePaletteSpec withRotation(TextureRotationSetting rotation)
-    {
+    public TexturePaletteSpec withRotation(TextureRotationSetting rotation) {
         this.rotation = rotation;
         return this;
     }
-    
+
     /**
      * @see TexturePallette#renderIntent
      */
-    public TexturePaletteSpec withRenderIntent(TextureRenderIntent renderIntent)
-    {
+    public TexturePaletteSpec withRenderIntent(TextureRenderIntent renderIntent) {
         this.renderIntent = renderIntent;
         return this;
     }
-    
+
     /**
      * @see TexturePallette#textureGroupFlags
      */
-    public TexturePaletteSpec withGroups(TextureGroup... groups)
-    {
+    public TexturePaletteSpec withGroups(TextureGroup... groups) {
         this.textureGroupFlags = TextureGroup.makeTextureGroupFlags(groups);
         return this;
     }
-    
+
     /**
      * @see TexturePallette#zoomLevel
      */
-    public TexturePaletteSpec withZoomLevel(int zoomLevel)
-    {
+    public TexturePaletteSpec withZoomLevel(int zoomLevel) {
         this.zoomLevel = zoomLevel;
         return this;
     }
-    
+
     /**
      * @see TexturePallette#ticksPerFrame
      */
-    public TexturePaletteSpec withTicksPerFrame(int ticksPerFrame)
-    {
+    public TexturePaletteSpec withTicksPerFrame(int ticksPerFrame) {
         this.ticksPerFrame = ticksPerFrame;
         return this;
     }
-    
-    public TexturePaletteSpec withRenderNoBorderAsTile(boolean renderAsTile)
-    {
+
+    public TexturePaletteSpec withRenderNoBorderAsTile(boolean renderAsTile) {
         this.renderNoBorderAsTile = renderAsTile;
         return this;
     }

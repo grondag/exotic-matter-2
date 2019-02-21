@@ -25,85 +25,72 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public abstract class AbstractWedgeMeshFactory extends ShapeMeshGenerator implements ICollisionHandler
-{
+public abstract class AbstractWedgeMeshFactory extends ShapeMeshGenerator implements ICollisionHandler {
 
     protected static final Surface BACK_AND_BOTTOM_SURFACE = Surface.builder(SurfaceTopology.CUBIC)
-            .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP)
-            .build();
-    
-    protected static final Surface SIDE_SURFACE = Surface.builder(BACK_AND_BOTTOM_SURFACE)
-            .withAllowBorders(false)
+            .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
+
+    protected static final Surface SIDE_SURFACE = Surface.builder(BACK_AND_BOTTOM_SURFACE).withAllowBorders(false)
             .build();
 
-    protected static final Surface TOP_SURFACE = Surface.builder(SIDE_SURFACE)
-            .withIgnoreDepthForRandomization(true)
+    protected static final Surface TOP_SURFACE = Surface.builder(SIDE_SURFACE).withIgnoreDepthForRandomization(true)
             .build();
 
-    public AbstractWedgeMeshFactory()
-    {
-        super(StateFormat.BLOCK, 
-                STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION);
+    public AbstractWedgeMeshFactory() {
+        super(StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION);
     }
 
     @Override
-    public boolean isCube(ISuperModelState modelState)
-    {
+    public boolean isCube(ISuperModelState modelState) {
         return false;
     }
 
     @Override
-    public boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block, ISuperModelState modelState)
-    {
+    public boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block,
+            ISuperModelState modelState) {
         // not currently implemented - ambivalent about it
         return false;
     }
 
     @Override
-    public int geometricSkyOcclusion(ISuperModelState modelState)
-    {
+    public int geometricSkyOcclusion(ISuperModelState modelState) {
         return modelState.getAxis() == EnumFacing.Axis.Y ? 7 : 255;
     }
 
     @Override
-    public BlockOrientationType orientationType(ISuperModelState modelState)
-    {
+    public BlockOrientationType orientationType(ISuperModelState modelState) {
         return BlockOrientationType.EDGE;
-    } 
-    
+    }
+
     @Override
-    public @Nonnull ICollisionHandler collisionHandler()
-    {
+    public @Nonnull ICollisionHandler collisionHandler() {
         return this;
     }
 
     @Override
-    public SideShape sideShape(ISuperModelState modelState, EnumFacing side)
-    {
+    public SideShape sideShape(ISuperModelState modelState, EnumFacing side) {
         BlockCorner corner = BlockCorner.find(modelState.getAxis(), modelState.getAxisRotation());
         return side == corner.face1 || side == corner.face2 ? SideShape.SOLID : SideShape.MISSING;
     }
 
     @Override
-    public List<AxisAlignedBB> getCollisionBoxes(ISuperModelState modelState)
-    {
+    public List<AxisAlignedBB> getCollisionBoxes(ISuperModelState modelState) {
         return CollisionBoxDispatcher.getCollisionBoxes(modelState);
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(ISuperModelState modelState)
-    {
+    public AxisAlignedBB getCollisionBoundingBox(ISuperModelState modelState) {
         return Block.FULL_BLOCK_AABB;
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox(ISuperModelState modelState)
-    {
+    public AxisAlignedBB getRenderBoundingBox(ISuperModelState modelState) {
         return Block.FULL_BLOCK_AABB;
     }
 
     @Override
-    public boolean isAxisOrthogonalToPlacementFace()
-    { return true; }
+    public boolean isAxisOrthogonalToPlacementFace() {
+        return true;
+    }
 
 }

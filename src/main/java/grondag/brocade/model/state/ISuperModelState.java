@@ -2,6 +2,8 @@ package grondag.brocade.model.state;
 
 import java.util.List;
 
+import javax.vecmath.Matrix4f;
+
 import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.ISuperBlockAccess;
 import grondag.brocade.mesh.BlockOrientationType;
@@ -14,26 +16,24 @@ import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.terrain.TerrainState;
 import grondag.brocade.world.CornerJoinBlockState;
-import grondag.brocade.world.borked.SimpleJoin;
+import grondag.brocade.world.SimpleJoin;
 import grondag.fermion.color.ColorMap;
 import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public interface ISuperModelState extends IReadWriteNBT
-{
+public interface ISuperModelState extends IReadWriteNBT {
     int[] serializeToInts();
 
-    /** 
-     * Persisted but not part of hash nor included in equals comparison.
-     * If true, refreshFromWorldState does nothing.
+    /**
+     * Persisted but not part of hash nor included in equals comparison. If true,
+     * refreshFromWorldState does nothing.
      */
     boolean isStatic();
 
@@ -50,29 +50,30 @@ public interface ISuperModelState extends IReadWriteNBT
     ModelShape<?> getShape();
 
     /**
-     * Also resets shape-specific bits to default for the given shape.
-     * Does nothing if shape is the same as existing.
+     * Also resets shape-specific bits to default for the given shape. Does nothing
+     * if shape is the same as existing.
      */
     void setShape(ModelShape<?> shape);
 
     int getColorARGB(PaintLayer layer);
 
     void setColorRGB(PaintLayer layer, int rgb);
-    
+
     /**
      * See {@link #setAlpha(PaintLayer, int)}
      */
     int getAlpha(PaintLayer layer);
-    
-    /** 
-     * 255 (default) = fully opaque, 0 = invisible.
-     * Determines alpha component of {@link #getColorARGB(PaintLayer)}
-     * Only applies if {@link #isTranslucent(PaintLayer)} is true.
+
+    /**
+     * 255 (default) = fully opaque, 0 = invisible. Determines alpha component of
+     * {@link #getColorARGB(PaintLayer)} Only applies if
+     * {@link #isTranslucent(PaintLayer)} is true.
      */
     void setAlpha(PaintLayer layer, int translucency);
 
     /**
-     * Used by placement logic to know if shape has any kind of orientation to it that can be selected during placement.
+     * Used by placement logic to know if shape has any kind of orientation to it
+     * that can be selected during placement.
      */
     BlockOrientationType orientationType();
 
@@ -85,12 +86,12 @@ public interface ISuperModelState extends IReadWriteNBT
     void setAxisInverted(boolean isInverted);
 
     /**
-     * For base/lamp paint layers, true means should be rendered in translucent render layer.
-     * (Overlay textures always render in translucent layer.)
-     * For all paint layers, true also means {@link #getAlpha(PaintLayer)} applies.
+     * For base/lamp paint layers, true means should be rendered in translucent
+     * render layer. (Overlay textures always render in translucent layer.) For all
+     * paint layers, true also means {@link #getAlpha(PaintLayer)} applies.
      */
     boolean isTranslucent(PaintLayer layer);
-    
+
     /**
      * See {@link #isTranslucent(PaintLayer)}
      */
@@ -100,9 +101,10 @@ public interface ISuperModelState extends IReadWriteNBT
      * Will be true if layer is assigned a texture.
      */
     boolean isLayerEnabled(PaintLayer l);
-    
+
     /**
-     * Equivalent to setting the texture for the layer to {@link TexturePaletteRegistry#NONE}
+     * Equivalent to setting the texture for the layer to
+     * {@link TexturePaletteRegistry#NONE}
      */
     void disableLayer(PaintLayer l);
 
@@ -126,15 +128,19 @@ public interface ISuperModelState extends IReadWriteNBT
 
     void setPosZ(int index);
 
-    /** Usage is determined by shape. Limited to 44 bits and does not update from world. */
+    /**
+     * Usage is determined by shape. Limited to 44 bits and does not update from
+     * world.
+     */
     long getStaticShapeBits();
 
     /** usage is determined by shape */
     void setStaticShapeBits(long bits);
 
     /**
-     * Will return 0 if model state does not include species.
-     * This is more convenient than checking each place species is used.
+     * Will return 0 if model state does not include species. This is more
+     * convenient than checking each place species is used.
+     * 
      * @return
      */
     int getSpecies();
@@ -154,34 +160,42 @@ public interface ISuperModelState extends IReadWriteNBT
     void setMasonryJoin(SimpleJoin join);
 
     /**
-     * For machines and other blocks with a privileged horizontal face, North is considered the zero rotation.
+     * For machines and other blocks with a privileged horizontal face, North is
+     * considered the zero rotation.
      */
     Rotation getAxisRotation();
 
     /**
-     * For machines and other blocks with a privileged horizontal face, North is considered the zero rotation.
+     * For machines and other blocks with a privileged horizontal face, North is
+     * considered the zero rotation.
      */
     void setAxisRotation(Rotation rotation);
 
-    /** Multiblock shapes also get a full 64 bits of information - does not update from world */
+    /**
+     * Multiblock shapes also get a full 64 bits of information - does not update
+     * from world
+     */
     long getMultiBlockBits();
 
-    /** Multiblock shapes also get a full 64 bits of information - does not update from world */
+    /**
+     * Multiblock shapes also get a full 64 bits of information - does not update
+     * from world
+     */
     void setMultiBlockBits(long bits);
 
     TerrainState getTerrainState();
-    
+
     long getTerrainStateKey();
-    
+
     int getTerrainHotness();
-    
+
     void setTerrainState(TerrainState flowState);
 
     void setTerrainStateKey(long terrainStateKey);
-    
+
     /**
-     * Determines what rendering path should apply for the given paint layer
-     * based on user choices and the constraints imposed by MC rendering.  
+     * Determines what rendering path should apply for the given paint layer based
+     * on user choices and the constraints imposed by MC rendering.
      */
     BlockRenderLayer getRenderPass(PaintLayer layer);
 
@@ -197,7 +211,8 @@ public interface ISuperModelState extends IReadWriteNBT
     boolean hasLampSurface();
 
     /**
-     * True if base paint layer is translucent or lamp paint layer is present and translucent.
+     * True if base paint layer is translucent or lamp paint layer is present and
+     * translucent.
      */
     boolean hasTranslucentGeometry();
 
@@ -208,8 +223,8 @@ public interface ISuperModelState extends IReadWriteNBT
     boolean hasTextureRotation();
 
     /**
-     * Means that one or more elements (like a texture) uses species.
-     * Does not mean that the shape or block actually capture or generate species other than 0.
+     * Means that one or more elements (like a texture) uses species. Does not mean
+     * that the shape or block actually capture or generate species other than 0.
      */
     boolean hasSpecies();
 
@@ -234,42 +249,41 @@ public interface ISuperModelState extends IReadWriteNBT
     /** returns true if geometry is a full 1x1x1 cube. */
     boolean isCube();
 
-    /** 
-     * Rotate this block around the given orthogonalAxis if possible, making necessary changes to world state.
-     * Return true if successful. 
-     * @param blockState 
+    /**
+     * Rotate this block around the given orthogonalAxis if possible, making
+     * necessary changes to world state. Return true if successful.
+     * 
+     * @param blockState
      */
     boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block);
 
-    /** 
-     * How much of the sky is occluded by the shape of this block?
-     * Based on geometry alone, not transparency.
-     * Returns 0 if no occlusion (unlikely result).
-     * 1-15 if some occlusion.
-     * 255 if fully occludes sky.
+    /**
+     * How much of the sky is occluded by the shape of this block? Based on geometry
+     * alone, not transparency. Returns 0 if no occlusion (unlikely result). 1-15 if
+     * some occlusion. 255 if fully occludes sky.
      */
     int geometricSkyOcclusion();
 
-    /** 
-     * Returns true if visual elements and geometry match.
-     * Does not consider species in matching.
+    /**
+     * Returns true if visual elements and geometry match. Does not consider species
+     * in matching.
      */
     boolean doShapeAndAppearanceMatch(ISuperModelState other);
 
-    /** 
-     * Returns true if visual elements match.
-     * Does not consider species or geometry in matching.
+    /**
+     * Returns true if visual elements match. Does not consider species or geometry
+     * in matching.
      */
     boolean doesAppearanceMatch(ISuperModelState other);
 
-    /** 
-     * Returns a copy of this model state with only the bits that matter for geometry.
-     * Used as lookup key for block damage models.
+    /**
+     * Returns a copy of this model state with only the bits that matter for
+     * geometry. Used as lookup key for block damage models.
      */
     ISuperModelState geometricState();
 
     /**
-     * Returns a list of collision boxes offset to the given world position 
+     * Returns a list of collision boxes offset to the given world position
      */
     List<BoundingBox> collisionBoxes(BlockPos offset);
 
@@ -279,16 +293,17 @@ public interface ISuperModelState extends IReadWriteNBT
     Direction rotateFace(Direction face);
 
     /**
-     * Find appropriate transformation assuming base model is oriented to Y orthogonalAxis, positive.
-     * This is different than the Minecraft/Forge default because I brain that way.<br><br>
+     * Find appropriate transformation assuming base model is oriented to Y
+     * orthogonalAxis, positive. This is different than the Minecraft/Forge default
+     * because I brain that way.<br>
+     * <br>
      * See {@link Transform#getMatrix4f(ModelState)}
      */
     Matrix4f getMatrix4f();
 
     ISuperModelState clone();
 
-    default BoundingBox getCollisionBoundingBox()
-    {
+    default BoundingBox getCollisionBoundingBox() {
         return this.getShape().meshFactory().collisionHandler().getCollisionBoundingBox(this);
     }
 
@@ -296,15 +311,14 @@ public interface ISuperModelState extends IReadWriteNBT
      * For backwards compatibility with color maps
      */
     @Deprecated
-    public default void setColorMap(PaintLayer layer, ColorMap colorMap)
-    {
+    public default void setColorMap(PaintLayer layer, ColorMap colorMap) {
         this.setColorRGB(layer, colorMap.getColor(EnumColorMap.BASE));
     }
 
     public void setVertexProcessor(PaintLayer layer, VertexProcessor vp);
-    
+
     public VertexProcessor getVertexProcessor(PaintLayer layer);
 
     public RenderLayoutProducer getRenderLayoutProducer();
-    
+
 }

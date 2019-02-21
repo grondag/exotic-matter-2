@@ -1,12 +1,18 @@
 package grondag.brocade.primitives.stream;
 
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.vertex.IVec3f;
+import grondag.brocade.primitives.vertex.Vec3f;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
 
+//TODO:  make this no-alloc.  XM has an uncommitted start
 public class CsgPolyRecombinator
 {
     private static final ThreadLocal<CsgPolyRecombinator> INSTANCES = new ThreadLocal<CsgPolyRecombinator>()
@@ -33,7 +39,6 @@ public class CsgPolyRecombinator
     private final LongArrayList tagPolyPairs = new LongArrayList();
     private final IntArrayList polys = new IntArrayList();
     private final IntArrayList joinedVertex = new IntArrayList();
-    private final PolyVertexMap vertexMap = new PolyVertexMap();
     
     private CsgPolyRecombinator()
     {
@@ -305,10 +310,20 @@ public class CsgPolyRecombinator
         
     }
     
-    private int joinAtVertex(CsgPolyStream input, int addressA, int aTargetIndex, int addressB, int bTargetIndex)
+    private int joinAtVertex(CsgPolyStream input, int addressA, int addressB, Vec3f v)
     {
         IPolygon polyA = input.polyA(addressA);
         IPolygon polyB = input.polyB(addressB);
+        
+        final int aTargetIndex = polyA.indexForVertex(v);
+        // shouldn't happen, but won't work if does
+        if(aTargetIndex == IPolygon.VERTEX_NOT_FOUND) 
+            return IPolygon.NO_LINK_OR_TAG;
+        
+        final int bTargetIndex = polyB.indexForVertex(v);
+        // shouldn't happen, but won't work if does
+        if(bTargetIndex == IPolygon.VERTEX_NOT_FOUND) 
+            return IPolygon.NO_LINK_OR_TAG;
         
         return joinAtVertex(input, polyA, aTargetIndex, polyB, bTargetIndex);
     }
@@ -481,17 +496,72 @@ public class CsgPolyRecombinator
             combinePolysInner(input, output);
     }
     
+    private static void addPolyToVertexMap(HashMap<Vec3f, IntArrayList> vertexMap, IPolygon poly)
+    {
+        final int limit = poly.vertexCount();
+        for(int i = 0; i < limit; i++)
+        {
+            Vec3f v = poly.getPos(i);
+            IntArrayList bucket = vertexMap.get(v);
+            if(bucket == null)
+            {
+                bucket = new IntArrayList();
+                vertexMap.put(v, bucket);
+            }
+            bucket.add(poly.streamAddress());
+        }
+    }
     
     /**
+     * For use during second phase of combined - will not create buckets that are not found.
+     * Assumes these have been deleted because only had a single poly in them.
+     */
+    private static void addPolyToVertexMapGently(HashMap<Vec3f, IntArrayList> vertexMap, IPolygon poly)
+    {
+        final int limit = poly.vertexCount();
+        for(int i = 0; i < limit; i++)
+        {
+            Vec3f v = poly.getPos(i);
+            IntArrayList bucket = vertexMap.get(v);
+            if(bucket != null)
+                bucket.add(poly.streamAddress());
+        }
+    }
+    
+    private static void removePolyFromVertexMap(HashMap<Vec3f, IntArrayList> vertexMap, IPolygon poly, Vec3f excludingVertex)
+    {
+        final int limit = poly.vertexCount();
+        for(int i = 0; i < limit; i++)
+        {
+            Vec3f v = poly.getPos(i);
+            if(excludingVertex.equals(v))
+                continue;
+            
+            IntArrayList bucket = vertexMap.get(v);
+            
+            if(bucket == null)
+                continue;
+            
+            boolean check  = bucket.rem(poly.streamAddress());
+            assert check;
+        }
+    }
+    /**
      * For three or more polys with same tag.
+     *
+     * PERF: consider making polysIn a set in the caller
      */
     private void combinePolysInner(CsgPolyStream input, IWritablePolyStream output)
     {
-        vertexMap.clear();
+        /**
+         * Index of all polys by vertex
+         */
+        HashMap<Vec3f, IntArrayList> vertexMap = new HashMap<>();
+        
         {
             final int limit = polys.size();
             for(int i = 0; i < limit; i++)
-                vertexMap.addPoly(input.polyA(polys.getInt(i)));
+                addPolyToVertexMap(vertexMap, input.polyA(polys.getInt(i)));
         }
         
         /** 
@@ -505,43 +575,47 @@ public class CsgPolyRecombinator
          * than two polys reference it.
          */
         boolean potentialMatchesRemain = true;
-        PolyVertexMap.Cursor cursor = vertexMap.cursor();
         
         while(potentialMatchesRemain)
         {
             potentialMatchesRemain = false;
             
-            if(cursor.origin()) do
+            Iterator<Entry<Vec3f, IntArrayList>> it = vertexMap.entrySet().iterator();
+            while(it.hasNext())
             {
-                if(cursor.polyCount() < 2)
+                Entry<Vec3f, IntArrayList> entry = it.next();
+                IntArrayList bucket = entry.getValue();
+                if(bucket.size() < 2)
                 {
                     // nothing to simplify here
-                    cursor.remove();
+                    it.remove();
                 }
-                else if(cursor.polyCount() == 2)
+                else if(bucket.size() == 2)
                 {
                     // eliminate T junctions
-                    int firstPoly = cursor.firstPolyIndex();
-                    int secondPoly = cursor.secondPolyIndex();
-                    int newPoly = joinAtVertex(input, firstPoly, cursor.firstVertexIndex(), secondPoly, cursor.secondVertexIndex());
+                    Vec3f v = entry.getKey();
+                    int first = bucket.getInt(0);
+                    int second = bucket.getInt(1);
+                    int newPoly = joinAtVertex(input, first, second, v);
                     if(newPoly != IPolygon.NO_LINK_OR_TAG)
                     {
                         potentialMatchesRemain = true;
-                        cursor.remove();
+                        // we won't see a CME because not removing any vertices at this point except via the iterator
+                        it.remove();
                         
-                        boolean check = polys.rem(firstPoly);
+                        boolean check = polys.rem(first);
                         assert check;
-                        vertexMap.removePoly(firstPoly);
+                        removePolyFromVertexMap(vertexMap, input.polyA(first), v);
                         
-                        check = polys.rem(secondPoly);
+                        check = polys.rem(second);
                         assert check;
-                        vertexMap.removePoly(secondPoly);
+                        removePolyFromVertexMap(vertexMap, input.polyA(second), v);
                         
                         polys.add(newPoly);
-                        vertexMap.addPolyGently(input.polyA(newPoly));
+                        addPolyToVertexMapGently(vertexMap, input.polyA(newPoly));
                     }
                 }
-            } while(cursor.next());
+            }
         }
         
         final int limit = polys.size();

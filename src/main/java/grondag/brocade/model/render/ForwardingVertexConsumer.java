@@ -10,49 +10,42 @@ import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 /**
  * Forge has a class like this, but wrapped consumer here is non-final.
  */
-public abstract class ForwardingVertexConsumer implements IVertexConsumer
-{
+public abstract class ForwardingVertexConsumer implements IVertexConsumer {
     protected @Nullable IVertexConsumer wrapped;
-    
+
     @SuppressWarnings("null")
     @Override
-    public VertexFormat getVertexFormat()
-    {
+    public VertexFormat getVertexFormat() {
         return wrapped.getVertexFormat();
     }
 
     @SuppressWarnings("null")
     @Override
-    public void setQuadTint(int tint)
-    {
+    public void setQuadTint(int tint) {
         wrapped.setQuadTint(tint);
     }
 
     @SuppressWarnings("null")
     @Override
-    public void setQuadOrientation(EnumFacing orientation)
-    {
+    public void setQuadOrientation(EnumFacing orientation) {
         wrapped.setQuadOrientation(orientation);
     }
 
     @SuppressWarnings("null")
     @Override
-    public void setApplyDiffuseLighting(boolean diffuse)
-    {
+    public void setApplyDiffuseLighting(boolean diffuse) {
         wrapped.setApplyDiffuseLighting(diffuse);
     }
 
     @SuppressWarnings("null")
     @Override
-    public void setTexture(TextureAtlasSprite texture)
-    {
+    public void setTexture(TextureAtlasSprite texture) {
         wrapped.setTexture(texture);
     }
 
     @SuppressWarnings("null")
     @Override
-    public void put(final int element, float... data)
-    {
+    public void put(final int element, float... data) {
         wrapped.put(element, data);
     }
 }

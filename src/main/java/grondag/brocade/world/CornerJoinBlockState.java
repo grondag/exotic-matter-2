@@ -1,36 +1,29 @@
 package grondag.brocade.world;
 
-import grondag.brocade.world.borked.CornerJoinFaceState;
-import grondag.brocade.world.borked.SimpleJoin;
 import net.minecraft.util.math.Direction;
 
-public class CornerJoinBlockState
-{
+public class CornerJoinBlockState {
     private final int index;
-    
+
     /** join state considering only direct neighbors */
     public final SimpleJoin simpleJoin;
-    
+
     private byte faceJoinIndex[] = new byte[6];
-    
-    CornerJoinBlockState(int index, SimpleJoin simpleJoin)
-    {
+
+    CornerJoinBlockState(int index, SimpleJoin simpleJoin) {
         this.index = index;
         this.simpleJoin = simpleJoin;
     }
-    
-    public int getIndex()
-    {
+
+    public int getIndex() {
         return index;
     }
-    
-    void setFaceJoinState(Direction face, CornerJoinFaceState state)
-    {
-        faceJoinIndex[face.ordinal()]=(byte)state.ordinal();
+
+    void setFaceJoinState(Direction face, CornerJoinFaceState state) {
+        faceJoinIndex[face.ordinal()] = (byte) state.ordinal();
     }
-    
-    public CornerJoinFaceState getFaceJoinState(Direction face)
-    {
+
+    public CornerJoinFaceState getFaceJoinState(Direction face) {
         return CornerJoinFaceState.values()[faceJoinIndex[face.ordinal()]];
     }
 }

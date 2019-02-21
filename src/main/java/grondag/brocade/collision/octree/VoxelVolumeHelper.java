@@ -1,25 +1,20 @@
 package grondag.brocade.collision.octree;
 
-public class VoxelVolumeHelper
-{
+public class VoxelVolumeHelper {
 
-    static void setBit(int index, long[] target)
-    {
+    static void setBit(int index, long[] target) {
         target[index >> 6] |= (1L << (index & 63));
     }
 
-    static void clearBit(int index, long[] target)
-    {
+    static void clearBit(int index, long[] target) {
         target[index >> 6] &= ~(1L << (index & 63));
     }
 
-    static boolean isClear(int index, long[] src)
-    {
+    static boolean isClear(int index, long[] src) {
         return (src[index >> 6] & (1L << (index & 63))) == 0;
     }
 
-    static boolean isSet(int index, long[] src)
-    {
+    static boolean isSet(int index, long[] src) {
         return !isClear(index, src);
     }
 
