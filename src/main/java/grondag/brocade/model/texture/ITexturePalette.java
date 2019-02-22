@@ -2,10 +2,10 @@ package grondag.brocade.model.texture;
 
 import java.util.function.Consumer;
 
-import grondag.brocade.api.TextureLayout;
-import grondag.brocade.api.TextureRenderIntent;
-import grondag.brocade.api.TextureScale;
-import grondag.brocade.api.TextureRotation.TextureRotationSetting;
+import grondag.brocade.api.texture.TextureLayout;
+import grondag.brocade.api.texture.TextureRenderIntent;
+import grondag.brocade.api.texture.TextureScale;
+import grondag.brocade.api.texture.TextureRotation.TextureRotationSetting;
 import grondag.fermion.IGrondagMod;
 
 public interface ITexturePalette {

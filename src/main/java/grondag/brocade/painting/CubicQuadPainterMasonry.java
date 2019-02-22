@@ -89,7 +89,7 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
 
             final ITexturePalette tex = getTexture(modelState, paintLayer);
             editor.setTextureName(layerIndex,
-                    tex.getTextureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
+                    tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
             commonPostPaint(editor, layerIndex, modelState, paintLayer);
 

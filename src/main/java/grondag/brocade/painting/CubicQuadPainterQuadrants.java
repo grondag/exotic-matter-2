@@ -54,10 +54,10 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
 
             final EnumFacing nominalFace = editor.getNominalFace();
             ITexturePalette tex = getTexture(modelState, paintLayer);
-            final int textureVersion = tex.textureVersionMask()
+            final int textureVersion = tex.versionMask()
                     & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
 
-            editor.setTextureName(layerIndex, tex.getTextureName(textureVersion));
+            editor.setTextureName(layerIndex, tex.textureName(textureVersion));
             editor.setShouldContractUVs(layerIndex, true);
 
             final CornerJoinFaceState faceState = modelState.getCornerJoin().getFaceJoinState(nominalFace);

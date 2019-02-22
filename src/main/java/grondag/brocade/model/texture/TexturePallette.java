@@ -2,11 +2,11 @@ package grondag.brocade.model.texture;
 
 import java.util.function.Consumer;
 
-import grondag.brocade.api.TextureLayout;
-import grondag.brocade.api.TextureRenderIntent;
-import grondag.brocade.api.TextureRotation;
-import grondag.brocade.api.TextureScale;
-import grondag.brocade.api.TextureRotation.TextureRotationSetting;
+import grondag.brocade.api.texture.TextureLayout;
+import grondag.brocade.api.texture.TextureRenderIntent;
+import grondag.brocade.api.texture.TextureRotation;
+import grondag.brocade.api.texture.TextureScale;
+import grondag.brocade.api.texture.TextureRotation.TextureRotationSetting;
 import grondag.brocade.model.state.ModelStateData;
 import grondag.fermion.IGrondagMod;
 import net.minecraft.client.resource.language.I18n;
@@ -132,7 +132,7 @@ class TexturePallette implements ITexturePalette {
     }
 
     /**
-     * @see grondag.hard_science.superblock.texture.ITexturePallette#getTextureName(int,
+     * @see grondag.hard_science.superblock.texture.ITexturePallette#textureName(int,
      *      int)
      */
     @Override

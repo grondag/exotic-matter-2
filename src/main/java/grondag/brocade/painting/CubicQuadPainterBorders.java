@@ -192,7 +192,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             editor.setMaxU(layerIndex, inputs.flipU ? 0 : 1);
             editor.setMaxV(layerIndex, inputs.flipV ? 0 : 1);
             editor.setTextureName(layerIndex,
-                    tex.getTextureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
+                    tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
             commonPostPaint(editor, layerIndex, modelState, paintLayer);
 

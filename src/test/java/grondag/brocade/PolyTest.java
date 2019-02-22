@@ -237,7 +237,7 @@ public class PolyTest {
         assert poly.getRenderLayer(layer) == bl;
         assert poly.getRotation(layer) == rot;
         assert poly.shouldContractUVs(layer) == cuv;
-        assert poly.getTextureName(layer) == tex;
+        assert poly.textureName(layer) == tex;
         assert poly.getTextureSalt() == salt;
 
         for (int v = 0; v < vertexCount; v++) {
@@ -295,7 +295,7 @@ public class PolyTest {
         assert a.getRenderLayer(layer) == b.getRenderLayer(layer);
         assert a.getRotation(layer) == b.getRotation(layer);
         assert a.shouldContractUVs(layer) == b.shouldContractUVs(layer);
-        assert a.getTextureName(layer) == b.getTextureName(layer);
+        assert a.textureName(layer) == b.textureName(layer);
         assert a.getTextureSalt() == b.getTextureSalt();
 
         for (int v = 0; v < a.vertexCount(); v++) {

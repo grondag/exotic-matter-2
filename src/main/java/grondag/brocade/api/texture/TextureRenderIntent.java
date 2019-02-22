@@ -1,4 +1,4 @@
-package grondag.brocade.api;
+package grondag.brocade.api.texture;
 
 import net.minecraft.block.BlockRenderLayer;
 

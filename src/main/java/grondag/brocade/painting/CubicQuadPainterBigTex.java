@@ -65,7 +65,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 
                 surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(layerIndex), scale);
 
-                editor.setTextureName(layerIndex, tex.getTextureName(0));
+                editor.setTextureName(layerIndex, tex.textureName(0));
 
                 final int xOffset = (depthAndSpeciesHash >> 2) & scale.sliceCountMask;
                 final int yOffset = (depthAndSpeciesHash >> 8) & scale.sliceCountMask;
@@ -98,8 +98,8 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                         ? 0
                         : MathHelper.hash(Math.abs(surfaceVec.getZ()) | (editor.getTextureSalt() << 8));
 
-                editor.setTextureName(layerIndex, tex.getTextureName(
-                        (textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.textureVersionMask()));
+                editor.setTextureName(layerIndex, tex.textureName(
+                        (textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.versionMask()));
 
                 editor.setRotation(layerIndex,
                         allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState),

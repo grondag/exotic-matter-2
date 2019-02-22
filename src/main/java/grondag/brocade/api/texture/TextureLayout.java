@@ -1,4 +1,4 @@
-package grondag.brocade.api;
+package grondag.brocade.api.texture;
 
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
@@ -8,7 +8,6 @@ import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 
 import grondag.brocade.model.texture.EnhancedSprite;
-import grondag.brocade.model.texture.TexturePallette;
 import net.minecraft.client.MinecraftClient;
 
 public enum TextureLayout {
@@ -18,13 +17,13 @@ public enum TextureLayout {
      */
     SPLIT_X_8(STATE_FLAG_NONE) {
         @Override
-        public final String buildTextureName(TexturePallette texture, int version, int index) {
+        public final String buildTextureName(TextureSet texture, int version, int index) {
             return buildTextureName_X_8(texture, index);
         }
 
         @Override
-        public void prestitch(TexturePallette texture, Consumer<String> stitcher) {
-            for (int i = 0; i < texture.textureVersionCount; i++) {
+        public void prestitch(TextureSet texture, Consumer<String> stitcher) {
+            for (int i = 0; i < texture.versionCount(); i++) {
                 stitcher.accept(buildTextureName_X_8(texture, i));
             }
         }
@@ -47,16 +46,16 @@ public enum TextureLayout {
      */
     BORDER_13(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 14) {
         @Override
-        public final String buildTextureName(TexturePallette texture, int version, int index) {
+        public final String buildTextureName(TextureSet texture, int version, int index) {
             return buildTextureName_X_8(texture, version * this.blockTextureCount + index);
         }
 
         @Override
-        public void prestitch(TexturePallette texture, Consumer<String> stitcher) {
+        public void prestitch(TextureSet texture, Consumer<String> stitcher) {
             // last texture (no border) only needed if indicated
-            final int texCount = texture.renderNoBorderAsTile ? this.textureCount : this.textureCount - 1;
+            final int texCount = texture.renderNoBorderAsTile() ? this.textureCount : this.textureCount - 1;
 
-            for (int i = 0; i < texture.textureVersionCount; i++) {
+            for (int i = 0; i < texture.versionCount(); i++) {
                 for (int j = 0; j < texCount; j++) {
                     stitcher.accept(buildTextureName_X_8(texture, i * BORDER_13.blockTextureCount + j));
                 }
@@ -64,7 +63,7 @@ public enum TextureLayout {
         }
 
         @Override
-        public String sampleTextureName(TexturePallette texture) {
+        public String sampleTextureName(TextureSet texture) {
             return this.buildTextureName(texture, 0, 4);
         }
     },
@@ -75,13 +74,13 @@ public enum TextureLayout {
      */
     MASONRY_5(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_MASONRY_JOIN | STATE_FLAG_NEEDS_SPECIES, 5) {
         @Override
-        public final String buildTextureName(TexturePallette texture, int version, int index) {
+        public final String buildTextureName(TextureSet texture, int version, int index) {
             return buildTextureName_X_8(texture, version * this.blockTextureCount + index);
         }
 
         @Override
-        public void prestitch(TexturePallette texture, Consumer<String> stitcher) {
-            for (int i = 0; i < texture.textureVersionCount; i++) {
+        public void prestitch(TextureSet texture, Consumer<String> stitcher) {
+            for (int i = 0; i < texture.versionCount(); i++) {
                 for (int j = 0; j < this.textureCount; j++) {
                     stitcher.accept(buildTextureName_X_8(texture, i * this.blockTextureCount + j));
                 }
@@ -106,8 +105,8 @@ public enum TextureLayout {
      */
     QUADRANT_CONNECTED(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES);
 
-    private static String buildTextureName_X_8(TexturePallette texture, int offset) {
-        return texture.mod.modID() + ":blocks/" + texture.textureBaseName + "_" + (offset >> 3) + "_" + (offset & 7);
+    private static String buildTextureName_X_8(TextureSet texture, int offset) {
+        return texture.id().getNamespace() + ":blocks/" + texture.baseTextureName() + "_" + (offset >> 3) + "_" + (offset & 7);
     }
 
     private TextureLayout(int stateFlags) {
@@ -153,18 +152,18 @@ public enum TextureLayout {
      * textures. If textures have multiple versions, names should have a zero-based
      * _x suffix
      */
-    public String buildTextureName(TexturePallette texture, int version, int index) {
-        return texture.mod.modID() + ":blocks/" + (texture.textureVersionCount == 1 ? texture.textureBaseName
-                : (texture.textureBaseName + "_" + version));
+    public String buildTextureName(TextureSet texture, int version, int index) {
+        return texture.id().getNamespace() + ":blocks/" + (texture.versionCount() == 1 ? texture.baseTextureName()
+                : (texture.baseTextureName() + "_" + version));
     }
 
-    public void prestitch(TexturePallette texture, Consumer<String> stitcher) {
-        for (int i = 0; i < texture.textureVersionCount; i++) {
+    public void prestitch(TextureSet texture, Consumer<String> stitcher) {
+        for (int i = 0; i < texture.versionCount(); i++) {
             stitcher.accept(this.buildTextureName(texture, i, 0));
         }
     }
 
-    public String sampleTextureName(TexturePallette texture) {
+    public String sampleTextureName(TextureSet texture) {
         return this.buildTextureName(texture, 0, 0);
     }
 
@@ -173,7 +172,7 @@ public enum TextureLayout {
      * appropriate portion of the texture in the sample. It's always the whole
      * texture. Doesn't matter in most cases, but potentially a future enhancement.
      */
-    public EnhancedSprite createSampleSprite(TexturePallette texture) {
+    public EnhancedSprite createSampleSprite(TextureSet texture) {
         EnhancedSprite result = (EnhancedSprite) MinecraftClient.getInstance().getSpriteAtlas()
                 .getSprite(sampleTextureName(texture));
         return result;

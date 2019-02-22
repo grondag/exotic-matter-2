@@ -453,8 +453,8 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                             // For now, always use uv 0,0 as tiling origin.
 
                             final int salt = MathHelper.hash(baseSalt | (uIndexFinal << 16) | (vIndexFinal << 22));
-                            int textureVersion = tex.textureVersionMask() & (salt >> 4);
-                            editor.setTextureName(layerIndex, tex.getTextureName(textureVersion));
+                            int textureVersion = tex.versionMask() & (salt >> 4);
+                            editor.setTextureName(layerIndex, tex.textureName(textureVersion));
 
                             editor.setRotation(layerIndex,
                                     tex.rotation().rotationType() == TextureRotation.RANDOM

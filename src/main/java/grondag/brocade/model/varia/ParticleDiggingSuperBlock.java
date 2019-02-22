@@ -36,7 +36,7 @@ public class ParticleDiggingSuperBlock extends ParticleDigging {
         Block block = state.getBlock();
         this.particleAlpha = block.isTranslucent(state) ? ((color >> 24) & 0xFF) / 255f : 1f;
         ITexturePalette tex = modelState.getTexture(PaintLayer.BASE);
-        this.particleTexture = tex.getSampleSprite();
+        this.particleTexture = tex.sampleSprite();
         this.uvScale = 1f / tex.textureScale().sliceCount;
     }
 

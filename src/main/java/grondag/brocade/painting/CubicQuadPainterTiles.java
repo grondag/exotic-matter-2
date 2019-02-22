@@ -27,11 +27,11 @@ public abstract class CubicQuadPainterTiles extends QuadPainter {
             if (salt != 0) {
                 int saltHash = MathHelper.hash(salt);
                 rotation = Useful.offsetEnumValue(rotation, saltHash & 3);
-                textureVersion = (textureVersion + (saltHash >> 2)) & tex.textureVersionMask();
+                textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();
             }
 
             editor.setRotation(layerIndex, rotation);
-            editor.setTextureName(layerIndex, tex.getTextureName(textureVersion));
+            editor.setTextureName(layerIndex, tex.textureName(textureVersion));
             editor.setShouldContractUVs(layerIndex, true);
 
             commonPostPaint(editor, layerIndex, modelState, paintLayer);

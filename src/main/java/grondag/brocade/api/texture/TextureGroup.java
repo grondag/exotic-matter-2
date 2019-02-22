@@ -1,4 +1,4 @@
-package grondag.brocade.api;
+package grondag.brocade.api.texture;
 
 public enum TextureGroup {
     STATIC_TILES, STATIC_BORDERS, STATIC_DETAILS, DYNAMIC_TILES, DYNAMIC_BORDERS, DYNAMIC_DETAILS, HIDDEN_TILES,

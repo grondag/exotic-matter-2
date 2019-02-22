@@ -1,7 +1,7 @@
 package grondag.brocade.model.texture;
 
-import static grondag.brocade.api.TextureRotation.FIXED;
-import static grondag.brocade.api.TextureRotation.RANDOM;
+import static grondag.brocade.api.texture.TextureRotation.FIXED;
+import static grondag.brocade.api.texture.TextureRotation.RANDOM;
 import static grondag.fermion.world.Rotation.ROTATE_NONE;
 
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 import grondag.brocade.Brocade;
-import grondag.brocade.api.TextureGroup;
-import grondag.brocade.api.TextureLayout;
-import grondag.brocade.api.TextureRenderIntent;
-import grondag.brocade.api.TextureScale;
+import grondag.brocade.api.texture.TextureGroup;
+import grondag.brocade.api.texture.TextureLayout;
+import grondag.brocade.api.texture.TextureRenderIntent;
+import grondag.brocade.api.texture.TextureScale;
 import grondag.brocade.init.SubstanceConfig;
 import grondag.brocade.painting.PaintLayer;
 import grondag.fermion.IGrondagMod;

@@ -41,7 +41,7 @@ public abstract class QuadPainter {
     }
 
     public static int firstAvailableTextureLayer(IPolygon poly) {
-        return poly.getTextureName(0) == null ? 0 : poly.getTextureName(1) == null ? 1 : 2;
+        return poly.textureName(0) == null ? 0 : poly.textureName(1) == null ? 1 : 2;
     }
 
     protected static ITexturePalette getTexture(ISuperModelState modelState, PaintLayer paintLayer) {
@@ -173,7 +173,7 @@ public abstract class QuadPainter {
     protected static int textureVersionForFace(EnumFacing face, ITexturePalette tex, ISuperModelState modelState) {
         if (tex.textureVersionCount() == 0)
             return 0;
-        return textureHashForFace(face, tex, modelState) & tex.textureVersionMask();
+        return textureHashForFace(face, tex, modelState) & tex.versionMask();
     }
 
     protected static int textureHashForFace(EnumFacing face, ITexturePalette tex, ISuperModelState modelState) {
