@@ -1,22 +1,21 @@
 package grondag.brocade.apiimpl.texture;
 
+import grondag.brocade.api.texture.TextureGroup;
 import grondag.brocade.api.texture.TextureLayout;
 import grondag.brocade.api.texture.TextureRenderIntent;
 import grondag.brocade.api.texture.TextureRotation;
 import grondag.brocade.api.texture.TextureScale;
 
 abstract class AbstractTextureSet {
-    TextureLayout layout;
-    TextureRotation rotation;
-    TextureScale scale;
-    TextureRenderIntent renderIntent;
-    int versionCount;
+    TextureLayout layout = TextureLayout.SIMPLE;
+    TextureRotation rotation = TextureRotation.ROTATE_NONE;
+    TextureScale scale = TextureScale.SINGLE;
+    TextureRenderIntent renderIntent = TextureRenderIntent.BASE_ONLY;
+    int textureGroupFlags = TextureGroup.ALWAYS_HIDDEN.bitFlag;
+    int versionCount = 1;
+    boolean renderNoBorderAsTile = false;
     String baseTextureName;
-    boolean renderNoBorderAsTile;
-    String displayName;
-    int zoomLevel;
-    int textureGroupFlags;
-    String sampleTextureName;
+    String displayNameToken;
     
     protected void copyFrom(AbstractTextureSet template) {
         this.layout = template.layout;
@@ -26,10 +25,8 @@ abstract class AbstractTextureSet {
         this.versionCount = template.versionCount;
         this.baseTextureName = template.baseTextureName;
         this.renderNoBorderAsTile = template.renderNoBorderAsTile;
-        this.displayName = template.displayName;
-        this.zoomLevel = template.zoomLevel;
+        this.displayNameToken = template.displayNameToken;
         this.textureGroupFlags = template.textureGroupFlags;
-        this.sampleTextureName = template.sampleTextureName;
     }
     
     public TextureLayout layout() {
@@ -61,17 +58,9 @@ abstract class AbstractTextureSet {
     }
 
     public String displayName() {
-        return displayName;
+        return displayNameToken;
     }
 
-    public int zoomLevel() {
-        return zoomLevel;
-    }
-    
-    public String sampleTextureName() {
-        return sampleTextureName;
-    }
-    
     public int textureGroupFlags() {
         return textureGroupFlags;
     }

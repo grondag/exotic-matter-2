@@ -15,15 +15,15 @@ public interface TextureSetBuilder {
 
     TextureSetBuilder groups(TextureGroup... groups);
 
-    TextureSetBuilder zoomLevel(int zoomLevel);
-
     TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile);
     
     TextureSetBuilder baseTextureName(String baseTextureName);
     
-    TextureSetBuilder sampleTextureName(String sampleTextureName);
-    
-    TextureSetBuilder displayName(String displayName);
+    TextureSetBuilder displayNameToken(String displayNameToken);
     
     TextureSet build(Identifier id);
+    
+    default TextureSet build(String nameSpace, String path) {
+        return build(new Identifier(nameSpace, path));
+    }
 }

@@ -47,12 +47,6 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
     }
 
     @Override
-    public TextureSetBuilder zoomLevel(int zoomLevel) {
-        this.zoomLevel = zoomLevel;
-        return this;
-    }
-
-    @Override
     public TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile) {
         this.renderNoBorderAsTile = renderNoBorderAsTile;
         return this;
@@ -65,19 +59,15 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
     }
 
     @Override
-    public TextureSetBuilder sampleTextureName(String sampleTextureName) {
-        this.sampleTextureName = sampleTextureName;
-        return this;
-    }
-
-    @Override
-    public TextureSetBuilder displayName(String displayName) {
-        this.displayName = displayName;
+    public TextureSetBuilder displayNameToken(String displayNameToken) {
+        this.displayNameToken = displayNameToken;
         return this;
     }
 
     @Override
     public TextureSet build(Identifier id) {
-        return new TextureSetImpl(id, this);
+        TextureSetImpl result = new TextureSetImpl(id, this);
+        TextureSetRegistryImpl.INSTANCE.add(result);
+        return result;
     }
 }

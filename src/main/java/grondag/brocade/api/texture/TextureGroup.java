@@ -1,8 +1,16 @@
 package grondag.brocade.api.texture;
 
 public enum TextureGroup {
-    STATIC_TILES, STATIC_BORDERS, STATIC_DETAILS, DYNAMIC_TILES, DYNAMIC_BORDERS, DYNAMIC_DETAILS, HIDDEN_TILES,
-    HIDDEN_BORDERS, HIDDEN_DETAILS, ALWAYS_HIDDEN;
+    STATIC_TILES,
+    STATIC_BORDERS,
+    STATIC_DETAILS,
+    DYNAMIC_TILES,
+    DYNAMIC_BORDERS,
+    DYNAMIC_DETAILS,
+    HIDDEN_TILES,
+    HIDDEN_BORDERS,
+    HIDDEN_DETAILS,
+    ALWAYS_HIDDEN;
 
     /** used as a fast way to filter textures from a list */
     public final int bitFlag;

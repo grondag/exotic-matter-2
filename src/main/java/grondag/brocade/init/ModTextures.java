@@ -1,19 +1,25 @@
 package grondag.brocade.init;
 
-import static grondag.exotic_matter.model.texture.TextureRotationType.*;
-import static grondag.exotic_matter.world.Rotation.*;
+import static grondag.brocade.api.texture.TextureRotation.*;
 
-import grondag.exotic_matter.ConfigXM;
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.model.texture.TextureGroup;
-import grondag.exotic_matter.model.texture.TextureLayout;
-import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
-import grondag.exotic_matter.model.texture.TexturePaletteSpec;
-import grondag.exotic_matter.model.texture.TextureRenderIntent;
-import grondag.exotic_matter.model.texture.TextureScale;
+import grondag.brocade.Brocade;
+import grondag.brocade.api.texture.TextureSet;
+import grondag.fermion.config.FermionConfig;
+
+import static grondag.brocade.api.texture.TextureGroup.*;
+import static grondag.brocade.api.texture.TextureLayout.*;
+import static grondag.brocade.api.texture.TextureRenderIntent.*;
+import static grondag.brocade.api.texture.TextureScale.*;
 
 public class ModTextures {
+    
+    /** 
+     * Main purpose is to force instantiation of other static members.
+     */
+    public static void init() {
+        Brocade.INSTANCE.debug("Registering Brocade textures");
+    }
+    
     // ======================================================================
     // TEST/DEBUG TEXTURES - NOT LOADED UNLESS NEEDED
     // ======================================================================
@@ -21,108 +27,104 @@ public class ModTextures {
     // but still load placeholders so we don't lose test texture attributes on
     // blocks if test textures are temporarily disabled
 
-    public static final ITexturePalette BIGTEX_TEST_SINGLE = TexturePaletteRegistry.addTexturePallette(
-            "bigtex_test_single", ConfigXM.BLOCKS.showHiddenTextures ? "bigtex_single" : "noise_moderate_0_0",
-            new TexturePaletteSpec(ExoticMatter.INSTANCE).withVersionCount(1).withScale(TextureScale.SMALL)
-                    .withLayout(TextureLayout.SIMPLE).withRotation(CONSISTENT.with(ROTATE_NONE))
-                    .withRenderIntent(TextureRenderIntent.BASE_ONLY).withGroups(TextureGroup.HIDDEN_TILES));
+    public static final TextureSet BIGTEX_TEST_SINGLE = TextureSet.builder().displayNameToken("bigtex_test_single")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "bigtex_single" : "noise_moderate_0_0")
+            .versionCount(1).scale(SMALL).layout(SIMPLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
+            .groups(HIDDEN_TILES).build("brocade", "bigtex_test_single");
 
-    public static final ITexturePalette BIGTEX_TEST1 = TexturePaletteRegistry.addTexturePallette("big_tex_test1",
-            ConfigXM.BLOCKS.showHiddenTextures ? "bigtex" : "noise_moderate_0",
-            new TexturePaletteSpec(ExoticMatter.INSTANCE).withVersionCount(4).withScale(TextureScale.TINY)
-                    .withLayout(TextureLayout.SIMPLE).withRotation(RANDOM.with(ROTATE_NONE))
-                    .withRenderIntent(TextureRenderIntent.BASE_ONLY).withGroups(TextureGroup.HIDDEN_TILES));
+    public static final TextureSet BIGTEX_TEST1 = TextureSet.builder().displayNameToken("big_tex_test1")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "bigtex" : "noise_moderate_0")
+            .versionCount(4).scale(TINY).layout(SIMPLE).rotation(ROTATE_RANDOM).renderIntent(BASE_ONLY)
+            .groups(HIDDEN_TILES).build("brocade", "big_tex_test1");
 
-    public static final ITexturePalette BIGTEX_TEST2 = TexturePaletteRegistry.addTexturePallette("big_tex_test2",
-            ConfigXM.BLOCKS.showHiddenTextures ? "bigtex" : "noise_moderate_0",
-            new TexturePaletteSpec(BIGTEX_TEST1).withScale(TextureScale.SMALL));
-    public static final ITexturePalette BIGTEX_TEST3 = TexturePaletteRegistry.addTexturePallette("big_tex_test3",
-            ConfigXM.BLOCKS.showHiddenTextures ? "bigtex" : "noise_moderate_0",
-            new TexturePaletteSpec(BIGTEX_TEST1).withScale(TextureScale.MEDIUM));
-    public static final ITexturePalette BIGTEX_TEST4 = TexturePaletteRegistry.addTexturePallette("big_tex_test4",
-            ConfigXM.BLOCKS.showHiddenTextures ? "bigtex" : "noise_moderate_0",
-            new TexturePaletteSpec(BIGTEX_TEST1).withScale(TextureScale.LARGE));
-    public static final ITexturePalette BIGTEX_TEST5 = TexturePaletteRegistry.addTexturePallette("big_tex_test5",
-            ConfigXM.BLOCKS.showHiddenTextures ? "bigtex" : "noise_moderate_0",
-            new TexturePaletteSpec(BIGTEX_TEST1).withScale(TextureScale.GIANT));
+    public static final TextureSet BIGTEX_TEST2 = TextureSet.builder(BIGTEX_TEST1)
+            .displayNameToken("big_tex_test2").scale(SMALL).build("brocade", "big_tex_test2");
+    
+    public static final TextureSet BIGTEX_TEST3 = TextureSet.builder(BIGTEX_TEST1)
+            .displayNameToken("big_tex_test3").scale(MEDIUM).build("brocade", "big_tex_test3");
+            
+    public static final TextureSet BIGTEX_TEST4 = TextureSet.builder(BIGTEX_TEST1)
+            .displayNameToken("big_tex_test4").scale(LARGE).build("brocade", "big_tex_test4");
+    
+    public static final TextureSet BIGTEX_TEST5 = TextureSet.builder(BIGTEX_TEST1)
+            .displayNameToken("big_tex_test5").scale(GIANT).build("brocade", "big_tex_test5");
 
-    public static final ITexturePalette TEST = TexturePaletteRegistry.addTexturePallette("test",
-            ConfigXM.BLOCKS.showHiddenTextures ? "test" : "noise_moderate_0",
-            new TexturePaletteSpec(ExoticMatter.INSTANCE).withVersionCount(2).withScale(TextureScale.SINGLE)
-                    .withLayout(TextureLayout.SIMPLE).withRotation(RANDOM.with(ROTATE_NONE))
-                    .withRenderIntent(TextureRenderIntent.BASE_ONLY).withGroups(TextureGroup.HIDDEN_TILES));
-    public static final ITexturePalette TEST_ZOOM = TexturePaletteRegistry.addZoomedPallete(TEST);
+    public static final TextureSet TEST = TextureSet.builder().displayNameToken("test")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "test" : "noise_moderate_0")
+            .versionCount(2).scale(SINGLE).layout(SIMPLE).rotation(ROTATE_NONE)
+            .renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("brocade","test");
+    
+    public static final TextureSet TEST_ZOOM = TextureSet.builder(TEST).displayNameToken("test_zoom")
+            .scale(TINY).build("brocade", "test_zoom");
 
-    public static final ITexturePalette TEST_90 = TexturePaletteRegistry.addTexturePallette("test_90",
-            ConfigXM.BLOCKS.showHiddenTextures ? "test" : "noise_moderate_0",
-            new TexturePaletteSpec(TEST).withRotation(FIXED.with(ROTATE_90)));
-    public static final ITexturePalette TEST_90_ZOOM = TexturePaletteRegistry.addZoomedPallete(TEST_90);
+    public static final TextureSet TEST_90 = TextureSet.builder(TEST).displayNameToken("test_90")
+            .rotation(ROTATE_90).build("brocade", "test_90");
+    
+    public static final TextureSet TEST_90_ZOOM = TextureSet.builder(TEST_90).displayNameToken("test_90_zoom")
+            .scale(TINY).build("brocade", "test_90_zoom");
 
-    public static final ITexturePalette TEST_180 = TexturePaletteRegistry.addTexturePallette("test_180",
-            ConfigXM.BLOCKS.showHiddenTextures ? "test" : "noise_moderate_0",
-            new TexturePaletteSpec(TEST).withRotation(FIXED.with(ROTATE_180)));
-    public static final ITexturePalette TEST_180_ZOOM = TexturePaletteRegistry.addZoomedPallete(TEST_180);
+    public static final TextureSet TEST_180 = TextureSet.builder(TEST).displayNameToken("test_180")
+            .rotation(ROTATE_90).build("brocade", "test_180");
+    
+    public static final TextureSet TEST_180_ZOOM = TextureSet.builder(TEST_180).displayNameToken("test_180_zoom")
+            .scale(TINY).build("brocade", "test_180_zoom");
+    
+    public static final TextureSet TEST_270 = TextureSet.builder(TEST).displayNameToken("test_270")
+            .rotation(ROTATE_90).build("brocade", "test_270");
+    
+    public static final TextureSet TEST_270_ZOOM = TextureSet.builder(TEST_270).displayNameToken("test_270_zoom")
+            .scale(TINY).build("brocade", "test_270_zoom");
 
-    public static final ITexturePalette TEST_270 = TexturePaletteRegistry.addTexturePallette("test_270",
-            ConfigXM.BLOCKS.showHiddenTextures ? "test" : "noise_moderate_0",
-            new TexturePaletteSpec(TEST).withRotation(FIXED.with(ROTATE_270)));
-    public static final ITexturePalette TEST_270_ZOOM = TexturePaletteRegistry.addZoomedPallete(TEST_270);
+    public static final TextureSet TEST_4X4 = TextureSet.builder().displayNameToken("test4x4")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "test4x4" : "noise_moderate_0_0")
+            .versionCount(1).scale(SMALL).layout(SIMPLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
+            .groups(HIDDEN_TILES).build("brocade", "test4x4");
 
-    public static final ITexturePalette TEST_4X4 = TexturePaletteRegistry.addTexturePallette("test4x4",
-            ConfigXM.BLOCKS.showHiddenTextures ? "test4x4" : "noise_moderate_0_0",
-            new TexturePaletteSpec(ExoticMatter.INSTANCE).withVersionCount(1).withScale(TextureScale.SMALL)
-                    .withLayout(TextureLayout.SIMPLE).withRotation(FIXED.with(ROTATE_NONE))
-                    .withRenderIntent(TextureRenderIntent.BASE_ONLY).withGroups(TextureGroup.HIDDEN_TILES));
-
-    public static final ITexturePalette TEST_4x4_90 = TexturePaletteRegistry.addTexturePallette("test4x4_90",
-            ConfigXM.BLOCKS.showHiddenTextures ? "test4x4" : "noise_moderate_0_0",
-            new TexturePaletteSpec(TEST_4X4).withRotation(FIXED.with(ROTATE_90)));
-    public static final ITexturePalette TEST_4x4_180 = TexturePaletteRegistry.addTexturePallette("test4x4_180",
-            ConfigXM.BLOCKS.showHiddenTextures ? "test4x4" : "noise_moderate_0_0",
-            new TexturePaletteSpec(TEST_4X4).withRotation(FIXED.with(ROTATE_180)));
-    public static final ITexturePalette TEST_4x4_270 = TexturePaletteRegistry.addTexturePallette("test4x4_270",
-            ConfigXM.BLOCKS.showHiddenTextures ? "test4x4" : "noise_moderate_0_0",
-            new TexturePaletteSpec(TEST_4X4).withRotation(FIXED.with(ROTATE_270)));
-
+    public static final TextureSet TEST_4x4_90 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_90")
+            .rotation(ROTATE_90).build("brocade", "test4x4_90");
+    
+    public static final TextureSet TEST_4x4_180 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_180")
+            .rotation(ROTATE_180).build("brocade", "test4x4_180");
+    
+    public static final TextureSet TEST_4x4_270 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_270")
+            .rotation(ROTATE_270).build("brocade", "test4x4_270");
+    
     // ======================================================================
     // TILES - REGULAR
     //
     // Textures of general interest for any mod
     // ======================================================================
 
-    public static final ITexturePalette BLOCK_COBBLE = TexturePaletteRegistry.addTexturePallette("cobble", "cobble",
-            new TexturePaletteSpec(ExoticMatter.INSTANCE).withVersionCount(4).withScale(TextureScale.SINGLE)
-                    .withLayout(TextureLayout.SPLIT_X_8).withRotation(RANDOM.with(ROTATE_NONE))
-                    .withRenderIntent(TextureRenderIntent.BASE_ONLY).withGroups(TextureGroup.STATIC_TILES));
+    public static final TextureSet BLOCK_COBBLE = TextureSet.builder().displayNameToken("cobble")
+            .baseTextureName("cobble").versionCount(4).scale(SINGLE).layout(SPLIT_X_8).rotation(ROTATE_RANDOM)
+            .renderIntent(BASE_ONLY).groups(STATIC_TILES).build("brocade", "cobble");
 
-    public static final ITexturePalette BLOCK_COBBLE_ZOOM = TexturePaletteRegistry.addZoomedPallete(BLOCK_COBBLE);
+    public static final TextureSet BLOCK_COBBLE_ZOOM = TextureSet.builder(BLOCK_COBBLE).displayNameToken("cobble_zoom")
+            .scale(TINY).build("brocade", "cobble_zoom");
 
-    public static final ITexturePalette BLOCK_NOISE_STRONG = TexturePaletteRegistry.addTexturePallette("noise_strong",
-            "noise_strong", new TexturePaletteSpec(BLOCK_COBBLE));
+    public static final TextureSet BLOCK_NOISE_STRONG = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_strong")
+            .baseTextureName("noise_strong").build("brocade", "noise_strong");
+    
+    public static final TextureSet BLOCK_NOISE_STRONG_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_strong_zoom")
+            .scale(TINY).build("brocade", "noise_strong_zoom");
 
-    public static final ITexturePalette BLOCK_NOISE_STRONG_ZOOM = TexturePaletteRegistry
-            .addZoomedPallete(BLOCK_NOISE_STRONG);
+    public static final TextureSet BLOCK_NOISE_MODERATE = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_moderate")
+            .baseTextureName("noise_moderate").build("brocade", "noise_moderate");
+    
+    public static final TextureSet BLOCK_NOISE_MODERATE_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_moderate_zoom")
+            .scale(TINY).build("brocade", "noise_moderate_zoom");
+    
+    public static final TextureSet BLOCK_NOISE_SUBTLE = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_subtle")
+            .baseTextureName("noise_subtle").build("brocade", "noise_subtle");
+    
+    public static final TextureSet BLOCK_NOISE_SUBTLE_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_subtle_zoom")
+            .scale(TINY).build("brocade", "noise_subtle_zoom");
 
-    public static final ITexturePalette BLOCK_NOISE_MODERATE = TexturePaletteRegistry
-            .addTexturePallette("noise_moderate", "noise_moderate", new TexturePaletteSpec(BLOCK_COBBLE));
+    public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white")
+            .baseTextureName("white").versionCount(1).scale(SINGLE).layout(SPLIT_X_8)
+            .rotation(ROTATE_NONE).groups(STATIC_TILES).build("brocade", "white");
 
-    public static final ITexturePalette BLOCK_NOISE_MODERATE_ZOOM = TexturePaletteRegistry
-            .addZoomedPallete(BLOCK_NOISE_MODERATE);
-
-    public static final ITexturePalette BLOCK_NOISE_SUBTLE = TexturePaletteRegistry.addTexturePallette("noise_subtle",
-            "noise_subtle", new TexturePaletteSpec(BLOCK_COBBLE));
-
-    public static final ITexturePalette BLOCK_NOISE_SUBTLE_ZOOM = TexturePaletteRegistry
-            .addZoomedPallete(BLOCK_NOISE_SUBTLE);
-
-    public static final ITexturePalette WHITE = TexturePaletteRegistry.addTexturePallette("white", "white",
-            new TexturePaletteSpec(ExoticMatter.INSTANCE).withVersionCount(1).withScale(TextureScale.SINGLE)
-                    .withLayout(TextureLayout.SPLIT_X_8).withRotation(FIXED.with(ROTATE_NONE))
-                    .withGroups(TextureGroup.STATIC_TILES));
-
-    public static final ITexturePalette BORDER_SMOOTH_BLEND = TexturePaletteRegistry.addTexturePallette(
-            "border_smooth_blended", "border_smooth_blended",
-            new TexturePaletteSpec(ExoticMatter.INSTANCE).withVersionCount(1).withScale(TextureScale.SINGLE)
-                    .withLayout(TextureLayout.BORDER_13).withRotation(FIXED.with(ROTATE_NONE))
-                    .withRenderIntent(TextureRenderIntent.OVERLAY_ONLY).withGroups(TextureGroup.STATIC_BORDERS));
+    public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
+            .baseTextureName("border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13)
+            .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("brocade", "border_smooth_blended");
 }

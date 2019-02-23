@@ -1,32 +1,39 @@
 package grondag.brocade.apiimpl.texture;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import grondag.brocade.api.texture.TextureRotation;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.api.texture.TextureSetBuilder;
 import grondag.brocade.model.state.ModelStateData;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 
 public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
-    private static final AtomicInteger nextIndex = new AtomicInteger();
-    
     public static TextureSetBuilder builder() {
         return new TextureSetBuilderImpl();
+    }
+    
+    public static TextureSetBuilder builder(TextureSet template) {
+        TextureSetBuilderImpl result = new TextureSetBuilderImpl();
+        result.copyFrom((AbstractTextureSet) template);
+        return result;
     }
     
     public final int index;
     public final Identifier id;
     public final int versionMask;
     public final int stateFlags;
+    private final TextureLayoutHelper layoutHelper;
     
     TextureSetImpl(Identifier id, AbstractTextureSet template) {
         this.id = id;
-        this.index = nextIndex.getAndIncrement();
+        this.index = TextureSetRegistryImpl.INSTANCE.claimIndex();
         copyFrom(template);
         this.versionMask = Math.max(0, template.versionCount - 1);
+        this.layoutHelper = TextureLayoutHelper.HELPERS[layout.ordinal()];
         
         int flags = template.scale.modelStateFlag | template.layout.modelStateFlag;
 
@@ -60,26 +67,39 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     
     @Override
     public void prestitch(Consumer<String> stitcher) {
-        // TODO Auto-generated method stub
-        
+        layoutHelper.prestitch(this, stitcher);
     }
 
     @Override
+    public String sampleTextureName() {
+        return layoutHelper.sampleTextureName(this);
+    }
+    
+    private Sprite sampleSprite;
+    
+    @Override
     public Sprite sampleSprite() {
-        // TODO Auto-generated method stub
-        return null;
+        Sprite result = sampleSprite;
+        if (result == null) {
+            result = MinecraftClient.getInstance().getSpriteAtlas().getSprite(sampleTextureName());
+            sampleSprite = result;
+        }
+        return result;
     }
 
     @Override
     public String textureName(int version) {
-        // TODO Auto-generated method stub
-        return null;
+        return layoutHelper.buildTextureName(this, version & versionMask, 0);
     }
 
     @Override
     public String textureName(int version, int index) {
-        // TODO Auto-generated method stub
-        return null;
+        return layoutHelper.buildTextureName(this, version & versionMask, index);
+    }
+    
+    @Override
+    public final String displayName() {
+        return I18n.translate(displayNameToken);
     }
     
     @Override

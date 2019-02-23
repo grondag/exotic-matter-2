@@ -5,29 +5,12 @@ import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONR
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NONE;
 
-import java.util.function.Consumer;
-
-import grondag.brocade.model.texture.EnhancedSprite;
-import net.minecraft.client.MinecraftClient;
-
 public enum TextureLayout {
     /**
      * Separate random tiles with naming convention base_j_i where i is 0-7 and j is
      * 0 or more.
      */
-    SPLIT_X_8(STATE_FLAG_NONE) {
-        @Override
-        public final String buildTextureName(TextureSet texture, int version, int index) {
-            return buildTextureName_X_8(texture, index);
-        }
-
-        @Override
-        public void prestitch(TextureSet texture, Consumer<String> stitcher) {
-            for (int i = 0; i < texture.versionCount(); i++) {
-                stitcher.accept(buildTextureName_X_8(texture, i));
-            }
-        }
-    },
+    SPLIT_X_8(STATE_FLAG_NONE),
 
     /**
      * Single square file with optional versions. If more than one version, file
@@ -44,49 +27,13 @@ public enum TextureLayout {
      * rendering in a non-solid layer. Files won't exist or will be blank for 14 and
      * 15.
      */
-    BORDER_13(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 14) {
-        @Override
-        public final String buildTextureName(TextureSet texture, int version, int index) {
-            return buildTextureName_X_8(texture, version * this.blockTextureCount + index);
-        }
-
-        @Override
-        public void prestitch(TextureSet texture, Consumer<String> stitcher) {
-            // last texture (no border) only needed if indicated
-            final int texCount = texture.renderNoBorderAsTile() ? this.textureCount : this.textureCount - 1;
-
-            for (int i = 0; i < texture.versionCount(); i++) {
-                for (int j = 0; j < texCount; j++) {
-                    stitcher.accept(buildTextureName_X_8(texture, i * BORDER_13.blockTextureCount + j));
-                }
-            }
-        }
-
-        @Override
-        public String sampleTextureName(TextureSet texture) {
-            return this.buildTextureName(texture, 0, 4);
-        }
-    },
+    BORDER_13(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 14),
 
     /**
      * Separate files with naming convention same as SPLIT_X_8 except only the start
      * 5 textures out of every 8. Files won't exist or will be blank for 5-7.
      */
-    MASONRY_5(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_MASONRY_JOIN | STATE_FLAG_NEEDS_SPECIES, 5) {
-        @Override
-        public final String buildTextureName(TextureSet texture, int version, int index) {
-            return buildTextureName_X_8(texture, version * this.blockTextureCount + index);
-        }
-
-        @Override
-        public void prestitch(TextureSet texture, Consumer<String> stitcher) {
-            for (int i = 0; i < texture.versionCount(); i++) {
-                for (int j = 0; j < this.textureCount; j++) {
-                    stitcher.accept(buildTextureName_X_8(texture, i * this.blockTextureCount + j));
-                }
-            }
-        }
-    },
+    MASONRY_5(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_MASONRY_JOIN | STATE_FLAG_NEEDS_SPECIES, 5),
 
     /**
      * Animated big textures stored as series of .jpg files
@@ -104,10 +51,6 @@ public enum TextureLayout {
      * Follows same naming convention as {@link #SIMPLE}.
      */
     QUADRANT_CONNECTED(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES);
-
-    private static String buildTextureName_X_8(TextureSet texture, int offset) {
-        return texture.id().getNamespace() + ":blocks/" + texture.baseTextureName() + "_" + (offset >> 3) + "_" + (offset & 7);
-    }
 
     private TextureLayout(int stateFlags) {
         this(stateFlags, 1);
@@ -146,35 +89,4 @@ public enum TextureLayout {
      * {@link #blockRowCount} * 8.
      */
     public final int blockTextureCount;
-
-    /**
-     * Default implementation just prepends the folder. Suitable for single-file
-     * textures. If textures have multiple versions, names should have a zero-based
-     * _x suffix
-     */
-    public String buildTextureName(TextureSet texture, int version, int index) {
-        return texture.id().getNamespace() + ":blocks/" + (texture.versionCount() == 1 ? texture.baseTextureName()
-                : (texture.baseTextureName() + "_" + version));
-    }
-
-    public void prestitch(TextureSet texture, Consumer<String> stitcher) {
-        for (int i = 0; i < texture.versionCount(); i++) {
-            stitcher.accept(this.buildTextureName(texture, i, 0));
-        }
-    }
-
-    public String sampleTextureName(TextureSet texture) {
-        return this.buildTextureName(texture, 0, 0);
-    }
-
-    /**
-     * Note this currently doesn't set UV coordinates to give a to-scale,
-     * appropriate portion of the texture in the sample. It's always the whole
-     * texture. Doesn't matter in most cases, but potentially a future enhancement.
-     */
-    public EnhancedSprite createSampleSprite(TextureSet texture) {
-        EnhancedSprite result = (EnhancedSprite) MinecraftClient.getInstance().getSpriteAtlas()
-                .getSprite(sampleTextureName(texture));
-        return result;
-    }
 }

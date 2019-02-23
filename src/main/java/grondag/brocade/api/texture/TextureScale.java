@@ -45,14 +45,6 @@ public enum TextureScale {
      */
     public final int modelStateFlag;
 
-    public TextureScale zoom() {
-        if (this == GIANT) {
-            return GIANT;
-        } else {
-            return values()[this.ordinal() + 1];
-        }
-    }
-
     private TextureScale(int power, int modelStateFlag) {
         this.power = power;
         this.sliceCount = 1 << power;
@@ -60,5 +52,4 @@ public enum TextureScale {
         this.sliceIncrement = 1f / sliceCount;
         this.modelStateFlag = modelStateFlag;
     }
-
 }

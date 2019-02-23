@@ -11,6 +11,10 @@ public interface TextureSet {
         return TextureSetImpl.builder();
     }
     
+    public static TextureSetBuilder builder(TextureSet template) {
+        return TextureSetImpl.builder(template);
+    }
+    
     /** Registration ID */
     Identifier id();
     
@@ -74,12 +78,6 @@ public interface TextureSet {
      * Player-friendly, localized name for this texture palette
      */
     String displayName();
-    
-    /**
-     * Used to display appropriate label for texture. 0 = no zoom, 1 = 2x zoom, 2 =
-     * 4x zoom
-     */
-    public int zoomLevel();
     
     /**
      * Use {@link #sampleSprite()} when possible, not all texture formats work
