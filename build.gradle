@@ -40,12 +40,12 @@ sourceSets {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:19w08a"
-	mappings "net.fabricmc:yarn:19w08a.4"
+	minecraft "com.mojang:minecraft:19w08b"
+	mappings "net.fabricmc:yarn:19w08b.4"
 	modCompile "net.fabricmc:fabric-loader:0.3.7.108"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modCompile "net.fabricmc:fabric:0.2.2.local"
+	modCompile "net.fabricmc:fabric:0.2.3.local"
 	
 	modCompile "net.fabricmc:indigo:1.0.0"
 	modCompile "grondag:fermion-1.0.0"
