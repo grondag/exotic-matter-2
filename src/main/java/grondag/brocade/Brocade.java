@@ -25,7 +25,8 @@ package grondag.brocade;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import grondag.brocade.init.ModTextures;
+import grondag.brocade.init.BrocadeBlock;
+import grondag.brocade.init.BrocadeTextures;
 import grondag.fermion.IGrondagMod;
 import net.fabricmc.api.ModInitializer;
 
@@ -34,7 +35,8 @@ public class Brocade implements ModInitializer, IGrondagMod {
 
     @Override
     public void onInitialize() {
-        ModTextures.init();
+        BrocadeTextures.init();
+        BrocadeBlock.init();
     }
 
     private static Logger log;

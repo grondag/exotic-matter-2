@@ -103,7 +103,7 @@ public class SuperDispatcher {
                 IMutablePolygon mutable = q.claimCopy();
 
                 // arbitrary choice - just needs to be a simple non-null texture
-                mutable.setTextureName(0, grondag.exotic_matter.init.ModTextures.BLOCK_COBBLE.sampleTextureName());
+                mutable.setTextureName(0, grondag.exotic_matter.init.BrocadeTextures.BLOCK_COBBLE.sampleTextureName());
 
                 // Need to scale UV on non-cubic surfaces to be within a 1 block boundary.
                 // This causes breaking textures to be scaled to normal size.

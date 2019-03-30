@@ -32,12 +32,12 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
     }
     
     @Override
-    public TextureSet getById(Identifier id) {
+    public TextureSetImpl getById(Identifier id) {
         return NullHandler.defaultIfNull(map.get(id), DEFAULT_TEXTURE_SET);
     }
 
     @Override
-    public TextureSet getByIndex(int index) {
+    public TextureSetImpl getByIndex(int index) {
         return index < 0 || index >= nextIndex ? DEFAULT_TEXTURE_SET : array[index];
     }
 
