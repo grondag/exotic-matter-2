@@ -1,7 +1,7 @@
 package grondag.brocade.collision;
 
-import grondag.exotic_matter.varia.BitHelper;
-import grondag.exotic_matter.varia.functions.IAreaBoundsIntFunction;
+import grondag.fermion.varia.BitHelper;
+import grondag.fermion.functions.IAreaBoundsIntFunction;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntComparator;
@@ -96,7 +96,7 @@ public class BoxFinderUtils {
 
         LongArrays.quickSort(AREAS, new LongComparator() {
             @Override
-            public int compare(@SuppressWarnings("null") Long o1, @SuppressWarnings("null") Long o2) {
+            public int compare(Long o1, Long o2) {
                 return compare(o1.longValue(), o2.longValue());
             }
 
@@ -128,7 +128,7 @@ public class BoxFinderUtils {
         VOLUME_KEYS = volumes.toIntArray();
         IntArrays.quickSort(BoxFinderUtils.VOLUME_KEYS, new IntComparator() {
             @Override
-            public int compare(@SuppressWarnings("null") Integer o1, @SuppressWarnings("null") Integer o2) {
+            public int compare(Integer o1, Integer o2) {
                 return compare(o1.intValue(), o2.intValue());
             }
 

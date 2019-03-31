@@ -1,17 +1,17 @@
 package grondag.brocade.model.render;
 
-import javax.annotation.Nullable;
+
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 
 /**
  * Forge has a class like this, but wrapped consumer here is non-final.
  */
 public abstract class ForwardingVertexConsumer implements IVertexConsumer {
-    protected @Nullable IVertexConsumer wrapped;
+    protected IVertexConsumer wrapped;
 
     @SuppressWarnings("null")
     @Override
@@ -27,7 +27,7 @@ public abstract class ForwardingVertexConsumer implements IVertexConsumer {
 
     @SuppressWarnings("null")
     @Override
-    public void setQuadOrientation(EnumFacing orientation) {
+    public void setQuadOrientation(Direction orientation) {
         wrapped.setQuadOrientation(orientation);
     }
 

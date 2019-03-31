@@ -2,22 +2,22 @@ package grondag.brocade.block;
 
 import java.util.Map;
 
-import javax.annotation.Nonnull;
+
 
 import com.google.common.collect.Maps;
 
-import grondag.exotic_matter.model.varia.SuperDispatcher;
+import grondag.brocade.model.varia.SuperDispatcher;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.DefaultStateMapper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+
 
 /**
  * SuperBlocks all use the same underlying dispatcher.
  */
-@SideOnly(Side.CLIENT)
+
 public class SuperStateMapper extends DefaultStateMapper {
     public static final SuperStateMapper INSTANCE = new SuperStateMapper();
 
@@ -25,13 +25,13 @@ public class SuperStateMapper extends DefaultStateMapper {
     }
 
     @Override
-    public Map<IBlockState, ModelResourceLocation> putStateModelLocations(@Nonnull Block block) {
-        Map<IBlockState, ModelResourceLocation> mapLocations = Maps.newLinkedHashMap();
+    public Map<BlockState, ModelResourceLocation> putStateModelLocations(Block block) {
+        Map<BlockState, ModelResourceLocation> mapLocations = Maps.newLinkedHashMap();
 
         if (block instanceof ISuperBlock) {
             SuperBlock superBlock = (SuperBlock) block;
             for (int i = 0; i < 16; i++) {
-                IBlockState state = superBlock.getDefaultState().withProperty(ISuperBlock.META, i);
+                BlockState state = superBlock.getDefaultState().withProperty(ISuperBlock.META, i);
 
                 if (block instanceof SuperModelBlock) {
                     for (BlockHarvestTool tool : BlockHarvestTool.values()) {

@@ -3,11 +3,11 @@ package grondag.brocade.placement;
 import grondag.exotic_matter.serialization.IMessagePlusImmutable;
 import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
 import grondag.exotic_matter.serialization.NBTDictionary;
-import grondag.exotic_matter.varia.ILocalized;
-import grondag.exotic_matter.varia.Useful;
-import net.minecraft.nbt.NBTTagCompound;
+import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.Useful;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resource.language.I18n;
 
 /**
  * Determines how blocks are to be selected for operation of the placement item.
@@ -54,12 +54,12 @@ public enum TargetMode implements IMessagePlusImmutable<TargetMode>, IReadWriteN
     }
 
     @Override
-    public TargetMode deserializeNBT(NBTTagCompound tag) {
+    public TargetMode deserializeNBT(CompoundTag tag) {
         return Useful.safeEnumFromTag(tag, TAG_NAME, this);
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag) {
+    public void serializeNBT(CompoundTag tag) {
         Useful.saveEnumToTag(tag, TAG_NAME, this);
     }
 
@@ -76,6 +76,6 @@ public enum TargetMode implements IMessagePlusImmutable<TargetMode>, IReadWriteN
     @SuppressWarnings("deprecation")
     @Override
     public String localizedName() {
-        return I18n.translateToLocal("placement.target_mode." + this.name().toLowerCase());
+        return I18n.translate("placement.target_mode." + this.name().toLowerCase());
     }
 }

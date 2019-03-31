@@ -1,29 +1,28 @@
 package grondag.brocade.mesh;
 
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NONE;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NONE;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
 
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.model.collision.CollisionBoxDispatcher;
-import grondag.exotic_matter.model.collision.ICollisionHandler;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.painting.Surface;
-import grondag.exotic_matter.model.painting.SurfaceTopology;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.stream.IPolyStream;
-import grondag.exotic_matter.model.primitives.stream.IWritablePolyStream;
-import grondag.exotic_matter.model.primitives.stream.PolyStreams;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.state.StateFormat;
-import grondag.exotic_matter.model.varia.SideShape;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.collision.CollisionBoxDispatcher;
+import grondag.brocade.collision.ICollisionHandler;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.painting.Surface;
+import grondag.brocade.painting.SurfaceTopology;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.stream.IPolyStream;
+import grondag.brocade.primitives.stream.IWritablePolyStream;
+import grondag.brocade.primitives.stream.PolyStreams;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.StateFormat;
+import grondag.brocade.model.varia.SideShape;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -69,7 +68,7 @@ public class SphereMeshFactory extends ShapeMeshGenerator implements ICollisionH
     }
 
     @Override
-    public boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block,
+    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block,
             ISuperModelState modelState) {
         return false;
     }
@@ -80,23 +79,23 @@ public class SphereMeshFactory extends ShapeMeshGenerator implements ICollisionH
     }
 
     @Override
-    public @Nonnull ICollisionHandler collisionHandler() {
+    public ICollisionHandler collisionHandler() {
         return this;
     }
 
     @Override
-    public SideShape sideShape(ISuperModelState modelState, EnumFacing side) {
+    public SideShape sideShape(ISuperModelState modelState, Direction side) {
         return SideShape.MISSING;
     }
 
     @Override
-    public List<AxisAlignedBB> getCollisionBoxes(ISuperModelState modelState) {
+    public List<BoundingBox> getCollisionBoxes(ISuperModelState modelState) {
         return CollisionBoxDispatcher.getCollisionBoxes(modelState);
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(ISuperModelState modelState) {
-        return Block.FULL_BLOCK_AABB;
+    public BoundingBox getCollisionBoundingBox(ISuperModelState modelState) {
+        return ICollisionHandler.FULL_BLOCK_BOX;
     }
 
     @Override

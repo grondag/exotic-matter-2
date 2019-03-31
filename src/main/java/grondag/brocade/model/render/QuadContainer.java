@@ -3,15 +3,15 @@ package grondag.brocade.model.render;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
+
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.varia.structures.SimpleUnorderedArrayList;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.fermion.structures.SimpleUnorderedArrayList;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.math.Direction;
 
 public class QuadContainer {
     private static IPolygon[] EMPTY_LIST = {};
@@ -23,11 +23,11 @@ public class QuadContainer {
     // improve LOR
     // I didn't profile this to make sure it's worthwhile - don't tell Knuth.
     // Only populated if baked quads are requested
-    protected @Nullable ImmutableList<BakedQuad>[] faceLists = null;
+    protected ImmutableList<BakedQuad>[] faceLists = null;
 
-    private @Nullable int[] occlusionHash = null;
+    private int[] occlusionHash = null;
 
-    private int[] paintedFaceIndex = new int[EnumFacing.VALUES.length];
+    private int[] paintedFaceIndex = new int[Direction.VALUES.length];
 
     private final IPolygon[] paintedQuads;
 
@@ -40,7 +40,7 @@ public class QuadContainer {
     }
 
     @SuppressWarnings("unchecked")
-    public List<BakedQuad> getBakedQuads(@Nullable EnumFacing face) {
+    public List<BakedQuad> getBakedQuads(Direction face) {
         // build locally and don't set until end in case another thread is racing with
         // us
         ImmutableList<BakedQuad>[] faceLists = this.faceLists;
@@ -53,7 +53,7 @@ public class QuadContainer {
                 faceLists[6] = builder.build();
             }
 
-            for (EnumFacing f : EnumFacing.VALUES) {
+            for (Direction f : Direction.VALUES) {
                 final ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
                 this.forEachPaintedQuad(f, q -> q.addBakedQuadsToBuilder(0, builder, false));
                 faceLists[f.ordinal()] = builder.build();
@@ -70,7 +70,7 @@ public class QuadContainer {
             consumer.accept(q);
     }
 
-    public void forEachPaintedQuad(@Nullable EnumFacing face, Consumer<IPolygon> consumer) {
+    public void forEachPaintedQuad(Direction face, Consumer<IPolygon> consumer) {
         int start, end;
         if (face == null) {
             start = 0;
@@ -85,7 +85,7 @@ public class QuadContainer {
         }
     }
 
-    public int getOcclusionHash(@Nullable EnumFacing face) {
+    public int getOcclusionHash(Direction face) {
         if (face == null)
             return 0;
 
@@ -94,7 +94,7 @@ public class QuadContainer {
         if (occlusionHash == null) {
             occlusionHash = new int[6];
             for (int i = 0; i < 6; i++) {
-                final EnumFacing f = EnumFacing.VALUES[i];
+                final Direction f = Direction.VALUES[i];
                 occlusionHash[f.ordinal()] = computeOcclusionHash(f);
                 this.occlusionHash = occlusionHash;
             }
@@ -103,7 +103,7 @@ public class QuadContainer {
         return occlusionHash[face.ordinal()];
     }
 
-    private int computeOcclusionHash(EnumFacing face) {
+    private int computeOcclusionHash(Direction face) {
         QuadListKeyBuilder keyBuilder = QuadListKeyBuilder.prepareThreadLocal(face);
         this.forEachPaintedQuad(face, keyBuilder);
         return keyBuilder.getQuadListKey();
@@ -122,8 +122,8 @@ public class QuadContainer {
         }
 
         @Override
-        public void accept(@SuppressWarnings("null") IPolygon quad) {
-            final @Nullable EnumFacing facing = quad.getActualFace();
+        public void accept(IPolygon quad) {
+            final Direction facing = quad.getActualFace();
             final int index = facing == null ? 6 : facing.ordinal();
 
             SimpleUnorderedArrayList<IPolygon> bucket = buckets[index];
@@ -153,7 +153,7 @@ public class QuadContainer {
         }
 
         private final int addAndGetSize(IPolygon[] targetArray, int firstOpenIndex,
-                @Nullable SimpleUnorderedArrayList<IPolygon> sourceList) {
+                SimpleUnorderedArrayList<IPolygon> sourceList) {
             if (sourceList == null)
                 return 0;
             sourceList.copyToArray(targetArray, firstOpenIndex);

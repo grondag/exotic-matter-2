@@ -1,7 +1,7 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.varia.structures.BinaryEnumSet;
-import net.minecraft.util.text.translation.I18n;
+import grondag.fermion.structures.BinaryEnumSet;
+import net.minecraft.client.resource.language.I18n;
 
 /**
  * Primitive models can have up to five paint layers. These are vaguely akin to
@@ -65,7 +65,7 @@ public enum PaintLayer {
     public final int textureLayerIndex;
 
     public String localizedName() {
-        return I18n.translateToLocal("paintlayer." + this.name().toLowerCase());
+        return I18n.translate("paintlayer." + this.name().toLowerCase());
     }
 
 }

@@ -1,10 +1,10 @@
 package grondag.brocade.model.state;
 
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.SuperBlockWorldAccess;
-import net.minecraft.block.state.IBlockState;
+
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlockWorldAccess;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
@@ -17,7 +17,7 @@ public class SuperBlockHelper {
      */
     public static ISuperModelState getModelStateIfAvailable(IBlockAccess world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof ISuperBlock) {
             return SuperBlockWorldAccess.access(world).getModelState((ISuperBlock) state.getBlock(), state, pos,
                     refreshFromWorldIfNeeded);
@@ -29,15 +29,15 @@ public class SuperBlockHelper {
      * Returns species at position if it could join with the given block/modelState
      * Returns -1 if no superblock at position or if join not possible.
      */
-    public static int getJoinableSpecies(IBlockAccess world, BlockPos pos, @Nullable IBlockState withBlockState,
-            @Nullable ISuperModelState withModelState) {
+    public static int getJoinableSpecies(IBlockAccess world, BlockPos pos, BlockState withBlockState,
+            ISuperModelState withModelState) {
         if (withBlockState == null || withModelState == null)
             return -1;
 
         if (!withModelState.hasSpecies())
             return -1;
 
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
         if (state.getBlock() == withBlockState.getBlock()) {
             ISuperModelState mState = getModelStateIfAvailable(world, pos, false);
             if (mState == null)

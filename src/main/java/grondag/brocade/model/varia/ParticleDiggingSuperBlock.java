@@ -1,22 +1,22 @@
 package grondag.brocade.model.varia;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.state.ISuperModelState;
+
+
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.exotic_matter.model.texture.ITexturePalette;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.particle.ParticleDigging;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+
+
+
 public class ParticleDiggingSuperBlock extends ParticleDigging {
 
     /**
@@ -26,7 +26,7 @@ public class ParticleDiggingSuperBlock extends ParticleDigging {
     protected float uvScale;
 
     public ParticleDiggingSuperBlock(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn,
-            double ySpeedIn, double zSpeedIn, IBlockState state, ISuperModelState modelState) {
+            double ySpeedIn, double zSpeedIn, BlockState state, ISuperModelState modelState) {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn, state);
         int color = modelState.getColorARGB(PaintLayer.BASE);
         this.particleRed = ((color >> 16) & 0xFF) / 255f;
@@ -41,13 +41,13 @@ public class ParticleDiggingSuperBlock extends ParticleDigging {
     }
 
     @Override
-    protected void multiplyColor(@Nullable BlockPos p_187154_1_) {
+    protected void multiplyColor(BlockPos p_187154_1_) {
         // ignore
     }
 
     /** same as vanilla except for alpha and uvScale */
     @Override
-    public void renderParticle(@Nonnull BufferBuilder buffer, @Nonnull Entity entityIn, float partialTicks,
+    public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks,
             float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ) {
         float f = this.particleTexture
                 .getInterpolatedU((double) (this.particleTextureJitterX / 4.0F * 16.0F * this.uvScale));

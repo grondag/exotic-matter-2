@@ -1,8 +1,8 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.varia.ColorHelper;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.fermion.varia.ColorHelper;
 
 public class VertexProcessorDefault extends VertexProcessor {
     public final static VertexProcessor INSTANCE = new VertexProcessorDefault();

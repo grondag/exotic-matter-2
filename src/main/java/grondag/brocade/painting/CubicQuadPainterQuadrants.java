@@ -1,12 +1,12 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.stream.IMutablePolyStream;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.world.CornerJoinFaceState;
-import grondag.exotic_matter.world.FaceCorner;
-import net.minecraft.util.EnumFacing;
+import grondag.fermion.world.CornerJoinFaceState;
+import grondag.fermion.world.FaceCorner;
+import net.minecraft.util.math.Direction;
 
 /**
  * Applies quadrant-style border textures. Quads must have a nominal face. Will
@@ -52,7 +52,7 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
                 continue;
             }
 
-            final EnumFacing nominalFace = editor.getNominalFace();
+            final Direction nominalFace = editor.getNominalFace();
             ITexturePalette tex = getTexture(modelState, paintLayer);
             final int textureVersion = tex.versionMask()
                     & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));

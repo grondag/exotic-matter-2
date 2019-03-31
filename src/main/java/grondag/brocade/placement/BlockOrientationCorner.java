@@ -3,12 +3,12 @@ package grondag.brocade.placement;
 import grondag.exotic_matter.serialization.IMessagePlusImmutable;
 import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
 import grondag.exotic_matter.serialization.NBTDictionary;
-import grondag.exotic_matter.varia.ILocalized;
-import grondag.exotic_matter.varia.Useful;
-import grondag.exotic_matter.world.FarCorner;
-import net.minecraft.nbt.NBTTagCompound;
+import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.Useful;
+import grondag.fermion.world.FarCorner;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resource.language.I18n;
 
 public enum BlockOrientationCorner implements IMessagePlusImmutable<BlockOrientationCorner>,
         IReadWriteNBTImmutable<BlockOrientationCorner>, ILocalized {
@@ -26,12 +26,12 @@ public enum BlockOrientationCorner implements IMessagePlusImmutable<BlockOrienta
     }
 
     @Override
-    public BlockOrientationCorner deserializeNBT(NBTTagCompound tag) {
+    public BlockOrientationCorner deserializeNBT(CompoundTag tag) {
         return Useful.safeEnumFromTag(tag, TAG_NAME, this);
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag) {
+    public void serializeNBT(CompoundTag tag) {
         Useful.saveEnumToTag(tag, TAG_NAME, this);
     }
 
@@ -48,7 +48,7 @@ public enum BlockOrientationCorner implements IMessagePlusImmutable<BlockOrienta
     @SuppressWarnings("deprecation")
     @Override
     public String localizedName() {
-        return I18n.translateToLocal("placement.orientation.corner." + this.name().toLowerCase());
+        return I18n.translate("placement.orientation.corner." + this.name().toLowerCase());
     }
 
     public boolean isFixed() {

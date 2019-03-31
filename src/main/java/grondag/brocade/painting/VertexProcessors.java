@@ -2,8 +2,8 @@ package grondag.brocade.painting;
 
 import java.util.HashMap;
 
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.varia.structures.NullHandler;
+import grondag.brocade.Brocade;
+import grondag.fermion.structures.NullHandler;
 
 /**
  * Tracks vertex processors by name to support external processor registration
@@ -16,7 +16,7 @@ public class VertexProcessors {
 
     public static void register(VertexProcessor vp) {
         if (allByName.containsKey(vp.registryName)) {
-            ExoticMatter.INSTANCE.warn(
+            Brocade.INSTANCE.warn(
                     "Duplicate registration of vertex processor %s was ignored. Probable bug or configuration issue.");
         } else {
             allByName.put(vp.registryName, vp);

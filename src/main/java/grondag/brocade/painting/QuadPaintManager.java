@@ -6,12 +6,12 @@ import java.util.function.Consumer;
 
 import grondag.acuity.api.TextureFormat;
 import grondag.exotic_matter.ClientProxy;
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.stream.IMutablePolyStream;
-import grondag.exotic_matter.model.primitives.stream.PolyStreams;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.Brocade;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.primitives.stream.PolyStreams;
+import grondag.brocade.model.state.ISuperModelState;
 
 /**
  * Low-garbage consumer for quads from mesh generators that manages
@@ -29,7 +29,7 @@ public class QuadPaintManager implements Consumer<IPolygon> {
     private final IdentityHashMap<Surface, IMutablePolyStream> surfaces = new IdentityHashMap<Surface, IMutablePolyStream>();
 
     @Override
-    public void accept(@SuppressWarnings("null") IPolygon poly) {
+    public void accept(IPolygon poly) {
         IMutablePolyStream stream = surfaces.computeIfAbsent(poly.getSurface(), p -> PolyStreams.claimMutable(0));
 
         int address = stream.writerAddress();
@@ -101,7 +101,7 @@ public class QuadPaintManager implements Consumer<IPolygon> {
 
                         // make sure has an appropriate pipeline, some models may set up before we get
                         // here
-                        if (layerCount > 1 && ExoticMatter.proxy.isAcuityEnabled()
+                        if (layerCount > 1 && Brocade.proxy.isAcuityEnabled()
                                 && editor.getPipeline().textureFormat().layerCount() != layerCount)
                             editor.setPipeline(layerCount == 2 ? ClientProxy.acuityDefaultPipeline(TextureFormat.DOUBLE)
                                     : ClientProxy.acuityDefaultPipeline(TextureFormat.TRIPLE));

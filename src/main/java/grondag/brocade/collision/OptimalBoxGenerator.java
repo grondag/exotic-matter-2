@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.fermion.config.FermionConfig;
+import grondag.brocade.BrocadeConfig;
 import grondag.brocade.collision.octree.OctreeCoordinates;
 import grondag.brocade.collision.octree.VoxelVolume16;
 import grondag.brocade.primitives.TriangleBoxTest;
@@ -173,7 +173,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
      * Returns voxel volume of loaded mesh after simplification. Simplification
      * level is estimated based on the count of maximal bounding volumes vs the
      * budget per mesh. Call after inputing mesh via
-     * {@link #accept(grondag.exotic_matter.model.primitives.IPolygon)} and before
+     * {@link #accept(grondag.brocade.primitives.IPolygon)} and before
      * calling {@link #build()}
      * <p>
      * .
@@ -198,7 +198,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
         bf.populateMaximalVolumes();
 
         // find maximal volumes to enable estimate of simplification level
-        int overage = bf.volumeCount - ConfigXM.BLOCKS.collisionBoxBudget;
+        int overage = bf.volumeCount - BrocadeConfig.BLOCKS.collisionBoxBudget;
 
         if (overage > 0) {
             bf.simplify(overage);
@@ -253,7 +253,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
 //        
 //        bf.outputBoxes(builder);
 //
-//        if(builder.size() > ConfigXM.BLOCKS.collisionBoxBudget)
+//        if(builder.size() > BrocadeConfig.BLOCKS.collisionBoxBudget)
 //        {
 //            int simplificationLevel = 1;
 //            while(true)
@@ -266,9 +266,9 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
 //                    
 //                    builder.clear();
 //                    bf.outputBoxes(builder);
-//                    if(builder.size() <= ConfigXM.BLOCKS.collisionBoxBudget)
+//                    if(builder.size() <= BrocadeConfig.BLOCKS.collisionBoxBudget)
 //                    {
-//                        ExoticMatter.INSTANCE.info("%d, %d, %d, %d, %d, %d",
+//                        Brocade.INSTANCE.info("%d, %d, %d, %d, %d, %d",
 //                                volCount,
 //                                intersectionCount,
 //                                startingVoxels,

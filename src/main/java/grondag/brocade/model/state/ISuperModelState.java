@@ -2,7 +2,7 @@ package grondag.brocade.model.state;
 
 import java.util.List;
 
-import javax.vecmath.Matrix4f;
+import org.joml.Matrix4f;
 
 import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.ISuperBlockAccess;
@@ -288,7 +288,7 @@ public interface ISuperModelState extends IReadWriteNBT {
     List<BoundingBox> collisionBoxes(BlockPos offset);
 
     /**
-     * See {@link Transform#rotateFace(ModelState, EnumFacing)}
+     * See {@link Transform#rotateFace(ModelState, Direction)}
      */
     Direction rotateFace(Direction face);
 

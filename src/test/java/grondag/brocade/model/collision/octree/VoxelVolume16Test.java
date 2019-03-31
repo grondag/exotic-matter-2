@@ -1,8 +1,8 @@
-package grondag.exotic_matter.model.collision.octree;
+package grondag.brocade.collision.octree;
 
 import org.junit.jupiter.api.Test;
 
-import grondag.exotic_matter.ExoticMatter;
+import grondag.brocade.Brocade;
 
 class VoxelVolume16Test {
 
@@ -101,19 +101,19 @@ class VoxelVolume16Test {
 
     static void outputLayer(long[] data, int index) {
         int i = index * 4;
-        ExoticMatter.INSTANCE.info("LAYER %d", index);
+        Brocade.INSTANCE.info("LAYER %d", index);
         outputSubWord(data[i + 3]);
         outputSubWord(data[i + 2]);
         outputSubWord(data[i + 1]);
         outputSubWord(data[i + 0]);
-        ExoticMatter.INSTANCE.info("");
+        Brocade.INSTANCE.info("");
     }
 
     private static void outputSubWord(long bits) {
-        ExoticMatter.INSTANCE.info(pad((bits >>> 48) & 0xFFFFL));
-        ExoticMatter.INSTANCE.info(pad((bits >>> 32) & 0xFFFFL));
-        ExoticMatter.INSTANCE.info(pad((bits >>> 16) & 0xFFFFL));
-        ExoticMatter.INSTANCE.info(pad(bits & 0xFFFFL));
+        Brocade.INSTANCE.info(pad((bits >>> 48) & 0xFFFFL));
+        Brocade.INSTANCE.info(pad((bits >>> 32) & 0xFFFFL));
+        Brocade.INSTANCE.info(pad((bits >>> 16) & 0xFFFFL));
+        Brocade.INSTANCE.info(pad(bits & 0xFFFFL));
     }
 
     private static String pad(long value) {

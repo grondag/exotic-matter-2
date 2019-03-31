@@ -2,10 +2,10 @@ package grondag.brocade;
 
 import org.junit.Test;
 
-import grondag.exotic_matter.world.CornerJoinBlockState;
-import grondag.exotic_matter.world.CornerJoinBlockStateSelector;
-import grondag.exotic_matter.world.NeighborBlocks;
-import grondag.exotic_matter.world.SimpleJoin;
+import grondag.fermion.world.CornerJoinBlockState;
+import grondag.fermion.world.CornerJoinBlockStateSelector;
+import grondag.fermion.world.NeighborBlocks;
+import grondag.fermion.world.SimpleJoin;
 
 public class CornerJoinBlockStateTest {
 

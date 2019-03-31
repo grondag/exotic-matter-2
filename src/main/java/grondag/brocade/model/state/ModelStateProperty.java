@@ -1,6 +1,6 @@
 package grondag.brocade.model.state;
 
-import javax.annotation.Nullable;
+
 
 import net.minecraftforge.common.property.IUnlistedProperty;
 
@@ -12,12 +12,12 @@ public class ModelStateProperty implements IUnlistedProperty<ISuperModelState> {
     }
 
     @Override
-    public final boolean isValid(@Nullable ISuperModelState value) {
+    public final boolean isValid(ISuperModelState value) {
         return true;
     }
 
     @Override
-    public final String valueToString(@Nullable ISuperModelState value) {
+    public final String valueToString(ISuperModelState value) {
         return value.toString();
     }
 

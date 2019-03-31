@@ -1,22 +1,22 @@
 package grondag.brocade.model.state;
 
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.SuperBlockWorldAccess;
+
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlockWorldAccess;
 import grondag.exotic_matter.model.mesh.ModelShapes;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.painting.VertexProcessors;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.painting.VertexProcessors;
 import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
 import grondag.exotic_matter.terrain.TerrainState;
-import grondag.exotic_matter.varia.BitPacker64;
-import grondag.exotic_matter.world.CornerJoinBlockStateSelector;
-import grondag.exotic_matter.world.IExtraStateFactory;
-import grondag.exotic_matter.world.Rotation;
-import grondag.exotic_matter.world.SimpleJoin;
+import grondag.fermion.varia.BitPacker64;
+import grondag.fermion.world.CornerJoinBlockStateSelector;
+import grondag.fermion.world.IExtraStateFactory;
+import grondag.fermion.world.Rotation;
+import grondag.fermion.world.SimpleJoin;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
@@ -31,8 +31,8 @@ public class ModelStateData {
     public static final BitPacker64<ModelState>.IntElement POS_X = PACKER_CORE.createIntElement(256);
     public static final BitPacker64<ModelState>.IntElement POS_Y = PACKER_CORE.createIntElement(256);
     public static final BitPacker64<ModelState>.IntElement POS_Z = PACKER_CORE.createIntElement(256);
-    public static final BitPacker64<ModelState>.EnumElement<EnumFacing.Axis> AXIS = PACKER_CORE
-            .createEnumElement(EnumFacing.Axis.class);
+    public static final BitPacker64<ModelState>.EnumElement<Direction.Axis> AXIS = PACKER_CORE
+            .createEnumElement(Direction.Axis.class);
     public static final BitPacker64<ModelState>.BooleanElement AXIS_INVERTED = PACKER_CORE.createBooleanElement();
     public static final BitPacker64<ModelState>.EnumElement<Rotation> AXIS_ROTATION = PACKER_CORE
             .createEnumElement(Rotation.class);
@@ -122,7 +122,7 @@ public class ModelStateData {
      */
     public static final IExtraStateFactory TEST_GETTER_STATIC = new IExtraStateFactory() {
         @Override
-        public @Nullable ISuperModelState get(IBlockAccess worldIn, BlockPos pos, IBlockState state) {
+        public ISuperModelState get(IBlockAccess worldIn, BlockPos pos, BlockState state) {
             Block block = state.getBlock();
             return (block instanceof ISuperBlock)
                     ? SuperBlockWorldAccess.access(worldIn).getModelState((ISuperBlock) block, state, pos, false)
@@ -136,7 +136,7 @@ public class ModelStateData {
      */
     public static final IExtraStateFactory TEST_GETTER_DYNAMIC = new IExtraStateFactory() {
         @Override
-        public @Nullable ISuperModelState get(IBlockAccess worldIn, BlockPos pos, IBlockState state) {
+        public ISuperModelState get(IBlockAccess worldIn, BlockPos pos, BlockState state) {
             Block block = state.getBlock();
             return (block instanceof ISuperBlock)
                     ? SuperBlockWorldAccess.access(worldIn).getModelState(((ISuperBlock) block), state, pos, true)

@@ -5,39 +5,36 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
+
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.ConfigXM;
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.cache.LongSimpleCacheLoader;
-import grondag.exotic_matter.cache.LongSimpleLoadingCache;
-import grondag.exotic_matter.model.CSG.CSGMesh;
-import grondag.exotic_matter.model.CSG.CSGNode;
-import grondag.exotic_matter.model.collision.CollisionBoxDispatcher;
-import grondag.exotic_matter.model.collision.ICollisionHandler;
-import grondag.exotic_matter.model.mesh.ShapeMeshGenerator;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.painting.Surface;
-import grondag.exotic_matter.model.painting.SurfaceTopology;
-import grondag.exotic_matter.model.primitives.FaceVertex;
-import grondag.exotic_matter.model.primitives.PolyFactory;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.state.ModelStateData;
-import grondag.exotic_matter.model.state.StateFormat;
-import grondag.exotic_matter.model.varia.SideShape;
-import grondag.exotic_matter.world.HorizontalCorner;
-import grondag.exotic_matter.world.HorizontalFace;
+import grondag.brocade.BrocadeConfig;
+import grondag.brocade.Brocade;
+import grondag.brocade.block.ISuperBlock;
+import grondag.fermion.cache.LongSimpleCacheLoader;
+import grondag.fermion.cache.LongSimpleLoadingCache;
+import grondag.brocade.collision.CollisionBoxDispatcher;
+import grondag.brocade.collision.ICollisionHandler;
+import grondag.brocade.mesh.ShapeMeshGenerator;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.painting.Surface;
+import grondag.brocade.painting.SurfaceTopology;
+import grondag.brocade.primitives.FaceVertex;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.vertex.Vec3f;
+import grondag.brocade.world.HorizontalCorner;
+import grondag.brocade.world.HorizontalFace;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.ModelStateData;
+import grondag.brocade.model.state.StateFormat;
+import grondag.brocade.model.varia.SideShape;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -54,20 +51,20 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
     private static final Surface SURFACE_SIDE = Surface.builder(SurfaceTopology.CUBIC)
             .withEnabledLayers(PaintLayer.CUT, PaintLayer.LAMP, PaintLayer.OUTER).withAllowBorders(false).build();
 
-    private static final AxisAlignedBB[] COLLISION_BOUNDS = { new AxisAlignedBB(0, 0, 0, 1, 1, 1),
-            new AxisAlignedBB(0, 0, 0, 1, 11F / 12F, 1), new AxisAlignedBB(0, 0, 0, 1, 10F / 12F, 1),
-            new AxisAlignedBB(0, 0, 0, 1, 9F / 12F, 1),
+    private static final BoundingBox[] COLLISION_BOUNDS = { new BoundingBox(0, 0, 0, 1, 1, 1),
+            new BoundingBox(0, 0, 0, 1, 11F / 12F, 1), new BoundingBox(0, 0, 0, 1, 10F / 12F, 1),
+            new BoundingBox(0, 0, 0, 1, 9F / 12F, 1),
 
-            new AxisAlignedBB(0, 0, 0, 1, 8F / 12F, 1), new AxisAlignedBB(0, 0, 0, 1, 7F / 12F, 1),
-            new AxisAlignedBB(0, 0, 0, 1, 6F / 12F, 1), new AxisAlignedBB(0, 0, 0, 1, 5F / 12F, 1),
+            new BoundingBox(0, 0, 0, 1, 8F / 12F, 1), new BoundingBox(0, 0, 0, 1, 7F / 12F, 1),
+            new BoundingBox(0, 0, 0, 1, 6F / 12F, 1), new BoundingBox(0, 0, 0, 1, 5F / 12F, 1),
 
-            new AxisAlignedBB(0, 0, 0, 1, 4F / 12F, 1), new AxisAlignedBB(0, 0, 0, 1, 3F / 12F, 1),
-            new AxisAlignedBB(0, 0, 0, 1, 2F / 12F, 1), new AxisAlignedBB(0, 0, 0, 1, 1F / 12F, 1),
+            new BoundingBox(0, 0, 0, 1, 4F / 12F, 1), new BoundingBox(0, 0, 0, 1, 3F / 12F, 1),
+            new BoundingBox(0, 0, 0, 1, 2F / 12F, 1), new BoundingBox(0, 0, 0, 1, 1F / 12F, 1),
 
             // These aren't actually valid meta values, but prevent NPE if we get one
             // somehow
-            new AxisAlignedBB(0, 0, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 1, 1),
-            new AxisAlignedBB(0, 0, 0, 1, 1, 1), new AxisAlignedBB(0, 0, 0, 1, 1, 1) };
+            new BoundingBox(0, 0, 0, 1, 1, 1), new BoundingBox(0, 0, 0, 1, 1, 1),
+            new BoundingBox(0, 0, 0, 1, 1, 1), new BoundingBox(0, 0, 0, 1, 1, 1) };
 
     private static final IMutablePolygon template;
 
@@ -96,7 +93,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
         template.setLockUV(0, true);
         template.setSurface(SURFACE_TOP);
         // default - need to change for sides and bottom
-        template.setNominalFace(EnumFacing.UP);
+        template.setNominalFace(Direction.UP);
         // templateBuilder.setTag("template");
 
         final IMutablePolygon qBottom = template.claimCopy(4);
@@ -104,8 +101,8 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
             // Bottom faces are pre-built
 
             qBottom.setSurface(SURFACE_SIDE);
-            qBottom.setNominalFace(EnumFacing.DOWN);
-            qBottom.setupFaceQuad(0, 0, 1, 1, getBottomY(i - 2), EnumFacing.NORTH);
+            qBottom.setNominalFace(Direction.DOWN);
+            qBottom.setupFaceQuad(0, 0, 1, 1, getBottomY(i - 2), Direction.NORTH);
             // qBottom.setTag("bottom-" + i);
 
             // qBottom = Poly.claimCopyOf(qBottom).setTag("bottom-simple-" + i);
@@ -170,9 +167,9 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
     // {
     // synchronized(hitMap)
     // {
-    // ExoticMatter.INSTANCE.info("Terrain geometry potential cache hit rate = %d
+    // Brocade.INSTANCE.info("Terrain geometry potential cache hit rate = %d
     // percent", (hitCount.get() * 100) / tryCount.get());
-    // ExoticMatter.INSTANCE.info("Terrain geometry max cached states = %d",
+    // Brocade.INSTANCE.info("Terrain geometry max cached states = %d",
     // hitMap.size());
     // tryCount.set(0);
     // hitCount.set(0);
@@ -334,14 +331,14 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
 
             IMutablePolygon qiWork = template.claimCopy(3);
             qiWork.setupFaceQuad(fvMidSide[i], fvMidCorner[HorizontalCorner.find(side, side.getLeft()).ordinal()],
-                    fvCenter, EnumFacing.NORTH);
+                    fvCenter, Direction.NORTH);
             quadInputsCenterLeft[i] = qiWork;
             quadInputsSide[i].add(qiWork);
             quadInputsCorner[HorizontalCorner.find(side, side.getLeft()).ordinal()].add(qiWork);
 
             qiWork = template.claimCopy(3);
             qiWork.setupFaceQuad(fvMidCorner[HorizontalCorner.find(side, side.getRight()).ordinal()], fvMidSide[i],
-                    fvCenter, EnumFacing.NORTH);
+                    fvCenter, Direction.NORTH);
             quadInputsCenterRight[i] = qiWork;
             quadInputsSide[i].add(qiWork);
             quadInputsCorner[HorizontalCorner.find(side, side.getRight()).ordinal()].add(qiWork);
@@ -352,13 +349,13 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
             if (isSidePresent) {
                 qiWork = template.claimCopy(3);
                 qiWork.setupFaceQuad(fvFarSide[i], fvMidCorner[HorizontalCorner.find(side, side.getLeft()).ordinal()],
-                        fvMidSide[i], EnumFacing.NORTH);
+                        fvMidSide[i], Direction.NORTH);
                 quadInputsSide[i].add(qiWork);
                 quadInputsCorner[HorizontalCorner.find(side, side.getLeft()).ordinal()].add(qiWork);
 
                 qiWork = template.claimCopy(3);
                 qiWork.setupFaceQuad(fvMidCorner[HorizontalCorner.find(side, side.getRight()).ordinal()], fvFarSide[i],
-                        fvMidSide[i], EnumFacing.NORTH);
+                        fvMidSide[i], Direction.NORTH);
                 quadInputsSide[i].add(qiWork);
                 quadInputsCorner[HorizontalCorner.find(side, side.getRight()).ordinal()].add(qiWork);
             }
@@ -397,7 +394,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
                         : midPoint(fvFarSide[i], fvFarCorner[leftCorner.ordinal()])
                                 .withDepth(fvFarSide[i].depth + 0.5f);
 
-                qiWork.setupFaceQuad(fvMidCorner[leftCorner.ordinal()], fvFarSide[i], leftFarCorner, EnumFacing.NORTH);
+                qiWork.setupFaceQuad(fvMidCorner[leftCorner.ordinal()], fvFarSide[i], leftFarCorner, Direction.NORTH);
                 quadInputsCorner[leftCorner.ordinal()].add(qiWork);
 
                 qiWork = template.claimCopy(3);
@@ -413,7 +410,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
                                 .withDepth(fvFarSide[i].depth + 0.5f);
 
                 qiWork.setupFaceQuad(fvMidCorner[rightCorner.ordinal()], rightFarCorner, fvFarSide[i],
-                        EnumFacing.NORTH);
+                        Direction.NORTH);
                 quadInputsCorner[rightCorner.ordinal()].add(qiWork);
             } else {
                 if (isLeftCornerPresent) {
@@ -422,7 +419,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
                     qiWork.setupFaceQuad(fvMidCorner[leftCorner.ordinal()],
                             midPoint(fvFarSide[i], fvFarCorner[leftCorner.ordinal()])
                                     .withDepth(fvFarCorner[leftCorner.ordinal()].depth + 0.5f),
-                            fvFarCorner[leftCorner.ordinal()], EnumFacing.NORTH);
+                            fvFarCorner[leftCorner.ordinal()], Direction.NORTH);
                     quadInputsCorner[leftCorner.ordinal()].add(qiWork);
                 }
 
@@ -432,7 +429,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
                     qiWork.setupFaceQuad(fvMidCorner[rightCorner.ordinal()], fvFarCorner[rightCorner.ordinal()],
                             midPoint(fvFarSide[i], fvFarCorner[rightCorner.ordinal()])
                                     .withDepth(fvFarCorner[rightCorner.ordinal()].depth + 0.5f),
-                            EnumFacing.NORTH);
+                            Direction.NORTH);
                     quadInputsCorner[rightCorner.ordinal()].add(qiWork);
                 }
             }
@@ -475,7 +472,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
             normCorner[i] = vecOut.toImmutable();
         }
 
-        final boolean isTopSimple = ConfigXM.BLOCKS.simplifyTerrainBlockGeometry && flowState.isTopSimple()
+        final boolean isTopSimple = BrocadeConfig.BLOCKS.simplifyTerrainBlockGeometry && flowState.isTopSimple()
                 && !needsSubdivision;
 
         // note that outputting sides first seems to work best for CSG intersect
@@ -486,7 +483,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
             final HorizontalFace side = HorizontalFace.VALUES[i];
 
             // don't use middle vertex if it is close to being in line with corners
-            if (ConfigXM.BLOCKS.simplifyTerrainBlockGeometry && flowState.isSideSimple(side) && !needsSubdivision) {
+            if (BrocadeConfig.BLOCKS.simplifyTerrainBlockGeometry && flowState.isSideSimple(side) && !needsSubdivision) {
 
                 // side
                 IMutablePolygon qSide = template.claimCopy();
@@ -501,7 +498,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
                 qSide.setupFaceQuad(new FaceVertex(0, bottom, 0), new FaceVertex(1, bottom, 0),
                         new FaceVertex(1, flowState.getMidCornerVertexHeight(cornerLeft) - flowState.getYOffset(), 0),
                         new FaceVertex(0, flowState.getMidCornerVertexHeight(cornerRight) - flowState.getYOffset(), 0),
-                        EnumFacing.UP);
+                        Direction.UP);
                 terrainQuads.addPolygon(qSide);
 
                 // if side is simple top *may* be not necessarily so - build top if not simple
@@ -511,7 +508,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
                     // qi.setTag("top-simpleside-" + side.toString());
 
                     qi.setupFaceQuad(fvMidCorner[cornerLeft.ordinal()], fvCenter, fvMidCorner[cornerRight.ordinal()],
-                            EnumFacing.NORTH);
+                            Direction.NORTH);
                     qi.setVertexNormal(0, normCorner[cornerLeft.ordinal()]);
                     qi.setVertexNormal(1, normCenter);
                     qi.setVertexNormal(2, normCorner[cornerRight.ordinal()]);
@@ -533,7 +530,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
                                 flowState.getMidCornerVertexHeight(HorizontalCorner.find(side, side.getRight()))
                                         - flowState.getYOffset(),
                                 0),
-                        EnumFacing.UP);
+                        Direction.UP);
                 terrainQuads.addPolygon(qSide);
 
                 qSide = qSide.claimCopy();
@@ -546,7 +543,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
                                         - flowState.getYOffset(),
                                 0),
                         new FaceVertex(0.5f, flowState.getMidSideVertexHeight(side) - flowState.getYOffset(), 0),
-                        EnumFacing.UP);
+                        Direction.UP);
                 terrainQuads.addPolygon(qSide);
 
                 // Side is not simple so have to output tops.
@@ -615,7 +612,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
             qi.setupFaceQuad(fvMidCorner[HorizontalCorner.SOUTH_WEST.ordinal()],
                     fvMidCorner[HorizontalCorner.SOUTH_EAST.ordinal()],
                     fvMidCorner[HorizontalCorner.NORTH_EAST.ordinal()],
-                    fvMidCorner[HorizontalCorner.NORTH_WEST.ordinal()], EnumFacing.NORTH);
+                    fvMidCorner[HorizontalCorner.NORTH_WEST.ordinal()], Direction.NORTH);
             qi.setVertexNormal(0, normCorner[HorizontalCorner.SOUTH_WEST.ordinal()]);
             qi.setVertexNormal(1, normCorner[HorizontalCorner.SOUTH_EAST.ordinal()]);
             qi.setVertexNormal(2, normCorner[HorizontalCorner.NORTH_EAST.ordinal()]);
@@ -635,8 +632,8 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
         // Bottom face is pre-added to CSGNode templates
         // IPaintablePoly qBottom = Poly.mutable(template);
         // qBottom.setSurfaceInstance(SURFACE_SIDE);
-        // qBottom.setNominalFace(EnumFacing.DOWN);
-        // qBottom.setupFaceQuad(0, 0, 1, 1, bottom, EnumFacing.NORTH);
+        // qBottom.setNominalFace(Direction.DOWN);
+        // qBottom.setupFaceQuad(0, 0, 1, 1, bottom, Direction.NORTH);
         // terrainQuads.add(qBottom);
         // terrainQuads.add(getBottomForState(flowState));
     }
@@ -648,17 +645,17 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
         // note the order here is significant - testing shows this order gives fewest
         // splits in CSG intersect
         // most important thing seems to be that sides come first
-        cubeQuads.add(work.setSurface(SURFACE_SIDE).setupFaceQuad(EnumFacing.NORTH, 0, 0, 1, 1, 0, EnumFacing.UP)
+        cubeQuads.add(work.setSurface(SURFACE_SIDE).setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP)
                 .toPainted());
         cubeQuads.add(
-                work.setSurface(SURFACE_SIDE).setupFaceQuad(EnumFacing.EAST, 0, 0, 1, 1, 0, EnumFacing.UP).toPainted());
-        cubeQuads.add(work.setSurface(SURFACE_SIDE).setupFaceQuad(EnumFacing.SOUTH, 0, 0, 1, 1, 0, EnumFacing.UP)
+                work.setSurface(SURFACE_SIDE).setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP).toPainted());
+        cubeQuads.add(work.setSurface(SURFACE_SIDE).setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP)
                 .toPainted());
         cubeQuads.add(
-                work.setSurface(SURFACE_SIDE).setupFaceQuad(EnumFacing.WEST, 0, 0, 1, 1, 0, EnumFacing.UP).toPainted());
-        cubeQuads.add(work.setSurface(SURFACE_SIDE).setupFaceQuad(EnumFacing.UP, 0, 0, 1, 1, 0, EnumFacing.NORTH)
+                work.setSurface(SURFACE_SIDE).setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP).toPainted());
+        cubeQuads.add(work.setSurface(SURFACE_SIDE).setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH)
                 .toPainted());
-        cubeQuads.add(work.setSurface(SURFACE_SIDE).setupFaceQuad(EnumFacing.DOWN, 0, 0, 1, 1, 0, EnumFacing.NORTH)
+        cubeQuads.add(work.setSurface(SURFACE_SIDE).setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH)
                 .toPainted());
 
         work.release();
@@ -754,7 +751,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
         // 400000);
         //
         //
-        // private @Nonnull Collection<IPolygon> innerShapeQuads(ISuperModelState
+        // private Collection<IPolygon> innerShapeQuads(ISuperModelState
         // modelState)
         // {
 
@@ -794,7 +791,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
     }
 
     @Override
-    public @Nonnull ICollisionHandler collisionHandler() {
+    public ICollisionHandler collisionHandler() {
         return this;
     }
 
@@ -807,7 +804,7 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
     public void produceShapeQuads(ISuperModelState modelState, final Consumer<IPolygon> target) {
         // TODO: restore this feature, but generalize to all meshes and put in block
         // dispatcher
-//        final Consumer<IMutablePolygon> wrapped = ConfigXM.BLOCKS.enableTerrainQuadDebugRender
+//        final Consumer<IMutablePolygon> wrapped = BrocadeConfig.BLOCKS.enableTerrainQuadDebugRender
 //                ? QuadHelper.makeRecoloring(target) : target;
 
         // Hot terrain blocks that border non-hot blocks need a subdivided mesh
@@ -849,34 +846,34 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
     }
 
     @Override
-    public boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block,
+    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block,
             ISuperModelState modelState) {
         return false;
     }
 
     @Override
-    public SideShape sideShape(ISuperModelState modelState, EnumFacing side) {
+    public SideShape sideShape(ISuperModelState modelState, Direction side) {
         return modelState.getTerrainState().isFullCube() ? SideShape.SOLID : SideShape.MISSING;
     }
 
     @Override
-    public List<AxisAlignedBB> getCollisionBoxes(ISuperModelState modelState) {
+    public List<BoundingBox> getCollisionBoxes(ISuperModelState modelState) {
         return CollisionBoxDispatcher.getCollisionBoxes(modelState);
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(ISuperModelState modelState) {
+    public BoundingBox getCollisionBoundingBox(ISuperModelState modelState) {
         try {
             return COLLISION_BOUNDS[modelState.getTerrainState().centerHeight() - 1];
         } catch (Exception ex) {
-            ExoticMatter.INSTANCE.error("TerrainMeshFactory received Collision Bounding Box check for a foreign block.",
+            Brocade.INSTANCE.error("TerrainMeshFactory received Collision Bounding Box check for a foreign block.",
                     ex);
-            return Block.FULL_BLOCK_AABB;
+            return ICollisionHandler.FULL_BLOCK_BOX;
         }
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox(ISuperModelState modelState) {
+    public BoundingBox getRenderBoundingBox(ISuperModelState modelState) {
         return getCollisionBoundingBox(modelState);
     }
 

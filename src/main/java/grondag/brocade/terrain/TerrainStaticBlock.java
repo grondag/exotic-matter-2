@@ -2,30 +2,30 @@ package grondag.brocade.terrain;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
 
-import grondag.exotic_matter.ConfigXM;
-import grondag.exotic_matter.block.BlockSubstance;
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.SuperBlockStackHelper;
-import grondag.exotic_matter.block.SuperBlockWorldAccess;
-import grondag.exotic_matter.block.SuperStaticBlock;
-import grondag.exotic_matter.init.ModShapes;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.varia.Useful;
+
+import grondag.brocade.BrocadeConfig;
+import grondag.brocade.block.BlockSubstance;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlockStackHelper;
+import grondag.brocade.block.SuperBlockWorldAccess;
+import grondag.brocade.block.SuperStaticBlock;
+import grondag.brocade.init.ModShapes;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.fermion.varia.Useful;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+
 
 public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
     private final boolean isFiller;
@@ -62,14 +62,14 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
-            EnumFacing side) {
+    
+    public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+            Direction side) {
         final MutableBlockPos mpos = shouldSideBeRenderedPos.get().setPos(pos).move(side);
 
         // see Config.render().enableFaceCullingOnFlowBlocks for explanation
-        IBlockState neighborState = blockAccess.getBlockState(mpos);
-        if (ConfigXM.RENDER.enableFaceCullingOnFlowBlocks && TerrainBlockHelper.isFlowBlock(neighborState.getBlock())) {
+        BlockState neighborState = blockAccess.getBlockState(mpos);
+        if (BrocadeConfig.RENDER.enableFaceCullingOnFlowBlocks && TerrainBlockHelper.isFlowBlock(neighborState.getBlock())) {
             int myOcclusionKey = this.getOcclusionKey(blockState, blockAccess, pos, side);
             int otherOcclusionKey = ((ISuperBlock) neighborState.getBlock()).getOcclusionKey(neighborState, blockAccess,
                     mpos, side.getOpposite());
@@ -84,7 +84,7 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
      * top of terrain - better just to render the quads.
      */
     @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+    public boolean doesSideBlockRendering(BlockState state, IBlockAccess world, BlockPos pos, Direction face) {
         return false;
     }
 
@@ -105,10 +105,10 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
     }
 
     @Override
-    public int quantityDropped(IBlockAccess world, BlockPos pos, IBlockState state) {
+    public int quantityDropped(IBlockAccess world, BlockPos pos, BlockState state) {
         double volume = 0;
         ISuperModelState modelState = SuperBlockWorldAccess.access(world).computeModelState(this, state, pos, true);
-        for (AxisAlignedBB box : modelState.getShape().meshFactory().collisionHandler().getCollisionBoxes(modelState)) {
+        for (BoundingBox box : modelState.getShape().meshFactory().collisionHandler().getCollisionBoxes(modelState)) {
             volume += Useful.volumeAABB(box);
         }
 
@@ -120,8 +120,8 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
      * static.
      */
     @Override
-    public boolean removedByPlayer(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos,
-            @Nonnull EntityPlayer player, boolean willHarvest) {
+    public boolean removedByPlayer(BlockState state, World world, BlockPos pos,
+            EntityPlayer player, boolean willHarvest) {
         TerrainDynamicBlock.freezeNeighbors(world, pos, state);
         return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
@@ -131,8 +131,8 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
      * static.
      */
     @Override
-    public void onBlockPlacedBy(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state,
-            @Nonnull EntityLivingBase placer, @Nonnull ItemStack stack) {
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state,
+            LivingEntity placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         TerrainDynamicBlock.freezeNeighbors(worldIn, pos, state);
     }
@@ -140,8 +140,8 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
     /**
      * Convert this block to a dynamic version of itself if one is known.
      */
-    public void makeDynamic(IBlockState state, World world, BlockPos pos) {
-        IBlockState newState = dynamicState(state, world, pos);
+    public void makeDynamic(BlockState state, World world, BlockPos pos) {
+        BlockState newState = dynamicState(state, world, pos);
         if (newState != state)
             world.setBlockState(pos, newState, 3);
     }
@@ -149,7 +149,7 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
     /**
      * Returns dynamic version of self if one is known. Otherwise returns self.
      */
-    public IBlockState dynamicState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockState dynamicState(BlockState state, IBlockAccess world, BlockPos pos) {
         Block dynamicVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getDynamicBlock(this);
         if (dynamicVersion == null || state.getBlock() != this)
             return state;
@@ -159,26 +159,26 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
 
     // setting to false drops AO light value
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(BlockState state) {
         // don't have enough information without world access or extended state
         // to determine if is full cube.
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(BlockState state) {
         // don't have enough information without world access or extended state
         // to determine if is full cube.
         return false;
     }
 
     @Override
-    public boolean getUseNeighborBrightness(IBlockState state) {
+    public boolean getUseNeighborBrightness(BlockState state) {
         return true;
     }
 
     @Override
-    public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public int getLightOpacity(BlockState state, IBlockAccess world, BlockPos pos) {
         // FIXME: is this right? Retest after vertex normals are fixed
         // prevent filler blocks from blocking light to height block below
         return this.isFiller ? 0 : super.getLightOpacity(state, world, pos);

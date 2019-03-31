@@ -1,15 +1,15 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.stream.IMutablePolyStream;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.exotic_matter.model.texture.ITexturePalette;
 import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
 import grondag.exotic_matter.model.texture.TextureScale;
-import grondag.exotic_matter.varia.Useful;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.util.EnumFacing;
+import grondag.fermion.varia.Useful;
+import grondag.fermion.world.Rotation;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
@@ -116,7 +116,7 @@ public abstract class QuadPainter {
      * nominal face. Setting UV coordinates on a quad with lockUV=true has no
      * effect.
      */
-    protected static Vec3i getSurfaceVector(int blockX, int blockY, int blockZ, EnumFacing face, TextureScale scale) {
+    protected static Vec3i getSurfaceVector(int blockX, int blockY, int blockZ, Direction face, TextureScale scale) {
         // PERF: reuse instances?
 
         int sliceCountMask = scale.sliceCountMask;
@@ -170,13 +170,13 @@ public abstract class QuadPainter {
         }
     }
 
-    protected static int textureVersionForFace(EnumFacing face, ITexturePalette tex, ISuperModelState modelState) {
+    protected static int textureVersionForFace(Direction face, ITexturePalette tex, ISuperModelState modelState) {
         if (tex.textureVersionCount() == 0)
             return 0;
         return textureHashForFace(face, tex, modelState) & tex.versionMask();
     }
 
-    protected static int textureHashForFace(EnumFacing face, ITexturePalette tex, ISuperModelState modelState) {
+    protected static int textureHashForFace(Direction face, ITexturePalette tex, ISuperModelState modelState) {
         final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
         final int speciesBits = species << 16;
         final int shift = tex.textureScale().power;
@@ -215,7 +215,7 @@ public abstract class QuadPainter {
      * rotation type is RANDOM, is based on position (chunked by texture size) and
      * species (if applies).
      */
-    protected static Rotation textureRotationForFace(EnumFacing face, ITexturePalette tex,
+    protected static Rotation textureRotationForFace(Direction face, ITexturePalette tex,
             ISuperModelState modelState) {
         final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
         switch (tex.rotation().rotationType()) {

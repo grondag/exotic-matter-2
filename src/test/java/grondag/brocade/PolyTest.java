@@ -4,17 +4,17 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import grondag.exotic_matter.model.painting.Surface;
-import grondag.exotic_matter.model.painting.SurfaceTopology;
-import grondag.exotic_matter.model.primitives.FaceVertex;
-import grondag.exotic_matter.model.primitives.QuadHelper;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.stream.SimpleMutablePolygon;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;;
+import grondag.brocade.painting.Surface;
+import grondag.brocade.painting.SurfaceTopology;
+import grondag.brocade.primitives.FaceVertex;
+import grondag.brocade.primitives.QuadHelper;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.stream.SimpleMutablePolygon;
+import grondag.brocade.primitives.vertex.Vec3f;
+import grondag.fermion.world.Rotation;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.math.Direction;;
 
 public class PolyTest {
     private IMutablePolygon newPoly(int vertexCount) {
@@ -27,38 +27,38 @@ public class PolyTest {
     @Test
     public void test() {
 
-        IMutablePolygon quad = newPoly(4).setupFaceQuad(EnumFacing.UP, 0, 0, 1, 1, 0.5, EnumFacing.NORTH);
+        IMutablePolygon quad = newPoly(4).setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0.5, Direction.NORTH);
 
         // basic properties
         assert quad.layerCount() == 1;
         assert !quad.isLockUV(0);
         assert quad.shouldContractUVs(0);
-        assert quad.getNominalFace() == EnumFacing.UP;
+        assert quad.getNominalFace() == Direction.UP;
         assert quad.getRotation(0) == Rotation.ROTATE_NONE;
         assert quad.getRenderLayer(0) == BlockRenderLayer.SOLID;
 
         quad.setLockUV(0, true);
         quad.setShouldContractUVs(0, false);
-        quad.setNominalFace(EnumFacing.DOWN);
+        quad.setNominalFace(Direction.DOWN);
         quad.setRotation(0, Rotation.ROTATE_270);
         quad.setRenderLayer(0, BlockRenderLayer.TRANSLUCENT);
 
         assert quad.isLockUV(0);
         assert !quad.shouldContractUVs(0);
-        assert quad.getNominalFace() == EnumFacing.DOWN;
+        assert quad.getNominalFace() == Direction.DOWN;
         assert quad.getRotation(0) == Rotation.ROTATE_270;
         assert quad.getRenderLayer(0) == BlockRenderLayer.TRANSLUCENT;
         quad.release();
 
         // convexity & area tests
-        quad = newPoly(4).setupFaceQuad(EnumFacing.UP, 0, 0, 1, 1, 0.5, EnumFacing.NORTH);
+        quad = newPoly(4).setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0.5, Direction.NORTH);
         assert quad.isConvex();
         assert Math.abs(quad.getArea() - 1.0) < QuadHelper.EPSILON;
         quad.release();
 
-        quad = newPoly(3).setupFaceQuad(EnumFacing.UP, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0),
-                new FaceVertex(1, 1, 0), EnumFacing.NORTH);
-        assert quad.getFaceNormal().equals(Vec3f.forFace(EnumFacing.UP));
+        quad = newPoly(3).setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0),
+                new FaceVertex(1, 1, 0), Direction.NORTH);
+        assert quad.getFaceNormal().equals(Vec3f.forFace(Direction.UP));
         assert quad.getFaceNormal().equals(quad.computeFaceNormal());
         assert quad.isConvex();
         assert quad.vertexCount() == 3;
@@ -66,31 +66,31 @@ public class PolyTest {
         assert Math.abs(quad.getArea() - 0.5) < QuadHelper.EPSILON;
         quad.release();
 
-        quad = newPoly(4).setupFaceQuad(EnumFacing.UP, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0),
-                new FaceVertex(1, 1, 0), new FaceVertex(0.9f, 0.1f, 0), EnumFacing.NORTH);
+        quad = newPoly(4).setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0),
+                new FaceVertex(1, 1, 0), new FaceVertex(0.9f, 0.1f, 0), Direction.NORTH);
         assert !quad.isConvex();
         quad.release();
 
         // normal facing calculation
-        quad = newPoly(4).setupFaceQuad(EnumFacing.UP, 0, 0, 1, 1, 0.5, EnumFacing.NORTH);
-        assert quad.getNormalFace() == EnumFacing.UP;
+        quad = newPoly(4).setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0.5, Direction.NORTH);
+        assert quad.getNormalFace() == Direction.UP;
         quad.release();
 
-        quad = newPoly(4).setupFaceQuad(EnumFacing.DOWN, 0, 0, 1, 1, 0.5, EnumFacing.NORTH);
-        assert quad.getNormalFace() == EnumFacing.DOWN;
+        quad = newPoly(4).setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0.5, Direction.NORTH);
+        assert quad.getNormalFace() == Direction.DOWN;
         quad.release();
 
-        quad = newPoly(4).setupFaceQuad(EnumFacing.EAST, 0, 0, 1, 1, 0.5, EnumFacing.UP);
-        assert quad.getNormalFace() == EnumFacing.EAST;
+        quad = newPoly(4).setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0.5, Direction.UP);
+        assert quad.getNormalFace() == Direction.EAST;
         quad.release();
 
-        quad = newPoly(4).setupFaceQuad(EnumFacing.DOWN, 0, 0, 1, 1, 0.5, EnumFacing.NORTH);
-        assert quad.getNormalFace() == EnumFacing.DOWN;
+        quad = newPoly(4).setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0.5, Direction.NORTH);
+        assert quad.getNormalFace() == Direction.DOWN;
         quad.release();
 
-        quad = newPoly(4).setupFaceQuad(EnumFacing.SOUTH, new FaceVertex(0, 0, 0.1f), new FaceVertex(1, 0, 0.1f),
-                new FaceVertex(1, 1, 0), new FaceVertex(0.9f, 0.1f, 0), EnumFacing.UP);
-        assert quad.getNormalFace() == EnumFacing.SOUTH;
+        quad = newPoly(4).setupFaceQuad(Direction.SOUTH, new FaceVertex(0, 0, 0.1f), new FaceVertex(1, 0, 0.1f),
+                new FaceVertex(1, 1, 0), new FaceVertex(0.9f, 0.1f, 0), Direction.UP);
+        assert quad.getNormalFace() == Direction.SOUTH;
         quad.release();
 
         // exercise all the constructors, getters and setters
@@ -115,7 +115,7 @@ public class PolyTest {
         poly.setSurface(s);
         assert poly.getSurface() == s;
 
-        EnumFacing face = EnumFacing.VALUES[r.nextInt(6)];
+        Direction face = Direction.VALUES[r.nextInt(6)];
         poly.setNominalFace(face);
         assert poly.getNominalFace() == face;
 

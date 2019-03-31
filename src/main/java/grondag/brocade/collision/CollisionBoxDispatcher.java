@@ -76,7 +76,7 @@ public class CollisionBoxDispatcher {
 //            long total = totalNanos.addAndGet(System.nanoTime() - start);
 //            if(runCounter.incrementAndGet() == 100)
 //            {
-//                ExoticMatter.INSTANCE.info("Avg fast collision box nanos, past 100 samples = %d", total / 100);
+//                Brocade.INSTANCE.info("Avg fast collision box nanos, past 100 samples = %d", total / 100);
 //                runCounter.addAndGet(-100);
 //                totalNanos.addAndGet(-total);
 //            }

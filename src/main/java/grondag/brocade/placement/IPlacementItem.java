@@ -1,36 +1,36 @@
 package grondag.brocade.placement;
 
-import javax.annotation.Nullable;
+
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import grondag.exotic_matter.block.BlockSubstance;
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.SuperBlockStackHelper;
-import grondag.exotic_matter.block.SuperModelBlock;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.state.MetaUsage;
-import grondag.exotic_matter.serialization.NBTDictionary;
-import grondag.exotic_matter.varia.FixedRegionBounds;
-import grondag.exotic_matter.varia.Useful;
-import grondag.exotic_matter.varia.structures.BinaryEnumSet;
-import grondag.exotic_matter.world.PackedBlockPos;
-import grondag.exotic_matter.world.Rotation;
+import grondag.brocade.block.BlockSubstance;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlockStackHelper;
+import grondag.brocade.block.SuperModelBlock;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.MetaUsage;
+import grondag.fermion.serialization.NBTDictionary;
+import grondag.fermion.varia.FixedRegionBounds;
+import grondag.fermion.varia.Useful;
+import grondag.fermion.structures.BinaryEnumSet;
+import grondag.fermion.world.PackedBlockPos;
+import grondag.fermion.world.Rotation;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resource.language.I18n;
 
 public interface IPlacementItem {
     /////////////////////////////////////////////////////
@@ -50,14 +50,14 @@ public interface IPlacementItem {
      * holding one. If player is holding a PlacementItem in both hands, returns item
      * in primary hand.
      */
-    @Nullable
+    
     public static ItemStack getHeldPlacementItem(EntityPlayer player) {
-        ItemStack stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
+        ItemStack stack = MinecraftClient.getMinecraft().player.getHeldItemMainhand();
 
         if (stack.getItem() instanceof IPlacementItem)
             return stack;
 
-        stack = Minecraft.getMinecraft().player.getHeldItemOffhand();
+        stack = MinecraftClient.getMinecraft().player.getHeldItemOffhand();
 
         if (stack.getItem() instanceof IPlacementItem)
             return stack;
@@ -127,13 +127,13 @@ public interface IPlacementItem {
      * Hides what type of shape we are using and just lets us know the axis. Returns
      * UP/DOWN if not applicable.
      */
-    public default EnumFacing.Axis getBlockPlacementAxis(ItemStack stack) {
+    public default Direction.Axis getBlockPlacementAxis(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
-            return EnumFacing.Axis.Y;
+            return Direction.Axis.Y;
 
         ISuperModelState modelState = SuperBlockStackHelper.getStackModelState(stack);
         if (modelState == null)
-            return EnumFacing.Axis.Y;
+            return Direction.Axis.Y;
 
         switch (modelState.orientationType()) {
         case AXIS:
@@ -149,7 +149,7 @@ public interface IPlacementItem {
 
         case NONE:
         default:
-            return EnumFacing.Axis.Y;
+            return Direction.Axis.Y;
         }
     }
 
@@ -166,12 +166,12 @@ public interface IPlacementItem {
             return false;
 
         case FACE:
-            return this.getBlockOrientationFace(stack).face.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE;
+            return this.getBlockOrientationFace(stack).face.getAxisDirection() == Direction.AxisDirection.NEGATIVE;
 
         case EDGE:
             // FIXME: is this right?
             return this.getBlockOrientationEdge(stack).edge.face1
-                    .getAxisDirection() == EnumFacing.AxisDirection.POSITIVE;
+                    .getAxisDirection() == Direction.AxisDirection.POSITIVE;
 
         case CORNER:
             // TODO
@@ -417,7 +417,7 @@ public interface IPlacementItem {
 
         case NONE:
         default:
-            return I18n.translateToLocal("placement.orientation.none");
+            return I18n.translate("placement.orientation.none");
         }
     }
 
@@ -540,7 +540,7 @@ public interface IPlacementItem {
      * different than the stack block because SuperModel in-world blocks are
      * dependent on substance and other properties stored in the stack.
      */
-    public static IBlockState getPlacementBlockStateFromStackStatically(ItemStack stack) {
+    public static BlockState getPlacementBlockStateFromStackStatically(ItemStack stack) {
         // supermodel blocks may need to use a different block instance depending on
         // model/substance
         // handle this here by substituting a stack different than what we received
@@ -574,7 +574,7 @@ public interface IPlacementItem {
 
     }
 
-    public default IBlockState getPlacementBlockStateFromStack(ItemStack stack) {
+    public default BlockState getPlacementBlockStateFromStack(ItemStack stack) {
         return getPlacementBlockStateFromStackStatically(stack);
     }
 
@@ -660,7 +660,7 @@ public interface IPlacementItem {
         if (!this.isFixedRegionEnabled(stack))
             this.setFixedRegionEnabled(stack, true);
 
-        NBTTagCompound tag = Useful.getOrCreateTagCompound(stack);
+        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 
         tag.setLong(NBT_FIXED_REGION_SELECT_POS, PackedBlockPos.pack(pos, isCenter ? 1 : 0));
 
@@ -682,7 +682,7 @@ public interface IPlacementItem {
         if (!this.isFixedRegionSupported(stack))
             return;
 
-        NBTTagCompound tag = Useful.getOrCreateTagCompound(stack);
+        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
         tag.removeTag(NBT_FIXED_REGION_SELECT_POS);
 
         // disable fixed region if we don't have one
@@ -695,12 +695,12 @@ public interface IPlacementItem {
      * set by {@link #fixedRegionStart(ItemStack, BlockPos, boolean)} Boolean valus
      * is true if point is centered.
      */
-    @Nullable
+    
     public default Pair<BlockPos, Boolean> fixedRegionSelectionPos(ItemStack stack) {
         if (!this.isFixedRegionSupported(stack))
             return null;
 
-        NBTTagCompound tag = Useful.getOrCreateTagCompound(stack);
+        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 
         if (tag.hasKey(NBT_FIXED_REGION_SELECT_POS)) {
             long packed = tag.getLong(NBT_FIXED_REGION_SELECT_POS);
@@ -717,7 +717,7 @@ public interface IPlacementItem {
         Pair<BlockPos, Boolean> fromPos = fixedRegionSelectionPos(stack);
 
         // if somehow missing start position, still want to cancel selection operation
-        NBTTagCompound tag = Useful.getOrCreateTagCompound(stack);
+        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 
         if (fromPos == null)
             return;
@@ -746,7 +746,7 @@ public interface IPlacementItem {
 //                diff.getX() >= 0 ? diff.getX() + 1 : diff.getX() -1,
 //                diff.getY() >= 0 ? diff.getY() + 1 : diff.getY() -1,
 //                diff.getZ() >= 0 ? diff.getZ() + 1 : diff.getZ() -1);
-//        return(player.getHorizontalFacing().getAxis() == EnumFacing.Axis.Z)
+//        return(player.getHorizontalFacing().getAxis() == Direction.Axis.Z)
 //                ? selectedPos
 //                : new BlockPos(selectedPos.getZ(), selectedPos.getY(), selectedPos.getX());
 //    }
@@ -763,7 +763,7 @@ public interface IPlacementItem {
      * Region rotation is or isn't applied according to parameter.<br>
      */
     public default BlockPos getRegionSize(ItemStack stack, boolean applyRegionRotation) {
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundTag tag = stack.getTagCompound();
         if (tag == null || !tag.hasKey(NBT_REGION_SIZE))
             return new BlockPos(1, 1, 1);
 
@@ -779,7 +779,7 @@ public interface IPlacementItem {
         if (!this.isRegionSizeSupported(stack))
             return;
 
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundTag tag = stack.getTagCompound();
         tag.setLong(NBT_REGION_SIZE, pos.toLong());
     }
 
@@ -791,7 +791,7 @@ public interface IPlacementItem {
         if (!this.isRegionSizeSupported(stack))
             return false;
 
-        NBTTagCompound tag = Useful.getOrCreateTagCompound(stack);
+        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
         BlockPos oldPos = BlockPos.fromLong(tag.getLong(NBT_REGION_SIZE));
 
         BlockPos newPos = new BlockPos(MathHelper.clamp(oldPos.getX() + dx, 1, 9),
@@ -819,7 +819,7 @@ public interface IPlacementItem {
 //     */
 //    public static void selectedRegionUpdate(ItemStack stack, BlockPos selectedPos)
 //    {
-//        NBTTagCompound tag = Useful.getOrCreateTagCompound(stack);
+//        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 //        if(selectedPos == null)
 //        {
 //            tag.removeTag(NBT_REGION_SIZE);
@@ -836,14 +836,14 @@ public interface IPlacementItem {
             if (!this.isRegionSizeSupported(stack))
                 return "";
             BlockPos pos = getRegionSize(stack, false);
-            return I18n.translateToLocalFormatted("placement.message.region_box", pos.getX(), pos.getY(), pos.getZ());
+            return I18n.translateFormatted("placement.message.region_box", pos.getX(), pos.getY(), pos.getZ());
 
         case ON_CLICKED_SURFACE:
-            return I18n.translateToLocal("placement.message.region_additive");
+            return I18n.translate("placement.message.region_additive");
 
         case ON_CLICKED_FACE:
         default:
-            return I18n.translateToLocal("placement.message.region_single");
+            return I18n.translate("placement.message.region_single");
 
         }
     }
@@ -872,7 +872,7 @@ public interface IPlacementItem {
         if (!this.isSelectionRangeSupported(stack))
             return 0;
 
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundTag tag = stack.getTagCompound();
         int range = tag == null ? 0 : MathHelper.clamp(tag.getByte(NBT_REGION_FLOATING_RANGE), 0, 4);
         return range == 0 ? 0 : range + 1;
     }
@@ -884,7 +884,7 @@ public interface IPlacementItem {
         if (!this.isSelectionRangeSupported(stack))
             return false;
 
-        NBTTagCompound tag = Useful.getOrCreateTagCompound(stack);
+        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
         int range = tag.getByte(NBT_REGION_FLOATING_RANGE) + (reverse ? -1 : 1);
         if (range > 4)
             range = 0;
@@ -906,7 +906,7 @@ public interface IPlacementItem {
      * 
      * TODO: remove - replaced by PlacementPosition
      */
-    public default BlockPos getFloatingSelectionBlockPos(ItemStack stack, EntityLivingBase entity) {
+    public default BlockPos getFloatingSelectionBlockPos(ItemStack stack, LivingEntity entity) {
         int range = getFloatingSelectionRange(stack);
 
         Vec3d look = entity.getLookVec();

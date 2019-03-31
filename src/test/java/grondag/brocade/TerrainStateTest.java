@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import grondag.exotic_matter.terrain.TerrainState;
-import grondag.exotic_matter.world.HorizontalCorner;
-import grondag.exotic_matter.world.HorizontalFace;
+import grondag.fermion.world.HorizontalCorner;
+import grondag.fermion.world.HorizontalFace;
 
 public class TerrainStateTest {
 

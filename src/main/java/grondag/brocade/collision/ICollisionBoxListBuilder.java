@@ -4,19 +4,19 @@ import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntIterator;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BoundingBox;
 
 public interface ICollisionBoxListBuilder {
     IntCollection boxes();
 
     void clear();
 
-    default ImmutableList<AxisAlignedBB> build() {
+    default ImmutableList<BoundingBox> build() {
         IntCollection boxes = boxes();
         if (boxes.isEmpty())
             return ImmutableList.of();
         else {
-            ImmutableList.Builder<AxisAlignedBB> builder = ImmutableList.builder();
+            ImmutableList.Builder<BoundingBox> builder = ImmutableList.builder();
 
             IntIterator it = boxes.iterator();
             while (it.hasNext()) {

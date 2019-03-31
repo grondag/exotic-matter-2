@@ -1,6 +1,6 @@
 package grondag.brocade.block;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 public class SuperModelTileEntity extends SuperTileEntity {
 
@@ -14,7 +14,7 @@ public class SuperModelTileEntity extends SuperTileEntity {
     private BlockSubstance substance = BlockSubstance.DEFAULT;
 
     @Override
-    public void writeModNBT(NBTTagCompound compound) {
+    public void writeModNBT(CompoundTag compound) {
         super.writeModNBT(compound);
         if (this.substance != null)
             this.substance.serializeNBT(compound);
@@ -22,7 +22,7 @@ public class SuperModelTileEntity extends SuperTileEntity {
     }
 
     @Override
-    public void readModNBT(NBTTagCompound compound) {
+    public void readModNBT(CompoundTag compound) {
         super.readModNBT(compound);
         this.substance = BlockSubstance.deserializeNBT(compound);
         this.lightValue = compound == null ? 0 : compound.getByte(SuperBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);

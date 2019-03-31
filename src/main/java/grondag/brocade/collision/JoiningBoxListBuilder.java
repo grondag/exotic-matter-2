@@ -1,6 +1,6 @@
 package grondag.brocade.collision;
 
-import static grondag.exotic_matter.model.collision.CollisionBoxEncoder.*;
+import static grondag.brocade.collision.CollisionBoxEncoder.*;
 
 import java.util.Arrays;
 import java.util.function.IntConsumer;

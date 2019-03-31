@@ -1,10 +1,10 @@
 package grondag.brocade.model.varia;
 
-import grondag.exotic_matter.init.IItemModelRegistrant;
+import grondag.brocade.init.IItemModelRegistrant;
 import grondag.exotic_matter.model.color.BlockColorMapProvider;
 import grondag.exotic_matter.model.color.ColorMap.EnumColorMap;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelBakeEvent;

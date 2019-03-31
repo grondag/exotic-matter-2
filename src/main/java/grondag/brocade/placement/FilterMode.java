@@ -1,18 +1,18 @@
 package grondag.brocade.placement;
 
-import grondag.exotic_matter.block.ISuperBlock;
+import grondag.brocade.block.ISuperBlock;
 import grondag.exotic_matter.serialization.IMessagePlusImmutable;
 import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
 import grondag.exotic_matter.serialization.NBTDictionary;
-import grondag.exotic_matter.varia.ILocalized;
-import grondag.exotic_matter.varia.Useful;
+import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.Useful;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.world.World;
 
 /**
@@ -35,12 +35,12 @@ public enum FilterMode implements IMessagePlusImmutable<FilterMode>, IReadWriteN
     }
 
     @Override
-    public FilterMode deserializeNBT(NBTTagCompound tag) {
+    public FilterMode deserializeNBT(CompoundTag tag) {
         return Useful.safeEnumFromTag(tag, NBT_TAG, this);
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag) {
+    public void serializeNBT(CompoundTag tag) {
         Useful.saveEnumToTag(tag, NBT_TAG, this);
     }
 
@@ -57,13 +57,13 @@ public enum FilterMode implements IMessagePlusImmutable<FilterMode>, IReadWriteN
     @SuppressWarnings("deprecation")
     @Override
     public String localizedName() {
-        return I18n.translateToLocal("placement.filter_mode." + this.name().toLowerCase());
+        return I18n.translate("placement.filter_mode." + this.name().toLowerCase());
     }
 
     /**
      * If isVirtual then will only affect virtual blocks and empty space.
      */
-    public boolean shouldAffectBlock(IBlockState blockState, World world, BlockPos pos, ItemStack stack,
+    public boolean shouldAffectBlock(BlockState blockState, World world, BlockPos pos, ItemStack stack,
             boolean isVirtual) {
         Block block = blockState.getBlock();
 

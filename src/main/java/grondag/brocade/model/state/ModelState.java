@@ -1,57 +1,57 @@
 package grondag.brocade.model.state;
 
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_POS;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
-import static grondag.exotic_matter.model.state.ModelStateData.TEST_GETTER_STATIC;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_POS;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
+import static grondag.brocade.model.state.ModelStateData.TEST_GETTER_STATIC;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
 
-import grondag.exotic_matter.ConfigXM;
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.ISuperBlockAccess;
+import grondag.brocade.BrocadeConfig;
+import grondag.brocade.Brocade;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.ISuperBlockAccess;
 import grondag.exotic_matter.model.mesh.BlockOrientationType;
 import grondag.exotic_matter.model.mesh.ModelShape;
 import grondag.exotic_matter.model.mesh.ModelShapes;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.painting.VertexProcessor;
-import grondag.exotic_matter.model.painting.VertexProcessors;
-import grondag.exotic_matter.model.primitives.Transform;
-import grondag.exotic_matter.model.render.RenderLayout;
-import grondag.exotic_matter.model.render.RenderLayoutProducer;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.painting.VertexProcessor;
+import grondag.brocade.painting.VertexProcessors;
+import grondag.brocade.primitives.Transform;
+import grondag.brocade.model.render.RenderLayout;
+import grondag.brocade.model.render.RenderLayoutProducer;
 import grondag.exotic_matter.model.texture.ITexturePalette;
 import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
-import grondag.exotic_matter.model.varia.SideShape;
+import grondag.brocade.model.varia.SideShape;
 import grondag.exotic_matter.serialization.NBTDictionary;
 import grondag.exotic_matter.terrain.TerrainState;
-import grondag.exotic_matter.varia.SuperBlockMasonryMatch;
-import grondag.exotic_matter.varia.Useful;
-import grondag.exotic_matter.world.CornerJoinBlockState;
-import grondag.exotic_matter.world.CornerJoinBlockStateSelector;
-import grondag.exotic_matter.world.NeighborBlocks;
-import grondag.exotic_matter.world.Rotation;
-import grondag.exotic_matter.world.SimpleJoin;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import grondag.fermion.varia.SuperBlockMasonryMatch;
+import grondag.fermion.varia.Useful;
+import grondag.fermion.world.CornerJoinBlockState;
+import grondag.fermion.world.CornerJoinBlockStateSelector;
+import grondag.fermion.world.NeighborBlocks;
+import grondag.fermion.world.Rotation;
+import grondag.fermion.world.SimpleJoin;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -67,7 +67,7 @@ public class ModelState implements ISuperModelState {
     /**
      * Removes model state from the tag if present.
      */
-    public static final void clearNBTValues(@Nullable NBTTagCompound tag) {
+    public static final void clearNBTValues(CompoundTag tag) {
         if (tag == null)
             return;
         tag.removeTag(NBT_MODEL_BITS);
@@ -194,7 +194,7 @@ public class ModelState implements ISuperModelState {
      * {@inheritDoc}
      */
     @Override
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
 
@@ -241,7 +241,7 @@ public class ModelState implements ISuperModelState {
 
     @SuppressWarnings("null")
     @Override
-    public ISuperModelState refreshFromWorld(IBlockState state, ISuperBlockAccess world, BlockPos pos) {
+    public ISuperModelState refreshFromWorld(BlockState state, ISuperBlockAccess world, BlockPos pos) {
         // Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
         // " @" + pos.toString());
         if (this.isStatic)
@@ -371,12 +371,12 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public EnumFacing.Axis getAxis() {
+    public Direction.Axis getAxis() {
         return ModelStateData.AXIS.getValue(this);
     }
 
     @Override
-    public void setAxis(EnumFacing.Axis axis) {
+    public void setAxis(Direction.Axis axis) {
         ModelStateData.AXIS.setValue(axis, this);
         invalidateHashCode();
     }
@@ -424,7 +424,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public void setTexture(PaintLayer layer, @Nonnull ITexturePalette tex) {
+    public void setTexture(PaintLayer layer, ITexturePalette tex) {
         ModelStateData.PAINT_TEXTURE[layer.ordinal()].setValue(tex.ordinal(), this);
         invalidateHashCode();
         clearStateFlags();
@@ -509,8 +509,8 @@ public class ModelState implements ISuperModelState {
     public int getSpecies() {
         this.populateStateFlagsIfNeeded();
 
-        if (ConfigXM.BLOCKS.debugModelState && !this.hasSpecies())
-            ExoticMatter.INSTANCE.warn("getSpecies on model state does not apply for shape");
+        if (BrocadeConfig.BLOCKS.debugModelState && !this.hasSpecies())
+            Brocade.INSTANCE.warn("getSpecies on model state does not apply for shape");
 
         return this.hasSpecies() ? ModelStateData.SPECIES.getValue(this) : 0;
     }
@@ -519,8 +519,8 @@ public class ModelState implements ISuperModelState {
     public void setSpecies(int species) {
         this.populateStateFlagsIfNeeded();
 
-        if (ConfigXM.BLOCKS.debugModelState && !this.hasSpecies())
-            ExoticMatter.INSTANCE.warn("setSpecies on model state does not apply for shape");
+        if (BrocadeConfig.BLOCKS.debugModelState && !this.hasSpecies())
+            Brocade.INSTANCE.warn("setSpecies on model state does not apply for shape");
 
         if (this.hasSpecies()) {
             ModelStateData.SPECIES.setValue(species, this);
@@ -530,11 +530,11 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public CornerJoinBlockState getCornerJoin() {
-        if (ConfigXM.BLOCKS.debugModelState) {
+        if (BrocadeConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
                     || this.getShape().meshFactory().stateFormat != StateFormat.BLOCK)
-                ExoticMatter.INSTANCE.warn("getCornerJoin on model state does not apply for shape");
+                Brocade.INSTANCE.warn("getCornerJoin on model state does not apply for shape");
         }
 
         return CornerJoinBlockStateSelector.getJoinState(MathHelper.clamp(ModelStateData.BLOCK_JOIN.getValue(this), 0,
@@ -543,11 +543,11 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public void setCornerJoin(CornerJoinBlockState join) {
-        if (ConfigXM.BLOCKS.debugModelState) {
+        if (BrocadeConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
                     || this.getShape().meshFactory().stateFormat != StateFormat.BLOCK)
-                ExoticMatter.INSTANCE.warn("setCornerJoin on model state does not apply for shape");
+                Brocade.INSTANCE.warn("setCornerJoin on model state does not apply for shape");
         }
 
         ModelStateData.BLOCK_JOIN.setValue(join.getIndex(), this);
@@ -556,8 +556,8 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public SimpleJoin getSimpleJoin() {
-        if (ConfigXM.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.BLOCK)
-            ExoticMatter.INSTANCE.warn("getSimpleJoin on model state does not apply for shape");
+        if (BrocadeConfig.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.BLOCK)
+            Brocade.INSTANCE.warn("getSimpleJoin on model state does not apply for shape");
 
         // If this state is using corner join, join index is for a corner join
         // and so need to derive simple join from the corner join
@@ -569,15 +569,15 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public void setSimpleJoin(SimpleJoin join) {
-        if (ConfigXM.BLOCKS.debugModelState) {
+        if (BrocadeConfig.BLOCKS.debugModelState) {
             if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
-                ExoticMatter.INSTANCE.warn("Ignored setSimpleJoin on model state that does not apply for shape");
+                Brocade.INSTANCE.warn("Ignored setSimpleJoin on model state that does not apply for shape");
                 return;
             }
 
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) != 0) {
-                ExoticMatter.INSTANCE.warn("Ignored setSimpleJoin on model state that uses corner join instead");
+                Brocade.INSTANCE.warn("Ignored setSimpleJoin on model state that uses corner join instead");
                 return;
             }
         }
@@ -588,11 +588,11 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public SimpleJoin getMasonryJoin() {
-        if (ConfigXM.BLOCKS.debugModelState
+        if (BrocadeConfig.BLOCKS.debugModelState
                 && (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK
                         || (stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
                 || ((stateFlags & STATE_FLAG_NEEDS_MASONRY_JOIN) == 0))
-            ExoticMatter.INSTANCE.warn("getMasonryJoin on model state does not apply for shape");
+            Brocade.INSTANCE.warn("getMasonryJoin on model state does not apply for shape");
 
         populateStateFlagsIfNeeded();
         return new SimpleJoin(ModelStateData.MASONRY_JOIN.getValue(this));
@@ -600,16 +600,16 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public void setMasonryJoin(SimpleJoin join) {
-        if (ConfigXM.BLOCKS.debugModelState) {
+        if (BrocadeConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
-                ExoticMatter.INSTANCE.warn("Ignored setMasonryJoin on model state that does not apply for shape");
+                Brocade.INSTANCE.warn("Ignored setMasonryJoin on model state that does not apply for shape");
                 return;
             }
 
             if (((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
                     || ((stateFlags & STATE_FLAG_NEEDS_MASONRY_JOIN) == 0)) {
-                ExoticMatter.INSTANCE.warn("Ignored setMasonryJoin on model state for which it does not apply");
+                Brocade.INSTANCE.warn("Ignored setMasonryJoin on model state for which it does not apply");
                 return;
             }
         }
@@ -627,14 +627,14 @@ public class ModelState implements ISuperModelState {
     public void setAxisRotation(Rotation rotation) {
         populateStateFlagsIfNeeded();
         if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
-            if (ConfigXM.BLOCKS.debugModelState)
-                ExoticMatter.INSTANCE.warn("Ignored setAxisRotation on model state that does not apply for shape");
+            if (BrocadeConfig.BLOCKS.debugModelState)
+                Brocade.INSTANCE.warn("Ignored setAxisRotation on model state that does not apply for shape");
             return;
         }
 
         if ((stateFlags & STATE_FLAG_HAS_AXIS_ROTATION) == 0) {
-            if (ConfigXM.BLOCKS.debugModelState)
-                ExoticMatter.INSTANCE.warn("Ignored setAxisRotation on model state for which it does not apply");
+            if (BrocadeConfig.BLOCKS.debugModelState)
+                Brocade.INSTANCE.warn("Ignored setAxisRotation on model state for which it does not apply");
             return;
         }
 
@@ -648,16 +648,16 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public long getMultiBlockBits() {
-        if (ConfigXM.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.MULTIBLOCK)
-            ExoticMatter.INSTANCE.warn("getMultiBlockBits on model state does not apply for shape");
+        if (BrocadeConfig.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.MULTIBLOCK)
+            Brocade.INSTANCE.warn("getMultiBlockBits on model state does not apply for shape");
 
         return shapeBits0;
     }
 
     @Override
     public void setMultiBlockBits(long bits) {
-        if (ConfigXM.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.MULTIBLOCK)
-            ExoticMatter.INSTANCE.warn("setMultiBlockBits on model state does not apply for shape");
+        if (BrocadeConfig.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.MULTIBLOCK)
+            Brocade.INSTANCE.warn("setMultiBlockBits on model state does not apply for shape");
 
         shapeBits0 = bits;
         invalidateHashCode();
@@ -721,7 +721,7 @@ public class ModelState implements ISuperModelState {
         case MIDDLE:
         case OUTER: {
             this.populateStateFlagsIfNeeded();
-            if (ExoticMatter.proxy.isAcuityEnabled())
+            if (Brocade.proxy.isAcuityEnabled())
                 // report solid if multi-layer solid render is enabled and applicable
                 return (this.stateFlags & STATE_FLAG_HAS_SOLID_RENDER) == STATE_FLAG_HAS_SOLID_RENDER
                         ? BlockRenderLayer.SOLID
@@ -823,8 +823,8 @@ public class ModelState implements ISuperModelState {
 
         case NONE:
         default:
-            if (ConfigXM.BLOCKS.debugModelState)
-                ExoticMatter.INSTANCE.warn("ModelState.getMetaData called for inappropriate shape");
+            if (BrocadeConfig.BLOCKS.debugModelState)
+                Brocade.INSTANCE.warn("ModelState.getMetaData called for inappropriate shape");
             return 0;
         }
     }
@@ -853,7 +853,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public SideShape sideShape(EnumFacing side) {
+    public SideShape sideShape(Direction side) {
         return getShape().meshFactory().sideShape(this, side);
     }
 
@@ -863,7 +863,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block) {
+    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block) {
         return getShape().meshFactory().rotateBlock(blockState, world, pos, axis, block, this);
     }
 
@@ -933,11 +933,11 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public List<AxisAlignedBB> collisionBoxes(BlockPos offset) {
+    public List<BoundingBox> collisionBoxes(BlockPos offset) {
         return this.getShape().meshFactory().collisionHandler().getCollisionBoxes(this, offset);
     }
 
-    public static @Nullable ModelState deserializeFromNBTIfPresent(NBTTagCompound tag) {
+    public static ModelState deserializeFromNBTIfPresent(CompoundTag tag) {
         if (tag.hasKey(NBT_MODEL_BITS)) {
             ModelState result = new ModelState();
             result.deserializeNBT(tag);
@@ -947,7 +947,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public EnumFacing rotateFace(EnumFacing face) {
+    public Direction rotateFace(Direction face) {
         return Transform.rotateFace(this, face);
     }
 
@@ -962,13 +962,13 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public void deserializeNBT(@Nullable NBTTagCompound tag) {
+    public void deserializeNBT(CompoundTag tag) {
         if (tag == null)
             return;
 
         int[] stateBits = tag.getIntArray(NBT_MODEL_BITS);
         if (stateBits.length != 16) {
-            ExoticMatter.INSTANCE.warn("Bad or missing data encounter during ModelState NBT deserialization.");
+            Brocade.INSTANCE.warn("Bad or missing data encounter during ModelState NBT deserialization.");
             return;
         }
         this.deserializeFromInts(stateBits);
@@ -1007,7 +1007,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag) {
+    public void serializeNBT(CompoundTag tag) {
         tag.setIntArray(NBT_MODEL_BITS, this.serializeToInts());
 
         // shape is serialized by name because registered shapes can change if

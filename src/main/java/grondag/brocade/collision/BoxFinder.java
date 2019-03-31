@@ -1,13 +1,13 @@
 package grondag.brocade.collision;
 
-import static grondag.exotic_matter.model.collision.BoxFinderUtils.EMPTY;
+import static grondag.brocade.collision.BoxFinderUtils.EMPTY;
 
 import java.util.function.IntConsumer;
 
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.model.collision.BoxFinderUtils.Slice;
-import grondag.exotic_matter.varia.BitHelper;
-import grondag.exotic_matter.varia.functions.IAreaBoundsIntFunction;
+import grondag.brocade.Brocade;
+import grondag.brocade.collision.BoxFinderUtils.Slice;
+import grondag.fermion.varia.BitHelper;
+import grondag.fermion.functions.IAreaBoundsIntFunction;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
@@ -342,20 +342,20 @@ public class BoxFinder {
     }
 
     void explainDisjointSet(long disjointSet) {
-        ExoticMatter.INSTANCE.info("Disjoint Set Info: Box Count = %d, Score = %d", Long.bitCount(disjointSet),
+        Brocade.INSTANCE.info("Disjoint Set Info: Box Count = %d, Score = %d", Long.bitCount(disjointSet),
                 scoreOfDisjointSet(disjointSet));
         BitHelper.forEachBit(disjointSet, i -> {
             explainVolume(i);
         });
-        ExoticMatter.INSTANCE.info("");
+        Brocade.INSTANCE.info("");
     }
 
     void explainMaximalVolumes() {
-        ExoticMatter.INSTANCE.info("Maximal Volumes");
+        Brocade.INSTANCE.info("Maximal Volumes");
         for (int i = 0; i < volumeCount; i++) {
             explainVolume(i);
         }
-        ExoticMatter.INSTANCE.info("");
+        Brocade.INSTANCE.info("");
     }
 
     void explainVolume(int volIndex) {
@@ -368,7 +368,7 @@ public class BoxFinder {
         });
         final Slice slice = BoxFinderUtils.sliceFromKey(volKey);
         BoxFinderUtils.testAreaBounds(BoxFinderUtils.patternIndexFromKey(volKey), (minX, minY, maxX, maxY) -> {
-            ExoticMatter.INSTANCE.info(
+            Brocade.INSTANCE.info(
                     "Box w/ %d volume @ %d, %d,%d to %d, %d, %d  score = %d  intersects = %s  volKey = %d",
                     BoxFinderUtils.volumeFromKey(volKey), minX, minY, slice.min, maxX, maxY, slice.max,
                     volumeScores[volIndex], b.toString(), volKey);
@@ -586,7 +586,7 @@ public class BoxFinder {
 //            {
 //                if(i != j && BoxFinderUtils.isVolumeIncluded(volumes[i], volumes[j]))
 //                {
-//                    ExoticMatter.INSTANCE.info("REDUNDANT MAXIMAL VOLUMES");
+//                    Brocade.INSTANCE.info("REDUNDANT MAXIMAL VOLUMES");
 //                    explainVolume(i);
 //                    explainVolume(j);
 //                }
@@ -634,7 +634,7 @@ public class BoxFinder {
             if (intersects[i] == 0)
                 noIntersectMask |= (1L << i);
         }
-//        ExoticMatter.INSTANCE.info("noIntersectCount = %d", Long.bitCount(noIntersectMask));
+//        Brocade.INSTANCE.info("noIntersectCount = %d", Long.bitCount(noIntersectMask));
     }
 
     boolean isVolumePresent(int volKey) {

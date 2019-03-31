@@ -2,8 +2,8 @@ package grondag.brocade.model.varia;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
@@ -11,19 +11,19 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableMap;
 
-import grondag.exotic_matter.model.primitives.QuadHelper;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import grondag.brocade.primitives.QuadHelper;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraftforge.common.model.TRSRTransformation;
 
-public class SimpleItemBlockModel implements IBakedModel {
+public class SimpleItemBlockModel implements BakedModel {
     private final List<BakedQuad> quads;
     private final boolean isShaded;
 
@@ -78,31 +78,31 @@ public class SimpleItemBlockModel implements IBakedModel {
     }
 
     @Override
-    public @Nonnull TextureAtlasSprite getParticleTexture() {
+    public TextureAtlasSprite getParticleTexture() {
         assert false : "Unsupported method call: SimpleItemModel.getParticleTexture()";
-        return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelManager()
+        return MinecraftClient.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getModelManager()
                 .getMissingModel().getParticleTexture();
     }
 
     @Override
-    public @Nonnull ItemCameraTransforms getItemCameraTransforms() {
+    public ItemCameraTransforms getItemCameraTransforms() {
         return ItemCameraTransforms.DEFAULT;
     }
 
     @Override
-    public @Nonnull List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+    public List<BakedQuad> getQuads(BlockState state, Direction side, long rand) {
         return side == null ? quads : QuadHelper.EMPTY_QUAD_LIST;
     }
 
     @Override
-    public @Nonnull ItemOverrideList getOverrides() {
+    public ItemOverrideList getOverrides() {
         return ItemOverrideList.NONE;
     }
 
     // Below is borrowed from the old IPerspectiveAwareModel.
     // I confess I'm not exactly sure how it works.
     // Seems necessary to have item model render properly in 1st person.
-    public static Pair<? extends IBakedModel, Matrix4f> handlePerspective(IBakedModel model,
+    public static Pair<? extends BakedModel, Matrix4f> handlePerspective(BakedModel model,
             ImmutableMap<TransformType, TRSRTransformation> transforms, TransformType cameraTransformType) {
         TRSRTransformation tr = transforms.get(cameraTransformType);
         Matrix4f mat = null;
@@ -112,8 +112,8 @@ public class SimpleItemBlockModel implements IBakedModel {
     }
 
     @Override
-    public @Nonnull Pair<? extends IBakedModel, Matrix4f> handlePerspective(
-            @Nonnull TransformType cameraTransformType) {
+    public Pair<? extends BakedModel, Matrix4f> handlePerspective(
+            TransformType cameraTransformType) {
         return handlePerspective(this, BLOCK_TRANSFORMS, cameraTransformType);
 
     }

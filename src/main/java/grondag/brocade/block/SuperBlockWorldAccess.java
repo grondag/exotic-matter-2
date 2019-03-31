@@ -10,7 +10,7 @@ public class SuperBlockWorldAccess {
         @Override
         protected ISuperBlockAccess initialValue() {
             return FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER ? new PassthruWrapper()
-                    : ExoticMatter.proxy.clientWorldStateCache();
+                    : Brocade.proxy.clientWorldStateCache();
         }
     };
 

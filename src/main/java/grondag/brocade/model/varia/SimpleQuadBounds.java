@@ -1,17 +1,17 @@
 package grondag.brocade.model.varia;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 
 public class SimpleQuadBounds {
-    public EnumFacing face;
+    public Direction face;
     public float x0;
     public float y0;
     public float x1;
     public float y1;
     public float depth;
-    public EnumFacing topFace;
+    public Direction topFace;
 
-    public SimpleQuadBounds(EnumFacing face, float x0, float y0, float x1, float y1, float depth, EnumFacing topFace) {
+    public SimpleQuadBounds(Direction face, float x0, float y0, float x1, float y1, float depth, Direction topFace) {
         this.face = face;
         this.x0 = x0;
         this.y0 = y0;

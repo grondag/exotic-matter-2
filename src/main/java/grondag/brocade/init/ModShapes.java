@@ -1,7 +1,7 @@
 package grondag.brocade.init;
 
-import static grondag.exotic_matter.model.state.MetaUsage.SHAPE;
-import static grondag.exotic_matter.model.state.MetaUsage.SPECIES;
+import static grondag.brocade.model.state.MetaUsage.SHAPE;
+import static grondag.brocade.model.state.MetaUsage.SPECIES;
 
 import grondag.exotic_matter.model.mesh.CSGTestMeshFactory;
 import grondag.exotic_matter.model.mesh.CubeMeshFactory;

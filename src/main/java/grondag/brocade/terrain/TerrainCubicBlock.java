@@ -2,16 +2,16 @@ package grondag.brocade.terrain;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
 
-import grondag.exotic_matter.block.BlockSubstance;
-import grondag.exotic_matter.block.SuperSimpleBlock;
-import grondag.exotic_matter.model.state.ISuperModelState;
+
+import grondag.brocade.block.BlockSubstance;
+import grondag.brocade.block.SuperSimpleBlock;
+import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -35,13 +35,13 @@ public class TerrainCubicBlock extends SuperSimpleBlock implements IHotBlock {
     // allow mined blocks to stack - consistent with appearance of a full-height
     // block
     @Override
-    public int damageDropped(@Nonnull IBlockState state) {
+    public int damageDropped(BlockState state) {
         return 0;
     }
 
     // allow mined blocks to stack - don't put an NBT on them
     @Override
-    public ItemStack getStackFromBlock(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public ItemStack getStackFromBlock(BlockState state, IBlockAccess world, BlockPos pos) {
         return new ItemStack(Item.getItemFromBlock(this), 1, this.damageDropped(state));
     }
 
@@ -61,15 +61,15 @@ public class TerrainCubicBlock extends SuperSimpleBlock implements IHotBlock {
     }
 
     @Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
-            EnumFacing side) {
+    public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+            Direction side) {
         final MutableBlockPos mpos = shouldSideBeRenderedPos.get().setPos(pos).move(side);
-        IBlockState neighborState = blockAccess.getBlockState(mpos);
+        BlockState neighborState = blockAccess.getBlockState(mpos);
         return !neighborState.doesSideBlockRendering(blockAccess, mpos, side.getOpposite());
     }
 
     @Override
-    public int quantityDropped(IBlockAccess world, BlockPos pos, IBlockState state) {
+    public int quantityDropped(IBlockAccess world, BlockPos pos, BlockState state) {
         return 1;
     }
 
@@ -79,7 +79,7 @@ public class TerrainCubicBlock extends SuperSimpleBlock implements IHotBlock {
     }
 
     @Override
-    public boolean isAir(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+    public boolean isAir(BlockState state, IBlockAccess world, BlockPos pos) {
         return false;
     }
 

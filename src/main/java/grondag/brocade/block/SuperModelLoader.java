@@ -1,9 +1,9 @@
 package grondag.brocade.block;
 
-import javax.annotation.Nonnull;
 
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.model.varia.SuperDispatcher;
+
+import grondag.brocade.Brocade;
+import grondag.brocade.model.varia.SuperDispatcher;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
@@ -17,7 +17,7 @@ public class SuperModelLoader implements ICustomModelLoader {
     };
 
     @Override
-    public void onResourceManagerReload(@Nonnull IResourceManager resourceManager) {
+    public void onResourceManagerReload(IResourceManager resourceManager) {
         SuperDispatcher.INSTANCE.clear();
     }
 
@@ -27,13 +27,13 @@ public class SuperModelLoader implements ICustomModelLoader {
      * the dispatcher. Thus, the only mod we need to check for is the library mod.
      */
     @Override
-    public boolean accepts(@Nonnull ResourceLocation modelLocation) {
-        return modelLocation.getNamespace().equals(ExoticMatter.MODID)
+    public boolean accepts(ResourceLocation modelLocation) {
+        return modelLocation.getNamespace().equals(Brocade.MODID)
                 && modelLocation.getPath().contains(SuperDispatcher.RESOURCE_BASE_NAME);
     }
 
     @Override
-    public IModel loadModel(@Nonnull ResourceLocation modelLocation) throws Exception {
+    public IModel loadModel(ResourceLocation modelLocation) throws Exception {
         return SuperDispatcher.INSTANCE.getDelegate(modelLocation.getPath());
     }
 

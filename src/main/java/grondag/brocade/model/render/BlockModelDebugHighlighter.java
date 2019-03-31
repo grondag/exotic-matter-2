@@ -2,12 +2,12 @@ package grondag.brocade.model.render;
 
 import org.lwjgl.opengl.GL11;
 
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
-import grondag.exotic_matter.model.varia.SuperDispatcher;
-import grondag.exotic_matter.model.varia.SuperDispatcher.DispatchDelegate;
-import net.minecraft.block.state.IBlockState;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.vertex.IVec3f;
+import grondag.brocade.model.varia.SuperDispatcher;
+import grondag.brocade.model.varia.SuperDispatcher.DispatchDelegate;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -25,7 +25,7 @@ public class BlockModelDebugHighlighter {
         EntityPlayer player = event.getPlayer();
         if (player != null && pos != null) {
             World world = player.world;
-            IBlockState bs = world.getBlockState(pos);
+            BlockState bs = world.getBlockState(pos);
             if (bs.getBlock() instanceof ISuperBlock) {
                 ISuperBlock block = (ISuperBlock) bs.getBlock();
 
@@ -48,7 +48,7 @@ public class BlockModelDebugHighlighter {
     }
 
     private static void renderModel(double d0, double d1, double d2, IBlockAccess world, DispatchDelegate model,
-            IBlockState state, BlockPos pos, Tessellator tessellator, BufferBuilder buffer) {
+            BlockState state, BlockPos pos, Tessellator tessellator, BufferBuilder buffer) {
 
 //        GlStateManager.disableDepth();
         GlStateManager.enableBlend();

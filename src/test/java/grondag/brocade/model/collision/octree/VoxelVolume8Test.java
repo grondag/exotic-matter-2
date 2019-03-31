@@ -1,8 +1,8 @@
-package grondag.exotic_matter.model.collision.octree;
+package grondag.brocade.collision.octree;
 
 import org.junit.jupiter.api.Test;
 
-import grondag.exotic_matter.ExoticMatter;
+import grondag.brocade.Brocade;
 
 class VoxelVolume8Test {
 
@@ -58,16 +58,16 @@ class VoxelVolume8Test {
     }
 
     void outputLayer(long[] data, int index) {
-        ExoticMatter.INSTANCE.info("LAYER %d", index);
+        Brocade.INSTANCE.info("LAYER %d", index);
         long bits = data[index];
-        ExoticMatter.INSTANCE.info(Long.toBinaryString(bits & 0xFFL));
-        ExoticMatter.INSTANCE.info(Long.toBinaryString((bits >> 8) & 0xFFL));
-        ExoticMatter.INSTANCE.info(Long.toBinaryString((bits >> 16) & 0xFFL));
-        ExoticMatter.INSTANCE.info(Long.toBinaryString((bits >> 24) & 0xFFL));
-        ExoticMatter.INSTANCE.info(Long.toBinaryString((bits >> 32) & 0xFFL));
-        ExoticMatter.INSTANCE.info(Long.toBinaryString((bits >> 40) & 0xFFL));
-        ExoticMatter.INSTANCE.info(Long.toBinaryString((bits >> 48) & 0xFFL));
-        ExoticMatter.INSTANCE.info(Long.toBinaryString((bits >> 56) & 0xFFL));
-        ExoticMatter.INSTANCE.info("");
+        Brocade.INSTANCE.info(Long.toBinaryString(bits & 0xFFL));
+        Brocade.INSTANCE.info(Long.toBinaryString((bits >> 8) & 0xFFL));
+        Brocade.INSTANCE.info(Long.toBinaryString((bits >> 16) & 0xFFL));
+        Brocade.INSTANCE.info(Long.toBinaryString((bits >> 24) & 0xFFL));
+        Brocade.INSTANCE.info(Long.toBinaryString((bits >> 32) & 0xFFL));
+        Brocade.INSTANCE.info(Long.toBinaryString((bits >> 40) & 0xFFL));
+        Brocade.INSTANCE.info(Long.toBinaryString((bits >> 48) & 0xFFL));
+        Brocade.INSTANCE.info(Long.toBinaryString((bits >> 56) & 0xFFL));
+        Brocade.INSTANCE.info("");
     }
 }

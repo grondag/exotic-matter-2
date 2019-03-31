@@ -2,15 +2,16 @@ package grondag.brocade.mesh;
 
 import java.util.function.Consumer;
 
-import javax.vecmath.Matrix4f;
+import org.joml.Matrix4f;
 
-import grondag.exotic_matter.model.primitives.FaceVertex;
-import grondag.exotic_matter.model.primitives.PolyFactory;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.primitives.FaceVertex;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.stream.IWritablePolyStream;
+import grondag.brocade.primitives.stream.PolyStreams;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.fermion.world.Rotation;
+import net.minecraft.util.math.Direction;
 
 public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
     @Override
@@ -20,51 +21,58 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
         // Default geometry is Y orthogonalAxis with full sides against north/east
         // faces.
 
+        // PERF: if have a consumer and doing this dynamically - should consumer simply be a stream?
+        // Why create a stream just to pipe it to the consumer?  Or cache the result.
+        final IWritablePolyStream stream = PolyStreams.claimWritable();
+        final IMutablePolygon writer = stream.writer();
+        
         Matrix4f matrix = modelState.getMatrix4f();
 
-        IMutablePolygon template = PolyFactory.COMMON_POOL.newPaintable(4);
-        template.setRotation(0, Rotation.ROTATE_NONE);
-        template.setLockUV(0, true);
+        writer.setRotation(0, Rotation.ROTATE_NONE);
+        writer.setLockUV(0, true);
+        stream.saveDefaults();
 
-        IMutablePolygon quad = template.claimCopy();
-        quad.setSurface(BACK_AND_BOTTOM_SURFACE);
-        quad.setNominalFace(EnumFacing.NORTH);
-        quad.setupFaceQuad(0, 0, 1, 1, 0, EnumFacing.UP);
-        quad.transform(matrix);
-        target.accept(quad);
+        writer.setSurface(BACK_AND_BOTTOM_SURFACE);
+        writer.setNominalFace(Direction.NORTH);
+        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
+        writer.transform(matrix);
+        stream.append();
 
-        quad = template.claimCopy();
-        quad.setSurface(BACK_AND_BOTTOM_SURFACE);
-        quad.setNominalFace(EnumFacing.EAST);
-        quad.setupFaceQuad(0, 0, 1, 1, 0, EnumFacing.UP);
-        quad.transform(matrix);
-        target.accept(quad);
+        writer.setSurface(BACK_AND_BOTTOM_SURFACE);
+        writer.setNominalFace(Direction.EAST);
+        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
+        writer.transform(matrix);
+        stream.append();
 
-        quad = template.claimCopy();
-        quad.setSurface(SIDE_SURFACE);
-        quad.setNominalFace(EnumFacing.UP);
-        quad.setupFaceQuad(EnumFacing.UP, new FaceVertex(0, 1, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
-                EnumFacing.NORTH);
-        quad.transform(matrix);
-        target.accept(quad);
+        writer.setSurface(SIDE_SURFACE);
+        writer.setNominalFace(Direction.UP);
+        writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 1, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
+                Direction.NORTH);
+        writer.transform(matrix);
+        stream.append();
 
-        quad = template.claimCopy();
-        quad.setSurface(SIDE_SURFACE);
-        quad.setNominalFace(EnumFacing.DOWN);
-        quad.setupFaceQuad(EnumFacing.DOWN, new FaceVertex(0, 0, 0), new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0),
-                EnumFacing.NORTH);
-        quad.transform(matrix);
-        target.accept(quad);
+        writer.setSurface(SIDE_SURFACE);
+        writer.setNominalFace(Direction.DOWN);
+        writer.setupFaceQuad(Direction.DOWN, new FaceVertex(0, 0, 0), new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0),
+                Direction.NORTH);
+        writer.transform(matrix);
+        stream.append();
 
-        quad = template.claimCopy();
-        quad.setSurface(TOP_SURFACE);
-        quad.setNominalFace(EnumFacing.SOUTH);
-        quad.setupFaceQuad(EnumFacing.SOUTH, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
-                new FaceVertex(0, 1, 1), EnumFacing.UP);
-        quad.transform(matrix);
-        target.accept(quad);
+        writer.setSurface(TOP_SURFACE);
+        writer.setNominalFace(Direction.SOUTH);
+        writer.setupFaceQuad(Direction.SOUTH, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
+                new FaceVertex(0, 1, 1), Direction.UP);
+        writer.transform(matrix);
+        stream.append();
+        
+        if (stream.origin()) {
+            IPolygon reader = stream.reader();
 
-        template.release();
+            do
+                target.accept(reader);
+            while (stream.next());
+        }
+        stream.release();
     }
 
     @Override

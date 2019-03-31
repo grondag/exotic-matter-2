@@ -3,16 +3,16 @@ package grondag.brocade.painting;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-import grondag.exotic_matter.model.primitives.QuadHelper;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.polygon.IStreamPolygon;
-import grondag.exotic_matter.model.primitives.stream.IMutablePolyStream;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.primitives.QuadHelper;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.polygon.IStreamPolygon;
+import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.exotic_matter.model.texture.ITexturePalette;
 import grondag.exotic_matter.model.texture.TextureRotationType;
-import grondag.exotic_matter.varia.Useful;
-import net.minecraft.util.EnumFacing;
+import grondag.fermion.varia.Useful;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -378,7 +378,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
 
             final int layerIndex = firstAvailableTextureLayer(editor);
             final Surface surfIn = editor.getSurface();
-            final EnumFacing face = editor.getNominalFace();
+            final Direction face = editor.getNominalFace();
             final ITexturePalette tex = getTexture(modelState, paintLayer);
 
             /**

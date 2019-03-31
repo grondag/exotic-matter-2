@@ -1,9 +1,9 @@
 package grondag.brocade.placement;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+
+
+
 public enum PlacementPreviewRenderMode {
     SELECT(0x91BFBD), PLACE(0xA0FFFF), EXCAVATE(0xFC8D59), OBSTRUCTED(0xFFFFBF);
 

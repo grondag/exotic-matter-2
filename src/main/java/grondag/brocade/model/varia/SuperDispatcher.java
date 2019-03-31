@@ -4,50 +4,50 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+
 
 import com.google.common.collect.ImmutableList;
 
 import grondag.acuity.api.IPipelinedBakedModel;
 import grondag.acuity.api.IPipelinedQuadConsumer;
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.SuperBlockStackHelper;
-import grondag.exotic_matter.block.SuperModelItemOverrideList;
-import grondag.exotic_matter.cache.ObjectSimpleCacheLoader;
-import grondag.exotic_matter.cache.ObjectSimpleLoadingCache;
-import grondag.exotic_matter.model.painting.QuadPaintManager;
-import grondag.exotic_matter.model.painting.SurfaceTopology;
-import grondag.exotic_matter.model.primitives.QuadHelper;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.polygon.IStreamReaderPolygon;
-import grondag.exotic_matter.model.primitives.stream.DispatchPolyStream;
-import grondag.exotic_matter.model.primitives.stream.PolyStreams;
-import grondag.exotic_matter.model.render.QuadContainer;
-import grondag.exotic_matter.model.render.RenderLayout;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import grondag.brocade.Brocade;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlockStackHelper;
+import grondag.brocade.block.SuperModelItemOverrideList;
+import grondag.fermion.cache.ObjectSimpleCacheLoader;
+import grondag.fermion.cache.ObjectSimpleLoadingCache;
+import grondag.brocade.painting.QuadPaintManager;
+import grondag.brocade.painting.SurfaceTopology;
+import grondag.brocade.primitives.QuadHelper;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.polygon.IStreamReaderPolygon;
+import grondag.brocade.primitives.stream.DispatchPolyStream;
+import grondag.brocade.primitives.stream.PolyStreams;
+import grondag.brocade.model.render.QuadContainer;
+import grondag.brocade.model.render.RenderLayout;
+import grondag.brocade.model.state.ISuperModelState;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+
+
+
 public class SuperDispatcher {
     public static final SuperDispatcher INSTANCE = new SuperDispatcher();
     public static final String RESOURCE_BASE_NAME = "super_dispatcher";
@@ -103,7 +103,7 @@ public class SuperDispatcher {
                 IMutablePolygon mutable = q.claimCopy();
 
                 // arbitrary choice - just needs to be a simple non-null texture
-                mutable.setTextureName(0, grondag.exotic_matter.init.BrocadeTextures.BLOCK_COBBLE.sampleTextureName());
+                mutable.setTextureName(0, grondag.brocade.init.BrocadeTextures.BLOCK_COBBLE.sampleTextureName());
 
                 // Need to scale UV on non-cubic surfaces to be within a 1 block boundary.
                 // This causes breaking textures to be scaled to normal size.
@@ -136,7 +136,7 @@ public class SuperDispatcher {
         itemCache.clear();
     }
 
-    public int getOcclusionKey(ISuperModelState modelState, EnumFacing face) {
+    public int getOcclusionKey(ISuperModelState modelState, Direction face) {
         if (!modelState.getRenderLayout().containsBlockRenderLayer(BlockRenderLayer.SOLID))
             return 0;
 
@@ -149,7 +149,7 @@ public class SuperDispatcher {
         paintManager.producePaintedQuads(modelState, isItem, target);
     }
 
-    public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack) {
+    public BakedModel handleItemState(BakedModel originalModel, ItemStack stack) {
         ISuperModelState key = stack.getItem() instanceof CraftingItem ? ((CraftingItem) stack.getItem()).modelState
                 : SuperBlockStackHelper.getStackModelState(stack);
 
@@ -184,12 +184,12 @@ public class SuperDispatcher {
         return this.delegates[RenderLayout.TRANSLUCENT_ONLY.ordinal];
     }
 
-    public class DispatchDelegate implements IBakedModel, IModel, IPipelinedBakedModel {
+    public class DispatchDelegate implements BakedModel, IModel, IPipelinedBakedModel {
         private final String modelResourceString;
         private final RenderLayout blockRenderLayout;
 
         private DispatchDelegate(RenderLayout blockRenderLayout) {
-            this.modelResourceString = ExoticMatter.INSTANCE
+            this.modelResourceString = Brocade.INSTANCE
                     .prefixResource(SuperDispatcher.RESOURCE_BASE_NAME + blockRenderLayout.ordinal);
             this.blockRenderLayout = blockRenderLayout;
         }
@@ -217,7 +217,7 @@ public class SuperDispatcher {
         }
 
         @Override
-        public boolean mightRenderInLayer(@Nullable BlockRenderLayer forLayer) {
+        public boolean mightRenderInLayer(BlockRenderLayer forLayer) {
             return forLayer == null || this.blockRenderLayout.containsBlockRenderLayer(forLayer);
         }
 
@@ -234,7 +234,7 @@ public class SuperDispatcher {
         }
 
         @Override
-        public void produceQuads(@SuppressWarnings("null") IPipelinedQuadConsumer quadConsumer) {
+        public void produceQuads(IPipelinedQuadConsumer quadConsumer) {
             @SuppressWarnings("null")
             final ISuperModelState modelState = ((IExtendedBlockState) quadConsumer.blockState())
                     .getValue(ISuperBlock.MODEL_STATE);
@@ -244,23 +244,23 @@ public class SuperDispatcher {
 
             produceQuadsInner(reader, stream.firstAddress(layer, null), quadConsumer);
 
-            if (quadConsumer.shouldOutputSide(EnumFacing.DOWN))
-                produceQuadsInner(reader, stream.firstAddress(layer, EnumFacing.DOWN), quadConsumer);
+            if (quadConsumer.shouldOutputSide(Direction.DOWN))
+                produceQuadsInner(reader, stream.firstAddress(layer, Direction.DOWN), quadConsumer);
 
-            if (quadConsumer.shouldOutputSide(EnumFacing.UP))
-                produceQuadsInner(reader, stream.firstAddress(layer, EnumFacing.UP), quadConsumer);
+            if (quadConsumer.shouldOutputSide(Direction.UP))
+                produceQuadsInner(reader, stream.firstAddress(layer, Direction.UP), quadConsumer);
 
-            if (quadConsumer.shouldOutputSide(EnumFacing.EAST))
-                produceQuadsInner(reader, stream.firstAddress(layer, EnumFacing.EAST), quadConsumer);
+            if (quadConsumer.shouldOutputSide(Direction.EAST))
+                produceQuadsInner(reader, stream.firstAddress(layer, Direction.EAST), quadConsumer);
 
-            if (quadConsumer.shouldOutputSide(EnumFacing.WEST))
-                produceQuadsInner(reader, stream.firstAddress(layer, EnumFacing.WEST), quadConsumer);
+            if (quadConsumer.shouldOutputSide(Direction.WEST))
+                produceQuadsInner(reader, stream.firstAddress(layer, Direction.WEST), quadConsumer);
 
-            if (quadConsumer.shouldOutputSide(EnumFacing.NORTH))
-                produceQuadsInner(reader, stream.firstAddress(layer, EnumFacing.NORTH), quadConsumer);
+            if (quadConsumer.shouldOutputSide(Direction.NORTH))
+                produceQuadsInner(reader, stream.firstAddress(layer, Direction.NORTH), quadConsumer);
 
-            if (quadConsumer.shouldOutputSide(EnumFacing.SOUTH))
-                produceQuadsInner(reader, stream.firstAddress(layer, EnumFacing.SOUTH), quadConsumer);
+            if (quadConsumer.shouldOutputSide(Direction.SOUTH))
+                produceQuadsInner(reader, stream.firstAddress(layer, Direction.SOUTH), quadConsumer);
 
             reader.release();
         }
@@ -268,11 +268,11 @@ public class SuperDispatcher {
         @Override
         public TextureAtlasSprite getParticleTexture() {
             // should not ever be used
-            return Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+            return MinecraftClient.getMinecraft().getTextureMapBlocks().getMissingSprite();
         }
 
         @Override
-        public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+        public List<BakedQuad> getQuads(BlockState state, Direction side, long rand) {
             if (state == null)
                 return QuadHelper.EMPTY_QUAD_LIST;
 
@@ -334,8 +334,8 @@ public class SuperDispatcher {
         }
 
         @Override
-        public IBakedModel bake(@Nonnull IModelState state, @Nonnull VertexFormat format,
-                @Nonnull Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+        public BakedModel bake(IModelState state, VertexFormat format,
+                Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
             return this;
         }
     }

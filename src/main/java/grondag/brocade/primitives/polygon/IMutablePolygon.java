@@ -3,8 +3,8 @@ package grondag.brocade.primitives.polygon;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector4f;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import grondag.brocade.painting.Surface;
 import grondag.brocade.primitives.FaceVertex;

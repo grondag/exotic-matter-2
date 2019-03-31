@@ -3,20 +3,20 @@ package grondag.brocade.terrain;
 import java.util.List;
 import java.util.Random;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
@@ -30,76 +30,76 @@ public class DepletedFluidBlock extends Block {
     }
 
     @Override
-    public boolean isTopSolid(@Nonnull IBlockState state) {
+    public boolean isTopSolid(BlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullBlock(@Nonnull IBlockState state) {
+    public boolean isFullBlock(BlockState state) {
         return false;
     }
 
     @Override
-    public boolean isTranslucent(@Nonnull IBlockState state) {
+    public boolean isTranslucent(BlockState state) {
         return true;
     }
 
     @Override
-    public boolean isBlockNormalCube(@Nonnull IBlockState state) {
+    public boolean isBlockNormalCube(BlockState state) {
         return false;
     }
 
     @Override
-    public boolean isNormalCube(@Nonnull IBlockState state) {
+    public boolean isNormalCube(BlockState state) {
         return false;
     }
 
     @Override
-    public boolean isFullCube(@Nonnull IBlockState state) {
+    public boolean isFullCube(BlockState state) {
         return false;
     }
 
     @Override
-    public boolean isPassable(@Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos) {
+    public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
         return true;
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(@Nonnull IBlockState state) {
+    public EnumBlockRenderType getRenderType(BlockState state) {
         return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override
-    public boolean isReplaceable(@Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos) {
+    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
         return true;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(@Nonnull IBlockAccess worldIn, @Nonnull IBlockState state,
-            @Nonnull BlockPos pos, @Nonnull EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state,
+            BlockPos pos, Direction face) {
         return BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public void addCollisionBoxToList(@Nonnull IBlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos,
-            @Nonnull AxisAlignedBB entityBox, @Nonnull List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn,
+    public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos,
+            BoundingBox entityBox, List<BoundingBox> collidingBoxes, Entity entityIn,
             boolean isActualState) {
         return;
     }
 
     @Override
-    public @Nullable AxisAlignedBB getCollisionBoundingBox(@Nonnull IBlockState blockState,
-            @Nonnull IBlockAccess worldIn, @Nonnull BlockPos pos) {
+    public BoundingBox getCollisionBoundingBox(BlockState blockState,
+            IBlockAccess worldIn, BlockPos pos) {
         return Block.NULL_AABB;
     }
 
     @Override
-    public boolean isOpaqueCube(@Nonnull IBlockState state) {
+    public boolean isOpaqueCube(BlockState state) {
         return false;
     }
 
     @Override
-    public boolean canCollideCheck(@Nonnull IBlockState state, boolean hitIfLiquid) {
+    public boolean canCollideCheck(BlockState state, boolean hitIfLiquid) {
         return false;
     }
 
@@ -109,12 +109,12 @@ public class DepletedFluidBlock extends Block {
     }
 
     @Override
-    public int quantityDropped(@Nonnull Random random) {
+    public int quantityDropped(Random random) {
         return 0;
     }
 
     @Override
-    public int quantityDroppedWithBonus(int fortune, @Nonnull Random random) {
+    public int quantityDroppedWithBonus(int fortune, Random random) {
         return 0;
     }
 
@@ -124,58 +124,58 @@ public class DepletedFluidBlock extends Block {
     }
 
     @Override
-    public boolean isNormalCube(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+    public boolean isNormalCube(BlockState state, IBlockAccess world, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean doesSideBlockRendering(@Nonnull IBlockState state, @Nonnull IBlockAccess world,
-            @Nonnull BlockPos pos, @Nonnull EnumFacing face) {
+    public boolean doesSideBlockRendering(BlockState state, IBlockAccess world,
+            BlockPos pos, Direction face) {
         return false;
     }
 
     @Override
-    public boolean isSideSolid(@Nonnull IBlockState base_state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos,
-            @Nonnull EnumFacing side) {
+    public boolean isSideSolid(BlockState base_state, IBlockAccess world, BlockPos pos,
+            Direction side) {
         return false;
     }
 
     @Override
-    public int quantityDropped(@Nonnull IBlockState state, int fortune, @Nonnull Random random) {
+    public int quantityDropped(BlockState state, int fortune, Random random) {
         return 0;
     }
 
     @Override
-    public boolean canBeReplacedByLeaves(@Nonnull IBlockState state, @Nonnull IBlockAccess world,
-            @Nonnull BlockPos pos) {
+    public boolean canBeReplacedByLeaves(BlockState state, IBlockAccess world,
+            BlockPos pos) {
         return true;
     }
 
     @Override
-    public boolean canPlaceTorchOnTop(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+    public boolean canPlaceTorchOnTop(BlockState state, IBlockAccess world, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean addLandingEffects(@Nonnull IBlockState state, @Nonnull WorldServer worldObj,
-            @Nonnull BlockPos blockPosition, @Nonnull IBlockState iblockstate, @Nonnull EntityLivingBase entity,
+    public boolean addLandingEffects(BlockState state, WorldServer worldObj,
+            BlockPos blockPosition, BlockState BlockState, LivingEntity entity,
             int numberOfParticles) {
         return true;
     }
 
     @Override
-    public boolean addHitEffects(@Nonnull IBlockState state, @Nonnull World worldObj, @Nonnull RayTraceResult target,
-            @Nonnull ParticleManager manager) {
+    public boolean addHitEffects(BlockState state, World worldObj, RayTraceResult target,
+            ParticleManager manager) {
         return true;
     }
 
     @Override
-    public boolean addDestroyEffects(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull ParticleManager manager) {
+    public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         return true;
     }
 
     @Override
-    public boolean canRenderInLayer(@Nonnull IBlockState state, @Nonnull BlockRenderLayer layer) {
+    public boolean canRenderInLayer(BlockState state, BlockRenderLayer layer) {
         return false;
     }
 

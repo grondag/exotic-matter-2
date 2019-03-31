@@ -3,7 +3,7 @@ package grondag.brocade.model.render;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.vertex.IVec3f;
 import grondag.fermion.world.Rotation;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.MinecraftClientClient;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.BakedQuad;

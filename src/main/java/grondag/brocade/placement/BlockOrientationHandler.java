@@ -1,19 +1,19 @@
 package grondag.brocade.placement;
 
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.ISuperBlockAccess;
-import grondag.exotic_matter.block.SuperBlockStackHelper;
-import grondag.exotic_matter.block.SuperBlockWorldAccess;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.world.BlockCorner;
-import grondag.exotic_matter.world.Rotation;
-import grondag.exotic_matter.world.WorldHelper;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.ISuperBlockAccess;
+import grondag.brocade.block.SuperBlockStackHelper;
+import grondag.brocade.block.SuperBlockWorldAccess;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.world.BlockCorner;
+import grondag.fermion.world.Rotation;
+import grondag.fermion.world.WorldHelper;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.AxisDirection;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -73,7 +73,7 @@ public class BlockOrientationHandler {
         ISuperModelState closestModelState = null;
         World world = player.world;
         ISuperBlockAccess access = SuperBlockWorldAccess.access(world);
-        IBlockState onBlockState = world.getBlockState(pPos.onPos);
+        BlockState onBlockState = world.getBlockState(pPos.onPos);
         Block onBlock = onBlockState.getBlock();
 
         if (onBlock instanceof ISuperBlock) {
@@ -95,7 +95,7 @@ public class BlockOrientationHandler {
                     for (int z = -1; z <= 1; z++) {
                         if ((x | y | z) != 0) {
                             BlockPos testPos = pPos.onPos.add(x, y, z);
-                            IBlockState testBlockState = world.getBlockState(testPos);
+                            BlockState testBlockState = world.getBlockState(testPos);
                             if (testBlockState.getBlock() instanceof ISuperBlock) {
                                 double distSq = location.squareDistanceTo(pPos.onPos.getX() + 0.5 + x,
                                         pPos.onPos.getY() + 0.5 + y, pPos.onPos.getZ() + 0.5 + z);
@@ -140,7 +140,7 @@ public class BlockOrientationHandler {
         boolean isRotationDone = false;
 
         if (outputModelState.isAxisOrthogonalToPlacementFace()) {
-            EnumFacing adjacentFace = WorldHelper.closestAdjacentFace(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY,
+            Direction adjacentFace = WorldHelper.closestAdjacentFace(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY,
                     (float) pPos.hitZ);
 
             BlockCorner corner = BlockCorner.find(pPos.onFace.getOpposite(), adjacentFace);

@@ -4,10 +4,10 @@ import static it.unimi.dsi.fastutil.HashCommon.arraySize;
 
 import java.util.function.Supplier;
 
-import grondag.exotic_matter.block.ISuperBlockAccess;
-import grondag.exotic_matter.world.PackedBlockPos;
+import grondag.brocade.block.ISuperBlockAccess;
+import grondag.fermion.world.PackedBlockPos;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -57,7 +57,7 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
         }
     }
 
-    protected FastMap<IBlockState> blockStates = new FastMap<>();
+    protected FastMap<BlockState> blockStates = new FastMap<>();
     protected FastMap<TerrainState> terrainStates = new FastMap<>();
 
     @SuppressWarnings("null")
@@ -82,7 +82,7 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
     }
 
     @Override
-    public IBlockState getBlockState(final BlockPos pos) {
+    public BlockState getBlockState(final BlockPos pos) {
         long packedBlockPos = PackedBlockPos.pack(pos);
         return blockStates.computeFast(packedBlockPos, () -> world.getBlockState(pos));
     }
@@ -90,7 +90,7 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
     private final MutableBlockPos getBlockPos = new MutableBlockPos();
 
     @Override
-    public IBlockState getBlockState(long packedBlockPos) {
+    public BlockState getBlockState(long packedBlockPos) {
         return blockStates.computeFast(packedBlockPos, () -> {
             PackedBlockPos.unpackTo(packedBlockPos, getBlockPos);
             return world.getBlockState(getBlockPos);
@@ -100,7 +100,7 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
     private final MutableBlockPos getTerrainPos = new MutableBlockPos();
 
     @Override
-    public TerrainState terrainState(IBlockState state, long packedBlockPos) {
+    public TerrainState terrainState(BlockState state, long packedBlockPos) {
         return terrainStates.computeFast(packedBlockPos, () -> {
             PackedBlockPos.unpackTo(packedBlockPos, getTerrainPos);
             return TerrainState.terrainState(this, state, getTerrainPos);
@@ -108,7 +108,7 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
     }
 
     @Override
-    public TerrainState terrainState(IBlockState state, BlockPos pos) {
+    public TerrainState terrainState(BlockState state, BlockPos pos) {
         return terrainStates.computeFast(PackedBlockPos.pack(pos), () -> {
             return TerrainState.terrainState(this, state, pos);
         });
@@ -118,16 +118,16 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
      * Note this doesn't invalidate terrain state cache. Need to do that directly
      * before using anything that needs it if changing terrain surface.
      */
-    public void setBlockState(long packedBlockPos, IBlockState newState) {
+    public void setBlockState(long packedBlockPos, BlockState newState) {
         setBlockState(packedBlockPos, newState, true);
     }
 
     /**
      * Use when you want to control
-     * {@link #onBlockStateChange(long, IBlockState, IBlockState)} call back.
+     * {@link #onBlockStateChange(long, BlockState, BlockState)} call back.
      */
-    protected void setBlockState(long packedBlockPos, IBlockState newState, boolean callback) {
-        IBlockState oldState = getBlockState(packedBlockPos);
+    protected void setBlockState(long packedBlockPos, BlockState newState, boolean callback) {
+        BlockState oldState = getBlockState(packedBlockPos);
 
         if (newState == oldState)
             return;
@@ -143,18 +143,18 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
      * Handles application of block state to world. Override for deferred updates or
      * use cases where world should not be affected directly.
      */
-    protected void applyBlockState(long packedBlockPos, IBlockState oldState, IBlockState newState) {
+    protected void applyBlockState(long packedBlockPos, BlockState oldState, BlockState newState) {
         world.setBlockState(PackedBlockPos.unpack(packedBlockPos), newState);
     }
 
     /**
      * Called for all block state changes, even if not a terrain block.
      */
-    protected void onBlockStateChange(long packedBlockPos, IBlockState oldBlockState, IBlockState newBlockState) {
+    protected void onBlockStateChange(long packedBlockPos, BlockState oldBlockState, BlockState newBlockState) {
 
     }
 
-    public void setBlockState(BlockPos blockPos, IBlockState newState) {
+    public void setBlockState(BlockPos blockPos, BlockState newState) {
         this.setBlockState(PackedBlockPos.pack(blockPos), newState);
     }
 }

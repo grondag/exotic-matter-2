@@ -1,10 +1,10 @@
-package grondag.exotic_matter.model.primitives;
+package grondag.brocade.primitives;
 
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
 
 class TriangleBoxTestPerf {
     @Test

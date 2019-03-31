@@ -1,33 +1,33 @@
 package grondag.brocade.placement;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.block.SuperBlock;
-import grondag.exotic_matter.block.SuperBlockStackHelper;
-import grondag.exotic_matter.block.SuperTileEntity;
-import grondag.exotic_matter.init.IItemModelRegistrant;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.varia.SuperDispatcher;
+
+
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlock;
+import grondag.brocade.block.SuperBlockStackHelper;
+import grondag.brocade.block.SuperTileEntity;
+import grondag.brocade.init.IItemModelRegistrant;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.varia.SuperDispatcher;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -67,14 +67,14 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
 
     /**
      * Called client-side before
-     * {@link #onItemUse(EntityPlayer, World, BlockPos, EnumHand, EnumFacing, float, float, float)}.
+     * {@link #onItemUse(EntityPlayer, World, BlockPos, EnumHand, Direction, float, float, float)}.
      * If returns false for an itemBlock that method will never be called. We do all
      * of our "can we put there here" checks in that method, so we always return
      * true.
      */
     @Override
-    public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing side,
-            @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
+    public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, Direction side,
+            EntityPlayer player, ItemStack stack) {
         return true;
     }
 
@@ -108,14 +108,14 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
      * 
      * {@inheritDoc}
      */
-    @Nullable
+    
     @Override
-    public final NBTTagCompound getNBTShareTag(@Nonnull ItemStack stack) {
+    public final CompoundTag getNBTShareTag(ItemStack stack) {
         return SuperTileEntity.withoutServerTag(super.getNBTShareTag(stack));
     }
 
     @Override
-    public String getItemStackDisplayName(@Nonnull ItemStack stack) {
+    public String getItemStackDisplayName(ItemStack stack) {
         return ((ISuperBlock) this.block).getItemStackDisplayName(stack);
     }
 
@@ -145,9 +145,9 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
      * @param side   The side the player (or machine) right-clicked on.
      */
     @Override
-    public boolean placeBlockAt(@Nonnull ItemStack stack, @Nonnull EntityPlayer player, @Nonnull World world,
-            @Nonnull BlockPos pos, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ,
-            @Nonnull IBlockState newState) {
+    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world,
+            BlockPos pos, Direction side, float hitX, float hitY, float hitZ,
+            BlockState newState) {
         // world.setBlockState returns false if the state was already the requested
         // state
         // this is OK normally, but if we need to update the TileEntity it is the
@@ -162,20 +162,20 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull World world, @Nonnull EntityPlayer player,
-            @Nonnull EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
+            EnumHand hand) {
         return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(hand));
     }
 
     @Override
-    public EnumActionResult onItemUse(@Nonnull EntityPlayer playerIn, @Nonnull World worldIn, @Nonnull BlockPos pos,
-            @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos,
+            EnumHand hand, Direction facing, float hitX, float hitY, float hitZ) {
 
         ItemStack stackIn = playerIn.getHeldItem(hand);
 
         // NB: block is to limit scope of vars
         {
-            IBlockState currentState = worldIn.getBlockState(pos);
+            BlockState currentState = worldIn.getBlockState(pos);
             Block block = currentState.getBlock();
 
             if (!block.isReplaceable(worldIn, pos)) {
@@ -204,13 +204,13 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
         if (modelState == null)
             return EnumActionResult.FAIL;
 
-        AxisAlignedBB axisalignedbb = modelState.getShape().meshFactory().collisionHandler()
+        BoundingBox BoundingBox = modelState.getShape().meshFactory().collisionHandler()
                 .getCollisionBoundingBox(modelState);
 
-        if (!worldIn.checkNoEntityCollision(axisalignedbb.offset(pos)))
+        if (!worldIn.checkNoEntityCollision(BoundingBox.offset(pos)))
             return EnumActionResult.FAIL;
 
-        IBlockState placedState = IPlacementItem.getPlacementBlockStateFromStackStatically(stackIn);
+        BlockState placedState = IPlacementItem.getPlacementBlockStateFromStackStatically(stackIn);
 
         /**
          * Adjust block rotation if supported.

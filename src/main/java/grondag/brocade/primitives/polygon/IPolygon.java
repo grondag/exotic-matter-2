@@ -9,7 +9,7 @@ import grondag.brocade.primitives.vertex.IVec3f;
 import grondag.brocade.primitives.vertex.IVertexCollection;
 import grondag.brocade.primitives.vertex.Vec3f;
 import grondag.fermion.world.Rotation;
-import net.fabricmc.fabric.api.client.model.fabric.ModelHelper;
+import grondag.frex.api.core.ModelHelper;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedQuad;
@@ -344,7 +344,7 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
     // TODO: convert to Fabric Renderer API
 //    @Override
-//    public default void produceVertices(@SuppressWarnings("null") IPipelinedVertexConsumer vertexLighter)
+//    public default void produceVertices(IPipelinedVertexConsumer vertexLighter)
 //    {
 //        float[][][] uvData = AcuityHelper.getUVData(this);
 //        int lastGlow = 0;

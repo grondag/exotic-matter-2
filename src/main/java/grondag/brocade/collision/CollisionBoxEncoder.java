@@ -2,9 +2,9 @@ package grondag.brocade.collision;
 
 import java.util.function.IntConsumer;
 
-import grondag.exotic_matter.varia.functions.IBoxBoundsIntFunction;
-import grondag.exotic_matter.varia.functions.IBoxBoundsObjectFunction;
-import net.minecraft.util.EnumFacing;
+import grondag.fermion.functions.IBoxBoundsIntFunction;
+import grondag.fermion.functions.IBoxBoundsObjectFunction;
+import net.minecraft.util.math.Direction;
 
 /**
  * Static methods for encoding and decoding 1/8 ^ 3 AABB within a unit cube
@@ -28,9 +28,9 @@ public class CollisionBoxEncoder {
     private static final int MAX_A_SHIFT = 16;
     private static final int MAX_B_SHIFT = 20;
 
-    static final int X_AXIS = EnumFacing.Axis.X.ordinal();
-    static final int Y_AXIS = EnumFacing.Axis.Y.ordinal();
-    static final int Z_AXIS = EnumFacing.Axis.Z.ordinal();
+    static final int X_AXIS = Direction.Axis.X.ordinal();
+    static final int Y_AXIS = Direction.Axis.Y.ordinal();
+    static final int Z_AXIS = Direction.Axis.Z.ordinal();
 
     /**
      * Encodes an AABB within a unit cube sliced into eights on each axis. Values

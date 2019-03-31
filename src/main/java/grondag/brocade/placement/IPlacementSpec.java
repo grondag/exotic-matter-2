@@ -1,12 +1,12 @@
 package grondag.brocade.placement;
 
 import grondag.exotic_matter.simulator.IWorldTask;
-import grondag.exotic_matter.world.IBlockRegion;
+import grondag.fermion.world.IBlockRegion;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+
 
 public interface IPlacementSpec {
 
@@ -37,7 +37,7 @@ public interface IPlacementSpec {
      * obstacles, uses color to indicate obstructed/invalid and show where at least
      * some of the obstacles are (if not too expensive).
      */
-    @SideOnly(Side.CLIENT)
+    
     void renderPreview(RenderWorldLastEvent event, EntityPlayerSP player);
 
     /**

@@ -1,7 +1,6 @@
 package grondag.brocade.primitives;
 
-import javax.vecmath.Point2f;
-import javax.vecmath.Point2d;
+import org.joml.Vector2f;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.vertex.IVec3f;
@@ -30,7 +29,7 @@ public class PointInPolygonTest {
      *         =0 for point on the line <br>
      *         <0 for point right of the line
      */
-    private static double isLeft(Point2f lineStart, Point2f lineEnd, Point2f point) {
+    private static double isLeft(Vector2f lineStart, Vector2f lineEnd, Vector2f point) {
         return (lineEnd.x - lineStart.x) * (point.y - lineStart.y)
                 - (point.x - lineStart.x) * (lineEnd.y - lineStart.y);
     }
@@ -58,7 +57,7 @@ public class PointInPolygonTest {
      * @param vertices vertex points of a closed polygon V[n+1] with V[n]=V[0]
      * @return true if inside
      */
-    public static boolean isPointInPolyCrossingNumber(Point2d point, Point2d[] vertices) {
+    public static boolean isPointInPolyCrossingNumber(Vector2f point, Vector2f[] vertices) {
         int cn = 0; // the crossing number counter
 
         // number of vertices is one less due to wrapped input array
@@ -85,7 +84,7 @@ public class PointInPolygonTest {
      * @param vertices vertex points of a closed polygon V[n+1] with V[n]=V[0]
      * @return true if inside
      */
-    public static boolean isPointInPolyWindingNumber(Point2f point, Point2f[] vertices) {
+    public static boolean isPointInPolyWindingNumber(Vector2f point, Vector2f[] vertices) {
         int wn = 0; // the winding number counter
 
         // number of vertices is one less due to wrapped input array

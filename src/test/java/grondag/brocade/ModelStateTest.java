@@ -2,35 +2,35 @@ package grondag.exotic_matter;
 
 import org.junit.Test;
 
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.init.ModShapes;
-import grondag.exotic_matter.init.ModTextures;
+import grondag.brocade.Brocade;
+import grondag.brocade.init.ModShapes;
+import grondag.brocade.init.ModTextures;
 import grondag.exotic_matter.model.mesh.ModelShapes;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.painting.VertexProcessorDefault;
-import grondag.exotic_matter.model.render.RenderLayout;
-import grondag.exotic_matter.model.state.ModelState;
-import grondag.exotic_matter.model.state.ModelStateData;
-import grondag.exotic_matter.world.CornerJoinBlockStateSelector;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.painting.VertexProcessorDefault;
+import grondag.brocade.model.render.RenderLayout;
+import grondag.brocade.model.state.ModelState;
+import grondag.brocade.model.state.ModelStateData;
+import grondag.fermion.world.CornerJoinBlockStateSelector;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.math.Direction;
 
 public class ModelStateTest {
 
     @Test
     public void test() {
-        ExoticMatter.INSTANCE.info("Max shapes within current format: " + ModelShapes.MAX_SHAPES);
-        ExoticMatter.INSTANCE.info("core bits length = " + ModelStateData.PACKER_CORE.bitLength());
-        ExoticMatter.INSTANCE.info("layer bits length = " + ModelStateData.PACKER_LAYER_BASE.bitLength());
+        Brocade.INSTANCE.info("Max shapes within current format: " + ModelShapes.MAX_SHAPES);
+        Brocade.INSTANCE.info("core bits length = " + ModelStateData.PACKER_CORE.bitLength());
+        Brocade.INSTANCE.info("layer bits length = " + ModelStateData.PACKER_LAYER_BASE.bitLength());
         assert ModelStateData.PACKER_LAYER_BASE.bitLength() == ModelStateData.PACKER_LAYER_CUT.bitLength();
         assert ModelStateData.PACKER_LAYER_BASE.bitLength() == ModelStateData.PACKER_LAYER_LAMP.bitLength();
         assert ModelStateData.PACKER_LAYER_BASE.bitLength() == ModelStateData.PACKER_LAYER_MIDDLE.bitLength();
         assert ModelStateData.PACKER_LAYER_BASE.bitLength() == ModelStateData.PACKER_LAYER_OUTER.bitLength();
 
-        ExoticMatter.INSTANCE.info("block shape bits length = " + ModelStateData.PACKER_SHAPE_BLOCK.bitLength());
-        ExoticMatter.INSTANCE.info("flow shape bits length = " + ModelStateData.PACKER_SHAPE_FLOW.bitLength());
-        ExoticMatter.INSTANCE.info("extra shape bits length = " + ModelStateData.PACKER_SHAPE_EXTRA.bitLength());
+        Brocade.INSTANCE.info("block shape bits length = " + ModelStateData.PACKER_SHAPE_BLOCK.bitLength());
+        Brocade.INSTANCE.info("flow shape bits length = " + ModelStateData.PACKER_SHAPE_FLOW.bitLength());
+        Brocade.INSTANCE.info("extra shape bits length = " + ModelStateData.PACKER_SHAPE_EXTRA.bitLength());
 
         // sign bit on third long is used to store static indicator
         assert (ModelStateData.PACKER_SHAPE_EXTRA.bitLength() < 64);
@@ -47,7 +47,7 @@ public class ModelStateTest {
         state.setTexture(PaintLayer.LAMP, BrocadeTextures.BLOCK_COBBLE);
         state.setTexture(PaintLayer.MIDDLE, BrocadeTextures.BLOCK_NOISE_SUBTLE_ZOOM);
         state.setTexture(PaintLayer.OUTER, BrocadeTextures.BIGTEX_TEST1);
-        state.setAxis(EnumFacing.Axis.Z);
+        state.setAxis(Direction.Axis.Z);
         state.setTranslucent(PaintLayer.MIDDLE, true);
         state.setAlpha(PaintLayer.MIDDLE, 0x55);
         state.setPosX(3);
@@ -59,7 +59,7 @@ public class ModelStateTest {
         state.setStaticShapeBits(879579585L);
         state.setVertexProcessor(PaintLayer.BASE, VertexProcessorDefault.INSTANCE);
 
-        NBTTagCompound persistedState = state.serializeNBT();
+        CompoundTag persistedState = state.serializeNBT();
 
         ModelState reloadedState = new ModelState();
         reloadedState.deserializeNBT(persistedState);
@@ -75,7 +75,7 @@ public class ModelStateTest {
         assert (reloadedState.getTexture(PaintLayer.LAMP) == BrocadeTextures.BLOCK_COBBLE);
         assert (reloadedState.getTexture(PaintLayer.MIDDLE) == BrocadeTextures.BLOCK_NOISE_SUBTLE_ZOOM);
         assert (reloadedState.getTexture(PaintLayer.OUTER) == BrocadeTextures.BIGTEX_TEST1);
-        assert (reloadedState.getAxis()) == EnumFacing.Axis.Z;
+        assert (reloadedState.getAxis()) == Direction.Axis.Z;
         assert (reloadedState.getAlpha(PaintLayer.MIDDLE)) == 0x55;
         assert (reloadedState.getColorARGB(PaintLayer.MIDDLE) == 0x55FFFFFF);
         assert (reloadedState.getPosX() == 3);

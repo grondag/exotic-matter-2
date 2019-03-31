@@ -12,8 +12,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+
 import javax.imageio.ImageReader;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 
@@ -23,25 +23,25 @@ import org.lwjgl.opengl.GLContext;
 
 import com.sun.imageio.plugins.jpeg.JPEGImageReaderSpi;
 
-import grondag.exotic_matter.ConfigXM;
-import grondag.exotic_matter.ExoticMatter;
+import grondag.brocade.BrocadeConfig;
+import grondag.brocade.Brocade;
 import grondag.exotic_matter.concurrency.PerformanceCollector;
 import grondag.exotic_matter.concurrency.PerformanceCounter;
 import grondag.fermion.render.TextureHelper;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+
 
 @SuppressWarnings("restriction")
-@SideOnly(Side.CLIENT)
+
 public class CompressedAnimatedSprite extends EnhancedSprite {
     /** DO NOT ACCESS DIRECTLY. Use {@link #getLoaderPool()} */
-    @Nullable
+    
     private static volatile ThreadPoolExecutor loaderThreadPool;
 
     private static synchronized ThreadPoolExecutor getLoaderPool() {
@@ -54,7 +54,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
     }
 
     /** DO NOT ACCESS DIRECTLY! */
-    @Nullable
+    
     private static volatile JPEGImageReaderSpi jpegReader;
 
     private static synchronized JPEGImageReaderSpi getJpegReader() {
@@ -81,11 +81,11 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
     public static final PerformanceCollector perfCollectorLoad = new PerformanceCollector(
             "Texture Animation Loading: Total Time");
     private static final PerformanceCounter perfUpdate = PerformanceCounter
-            .create(ConfigXM.RENDER.enableAnimationStatistics, "Texture Animation Update", perfCollectorUpdate);
+            .create(BrocadeConfig.RENDER.enableAnimationStatistics, "Texture Animation Update", perfCollectorUpdate);
     public static final PerformanceCounter perfLoadRead = PerformanceCounter
-            .create(ConfigXM.RENDER.enableAnimationStatistics, "Read Texture Files", perfCollectorLoad);
+            .create(BrocadeConfig.RENDER.enableAnimationStatistics, "Read Texture Files", perfCollectorLoad);
     public static final PerformanceCounter perfLoadProcessing = PerformanceCounter
-            .create(ConfigXM.RENDER.enableAnimationStatistics, "Decode and Buffer Textures", perfCollectorLoad);
+            .create(BrocadeConfig.RENDER.enableAnimationStatistics, "Decode and Buffer Textures", perfCollectorLoad);
 //    public static final ConcurrentPerformanceCounter perfLoadJpeg = new ConcurrentPerformanceCounter();
 //    public static final ConcurrentPerformanceCounter perfLoadAlpha = new ConcurrentPerformanceCounter();
 //    public static final ConcurrentPerformanceCounter perfLoadMipMap = new ConcurrentPerformanceCounter();
@@ -100,11 +100,11 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
     /**
      * Used when texture compression is disabled. Dimensions are frame, mipmap level
      */
-    @Nullable
+    
     private ByteBuffer[][] rawImageData;
 
     /** handles to compressed textures if texture compression is enabled */
-    @Nullable
+    
     private int glCompressedTextureID[];
 
     /** set to false if error in encountered to stop future processing */
@@ -117,21 +117,21 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
 
     public CompressedAnimatedSprite(ResourceLocation loc, int ticksPerFrame) {
         super(loc.toString());
-        this.mipmapLevels = Minecraft.getMinecraft().gameSettings.mipmapLevels;
+        this.mipmapLevels = MinecraftClient.getMinecraft().gameSettings.mipmapLevels;
         this.ticksPerFrame = ticksPerFrame;
-        this.isCompressed = ConfigXM.RENDER.enableAnimatedTextures && ConfigXM.RENDER.enableAnimatedTextureCompression
+        this.isCompressed = BrocadeConfig.RENDER.enableAnimatedTextures && BrocadeConfig.RENDER.enableAnimatedTextureCompression
                 && GLContext.getCapabilities().GL_EXT_texture_compression_s3tc;
     }
 
     @Override
-    public boolean hasCustomLoader(@Nonnull IResourceManager manager, @Nonnull ResourceLocation location) {
+    public boolean hasCustomLoader(IResourceManager manager, ResourceLocation location) {
         return true;
     }
 
     @SuppressWarnings("null")
     @Override
-    public boolean load(@Nonnull IResourceManager manager, @Nonnull ResourceLocation location,
-            @Nonnull Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
+    public boolean load(IResourceManager manager, ResourceLocation location,
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter) {
         perfLoadRead.startRun();
 
         ThreadPoolExecutor loaderPool = getLoaderPool();
@@ -167,7 +167,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
                     this.height = reader.getHeight(0);
 
                     if (this.width != this.height || this.width == 0) {
-                        ExoticMatter.INSTANCE.error(String.format(
+                        Brocade.INSTANCE.error(String.format(
                                 "Unable to load animated texture %s because textures file did not contain a square image.",
                                 this.getIconName()));
                         this.isValid = false;
@@ -181,7 +181,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
                 runner.submit(new FrameReader(frameResouce, frameIndex++));
 
                 // only load the start texture if animation is disabled
-                if (frameIndex == 1 && !ConfigXM.RENDER.enableAnimatedTextures) {
+                if (frameIndex == 1 && !BrocadeConfig.RENDER.enableAnimatedTextures) {
                     keepGoing = false;
                 }
             } catch (Exception e) {
@@ -194,7 +194,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
         perfLoadRead.addCount(1);
 
         if (frameIndex == 0) {
-            ExoticMatter.INSTANCE.error(String.format(
+            Brocade.INSTANCE.error(String.format(
                     "Unable to load animated texture %s because textures files not checked.", this.getIconName()));
             this.isValid = false;
             return true;
@@ -204,7 +204,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
         try {
 
             this.frameCount = frameIndex;
-            if (ConfigXM.RENDER.enableAnimatedTextureCompression) {
+            if (BrocadeConfig.RENDER.enableAnimatedTextureCompression) {
                 this.glCompressedTextureID = new int[frameIndex];
             } else {
                 this.rawImageData = new ByteBuffer[frameIndex][];
@@ -219,7 +219,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
 //                long start = perfLoadTransfer.startRun();
                 if (result == null || frameResult == null) {
                     if (loaderPool.getActiveCount() == 0) {
-                        ExoticMatter.INSTANCE.error(String
+                        Brocade.INSTANCE.error(String
                                 .format("Unable to load animated texture due to unknown error.", this.getIconName()));
                         this.isValid = false;
                         perfLoadProcessing.endRun();
@@ -253,7 +253,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
             // which is what we want.
             return false;
         } catch (Exception e) {
-            ExoticMatter.INSTANCE
+            Brocade.INSTANCE
                     .error(String.format("Unable to load animated texture %s due to error.", this.getIconName()), e);
             this.isValid = false;
             perfLoadProcessing.endRun();
@@ -271,7 +271,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
         }
 
         @Override
-        @Nullable
+        
         public Pair<Integer, int[][]> call() throws Exception {
             try {
 //                long start = perfLoadJpeg.startRun();
@@ -285,7 +285,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
 //                perfLoadJpeg.endRun(start);
 
                 if (image == null) {
-                    ExoticMatter.INSTANCE.warn(
+                    Brocade.INSTANCE.warn(
                             String.format("Unable to load frame for animated texture %s. Texture will not animate.",
                                     CompressedAnimatedSprite.this.getIconName()));
                     CompressedAnimatedSprite.this.isValid = false;
@@ -320,7 +320,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
                     return Pair.of(this.frameIndex, result);
                 }
             } catch (Exception e) {
-                ExoticMatter.INSTANCE
+                Brocade.INSTANCE
                         .error(String.format("Unable to load frame for animated texture %s. Texture will not animate.",
                                 CompressedAnimatedSprite.this.getIconName()), e);
                 CompressedAnimatedSprite.this.isValid = false;
@@ -330,7 +330,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
     }
 
     @Override
-    public void loadSpriteFrames(@Nonnull IResource resource, int mipmaplevels) throws IOException {
+    public void loadSpriteFrames(IResource resource, int mipmaplevels) throws IOException {
         // NOOP - all handled during load
     }
 
@@ -346,13 +346,13 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
 
     @Override
     public boolean hasAnimationMetadata() {
-        return ConfigXM.RENDER.enableAnimatedTextures;
+        return BrocadeConfig.RENDER.enableAnimatedTextures;
     }
 
     @SuppressWarnings("null")
     @Override
     public void updateAnimation() {
-        if (this.isValid && ConfigXM.RENDER.enableAnimatedTextures) {
+        if (this.isValid && BrocadeConfig.RENDER.enableAnimatedTextures) {
             perfUpdate.startRun();
             ++this.tickCounter;
             if (this.tickCounter >= this.ticksPerFrame) {
@@ -373,7 +373,7 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
                     perfUpdate.addCount(1);
 
                 } catch (Exception e) {
-                    ExoticMatter.INSTANCE.error(
+                    Brocade.INSTANCE.error(
                             String.format("Unable to load frame for animated texture %s. Texture will not animate.",
                                     this.getIconName()),
                             e);
@@ -386,18 +386,18 @@ public class CompressedAnimatedSprite extends EnhancedSprite {
 
     public static void reportMemoryUsage() {
         // don't output on start pass when we are empty
-        if (ConfigXM.RENDER.enableAnimatedTextures) {
+        if (BrocadeConfig.RENDER.enableAnimatedTextures) {
             if (vanillaBytes != 0) {
-                if (ConfigXM.RENDER.enableAnimatedTextureCompression) {
-                    ExoticMatter.INSTANCE.info("Animated texture memory consumption is " + (vanillaBytes >> 22)
+                if (BrocadeConfig.RENDER.enableAnimatedTextureCompression) {
+                    Brocade.INSTANCE.info("Animated texture memory consumption is " + (vanillaBytes >> 22)
                             + "MB. (Compression enabled.)");
                 } else {
-                    ExoticMatter.INSTANCE.info("Animated texture memory consumption is " + (vanillaBytes >> 20)
+                    Brocade.INSTANCE.info("Animated texture memory consumption is " + (vanillaBytes >> 20)
                             + "MB. (Compression disabled.)");
                 }
             }
         } else {
-            ExoticMatter.INSTANCE.info("Animated textures are disabled.");
+            Brocade.INSTANCE.info("Animated textures are disabled.");
         }
     }
 

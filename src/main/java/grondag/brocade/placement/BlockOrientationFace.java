@@ -3,33 +3,33 @@ package grondag.brocade.placement;
 import grondag.exotic_matter.serialization.IMessagePlusImmutable;
 import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
 import grondag.exotic_matter.serialization.NBTDictionary;
-import grondag.exotic_matter.varia.ILocalized;
-import grondag.exotic_matter.varia.Useful;
-import net.minecraft.nbt.NBTTagCompound;
+import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.Useful;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.util.math.Direction;
+import net.minecraft.client.resource.language.I18n;
 
 public enum BlockOrientationFace implements IMessagePlusImmutable<BlockOrientationFace>,
         IReadWriteNBTImmutable<BlockOrientationFace>, ILocalized {
-    DYNAMIC(null), MATCH_CLOSEST(null), UP(EnumFacing.UP), DOWN(EnumFacing.DOWN), NORTH(EnumFacing.NORTH),
-    EAST(EnumFacing.EAST), SOUTH(EnumFacing.SOUTH), WEST(EnumFacing.WEST);
+    DYNAMIC(null), MATCH_CLOSEST(null), UP(Direction.UP), DOWN(Direction.DOWN), NORTH(Direction.NORTH),
+    EAST(Direction.EAST), SOUTH(Direction.SOUTH), WEST(Direction.WEST);
 
     private static final String TAG_NAME = NBTDictionary.claim("blockOrientFace");
 
-    public final EnumFacing face;
+    public final Direction face;
 
-    private BlockOrientationFace(EnumFacing face) {
+    private BlockOrientationFace(Direction face) {
         this.face = face;
     }
 
     @Override
-    public BlockOrientationFace deserializeNBT(NBTTagCompound tag) {
+    public BlockOrientationFace deserializeNBT(CompoundTag tag) {
         return Useful.safeEnumFromTag(tag, TAG_NAME, this);
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag) {
+    public void serializeNBT(CompoundTag tag) {
         Useful.saveEnumToTag(tag, TAG_NAME, this);
     }
 
@@ -46,7 +46,7 @@ public enum BlockOrientationFace implements IMessagePlusImmutable<BlockOrientati
     @SuppressWarnings("deprecation")
     @Override
     public String localizedName() {
-        return I18n.translateToLocal("placement.orientation.face." + this.name().toLowerCase());
+        return I18n.translate("placement.orientation.face." + this.name().toLowerCase());
     }
 
     public boolean isFixed() {

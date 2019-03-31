@@ -2,29 +2,29 @@ package grondag.brocade.model.render;
 
 import java.lang.reflect.Field;
 
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.varia.ReflectionHelper;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+
+import grondag.brocade.Brocade;
+import grondag.fermion.varia.ReflectionHelper;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.client.renderer.vertex.VertexFormatElement.EnumUsage;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 import net.minecraftforge.client.model.pipeline.QuadGatheringTransformer;
 
 public class LitBakedQuad extends BakedQuad {
-    private static @Nullable final Field parentField;
+    private static final Field parentField;
     static {
         Field pf = null;
         try {
             pf = ReflectionHelper.getAccessibleField(QuadGatheringTransformer.class, "parent");
         } catch (NoSuchFieldException e) {
-            ExoticMatter.INSTANCE.error("Unable to wrap forge lighter, rendering will be borked", e);
+            Brocade.INSTANCE.error("Unable to wrap forge lighter, rendering will be borked", e);
         }
         parentField = pf;
     }
@@ -92,7 +92,7 @@ public class LitBakedQuad extends BakedQuad {
     private final float[][] normals;
     private int hash = 0;
 
-    public LitBakedQuad(int[] vertexDataIn, float[][] normals, int tintIndexIn, @Nullable EnumFacing faceIn,
+    public LitBakedQuad(int[] vertexDataIn, float[][] normals, int tintIndexIn, Direction faceIn,
             TextureAtlasSprite spriteIn, boolean applyDiffuseLighting, VertexFormat format, int glowBits) {
         super(vertexDataIn, tintIndexIn, faceIn, spriteIn, applyDiffuseLighting, format);
         assert format == DefaultVertexFormats.BLOCK : "unsupported format for pre-lit quad";
@@ -113,7 +113,7 @@ public class LitBakedQuad extends BakedQuad {
                 super.pipe(w.lighter);
             } catch (Exception e) {
                 wrapError = true;
-                ExoticMatter.INSTANCE.error(
+                Brocade.INSTANCE.error(
                         "Unable to enable glow rendering due to unexpected error. Glow rendering will be disabled.", e);
             } finally {
                 w.unwrap();
@@ -186,7 +186,7 @@ public class LitBakedQuad extends BakedQuad {
     }
 
     @Override
-    public boolean equals(@Nullable Object other) {
+    public boolean equals(Object other) {
         if (other instanceof LitBakedQuad) {
             LitBakedQuad otherQuad = (LitBakedQuad) other;
 

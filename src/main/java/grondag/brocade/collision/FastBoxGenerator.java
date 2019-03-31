@@ -1,17 +1,17 @@
 package grondag.brocade.collision;
 
-import static grondag.exotic_matter.model.collision.octree.OctreeCoordinates.ALL_EMPTY;
+import static grondag.brocade.collision.octree.OctreeCoordinates.ALL_EMPTY;
 
 import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.model.collision.octree.OctreeCoordinates;
-import grondag.exotic_matter.model.collision.octree.VoxelVolume8;
-import grondag.exotic_matter.model.primitives.TriangleBoxTest;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
-import net.minecraft.util.math.AxisAlignedBB;
+import grondag.brocade.collision.octree.OctreeCoordinates;
+import grondag.brocade.collision.octree.VoxelVolume8;
+import grondag.brocade.primitives.TriangleBoxTest;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.vertex.IVec3f;
+import net.minecraft.util.math.BoundingBox;
 
 /**
  * Generates non-intersecting collision boxes for a model within a single block
@@ -149,7 +149,7 @@ public class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<I
         div1(polyData, voxelBits);
     }
 
-    public final ImmutableList<AxisAlignedBB> build() {
+    public final ImmutableList<BoundingBox> build() {
         builder.clear();
         final long[] data = this.voxelBits;
         VoxelVolume8.fillVolume(data);

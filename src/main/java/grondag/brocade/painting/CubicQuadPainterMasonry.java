@@ -1,17 +1,17 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.primitives.FaceQuadInputs;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.stream.IMutablePolyStream;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.primitives.FaceQuadInputs;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.world.Rotation;
-import grondag.exotic_matter.world.SimpleJoin;
-import grondag.exotic_matter.world.SimpleJoinFaceState;
-import net.minecraft.util.EnumFacing;
+import grondag.fermion.world.Rotation;
+import grondag.fermion.world.SimpleJoin;
+import grondag.fermion.world.SimpleJoinFaceState;
+import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterMasonry extends QuadPainter {
-    protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[EnumFacing.VALUES.length][SimpleJoinFaceState
+    protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[Direction.VALUES.length][SimpleJoinFaceState
             .values().length];
 
     private static enum Textures {
@@ -20,7 +20,7 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
 
     static {
         // mapping is unusual in that a join indicates a border IS present on texture
-        for (EnumFacing face : EnumFacing.VALUES) {
+        for (Direction face : Direction.VALUES) {
             FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.NONE.ordinal()] = null; // new
                                                                                     // ImmutableList.Builder<BakedQuad>().build();
                                                                                     // // NO BORDER
@@ -69,7 +69,7 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
         IMutablePolygon editor = stream.editor();
         do {
             final SimpleJoin bjs = modelState.getMasonryJoin();
-            final EnumFacing face = editor.getNominalFace();
+            final Direction face = editor.getNominalFace();
             final SimpleJoinFaceState fjs = SimpleJoinFaceState.find(face, bjs);
             final FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][fjs.ordinal()];
 

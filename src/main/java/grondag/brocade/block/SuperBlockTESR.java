@@ -1,16 +1,16 @@
 package grondag.brocade.block;
 
-import javax.annotation.Nonnull;
+
 
 import org.lwjgl.opengl.GL11;
 
-import grondag.exotic_matter.model.render.PerQuadModelRenderer;
-import grondag.exotic_matter.model.render.RenderLayout;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.varia.SuperDispatcher;
-import grondag.exotic_matter.model.varia.SuperDispatcher.DispatchDelegate;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
+import grondag.brocade.model.render.PerQuadModelRenderer;
+import grondag.brocade.model.render.RenderLayout;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.varia.SuperDispatcher;
+import grondag.brocade.model.varia.SuperDispatcher.DispatchDelegate;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -19,16 +19,16 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+
+
+
 public abstract class SuperBlockTESR extends TileEntitySpecialRenderer<SuperTileEntity> {
     protected static void addVertexWithUV(BufferBuilder buffer, double x, double y, double z, double u, double v,
             int skyLight, int blockLight) {
@@ -38,7 +38,7 @@ public abstract class SuperBlockTESR extends TileEntitySpecialRenderer<SuperTile
     private final DispatchDelegate tesrDelegate = SuperDispatcher.INSTANCE.delegates[RenderLayout.NONE.ordinal];
 
     @Override
-    public void render(@Nonnull SuperTileEntity te, double x, double y, double z, float partialTicks, int destroyStage,
+    public void render(SuperTileEntity te, double x, double y, double z, float partialTicks, int destroyStage,
             float alpha) {
         if (te != null) {
 
@@ -79,7 +79,7 @@ public abstract class SuperBlockTESR extends TileEntitySpecialRenderer<SuperTile
             GlStateManager.disableCull();
         }
 
-        if (Minecraft.isAmbientOcclusionEnabled()) {
+        if (MinecraftClient.isAmbientOcclusionEnabled()) {
             GlStateManager.shadeModel(GL11.GL_SMOOTH);
         } else {
             GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -87,7 +87,7 @@ public abstract class SuperBlockTESR extends TileEntitySpecialRenderer<SuperTile
 
         World world = te.getWorld();
         ISuperModelState modelState = te.getCachedModelState();
-        IBlockState state = ((IExtendedBlockState) world.getBlockState(te.getPos()))
+        BlockState state = ((IExtendedBlockState) world.getBlockState(te.getPos()))
                 .withProperty(ISuperBlock.MODEL_STATE, modelState);
 
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);

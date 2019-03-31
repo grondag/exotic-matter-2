@@ -1,21 +1,21 @@
 package grondag.brocade.block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+
 
 import com.google.common.collect.Lists;
 
-import grondag.exotic_matter.model.varia.SuperDispatcher;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import grondag.brocade.model.varia.SuperDispatcher;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+
+
+
 public class SuperModelItemOverrideList extends ItemOverrideList {
     private final SuperDispatcher dispatcher;
 
@@ -25,8 +25,8 @@ public class SuperModelItemOverrideList extends ItemOverrideList {
     }
 
     @Override
-    public IBakedModel handleItemState(@Nonnull IBakedModel originalModel, @Nonnull ItemStack stack,
-            @Nullable World world, @Nullable EntityLivingBase entity) {
+    public BakedModel handleItemState(BakedModel originalModel, ItemStack stack,
+            World world, LivingEntity entity) {
         return dispatcher.handleItemState(originalModel, stack);
     }
 }

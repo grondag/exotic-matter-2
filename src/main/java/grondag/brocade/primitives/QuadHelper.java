@@ -2,17 +2,17 @@ package grondag.brocade.primitives;
 
 import java.util.List;
 
-import javax.vecmath.AxisAngle4d;
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector4f;
+import org.joml.AxisAngle4d;
+import org.joml.Quaternionf;
+import org.joml.Vector4f;
 
 import com.google.common.collect.ImmutableList;
 
+import grondag.frex.api.core.ModelHelper;
 import grondag.brocade.primitives.vertex.IVec3f;
 import grondag.brocade.primitives.vertex.IVertexCollection;
 import grondag.brocade.primitives.vertex.Vec3Function;
 import grondag.brocade.primitives.vertex.Vec3f;
-import net.fabricmc.fabric.api.client.model.fabric.ModelHelper;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -192,8 +192,8 @@ public class QuadHelper {
     /**
      * Builds the appropriate quaternion to rotate around the given orthogonalAxis.
      */
-    public static Quat4f rotationForAxis(Direction.Axis axis, double degrees) {
-        Quat4f retVal = new Quat4f();
+    public static Quaternionf rotationForAxis(Direction.Axis axis, double degrees) {
+        Quaternionf retVal = new Quaternionf();
         switch (axis) {
         case X:
             

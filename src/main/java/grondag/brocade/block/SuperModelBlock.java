@@ -1,23 +1,23 @@
 package grondag.brocade.block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.init.ModShapes;
-import grondag.exotic_matter.model.render.RenderLayout;
-import grondag.exotic_matter.model.render.RenderLayoutProducer;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.state.ModelState;
-import grondag.exotic_matter.model.varia.WorldLightOpacity;
+
+
+import grondag.brocade.Brocade;
+import grondag.brocade.init.ModShapes;
+import grondag.brocade.model.render.RenderLayout;
+import grondag.brocade.model.render.RenderLayoutProducer;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.ModelState;
+import grondag.brocade.model.varia.WorldLightOpacity;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockStateContainer;
+import net.minecraft.block.BlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -104,7 +104,7 @@ public class SuperModelBlock extends SuperBlockPlus {
                 SuperModelBlock.superModelBlocks[blockRenderMode.ordinal][opacity
                         .ordinal()][0][0] = (SuperModelBlock) new SuperModelBlock("supermodel" + superModelIndex++,
                                 Material.ROCK, blockRenderMode, opacity, false, false)
-                                        .setTranslationKey("super_model_block").setCreativeTab(ExoticMatter.tabMod); // all
+                                        .setTranslationKey("super_model_block").setCreativeTab(Brocade.tabMod); // all
                                                                                                                      // superblocks
                                                                                                                      // have
                                                                                                                      // same
@@ -117,7 +117,7 @@ public class SuperModelBlock extends SuperBlockPlus {
                 SuperModelBlock.superModelBlocks[blockRenderMode.ordinal][opacity
                         .ordinal()][0][1] = (SuperModelBlock) new SuperModelBlock("supermodel" + superModelIndex++,
                                 Material.ROCK, blockRenderMode, opacity, false, true)
-                                        .setTranslationKey("super_model_block").setCreativeTab(ExoticMatter.tabMod); // all
+                                        .setTranslationKey("super_model_block").setCreativeTab(Brocade.tabMod); // all
                                                                                                                      // superblocks
                                                                                                                      // have
                                                                                                                      // same
@@ -130,7 +130,7 @@ public class SuperModelBlock extends SuperBlockPlus {
                 SuperModelBlock.superModelBlocks[blockRenderMode.ordinal][opacity
                         .ordinal()][1][0] = (SuperModelBlock) new SuperModelBlock("supermodel" + superModelIndex++,
                                 Material.ROCK, blockRenderMode, opacity, true, false)
-                                        .setTranslationKey("super_model_block").setCreativeTab(ExoticMatter.tabMod); // all
+                                        .setTranslationKey("super_model_block").setCreativeTab(Brocade.tabMod); // all
                                                                                                                      // superblocks
                                                                                                                      // have
                                                                                                                      // same
@@ -143,7 +143,7 @@ public class SuperModelBlock extends SuperBlockPlus {
                 SuperModelBlock.superModelBlocks[blockRenderMode.ordinal][opacity
                         .ordinal()][1][1] = (SuperModelBlock) new SuperModelBlock("supermodel" + superModelIndex++,
                                 Material.ROCK, blockRenderMode, opacity, true, true)
-                                        .setTranslationKey("super_model_block").setCreativeTab(ExoticMatter.tabMod); // all
+                                        .setTranslationKey("super_model_block").setCreativeTab(Brocade.tabMod); // all
                                                                                                                      // superblocks
                                                                                                                      // have
                                                                                                                      // same
@@ -180,7 +180,7 @@ public class SuperModelBlock extends SuperBlockPlus {
     }
 
     @Override
-    public @Nullable TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new SuperModelTileEntity();
     }
 
@@ -191,7 +191,7 @@ public class SuperModelBlock extends SuperBlockPlus {
     }
 
     @Override
-    public int damageDropped(@Nonnull IBlockState state) {
+    public int damageDropped(BlockState state) {
         // don't want species to "stick" with SuperModelblocks - so they can restack
         // species will be set again on placement anyway
         return 0;
@@ -199,8 +199,8 @@ public class SuperModelBlock extends SuperBlockPlus {
 
     @SuppressWarnings("deprecation")
     @Override
-    public IBlockState getActualState(@Nonnull IBlockState state, @Nonnull IBlockAccess worldIn,
-            @Nonnull BlockPos pos) {
+    public BlockState getActualState(BlockState state, IBlockAccess worldIn,
+            BlockPos pos) {
         BlockSubstance substance = this.getSubstance(state, worldIn, pos);
         // Add substance for tool methods
         return super.getActualState(state, worldIn, pos).withProperty(HARVEST_TOOL, substance.harvestTool)
@@ -210,11 +210,11 @@ public class SuperModelBlock extends SuperBlockPlus {
     /**
      * {@inheritDoc} <br>
      * <br>
-     * relying on {@link #getActualState(IBlockState, IBlockAccess, BlockPos)} to
+     * relying on {@link #getActualState(BlockState, IBlockAccess, BlockPos)} to
      * set {@link #SUBSTANCE} property
      */
     @Override
-    public int getHarvestLevel(@Nonnull IBlockState state) {
+    public int getHarvestLevel(BlockState state) {
         Integer l = state.getValue(HARVEST_LEVEL);
         return l == null ? 0 : l;
     }
@@ -222,37 +222,37 @@ public class SuperModelBlock extends SuperBlockPlus {
     /**
      * {@inheritDoc} <br>
      * <br>
-     * relying on {@link #getActualState(IBlockState, IBlockAccess, BlockPos)} to
+     * relying on {@link #getActualState(BlockState, IBlockAccess, BlockPos)} to
      * set {@link #SUBSTANCE} property
      */
     @Override
-    @Nullable
-    public String getHarvestTool(@Nonnull IBlockState state) {
+    
+    public String getHarvestTool(BlockState state) {
         BlockHarvestTool tool = state.getValue(HARVEST_TOOL);
         return tool == null ? null : tool.toolString;
     }
 
     @Override
-    public float getBlockHardness(@Nonnull IBlockState blockState, @Nonnull World worldIn, @Nonnull BlockPos pos) {
+    public float getBlockHardness(BlockState blockState, World worldIn, BlockPos pos) {
         return this.getSubstance(blockState, worldIn, pos).hardness;
     }
 
     @Override
-    public float getExplosionResistance(@Nonnull World world, @Nonnull BlockPos pos, @Nullable Entity exploder,
-            @Nonnull Explosion explosion) {
+    public float getExplosionResistance(World world, BlockPos pos, Entity exploder,
+            Explosion explosion) {
         return this.getSubstance(world, pos).resistance;
     }
 
     @Override
-    public SoundType getSoundType(@Nonnull IBlockState state, @Nonnull World world, @Nonnull BlockPos pos,
-            @Nullable Entity entity) {
+    public SoundType getSoundType(BlockState state, World world, BlockPos pos,
+            Entity entity) {
         return this.getSubstance(state, world, pos).soundType;
     }
 
     /**
      * SuperModel blocks light emission level is stored in tile entity. Is not part
      * of model state because does not affect rendering. However,
-     * {@link #getLightValue(IBlockState)} will return 0. That version is not used
+     * {@link #getLightValue(BlockState)} will return 0. That version is not used
      * in vanilla forge except to determine if flat render pipeline should be used
      * for emissive blocks. Should not be a problem because render logic also checks
      * isAmbientOcclusion() on the baked model itself.
@@ -265,7 +265,7 @@ public class SuperModelBlock extends SuperBlockPlus {
      * 
      */
     @Override
-    public int getLightValue(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+    public int getLightValue(BlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity myTE = world.getTileEntity(pos);
         return myTE == null || !(myTE instanceof SuperModelTileEntity) ? 0
                 : ((SuperModelTileEntity) myTE).getLightValue();
@@ -283,14 +283,14 @@ public class SuperModelBlock extends SuperBlockPlus {
     }
 
     @Override
-    public BlockSubstance getSubstance(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockSubstance getSubstance(BlockState state, IBlockAccess world, BlockPos pos) {
         TileEntity myTE = world.getTileEntity(pos);
         return myTE == null || !(myTE instanceof SuperModelTileEntity) ? BlockSubstance.DEFAULT
                 : ((SuperModelTileEntity) myTE).getSubstance();
     }
 
     @Override
-    public boolean isGeometryFullCube(IBlockState state) {
+    public boolean isGeometryFullCube(BlockState state) {
         return this.fullBlock;
     }
 
@@ -302,20 +302,20 @@ public class SuperModelBlock extends SuperBlockPlus {
     /**
      * Set light level emitted by block. Inputs are masked to 0-15
      */
-    public void setLightValue(IBlockState state, IBlockAccess world, BlockPos pos, int lightValue) {
+    public void setLightValue(BlockState state, IBlockAccess world, BlockPos pos, int lightValue) {
         TileEntity myTE = world.getTileEntity(pos);
         if (myTE != null && myTE instanceof SuperModelTileEntity)
             ((SuperModelTileEntity) myTE).setLightValue((byte) (lightValue & 0xF));
     }
 
-    public void setSubstance(IBlockState state, IBlockAccess world, BlockPos pos, BlockSubstance substance) {
+    public void setSubstance(BlockState state, IBlockAccess world, BlockPos pos, BlockSubstance substance) {
         TileEntity myTE = world.getTileEntity(pos);
         if (myTE != null && myTE instanceof SuperModelTileEntity)
             ((SuperModelTileEntity) myTE).setSubstance(substance);
     }
 
     @Override
-    protected WorldLightOpacity worldLightOpacity(IBlockState state) {
+    protected WorldLightOpacity worldLightOpacity(BlockState state) {
         return this.worldLightOpacity;
     }
 }

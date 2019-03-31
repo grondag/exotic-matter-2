@@ -3,11 +3,11 @@ package grondag.brocade.placement;
 import grondag.exotic_matter.serialization.IMessagePlusImmutable;
 import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
 import grondag.exotic_matter.serialization.NBTDictionary;
-import grondag.exotic_matter.varia.ILocalized;
-import grondag.exotic_matter.varia.Useful;
-import net.minecraft.nbt.NBTTagCompound;
+import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.Useful;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resource.language.I18n;
 
 public enum SpeciesMode implements IMessagePlusImmutable<SpeciesMode>, IReadWriteNBTImmutable<SpeciesMode>, ILocalized {
     MATCH_CLICKED, MATCH_MOST, COUNTER_MOST;
@@ -15,12 +15,12 @@ public enum SpeciesMode implements IMessagePlusImmutable<SpeciesMode>, IReadWrit
     private static final String TAG_NAME = NBTDictionary.claim("speciesMode");
 
     @Override
-    public SpeciesMode deserializeNBT(NBTTagCompound tag) {
+    public SpeciesMode deserializeNBT(CompoundTag tag) {
         return Useful.safeEnumFromTag(tag, TAG_NAME, this);
     }
 
     @Override
-    public void serializeNBT(NBTTagCompound tag) {
+    public void serializeNBT(CompoundTag tag) {
         Useful.saveEnumToTag(tag, TAG_NAME, this);
     }
 
@@ -37,7 +37,7 @@ public enum SpeciesMode implements IMessagePlusImmutable<SpeciesMode>, IReadWrit
     @SuppressWarnings("deprecation")
     @Override
     public String localizedName() {
-        return I18n.translateToLocal("placement.species_mode." + this.name().toLowerCase());
+        return I18n.translate("placement.species_mode." + this.name().toLowerCase());
     }
 
     /** mode to use if player holding alt key */

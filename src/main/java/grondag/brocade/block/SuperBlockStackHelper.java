@@ -1,14 +1,14 @@
 package grondag.brocade.block;
 
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.state.ModelState;
+
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.ModelState;
 import grondag.exotic_matter.serialization.NBTDictionary;
-import grondag.exotic_matter.varia.Useful;
+import grondag.fermion.varia.Useful;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 
 /**
  * Item stack serialization handlers
@@ -26,7 +26,7 @@ public class SuperBlockStackHelper {
     }
 
     public static byte getStackLightValue(ItemStack stack) {
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundTag tag = stack.getTagCompound();
         // important that the tag used here matches that used in tile entity
         return tag == null ? 0 : tag.getByte(SuperBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
     }
@@ -37,26 +37,26 @@ public class SuperBlockStackHelper {
     }
 
     public static BlockSubstance getStackSubstance(ItemStack stack) {
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundTag tag = stack.getTagCompound();
         return tag == null ? BlockSubstance.DEFAULT : BlockSubstance.deserializeNBT(tag);
     }
 
-    public static void setStackModelState(ItemStack stack, @Nullable ISuperModelState modelState) {
-        NBTTagCompound tag = stack.getTagCompound();
+    public static void setStackModelState(ItemStack stack, ISuperModelState modelState) {
+        CompoundTag tag = stack.getTagCompound();
         if (modelState == null) {
             ModelState.clearNBTValues(tag);
             return;
         }
 
         if (tag == null) {
-            tag = new NBTTagCompound();
+            tag = new CompoundTag();
             stack.setTagCompound(tag);
         }
 
         modelState.serializeNBT(tag);
     }
 
-    @Nullable
+    
     public static ISuperModelState getStackModelState(ItemStack stack) {
         @SuppressWarnings("null")
         ISuperModelState stackState = stack.hasTagCompound()

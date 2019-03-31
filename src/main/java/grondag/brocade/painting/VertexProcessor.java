@@ -1,7 +1,7 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.model.state.ISuperModelState;
 
 /**
  * Logic to apply color, brightness, glow and other attributes that depend on

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
+import grondag.brocade.primitives.vertex.Vec3f;
 
 class VertexTest {
 

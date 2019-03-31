@@ -1,10 +1,10 @@
 package grondag.brocade.placement;
 
-import javax.annotation.Nullable;
+
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -25,7 +25,7 @@ import net.minecraft.util.math.Vec3d;
  * on.
  */
 public class PlacementPosition {
-    public final EnumFacing onFace;
+    public final Direction onFace;
     public final BlockPos onPos;
     public final BlockPos inPos;
     public final double hitX;
@@ -43,8 +43,8 @@ public class PlacementPosition {
      * @param isExcavation           if true will select *in* starting block vs *on*
      *                               it
      */
-    public PlacementPosition(EntityPlayer player, @Nullable BlockPos onPos, @Nullable EnumFacing onFace,
-            @Nullable Vec3d hitVec, int floatingSelectionRange, boolean isExcavation) {
+    public PlacementPosition(EntityPlayer player, BlockPos onPos, Direction onFace,
+            Vec3d hitVec, int floatingSelectionRange, boolean isExcavation) {
 
         this.isFloating = floatingSelectionRange > 0;
         if (this.isFloating || onPos == null || onFace == null || hitVec == null) {

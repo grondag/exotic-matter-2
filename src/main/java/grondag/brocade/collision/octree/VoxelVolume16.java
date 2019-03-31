@@ -1,6 +1,6 @@
 package grondag.brocade.collision.octree;
 
-import grondag.exotic_matter.varia.functions.Int3Consumer;
+import grondag.fermion.functions.Int3Consumer;
 
 /**
  * Operations on Cartesian representation of 16x16x16 voxels in unit cube that

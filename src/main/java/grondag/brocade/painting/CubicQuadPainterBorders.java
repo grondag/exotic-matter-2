@@ -1,17 +1,17 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.primitives.FaceQuadInputs;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.stream.IMutablePolyStream;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.primitives.FaceQuadInputs;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.world.CornerJoinBlockState;
-import grondag.exotic_matter.world.CornerJoinFaceState;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.util.EnumFacing;
+import grondag.fermion.world.CornerJoinBlockState;
+import grondag.fermion.world.CornerJoinFaceState;
+import grondag.fermion.world.Rotation;
+import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterBorders extends QuadPainter {
-    protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[EnumFacing.VALUES.length][CornerJoinFaceState
+    protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[Direction.VALUES.length][CornerJoinFaceState
             .values().length];
 
     /** Texture offsets */
@@ -40,7 +40,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             Rotation.ROTATE_NONE, false, false);
 
     static {
-        for (EnumFacing face : EnumFacing.VALUES) {
+        for (Direction face : Direction.VALUES) {
             // First one will only be used if we are rendering in solid layer.
             FACE_INPUTS[face.ordinal()][CornerJoinFaceState.ALL_NO_CORNERS.ordinal()] = NO_BORDER;
             FACE_INPUTS[face.ordinal()][CornerJoinFaceState.NO_FACE.ordinal()] = null; // NULL FACE
@@ -151,11 +151,11 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
 
             // rotate bottom face 180 so that it works - bottom face orientation is
             // different from others
-            if (face == EnumFacing.DOWN) {
-                for (int i = 0; i < FACE_INPUTS[EnumFacing.DOWN.ordinal()].length; i++) {
-                    FaceQuadInputs fqi = FACE_INPUTS[EnumFacing.DOWN.ordinal()][i];
+            if (face == Direction.DOWN) {
+                for (int i = 0; i < FACE_INPUTS[Direction.DOWN.ordinal()].length; i++) {
+                    FaceQuadInputs fqi = FACE_INPUTS[Direction.DOWN.ordinal()][i];
                     if (fqi != null && fqi != NO_BORDER) {
-                        FACE_INPUTS[EnumFacing.DOWN.ordinal()][i] = new FaceQuadInputs(fqi.textureOffset,
+                        FACE_INPUTS[Direction.DOWN.ordinal()][i] = new FaceQuadInputs(fqi.textureOffset,
                                 fqi.rotation.clockwise().clockwise(), fqi.flipU, fqi.flipV);
                     }
                 }
@@ -168,7 +168,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
         do {
 
             CornerJoinBlockState bjs = modelState.getCornerJoin();
-            EnumFacing face = editor.getNominalFace();
+            Direction face = editor.getNominalFace();
             FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][bjs.getFaceJoinState(face).ordinal()];
 
             // if can't identify a face, skip texturing

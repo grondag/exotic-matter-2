@@ -1,8 +1,8 @@
 package grondag.brocade.block;
 
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.varia.WorldLightOpacity;
-import net.minecraft.block.state.IBlockState;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.varia.WorldLightOpacity;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
@@ -29,7 +29,7 @@ public class SuperStaticBlock extends SuperBlockPlus {
     }
 
     @Override
-    public BlockSubstance getSubstance(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockSubstance getSubstance(BlockState state, IBlockAccess world, BlockPos pos) {
         return this.substance;
     }
 
@@ -39,7 +39,7 @@ public class SuperStaticBlock extends SuperBlockPlus {
     }
 
     @Override
-    public boolean isGeometryFullCube(IBlockState state) {
+    public boolean isGeometryFullCube(BlockState state) {
         return this.isGeometryFullCube;
     }
 
@@ -49,7 +49,7 @@ public class SuperStaticBlock extends SuperBlockPlus {
     }
 
     @Override
-    protected WorldLightOpacity worldLightOpacity(IBlockState state) {
+    protected WorldLightOpacity worldLightOpacity(BlockState state) {
         return this.worldLightOpacity;
     }
 

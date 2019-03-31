@@ -1,13 +1,13 @@
-package grondag.exotic_matter.model.primitives;
+package grondag.brocade.primitives;
 
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
-import grondag.exotic_matter.model.primitives.PointInPolygonTest.DiscardAxis;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.vertex.IVec3f;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
+import grondag.brocade.primitives.PointInPolygonTest.DiscardAxis;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.vertex.IVec3f;
+import grondag.brocade.primitives.vertex.Vec3f;
 
 class PointInPolygonTestPerf {
 

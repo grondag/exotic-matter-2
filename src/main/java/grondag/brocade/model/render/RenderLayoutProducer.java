@@ -1,6 +1,6 @@
 package grondag.brocade.model.render;
 
-import grondag.exotic_matter.ExoticMatter;
+import grondag.brocade.Brocade;
 
 /**
  * Selects of appropriate render layout based on availability of Acuity
@@ -27,7 +27,7 @@ public abstract class RenderLayoutProducer {
     public static final RenderLayoutProducer DEPENDS = new RenderLayoutProducer(4) {
         @Override
         public final RenderLayout renderLayout() {
-            return ExoticMatter.proxy.isAcuityEnabled() ? RenderLayout.SOLID_ONLY : RenderLayout.SOLID_AND_TRANSLUCENT;
+            return Brocade.proxy.isAcuityEnabled() ? RenderLayout.SOLID_ONLY : RenderLayout.SOLID_AND_TRANSLUCENT;
         }
     };
 

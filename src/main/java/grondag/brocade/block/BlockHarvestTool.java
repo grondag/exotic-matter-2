@@ -1,7 +1,7 @@
 package grondag.brocade.block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+
+
 
 import net.minecraft.util.IStringSerializable;
 
@@ -12,15 +12,15 @@ public enum BlockHarvestTool implements IStringSerializable {
      * String MC uses to compare test for this tool type. Null means any tool can
      * harvest.
      */
-    @Nullable
+    
     public final String toolString;
 
-    private BlockHarvestTool(@Nullable String toolString) {
+    private BlockHarvestTool(String toolString) {
         this.toolString = toolString;
     }
 
     @Override
-    public @Nonnull String getName() {
+    public String getName() {
         return this.name().toLowerCase();
     }
 }

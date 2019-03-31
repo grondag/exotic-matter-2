@@ -6,8 +6,8 @@ import java.util.function.Consumer;
 
 import org.junit.Test;
 
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.state.ModelState;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.model.state.ModelState;
 import grondag.exotic_matter.terrain.TerrainMeshFactory;
 
 public class TerrainPerf {
@@ -16,7 +16,7 @@ public class TerrainPerf {
     public void test() {
         ModelState[] modelStates = new ModelState[120000];
 //        int[] offenders = new int[modelStates.length];
-        ConfigXM.BLOCKS.simplifyTerrainBlockGeometry = true;
+        BrocadeConfig.BLOCKS.simplifyTerrainBlockGeometry = true;
 
         try {
             FileInputStream fis = new FileInputStream("terrainState.data");

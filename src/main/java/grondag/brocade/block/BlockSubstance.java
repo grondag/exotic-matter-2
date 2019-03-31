@@ -5,23 +5,23 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.ExoticMatter;
-import grondag.exotic_matter.init.SubstanceConfig;
+
+import grondag.brocade.Brocade;
+import grondag.brocade.init.SubstanceConfig;
 import grondag.exotic_matter.model.color.BlockColorMapProvider;
 import grondag.exotic_matter.model.color.Chroma;
 import grondag.exotic_matter.model.color.Hue;
 import grondag.exotic_matter.model.color.Luminance;
 import grondag.exotic_matter.serialization.NBTDictionary;
-import grondag.exotic_matter.varia.ILocalized;
-import grondag.exotic_matter.varia.structures.NullHandler;
+import grondag.fermion.varia.ILocalized;
+import grondag.fermion.structures.NullHandler;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.entity.ai.pathing.PathNodeType;
 
 /**
  * Similar to Minecraft Material. Didn't want to tie to that implementation.
@@ -47,7 +47,7 @@ public class BlockSubstance implements ILocalized {
             new SubstanceConfig(1, BlockHarvestTool.ANY, 0, 10, 1.0), Material.GROUND, SoundType.CLOTH,
             BlockColorMapProvider.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.MEDIUM_LIGHT).ordinal);
 
-    public static BlockSubstance deserializeNBT(NBTTagCompound tag) {
+    public static BlockSubstance deserializeNBT(CompoundTag tag) {
         return NullHandler.defaultIfNull(allByName.get(tag.getString(NBT_SUBSTANCE)), BlockSubstance.DEFAULT);
     }
 
@@ -56,12 +56,12 @@ public class BlockSubstance implements ILocalized {
         return ordinal >= 0 && ordinal < allByOrdinal.size() ? allByOrdinal.get(ordinal) : null;
     }
 
-    @Nullable
+    
     public static BlockSubstance get(String systemName) {
         return allByName.get(systemName);
     }
 
-    @Nullable
+    
     public static BlockSubstance get(int ordinal) {
         return ordinal < 0 || ordinal >= allByOrdinal.size() ? null : allByOrdinal.get(ordinal);
     }
@@ -71,7 +71,7 @@ public class BlockSubstance implements ILocalized {
         BlockSubstance existing = get(systemName);
         if (existing != null) {
             assert false : "Duplicate substance name";
-            ExoticMatter.INSTANCE.warn(
+            Brocade.INSTANCE.warn(
                     "Block substance with duplicate name %s not created.  Existing substance with that name be used instead.",
                     systemName);
             return existing;
@@ -124,13 +124,13 @@ public class BlockSubstance implements ILocalized {
         this.walkSpeedFactor = substance.walkSpeedFactor;
         this.flammability = substance.flammability;
         this.isBurning = substance.isBurning;
-        this.pathNodeType = substance.pathNodeType.pathNodeType;
+        this.pathNodeType = substance.pathNodeType;
 
         if (this.ordinal < MAX_SUBSTANCES) {
             allByName.put(systemName, this);
             allByOrdinal.add(this);
         } else {
-            ExoticMatter.INSTANCE.warn("Block substance limit of %d exceeded.  Substance %s will not be usable.",
+            Brocade.INSTANCE.warn("Block substance limit of %d exceeded.  Substance %s will not be usable.",
                     MAX_SUBSTANCES, systemName);
         }
 
@@ -138,10 +138,10 @@ public class BlockSubstance implements ILocalized {
 
     @Override
     public String localizedName() {
-        return I18n.translateToLocal("material." + this.systemName.toLowerCase());
+        return I18n.translate("material." + this.systemName.toLowerCase());
     }
 
-    public void serializeNBT(NBTTagCompound tag) {
+    public void serializeNBT(CompoundTag tag) {
         tag.setString(NBT_SUBSTANCE, this.systemName);
     }
 

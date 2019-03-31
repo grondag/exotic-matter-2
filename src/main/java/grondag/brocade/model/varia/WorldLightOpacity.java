@@ -1,8 +1,8 @@
 package grondag.brocade.model.varia;
 
-import grondag.exotic_matter.block.BlockSubstance;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.block.BlockSubstance;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.model.state.ISuperModelState;
 
 /**
  * Less granular representation of block translucency than Translucency.

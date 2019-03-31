@@ -1,13 +1,13 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.stream.IMutablePolyStream;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.exotic_matter.model.texture.ITexturePalette;
 import grondag.exotic_matter.model.texture.TextureRotationType;
 import grondag.exotic_matter.model.texture.TextureScale;
-import grondag.exotic_matter.varia.Useful;
-import net.minecraft.util.EnumFacing;
+import grondag.fermion.varia.Useful;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
@@ -39,7 +39,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
             editor.setLockUV(layerIndex, true);
             editor.assignLockedUVCoordinates(layerIndex);
 
-            final EnumFacing nominalFace = editor.getNominalFace();
+            final Direction nominalFace = editor.getNominalFace();
             final ITexturePalette tex = getTexture(modelState, paintLayer);
             final boolean allowTexRotation = tex.rotation().rotationType() != TextureRotation.FIXED;
             final TextureScale scale = tex.textureScale();

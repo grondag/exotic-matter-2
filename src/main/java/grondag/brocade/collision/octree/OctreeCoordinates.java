@@ -2,10 +2,10 @@ package grondag.brocade.collision.octree;
 
 import java.util.Arrays;
 
-import grondag.exotic_matter.varia.functions.Float3Consumer;
-import grondag.exotic_matter.varia.functions.Float3Test;
-import grondag.exotic_matter.varia.functions.IBoxBoundsIntConsumer;
-import grondag.exotic_matter.varia.functions.Int3Consumer;
+import grondag.fermion.functions.Float3Consumer;
+import grondag.fermion.functions.Float3Test;
+import grondag.fermion.functions.IBoxBoundsIntConsumer;
+import grondag.fermion.functions.Int3Consumer;
 
 public class OctreeCoordinates {
     public static final long FULL_BITS = 0xFFFFFFFFFFFFFFFFL;

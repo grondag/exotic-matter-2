@@ -1,15 +1,15 @@
 package grondag.brocade.block;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.state.ModelState;
+
+
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.ModelState;
 import grondag.exotic_matter.serialization.NBTDictionary;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -17,8 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+
 
 public class SuperTileEntity extends TileEntity {
     ////////////////////////////////////////////////////////////////////////
@@ -31,13 +31,13 @@ public class SuperTileEntity extends TileEntity {
     public static final String NBT_SERVER_SIDE_TAG = NBTDictionary.claim("serverOnly");
 
     /** Returns server-side tag if one is present, creating it if not. */
-    public static NBTTagCompound getServerTag(NBTTagCompound fromTag) {
+    public static CompoundTag getServerTag(CompoundTag fromTag) {
         NBTBase result = fromTag.getTag(NBT_SERVER_SIDE_TAG);
         if (result == null || result.getId() != 10) {
-            result = new NBTTagCompound();
+            result = new CompoundTag();
             fromTag.setTag(NBT_SERVER_SIDE_TAG, result);
         }
-        return (NBTTagCompound) result;
+        return (CompoundTag) result;
     }
 
     /**
@@ -45,7 +45,7 @@ public class SuperTileEntity extends TileEntity {
      * stripped, returns a modified copy. Otherwise returns input tag. Will return
      * null if a null tag is passed in.
      */
-    public static NBTTagCompound withoutServerTag(NBTTagCompound inputTag) {
+    public static CompoundTag withoutServerTag(CompoundTag inputTag) {
         if (inputTag != null && inputTag.hasKey(NBT_SERVER_SIDE_TAG)) {
             inputTag = inputTag.copy();
             inputTag.removeTag(NBT_SERVER_SIDE_TAG);
@@ -62,7 +62,7 @@ public class SuperTileEntity extends TileEntity {
     // INSTANCE MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    protected @Nullable ISuperModelState modelState = null;
+    protected ISuperModelState modelState = null;
 
     // public IExtendedBlockState exBlockState;
     private boolean isModelStateCacheDirty = true;
@@ -71,7 +71,7 @@ public class SuperTileEntity extends TileEntity {
      * Called client side at start up and when setting is changed.
      */
     public static void updateRenderDistance() {
-        int configuredDist = Minecraft.getMinecraft().gameSettings.renderDistanceChunks * 16;
+        int configuredDist = MinecraftClient.getMinecraft().gameSettings.renderDistanceChunks * 16;
         maxSuperBlockRenderDistanceSq = configuredDist * configuredDist;
     }
 
@@ -81,8 +81,8 @@ public class SuperTileEntity extends TileEntity {
     }
 
     @Override
-    public boolean shouldRefresh(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState oldState,
-            @Nonnull IBlockState newSate) {
+    public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState,
+            BlockState newSate) {
         if (oldState.getBlock() == newSate.getBlock()) {
             return false;
         } else {
@@ -159,12 +159,12 @@ public class SuperTileEntity extends TileEntity {
     /**
      * Generate tag sent to client when block/chunk start loads. MUST include x, y,
      * z tags so client knows which TE belong to. Super calls writeInternal()
-     * instead of {@link #writeToNBT(NBTTagCompound)} We call writeToNBT so that we
+     * instead of {@link #writeToNBT(CompoundTag)} We call writeToNBT so that we
      * include all info, but filter out server-side only tag to prevent wastefully
      * large packets.
      */
     @Override
-    public NBTTagCompound getUpdateTag() {
+    public CompoundTag getUpdateTag() {
         return withoutServerTag(writeToNBT(super.getUpdateTag()));
     }
 
@@ -174,7 +174,7 @@ public class SuperTileEntity extends TileEntity {
      * ByteBuffer but that is how MC does it and the packet only accepts NBT.
      */
     @Override
-    public @Nullable SPacketUpdateTileEntity getUpdatePacket() {
+    public SPacketUpdateTileEntity getUpdatePacket() {
         return new SPacketUpdateTileEntity(this.pos, getBlockMetadata(), this.getUpdateTag());
     }
 
@@ -182,25 +182,25 @@ public class SuperTileEntity extends TileEntity {
      * Process packet sent to client for TE synch after block/chunk is loaded.
      */
     @Override
-    public void onDataPacket(@Nonnull NetworkManager net, @Nonnull SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         handleUpdateTag(pkt.getNbtCompound());
     }
 
     @Override
-    public final void readFromNBT(@Nonnull NBTTagCompound compound) {
+    public final void readFromNBT(CompoundTag compound) {
         super.readFromNBT(compound);
         this.readModNBT(compound);
     }
 
     /**
      * Restores all state previously serialized by
-     * {@link #writeModNBT(NBTTagCompound)}
+     * {@link #writeModNBT(CompoundTag)}
      * <p>
      * 
      * Note: important that tags used here match those used PlacementItem helper
      * methods.
      */
-    public void readModNBT(NBTTagCompound compound) {
+    public void readModNBT(CompoundTag compound) {
         this.modelState = ModelState.deserializeFromNBTIfPresent(compound);
         this.onModelStateChange(true);
     }
@@ -213,17 +213,17 @@ public class SuperTileEntity extends TileEntity {
      * Note: important that tags used here match those used PlacementItem helper
      * methods
      */
-    public void writeModNBT(NBTTagCompound compound) {
+    public void writeModNBT(CompoundTag compound) {
         this.modelState.serializeNBT(compound);
     }
 
     @Override
-    public final NBTTagCompound writeToNBT(@Nonnull NBTTagCompound compound) {
+    public final CompoundTag writeToNBT(CompoundTag compound) {
         this.writeModNBT(compound);
         return super.writeToNBT(compound);
     }
 
-    public ISuperModelState getModelState(IBlockState state, IBlockAccess world, BlockPos pos,
+    public ISuperModelState getModelState(BlockState state, IBlockAccess world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
         ISuperModelState result = this.modelState;
 
@@ -309,8 +309,8 @@ public class SuperTileEntity extends TileEntity {
         return false;
     }
 
-    @SideOnly(Side.CLIENT)
-    private @Nullable net.minecraft.util.math.AxisAlignedBB renderBB;
+    
+    private net.minecraft.util.math.BoundingBox renderBB;
 
     /**
      * Cache result. Gets called alot for TESR. <br>
@@ -318,12 +318,12 @@ public class SuperTileEntity extends TileEntity {
      * 
      * {@inheritDoc}
      */
-    @SideOnly(Side.CLIENT)
+    
     @Override
-    public net.minecraft.util.math.AxisAlignedBB getRenderBoundingBox() {
-        net.minecraft.util.math.AxisAlignedBB result = this.renderBB;
+    public net.minecraft.util.math.BoundingBox getRenderBoundingBox() {
+        net.minecraft.util.math.BoundingBox result = this.renderBB;
         if (result == null) {
-            result = new net.minecraft.util.math.AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1,
+            result = new net.minecraft.util.math.BoundingBox(pos.getX() - 1, pos.getY(), pos.getZ() - 1,
                     pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
             this.renderBB = result;
         }

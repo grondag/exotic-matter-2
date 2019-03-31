@@ -4,28 +4,27 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.model.state.ISuperModelState;
-import net.minecraft.block.Block;
-import net.minecraft.util.math.AxisAlignedBB;
+import grondag.brocade.model.state.ISuperModelState;
+import net.minecraft.util.math.BoundingBox;
 
 public class CubeCollisionHandler implements ICollisionHandler {
 
     public static CubeCollisionHandler INSTANCE = new CubeCollisionHandler();
-
-    private static final List<AxisAlignedBB> FULL_BLOCK_AABB_LIST = ImmutableList.of(Block.FULL_BLOCK_AABB);
+    
+    private static final List<BoundingBox> FULL_BLOCK_AABB_LIST = ImmutableList.of(FULL_BLOCK_BOX);
 
     @Override
-    public List<AxisAlignedBB> getCollisionBoxes(ISuperModelState modelState) {
+    public List<BoundingBox> getCollisionBoxes(ISuperModelState modelState) {
         return FULL_BLOCK_AABB_LIST;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(ISuperModelState modelState) {
-        return Block.FULL_BLOCK_AABB;
+    public BoundingBox getCollisionBoundingBox(ISuperModelState modelState) {
+        return FULL_BLOCK_BOX;
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox(ISuperModelState modelState) {
-        return Block.FULL_BLOCK_AABB;
+    public BoundingBox getRenderBoundingBox(ISuperModelState modelState) {
+        return FULL_BLOCK_BOX;
     }
 }

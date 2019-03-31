@@ -32,11 +32,11 @@ package grondag.brocade.mesh;
  * <info@michaelhoffer.de>.
  */
 
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.primitives.stream.CsgPolyStream;
-import grondag.exotic_matter.model.primitives.stream.IPolyStream;
-import grondag.exotic_matter.model.primitives.stream.IWritablePolyStream;
-import grondag.exotic_matter.model.primitives.stream.PolyStreams;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.stream.CsgPolyStream;
+import grondag.brocade.primitives.stream.IPolyStream;
+import grondag.brocade.primitives.stream.IWritablePolyStream;
+import grondag.brocade.primitives.stream.PolyStreams;
 
 /**
  * Access point for CSG operations.<br>

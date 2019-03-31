@@ -3,7 +3,7 @@ package grondag.brocade.model.texture;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.annotation.Nullable;
+
 import javax.imageio.stream.ImageInputStreamImpl;
 
 import org.apache.commons.io.IOUtils;
@@ -32,7 +32,7 @@ public class InMemoryImageInputStream extends ImageInputStreamImpl {
     }
 
     @Override
-    public int read(@Nullable byte[] b, int off, int len) throws IOException {
+    public int read(byte[] b, int off, int len) throws IOException {
         if (streamPos == length) {
             return -1;
         }

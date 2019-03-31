@@ -2,7 +2,7 @@ package grondag.brocade.terrain;
 
 import java.util.HashMap;
 
-import javax.annotation.Nullable;
+
 
 import com.google.common.collect.HashBiMap;
 
@@ -31,7 +31,7 @@ public class TerrainBlockRegistry {
         fillerMap.put(heightBlock, fillerBlock);
     }
 
-    @Nullable
+    
     public Block getFillerBlock(Block hieghtBlock) {
         return this.fillerMap.get(hieghtBlock);
     }

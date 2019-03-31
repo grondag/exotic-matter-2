@@ -1,9 +1,9 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.world.FaceCorner;
-import grondag.exotic_matter.world.FaceSide;
-import grondag.exotic_matter.world.Rotation;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.fermion.world.FaceCorner;
+import grondag.fermion.world.FaceSide;
+import grondag.fermion.world.Rotation;
 
 /**
  * Identifies content of each quadrant within texture file, starting at top

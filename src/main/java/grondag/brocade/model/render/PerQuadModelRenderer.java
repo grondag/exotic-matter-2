@@ -2,34 +2,34 @@ package grondag.brocade.model.render;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.renderer.BlockModelRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.pipeline.VertexBufferConsumer;
 import net.minecraftforge.client.model.pipeline.VertexLighterFlat;
 import net.minecraftforge.client.model.pipeline.VertexLighterSmoothAo;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+
 
 /**
  * Selects lighter based on isShaded value of each individual quad, vs.
  * determining it at model level.
  *
  */
-@SideOnly(Side.CLIENT)
+
 public class PerQuadModelRenderer extends BlockModelRenderer {
 
     public static final PerQuadModelRenderer INSTANCE = new PerQuadModelRenderer(
-            Minecraft.getMinecraft().getBlockColors());
+            MinecraftClient.getMinecraft().getBlockColors());
 
     private final ThreadLocal<VertexLighterFlat> lighterFlat = new ThreadLocal<VertexLighterFlat>() {
         @Override
@@ -58,7 +58,7 @@ public class PerQuadModelRenderer extends BlockModelRenderer {
     }
 
     /** always returns true for convenience */
-    private VertexLighterFlat setupFlat(IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos,
+    private VertexLighterFlat setupFlat(IBlockAccess world, BakedModel model, BlockState state, BlockPos pos,
             BufferBuilder buffer) {
         VertexLighterFlat lighter = this.lighterFlat.get();
         if (buffer != this.lastRendererFlat.get()) {
@@ -76,7 +76,7 @@ public class PerQuadModelRenderer extends BlockModelRenderer {
     }
 
     /** always returns true for convenience */
-    private VertexLighterFlat setupSmooth(IBlockAccess world, IBakedModel model, IBlockState state, BlockPos pos,
+    private VertexLighterFlat setupSmooth(IBlockAccess world, BakedModel model, BlockState state, BlockPos pos,
             BufferBuilder buffer) {
         VertexLighterFlat lighter = this.lighterSmooth.get();
         if (buffer != this.lastRendererSmooth.get()) {
@@ -94,8 +94,8 @@ public class PerQuadModelRenderer extends BlockModelRenderer {
     }
 
     @Override
-    public boolean renderModel(@Nonnull IBlockAccess world, @Nonnull IBakedModel model, @Nonnull IBlockState state,
-            @Nonnull BlockPos pos, @Nonnull BufferBuilder buffer, boolean checkSides, long rand) {
+    public boolean renderModel(IBlockAccess world, BakedModel model, BlockState state,
+            BlockPos pos, BufferBuilder buffer, boolean checkSides, long rand) {
 
         boolean isEmpty = true;
         VertexLighterFlat flatLighter = null;
@@ -118,7 +118,7 @@ public class PerQuadModelRenderer extends BlockModelRenderer {
         }
 
         for (int i = 0; i < 6; i++) {
-            final EnumFacing side = EnumFacing.VALUES[i];
+            final Direction side = Direction.VALUES[i];
             quads = model.getQuads(state, side, rand);
             if (!quads.isEmpty()) {
                 if (!checkSides || state.shouldSideBeRendered(world, pos, side)) {

@@ -5,7 +5,7 @@ import java.util.Random;
 import org.junit.Test;
 
 import grondag.exotic_matter.model.CSG.CSGPlane;
-import grondag.exotic_matter.model.primitives.vertex.Vec3f;
+import grondag.brocade.primitives.vertex.Vec3f;
 
 public class CSGPlanPerf {
 

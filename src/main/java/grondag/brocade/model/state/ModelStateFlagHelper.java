@@ -1,15 +1,15 @@
 package grondag.brocade.model.state;
 
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_DISABLE_BLOCK_ONLY;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_IS_POPULATED;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_DISABLE_BLOCK_ONLY;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_IS_POPULATED;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
 
 import grondag.exotic_matter.model.mesh.ModelShape;
 import grondag.exotic_matter.model.mesh.ShapeMeshGenerator;
-import grondag.exotic_matter.model.painting.PaintLayer;
+import grondag.brocade.painting.PaintLayer;
 import grondag.exotic_matter.model.texture.ITexturePalette;
 import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
 

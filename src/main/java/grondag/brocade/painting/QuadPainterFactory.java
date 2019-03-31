@@ -1,8 +1,8 @@
 package grondag.brocade.painting;
 
-import grondag.exotic_matter.model.painting.QuadPainter.IPaintMethod;
-import grondag.exotic_matter.model.primitives.stream.IMutablePolyStream;
-import grondag.exotic_matter.model.state.ISuperModelState;
+import grondag.brocade.painting.QuadPainter.IPaintMethod;
+import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.exotic_matter.model.texture.ITexturePalette;
 import grondag.exotic_matter.model.texture.TextureScale;
 

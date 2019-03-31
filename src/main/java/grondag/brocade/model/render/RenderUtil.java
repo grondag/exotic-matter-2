@@ -3,11 +3,11 @@ package grondag.brocade.model.render;
 import javax.vecmath.Vector3f;
 
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+
 
 public class RenderUtil {
     private static final float VOXEL_TEST_RAY_X;
@@ -28,8 +28,8 @@ public class RenderUtil {
     /**
      * Draws block-aligned grid on sides of AABB if entity can see it from outside
      */
-    @SideOnly(Side.CLIENT)
-    public static void drawGrid(BufferBuilder buffer, AxisAlignedBB aabb, Vec3d viewFrom, double offsetX,
+    
+    public static void drawGrid(BufferBuilder buffer, BoundingBox aabb, Vec3d viewFrom, double offsetX,
             double offsetY, double offsetZ, float red, float green, float blue, float alpha) {
         double minX = aabb.minX - offsetX;
         double minY = aabb.minY - offsetY;

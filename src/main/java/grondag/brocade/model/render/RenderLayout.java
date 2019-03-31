@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.varia.structures.BinaryEnumSet;
-import net.minecraft.util.BlockRenderLayer;
+import grondag.fermion.structures.BinaryEnumSet;
+import net.minecraft.block.BlockRenderLayer;
 
 /**
  * Answers question how many layers a block/model can render in. Used to respond

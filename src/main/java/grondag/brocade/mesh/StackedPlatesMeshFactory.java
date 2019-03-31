@@ -1,33 +1,33 @@
 package grondag.brocade.mesh;
 
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.exotic_matter.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
-import javax.vecmath.Matrix4f;
+import org.joml.Matrix4f;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.exotic_matter.block.ISuperBlock;
-import grondag.exotic_matter.model.collision.ICollisionHandler;
-import grondag.exotic_matter.model.painting.PaintLayer;
-import grondag.exotic_matter.model.painting.Surface;
-import grondag.exotic_matter.model.painting.SurfaceTopology;
-import grondag.exotic_matter.model.primitives.PolyFactory;
-import grondag.exotic_matter.model.primitives.polygon.IMutablePolygon;
-import grondag.exotic_matter.model.primitives.polygon.IPolygon;
-import grondag.exotic_matter.model.state.ISuperModelState;
-import grondag.exotic_matter.model.state.StateFormat;
-import grondag.exotic_matter.model.varia.SideShape;
-import grondag.exotic_matter.varia.Useful;
-import grondag.exotic_matter.world.Rotation;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.collision.ICollisionHandler;
+import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.painting.Surface;
+import grondag.brocade.painting.SurfaceTopology;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
+import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.primitives.stream.IWritablePolyStream;
+import grondag.brocade.primitives.stream.PolyStreams;
+import grondag.canvas.helper.DirectionHelper;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.StateFormat;
+import grondag.brocade.model.varia.SideShape;
+import grondag.fermion.world.Rotation;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -49,35 +49,44 @@ public class StackedPlatesMeshFactory extends ShapeMeshGenerator implements ICol
         final int meta = modelState.getMetaData();
         final Matrix4f matrix = modelState.getMatrix4f();
         final float height = (meta + 1) / 16;
+        
+        // PERF: if have a consumer and doing this dynamically - should consumer simply be a stream?
+        // Why create a stream just to pipe it to the consumer?  Or cache the result.
+        final IWritablePolyStream stream = PolyStreams.claimWritable();
+        final IMutablePolygon writer = stream.writer();
 
-        IMutablePolygon template = PolyFactory.COMMON_POOL.newPaintable(4);
-        template.setRotation(0, Rotation.ROTATE_NONE);
-        template.setLockUV(0, true);
+        writer.setRotation(0, Rotation.ROTATE_NONE);
+        writer.setLockUV(0, true);
+        stream.saveDefaults();
+        
+        writer.setSurface(TOP_AND_BOTTOM_SURFACE);
+        writer.setNominalFace(Direction.UP);
+        writer.setupFaceQuad(0, 0, 1, 1, 1 - height, Direction.NORTH);
+        writer.transform(matrix);
+        stream.append();
 
-        IMutablePolygon quad = template.claimCopy(4);
-        quad.setSurface(TOP_AND_BOTTOM_SURFACE);
-        quad.setNominalFace(EnumFacing.UP);
-        quad.setupFaceQuad(0, 0, 1, 1, 1 - height, EnumFacing.NORTH);
-        quad.transform(matrix);
-        target.accept(quad);
-
-        for (EnumFacing face : EnumFacing.Plane.HORIZONTAL.facings()) {
-            quad = template.claimCopy(4);
-            quad.setSurface(SIDE_SURFACE);
-            quad.setNominalFace(face);
-            quad.setupFaceQuad(0, 0, 1, height, 0, EnumFacing.UP);
-            quad.transform(matrix);
-            target.accept(quad);
+        for (Direction face : DirectionHelper.HORIZONTAL_FACES) {
+            writer.setSurface(SIDE_SURFACE);
+            writer.setNominalFace(face);
+            writer.setupFaceQuad(0, 0, 1, height, 0, Direction.UP);
+            writer.transform(matrix);
+            stream.append();
         }
 
-        quad = template.claimCopy(4);
-        quad.setSurface(TOP_AND_BOTTOM_SURFACE);
-        quad.setNominalFace(EnumFacing.DOWN);
-        quad.setupFaceQuad(0, 0, 1, 1, 0, EnumFacing.NORTH);
-        quad.transform(matrix);
-        target.accept(quad);
+        writer.setSurface(TOP_AND_BOTTOM_SURFACE);
+        writer.setNominalFace(Direction.DOWN);
+        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
+        writer.transform(matrix);
+        stream.append();
 
-        template.release();
+        if (stream.origin()) {
+            IPolygon reader = stream.reader();
+
+            do
+                target.accept(reader);
+            while (stream.next());
+        }
+        stream.release();
     }
 
     @Override
@@ -91,14 +100,14 @@ public class StackedPlatesMeshFactory extends ShapeMeshGenerator implements ICol
     }
 
     @Override
-    public boolean rotateBlock(IBlockState blockState, World world, BlockPos pos, EnumFacing axis, ISuperBlock block,
+    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block,
             ISuperModelState modelState) {
         return false;
     }
 
     @Override
     public int geometricSkyOcclusion(ISuperModelState modelState) {
-        return modelState.getAxis() == EnumFacing.Axis.Y ? 255 : modelState.getMetaData();
+        return modelState.getAxis() == Direction.Axis.Y ? 255 : modelState.getMetaData();
     }
 
     @Override
@@ -107,32 +116,32 @@ public class StackedPlatesMeshFactory extends ShapeMeshGenerator implements ICol
     }
 
     @Override
-    public @Nonnull ICollisionHandler collisionHandler() {
+    public ICollisionHandler collisionHandler() {
         return this;
     }
 
     @Override
-    public List<AxisAlignedBB> getCollisionBoxes(ISuperModelState modelState) {
+    public List<BoundingBox> getCollisionBoxes(ISuperModelState modelState) {
         return ImmutableList.of(getCollisionBoundingBox(modelState));
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBox(ISuperModelState modelState) {
-        return Useful.makeRotatedAABB(0, 0, 0, 1, (modelState.getMetaData() + 1) / 16f, 1, modelState.getMatrix4f());
+    public BoundingBox getCollisionBoundingBox(ISuperModelState modelState) {
+        return ICollisionHandler.makeRotatedAABB(0, 0, 0, 1, (modelState.getMetaData() + 1) / 16f, 1, modelState.getMatrix4f());
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox(ISuperModelState modelState) {
+    public BoundingBox getRenderBoundingBox(ISuperModelState modelState) {
         return getCollisionBoundingBox(modelState);
     }
 
     @Override
-    public SideShape sideShape(ISuperModelState modelState, EnumFacing side) {
+    public SideShape sideShape(ISuperModelState modelState, Direction side) {
         if (modelState.getMetaData() == 15)
             return SideShape.SOLID;
 
         if (side.getAxis() == modelState.getAxis()) {
-            return (side.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE) == modelState.isAxisInverted()
+            return (side.getDirection() == Direction.AxisDirection.POSITIVE) == modelState.isAxisInverted()
                     ? SideShape.SOLID
                     : SideShape.MISSING;
         } else {
