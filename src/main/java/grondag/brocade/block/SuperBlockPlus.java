@@ -8,7 +8,7 @@ import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.MetaUsage;
 import grondag.fermion.varia.ItemHelper;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Material;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;

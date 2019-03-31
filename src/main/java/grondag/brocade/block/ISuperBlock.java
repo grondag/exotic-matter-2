@@ -147,7 +147,7 @@ public interface ISuperBlock extends IBlockItemRegistrator {
      * virtual and visible to the given player.
      */
     default boolean isVirtuallySolid(BlockPos pos, PlayerEntity player) {
-        return !((Block) this).isReplaceable(player.world, pos);
+        return !((Block) this).getMaterial(player.world.getBlockState(pos)).isReplaceable();
     }
 
     /**
@@ -175,11 +175,13 @@ public interface ISuperBlock extends IBlockItemRegistrator {
      * don't know what type of block it is. Will return negation of
      * {@link #isReplaceable(ExtendedBlockView, BlockPos)} for any block that doesn't
      * implement ISuperBlock.
+     * 
+     * UGLY: really needed?  Seems redundant of isVirtuallySolid, plus have mixins now
      */
     public static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, PlayerEntity player) {
         Block block = state.getBlock();
         return isVirtualBlock(block) ? ((ISuperBlock) block).isVirtuallySolid(pos, player)
-                : !block.isReplaceable(player.world, pos);
+                : !block.getMaterial(state).isReplaceable();
     }
 
     /**

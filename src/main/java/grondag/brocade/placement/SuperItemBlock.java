@@ -11,7 +11,7 @@ import grondag.brocade.init.IItemModelRegistrant;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.varia.SuperDispatcher;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -226,7 +226,7 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
 
         if (placeBlockAt(placedStack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ, placedState)) {
             placedState = worldIn.getBlockState(pos);
-            SoundType soundtype = placedState.getBlock().getSoundType(placedState, worldIn, pos, playerIn);
+            BlockSoundGroup soundtype = placedState.getBlock().getBlockSoundGroup(placedState, worldIn, pos, playerIn);
             worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS,
                     (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             if (!(playerIn.isCreative()))

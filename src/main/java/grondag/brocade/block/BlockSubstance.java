@@ -9,17 +9,17 @@ import java.util.List;
 
 import grondag.brocade.Brocade;
 import grondag.brocade.init.SubstanceConfig;
-import grondag.exotic_matter.model.color.BlockColorMapProvider;
-import grondag.exotic_matter.model.color.Chroma;
-import grondag.exotic_matter.model.color.Hue;
-import grondag.exotic_matter.model.color.Luminance;
-import grondag.exotic_matter.serialization.NBTDictionary;
+import grondag.fermion.color.BlockColorMapProvider;
+import grondag.fermion.color.Chroma;
+import grondag.fermion.color.Hue;
+import grondag.fermion.color.Luminance;
+import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.structures.NullHandler;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.block.Material;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 
@@ -27,7 +27,6 @@ import net.minecraft.entity.ai.pathing.PathNodeType;
  * Similar to Minecraft Material. Didn't want to tie to that implementation.
  * Determines Minecraft material and other physical properties.
  */
-@SuppressWarnings("deprecation")
 public class BlockSubstance implements ILocalized {
     private static final String NBT_SUBSTANCE = NBTDictionary.claim("substance");
 
@@ -44,14 +43,14 @@ public class BlockSubstance implements ILocalized {
     private static int nextOrdinal = 0;
 
     public static final BlockSubstance DEFAULT = create("default",
-            new SubstanceConfig(1, BlockHarvestTool.ANY, 0, 10, 1.0), Material.GROUND, SoundType.CLOTH,
+            new SubstanceConfig(1, BlockHarvestTool.ANY, 0, 10, 1.0), Material.EARTH, BlockSoundGroup.WOOL,
             BlockColorMapProvider.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.MEDIUM_LIGHT).ordinal);
 
     public static BlockSubstance deserializeNBT(CompoundTag tag) {
         return NullHandler.defaultIfNull(allByName.get(tag.getString(NBT_SUBSTANCE)), BlockSubstance.DEFAULT);
     }
 
-    public static BlockSubstance fromBytes(PacketBuffer pBuff) {
+    public static BlockSubstance fromBytes(PacketByteBuf pBuff) {
         int ordinal = pBuff.readByte();
         return ordinal >= 0 && ordinal < allByOrdinal.size() ? allByOrdinal.get(ordinal) : null;
     }
@@ -66,7 +65,7 @@ public class BlockSubstance implements ILocalized {
         return ordinal < 0 || ordinal >= allByOrdinal.size() ? null : allByOrdinal.get(ordinal);
     }
 
-    public static BlockSubstance create(String systemName, SubstanceConfig config, Material material, SoundType sound,
+    public static BlockSubstance create(String systemName, SubstanceConfig config, Material material, BlockSoundGroup sound,
             int defaultColorMapID, boolean isHyperMaterial) {
         BlockSubstance existing = get(systemName);
         if (existing != null) {
@@ -80,18 +79,18 @@ public class BlockSubstance implements ILocalized {
         return new BlockSubstance(systemName, config, material, sound, defaultColorMapID, isHyperMaterial);
     }
 
-    public static BlockSubstance create(String systemName, SubstanceConfig config, Material material, SoundType sound,
+    public static BlockSubstance create(String systemName, SubstanceConfig config, Material material, BlockSoundGroup sound,
             int defaultColorMapID) {
         return create(systemName, config, material, sound, defaultColorMapID, false);
     }
 
     public static BlockSubstance createHypermatter(String systemName, SubstanceConfig config, Material material,
-            SoundType sound, int defaultColorMapID) {
+            BlockSoundGroup sound, int defaultColorMapID) {
         return create(systemName, config, material, sound, defaultColorMapID, true);
     }
 
     public final Material material;
-    public final SoundType soundType;
+    public final BlockSoundGroup soundType;
 
     public final String systemName;
     public final int ordinal;
@@ -107,7 +106,7 @@ public class BlockSubstance implements ILocalized {
     public final boolean isBurning;
     public final PathNodeType pathNodeType;
 
-    private BlockSubstance(String systemName, SubstanceConfig substance, Material material, SoundType sound,
+    private BlockSubstance(String systemName, SubstanceConfig substance, Material material, BlockSoundGroup sound,
             int defaultColorMapID, boolean isHyperMaterial) {
         this.systemName = systemName;
         this.ordinal = nextOrdinal++;
@@ -142,10 +141,10 @@ public class BlockSubstance implements ILocalized {
     }
 
     public void serializeNBT(CompoundTag tag) {
-        tag.setString(NBT_SUBSTANCE, this.systemName);
+        tag.putString(NBT_SUBSTANCE, this.systemName);
     }
 
-    public void toBytes(PacketBuffer pBuff) {
+    public void toBytes(PacketByteBuf pBuff) {
         pBuff.writeByte(this.ordinal);
     }
 

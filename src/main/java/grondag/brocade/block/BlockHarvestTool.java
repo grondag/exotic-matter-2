@@ -1,11 +1,6 @@
 package grondag.brocade.block;
 
-
-
-
-import net.minecraft.util.IStringSerializable;
-
-public enum BlockHarvestTool implements IStringSerializable {
+public enum BlockHarvestTool {
     ANY(null), PICK("pickaxe"), AXE("axe"), SHOVEL("shovel");
 
     /**
@@ -17,10 +12,5 @@ public enum BlockHarvestTool implements IStringSerializable {
 
     private BlockHarvestTool(String toolString) {
         this.toolString = toolString;
-    }
-
-    @Override
-    public String getName() {
-        return this.name().toLowerCase();
     }
 }

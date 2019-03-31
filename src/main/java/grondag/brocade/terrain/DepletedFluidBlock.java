@@ -7,7 +7,7 @@ import java.util.Random;
 
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import net.minecraft.block.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.particle.ParticleManager;

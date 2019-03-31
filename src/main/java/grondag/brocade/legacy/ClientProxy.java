@@ -17,7 +17,7 @@
 //import grondag.brocade.block.SuperModelLoader;
 //import grondag.brocade.block.SuperTileEntity;
 //import grondag.brocade.collision.CollisionBoxDispatcher;
-//import grondag.exotic_matter.model.color.BlockColorMapProvider;
+//import grondag.fermion.color.BlockColorMapProvider;
 //import grondag.brocade.model.varia.SuperDispatcher;
 //import grondag.exotic_matter.statecache.IWorldStateCache;
 //import grondag.exotic_matter.statecache.WorldStateCache;

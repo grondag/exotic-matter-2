@@ -34,8 +34,8 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.block.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.BlockStateContainer;
@@ -116,7 +116,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
 
         // these values are fail-safes - should never be used normally
         this.setHarvestLevel("pickaxe", 1);
-        setSoundType(SoundType.STONE);
+        setBlockSoundGroup(BlockSoundGroup.STONE);
         setHardness(2);
         setResistance(50);
 

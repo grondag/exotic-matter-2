@@ -37,7 +37,7 @@ import grondag.brocade.model.render.RenderLayoutProducer;
 import grondag.exotic_matter.model.texture.ITexturePalette;
 import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
 import grondag.brocade.model.varia.SideShape;
-import grondag.exotic_matter.serialization.NBTDictionary;
+import grondag.fermion.serialization.NBTDictionary;
 import grondag.exotic_matter.terrain.TerrainState;
 import grondag.fermion.varia.SuperBlockMasonryMatch;
 import grondag.fermion.varia.Useful;
@@ -48,7 +48,7 @@ import grondag.fermion.world.Rotation;
 import grondag.fermion.world.SimpleJoin;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BoundingBox;
@@ -1035,7 +1035,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public void fromBytes(PacketBuffer pBuff) {
+    public void fromBytes(PacketByteBuf pBuff) {
         this.coreBits = pBuff.readLong();
         this.shapeBits0 = pBuff.readLong();
         this.shapeBits1 = pBuff.readVarLong();
@@ -1047,7 +1047,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public void toBytes(PacketBuffer pBuff) {
+    public void toBytes(PacketByteBuf pBuff) {
         pBuff.writeLong(this.coreBits);
         pBuff.writeLong(this.shapeBits0);
         pBuff.writeVarLong(this.shapeBits1);

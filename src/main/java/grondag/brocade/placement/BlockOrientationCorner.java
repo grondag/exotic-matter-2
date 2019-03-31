@@ -2,12 +2,12 @@ package grondag.brocade.placement;
 
 import grondag.exotic_matter.serialization.IMessagePlusImmutable;
 import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
-import grondag.exotic_matter.serialization.NBTDictionary;
+import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.FarCorner;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.client.resource.language.I18n;
 
 public enum BlockOrientationCorner implements IMessagePlusImmutable<BlockOrientationCorner>,
@@ -36,12 +36,12 @@ public enum BlockOrientationCorner implements IMessagePlusImmutable<BlockOrienta
     }
 
     @Override
-    public BlockOrientationCorner fromBytes(PacketBuffer pBuff) {
+    public BlockOrientationCorner fromBytes(PacketByteBuf pBuff) {
         return pBuff.readEnumValue(BlockOrientationCorner.class);
     }
 
     @Override
-    public void toBytes(PacketBuffer pBuff) {
+    public void toBytes(PacketByteBuf pBuff) {
         pBuff.writeEnumValue(this);
     }
 

@@ -10,11 +10,11 @@
 //import grondag.brocade.block.SuperSimpleBlock;
 //import grondag.brocade.init.IBlockItemRegistrator;
 //import grondag.brocade.init.ModShapes;
-//import grondag.exotic_matter.model.color.BlockColorMapProvider;
-//import grondag.exotic_matter.model.color.Chroma;
-//import grondag.exotic_matter.model.color.ColorMap.EnumColorMap;
-//import grondag.exotic_matter.model.color.Hue;
-//import grondag.exotic_matter.model.color.Luminance;
+//import grondag.fermion.color.BlockColorMapProvider;
+//import grondag.fermion.color.Chroma;
+//import grondag.fermion.color.ColorMap.EnumColorMap;
+//import grondag.fermion.color.Hue;
+//import grondag.fermion.color.Luminance;
 //import grondag.exotic_matter.model.mesh.SquareColumnMeshFactory;
 //import grondag.brocade.painting.PaintLayer;
 //import grondag.brocade.model.state.ISuperModelState;

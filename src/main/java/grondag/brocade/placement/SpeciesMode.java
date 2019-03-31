@@ -2,11 +2,11 @@ package grondag.brocade.placement;
 
 import grondag.exotic_matter.serialization.IMessagePlusImmutable;
 import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
-import grondag.exotic_matter.serialization.NBTDictionary;
+import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.client.resource.language.I18n;
 
 public enum SpeciesMode implements IMessagePlusImmutable<SpeciesMode>, IReadWriteNBTImmutable<SpeciesMode>, ILocalized {
@@ -25,12 +25,12 @@ public enum SpeciesMode implements IMessagePlusImmutable<SpeciesMode>, IReadWrit
     }
 
     @Override
-    public SpeciesMode fromBytes(PacketBuffer pBuff) {
+    public SpeciesMode fromBytes(PacketByteBuf pBuff) {
         return pBuff.readEnumValue(SpeciesMode.class);
     }
 
     @Override
-    public void toBytes(PacketBuffer pBuff) {
+    public void toBytes(PacketByteBuf pBuff) {
         pBuff.writeEnumValue(this);
     }
 

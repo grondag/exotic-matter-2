@@ -11,8 +11,8 @@ import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.ModelState;
 import grondag.brocade.model.varia.WorldLightOpacity;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.block.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.properties.PropertyInteger;
@@ -244,7 +244,7 @@ public class SuperModelBlock extends SuperBlockPlus {
     }
 
     @Override
-    public SoundType getSoundType(BlockState state, World world, BlockPos pos,
+    public BlockSoundGroup getBlockSoundGroup(BlockState state, World world, BlockPos pos,
             Entity entity) {
         return this.getSubstance(state, world, pos).soundType;
     }

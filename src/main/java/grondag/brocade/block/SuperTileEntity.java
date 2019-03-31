@@ -5,7 +5,7 @@ package grondag.brocade.block;
 
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.ModelState;
-import grondag.exotic_matter.serialization.NBTDictionary;
+import grondag.fermion.serialization.NBTDictionary;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NBTBase;

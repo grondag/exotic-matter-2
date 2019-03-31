@@ -1,8 +1,8 @@
 package grondag.brocade.model.varia;
 
 import grondag.brocade.init.IItemModelRegistrant;
-import grondag.exotic_matter.model.color.BlockColorMapProvider;
-import grondag.exotic_matter.model.color.ColorMap.EnumColorMap;
+import grondag.fermion.color.BlockColorMapProvider;
+import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
