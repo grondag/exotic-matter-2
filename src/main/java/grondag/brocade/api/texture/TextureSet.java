@@ -24,7 +24,7 @@ public interface TextureSet {
     /**
      * Passes strings to consumer for all textures to be included in texture stitch.
      */
-    void prestitch(Consumer<String> stitcher);
+    void prestitch(Consumer<Identifier> stitcher);
     
     /**
      * For use by TESR and GUI to conveniently and quickly access default sprite

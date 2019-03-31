@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import grondag.brocade.api.texture.TextureLayout;
 import grondag.brocade.api.texture.TextureSet;
+import net.minecraft.util.Identifier;
 
 public abstract class TextureLayoutHelper {
     static final TextureLayoutHelper HELPERS[] = new TextureLayoutHelper[TextureLayout.values().length];
@@ -15,13 +16,6 @@ public abstract class TextureLayoutHelper {
             @Override
             public final String buildTextureName(TextureSet texture, int version, int index) {
                 return buildTextureName_X_8(texture, index);
-            }
-
-            @Override
-            public void prestitch(TextureSet texture, Consumer<String> stitcher) {
-                for (int i = 0; i < texture.versionCount(); i++) {
-                    stitcher.accept(buildTextureName_X_8(texture, i));
-                }
             }
         };
         
@@ -34,13 +28,13 @@ public abstract class TextureLayoutHelper {
             }
 
             @Override
-            public void prestitch(TextureSet texture, Consumer<String> stitcher) {
+            public void prestitch(TextureSet texture, Consumer<Identifier> stitcher) {
                 // last texture (no border) only needed if indicated
                 final int texCount = texture.renderNoBorderAsTile() ? BORDER_13.textureCount : BORDER_13.textureCount - 1;
 
                 for (int i = 0; i < texture.versionCount(); i++) {
                     for (int j = 0; j < texCount; j++) {
-                        stitcher.accept(buildTextureName_X_8(texture, i * BORDER_13.blockTextureCount + j));
+                        stitcher.accept(new Identifier(texture.id().getNamespace(), buildTextureName_X_8(texture, i * BORDER_13.blockTextureCount + j)));
                     }
                 }
             }
@@ -58,10 +52,10 @@ public abstract class TextureLayoutHelper {
             }
 
             @Override
-            public void prestitch(TextureSet texture, Consumer<String> stitcher) {
+            public void prestitch(TextureSet texture, Consumer<Identifier> stitcher) {
                 for (int i = 0; i < texture.versionCount(); i++) {
                     for (int j = 0; j < MASONRY_5.textureCount; j++) {
-                        stitcher.accept(buildTextureName_X_8(texture, i * MASONRY_5.blockTextureCount + j));
+                        stitcher.accept(new Identifier(texture.id().getNamespace(), buildTextureName_X_8(texture, i * MASONRY_5.blockTextureCount + j)));
                     }
                 }
             }
@@ -75,7 +69,7 @@ public abstract class TextureLayoutHelper {
     protected TextureLayoutHelper() {};
     
     public static String buildTextureName_X_8(TextureSet texture, int offset) {
-        return texture.id().getNamespace() + ":blocks/" + texture.baseTextureName() + "_" + (offset >> 3) + "_" + (offset & 7);
+        return texture.baseTextureName() + "_" + (offset >> 3) + "_" + (offset & 7);
     }
     
     /**
@@ -84,13 +78,12 @@ public abstract class TextureLayoutHelper {
      * _x suffix
      */
     public String buildTextureName(TextureSet texture, int version, int index) {
-        return texture.id().getNamespace() + ":blocks/" + (texture.versionCount() == 1 ? texture.baseTextureName()
-                : (texture.baseTextureName() + "_" + version));
+        return texture.versionCount() == 1 ? texture.baseTextureName() : (texture.baseTextureName() + "_" + version);
     }
     
-    public void prestitch(TextureSet texture, Consumer<String> stitcher) {
+    public void prestitch(TextureSet texture, Consumer<Identifier> stitcher) {
         for (int i = 0; i < texture.versionCount(); i++) {
-            stitcher.accept(this.buildTextureName(texture, i, 0));
+            stitcher.accept(new Identifier(texture.id().getNamespace(), this.buildTextureName(texture, i, 0)));
         }
     }
 

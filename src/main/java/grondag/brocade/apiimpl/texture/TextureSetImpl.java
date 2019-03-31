@@ -66,7 +66,7 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     }
     
     @Override
-    public void prestitch(Consumer<String> stitcher) {
+    public void prestitch(Consumer<Identifier> stitcher) {
         layoutHelper.prestitch(this, stitcher);
     }
 

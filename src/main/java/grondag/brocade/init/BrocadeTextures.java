@@ -17,7 +17,7 @@ import static grondag.brocade.api.texture.TextureScale.*;
 public class BrocadeTextures {
     
     /** 
-     * Main purpose is to force instantiation of other static members.
+     * Main purpose of being here is to force instantiation of other static members.
      */
     public static void init() {
         Brocade.INSTANCE.debug("Registering Brocade textures");
@@ -28,7 +28,7 @@ public class BrocadeTextures {
             final int limit = texReg.size();
             for(int i = 0; i < limit; i++) {
                 TextureSetImpl set = texReg.getByIndex(i);
-                set.prestitch(atlas.getSprite(null));
+                set.prestitch(id -> registry.register(id));
             }
         });
     }
