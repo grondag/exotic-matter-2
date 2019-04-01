@@ -15,7 +15,6 @@ import grondag.brocade.block.ISuperBlock;
 import grondag.fermion.cache.LongSimpleCacheLoader;
 import grondag.fermion.cache.LongSimpleLoadingCache;
 import grondag.brocade.collision.CollisionBoxDispatcher;
-import grondag.brocade.collision.ICollisionHandler;
 import grondag.brocade.mesh.ShapeMeshGenerator;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
@@ -43,7 +42,7 @@ import net.minecraft.world.World;
  * no effort to set useful UV values because all quads are expected to be UV
  * locked.
  */
-public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollisionHandler {
+public class TerrainMeshFactory extends ShapeMeshGenerator {
     private static final Surface SURFACE_TOP = Surface.builder(SurfaceTopology.CUBIC)
             .withIgnoreDepthForRandomization(true)
             .withEnabledLayers(PaintLayer.BASE, PaintLayer.LAMP, PaintLayer.MIDDLE).build();
@@ -791,11 +790,6 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
     }
 
     @Override
-    public ICollisionHandler collisionHandler() {
-        return this;
-    }
-
-    @Override
     public int geometricSkyOcclusion(ISuperModelState modelState) {
         return modelState.getTerrainState().verticalOcclusion();
     }
@@ -854,27 +848,6 @@ public class TerrainMeshFactory extends ShapeMeshGenerator implements ICollision
     @Override
     public SideShape sideShape(ISuperModelState modelState, Direction side) {
         return modelState.getTerrainState().isFullCube() ? SideShape.SOLID : SideShape.MISSING;
-    }
-
-    @Override
-    public List<BoundingBox> getCollisionBoxes(ISuperModelState modelState) {
-        return CollisionBoxDispatcher.getCollisionBoxes(modelState);
-    }
-
-    @Override
-    public BoundingBox getCollisionBoundingBox(ISuperModelState modelState) {
-        try {
-            return COLLISION_BOUNDS[modelState.getTerrainState().centerHeight() - 1];
-        } catch (Exception ex) {
-            Brocade.INSTANCE.error("TerrainMeshFactory received Collision Bounding Box check for a foreign block.",
-                    ex);
-            return ICollisionHandler.FULL_BLOCK_BOX;
-        }
-    }
-
-    @Override
-    public BoundingBox getRenderBoundingBox(ISuperModelState modelState) {
-        return getCollisionBoundingBox(modelState);
     }
 
     @Override

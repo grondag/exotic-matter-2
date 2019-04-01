@@ -15,7 +15,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 
 
@@ -223,7 +223,7 @@ public class SuperTileEntity extends TileEntity {
         return super.writeToNBT(compound);
     }
 
-    public ISuperModelState getModelState(BlockState state, IBlockAccess world, BlockPos pos,
+    public ISuperModelState getModelState(BlockState state, ExtendedBlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
         ISuperModelState result = this.modelState;
 

@@ -3,8 +3,6 @@ package grondag.brocade.mesh;
 import java.util.function.Consumer;
 
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.collision.CubeCollisionHandler;
-import grondag.brocade.collision.ICollisionHandler;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.ModelStateData;
 import grondag.brocade.model.state.StateFormat;
@@ -90,11 +88,6 @@ public class SquareColumnMeshFactory extends ShapeMeshGenerator {
         for (int i = 0; i < 6; i++) {
             this.makeFaceQuads(modelState, DirectionHelper.fromOrdinal(i), spec, target);
         }
-    }
-
-    @Override
-    public ICollisionHandler collisionHandler() {
-        return CubeCollisionHandler.INSTANCE;
     }
 
     @Override

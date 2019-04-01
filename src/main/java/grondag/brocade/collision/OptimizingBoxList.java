@@ -2,10 +2,12 @@ package grondag.brocade.collision;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.fermion.config.FermionConfig;
 import grondag.brocade.model.state.ISuperModelState;
+import grondag.fermion.config.FermionConfig;
 import grondag.fermion.varia.Useful;
 import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 public class OptimizingBoxList implements Runnable {
     // singleton is fine because called from a single thread
@@ -13,14 +15,32 @@ public class OptimizingBoxList implements Runnable {
 
     private ImmutableList<BoundingBox> wrapped;
     private ISuperModelState modelState;
+    private VoxelShape shape;
 
-    OptimizingBoxList(ImmutableList<BoundingBox> initialList, ISuperModelState modelState) {
-        this.wrapped = initialList;
+    OptimizingBoxList(FastBoxGenerator generator, ISuperModelState modelState) {
         this.modelState = modelState;
+        this.wrapped = generator.build();
+        this.shape = makeShapeFromBoxes(wrapped);
     }
 
     protected ImmutableList<BoundingBox> getList() {
         return wrapped;
+    }
+    
+    protected VoxelShape getShape() {
+        return shape;
+    }
+    
+    private static VoxelShape makeShapeFromBoxes(ImmutableList<BoundingBox> boxes) {
+        if(boxes.isEmpty()) {
+            return VoxelShapes.empty();
+        }
+        VoxelShape shape = VoxelShapes.cuboid(boxes.get(0));
+        final int limit = boxes.size();
+        for(int i = 1; i < limit; i++) {
+            shape = VoxelShapes.union(shape, VoxelShapes.cuboid(boxes.get(i)));
+        }
+        return shape;
     }
 
     @Override
@@ -39,6 +59,7 @@ public class OptimizingBoxList implements Runnable {
             if (oldSize > FermionConfig.BLOCKS.collisionBoxBudget
                     || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2)
                 wrapped = generator.build();
+                shape = makeShapeFromBoxes(wrapped);
         }
 //        if((CollisionBoxDispatcher.QUEUE.size() & 0xFF) == 0)
 //            System.out.println("Queue depth = " + CollisionBoxDispatcher.QUEUE.size());

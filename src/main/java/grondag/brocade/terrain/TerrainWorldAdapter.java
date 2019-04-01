@@ -10,7 +10,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 
 /**
@@ -77,7 +77,7 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
     }
 
     @Override
-    public IBlockAccess wrapped() {
+    public ExtendedBlockView wrapped() {
         return this.world;
     }
 

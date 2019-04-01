@@ -14,7 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 
 public class TerrainCubicBlock extends SuperSimpleBlock implements IHotBlock {
 
@@ -41,7 +41,7 @@ public class TerrainCubicBlock extends SuperSimpleBlock implements IHotBlock {
 
     // allow mined blocks to stack - don't put an NBT on them
     @Override
-    public ItemStack getStackFromBlock(BlockState state, IBlockAccess world, BlockPos pos) {
+    public ItemStack getStackFromBlock(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return new ItemStack(Item.getItemFromBlock(this), 1, this.damageDropped(state));
     }
 
@@ -61,7 +61,7 @@ public class TerrainCubicBlock extends SuperSimpleBlock implements IHotBlock {
     }
 
     @Override
-    public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+    public boolean shouldSideBeRendered(BlockState blockState, ExtendedBlockView blockAccess, BlockPos pos,
             Direction side) {
         final MutableBlockPos mpos = shouldSideBeRenderedPos.get().setPos(pos).move(side);
         BlockState neighborState = blockAccess.getBlockState(mpos);
@@ -69,17 +69,17 @@ public class TerrainCubicBlock extends SuperSimpleBlock implements IHotBlock {
     }
 
     @Override
-    public int quantityDropped(IBlockAccess world, BlockPos pos, BlockState state) {
+    public int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state) {
         return 1;
     }
 
     @Override
-    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+    public boolean isReplaceable(ExtendedBlockView worldIn, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean isAir(BlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean isAir(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return false;
     }
 

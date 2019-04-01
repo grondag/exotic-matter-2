@@ -15,7 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
@@ -94,7 +94,7 @@ public abstract class SuperBlockPlus extends SuperBlock implements ITileEntityPr
     }
 
     @Override
-    public ItemStack getStackFromBlock(BlockState state, IBlockAccess world, BlockPos pos) {
+    public ItemStack getStackFromBlock(BlockState state, ExtendedBlockView world, BlockPos pos) {
         BlockState currentState = world.getBlockState(pos);
 
         ItemStack stack = super.getStackFromBlock(currentState, world, pos);

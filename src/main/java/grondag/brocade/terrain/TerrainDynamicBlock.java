@@ -23,7 +23,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 
 
@@ -65,7 +65,7 @@ public class TerrainDynamicBlock extends SuperSimpleBlock implements IHotBlock {
 
     @Override
     
-    public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+    public boolean shouldSideBeRendered(BlockState blockState, ExtendedBlockView blockAccess, BlockPos pos,
             Direction side) {
         // See Config.render().enableFaceCullingOnFlowBlocks for explanation
         // Exploits special case - adjacent dynamic blocks *always* cover each other's
@@ -105,7 +105,7 @@ public class TerrainDynamicBlock extends SuperSimpleBlock implements IHotBlock {
      * top of terrain - better just to render the quads.
      */
     @Override
-    public boolean doesSideBlockRendering(BlockState state, IBlockAccess world, BlockPos pos, Direction face) {
+    public boolean doesSideBlockRendering(BlockState state, ExtendedBlockView world, BlockPos pos, Direction face) {
         return false;
     }
 
@@ -142,7 +142,7 @@ public class TerrainDynamicBlock extends SuperSimpleBlock implements IHotBlock {
     }
 
     @Override
-    public int quantityDropped(IBlockAccess world, BlockPos pos, BlockState state) {
+    public int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state) {
         double volume = 0;
         ISuperModelState modelState = SuperBlockWorldAccess.access(world).computeModelState(this, state, pos, true);
         for (BoundingBox box : modelState.getShape().meshFactory().collisionHandler().getCollisionBoxes(modelState)) {
@@ -153,12 +153,12 @@ public class TerrainDynamicBlock extends SuperSimpleBlock implements IHotBlock {
     }
 
     @Override
-    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+    public boolean isReplaceable(ExtendedBlockView worldIn, BlockPos pos) {
         return SuperBlockWorldAccess.access(worldIn).terrainState(pos).isEmpty();
     }
 
     @Override
-    public boolean isAir(BlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean isAir(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return SuperBlockWorldAccess.access(world).terrainState(pos).isEmpty();
     }
 
@@ -190,7 +190,7 @@ public class TerrainDynamicBlock extends SuperSimpleBlock implements IHotBlock {
     }
 
     @Override
-    public boolean isNormalCube(BlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean isNormalCube(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return SuperBlockWorldAccess.access(world).terrainState(state, pos).isFullCube();
     }
 
@@ -200,7 +200,7 @@ public class TerrainDynamicBlock extends SuperSimpleBlock implements IHotBlock {
     }
 
     @Override
-    public int getLightOpacity(BlockState state, IBlockAccess world, BlockPos pos) {
+    public int getLightOpacity(BlockState state, ExtendedBlockView world, BlockPos pos) {
 
         /// FIXME: is this right? Retest after vertex normals are fixed
         return 0;

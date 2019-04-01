@@ -2,23 +2,23 @@ package grondag.brocade.model.state;
 
 
 
+import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.SuperBlockWorldAccess;
-import grondag.exotic_matter.model.mesh.ModelShapes;
+import grondag.brocade.mesh.ModelShapes;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessors;
-import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
-import grondag.exotic_matter.terrain.TerrainState;
+import grondag.brocade.terrain.TerrainState;
+import grondag.brocade.world.CornerJoinBlockStateSelector;
+import grondag.brocade.world.IExtraStateFactory;
+import grondag.brocade.world.SimpleJoin;
 import grondag.fermion.varia.BitPacker64;
-import grondag.fermion.world.CornerJoinBlockStateSelector;
-import grondag.fermion.world.IExtraStateFactory;
 import grondag.fermion.world.Rotation;
-import grondag.fermion.world.SimpleJoin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 
 public class ModelStateData {
     /**
@@ -105,7 +105,7 @@ public class ModelStateData {
             // important these two come first to allow for easy default values
             PAINT_COLOR[i] = PACKER_LAYERS[i].createIntElement(0x1000000);
             PAINT_ALPHA[i] = PACKER_LAYERS[i].createIntElement(0x100);
-            PAINT_TEXTURE[i] = PACKER_LAYERS[i].createIntElement(TexturePaletteRegistry.MAX_PALETTES);
+            PAINT_TEXTURE[i] = PACKER_LAYERS[i].createIntElement(TextureSetRegistryImpl.MAX_TEXTURE_SETS);
             PAINT_IS_TRANSLUCENT[i] = PACKER_LAYERS[i].createBooleanElement();
             PAINT_EMISSIVE[i] = PACKER_LAYERS[i].createBooleanElement();
             PAINT_VERTEX_PROCESSOR[i] = PACKER_LAYERS[i].createIntElement(VertexProcessors.MAX_PROCESSORS);
@@ -122,7 +122,7 @@ public class ModelStateData {
      */
     public static final IExtraStateFactory TEST_GETTER_STATIC = new IExtraStateFactory() {
         @Override
-        public ISuperModelState get(IBlockAccess worldIn, BlockPos pos, BlockState state) {
+        public ISuperModelState get(ExtendedBlockView worldIn, BlockPos pos, BlockState state) {
             Block block = state.getBlock();
             return (block instanceof ISuperBlock)
                     ? SuperBlockWorldAccess.access(worldIn).getModelState((ISuperBlock) block, state, pos, false)
@@ -136,7 +136,7 @@ public class ModelStateData {
      */
     public static final IExtraStateFactory TEST_GETTER_DYNAMIC = new IExtraStateFactory() {
         @Override
-        public ISuperModelState get(IBlockAccess worldIn, BlockPos pos, BlockState state) {
+        public ISuperModelState get(ExtendedBlockView worldIn, BlockPos pos, BlockState state) {
             Block block = state.getBlock();
             return (block instanceof ISuperBlock)
                     ? SuperBlockWorldAccess.access(worldIn).getModelState(((ISuperBlock) block), state, pos, true)

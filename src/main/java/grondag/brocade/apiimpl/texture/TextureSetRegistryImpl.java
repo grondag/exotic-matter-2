@@ -16,6 +16,10 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
     public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
     public static final TextureSetImpl DEFAULT_TEXTURE_SET;
     
+    public static TextureSet noTexture() {
+        return INSTANCE.getByIndex(0);
+    }
+    
     private final TextureSetImpl[] array = new TextureSetImpl[MAX_TEXTURE_SETS];
     private final HashMap<Identifier, TextureSetImpl> map = new HashMap<>();
     private int nextIndex = 0;
@@ -49,6 +53,6 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
     static {
         DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("noise_moderate").versionCount(4).scale(TextureScale.SINGLE)
                 .layout(TextureLayout.SPLIT_X_8).rotation(TextureRotation.ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_ONLY)
-                .groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE);
+                .groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
     }
 }

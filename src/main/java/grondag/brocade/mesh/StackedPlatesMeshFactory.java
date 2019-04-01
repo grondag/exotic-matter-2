@@ -4,15 +4,14 @@ import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.joml.Matrix4f;
 
-import com.google.common.collect.ImmutableList;
-
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.collision.ICollisionHandler;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.StateFormat;
+import grondag.brocade.model.varia.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
@@ -21,17 +20,13 @@ import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
 import grondag.canvas.helper.DirectionHelper;
-import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.StateFormat;
-import grondag.brocade.model.varia.SideShape;
 import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public class StackedPlatesMeshFactory extends ShapeMeshGenerator implements ICollisionHandler {
+public class StackedPlatesMeshFactory extends ShapeMeshGenerator {
     // This may not be the right setup - refactored surfaces at a time this wasn't
     // being actively used.
     protected static Surface TOP_AND_BOTTOM_SURFACE = Surface.builder(SurfaceTopology.CUBIC)
@@ -113,26 +108,6 @@ public class StackedPlatesMeshFactory extends ShapeMeshGenerator implements ICol
     @Override
     public BlockOrientationType orientationType(ISuperModelState modelState) {
         return BlockOrientationType.FACE;
-    }
-
-    @Override
-    public ICollisionHandler collisionHandler() {
-        return this;
-    }
-
-    @Override
-    public List<BoundingBox> getCollisionBoxes(ISuperModelState modelState) {
-        return ImmutableList.of(getCollisionBoundingBox(modelState));
-    }
-
-    @Override
-    public BoundingBox getCollisionBoundingBox(ISuperModelState modelState) {
-        return ICollisionHandler.makeRotatedAABB(0, 0, 0, 1, (modelState.getMetaData() + 1) / 16f, 1, modelState.getMatrix4f());
-    }
-
-    @Override
-    public BoundingBox getRenderBoundingBox(ISuperModelState modelState) {
-        return getCollisionBoundingBox(modelState);
     }
 
     @Override

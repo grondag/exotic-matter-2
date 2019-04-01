@@ -19,7 +19,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -60,7 +60,7 @@ public class DepletedFluidBlock extends Block {
     }
 
     @Override
-    public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
+    public boolean isPassable(ExtendedBlockView worldIn, BlockPos pos) {
         return true;
     }
 
@@ -70,12 +70,12 @@ public class DepletedFluidBlock extends Block {
     }
 
     @Override
-    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+    public boolean isReplaceable(ExtendedBlockView worldIn, BlockPos pos) {
         return true;
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state,
+    public BlockFaceShape getBlockFaceShape(ExtendedBlockView worldIn, BlockState state,
             BlockPos pos, Direction face) {
         return BlockFaceShape.UNDEFINED;
     }
@@ -89,7 +89,7 @@ public class DepletedFluidBlock extends Block {
 
     @Override
     public BoundingBox getCollisionBoundingBox(BlockState blockState,
-            IBlockAccess worldIn, BlockPos pos) {
+            ExtendedBlockView worldIn, BlockPos pos) {
         return Block.NULL_AABB;
     }
 
@@ -124,18 +124,18 @@ public class DepletedFluidBlock extends Block {
     }
 
     @Override
-    public boolean isNormalCube(BlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean isNormalCube(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean doesSideBlockRendering(BlockState state, IBlockAccess world,
+    public boolean doesSideBlockRendering(BlockState state, ExtendedBlockView world,
             BlockPos pos, Direction face) {
         return false;
     }
 
     @Override
-    public boolean isSideSolid(BlockState base_state, IBlockAccess world, BlockPos pos,
+    public boolean isSideSolid(BlockState base_state, ExtendedBlockView world, BlockPos pos,
             Direction side) {
         return false;
     }
@@ -146,13 +146,13 @@ public class DepletedFluidBlock extends Block {
     }
 
     @Override
-    public boolean canBeReplacedByLeaves(BlockState state, IBlockAccess world,
+    public boolean canBeReplacedByLeaves(BlockState state, ExtendedBlockView world,
             BlockPos pos) {
         return true;
     }
 
     @Override
-    public boolean canPlaceTorchOnTop(BlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean canPlaceTorchOnTop(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return false;
     }
 

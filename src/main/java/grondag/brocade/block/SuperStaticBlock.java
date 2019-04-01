@@ -4,7 +4,7 @@ import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.varia.WorldLightOpacity;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 
 public class SuperStaticBlock extends SuperBlockPlus {
     private final BlockSubstance substance;
@@ -29,7 +29,7 @@ public class SuperStaticBlock extends SuperBlockPlus {
     }
 
     @Override
-    public BlockSubstance getSubstance(BlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockSubstance getSubstance(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return this.substance;
     }
 

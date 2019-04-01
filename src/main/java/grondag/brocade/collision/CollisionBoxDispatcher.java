@@ -8,11 +8,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
 import com.google.common.collect.ImmutableList;
 
 import grondag.fermion.cache.ObjectSimpleCacheLoader;
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
 import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.shape.VoxelShape;
 import grondag.brocade.model.state.ISuperModelState;
 
 public class CollisionBoxDispatcher {
@@ -50,6 +54,10 @@ public class CollisionBoxDispatcher {
         return modelBounds.get(modelState.geometricState()).getList();
     }
 
+    public static VoxelShape getOutlineShape(ISuperModelState modelState) {
+        return modelBounds.get(modelState.geometricState()).getShape();
+    }
+    
     /**
      * Clears the cache.
      */
@@ -70,7 +78,7 @@ public class CollisionBoxDispatcher {
             key.getShape().meshFactory().produceShapeQuads(key, generator);
 
             // note that build clears for next use
-            OptimizingBoxList result = new OptimizingBoxList(generator.build(), key);
+            OptimizingBoxList result = new OptimizingBoxList(generator, key);
             EXEC.execute(result);
 
 //            long total = totalNanos.addAndGet(System.nanoTime() - start);
@@ -83,5 +91,25 @@ public class CollisionBoxDispatcher {
 
             return result;
         }
+    }
+
+    public static final BoundingBox FULL_BLOCK_BOX = new BoundingBox(0, 0, 0, 1, 1, 1);
+
+    /**
+     * Creates an AABB with the bounds and rotation provided.
+     */
+    public static BoundingBox makeRotatedAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Matrix4f rotation)
+    {
+        Vector3f minPos = new Vector3f(minX, minY, minZ);
+        Vector3f maxPos = new Vector3f(maxX, maxY, maxZ);
+        rotation.transformPosition(minPos);
+        rotation.transformPosition(maxPos);
+        return new BoundingBox(minPos.x, minPos.y, minPos.z, 
+                maxPos.x, maxPos.y, maxPos.z);
+    }
+
+    public static BoundingBox makeRotatedAABB(BoundingBox fromAABB, Matrix4f rotation)
+    {
+        return makeRotatedAABB((float)fromAABB.minX, (float)fromAABB.minY, (float)fromAABB.minZ, (float)fromAABB.maxX, (float)fromAABB.maxY, (float)fromAABB.maxZ, rotation);
     }
 }

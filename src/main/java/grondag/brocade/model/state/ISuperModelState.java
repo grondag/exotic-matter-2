@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.joml.Matrix4f;
 
+import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.ISuperBlockAccess;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.model.render.RenderLayout;
 import grondag.brocade.model.render.RenderLayoutProducer;
-import grondag.brocade.model.texture.ITexturePalette;
 import grondag.brocade.model.varia.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
@@ -20,6 +20,7 @@ import grondag.brocade.world.SimpleJoin;
 import grondag.fermion.color.ColorMap;
 import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.fermion.serialization.IReadWriteNBT;
+import grondag.fermion.serialization.PacketSerializable;
 import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
@@ -28,7 +29,7 @@ import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public interface ISuperModelState extends IReadWriteNBT {
+public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
     int[] serializeToInts();
 
     /**
@@ -104,13 +105,13 @@ public interface ISuperModelState extends IReadWriteNBT {
 
     /**
      * Equivalent to setting the texture for the layer to
-     * {@link TexturePaletteRegistry#NONE}
+     * {@link TexturePaletteRegistry#NONE_ID}
      */
     void disableLayer(PaintLayer l);
 
-    ITexturePalette getTexture(PaintLayer layer);
+    TextureSet getTexture(PaintLayer layer);
 
-    void setTexture(PaintLayer layer, ITexturePalette tex);
+    void setTexture(PaintLayer layer, TextureSet tex);
 
     boolean isEmissive(PaintLayer layer);
 

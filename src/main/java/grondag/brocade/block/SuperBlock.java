@@ -19,7 +19,7 @@ import grondag.brocade.model.render.RenderLayoutProducer;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.MetaUsage;
 import grondag.brocade.model.state.ModelState;
-import grondag.brocade.collision.ICollisionHandler;
+import grondag.brocade.collision.CollisionBoxDispatcher;
 import grondag.brocade.model.varia.ParticleDiggingSuperBlock;
 import grondag.brocade.model.varia.SideShape;
 import grondag.brocade.model.varia.SuperDispatcher;
@@ -47,6 +47,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving.SpawnPlacementType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
@@ -67,9 +68,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -84,9 +87,7 @@ import net.minecraftforge.registries.IForgeRegistry;
  * Base class for HardScience building blocks.
  */
 
-@Optional.InterfaceList({
-        @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe") })
-public abstract class SuperBlock extends Block implements IProbeInfoAccessor, ISuperBlock {
+public abstract class SuperBlock extends Block implements ISuperBlock {
 
     /** non-null if this drops something other than itself */
     private Item dropItem;
@@ -136,32 +137,26 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * block. Used in model state refresh from world.
      */
     @Override
-    public IBlockTest blockJoinTest(IBlockAccess worldIn, BlockState state, BlockPos pos,
+    public IBlockTest blockJoinTest(ExtendedBlockView worldIn, BlockState state, BlockPos pos,
             ISuperModelState modelState) {
         return new SuperBlockBorderMatch(this, modelState, true);
     }
 
+    
     @Override
-    public void addCollisionBoxToList(BlockState state, World worldIn, BlockPos pos,
-            BoundingBox entityBox, List<BoundingBox> collidingBoxes, Entity entityIn,
-            boolean p_185477_7_) {
-        ISuperModelState modelState = SuperBlockWorldAccess.access(worldIn).getModelState(this, pos, true);
-        ICollisionHandler collisionHandler = modelState.getShape().meshFactory().collisionHandler();
-
-        BoundingBox localMask = entityBox.offset(-pos.getX(), -pos.getY(), -pos.getZ());
-
-        List<BoundingBox> bounds = collisionHandler.getCollisionBoxes(modelState);
-
-        for (BoundingBox aabb : bounds) {
-            if (localMask.intersects(aabb)) {
-                collidingBoxes.add(aabb.offset(pos.getX(), pos.getY(), pos.getZ()));
-            }
-        }
-
+    public grondag.brocade.world.IBlockTest blockJoinTest(ExtendedBlockView worldIn, BlockState state, BlockPos pos,
+            ISuperModelState modelState) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
-    
+    public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, VerticalEntityPosition verticalEntityPos) {
+        ISuperModelState modelState = ((ISuperBlockAccess)blockView).getModelState(this, pos, true);
+        return CollisionBoxDispatcher.getOutlineShape(modelState);
+    }
+
+    @Override
     public boolean addDestroyEffects(World world, BlockPos pos, ParticleManager manager) {
         BlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() != this) {
@@ -400,12 +395,12 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * for that reason.
      */
     @Override
-    public boolean canBeConnectedTo(IBlockAccess world, BlockPos pos, Direction facing) {
+    public boolean canBeConnectedTo(ExtendedBlockView world, BlockPos pos, Direction facing) {
         return false;
     }
 
     @Override
-    public boolean canBeReplacedByLeaves(BlockState state, IBlockAccess world,
+    public boolean canBeReplacedByLeaves(BlockState state, ExtendedBlockView world,
             BlockPos pos) {
         return false;
     }
@@ -420,7 +415,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
 //    }
 
     @Override
-    public boolean canConnectRedstone(BlockState state, IBlockAccess world, BlockPos pos,
+    public boolean canConnectRedstone(BlockState state, ExtendedBlockView world, BlockPos pos,
             Direction side) {
         return false;
     }
@@ -431,7 +426,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * Mobs can't spawn on hypermatter.
      */
     @Override
-    public boolean canCreatureSpawn(BlockState state, IBlockAccess world, BlockPos pos,
+    public boolean canCreatureSpawn(BlockState state, ExtendedBlockView world, BlockPos pos,
             SpawnPlacementType type) {
         return !this.isHypermatter() && super.canCreatureSpawn(state, world, pos, type);
     }
@@ -448,7 +443,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
     }
 
     @Override
-    public boolean canEntityDestroy(BlockState state, IBlockAccess world, BlockPos pos,
+    public boolean canEntityDestroy(BlockState state, ExtendedBlockView world, BlockPos pos,
             Entity entity) {
         return super.canEntityDestroy(state, world, pos, entity);
     }
@@ -465,7 +460,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
     }
 
     @Override
-    public boolean canPlaceTorchOnTop(BlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean canPlaceTorchOnTop(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return SuperBlockWorldAccess.access(world).computeModelState(this, state, pos, true)
                 .sideShape(Direction.UP).holdsTorch;
     }
@@ -540,14 +535,14 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
     }
 
     @Override
-    public boolean doesSideBlockRendering(BlockState state, IBlockAccess world,
+    public boolean doesSideBlockRendering(BlockState state, ExtendedBlockView world,
             BlockPos pos, Direction face) {
         ISuperModelState modelState = SuperBlockWorldAccess.access(world).getModelState(this, state, pos, true);
         return !modelState.hasTranslucentGeometry() && modelState.sideShape(face).occludesOpposite;
     }
 
     @Override
-    public PathNodeType getAiPathNodeType(BlockState state, IBlockAccess world,
+    public PathNodeType getAiPathNodeType(BlockState state, ExtendedBlockView world,
             BlockPos pos) {
         if (this.isBurning(world, pos))
             return PathNodeType.DAMAGE_FIRE;
@@ -594,14 +589,14 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * cases is same as collision bounding box.
      */
     @Override
-    public BoundingBox getBoundingBox(BlockState state, IBlockAccess worldIn,
+    public BoundingBox getBoundingBox(BlockState state, ExtendedBlockView worldIn,
             BlockPos pos) {
         return SuperBlockWorldAccess.access(worldIn).computeModelState(this, state, pos, true)
                 .getCollisionBoundingBox();
     }
 
     @Override
-    public BoundingBox getCollisionBoundingBox(BlockState state, IBlockAccess worldIn,
+    public BoundingBox getCollisionBoundingBox(BlockState state, ExtendedBlockView worldIn,
             BlockPos pos) {
         return SuperBlockWorldAccess.access(worldIn).computeModelState(this, state, pos, true)
                 .getCollisionBoundingBox();
@@ -621,7 +616,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * drops. Also don't use fortune for our drops.
      */
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, BlockState state,
+    public List<ItemStack> getDrops(ExtendedBlockView world, BlockPos pos, BlockState state,
             int fortune) {
         Item dropItem = this.dropItem;
 
@@ -641,7 +636,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * Determines which model should be displayed via MODEL_STATE.
      */
     @Override
-    public BlockState getExtendedState(BlockState state, IBlockAccess world,
+    public BlockState getExtendedState(BlockState state, ExtendedBlockView world,
             BlockPos pos) {
         return ((IExtendedBlockState) state).withProperty(MODEL_STATE,
                 SuperBlockWorldAccess.access(world).getModelState(this, state, pos, true));
@@ -652,13 +647,13 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * that the Fire block maintains.
      */
     @Override
-    public int getFireSpreadSpeed(IBlockAccess world, BlockPos pos, Direction face) {
+    public int getFireSpreadSpeed(ExtendedBlockView world, BlockPos pos, Direction face) {
         return 0;
     }
 
     /** lowest-tier wood has a small chance of burning */
     @Override
-    public int getFlammability(IBlockAccess world, BlockPos pos, Direction face) {
+    public int getFlammability(ExtendedBlockView world, BlockPos pos, Direction face) {
         return this.getSubstance(world, pos).flammability;
     }
 
@@ -675,7 +670,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * <br>
      * 
      * DO NOT USE THIS FOR SUPERBLOCKS! Use
-     * {@link #getStackFromBlock(BlockState, IBlockAccess, BlockPos)} instead.
+     * {@link #getStackFromBlock(BlockState, ExtendedBlockView, BlockPos)} instead.
      * 
      * Also, yes, I overrode this method just to add this warning.
      */
@@ -714,7 +709,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * Any value over 0 prevents a block from seeing the sky.
      */
     @Override
-    public int getLightOpacity(BlockState state, IBlockAccess world, BlockPos pos) {
+    public int getLightOpacity(BlockState state, ExtendedBlockView world, BlockPos pos) {
         ISuperModelState modelState = SuperBlockWorldAccess.access(world).getModelState(this, state, pos, false);
         if (this.getSubstance(state, world, pos).isTranslucent) {
             return WorldLightOpacity.opacityFromAlpha(modelState.getAlpha(PaintLayer.BASE));
@@ -805,7 +800,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
 
     @Override
     
-    public int getOcclusionKey(BlockState state, IBlockAccess world, BlockPos pos, Direction side) {
+    public int getOcclusionKey(BlockState state, ExtendedBlockView world, BlockPos pos, Direction side) {
         return SuperDispatcher.INSTANCE
                 .getOcclusionKey(SuperBlockWorldAccess.access(world).getModelState(this, state, pos, true), side);
     }
@@ -823,7 +818,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
     }
 
     @Override
-    public ItemStack getStackFromBlock(BlockState state, IBlockAccess world, BlockPos pos) {
+    public ItemStack getStackFromBlock(BlockState state, ExtendedBlockView world, BlockPos pos) {
         ItemStack result = this.getSubItems().get(this.damageDropped(state));
         // important to copy here - otherwise end up updating instance held in block
         return result == null ? ItemStack.EMPTY : result.copy();
@@ -894,10 +889,10 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * Controls material-dependent properties
      */
     @Override
-    public abstract BlockSubstance getSubstance(BlockState state, IBlockAccess world, BlockPos pos);
+    public abstract BlockSubstance getSubstance(BlockState state, ExtendedBlockView world, BlockPos pos);
 
     @Override
-    public BlockSubstance getSubstance(IBlockAccess world, BlockPos pos) {
+    public BlockSubstance getSubstance(ExtendedBlockView world, BlockPos pos) {
         return this.getSubstance(world.getBlockState(pos), world, pos);
     }
 
@@ -969,7 +964,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * beacon base. I will almost certainly regret this.
      */
     @Override
-    public boolean isBeaconBase(IBlockAccess worldObj, BlockPos pos, BlockPos beacon) {
+    public boolean isBeaconBase(ExtendedBlockView worldObj, BlockPos pos, BlockPos beacon) {
         return this.isHypermatter() || super.isBeaconBase(worldObj, pos, beacon);
     }
 
@@ -985,19 +980,19 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
     }
 
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess world, BlockState state, BlockPos pos, Direction face) {
+    public BlockFaceShape getBlockFaceShape(ExtendedBlockView world, BlockState state, BlockPos pos, Direction face) {
         return SuperBlockWorldAccess.access(world).getModelState(this, pos, true).sideShape(face) == SideShape.SOLID
                 ? BlockFaceShape.SOLID
                 : BlockFaceShape.UNDEFINED;
     }
 
     @Override
-    public boolean isBurning(IBlockAccess world, BlockPos pos) {
+    public boolean isBurning(ExtendedBlockView world, BlockPos pos) {
         return this.getSubstance(world, pos).isBurning;
     }
 
     @Override
-    public boolean isFlammable(IBlockAccess world, BlockPos pos, Direction face) {
+    public boolean isFlammable(ExtendedBlockView world, BlockPos pos, Direction face) {
         return this.getSubstance(world, pos).flammability > 0;
     }
 
@@ -1081,7 +1076,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * 
      */
     @Override
-    public boolean isNormalCube(BlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean isNormalCube(BlockState state, ExtendedBlockView world, BlockPos pos) {
         return SuperBlockWorldAccess.access(world).computeModelState(this, state, pos, true).isCube()
                 && this.getSubstance(state, world, pos).material.isSolid();
     }
@@ -1100,12 +1095,12 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
     }
 
     @Override
-    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+    public boolean isReplaceable(ExtendedBlockView worldIn, BlockPos pos) {
         return this.getSubstance(worldIn, pos).material.isReplaceable();
     }
 
     @Override
-    public boolean isSideSolid(BlockState base_state, IBlockAccess world, BlockPos pos, Direction side) {
+    public boolean isSideSolid(BlockState base_state, ExtendedBlockView world, BlockPos pos, Direction side) {
         return SuperBlockWorldAccess.access(world).computeModelState(this, base_state, pos, true)
                 .sideShape(side).holdsTorch;
     }
@@ -1130,7 +1125,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
      * metadata. Other versions (not overriden) should not be called.
      */
     @Override
-    public int quantityDropped(IBlockAccess world, BlockPos pos, BlockState state) {
+    public int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state) {
         return 1;
     }
 
@@ -1194,7 +1189,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
     /**
      * Want to avoid the synchronization penalty of pooled block pos. For use only
      * in
-     * {@link #shouldSideBeRendered(BlockState, IBlockAccess, BlockPos, Direction)}
+     * {@link #shouldSideBeRendered(BlockState, ExtendedBlockView, BlockPos, Direction)}
      */
     protected static ThreadLocal<MutableBlockPos> shouldSideBeRenderedPos = new ThreadLocal<MutableBlockPos>() {
 
@@ -1206,7 +1201,7 @@ public abstract class SuperBlock extends Block implements IProbeInfoAccessor, IS
 
     @Override
     
-    public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+    public boolean shouldSideBeRendered(BlockState blockState, ExtendedBlockView blockAccess, BlockPos pos,
             Direction side) {
         if (this.getSubstance(blockState, blockAccess, pos).isTranslucent) {
             final MutableBlockPos mpos = shouldSideBeRenderedPos.get().setPos(pos).move(side);

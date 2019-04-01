@@ -11,7 +11,7 @@ public interface TextureSetRegistry {
     /**
      * Will always be associated with index 0.
      */
-    public static final Identifier NONE = new Identifier("brocade", "none");
+    public static final Identifier NONE_ID = new Identifier("brocade", "none");
     
     /**
      * Max number of texture palettes that can be registered, loaded and represented

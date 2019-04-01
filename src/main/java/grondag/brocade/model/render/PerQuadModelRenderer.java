@@ -13,7 +13,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraftforge.client.model.pipeline.VertexBufferConsumer;
 import net.minecraftforge.client.model.pipeline.VertexLighterFlat;
 import net.minecraftforge.client.model.pipeline.VertexLighterSmoothAo;
@@ -58,7 +58,7 @@ public class PerQuadModelRenderer extends BlockModelRenderer {
     }
 
     /** always returns true for convenience */
-    private VertexLighterFlat setupFlat(IBlockAccess world, BakedModel model, BlockState state, BlockPos pos,
+    private VertexLighterFlat setupFlat(ExtendedBlockView world, BakedModel model, BlockState state, BlockPos pos,
             BufferBuilder buffer) {
         VertexLighterFlat lighter = this.lighterFlat.get();
         if (buffer != this.lastRendererFlat.get()) {
@@ -76,7 +76,7 @@ public class PerQuadModelRenderer extends BlockModelRenderer {
     }
 
     /** always returns true for convenience */
-    private VertexLighterFlat setupSmooth(IBlockAccess world, BakedModel model, BlockState state, BlockPos pos,
+    private VertexLighterFlat setupSmooth(ExtendedBlockView world, BakedModel model, BlockState state, BlockPos pos,
             BufferBuilder buffer) {
         VertexLighterFlat lighter = this.lighterSmooth.get();
         if (buffer != this.lastRendererSmooth.get()) {
@@ -94,7 +94,7 @@ public class PerQuadModelRenderer extends BlockModelRenderer {
     }
 
     @Override
-    public boolean renderModel(IBlockAccess world, BakedModel model, BlockState state,
+    public boolean renderModel(ExtendedBlockView world, BakedModel model, BlockState state,
             BlockPos pos, BufferBuilder buffer, boolean checkSides, long rand) {
 
         boolean isEmpty = true;

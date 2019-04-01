@@ -3,7 +3,6 @@ package grondag.brocade.mesh;
 import java.util.function.Consumer;
 
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.collision.ICollisionHandler;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.StateFormat;
 import grondag.brocade.model.varia.SideShape;
@@ -49,8 +48,6 @@ public abstract class ShapeMeshGenerator {
     public BlockOrientationType orientationType(ISuperModelState modelState) {
         return BlockOrientationType.NONE;
     }
-
-    public abstract ICollisionHandler collisionHandler();
 
     /**
      * How much of the sky is occluded by the shape of this block? Based on geometry

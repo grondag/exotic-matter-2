@@ -6,7 +6,7 @@ import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.SuperBlockWorldAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 
 /**
  * Convenience methods for SuperBlock and subclasses
@@ -15,7 +15,7 @@ public class SuperBlockHelper {
     /**
      * returns null if not a superblock at the position
      */
-    public static ISuperModelState getModelStateIfAvailable(IBlockAccess world, BlockPos pos,
+    public static ISuperModelState getModelStateIfAvailable(ExtendedBlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof ISuperBlock) {
@@ -29,7 +29,7 @@ public class SuperBlockHelper {
      * Returns species at position if it could join with the given block/modelState
      * Returns -1 if no superblock at position or if join not possible.
      */
-    public static int getJoinableSpecies(IBlockAccess world, BlockPos pos, BlockState withBlockState,
+    public static int getJoinableSpecies(ExtendedBlockView world, BlockPos pos, BlockState withBlockState,
             ISuperModelState withModelState) {
         if (withBlockState == null || withModelState == null)
             return -1;

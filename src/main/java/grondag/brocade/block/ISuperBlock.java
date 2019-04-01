@@ -16,15 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.ExtendedBlockView;
 
-public interface ISuperBlock extends IBlockItemRegistrator {
-    /**
-     * Contains state passed from getExtendedState to handleBlockState. Using a
-     * custom unlisted property because we need large int values and the vanilla
-     * implementation enumerates all allowed values into a hashmap... Plus this
-     * hides the implementation from the block.
-     */
-    ModelStateProperty MODEL_STATE = new ModelStateProperty();
-
+public interface ISuperBlock extends IBlockItemRegistrator, BrocadeBlock {
     String getItemStackDisplayName(ItemStack stack);
 
     /**
@@ -186,7 +178,7 @@ public interface ISuperBlock extends IBlockItemRegistrator {
 
     /**
      * World-aware version called from getDrops because logic may need more than
-     * metadata. Other versions (not overriden) should not be called.
+     * metadata. Other versions (not overridden) should not be called.
      */
     int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state);
 

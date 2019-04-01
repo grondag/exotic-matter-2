@@ -4,14 +4,16 @@ import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_DISABLE_BLOC
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_IS_POPULATED;
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+
+import grondag.brocade.api.texture.TextureSet;
+import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
+
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
 
-import grondag.exotic_matter.model.mesh.ModelShape;
-import grondag.exotic_matter.model.mesh.ShapeMeshGenerator;
+import grondag.brocade.mesh.ModelShape;
+import grondag.brocade.mesh.ShapeMeshGenerator;
 import grondag.brocade.painting.PaintLayer;
-import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
 
 /**
  * Populates state flags for a given model state.
@@ -29,7 +31,7 @@ public class ModelStateFlagHelper {
         if (shape.metaUsage() == MetaUsage.SPECIES)
             flags |= STATE_FLAG_NEEDS_SPECIES;
 
-        ITexturePalette texBase = state.getTexture(PaintLayer.BASE);
+        TextureSet texBase = state.getTexture(PaintLayer.BASE);
         flags |= texBase.stateFlags();
 
         flags |= state.getTexture(PaintLayer.CUT).stateFlags();
@@ -45,8 +47,8 @@ public class ModelStateFlagHelper {
             flags |= STATE_FLAG_HAS_SOLID_RENDER;
 
         if (mesh.hasLampSurface(state)) {
-            ITexturePalette texLamp = state.getTexture(PaintLayer.LAMP);
-            if (texLamp != TexturePaletteRegistry.NONE)
+            TextureSet texLamp = state.getTexture(PaintLayer.LAMP);
+            if (texLamp.id() != TextureSetRegistryImpl.NONE_ID)
                 flags |= texLamp.stateFlags();
 
             if (state.isTranslucent(PaintLayer.LAMP))
@@ -55,12 +57,12 @@ public class ModelStateFlagHelper {
                 flags |= STATE_FLAG_HAS_SOLID_RENDER;
         }
 
-        ITexturePalette texOverlay = state.getTexture(PaintLayer.MIDDLE);
-        if (texOverlay != TexturePaletteRegistry.NONE)
+        TextureSet texOverlay = state.getTexture(PaintLayer.MIDDLE);
+        if (texOverlay.id() != TextureSetRegistryImpl.NONE_ID)
             flags |= (texOverlay.stateFlags() | STATE_FLAG_HAS_TRANSLUCENT_RENDER);
 
         texOverlay = state.getTexture(PaintLayer.OUTER);
-        if (texOverlay != TexturePaletteRegistry.NONE)
+        if (texOverlay.id() != TextureSetRegistryImpl.NONE_ID)
             flags |= (texOverlay.stateFlags() | STATE_FLAG_HAS_TRANSLUCENT_RENDER);
 
         // turn off this.stateFlags that don't apply to non-block formats if we aren't

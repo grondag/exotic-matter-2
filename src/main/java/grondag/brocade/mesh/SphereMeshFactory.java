@@ -2,14 +2,12 @@ package grondag.brocade.mesh;
 
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NONE;
 
-import java.util.List;
 import java.util.function.Consumer;
 
-
-
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.collision.CollisionBoxDispatcher;
-import grondag.brocade.collision.ICollisionHandler;
+import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.model.state.StateFormat;
+import grondag.brocade.model.varia.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
@@ -17,17 +15,13 @@ import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IPolyStream;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.StateFormat;
-import grondag.brocade.model.varia.SideShape;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class SphereMeshFactory extends ShapeMeshGenerator implements ICollisionHandler {
+public class SphereMeshFactory extends ShapeMeshGenerator {
     private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.TILED).withAllowBorders(false)
             .withDisabledLayers(PaintLayer.LAMP, PaintLayer.CUT).build();
 
@@ -79,23 +73,8 @@ public class SphereMeshFactory extends ShapeMeshGenerator implements ICollisionH
     }
 
     @Override
-    public ICollisionHandler collisionHandler() {
-        return this;
-    }
-
-    @Override
     public SideShape sideShape(ISuperModelState modelState, Direction side) {
         return SideShape.MISSING;
-    }
-
-    @Override
-    public List<BoundingBox> getCollisionBoxes(ISuperModelState modelState) {
-        return CollisionBoxDispatcher.getCollisionBoxes(modelState);
-    }
-
-    @Override
-    public BoundingBox getCollisionBoundingBox(ISuperModelState modelState) {
-        return ICollisionHandler.FULL_BLOCK_BOX;
     }
 
     @Override

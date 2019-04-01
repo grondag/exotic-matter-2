@@ -22,7 +22,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 
 
@@ -63,7 +63,7 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
 
     @Override
     
-    public boolean shouldSideBeRendered(BlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+    public boolean shouldSideBeRendered(BlockState blockState, ExtendedBlockView blockAccess, BlockPos pos,
             Direction side) {
         final MutableBlockPos mpos = shouldSideBeRenderedPos.get().setPos(pos).move(side);
 
@@ -84,7 +84,7 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
      * top of terrain - better just to render the quads.
      */
     @Override
-    public boolean doesSideBlockRendering(BlockState state, IBlockAccess world, BlockPos pos, Direction face) {
+    public boolean doesSideBlockRendering(BlockState state, ExtendedBlockView world, BlockPos pos, Direction face) {
         return false;
     }
 
@@ -105,7 +105,7 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
     }
 
     @Override
-    public int quantityDropped(IBlockAccess world, BlockPos pos, BlockState state) {
+    public int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state) {
         double volume = 0;
         ISuperModelState modelState = SuperBlockWorldAccess.access(world).computeModelState(this, state, pos, true);
         for (BoundingBox box : modelState.getShape().meshFactory().collisionHandler().getCollisionBoxes(modelState)) {
@@ -149,7 +149,7 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
     /**
      * Returns dynamic version of self if one is known. Otherwise returns self.
      */
-    public BlockState dynamicState(BlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockState dynamicState(BlockState state, ExtendedBlockView world, BlockPos pos) {
         Block dynamicVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getDynamicBlock(this);
         if (dynamicVersion == null || state.getBlock() != this)
             return state;
@@ -178,7 +178,7 @@ public class TerrainStaticBlock extends SuperStaticBlock implements IHotBlock {
     }
 
     @Override
-    public int getLightOpacity(BlockState state, IBlockAccess world, BlockPos pos) {
+    public int getLightOpacity(BlockState state, ExtendedBlockView world, BlockPos pos) {
         // FIXME: is this right? Retest after vertex normals are fixed
         // prevent filler blocks from blocking light to height block below
         return this.isFiller ? 0 : super.getLightOpacity(state, world, pos);

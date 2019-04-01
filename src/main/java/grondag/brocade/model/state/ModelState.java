@@ -16,38 +16,37 @@ import static grondag.brocade.model.state.ModelStateData.TEST_GETTER_STATIC;
 
 import java.util.List;
 
-
-
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Matrix4f;
+import org.joml.Matrix4f;
 
 import grondag.brocade.BrocadeConfig;
+import grondag.brocade.api.texture.TextureSet;
+import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.brocade.Brocade;
+import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.ISuperBlockAccess;
-import grondag.exotic_matter.model.mesh.BlockOrientationType;
-import grondag.exotic_matter.model.mesh.ModelShape;
-import grondag.exotic_matter.model.mesh.ModelShapes;
+import grondag.brocade.mesh.BlockOrientationType;
+import grondag.brocade.mesh.ModelShape;
+import grondag.brocade.mesh.ModelShapes;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.painting.VertexProcessors;
 import grondag.brocade.primitives.Transform;
 import grondag.brocade.model.render.RenderLayout;
 import grondag.brocade.model.render.RenderLayoutProducer;
-import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
 import grondag.brocade.model.varia.SideShape;
 import grondag.fermion.serialization.NBTDictionary;
-import grondag.exotic_matter.terrain.TerrainState;
-import grondag.fermion.varia.SuperBlockMasonryMatch;
+import grondag.brocade.terrain.TerrainState;
+import grondag.brocade.world.CornerJoinBlockState;
+import grondag.brocade.world.CornerJoinBlockStateSelector;
+import grondag.brocade.world.NeighborBlocks;
+import grondag.brocade.world.SimpleJoin;
+import grondag.brocade.world.SuperBlockMasonryMatch;
 import grondag.fermion.varia.Useful;
-import grondag.fermion.world.CornerJoinBlockState;
-import grondag.fermion.world.CornerJoinBlockStateSelector;
-import grondag.fermion.world.NeighborBlocks;
 import grondag.fermion.world.Rotation;
-import grondag.fermion.world.SimpleJoin;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
@@ -70,9 +69,9 @@ public class ModelState implements ISuperModelState {
     public static final void clearNBTValues(CompoundTag tag) {
         if (tag == null)
             return;
-        tag.removeTag(NBT_MODEL_BITS);
-        tag.removeTag(NBT_SHAPE);
-        tag.removeTag(NBT_LAYERS);
+        tag.remove(NBT_MODEL_BITS);
+        tag.remove(NBT_SHAPE);
+        tag.remove(NBT_LAYERS);
     }
 
     private boolean isStatic = false;
@@ -239,7 +238,6 @@ public class ModelState implements ISuperModelState {
         return hashCode;
     }
 
-    @SuppressWarnings("null")
     @Override
     public ISuperModelState refreshFromWorld(BlockState state, ISuperBlockAccess world, BlockPos pos) {
         // Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
@@ -250,7 +248,9 @@ public class ModelState implements ISuperModelState {
         populateStateFlagsIfNeeded();
 
         if (state.getBlock() instanceof ISuperBlock) {
-            this.setMetaData(state.getValue(ISuperBlock.META));
+            // FIXME: - doesn't work when block state is something other than species
+            // needs to be a method that serializes block state to an int and back
+            this.setMetaData(state.get(BrocadeBlock.SPECIES));
         } else {
             // prevent strangeness - shouldn't get called by non-superblock but modded MC is
             // crazy biz
@@ -394,12 +394,12 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public boolean isLayerEnabled(PaintLayer layer) {
-        return this.getTexture(layer) != TexturePaletteRegistry.NONE;
+        return this.getTexture(layer).id() != TextureSetRegistryImpl.NONE_ID;
     }
 
     @Override
     public void disableLayer(PaintLayer layer) {
-        this.setTexture(layer, TexturePaletteRegistry.NONE);
+        this.setTexture(layer, TextureSetRegistryImpl.noTexture());
     }
 
     @Override
@@ -419,13 +419,13 @@ public class ModelState implements ISuperModelState {
     ////////////////////////////////////////////////////
 
     @Override
-    public ITexturePalette getTexture(PaintLayer layer) {
-        return TexturePaletteRegistry.get(ModelStateData.PAINT_TEXTURE[layer.ordinal()].getValue(this));
+    public TextureSet getTexture(PaintLayer layer) {
+        return TextureSetRegistryImpl.INSTANCE.getByIndex(ModelStateData.PAINT_TEXTURE[layer.ordinal()].getValue(this));
     }
 
     @Override
-    public void setTexture(PaintLayer layer, ITexturePalette tex) {
-        ModelStateData.PAINT_TEXTURE[layer.ordinal()].setValue(tex.ordinal(), this);
+    public void setTexture(PaintLayer layer, TextureSet tex) {
+        ModelStateData.PAINT_TEXTURE[layer.ordinal()].setValue(tex.index(), this);
         invalidateHashCode();
         clearStateFlags();
     }
@@ -719,16 +719,8 @@ public class ModelState implements ISuperModelState {
             return this.isTranslucent(layer) ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
 
         case MIDDLE:
-        case OUTER: {
-            this.populateStateFlagsIfNeeded();
-            if (Brocade.proxy.isAcuityEnabled())
-                // report solid if multi-layer solid render is enabled and applicable
-                return (this.stateFlags & STATE_FLAG_HAS_SOLID_RENDER) == STATE_FLAG_HAS_SOLID_RENDER
-                        ? BlockRenderLayer.SOLID
-                        : BlockRenderLayer.TRANSLUCENT;
-            else
-                return BlockRenderLayer.TRANSLUCENT;
-        }
+        case OUTER:
+            return BlockRenderLayer.TRANSLUCENT;
         }
     }
 
@@ -938,7 +930,7 @@ public class ModelState implements ISuperModelState {
     }
 
     public static ModelState deserializeFromNBTIfPresent(CompoundTag tag) {
-        if (tag.hasKey(NBT_MODEL_BITS)) {
+        if (tag.containsKey(NBT_MODEL_BITS)) {
             ModelState result = new ModelState();
             result.deserializeNBT(tag);
             return result;
@@ -954,11 +946,6 @@ public class ModelState implements ISuperModelState {
     @Override
     public Matrix4f getMatrix4f() {
         return Transform.getMatrix4f(this);
-    }
-
-    @Override
-    public Matrix4d getMatrix4d() {
-        return new Matrix4d(this.getMatrix4f());
     }
 
     @Override
@@ -988,8 +975,8 @@ public class ModelState implements ISuperModelState {
                 int i = 0;
                 for (PaintLayer l : PaintLayer.VALUES) {
                     if (ModelStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
-                        ITexturePalette tex = TexturePaletteRegistry.get(names[i++]);
-                        ModelStateData.PAINT_TEXTURE[l.ordinal()].setValue(tex.ordinal(), this);
+                        TextureSet tex = TextureSetRegistryImpl.INSTANCE.getById(new Identifier(names[i++]));
+                        ModelStateData.PAINT_TEXTURE[l.ordinal()].setValue(tex.index(), this);
                         if (i == names.length)
                             break;
                     }
@@ -1008,11 +995,11 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public void serializeNBT(CompoundTag tag) {
-        tag.setIntArray(NBT_MODEL_BITS, this.serializeToInts());
+        tag.putIntArray(NBT_MODEL_BITS, this.serializeToInts());
 
         // shape is serialized by name because registered shapes can change if
         // mods/config change
-        tag.setString(NBT_SHAPE, this.getShape().systemName());
+        tag.putString(NBT_SHAPE, this.getShape().systemName());
 
         // textures and vertex processors serialized by name because registered can
         // change if mods/config change
@@ -1021,7 +1008,7 @@ public class ModelState implements ISuperModelState {
             if (ModelStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
                 if (layers.length() != 0)
                     layers.append(",");
-                layers.append(this.getTexture(l).systemName());
+                layers.append(this.getTexture(l).id().toString());
             }
 
             if (ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
@@ -1031,7 +1018,7 @@ public class ModelState implements ISuperModelState {
             }
         }
         if (layers.length() != 0)
-            tag.setString(NBT_LAYERS, layers.toString());
+            tag.putString(NBT_LAYERS, layers.toString());
     }
 
     @Override

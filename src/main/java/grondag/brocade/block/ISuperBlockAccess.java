@@ -6,13 +6,13 @@ import grondag.brocade.terrain.TerrainState;
 import grondag.fermion.world.PackedBlockPos;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ExtendedBlockView;
+import net.minecraft.world.BlockView;
 
 /**
  * Provides convenient access methods and also an opportunity to cache expensive
  * value.
  */
-public interface ISuperBlockAccess extends ExtendedBlockView {
+public interface ISuperBlockAccess extends BlockView {
     public default ISuperModelState getModelState(ISuperBlock block, BlockState blockState, BlockPos pos,
             boolean refreshFromWorld) {
         return block.getModelStateAssumeStateIsCurrent(blockState, this, pos, refreshFromWorld);

@@ -25,7 +25,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
@@ -199,7 +199,7 @@ public class SuperModelBlock extends SuperBlockPlus {
 
     @SuppressWarnings("deprecation")
     @Override
-    public BlockState getActualState(BlockState state, IBlockAccess worldIn,
+    public BlockState getActualState(BlockState state, ExtendedBlockView worldIn,
             BlockPos pos) {
         BlockSubstance substance = this.getSubstance(state, worldIn, pos);
         // Add substance for tool methods
@@ -210,7 +210,7 @@ public class SuperModelBlock extends SuperBlockPlus {
     /**
      * {@inheritDoc} <br>
      * <br>
-     * relying on {@link #getActualState(BlockState, IBlockAccess, BlockPos)} to
+     * relying on {@link #getActualState(BlockState, ExtendedBlockView, BlockPos)} to
      * set {@link #SUBSTANCE} property
      */
     @Override
@@ -222,7 +222,7 @@ public class SuperModelBlock extends SuperBlockPlus {
     /**
      * {@inheritDoc} <br>
      * <br>
-     * relying on {@link #getActualState(BlockState, IBlockAccess, BlockPos)} to
+     * relying on {@link #getActualState(BlockState, ExtendedBlockView, BlockPos)} to
      * set {@link #SUBSTANCE} property
      */
     @Override
@@ -265,7 +265,7 @@ public class SuperModelBlock extends SuperBlockPlus {
      * 
      */
     @Override
-    public int getLightValue(BlockState state, IBlockAccess world, BlockPos pos) {
+    public int getLightValue(BlockState state, ExtendedBlockView world, BlockPos pos) {
         TileEntity myTE = world.getTileEntity(pos);
         return myTE == null || !(myTE instanceof SuperModelTileEntity) ? 0
                 : ((SuperModelTileEntity) myTE).getLightValue();
@@ -283,7 +283,7 @@ public class SuperModelBlock extends SuperBlockPlus {
     }
 
     @Override
-    public BlockSubstance getSubstance(BlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockSubstance getSubstance(BlockState state, ExtendedBlockView world, BlockPos pos) {
         TileEntity myTE = world.getTileEntity(pos);
         return myTE == null || !(myTE instanceof SuperModelTileEntity) ? BlockSubstance.DEFAULT
                 : ((SuperModelTileEntity) myTE).getSubstance();
@@ -302,13 +302,13 @@ public class SuperModelBlock extends SuperBlockPlus {
     /**
      * Set light level emitted by block. Inputs are masked to 0-15
      */
-    public void setLightValue(BlockState state, IBlockAccess world, BlockPos pos, int lightValue) {
+    public void setLightValue(BlockState state, ExtendedBlockView world, BlockPos pos, int lightValue) {
         TileEntity myTE = world.getTileEntity(pos);
         if (myTE != null && myTE instanceof SuperModelTileEntity)
             ((SuperModelTileEntity) myTE).setLightValue((byte) (lightValue & 0xF));
     }
 
-    public void setSubstance(BlockState state, IBlockAccess world, BlockPos pos, BlockSubstance substance) {
+    public void setSubstance(BlockState state, ExtendedBlockView world, BlockPos pos, BlockSubstance substance) {
         TileEntity myTE = world.getTileEntity(pos);
         if (myTE != null && myTE instanceof SuperModelTileEntity)
             ((SuperModelTileEntity) myTE).setSubstance(substance);
