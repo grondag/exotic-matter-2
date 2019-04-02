@@ -3,8 +3,8 @@ package grondag.brocade.model.state;
 
 
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
-import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.SuperBlockWorldAccess;
+import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.mesh.ModelShapes;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessors;

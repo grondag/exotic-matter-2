@@ -1,18 +1,17 @@
 package grondag.brocade.terrain;
 
 
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.ISuperBlockAccess;
 import grondag.brocade.primitives.QuadHelper;
-import grondag.fermion.varia.BitPacker64;
-import grondag.fermion.varia.Useful;
 import grondag.brocade.world.HorizontalCorner;
 import grondag.brocade.world.HorizontalFace;
+import grondag.fermion.varia.BitPacker64;
+import grondag.fermion.varia.Useful;
 import grondag.fermion.world.PackedBlockPos;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.Mutable;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BlockView;
 
 public class TerrainState {
 
@@ -1020,19 +1019,16 @@ public class TerrainState {
         return div;
     }
 
-    public static <T> T produceBitsFromWorldStatically(ISuperBlock block, BlockState state, ISuperBlockAccess world,
-            BlockPos pos, ITerrainBitConsumer<T> consumer) {
-        return produceBitsFromWorldStatically(block.isFlowFiller(), state, world, pos, consumer);
+    public static <T> T produceBitsFromWorldStatically(BlockState state, BlockView world, BlockPos pos, ITerrainBitConsumer<T> consumer) {
+        return produceBitsFromWorldStatically(TerrainBlockHelper.isFlowFiller(state), state, world, pos, consumer);
     }
 
-    public static TerrainState terrainState(ISuperBlockAccess world, BlockState state, BlockPos pos) {
-        Block block = state.getBlock();
-        if (!TerrainBlockHelper.isFlowBlock(block))
+    public static TerrainState terrainState(BlockView world, BlockState state, BlockPos pos) {
+        if (!TerrainBlockHelper.isFlowBlock(state))
             return TerrainState.EMPTY_STATE;
-        return produceBitsFromWorldStatically((ISuperBlock) block, state, world, pos, TerrainState.FACTORY);
+        return produceBitsFromWorldStatically(state, world, pos, TerrainState.FACTORY);
     }
 
-    @SuppressWarnings("null")
     public static final BitPacker64<Void> HOTNESS_PACKER = new BitPacker64<Void>(null, null);
     public static final BitPacker64<Void>.IntElement CENTER_HOTNESS = HOTNESS_PACKER.createIntElement(6);
     @SuppressWarnings("unchecked")
@@ -1060,14 +1056,14 @@ public class TerrainState {
     }
 
     private static <T> T produceBitsFromWorldStatically(boolean isFlowFiller, BlockState state,
-            ISuperBlockAccess world, final BlockPos pos, ITerrainBitConsumer<T> consumer) {
+            BlockView world, final BlockPos pos, ITerrainBitConsumer<T> consumer) {
         int sideHeight[] = new int[4];
         int cornerHeight[] = new int[4];
         int yOffset = 0;
 
         long hotness = 0;
 
-        BlockPos.MutableBlockPos mPos = mutablePos.get();
+        BlockPos.Mutable mPos = mutablePos.get();
 
         // HardScience.log.info("flowstate getBitsFromWorld @" + pos.toString());
 
@@ -1078,9 +1074,9 @@ public class TerrainState {
             yOrigin -= offset;
             yOffset = offset;
 
-            mPos.setPos(pos.getX(), pos.getY() - offset, pos.getZ());
+            mPos.set(pos.getX(), pos.getY() - offset, pos.getZ());
             originState = world.getBlockState(mPos);
-            if (!TerrainBlockHelper.isFlowHeight(originState.getBlock())) {
+            if (!TerrainBlockHelper.isFlowHeight(originState)) {
                 return consumer.apply(EMPTY_BLOCK_STATE_KEY, 0);
             }
         } else {
@@ -1089,16 +1085,16 @@ public class TerrainState {
             // HardScience.log.info("flowstate is height block");
 
             // try to use block above as height origin
-            mPos.setPos(pos.getX(), pos.getY() + 2, pos.getZ());
+            mPos.set(pos.getX(), pos.getY() + 2, pos.getZ());
             originState = world.getBlockState(mPos);
-            if (TerrainBlockHelper.isFlowHeight(originState.getBlock())) {
+            if (TerrainBlockHelper.isFlowHeight(originState)) {
                 yOrigin += 2;
                 yOffset = -2;
                 // HardScience.log.info("origin 2 up");
             } else {
-                mPos.setPos(pos.getX(), pos.getY() + 1, pos.getZ());
+                mPos.set(pos.getX(), pos.getY() + 1, pos.getZ());
                 originState = world.getBlockState(mPos);
-                if (TerrainBlockHelper.isFlowHeight(originState.getBlock())) {
+                if (TerrainBlockHelper.isFlowHeight(originState)) {
                     yOrigin += 1;
                     yOffset = -1;
                     // HardScience.log.info("origin 1 up");
@@ -1110,13 +1106,13 @@ public class TerrainState {
             }
         }
 
-        // TODO: use packed block pos instead of mutable here
+        // PERF: use packed block pos instead of mutable here
         int[][] neighborHeight = new int[3][3];
         neighborHeight[1][1] = TerrainBlockHelper.getFlowHeightFromState(originState);
         final int centerHeight = neighborHeight[1][1];
 
         if (centerHeight > 0) {
-            hotness = CENTER_HOTNESS.setValue(TerrainBlockHelper.getHotness(originState.getBlock()), hotness);
+            hotness = CENTER_HOTNESS.setValue(TerrainBlockHelper.getHotness(originState), hotness);
         }
         final boolean hasHotness = hotness != 0;
 
@@ -1124,11 +1120,10 @@ public class TerrainState {
             for (int z = 0; z < 3; z++) {
                 if (x == 1 && z == 1)
                     continue;
-                mPos.setPos(pos.getX() - 1 + x, yOrigin, pos.getZ() - 1 + z);
+                mPos.set(pos.getX() - 1 + x, yOrigin, pos.getZ() - 1 + z);
 
                 // use cache if available
-                neighborHeight[x][z] = world.getFlowHeight(mPos);
-
+                neighborHeight[x][z] = TerrainBlockHelper.getFlowHeightFromState(world.getBlockState(mPos));
             }
         }
 
@@ -1139,9 +1134,8 @@ public class TerrainState {
             sideHeight[side.ordinal()] = h;
             if (h != TerrainState.NO_BLOCK && hasHotness) {
                 final int y = yOrigin - 2 + (h - TerrainState.MIN_HEIGHT) / TerrainState.BLOCK_LEVELS_INT;
-                mPos.setPos(pos.getX() + x, y, pos.getZ() + z);
-                BlockState hotState = world.getBlockState(mPos);
-                final int heat = TerrainBlockHelper.getHotness(hotState.getBlock());
+                mPos.set(pos.getX() + x, y, pos.getZ() + z);
+                final int heat = TerrainBlockHelper.getHotness(world.getBlockState(mPos));
                 if (heat != 0)
                     hotness = SIDE_HOTNESS[side.ordinal()].setValue(heat, hotness);
             }
@@ -1155,9 +1149,8 @@ public class TerrainState {
 
             if (h != TerrainState.NO_BLOCK && hasHotness) {
                 final int y = yOrigin - 2 + (h - TerrainState.MIN_HEIGHT) / TerrainState.BLOCK_LEVELS_INT;
-                mPos.setPos(pos.getX() + x, y, pos.getZ() + z);
-                BlockState hotState = world.getBlockState(mPos);
-                final int heat = TerrainBlockHelper.getHotness(hotState.getBlock());
+                mPos.set(pos.getX() + x, y, pos.getZ() + z);
+                final int heat = TerrainBlockHelper.getHotness(world.getBlockState(mPos));
                 if (heat != 0)
                     hotness = CORNER_HOTNESS[corner.ordinal()].setValue(heat, hotness);
             }
@@ -1172,28 +1165,29 @@ public class TerrainState {
      * relative flow height based on blocks 2 above through 2 down. Gets called
      * frequently, thus the use of mutable pos.
      */
-    public static int getFlowHeight(ISuperBlockAccess world, long packedBlockPos) {
-        BlockState state = world.getBlockState(PackedBlockPos.up(packedBlockPos, 2));
+    public static int getFlowHeight(BlockView world, long packedBlockPos) {
+        Mutable mPos = mutablePos.get();
+        BlockState state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.up(packedBlockPos, 2), mPos));
         int h = TerrainBlockHelper.getFlowHeightFromState(state);
         if (h > 0)
             return 2 * BLOCK_LEVELS_INT + h;
 
-        state = world.getBlockState(PackedBlockPos.up(packedBlockPos));
+        state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.up(packedBlockPos), mPos));
         h = TerrainBlockHelper.getFlowHeightFromState(state);
         if (h > 0)
             return BLOCK_LEVELS_INT + h;
 
-        state = world.getBlockState(packedBlockPos);
+        state = world.getBlockState(PackedBlockPos.unpackTo(packedBlockPos, mPos));
         h = TerrainBlockHelper.getFlowHeightFromState(state);
         if (h > 0)
             return h;
 
-        state = world.getBlockState(PackedBlockPos.down(packedBlockPos));
+        state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.down(packedBlockPos), mPos));
         h = TerrainBlockHelper.getFlowHeightFromState(state);
         if (h > 0)
             return -BLOCK_LEVELS_INT + h;
 
-        state = world.getBlockState(PackedBlockPos.down(packedBlockPos, 2));
+        state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.down(packedBlockPos, 2), mPos));
         h = TerrainBlockHelper.getFlowHeightFromState(state);
         if (h > 0)
             return -2 * BLOCK_LEVELS_INT + h;

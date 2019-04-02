@@ -1,9 +1,11 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
 
 
 
 import grondag.brocade.Brocade;
+import grondag.brocade.block.BlockHarvestTool;
+import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.init.ModShapes;
 import grondag.brocade.model.render.RenderLayout;
 import grondag.brocade.model.render.RenderLayoutProducer;

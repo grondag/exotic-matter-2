@@ -1,4 +1,4 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
 import java.util.Map;
 
@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
+import grondag.brocade.block.BlockHarvestTool;
 import grondag.brocade.model.varia.SuperDispatcher;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

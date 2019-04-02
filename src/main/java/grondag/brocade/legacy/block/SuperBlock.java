@@ -1,4 +1,4 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-
-
-
 import com.google.common.collect.ImmutableList;
 
 import grondag.brocade.BrocadeConfig;
 import grondag.brocade.BrocadeConfig.BlockSettings.ProbeInfoLevel;
+import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.model.render.RenderLayout;
 import grondag.brocade.model.render.RenderLayoutProducer;
@@ -24,15 +22,11 @@ import grondag.brocade.model.varia.ParticleDiggingSuperBlock;
 import grondag.brocade.model.varia.SideShape;
 import grondag.brocade.model.varia.SuperDispatcher;
 import grondag.brocade.model.varia.WorldLightOpacity;
-import grondag.exotic_matter.placement.SuperItemBlock;
-import grondag.fermion.varia.Color;
-import grondag.fermion.varia.Color.EnumHCLFailureMode;
-import grondag.fermion.varia.SuperBlockBorderMatch;
-import grondag.fermion.world.IBlockTest;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoAccessor;
-import mcjty.theoneprobe.api.ProbeMode;
+import grondag.brocade.placement.SuperItemBlock;
+import grondag.fermion.color.Color;
+import grondag.fermion.color.Color.EnumHCLFailureMode;
+import grondag.brocade.world.SuperBlockBorderMatch;
+import grondag.brocade.world.IBlockTest;
 import net.minecraft.block.Block;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.block.Material;
@@ -65,7 +59,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
+import net.minecraft.util.math.BlockPos.Mutable;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
@@ -79,8 +73,6 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.Optional;
-
-
 import net.minecraftforge.registries.IForgeRegistry;
 
 /**
@@ -144,7 +136,7 @@ public abstract class SuperBlock extends Block implements ISuperBlock {
 
     
     @Override
-    public grondag.brocade.world.IBlockTest blockJoinTest(ExtendedBlockView worldIn, BlockState state, BlockPos pos,
+    public grondag.brocade.world.IBlockTest blockJoinTest(BlockView worldIn, BlockState state, BlockPos pos,
             ISuperModelState modelState) {
         // TODO Auto-generated method stub
         return null;
@@ -152,7 +144,7 @@ public abstract class SuperBlock extends Block implements ISuperBlock {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, VerticalEntityPosition verticalEntityPos) {
-        ISuperModelState modelState = ((ISuperBlockAccess)blockView).getModelState(this, pos, true);
+        ISuperModelState modelState = ((BlockView)blockView).getModelState(this, pos, true);
         return CollisionBoxDispatcher.getOutlineShape(modelState);
     }
 
@@ -743,7 +735,7 @@ public abstract class SuperBlock extends Block implements ISuperBlock {
      * 
      */
     @Override
-    public ISuperModelState getModelState(ISuperBlockAccess world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+    public ISuperModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         return getModelStateAssumeStateIsCurrent(world.getBlockState(pos), world, pos, refreshFromWorldIfNeeded);
     }
 
@@ -769,7 +761,7 @@ public abstract class SuperBlock extends Block implements ISuperBlock {
      * those changes may not be detected by path finding.
      */
     @Override
-    public ISuperModelState computeModelState(BlockState state, ISuperBlockAccess world, BlockPos pos,
+    public ISuperModelState computeModelState(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
         ISuperModelState result = this.getDefaultModelState();
         if (refreshFromWorldIfNeeded) {
@@ -785,7 +777,7 @@ public abstract class SuperBlock extends Block implements ISuperBlock {
      * Use when absolutely certain given block state is current.
      */
     @Override
-    public ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, ISuperBlockAccess world, BlockPos pos,
+    public ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
         if (state instanceof IExtendedBlockState) {
             ISuperModelState result = ((IExtendedBlockState) state).getValue(ISuperBlock.MODEL_STATE);
@@ -1191,20 +1183,19 @@ public abstract class SuperBlock extends Block implements ISuperBlock {
      * in
      * {@link #shouldSideBeRendered(BlockState, ExtendedBlockView, BlockPos, Direction)}
      */
-    protected static ThreadLocal<MutableBlockPos> shouldSideBeRenderedPos = new ThreadLocal<MutableBlockPos>() {
+    protected static ThreadLocal<Mutable> shouldSideBeRenderedPos = new ThreadLocal<Mutable>() {
 
         @Override
-        protected MutableBlockPos initialValue() {
-            return new MutableBlockPos();
+        protected Mutable initialValue() {
+            return new Mutable();
         }
     };
 
     @Override
-    
-    public boolean shouldSideBeRendered(BlockState blockState, ExtendedBlockView blockAccess, BlockPos pos,
+    public boolean shouldSideBeRendered(BlockState blockState, BlockView blockAccess, BlockPos pos,
             Direction side) {
         if (this.getSubstance(blockState, blockAccess, pos).isTranslucent) {
-            final MutableBlockPos mpos = shouldSideBeRenderedPos.get().setPos(pos).move(side);
+            final Mutable mpos = shouldSideBeRenderedPos.get().setPos(pos).move(side);
 
             BlockState otherBlockState = blockAccess.getBlockState(mpos);
             Block block = otherBlockState.getBlock();
@@ -1213,10 +1204,9 @@ public abstract class SuperBlock extends Block implements ISuperBlock {
                 // only match with blocks with same "virtuality" as this one
                 if (this.isVirtual() == sBlock.isVirtual()
                         && sBlock.getSubstance(otherBlockState, blockAccess, mpos).isTranslucent) {
-                    ISuperBlockAccess access = SuperBlockWorldAccess.access(blockAccess);
 
-                    ISuperModelState myModelState = access.getModelState(this, blockState, pos, false);
-                    ISuperModelState otherModelState = access.getModelState(sBlock, otherBlockState, mpos, false);
+                    ISuperModelState myModelState = getModelStateAssumeStateIsCurrent(blockState, blockAccess, pos, true);
+                    ISuperModelState otherModelState = sBlock.getModelStateAssumeStateIsCurrent(otherBlockState, blockAccess, mpos, true);
                     // for transparent blocks, want blocks with same apperance and species to join
                     return (myModelState.hasSpecies() && myModelState.getSpecies() != otherModelState.getSpecies())
                             || !myModelState.doShapeAndAppearanceMatch(otherModelState);

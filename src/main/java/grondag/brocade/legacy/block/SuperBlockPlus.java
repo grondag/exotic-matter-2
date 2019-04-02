@@ -1,4 +1,4 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
 
 
@@ -9,12 +9,14 @@ import grondag.brocade.model.state.MetaUsage;
 import grondag.fermion.varia.ItemHelper;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -53,9 +55,9 @@ public abstract class SuperBlockPlus extends SuperBlock implements ITileEntityPr
     }
 
     @Override
-    public ISuperModelState computeModelState(BlockState state, ISuperBlockAccess world, BlockPos pos,
+    public ISuperModelState computeModelState(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
-        TileEntity myTE = world.getTileEntity(pos);
+        BlockEntity myTE = world.getBlockEntity(pos);
         if (myTE != null && myTE instanceof SuperTileEntity) {
             BlockState currentState = world.getBlockState(pos);
             ISuperModelState result = ((SuperTileEntity) myTE).getModelState(currentState, world, pos,
@@ -76,7 +78,7 @@ public abstract class SuperBlockPlus extends SuperBlock implements ITileEntityPr
      * Use when absolutely certain given block state is current.
      */
     @Override
-    public ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, ISuperBlockAccess world, BlockPos pos,
+    public ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
         if (state instanceof IExtendedBlockState) {
             ISuperModelState result = ((IExtendedBlockState) state).getValue(ISuperBlock.MODEL_STATE);

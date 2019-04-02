@@ -5,7 +5,7 @@ import java.util.List;
 
 
 import grondag.brocade.block.BlockSubstance;
-import grondag.brocade.block.SuperSimpleBlock;
+import grondag.brocade.legacy.block.SuperSimpleBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -1,14 +1,13 @@
 package grondag.brocade.world;
 
-import grondag.brocade.block.ISuperBlockAccess;
-import grondag.brocade.block.SuperBlockWorldAccess;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.fermion.varia.Useful;
-import net.fabricmc.fabric.api.client.model.fabric.ModelHelper;
+import grondag.frex.api.core.ModelHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.ExtendedBlockView;
 
 /**
@@ -27,7 +26,7 @@ public class NeighborBlocks {
     private BlockState blockStates[] = new BlockState[STATE_COUNT];
     private ISuperModelState modelStates[] = new ISuperModelState[STATE_COUNT];
 
-    private final ISuperBlockAccess world;
+    private final BlockView world;
     private final int x;
     private final int y;
     private final int z;
@@ -37,12 +36,12 @@ public class NeighborBlocks {
     /**
      * Gathers blockstates for adjacent positions as needed.
      */
-    public NeighborBlocks(ExtendedBlockView worldIn, BlockPos pos) {
+    public NeighborBlocks(BlockView worldIn, BlockPos pos) {
         this(worldIn, pos, (IExtraStateFactory) IExtraStateFactory.NONE);
     }
 
-    public NeighborBlocks(ExtendedBlockView worldIn, BlockPos pos, IExtraStateFactory factory) {
-        this.world = SuperBlockWorldAccess.access(worldIn);
+    public NeighborBlocks(BlockView worldIn, BlockPos pos, IExtraStateFactory factory) {
+        this.world = worldIn;
         this.x = pos.getX();
         this.y = pos.getY();
         this.z = pos.getZ();
@@ -55,8 +54,8 @@ public class NeighborBlocks {
     public BlockState getBlockState(Direction face) {
         BlockState result = blockStates[face.ordinal()];
         if (result == null) {
-            final Vec3i vec = face.getDirectionVec();
-            result = world.getBlockState(mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
+            final Vec3i vec = face.getVector();
+            result = world.getBlockState(mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
             blockStates[face.ordinal()] = result;
         }
         return result;

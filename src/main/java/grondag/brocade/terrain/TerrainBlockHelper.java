@@ -2,14 +2,14 @@ package grondag.brocade.terrain;
 
 import java.util.function.Predicate;
 
-import grondag.brocade.block.BrocadeBlock;
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.ISuperBlockAccess;
+import grondag.brocade.api.block.BrocadeBlock;
+import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.fermion.world.PackedBlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class TerrainBlockHelper {
@@ -151,8 +151,9 @@ public class TerrainBlockHelper {
      * and neighboring flow blocks. Returns false if otherwise or if is not a flow
      * block.
      */
-    public static boolean shouldBeFullCube(BlockState blockState, ISuperBlockAccess blockAccess, BlockPos pos) {
-        return blockAccess.terrainState(blockState, pos).isFullCube();
+    public static boolean shouldBeFullCube(BlockState blockState, BlockView blockAccess, BlockPos pos) {
+        BrocadeBlock block = (BrocadeBlock)blockState.getBlock();
+        return block.brocade_isTerrain(blockState) && block.getModelStateAssumeStateIsCurrent(blockState, blockAccess, pos, true).getTerrainState().isFullCube();
     }
 
     /**

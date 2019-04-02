@@ -1,5 +1,6 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
+import grondag.brocade.block.BlockSubstance;
 import net.minecraft.nbt.CompoundTag;
 
 public class SuperModelTileEntity extends SuperTileEntity {

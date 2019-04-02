@@ -1,16 +1,14 @@
 package grondag.brocade.placement;
 
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.ISuperBlockAccess;
-import grondag.brocade.block.SuperBlockStackHelper;
-import grondag.brocade.block.SuperBlockWorldAccess;
+import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.legacy.block.SuperBlockStackHelper;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.world.BlockCorner;
 import grondag.fermion.world.Rotation;
 import grondag.fermion.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.AxisDirection;
@@ -67,17 +65,16 @@ public class BlockOrientationHandler {
         SuperBlockStackHelper.setStackModelState(stack, modelState);
     }
 
-    private static void applyClosestOrientation(ItemStack stack, EntityPlayer player, PlacementPosition pPos) {
+    private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // find closest instance, starting with block placed on
         ISuperModelState outputModelState = SuperBlockStackHelper.getStackModelState(stack);
         ISuperModelState closestModelState = null;
         World world = player.world;
-        ISuperBlockAccess access = SuperBlockWorldAccess.access(world);
         BlockState onBlockState = world.getBlockState(pPos.onPos);
         Block onBlock = onBlockState.getBlock();
 
         if (onBlock instanceof ISuperBlock) {
-            closestModelState = access.getModelState((ISuperBlock) onBlock, pPos.onPos, true);
+            closestModelState = ((ISuperBlock)onBlock).getModelStateAssumeStateIsCurrent(onBlockState, world, pPos.onPos, true);
 
             // can't use onBlock as reference if is of a different type
             if (closestModelState.getShape() != outputModelState.getShape())

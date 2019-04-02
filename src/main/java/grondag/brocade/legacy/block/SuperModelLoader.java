@@ -1,4 +1,4 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
 
 

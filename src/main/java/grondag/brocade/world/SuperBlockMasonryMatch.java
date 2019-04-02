@@ -1,20 +1,22 @@
 package grondag.brocade.world;
 
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.ISuperBlockAccess;
+import grondag.brocade.api.block.BrocadeBlock;
+import grondag.brocade.block.BrocadeBlockHelper;
+import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 
 /** returns true if NO border should be displayed */
 public class SuperBlockMasonryMatch extends AbstractNonFaceTest
 {
-    private final ISuperBlock block;
+    private final BrocadeBlock block;
     private final int matchSpecies;
     private final BlockPos origin;
     
     /** pass in the info for the block you want to match */
-    public SuperBlockMasonryMatch(ISuperBlock block, int matchSpecies, BlockPos pos)
+    public SuperBlockMasonryMatch(BrocadeBlock block, int matchSpecies, BlockPos pos)
     {
         this.block = block;
         //last param = false prevents recursion - we don't need the full model state (which depends on this logic)
@@ -26,28 +28,27 @@ public class SuperBlockMasonryMatch extends AbstractNonFaceTest
     public boolean wantsModelState() { return true; }
 
     @Override
-    protected boolean testBlock(ISuperBlockAccess world, BlockState ibs, BlockPos pos)
+    protected boolean testBlock(BlockView world, BlockState state, BlockPos pos)
     {
-        return testBlock(world, ibs, pos, world.getModelState(this.block, ibs, pos, false));
+        return testBlock(world, state, pos, BrocadeBlockHelper.getModelStateIfAvailable(world, state, pos, false));
     }
     
     @Override
-    protected boolean testBlock(ISuperBlockAccess world, BlockState blockState, BlockPos pos, ISuperModelState modelState)
+    protected boolean testBlock(BlockView world, BlockState blockState, BlockPos pos, ISuperModelState modelState)
     {
         // for masonry blocks, a join indicates that a border IS present
-        
-        boolean isSibling = blockState.getBlock() == this.block && modelState.hasMasonryJoin();
-        boolean isMate = isSibling 
-               && matchSpecies == modelState.getSpecies();
-        
-        // display mortar when against solid superblocks, even if not masonry
-        boolean isSolid = blockState.isFullOpaque(world, pos) && blockState.getBlock() instanceof ISuperBlock;
-        
-        // no mortar between mates or non-solid superblocks
-        if(isMate || !isSolid) return false;
+        final boolean isSibling = blockState.getBlock() == this.block && modelState != null && modelState.hasMasonryJoin();
         
         // always mortar if not a sibling
         if(!isSibling) return true;
+        
+        final  boolean isMate = matchSpecies == modelState.getSpecies();
+        
+        // display mortar when against solid superblocks, even if not masonry
+        final boolean isSolid = blockState.isFullOpaque(world, pos) && blockState.getBlock() instanceof ISuperBlock;
+        
+        // no mortar between mates or non-solid superblocks
+        if(isMate || !isSolid) return false;
         
         // between siblings, only mortar on three sides of cube
         // (other sibling will do the mortar on other sides)

@@ -1,7 +1,8 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
 
 
+import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.ModelState;
 import grondag.fermion.serialization.NBTDictionary;

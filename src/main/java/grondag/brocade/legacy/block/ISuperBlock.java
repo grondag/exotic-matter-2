@@ -1,11 +1,12 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
 import java.util.List;
 
+import grondag.brocade.api.block.BrocadeBlock;
+import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.init.IBlockItemRegistrator;
 import grondag.brocade.model.render.RenderLayout;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.ModelStateProperty;
 import grondag.brocade.world.IBlockTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,16 +15,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.ExtendedBlockView;
+import net.minecraft.world.BlockView;
 
-public interface ISuperBlock extends IBlockItemRegistrator, BrocadeBlock {
+public interface ISuperBlock extends IBlockItemRegistrator {
     String getItemStackDisplayName(ItemStack stack);
 
     /**
      * Factory for block test that should be used for border/shape joins for this
      * block. Used in model state refresh from world.
      */
-    IBlockTest blockJoinTest(ExtendedBlockView worldIn, BlockState state, BlockPos pos, ISuperModelState modelState);
+    IBlockTest blockJoinTest(BlockView worldIn, BlockState state, BlockPos pos, ISuperModelState modelState);
 
     RenderLayout renderLayout();
 
@@ -46,12 +47,12 @@ public interface ISuperBlock extends IBlockItemRegistrator, BrocadeBlock {
      * 
      * 
      */
-    ISuperModelState getModelState(ISuperBlockAccess world, BlockPos pos, boolean refreshFromWorldIfNeeded);
+    ISuperModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded);
 
     /**
      * Use when absolutely certain given block state is current.
      */
-    ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, ISuperBlockAccess world, BlockPos pos,
+    ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded);
 
     /**
@@ -79,21 +80,21 @@ public interface ISuperBlock extends IBlockItemRegistrator, BrocadeBlock {
      * based on other components of model state (orthogonalAxis, for example) and
      * those changes may not be detected by path finding.
      */
-    ISuperModelState computeModelState(BlockState state, ISuperBlockAccess world, BlockPos pos,
+    ISuperModelState computeModelState(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded);
 
-    int getOcclusionKey(BlockState state, ExtendedBlockView world, BlockPos pos, Direction side);
+    int getOcclusionKey(BlockState state, BlockView world, BlockPos pos, Direction side);
 
-    ItemStack getStackFromBlock(BlockState state, ExtendedBlockView world, BlockPos pos);
+    ItemStack getStackFromBlock(BlockState state, BlockView world, BlockPos pos);
 
     List<ItemStack> getSubItems();
 
     /**
      * Controls material-dependent properties
      */
-    BlockSubstance getSubstance(BlockState state, ExtendedBlockView world, BlockPos pos);
+    BlockSubstance getSubstance(BlockState state, BlockView world, BlockPos pos);
 
-    BlockSubstance getSubstance(ExtendedBlockView world, BlockPos pos);
+    BlockSubstance getSubstance(BlockView world, BlockPos pos);
 
     /**
      * Used to assigned substance to item stacks
@@ -180,7 +181,7 @@ public interface ISuperBlock extends IBlockItemRegistrator, BrocadeBlock {
      * World-aware version called from getDrops because logic may need more than
      * metadata. Other versions (not overridden) should not be called.
      */
-    int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state);
+    int quantityDropped(BlockView world, BlockPos pos, BlockState state);
 
     ISuperBlock setAllowSilkHarvest(boolean allow);
 

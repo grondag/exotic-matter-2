@@ -11,10 +11,10 @@ import com.google.common.collect.ImmutableList;
 
 import grondag.brocade.BrocadeConfig;
 import grondag.brocade.Brocade;
-import grondag.brocade.block.ISuperBlock;
 import grondag.fermion.cache.LongSimpleCacheLoader;
 import grondag.fermion.cache.LongSimpleLoadingCache;
 import grondag.brocade.collision.CollisionBoxDispatcher;
+import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.mesh.ShapeMeshGenerator;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;

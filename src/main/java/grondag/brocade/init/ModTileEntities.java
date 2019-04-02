@@ -1,8 +1,8 @@
 package grondag.brocade.init;
 
 import grondag.brocade.Brocade;
-import grondag.brocade.block.SuperModelTileEntity;
-import grondag.brocade.block.SuperTileEntity;
+import grondag.brocade.legacy.block.SuperModelTileEntity;
+import grondag.brocade.legacy.block.SuperTileEntity;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 

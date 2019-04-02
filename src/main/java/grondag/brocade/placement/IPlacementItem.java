@@ -5,9 +5,9 @@ package grondag.brocade.placement;
 import org.apache.commons.lang3.tuple.Pair;
 
 import grondag.brocade.block.BlockSubstance;
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.SuperBlockStackHelper;
-import grondag.brocade.block.SuperModelBlock;
+import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.legacy.block.SuperBlockStackHelper;
+import grondag.brocade.legacy.block.SuperModelBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.MetaUsage;
 import grondag.fermion.serialization.NBTDictionary;

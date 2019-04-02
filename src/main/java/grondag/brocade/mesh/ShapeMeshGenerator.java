@@ -2,7 +2,7 @@ package grondag.brocade.mesh;
 
 import java.util.function.Consumer;
 
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.StateFormat;
 import grondag.brocade.model.varia.SideShape;

@@ -19,12 +19,11 @@ import java.util.List;
 import org.joml.Matrix4f;
 
 import grondag.brocade.BrocadeConfig;
+import grondag.brocade.api.block.BrocadeBlock;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.brocade.Brocade;
-import grondag.brocade.block.BrocadeBlock;
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.ISuperBlockAccess;
+import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.mesh.ModelShapes;
@@ -53,6 +52,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class ModelState implements ISuperModelState {
@@ -239,7 +239,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public ISuperModelState refreshFromWorld(BlockState state, ISuperBlockAccess world, BlockPos pos) {
+    public ISuperModelState refreshFromWorld(BlockState state, BlockView world, BlockPos pos) {
         // Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
         // " @" + pos.toString());
         if (this.isStatic)

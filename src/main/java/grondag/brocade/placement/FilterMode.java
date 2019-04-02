@@ -1,6 +1,6 @@
 package grondag.brocade.placement;
 
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.exotic_matter.serialization.IMessagePlusImmutable;
 import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
 import grondag.fermion.serialization.NBTDictionary;

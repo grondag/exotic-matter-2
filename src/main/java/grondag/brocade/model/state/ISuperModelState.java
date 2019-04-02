@@ -1,12 +1,9 @@
 package grondag.brocade.model.state;
 
-import java.util.List;
-
 import org.joml.Matrix4f;
 
 import grondag.brocade.api.texture.TextureSet;
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.ISuperBlockAccess;
+import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.model.render.RenderLayout;
@@ -25,8 +22,8 @@ import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
@@ -46,7 +43,7 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
     int hashCode();
 
     /** returns self as convenience method */
-    ISuperModelState refreshFromWorld(BlockState state, ISuperBlockAccess world, BlockPos pos);
+    ISuperModelState refreshFromWorld(BlockState state, BlockView world, BlockPos pos);
 
     ModelShape<?> getShape();
 
@@ -284,11 +281,6 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
     ISuperModelState geometricState();
 
     /**
-     * Returns a list of collision boxes offset to the given world position
-     */
-    List<BoundingBox> collisionBoxes(BlockPos offset);
-
-    /**
      * See {@link Transform#rotateFace(ModelState, Direction)}
      */
     Direction rotateFace(Direction face);
@@ -303,10 +295,6 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
     Matrix4f getMatrix4f();
 
     ISuperModelState clone();
-
-    default BoundingBox getCollisionBoundingBox() {
-        return this.getShape().meshFactory().collisionHandler().getCollisionBoundingBox(this);
-    }
 
     /**
      * For backwards compatibility with color maps

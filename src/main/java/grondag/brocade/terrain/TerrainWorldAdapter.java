@@ -4,13 +4,13 @@ import static it.unimi.dsi.fastutil.HashCommon.arraySize;
 
 import java.util.function.Supplier;
 
-import grondag.brocade.block.ISuperBlockAccess;
 import grondag.fermion.world.PackedBlockPos;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.MutableBlockPos;
-import net.minecraft.world.ExtendedBlockView;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 /**
@@ -20,8 +20,9 @@ import net.minecraft.world.World;
  * occur through this instance.
  * 
  * TODO: add caching for flow height - do with as part of SuperBlockState
+ * TODO: reinstate usage or remove
  */
-public class TerrainWorldAdapter implements ISuperBlockAccess {
+public class TerrainWorldAdapter implements BlockView {
     protected World world;
 
     @SuppressWarnings("serial")
@@ -60,12 +61,10 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
     protected FastMap<BlockState> blockStates = new FastMap<>();
     protected FastMap<TerrainState> terrainStates = new FastMap<>();
 
-    @SuppressWarnings("null")
     public TerrainWorldAdapter() {
 
     }
 
-    @SuppressWarnings("null")
     public TerrainWorldAdapter(World world) {
         this.prepare(world);
     }
@@ -76,8 +75,7 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
         this.terrainStates.clear();
     }
 
-    @Override
-    public ExtendedBlockView wrapped() {
+    public World wrapped() {
         return this.world;
     }
 
@@ -87,9 +85,8 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
         return blockStates.computeFast(packedBlockPos, () -> world.getBlockState(pos));
     }
 
-    private final MutableBlockPos getBlockPos = new MutableBlockPos();
+    private final BlockPos.Mutable getBlockPos = new BlockPos.Mutable();
 
-    @Override
     public BlockState getBlockState(long packedBlockPos) {
         return blockStates.computeFast(packedBlockPos, () -> {
             PackedBlockPos.unpackTo(packedBlockPos, getBlockPos);
@@ -97,9 +94,8 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
         });
     }
 
-    private final MutableBlockPos getTerrainPos = new MutableBlockPos();
+    private final BlockPos.Mutable getTerrainPos = new BlockPos.Mutable();
 
-    @Override
     public TerrainState terrainState(BlockState state, long packedBlockPos) {
         return terrainStates.computeFast(packedBlockPos, () -> {
             PackedBlockPos.unpackTo(packedBlockPos, getTerrainPos);
@@ -107,7 +103,6 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
         });
     }
 
-    @Override
     public TerrainState terrainState(BlockState state, BlockPos pos) {
         return terrainStates.computeFast(PackedBlockPos.pack(pos), () -> {
             return TerrainState.terrainState(this, state, pos);
@@ -156,5 +151,15 @@ public class TerrainWorldAdapter implements ISuperBlockAccess {
 
     public void setBlockState(BlockPos blockPos, BlockState newState) {
         this.setBlockState(PackedBlockPos.pack(blockPos), newState);
+    }
+
+    @Override
+    public BlockEntity getBlockEntity(BlockPos pos) {
+        return world.getBlockEntity(pos);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockPos pos) {
+        return world.getFluidState(pos);
     }
 }

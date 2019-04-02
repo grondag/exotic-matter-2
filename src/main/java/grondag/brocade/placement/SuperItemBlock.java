@@ -3,11 +3,11 @@ package grondag.brocade.placement;
 
 
 
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.SuperBlock;
-import grondag.brocade.block.SuperBlockStackHelper;
-import grondag.brocade.block.SuperTileEntity;
 import grondag.brocade.init.IItemModelRegistrant;
+import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.legacy.block.SuperBlock;
+import grondag.brocade.legacy.block.SuperBlockStackHelper;
+import grondag.brocade.legacy.block.SuperTileEntity;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.varia.SuperDispatcher;
 import net.minecraft.block.Block;

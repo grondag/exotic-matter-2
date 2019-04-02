@@ -6,11 +6,11 @@ import java.util.List;
 
 import grondag.brocade.BrocadeConfig;
 import grondag.brocade.block.BlockSubstance;
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.SuperBlockStackHelper;
 import grondag.brocade.block.SuperBlockWorldAccess;
-import grondag.brocade.block.SuperStaticBlock;
 import grondag.brocade.init.ModShapes;
+import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.legacy.block.SuperBlockStackHelper;
+import grondag.brocade.legacy.block.SuperStaticBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.fermion.varia.Useful;
 import net.minecraft.block.Block;

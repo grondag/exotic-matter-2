@@ -1,5 +1,6 @@
-package grondag.brocade.block;
+package grondag.brocade.legacy.block;
 
+import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.varia.WorldLightOpacity;
 import net.minecraft.block.BlockState;

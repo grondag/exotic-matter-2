@@ -1,3 +1,4 @@
+package grondag.brocade.legacy.block;
 //TODO: remove after world state access sorted out
 
 //package grondag.brocade.block;
