@@ -2,12 +2,12 @@ package grondag.brocade.primitives.stream;
 
 import java.util.function.Consumer;
 
+import grondag.brocade.legacy.render.QuadListKeyBuilder;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.polygon.IStreamReaderPolygon;
 import grondag.fermion.intstream.IntStreams;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
-import grondag.brocade.model.render.QuadListKeyBuilder;
 
 /**
  * Read-only stream that builds linked lists of quads based on actual face. Used

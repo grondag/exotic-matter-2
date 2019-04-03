@@ -14,43 +14,40 @@ import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIE
 import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
 import static grondag.brocade.model.state.ModelStateData.TEST_GETTER_STATIC;
 
-import java.util.List;
-
 import org.joml.Matrix4f;
 
+import grondag.brocade.Brocade;
 import grondag.brocade.BrocadeConfig;
 import grondag.brocade.api.block.BrocadeBlock;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
-import grondag.brocade.Brocade;
 import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.legacy.render.RenderLayout;
+import grondag.brocade.legacy.render.RenderLayoutProducer;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.mesh.ModelShapes;
+import grondag.brocade.model.varia.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.painting.VertexProcessors;
 import grondag.brocade.primitives.Transform;
-import grondag.brocade.model.render.RenderLayout;
-import grondag.brocade.model.render.RenderLayoutProducer;
-import grondag.brocade.model.varia.SideShape;
-import grondag.fermion.serialization.NBTDictionary;
 import grondag.brocade.terrain.TerrainState;
 import grondag.brocade.world.CornerJoinBlockState;
 import grondag.brocade.world.CornerJoinBlockStateSelector;
 import grondag.brocade.world.NeighborBlocks;
 import grondag.brocade.world.SimpleJoin;
 import grondag.brocade.world.SuperBlockMasonryMatch;
+import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
+import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
-import net.minecraft.block.BlockRenderLayer;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -281,7 +278,7 @@ public class ModelState implements ISuperModelState {
                 if (neighbors == null)
                     neighbors = new NeighborBlocks(world, pos, TEST_GETTER_STATIC);
                 NeighborBlocks.NeighborTestResults masonryTests = neighbors.getNeighborTestResults(
-                        new SuperBlockMasonryMatch((ISuperBlock) state.getBlock(), this.getSpecies(), pos));
+                        new SuperBlockMasonryMatch((BrocadeBlock) state.getBlock(), this.getSpecies(), pos));
                 ModelStateData.MASONRY_JOIN.setValue(SimpleJoin.getIndex(masonryTests), this);
             }
 
@@ -292,7 +289,7 @@ public class ModelState implements ISuperModelState {
             // because doesn't have per-block rotation or version
             if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS)
                 refreshBlockPosFromWorld(pos, 255);
-            TerrainState.produceBitsFromWorldStatically((ISuperBlock) state.getBlock(), state, world, pos, (t, h) -> {
+            TerrainState.produceBitsFromWorldStatically(state, world, pos, (t, h) -> {
                 ModelStateData.FLOW_JOIN.setValue(t, this);
                 ModelStateData.EXTRA_SHAPE_BITS.setValue(h, this);
                 return null;
@@ -922,11 +919,6 @@ public class ModelState implements ISuperModelState {
 
         }
         return result;
-    }
-
-    @Override
-    public List<BoundingBox> collisionBoxes(BlockPos offset) {
-        return this.getShape().meshFactory().collisionHandler().getCollisionBoxes(this, offset);
     }
 
     public static ModelState deserializeFromNBTIfPresent(CompoundTag tag) {

@@ -3,7 +3,7 @@ package grondag.brocade.legacy.block;
 
 
 
-import grondag.brocade.model.render.RenderLayoutProducer;
+import grondag.brocade.legacy.render.RenderLayoutProducer;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.MetaUsage;
 import grondag.fermion.varia.ItemHelper;

@@ -2,9 +2,8 @@ package grondag.brocade.model.state;
 
 
 
+import grondag.brocade.api.block.BrocadeBlock;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
-import grondag.brocade.block.SuperBlockWorldAccess;
-import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.mesh.ModelShapes;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessors;
@@ -16,9 +15,9 @@ import grondag.fermion.varia.BitPacker64;
 import grondag.fermion.world.Rotation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ExtendedBlockView;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 
 public class ModelStateData {
     /**
@@ -122,10 +121,10 @@ public class ModelStateData {
      */
     public static final IExtraStateFactory TEST_GETTER_STATIC = new IExtraStateFactory() {
         @Override
-        public ISuperModelState get(ExtendedBlockView worldIn, BlockPos pos, BlockState state) {
+        public ISuperModelState get(BlockView worldIn, BlockPos pos, BlockState state) {
             Block block = state.getBlock();
-            return (block instanceof ISuperBlock)
-                    ? SuperBlockWorldAccess.access(worldIn).getModelState((ISuperBlock) block, state, pos, false)
+            return (block instanceof BrocadeBlock)
+                    ? ((BrocadeBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, false)
                     : null;
         }
     };
@@ -136,10 +135,10 @@ public class ModelStateData {
      */
     public static final IExtraStateFactory TEST_GETTER_DYNAMIC = new IExtraStateFactory() {
         @Override
-        public ISuperModelState get(ExtendedBlockView worldIn, BlockPos pos, BlockState state) {
+        public ISuperModelState get(BlockView worldIn, BlockPos pos, BlockState state) {
             Block block = state.getBlock();
-            return (block instanceof ISuperBlock)
-                    ? SuperBlockWorldAccess.access(worldIn).getModelState(((ISuperBlock) block), state, pos, true)
+            return (block instanceof BrocadeBlock)
+                    ? ((BrocadeBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, true)
                     : null;
         }
     };

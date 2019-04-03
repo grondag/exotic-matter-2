@@ -4,8 +4,8 @@ package grondag.brocade.legacy.block;
 
 import org.lwjgl.opengl.GL11;
 
-import grondag.brocade.model.render.PerQuadModelRenderer;
-import grondag.brocade.model.render.RenderLayout;
+import grondag.brocade.legacy.render.PerQuadModelRenderer;
+import grondag.brocade.legacy.render.RenderLayout;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.varia.SuperDispatcher;
 import grondag.brocade.model.varia.SuperDispatcher.DispatchDelegate;

@@ -2,7 +2,7 @@ package grondag.brocade.primitives.polygon;
 
 import com.google.common.collect.ImmutableList.Builder;
 
-import grondag.brocade.model.render.QuadBakery;
+import grondag.brocade.legacy.render.QuadBakery;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.primitives.QuadHelper;
 import grondag.brocade.primitives.vertex.IVec3f;

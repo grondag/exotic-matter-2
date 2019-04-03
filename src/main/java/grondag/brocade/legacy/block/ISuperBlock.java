@@ -5,7 +5,7 @@ import java.util.List;
 import grondag.brocade.api.block.BrocadeBlock;
 import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.init.IBlockItemRegistrator;
-import grondag.brocade.model.render.RenderLayout;
+import grondag.brocade.legacy.render.RenderLayout;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.world.IBlockTest;
 import net.minecraft.block.Block;

@@ -1,4 +1,4 @@
-package grondag.brocade.model.render;
+package grondag.brocade.legacy.render;
 
 import java.util.List;
 import java.util.function.Consumer;

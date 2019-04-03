@@ -4,10 +4,10 @@ import org.joml.Matrix4f;
 
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.legacy.render.RenderLayout;
+import grondag.brocade.legacy.render.RenderLayoutProducer;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
-import grondag.brocade.model.render.RenderLayout;
-import grondag.brocade.model.render.RenderLayoutProducer;
 import grondag.brocade.model.varia.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
