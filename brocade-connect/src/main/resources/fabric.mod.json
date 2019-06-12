@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "brocade-connect",
+  "version": "${version}",
+  "name": "Brocade Connect",
+  "description": "Connected block library for use by other mods",
+  "authors": [
+    "Grondag"
+  ],
+  "contact": {
+    "homepage": "https://github.com/grondag/brocade-connect",
+    "issues": "https://github.com/grondag/brocade-connect/issues",
+    "sources": "https://github.com/grondag/brocade-connect"
+  },
+  "license": "Apache-2.0",
+  "icon": "assets/brocade/brocade-connect_icon.png",
+  
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+    ]
+  },
+  
+  "mixins": [
+  ],
+  
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  },
+  "custom": {
+    "modmenu:api": true,
+    "modmenu:clientsideOnly": false
+  }
+}

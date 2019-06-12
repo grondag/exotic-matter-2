@@ -2,7 +2,6 @@ package grondag.brocade.world;
 
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.fermion.varia.Useful;
-import grondag.frex.api.core.ModelHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -94,7 +93,7 @@ public class NeighborBlocks {
         BlockState result = blockStates[corner.superOrdinal];
         if (result == null) {
             final Vec3i vec = corner.directionVector;
-            result = world.getBlockState(mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
+            result = world.getBlockState(mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
             blockStates[corner.superOrdinal] = result;
         }
         return result;
@@ -109,7 +108,7 @@ public class NeighborBlocks {
         BlockState result = blockStates[corner.superOrdinal];
         if (result == null) {
             final Vec3i vec = corner.directionVector;
-            result = world.getBlockState(mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
+            result = world.getBlockState(mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
             blockStates[corner.superOrdinal] = result;
         }
         return result;
@@ -123,8 +122,8 @@ public class NeighborBlocks {
         ISuperModelState result = modelStates[face.ordinal()];
         if (result == null) {
             BlockState state = this.getBlockState(face);
-            final Vec3i vec = face.getDirectionVec();
-            mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+            final Vec3i vec = face.getVector();
+            mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
             result = this.factory.get(this.world, mutablePos, state);
             modelStates[face.ordinal()] = result;
         }
@@ -165,7 +164,7 @@ public class NeighborBlocks {
         if (result == null) {
             BlockState state = this.getBlockState(corner);
             final Vec3i vec = corner.directionVector;
-            mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+            mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
             result = this.factory.get(this.world, mutablePos, state);
             modelStates[corner.superOrdinal] = result;
         }
@@ -182,7 +181,7 @@ public class NeighborBlocks {
         if (result == null) {
             BlockState state = this.getBlockState(corner);
             final Vec3i vec = corner.directionVector;
-            mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+            mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
             result = this.factory.get(this.world, mutablePos, state);
             modelStates[corner.superOrdinal] = result;
         }
@@ -229,15 +228,15 @@ public class NeighborBlocks {
 
         private boolean doTest(Direction face) {
             BlockState state = getBlockState(face);
-            final Vec3i vec = face.getDirectionVec();
+            final Vec3i vec = face.getVector();
 
             if (test.wantsModelState()) {
                 ISuperModelState modelState = getModelState(face);
                 return test.testBlock(face, world, state,
-                        mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()), modelState);
+                        mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()), modelState);
             } else {
                 return test.testBlock(face, world, state,
-                        mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
+                        mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
             }
         }
 
@@ -248,10 +247,10 @@ public class NeighborBlocks {
             if (test.wantsModelState()) {
                 ISuperModelState modelState = getModelState(corner);
                 return test.testBlock(corner, world, state,
-                        mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()), modelState);
+                        mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()), modelState);
             } else {
                 return test.testBlock(corner, world, state,
-                        mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
+                        mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
             }
         }
 
@@ -262,10 +261,10 @@ public class NeighborBlocks {
             if (test.wantsModelState()) {
                 ISuperModelState modelState = getModelState(corner);
                 return test.testBlock(corner, world, state,
-                        mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()), modelState);
+                        mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()), modelState);
             } else {
                 return test.testBlock(corner, world, state,
-                        mutablePos.setPos(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
+                        mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
             }
         }
 

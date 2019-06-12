@@ -8,6 +8,7 @@ import grondag.brocade.apiimpl.texture.TextureSetImpl;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.fermion.config.FermionConfig;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.minecraft.client.MinecraftClient;
 
 import static grondag.brocade.api.texture.TextureGroup.*;
 import static grondag.brocade.api.texture.TextureLayout.*;
@@ -22,13 +23,14 @@ public class BrocadeTextures {
     public static void init() {
         Brocade.INSTANCE.debug("Registering Brocade textures");
         
-        ClientSpriteRegistryCallback.EVENT.register((atlas, registry) -> 
-        {
-            TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
-            final int limit = texReg.size();
-            for(int i = 0; i < limit; i++) {
-                TextureSetImpl set = texReg.getByIndex(i);
-                set.prestitch(id -> registry.register(id));
+        ClientSpriteRegistryCallback.EVENT.register((atlas, registry) -> {
+            if(atlas == MinecraftClient.getInstance().getSpriteAtlas()) {
+                TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
+                final int limit = texReg.size();
+                for(int i = 0; i < limit; i++) {
+                    TextureSetImpl set = texReg.getByIndex(i);
+                    set.prestitch(id -> registry.register(id));
+                }
             }
         });
     }
