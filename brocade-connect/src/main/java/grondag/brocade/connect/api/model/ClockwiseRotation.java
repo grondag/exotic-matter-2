@@ -20,10 +20,23 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.StringIdentifiable;
+
 @API(status = STABLE)
-public enum ClockwiseRotation {
+public enum ClockwiseRotation implements StringIdentifiable {
     ROTATE_NONE,
     ROTATE_90,
     ROTATE_180,
-    ROTATE_270
+    ROTATE_270;
+
+    public final String name;
+    
+    private ClockwiseRotation() {
+        this.name = this.name().toLowerCase();
+    }
+    
+    @Override
+    public String asString() {
+        return name;
+    }
 }

@@ -25,7 +25,7 @@ ext.getVersionCode = { ->
 
 archivesBaseName = "brocade-connect"
 group = "grondag"
-version = "1.0.2+build." + project.getVersionCode();
+version = "1.1.0+build." + project.getVersionCode();
 
 minecraft {
 }

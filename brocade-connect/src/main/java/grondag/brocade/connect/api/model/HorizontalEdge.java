@@ -25,13 +25,14 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import grondag.brocade.connect.impl.helper.HorizontalCornerHelper;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Vec3i;
 
 /**
  * A subset of {@link BlockEdge}, includes only the edges in the horizontal plane.
  */
 @API(status = STABLE)
-public enum HorizontalEdge {
+public enum HorizontalEdge implements StringIdentifiable {
     NORTH_EAST(HorizontalFace.NORTH, HorizontalFace.EAST), 
     NORTH_WEST(HorizontalFace.NORTH, HorizontalFace.WEST),
     SOUTH_EAST(HorizontalFace.SOUTH, HorizontalFace.EAST), 
@@ -42,7 +43,10 @@ public enum HorizontalEdge {
 
     public final Vec3i vector;
 
+    public final String name;
+    
     private HorizontalEdge(HorizontalFace face1, HorizontalFace face2) {
+        this.name = this.name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
         this.vector = new Vec3i(face1.face.getVector().getX() + face2.face.getVector().getX(), 0,
@@ -65,5 +69,10 @@ public enum HorizontalEdge {
     
     public static void forEach(Consumer<HorizontalEdge> consumer) {
         HorizontalCornerHelper.forEach(consumer);
+    }
+
+    @Override
+    public String asString() {
+        return name;
     }
 }

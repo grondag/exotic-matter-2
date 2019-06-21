@@ -24,9 +24,10 @@ import java.util.function.Consumer;
 import org.apiguardian.api.API;
 
 import grondag.brocade.connect.impl.helper.FaceCornerHelper;
+import net.minecraft.util.StringIdentifiable;
 
 @API(status = STABLE)
-public enum FaceCorner {
+public enum FaceCorner implements StringIdentifiable {
     TOP_LEFT(FaceEdge.LEFT_EDGE, FaceEdge.TOP_EDGE),
     TOP_RIGHT(FaceEdge.TOP_EDGE, FaceEdge.RIGHT_EDGE),
     BOTTOM_LEFT(FaceEdge.BOTTOM_EDGE, FaceEdge.LEFT_EDGE),
@@ -41,11 +42,14 @@ public enum FaceCorner {
      * Face edge that is clockwise from this block corner.
      */
     public final FaceEdge rightSide;
+    
+    public final String name;
 
     @API(status = INTERNAL)
     public final int ordinalBit;
 
     private FaceCorner(FaceEdge leftSide, FaceEdge rightSide) {
+        this.name = this.name().toLowerCase();
         this.leftSide = leftSide;
         this.rightSide = rightSide;
         this.ordinalBit = 1 << this.ordinal();
@@ -63,5 +67,10 @@ public enum FaceCorner {
     
     public static void forEach(Consumer<FaceCorner> consumer) {
         FaceCornerHelper.forEach(consumer);
+    }
+
+    @Override
+    public String asString() {
+        return name;
     }
 }

@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import grondag.brocade.connect.impl.helper.BlockCornerHelper;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
@@ -34,7 +35,7 @@ import net.minecraft.util.math.Vec3i;
  * the neighboring blocks diagonally adjacent to those corners.
  */
 @API(status = STABLE)
-public enum BlockCorner {
+public enum BlockCorner implements StringIdentifiable {
     UP_NORTH_EAST(Direction.UP, Direction.EAST, Direction.NORTH),
     UP_NORTH_WEST(Direction.UP, Direction.WEST, Direction.NORTH),
     UP_SOUTH_EAST(Direction.UP, Direction.EAST, Direction.SOUTH),
@@ -48,6 +49,7 @@ public enum BlockCorner {
     public final Direction face2;
     public final Direction face3;
     public final Vec3i vector;
+    public final String name;
     
     /**
      * Ordinal sequence that includes all faces, corner and far corners. Use to
@@ -59,6 +61,7 @@ public enum BlockCorner {
     public final int superOrdinalBit;
     
     private BlockCorner(Direction face1, Direction face2, Direction face3) {
+        this.name = this.name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
         this.face3 = face3;
@@ -91,5 +94,10 @@ public enum BlockCorner {
     
     public static void forEach(Consumer<BlockCorner> consumer) {
         BlockCornerHelper.forEach(consumer);
+    }
+
+    @Override
+    public String asString() {
+        return name;
     }
 }

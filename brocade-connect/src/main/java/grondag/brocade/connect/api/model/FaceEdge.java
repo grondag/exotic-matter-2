@@ -32,10 +32,11 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import grondag.brocade.connect.impl.helper.FaceEdgeHelper;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 
 @API(status = STABLE)
-public enum FaceEdge {
+public enum FaceEdge implements StringIdentifiable {
     TOP_EDGE(SOUTH, SOUTH, UP, UP, UP, UP),
     BOTTOM_EDGE(NORTH, NORTH, DOWN, DOWN, DOWN, DOWN),
     LEFT_EDGE(WEST, EAST, EAST, WEST, NORTH, SOUTH),
@@ -44,13 +45,16 @@ public enum FaceEdge {
     // for a given face, which face is at the position identified by this enum?
     private final Direction relativeLookup[];
 
+    @API(status = INTERNAL)
+    public final int ordinalBit;
+    
+    public final String name;
+    
     private FaceEdge(Direction... relativeLookup) {
+        this.name = this.name().toLowerCase();
         this.relativeLookup = relativeLookup;
         this.ordinalBit = 1 << this.ordinal();
     }
-
-    @API(status = INTERNAL)
-    public final int ordinalBit;
 
     public FaceEdge clockwise() {
         switch (this) {
@@ -106,5 +110,10 @@ public enum FaceEdge {
     
     public static void forEach(Consumer<FaceEdge> consumer) {
         FaceEdgeHelper.forEach(consumer);
+    }
+
+    @Override
+    public String asString() {
+        return name;
     }
 }

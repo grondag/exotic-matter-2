@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import grondag.brocade.connect.impl.helper.BlockEdgeHelper;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
@@ -39,7 +40,7 @@ import net.minecraft.util.math.Vec3i;
  * neighboring blocks diagonally adjacent to those edges.
  */
 @API(status = STABLE)
-public enum BlockEdge {
+public enum BlockEdge implements StringIdentifiable {
     UP_EAST(Direction.UP, Direction.EAST, ROTATE_NONE), // Z AXIS
     UP_WEST(Direction.UP, Direction.WEST, ROTATE_270), // Z AXIS
     UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), // X AXIS
@@ -55,6 +56,7 @@ public enum BlockEdge {
 
     public final Direction face1;
     public final Direction face2;
+    public final String name;
 
     /**
      * Axis parallel to both faces.  
@@ -88,6 +90,7 @@ public enum BlockEdge {
     public final HorizontalEdge horizontalEdge;
     
     private BlockEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
+        this.name = this.name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
         this.rotation = rotation;
@@ -127,5 +130,10 @@ public enum BlockEdge {
     
     public static void forEach(Consumer<BlockEdge> consumer) {
         BlockEdgeHelper.forEach(consumer);
+    }
+
+    @Override
+    public String asString() {
+        return name;
     }
 }

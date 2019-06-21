@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import grondag.brocade.connect.impl.helper.HorizontalFaceHelper;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
@@ -32,7 +33,7 @@ import net.minecraft.util.math.Vec3i;
  * A subset of {@link Direction}, includes only the face in the horizontal plane.
  */
 @API(status = STABLE)
-public enum HorizontalFace {
+public enum HorizontalFace implements StringIdentifiable {
     NORTH(Direction.NORTH),
     EAST(Direction.EAST),
     SOUTH(Direction.SOUTH),
@@ -42,7 +43,10 @@ public enum HorizontalFace {
 
     public final Vec3i vector;
 
+    public final String name;
+    
     private HorizontalFace(Direction face) {
+        this.name = this.name().toLowerCase();
         this.face = face;
         this.vector = face.getVector();
     }
@@ -79,5 +83,10 @@ public enum HorizontalFace {
     
     public static void forEach(Consumer<HorizontalFace> consumer) {
         HorizontalFaceHelper.forEach(consumer);
+    }
+
+    @Override
+    public String asString() {
+        return name;
     }
 }
