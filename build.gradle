@@ -1,28 +1,44 @@
 plugins {
-	id 'fabric-loom' version '0.2.1-SNAPSHOT'
-	id 'java'
-	id 'maven'
+	id 'fabric-loom' version '0.2.4-SNAPSHOT'
 	id 'maven-publish'
-	id "com.zoltu.git-versioning" version "3.0.3"
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
-def versionInfo = ZoltuGitVersioning.versionInfo
-def autoVersion = "${versionInfo.major}.${versionInfo.minor}.${versionInfo.commitCount}"
+ext.getVersionCode = { ->
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-list', '--first-parent', '--count', 'origin/master'
+            standardOutput = stdout
+        }
+        return Integer.parseInt(stdout.toString().trim())
+    }
+    catch (ignored) {
+        return -1;
+    }
+}
 
-archivesBaseName = project.archives_base_name
-group = project.maven_group
-version = autoVersion;
+archivesBaseName = "brocade"
+group = "grondag"
+version = version = "0.1.0+alpha." + project.getVersionCode();
 
 minecraft {
 }
 
 repositories {
-    flatDir {
-        dirs '../renderbender/build/libs'
-    }
+    //mavenLocal()
+    //flatDir {
+    //    dirs '../fabric/build/libs'
+    //}
+    
+    maven { url "https://tehnut.info/maven"}
+    maven { url "http://maven.sargunv.s3-website-us-west-2.amazonaws.com/" }
+    maven { url "https://minecraft.curseforge.com/api/maven" }
+    maven { url "https://maven.fabricmc.net/io/github/prospector/modmenu/ModMenu/" }
+    maven { url "https://maven.jamieswhiteshirt.com/libs-release/"}
+    
  	maven {
     	name = "grondag"
     	url = "https://grondag-repo.appspot.com"
@@ -34,10 +50,15 @@ repositories {
 }
 
 processResources {
-	inputs.property "version", autoVersion
+	inputs.property "version", version
+	
 	from(sourceSets.main.resources.srcDirs) {
 		include "fabric.mod.json"
 		expand "version": version
+	}
+	
+	from(sourceSets.main.resources.srcDirs) {
+		exclude "fabric.mod.json"
 	}
 }
 
@@ -79,28 +100,36 @@ sourceSets {
     }
 }
 
+def mcVersion = "1.14.2"
+
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
-	modCompile "net.fabricmc:fabric:${project.fabric_version}"
+   minecraft "com.mojang:minecraft:$mcVersion"
+	mappings "net.fabricmc:yarn:$mcVersion+build.7"
+    modImplementation "net.fabricmc:fabric-loader:0.4.8+build.155"
+    modCompile "net.fabricmc.fabric-api:fabric-api:0.3.0+build.185"
 	
-	modCompile "grondag:frex:${project.frex_version}"
-	modCompile "grondag:fermion:${project.fermion_version}"
-	modCompile "grondag:canvas:${project.canvas_version}"
+	modImplementation "grondag:canvas:0.7.1+alpha.+"
+
+    modImplementation "grondag:fermion:0.6.+"
+    include "grondag:fermion:0.6.+"
 	
-	compile "org.apiguardian:apiguardian-api:${apiguardian_version}"
-	compile "com.google.code.findbugs:jsr305:${findbugs_version}"
-	compile "org.joml:joml:1.9.9"
+	modImplementation "grondag:frex:0.7.1+"
+    include "grondag:frex:0.7.1+"
 	
-	include "grondag:fermion:${project.fermion_version}"
+	// For dev env testing 
+	modRuntime "com.jamieswhiteshirt:developer-mode:1.0.11"
+	modApi "io.github.prospector.modmenu:ModMenu:1.6.2-92"
+	
+	// dev env annotation support
+	compile "org.apiguardian:apiguardian-api:1.0.0"
+	compile "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-			artifact(jar) {
-				builtBy remapJar
+			artifact(jar.archivePath) {
+	    		builtBy remapJar
 			}
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
@@ -112,8 +141,12 @@ publishing {
         maven {
             url "https://grondag-repo.appspot.com"
             credentials {
-	            username "${maven_user}"
-	            password "${maven_password}"
+            	if (project.hasProperty('maven_user')){
+					username = project.getProperty('maven_user')
+				}
+				if (project.hasProperty('maven_password')){
+					password = project.getProperty('maven_password')
+				}
 			}
         }
     }

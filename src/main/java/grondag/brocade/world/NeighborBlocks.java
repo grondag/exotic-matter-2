@@ -2,12 +2,12 @@ package grondag.brocade.world;
 
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.fermion.varia.Useful;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.ExtendedBlockView;
 
 /**
  * Convenient way to gather and test block states for blocks adjacent to a given
@@ -219,7 +219,6 @@ public class NeighborBlocks {
         }
 
         // for testing
-        @SuppressWarnings("null")
         private NeighborTestResults(int faceFlags) {
             this.test = null;
             this.resultFlags = faceFlags;

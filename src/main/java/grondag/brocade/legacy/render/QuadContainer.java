@@ -1,16 +1,14 @@
 package grondag.brocade.legacy.render;
 
-import java.util.List;
 import java.util.function.Consumer;
-
-
 
 import com.google.common.collect.ImmutableList;
 
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.fermion.structures.SimpleUnorderedArrayList;
-import net.minecraft.client.render.model.BakedQuad;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.math.Direction;
 
 public class QuadContainer {
@@ -27,7 +25,7 @@ public class QuadContainer {
 
     private int[] occlusionHash = null;
 
-    private int[] paintedFaceIndex = new int[Direction.VALUES.length];
+    private int[] paintedFaceIndex = new int[6];
 
     private final IPolygon[] paintedQuads;
 
@@ -37,32 +35,6 @@ public class QuadContainer {
         this.paintedQuads = paintedQuads;
         this.paintedFaceIndex = paintedFaceIndex;
         this.layer = layer;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<BakedQuad> getBakedQuads(Direction face) {
-        // build locally and don't set until end in case another thread is racing with
-        // us
-        ImmutableList<BakedQuad>[] faceLists = this.faceLists;
-
-        if (faceLists == null) {
-            faceLists = new ImmutableList[7];
-            {
-                final ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
-                this.forEachPaintedQuad(null, q -> q.addBakedQuadsToBuilder(layer, builder, false));
-                faceLists[6] = builder.build();
-            }
-
-            for (Direction f : Direction.VALUES) {
-                final ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
-                this.forEachPaintedQuad(f, q -> q.addBakedQuadsToBuilder(0, builder, false));
-                faceLists[f.ordinal()] = builder.build();
-            }
-
-            this.faceLists = faceLists;
-        }
-
-        return face == null ? faceLists[6] : faceLists[face.ordinal()];
     }
 
     public void forEachPaintedQuad(Consumer<IPolygon> consumer) {
@@ -94,7 +66,7 @@ public class QuadContainer {
         if (occlusionHash == null) {
             occlusionHash = new int[6];
             for (int i = 0; i < 6; i++) {
-                final Direction f = Direction.VALUES[i];
+                final Direction f = ModelHelper.faceFromIndex(i);
                 occlusionHash[f.ordinal()] = computeOcclusionHash(f);
                 this.occlusionHash = occlusionHash;
             }

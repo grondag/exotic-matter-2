@@ -54,7 +54,7 @@ public enum TextureRenderIntent {
         case CUTOUT:
             return false;
 
-        case MIPPED_CUTOUT:
+        case CUTOUT_MIPPED:
             return this == BASE_ONLY || this == BASE_OR_OVERLAY_CUTOUT_OKAY;
 
         case SOLID:

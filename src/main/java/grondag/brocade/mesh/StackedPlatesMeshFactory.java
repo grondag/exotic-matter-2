@@ -19,7 +19,6 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.canvas.helper.DirectionHelper;
 import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -39,6 +38,8 @@ public class StackedPlatesMeshFactory extends ShapeMeshGenerator {
         super(StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
+    private static final Direction[] HORIZONTAL_FACES = {Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH};
+    
     @Override
     public void produceShapeQuads(ISuperModelState modelState, Consumer<IPolygon> target) {
         final int meta = modelState.getMetaData();
@@ -60,7 +61,7 @@ public class StackedPlatesMeshFactory extends ShapeMeshGenerator {
         writer.transform(matrix);
         stream.append();
 
-        for (Direction face : DirectionHelper.HORIZONTAL_FACES) {
+        for (Direction face : HORIZONTAL_FACES) {
             writer.setSurface(SIDE_SURFACE);
             writer.setNominalFace(face);
             writer.setupFaceQuad(0, 0, 1, height, 0, Direction.UP);

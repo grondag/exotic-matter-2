@@ -4,8 +4,6 @@ import org.joml.Matrix4f;
 
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.legacy.block.ISuperBlock;
-import grondag.brocade.legacy.render.RenderLayout;
-import grondag.brocade.legacy.render.RenderLayoutProducer;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.model.varia.SideShape;
@@ -197,8 +195,6 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
      */
     BlockRenderLayer getRenderPass(PaintLayer layer);
 
-    RenderLayout getRenderLayout();
-
     boolean hasAxis();
 
     boolean hasAxisOrientation();
@@ -307,7 +303,4 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
     public void setVertexProcessor(PaintLayer layer, VertexProcessor vp);
 
     public VertexProcessor getVertexProcessor(PaintLayer layer);
-
-    public RenderLayoutProducer getRenderLayoutProducer();
-
 }

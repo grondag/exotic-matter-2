@@ -27,8 +27,8 @@ public class ModelShape<T extends ShapeMeshGenerator> {
         if (this.ordinal < ModelShapes.MAX_SHAPES)
             ModelShapes.allByOrdinal.add(this);
         else
-            Brocade.INSTANCE.warn("Model shape limit of %d exceeded.  Shape %s added but will not be rendered.",
-                    ModelShapes.MAX_SHAPES, systemName);
+            Brocade.LOG.warn(String.format("Model shape limit of %d exceeded.  Shape %s added but will not be rendered.",
+                    ModelShapes.MAX_SHAPES, systemName));
     }
 
     ModelShape(String systemName, Class<T> meshFactoryClass, MetaUsage metaUsage) {
@@ -40,7 +40,7 @@ public class ModelShape<T extends ShapeMeshGenerator> {
             try {
                 this.factory = this.meshFactoryClass.newInstance();
             } catch (Exception e) {
-                Brocade.INSTANCE
+                Brocade.LOG
                         .error("Unable to load model factory for shape " + this.systemName + " due to error.", e);
             }
             factoryNeedLoad = false;

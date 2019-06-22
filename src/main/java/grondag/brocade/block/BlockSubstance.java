@@ -70,9 +70,9 @@ public class BlockSubstance implements ILocalized {
         BlockSubstance existing = get(systemName);
         if (existing != null) {
             assert false : "Duplicate substance name";
-            Brocade.INSTANCE.warn(
-                    "Block substance with duplicate name %s not created.  Existing substance with that name be used instead.",
-                    systemName);
+            Brocade.LOG.warn(
+                    String.format("Block substance with duplicate name %s not created.  Existing substance with that name be used instead.",
+                    systemName));
             return existing;
         }
 
@@ -129,8 +129,8 @@ public class BlockSubstance implements ILocalized {
             allByName.put(systemName, this);
             allByOrdinal.add(this);
         } else {
-            Brocade.INSTANCE.warn("Block substance limit of %d exceeded.  Substance %s will not be usable.",
-                    MAX_SUBSTANCES, systemName);
+            Brocade.LOG.warn(String.format("Block substance limit of %d exceeded.  Substance %s will not be usable.",
+                    MAX_SUBSTANCES, systemName));
         }
 
     }

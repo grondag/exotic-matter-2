@@ -342,20 +342,20 @@ public class BoxFinder {
     }
 
     void explainDisjointSet(long disjointSet) {
-        Brocade.INSTANCE.info("Disjoint Set Info: Box Count = %d, Score = %d", Long.bitCount(disjointSet),
-                scoreOfDisjointSet(disjointSet));
+        Brocade.LOG.info(String.format("Disjoint Set Info: Box Count = %d, Score = %d", Long.bitCount(disjointSet),
+                scoreOfDisjointSet(disjointSet)));
         BitHelper.forEachBit(disjointSet, i -> {
             explainVolume(i);
         });
-        Brocade.INSTANCE.info("");
+        Brocade.LOG.info("");
     }
 
     void explainMaximalVolumes() {
-        Brocade.INSTANCE.info("Maximal Volumes");
+        Brocade.LOG.info("Maximal Volumes");
         for (int i = 0; i < volumeCount; i++) {
             explainVolume(i);
         }
-        Brocade.INSTANCE.info("");
+        Brocade.LOG.info("");
     }
 
     void explainVolume(int volIndex) {
@@ -368,10 +368,10 @@ public class BoxFinder {
         });
         final Slice slice = BoxFinderUtils.sliceFromKey(volKey);
         BoxFinderUtils.testAreaBounds(BoxFinderUtils.patternIndexFromKey(volKey), (minX, minY, maxX, maxY) -> {
-            Brocade.INSTANCE.info(
+            Brocade.LOG.info(String.format(
                     "Box w/ %d volume @ %d, %d,%d to %d, %d, %d  score = %d  intersects = %s  volKey = %d",
                     BoxFinderUtils.volumeFromKey(volKey), minX, minY, slice.min, maxX, maxY, slice.max,
-                    volumeScores[volIndex], b.toString(), volKey);
+                    volumeScores[volIndex], b.toString(), volKey));
             return 0;
         });
     }

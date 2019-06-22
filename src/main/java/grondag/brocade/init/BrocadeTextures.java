@@ -9,6 +9,7 @@ import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.fermion.config.FermionConfig;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 
 import static grondag.brocade.api.texture.TextureGroup.*;
 import static grondag.brocade.api.texture.TextureLayout.*;
@@ -21,9 +22,9 @@ public class BrocadeTextures {
      * Main purpose of being here is to force instantiation of other static members.
      */
     public static void init() {
-        Brocade.INSTANCE.debug("Registering Brocade textures");
+        Brocade.LOG.debug("Registering Brocade textures");
         
-        ClientSpriteRegistryCallback.EVENT.register((atlas, registry) -> {
+        ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlas, registry) -> {
             if(atlas == MinecraftClient.getInstance().getSpriteAtlas()) {
                 TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
                 final int limit = texReg.size();

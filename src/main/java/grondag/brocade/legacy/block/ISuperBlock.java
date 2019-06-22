@@ -1,23 +1,20 @@
 package grondag.brocade.legacy.block;
 
-import java.util.List;
-
-import grondag.brocade.api.block.BrocadeBlock;
-import grondag.brocade.block.BlockSubstance;
-import grondag.brocade.init.IBlockItemRegistrator;
-import grondag.brocade.legacy.render.RenderLayout;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.world.IBlockTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.ExtendedBlockView;
 
-public interface ISuperBlock extends IBlockItemRegistrator {
+public interface ISuperBlock {
+    public static final IntProperty SPECIES = IntProperty.of("brocade_species", 0, 15);
+    
     String getItemStackDisplayName(ItemStack stack);
 
     /**
@@ -26,18 +23,11 @@ public interface ISuperBlock extends IBlockItemRegistrator {
      */
     IBlockTest blockJoinTest(BlockView worldIn, BlockState state, BlockPos pos, ISuperModelState modelState);
 
-    RenderLayout renderLayout();
-
     /**
      * Returns an instance of the default model state for this block. Because model
      * states are mutable, every call returns a new instance.
      */
     ISuperModelState getDefaultModelState();
-
-    /**
-     * Number of supported meta values for this block.
-     */
-    int getMetaCount();
 
     /**
      * If last parameter is false, does not perform a refresh from world for
@@ -85,24 +75,6 @@ public interface ISuperBlock extends IBlockItemRegistrator {
 
     int getOcclusionKey(BlockState state, BlockView world, BlockPos pos, Direction side);
 
-    ItemStack getStackFromBlock(BlockState state, BlockView world, BlockPos pos);
-
-    List<ItemStack> getSubItems();
-
-    /**
-     * Controls material-dependent properties
-     */
-    BlockSubstance getSubstance(BlockState state, BlockView world, BlockPos pos);
-
-    BlockSubstance getSubstance(BlockView world, BlockPos pos);
-
-    /**
-     * Used to assigned substance to item stacks
-     */
-    default BlockSubstance defaultSubstance() {
-        return BlockSubstance.DEFAULT;
-    }
-
     /**
      * True if this is an instance of an IFlowBlock and also a filler block. Avoids
      * performance hit of casting to the IFlowBlock Interface. (Based on performance
@@ -116,17 +88,6 @@ public interface ISuperBlock extends IBlockItemRegistrator {
      * profile results.)
      */
     boolean isFlowHeight();
-
-    /**
-     * With {@link #isSubstanceTranslucent(BlockState)} makes all the block test
-     * methods work when full location information not available.
-     * 
-     * Only addresses geometry - does this block fully occupy a 1x1x1 cube? True if
-     * so. False otherwise.
-     */
-    boolean isGeometryFullCube(BlockState state);
-
-    boolean isHypermatter();
 
     /**
      * Only true for virtual blocks. Avoids "instanceof" checking.
@@ -176,17 +137,4 @@ public interface ISuperBlock extends IBlockItemRegistrator {
         return isVirtualBlock(block) ? ((ISuperBlock) block).isVirtuallySolid(pos, player)
                 : !block.getMaterial(state).isReplaceable();
     }
-
-    /**
-     * World-aware version called from getDrops because logic may need more than
-     * metadata. Other versions (not overridden) should not be called.
-     */
-    int quantityDropped(BlockView world, BlockPos pos, BlockState state);
-
-    ISuperBlock setAllowSilkHarvest(boolean allow);
-
-    /**
-     * Sets a drop other than this block if desired.
-     */
-    ISuperBlock setDropItem(Item dropItem);
 }

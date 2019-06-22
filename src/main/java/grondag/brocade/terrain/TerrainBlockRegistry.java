@@ -19,8 +19,8 @@ public class TerrainBlockRegistry {
         stateMap.put(dynamicBlock, staticBlock);
     }
 
-    public Block getStaticBlock(Block dynamicBlock) {
-        return this.stateMap.get(dynamicBlock);
+    public TerrainStaticBlock getStaticBlock(Block dynamicBlock) {
+        return (TerrainStaticBlock)this.stateMap.get(dynamicBlock);
     }
 
     public Block getDynamicBlock(Block staticBlock) {

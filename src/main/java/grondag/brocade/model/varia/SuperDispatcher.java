@@ -9,8 +9,6 @@ import java.util.function.Function;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.acuity.api.IPipelinedBakedModel;
-import grondag.acuity.api.IPipelinedQuadConsumer;
 import grondag.brocade.Brocade;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.legacy.block.SuperBlockStackHelper;

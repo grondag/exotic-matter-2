@@ -25,34 +25,20 @@ package grondag.brocade;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import grondag.brocade.init.BrocadeBlock;
+import grondag.brocade.init.BrocadeBlocks;
 import grondag.brocade.init.BrocadeTextures;
-import grondag.fermion.IGrondagMod;
 import net.fabricmc.api.ModInitializer;
 
-public class Brocade implements ModInitializer, IGrondagMod {
+public class Brocade implements ModInitializer {
     public static Brocade INSTANCE = new Brocade();
 
     @Override
     public void onInitialize() {
         BrocadeTextures.init();
-        BrocadeBlock.init();
+        BrocadeBlocks.init();
     }
 
-    private static Logger log;
+    public static Logger LOG = LogManager.getLogger("Brocade");
 
-    @Override
-    public Logger getLog() {
-        Logger result = log;
-        if (result == null) {
-            result = LogManager.getLogger("Brocade");
-            log = result;
-        }
-        return result;
-    }
-
-    @Override
-    public String modID() {
-        return "brocade";
-    }
+    public static final String MODID = "brocade";
 }

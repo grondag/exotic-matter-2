@@ -1,27 +1,11 @@
 package grondag.brocade.legacy.render;
 
-import javax.vecmath.Vector3f;
-
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Vec3d;
 
-
-
 public class RenderUtil {
-    private static final float VOXEL_TEST_RAY_X;
-    private static final float VOXEL_TEST_RAY_Y;
-    private static final float VOXEL_TEST_RAY_Z;
-
-    static {
-        Vector3f ray = new Vector3f(5525, 13123, 7435);
-        ray.normalize();
-        VOXEL_TEST_RAY_X = ray.x;
-        VOXEL_TEST_RAY_Y = ray.y;
-        VOXEL_TEST_RAY_Z = ray.z;
-    }
-
     public static final BlockRenderLayer[] RENDER_LAYERS = BlockRenderLayer.values();
     public static final int RENDER_LAYER_COUNT = RENDER_LAYERS.length;
 
@@ -46,13 +30,13 @@ public class RenderUtil {
             if (dy != Double.MAX_VALUE) {
                 for (int x = 1; x <= xSpan; x++) {
                     double dx = minX + x;
-                    buffer.pos(dx, dy, minZ).color(red, green, blue, alpha).endVertex();
-                    buffer.pos(dx, dy, maxZ).color(red, green, blue, alpha).endVertex();
+                    buffer.vertex(dx, dy, minZ).color(red, green, blue, alpha).end();
+                    buffer.vertex(dx, dy, maxZ).color(red, green, blue, alpha).end();
                 }
                 for (int z = 1; z <= zSpan; z++) {
                     double dz = minZ + z;
-                    buffer.pos(minX, dy, dz).color(red, green, blue, alpha).endVertex();
-                    buffer.pos(maxX, dy, dz).color(red, green, blue, alpha).endVertex();
+                    buffer.vertex(minX, dy, dz).color(red, green, blue, alpha).end();
+                    buffer.vertex(maxX, dy, dz).color(red, green, blue, alpha).end();
                 }
             }
         }
@@ -63,13 +47,13 @@ public class RenderUtil {
                 if (dx != Double.MAX_VALUE) {
                     for (int y = 1; y <= ySpan; y++) {
                         double dy = minY + y;
-                        buffer.pos(dx, dy, minZ).color(red, green, blue, alpha).endVertex();
-                        buffer.pos(dx, dy, maxZ).color(red, green, blue, alpha).endVertex();
+                        buffer.vertex(dx, dy, minZ).color(red, green, blue, alpha).end();
+                        buffer.vertex(dx, dy, maxZ).color(red, green, blue, alpha).end();
                     }
                     for (int z = 1; z <= zSpan; z++) {
                         double dz = minZ + z;
-                        buffer.pos(dx, minY, dz).color(red, green, blue, alpha).endVertex();
-                        buffer.pos(dx, maxY, dz).color(red, green, blue, alpha).endVertex();
+                        buffer.vertex(dx, minY, dz).color(red, green, blue, alpha).end();
+                        buffer.vertex(dx, maxY, dz).color(red, green, blue, alpha).end();
                     }
                 }
             }
@@ -79,13 +63,13 @@ public class RenderUtil {
                 if (dz != Double.MAX_VALUE) {
                     for (int y = 1; y <= ySpan; y++) {
                         double dy = minY + y;
-                        buffer.pos(minX, dy, dz).color(red, green, blue, alpha).endVertex();
-                        buffer.pos(maxX, dy, dz).color(red, green, blue, alpha).endVertex();
+                        buffer.vertex(minX, dy, dz).color(red, green, blue, alpha).end();
+                        buffer.vertex(maxX, dy, dz).color(red, green, blue, alpha).end();
                     }
                     for (int x = 1; x <= xSpan; x++) {
                         double dx = minX + x;
-                        buffer.pos(dx, minY, dz).color(red, green, blue, alpha).endVertex();
-                        buffer.pos(dx, maxY, dz).color(red, green, blue, alpha).endVertex();
+                        buffer.vertex(dx, minY, dz).color(red, green, blue, alpha).end();
+                        buffer.vertex(dx, maxY, dz).color(red, green, blue, alpha).end();
                     }
                 }
             }

@@ -2,8 +2,8 @@ package grondag.brocade.model.state;
 
 
 
-import grondag.brocade.api.block.BrocadeBlock;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
+import grondag.brocade.legacy.block.SuperBlock;
 import grondag.brocade.mesh.ModelShapes;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessors;
@@ -123,8 +123,8 @@ public class ModelStateData {
         @Override
         public ISuperModelState get(BlockView worldIn, BlockPos pos, BlockState state) {
             Block block = state.getBlock();
-            return (block instanceof BrocadeBlock)
-                    ? ((BrocadeBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, false)
+            return (block instanceof SuperBlock)
+                    ? ((SuperBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, false)
                     : null;
         }
     };
@@ -137,8 +137,8 @@ public class ModelStateData {
         @Override
         public ISuperModelState get(BlockView worldIn, BlockPos pos, BlockState state) {
             Block block = state.getBlock();
-            return (block instanceof BrocadeBlock)
-                    ? ((BrocadeBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, true)
+            return (block instanceof SuperBlock)
+                    ? ((SuperBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, true)
                     : null;
         }
     };

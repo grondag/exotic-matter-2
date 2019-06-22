@@ -1,5 +1,6 @@
 package grondag.brocade.model.varia;
 
+//TODO: remove
 public enum SideShape {
     SOLID(true, true), PARTIAL(true, false), MISSING(false, false);
 

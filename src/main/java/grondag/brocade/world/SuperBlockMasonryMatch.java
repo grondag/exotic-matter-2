@@ -1,6 +1,5 @@
 package grondag.brocade.world;
 
-import grondag.brocade.api.block.BrocadeBlock;
 import grondag.brocade.block.BrocadeBlockHelper;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.model.state.ISuperModelState;
@@ -11,12 +10,12 @@ import net.minecraft.world.BlockView;
 /** returns true if NO border should be displayed */
 public class SuperBlockMasonryMatch extends AbstractNonFaceTest
 {
-    private final BrocadeBlock block;
+    private final ISuperBlock block;
     private final int matchSpecies;
     private final BlockPos origin;
     
     /** pass in the info for the block you want to match */
-    public SuperBlockMasonryMatch(BrocadeBlock block, int matchSpecies, BlockPos pos)
+    public SuperBlockMasonryMatch(ISuperBlock block, int matchSpecies, BlockPos pos)
     {
         this.block = block;
         //last param = false prevents recursion - we don't need the full model state (which depends on this logic)

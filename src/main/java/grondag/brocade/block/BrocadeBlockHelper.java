@@ -2,7 +2,7 @@ package grondag.brocade.block;
 
 
 
-import grondag.brocade.api.block.BrocadeBlock;
+import grondag.brocade.legacy.block.SuperBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -23,8 +23,8 @@ public class BrocadeBlockHelper {
      * returns null if not a brocade block at the position
      */
     public static ISuperModelState getModelStateIfAvailable(BlockView world, BlockState state, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        if (state.getBlock() instanceof BrocadeBlock) {
-            return ((BrocadeBlock)state.getBlock()).getModelStateAssumeStateIsCurrent(state, world, pos, refreshFromWorldIfNeeded);
+        if (state.getBlock() instanceof SuperBlock) {
+            return ((SuperBlock)state.getBlock()).getModelStateAssumeStateIsCurrent(state, world, pos, refreshFromWorldIfNeeded);
         } else {
             return null;
         }

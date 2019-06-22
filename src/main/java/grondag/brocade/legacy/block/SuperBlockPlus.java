@@ -1,53 +1,43 @@
 package grondag.brocade.legacy.block;
 
-
-
-
-import grondag.brocade.legacy.render.RenderLayoutProducer;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.MetaUsage;
-import grondag.fermion.varia.ItemHelper;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.Material;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.IExtendedBlockState;
 
 /** base class for tile entity blocks */
-public abstract class SuperBlockPlus extends SuperBlock implements ITileEntityProvider {
+public class SuperBlockPlus extends SuperBlock implements BlockEntityProvider {
     /**
      * Prevent concurrency weirdness in
      * {@link #getTileEntityReliably(World, BlockPos)}
      */
-    private static final Object TILE_ENTITY_AD_HOCK_CREATION_LOCK = new Object();
+    private static final Object BLOCK_ENTITY_AD_HOCK_CREATION_LOCK = new Object();
 
-    public SuperBlockPlus(String blockName, Material defaultMaterial, ISuperModelState defaultModelState,
-            RenderLayoutProducer renderLayout) {
-        super(blockName, defaultMaterial, defaultModelState, renderLayout);
+    private final BlockEntityType<?> blockEntityType;
+    
+    public SuperBlockPlus(Settings blockSettings, ISuperModelState defaultModelState, BlockEntityType<?> blockEntityType) {
+        super(blockSettings, defaultModelState);
+        this.blockEntityType = blockEntityType;
     }
 
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new SuperTileEntity();
+    public BlockEntity createBlockEntity(BlockView worldIn) {
+        return new SuperTileEntity(blockEntityType);
     }
 
-    @SuppressWarnings("null")
-    public TileEntity getTileEntityReliably(World world, BlockPos pos) {
-        TileEntity result = world.getTileEntity(pos);
+    public BlockEntity getTileEntityReliably(World world, BlockPos pos) {
+        BlockEntity result = world.getBlockEntity(pos);
         if (result == null) {
-            synchronized (TILE_ENTITY_AD_HOCK_CREATION_LOCK) {
-                result = world.getTileEntity(pos);
+            synchronized (BLOCK_ENTITY_AD_HOCK_CREATION_LOCK) {
+                result = world.getBlockEntity(pos);
                 if (result == null) {
-                    result = createNewTileEntity(world, 0);
-                    world.setTileEntity(pos, result);
+                    result = createBlockEntity(world);
+                    world.setBlockEntity(pos, result);
                 }
             }
         }
@@ -64,9 +54,9 @@ public abstract class SuperBlockPlus extends SuperBlock implements ITileEntityPr
                     refreshFromWorldIfNeeded);
 
             // honor passed in species if different
-            if (currentState.getValue(META) != state.getValue(META) && result.metaUsage() != MetaUsage.NONE) {
+            if (result.metaUsage() != MetaUsage.NONE && currentState.get(SPECIES) != state.get(SPECIES)) {
                 result = result.clone();
-                result.setMetaData(state.getValue(META));
+                result.setMetaData(state.get(SPECIES));
             }
             return result;
         } else {
@@ -80,62 +70,14 @@ public abstract class SuperBlockPlus extends SuperBlock implements ITileEntityPr
     @Override
     public ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
-        if (state instanceof IExtendedBlockState) {
-            ISuperModelState result = ((IExtendedBlockState) state).getValue(ISuperBlock.MODEL_STATE);
-            if (result != null)
-                return result;
-        }
 
-        TileEntity myTE = world.getTileEntity(pos);
+        BlockEntity myTE = world.getBlockEntity(pos);
         if (myTE != null && myTE instanceof SuperTileEntity) {
             return ((SuperTileEntity) myTE).getModelState(state, world, pos, refreshFromWorldIfNeeded);
 
         } else {
             return computeModelState(state, world, pos, refreshFromWorldIfNeeded);
         }
-    }
-
-    @Override
-    public ItemStack getStackFromBlock(BlockState state, ExtendedBlockView world, BlockPos pos) {
-        BlockState currentState = world.getBlockState(pos);
-
-        ItemStack stack = super.getStackFromBlock(currentState, world, pos);
-
-        if (!stack.isEmpty()) {
-            TileEntity blockTE = world.getTileEntity(pos);
-            if (blockTE != null && blockTE instanceof SuperTileEntity) {
-                // force refresh of TE state before persisting in stack
-                ((SuperTileEntity) blockTE).getModelState(currentState, world, pos, true);
-                blockTE.writeToNBT(ItemHelper.getOrCreateStackTag(stack));
-            }
-        }
-        return stack;
-    }
-
-    /**
-     * Need to destroy block here because did not do it during removedByPlayer.
-     */
-    @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, BlockState state,
-            TileEntity te, ItemStack stack) {
-        super.harvestBlock(worldIn, player, pos, state, te, stack);
-        worldIn.setBlockToAir(pos);
-    }
-
-    /**
-     * {@inheritDoc} <br>
-     * <br>
-     * 
-     * SuperModelBlock: Defer destruction of block until after drops when harvesting
-     * so can gather NBT from tile entity.
-     */
-    @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos,
-            EntityPlayer player, boolean willHarvest) {
-        if (willHarvest) {
-            return true;
-        }
-        return super.removedByPlayer(state, world, pos, player, willHarvest);
     }
 
     /**
@@ -145,23 +87,9 @@ public abstract class SuperBlockPlus extends SuperBlock implements ITileEntityPr
      * state packet.
      */
     public void setModelState(World world, BlockPos pos, ISuperModelState modelState) {
-        TileEntity blockTE = world.getTileEntity(pos);
+        BlockEntity blockTE = world.getBlockEntity(pos);
         if (blockTE != null && blockTE instanceof SuperTileEntity) {
             ((SuperTileEntity) blockTE).setModelState(modelState);
         }
     }
-
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state,
-            LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-
-        // restore TE state from stack
-        // on client side, stack state may not include all elements (like storage)
-        TileEntity blockTE = worldIn.getTileEntity(pos);
-        if (blockTE != null && blockTE instanceof SuperTileEntity) {
-            ((SuperTileEntity) blockTE).readModNBT(ItemHelper.getOrCreateStackTag(stack));
-        }
-    }
-
 }

@@ -1,19 +1,13 @@
 package grondag.brocade.primitives.polygon;
 
-import com.google.common.collect.ImmutableList.Builder;
-
-import grondag.brocade.legacy.render.QuadBakery;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.primitives.QuadHelper;
 import grondag.brocade.primitives.vertex.IVec3f;
 import grondag.brocade.primitives.vertex.IVertexCollection;
 import grondag.brocade.primitives.vertex.Vec3f;
 import grondag.fermion.world.Rotation;
-import grondag.frex.api.core.ModelHelper;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.BlockRenderLayer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -309,28 +303,6 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
     BlockRenderLayer getRenderLayer(int layerIndex);
 
-    /**
-     * Adds all quads that belong in the given layer. If layer is null, outputs all
-     * quads.
-     */
-    public default void addBakedQuadsToBuilder(BlockRenderLayer layer, Builder<BakedQuad> builder, boolean isItem) {
-        final int limit = this.layerCount();
-        if (limit == 1) {
-            if (layer == null || this.getRenderLayer(0) == layer)
-                addBakedQuadsToBuilder(0, builder, isItem);
-        } else {
-            for (int i = 0; i < limit; i++) {
-                if (layer == null || this.getRenderLayer(i) == layer)
-                    addBakedQuadsToBuilder(i, builder, isItem);
-            }
-        }
-    }
-
-    public default void addBakedQuadsToBuilder(int layerIndex, Builder<BakedQuad> builder, boolean isItem) {
-        assert vertexCount() <= 4;
-        builder.add(QuadBakery.createBakedQuad(this, isItem));
-    }
-
     boolean isEmissive(int layerIndex);
 
     // Use materials instead
@@ -401,70 +373,6 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 //            }
 //        }
 //    }
-
-    class AcuityHelper {
-        /**
-         * INTERNAL USE ONLY
-         */
-        private static final ThreadLocal<float[][][]> uvArray = new ThreadLocal<float[][][]>() {
-            @Override
-            protected float[][][] initialValue() {
-                return new float[3][4][2];
-            }
-        };
-
-        /**
-         * WARNING: returned result is thread-local, do not let it escape.
-         */
-        static float[][][] getUVData(IPolygon poly) {
-            final int layerCount = poly.layerCount();
-
-            final float[][][] uvData = uvArray.get();
-
-            for (int l = 0; l < layerCount; l++) {
-                final Sprite textureSprite = MinecraftClient.getInstance().getSpriteAtlas()
-                        .getSprite(poly.getTextureName(l));
-
-                final float minU = poly.getMinU(l);
-                final float minV = poly.getMinV(l);
-
-                final float spanU = poly.getMaxU(l) - minU;
-                final float spanV = poly.getMaxV(l) - minV;
-
-                for (int v = 0; v < 4; v++) {
-                    uvData[l][v][0] = poly.getVertexU(l, v);
-                    uvData[l][v][1] = poly.getVertexV(l, v);
-                }
-
-                // apply texture rotation
-                QuadBakery.applyTextureRotation(poly.getRotation(l), uvData[l]);
-
-                // scale UV coordinates to size of texture sub-region
-                for (int v = 0; v < 4; v++) {
-                    uvData[l][v][0] = minU + spanU * uvData[l][v][0];
-                    uvData[l][v][1] = minV + spanV * uvData[l][v][1];
-                }
-
-                if (poly.shouldContractUVs(l)) {
-                    QuadBakery.contractUVs(textureSprite, uvData[l]);
-                }
-
-                final float spriteMinU = textureSprite.getMinU();
-                final float spriteSpanU = textureSprite.getMaxU() - spriteMinU;
-                final float spriteMinV = textureSprite.getMinV();
-                final float spriteSpanV = textureSprite.getMaxV() - spriteMinV;
-
-                for (int v = 0; v < 4; v++) {
-                    // doing interpolation here vs using sprite methods to avoid wasteful multiply
-                    // and divide by 16
-                    // PERF: can this be combined with loop above?
-                    uvData[l][v][0] = spriteMinU + uvData[l][v][0] * spriteSpanU;
-                    uvData[l][v][1] = spriteMinV + uvData[l][v][1] * spriteSpanV;
-                }
-            }
-            return uvData;
-        }
-    }
 
     /**
      * Should be called by when the original reference or another reference created
