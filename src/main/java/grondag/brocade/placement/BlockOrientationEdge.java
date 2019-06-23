@@ -39,7 +39,6 @@ public enum BlockOrientationEdge implements ILocalized {
         pBuff.writeEnumConstant(this);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public String localizedName() {
         return I18n.translate("placement.orientation.edge." + this.name().toLowerCase());

@@ -5,11 +5,10 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import grondag.brocade.collision.CollisionBoxDispatcher;
+import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.ModelState;
-import grondag.brocade.model.varia.SuperDispatcher;
 import grondag.brocade.painting.PaintLayer;
-import grondag.brocade.world.IBlockTest;
 import grondag.brocade.world.SuperBlockBorderMatch;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
@@ -42,8 +40,8 @@ public class SuperBlock extends Block implements ISuperBlock {
      * block. Used in model state refresh from world.
      */
     @Override
-    public IBlockTest blockJoinTest(BlockView worldIn, BlockState state, BlockPos pos, ISuperModelState modelState) {
-        return new SuperBlockBorderMatch(this, modelState, true);
+    public BlockTest blockJoinTest() {
+        return SuperBlockBorderMatch.INSTANCE;
     }
 
     @Override
@@ -341,11 +339,12 @@ public class SuperBlock extends Block implements ISuperBlock {
         return computeModelState(state, world, pos, refreshFromWorldIfNeeded);
     }
 
-    @Override
-    public int getOcclusionKey(BlockState state, BlockView world, BlockPos pos, Direction side) {
-        return SuperDispatcher.INSTANCE
-                .getOcclusionKey(getModelStateAssumeStateIsCurrent(state, world, pos, true), side);
-    }
+  //TODO: restore or remove
+//    @Override
+//    public int getOcclusionKey(BlockState state, BlockView world, BlockPos pos, Direction side) {
+//        return SuperDispatcher.INSTANCE
+//                .getOcclusionKey(getModelStateAssumeStateIsCurrent(state, world, pos, true), side);
+//    }
 
     //TODO: restore or remove
     // overridden to allow for world-sensitive drops

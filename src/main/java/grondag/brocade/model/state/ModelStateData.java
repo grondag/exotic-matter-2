@@ -3,13 +3,13 @@ package grondag.brocade.model.state;
 
 
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
+import grondag.brocade.connect.api.world.ModelStateFunction;
 import grondag.brocade.legacy.block.SuperBlock;
 import grondag.brocade.mesh.ModelShapes;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessors;
 import grondag.brocade.terrain.TerrainState;
 import grondag.brocade.world.CornerJoinBlockStateSelector;
-import grondag.brocade.world.IExtraStateFactory;
 import grondag.brocade.world.SimpleJoin;
 import grondag.fermion.varia.BitPacker64;
 import grondag.fermion.world.Rotation;
@@ -119,12 +119,12 @@ public class ModelStateData {
      * Use this as factory for model state block tests that DON'T need to refresh
      * from world.
      */
-    public static final IExtraStateFactory TEST_GETTER_STATIC = new IExtraStateFactory() {
+    public static final ModelStateFunction TEST_GETTER_STATIC = new ModelStateFunction() {
         @Override
-        public ISuperModelState get(BlockView worldIn, BlockPos pos, BlockState state) {
-            Block block = state.getBlock();
+        public Object get(BlockView world, BlockState blockState, BlockPos pos) {
+            Block block = blockState.getBlock();
             return (block instanceof SuperBlock)
-                    ? ((SuperBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, false)
+                    ? ((SuperBlock)block).getModelStateAssumeStateIsCurrent(blockState, world, pos, false)
                     : null;
         }
     };
@@ -133,9 +133,9 @@ public class ModelStateData {
      * Use this as factory for model state block tests that DO need to refresh from
      * world.
      */
-    public static final IExtraStateFactory TEST_GETTER_DYNAMIC = new IExtraStateFactory() {
+    public static final ModelStateFunction TEST_GETTER_DYNAMIC = new ModelStateFunction() {
         @Override
-        public ISuperModelState get(BlockView worldIn, BlockPos pos, BlockState state) {
+        public Object get(BlockView worldIn, BlockState state, BlockPos pos) {
             Block block = state.getBlock();
             return (block instanceof SuperBlock)
                     ? ((SuperBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, true)

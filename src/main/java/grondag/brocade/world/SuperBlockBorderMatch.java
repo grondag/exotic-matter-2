@@ -1,51 +1,26 @@
 package grondag.brocade.world;
 
-import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.connect.api.world.BlockTest;
+import grondag.brocade.connect.api.world.BlockTestContext;
 import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
-public class SuperBlockBorderMatch extends AbstractNonFaceTest
-{
-    private final ISuperBlock block;
-    private final ISuperModelState matchModelState;
-    private final boolean isSpeciesPartOfMatch;
+public class SuperBlockBorderMatch implements BlockTest {
+    private SuperBlockBorderMatch() {}
     
-    /** pass in the info for the block you want to match */
-    public SuperBlockBorderMatch(ISuperBlock block, ISuperModelState modelState, boolean isSpeciesPartOfMatch)
-    {
-        this.block = block;
-        this.matchModelState = modelState;
-        this.isSpeciesPartOfMatch = isSpeciesPartOfMatch;
-    }
-    
-    /** assumes you want to match block at given position */
-    public SuperBlockBorderMatch(BlockView world, BlockState blockState, BlockPos pos, boolean isSpeciesPartOfMatch)
-    {
-        this.block = ((ISuperBlock)blockState.getBlock());
-        //last param = false prevents recursion - we don't need the full model state (which depends on this logic)
-        this.matchModelState = block.getModelStateAssumeStateIsCurrent(blockState, world, pos, true);
-        this.isSpeciesPartOfMatch = isSpeciesPartOfMatch;
-    }
-    
-    @Override 
-    public boolean wantsModelState() { return true; }
+    public static final SuperBlockBorderMatch INSTANCE = new SuperBlockBorderMatch();
     
     @Override
-    protected boolean testBlock(BlockView world, BlockState blockState, BlockPos pos, ISuperModelState modelState)
-    {
-        return blockState.getBlock() == this.block && testBlockInner(modelState);
-    }
-
-    @Override
-    protected boolean testBlock(BlockView world, BlockState blockState, BlockPos pos)
-    {
-        return blockState.getBlock() == this.block && testBlockInner(block.getModelStateAssumeStateIsCurrent(blockState, world, pos, false));
-    }
-    
-    private boolean testBlockInner(ISuperModelState modelState) {
-        return this.matchModelState.doShapeAndAppearanceMatch(modelState)
-                && (!this.isSpeciesPartOfMatch || !modelState.hasSpecies() || (this.matchModelState.getSpecies() == modelState.getSpecies()));
+    public boolean apply(BlockTestContext context) {
+        final ISuperModelState fromState = (ISuperModelState)context.fromModelState();
+        final ISuperModelState toState = (ISuperModelState)context.toModelState();
+        final BlockState toBlockState = context.toBlockState();
+        final BlockState fromBlockState = context.fromBlockState();
+        
+        if(fromBlockState.getBlock() != toBlockState.getBlock() || fromState == null || toState == null) {
+            return false;
+        }
+        
+        return fromState.doShapeAndAppearanceMatch(toState) && fromState.getSpecies() == toState.getSpecies();
     }
 }

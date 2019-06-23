@@ -25,9 +25,11 @@ import org.apiguardian.api.API;
 import grondag.brocade.connect.api.model.BlockEdge;
 import grondag.brocade.connect.api.world.BlockNeighbors;
 import grondag.brocade.connect.api.world.BlockTest;
+import grondag.brocade.connect.api.world.BlockTestContext;
 import grondag.brocade.connect.api.world.ModelStateFunction;
 import grondag.brocade.connect.api.model.BlockCorner;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -39,7 +41,7 @@ import net.minecraft.world.BlockView;
  * are cached for reuse.
  */
 @API(status = INTERNAL)
-public class BlocksNeighborsImpl implements BlockNeighbors {
+public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     private static final int STATE_COUNT = 6 + 12 + 8;
     private static final BlockState EMPTY_BLOCK_STATE[] = new BlockState[STATE_COUNT];
     private static final Object EMPTY_MODEL_STATE[] = new Object[STATE_COUNT];
@@ -84,9 +86,15 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
     private ModelStateFunction stateFunc;
 
     private BlockTest blockTest;
-    private BlockState testBlockState;
-    private Object testModelState;
+    private BlockState myBlockState;
+    private final BlockPos.Mutable myPos = new BlockPos.Mutable();
+    private Object myModelState;
     
+    // valid during tests - the "to" values
+    private final BlockPos.Mutable targetPos = new BlockPos.Mutable();
+    private BlockState targetBlockState = Blocks.AIR.getDefaultState();
+    private Object targetModelState = null;
+            
     protected BlocksNeighborsImpl () {
     }
     
@@ -95,6 +103,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
         this.x = x;
         this.y = y;
         this.z = z;
+        myPos.set(x, y, z);
         this.stateFunc = stateFunc;
         this.blockTest = blockTest;
         completionFlags = blockTest == null ? -1 : 0;
@@ -110,6 +119,25 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
     }
     
     //////////////////////////////
+    // POSITION
+    //////////////////////////////
+    
+    private void setPos(BlockPos.Mutable pos, Direction face) {
+        final Vec3i vec = face.getVector();
+        pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+    }
+    
+    private void setPos(BlockPos.Mutable pos, BlockEdge edge) {
+        final Vec3i vec = edge.vector;
+        pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+    }
+    
+    private void setPos(BlockPos.Mutable pos, BlockCorner corner) {
+        final Vec3i vec = corner.vector;
+        pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+    }
+    
+    //////////////////////////////
     // BLOCK STATE
     //////////////////////////////
     
@@ -117,8 +145,8 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
     public BlockState blockState(Direction face) {
         BlockState result = blockStates[face.ordinal()];
         if (result == null) {
-            final Vec3i vec = face.getVector();
-            result = world.getBlockState(mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
+            setPos(mutablePos, face);
+            result = world.getBlockState(mutablePos);
             blockStates[face.ordinal()] = result;
         }
         return result;
@@ -126,21 +154,21 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
 
     @Override
     public BlockState blockState() {
-        BlockState result = this.testBlockState;
+        BlockState result = this.myBlockState;
         if (result == null) {
             result = world.getBlockState(mutablePos.set(x, y, z));
-            this.testBlockState = result;
+            this.myBlockState = result;
         }
         return result;
     }
 
     @Override
-    public BlockState blockState(BlockEdge corner) {
-        BlockState result = blockStates[corner.superOrdinal];
+    public BlockState blockState(BlockEdge edge) {
+        BlockState result = blockStates[edge.superOrdinal];
         if (result == null) {
-            final Vec3i vec = corner.vector;
-            result = world.getBlockState(mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
-            blockStates[corner.superOrdinal] = result;
+            setPos(mutablePos, edge);
+            result = world.getBlockState(mutablePos);
+            blockStates[edge.superOrdinal] = result;
         }
         return result;
     }
@@ -149,8 +177,8 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
     public BlockState blockState(BlockCorner corner) {
         BlockState result = blockStates[corner.superOrdinal];
         if (result == null) {
-            final Vec3i vec = corner.vector;
-            result = world.getBlockState(mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ()));
+            setPos(mutablePos, corner);
+            result = world.getBlockState(mutablePos);
             blockStates[corner.superOrdinal] = result;
         }
         return result;
@@ -165,12 +193,12 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
         if(this.stateFunc == null) 
             return null;
         
-        Object result = this.testModelState;
+        Object result = this.myModelState;
         if (result == null) {
             BlockState state = this.blockState();
             mutablePos.set(x, y, z);
             result = this.stateFunc.get(this.world, state, mutablePos);
-            this.testModelState = result;
+            this.myModelState = result;
         }
         return result;
     }
@@ -183,8 +211,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
         Object result = modelStates[face.ordinal()];
         if (result == null) {
             BlockState state = this.blockState(face);
-            final Vec3i vec = face.getVector();
-            mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+            setPos(mutablePos, face);
             result = this.stateFunc.get(this.world, state, mutablePos);
             modelStates[face.ordinal()] = result;
         }
@@ -192,17 +219,16 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
     }
 
     @Override
-    public Object modelState(BlockEdge corner) {
+    public Object modelState(BlockEdge edge) {
         if(this.stateFunc == null) 
             return null;
         
-        Object result = modelStates[corner.superOrdinal];
+        Object result = modelStates[edge.superOrdinal];
         if (result == null) {
-            BlockState state = blockState(corner);
-            final Vec3i vec = corner.vector;
-            mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+            BlockState state = blockState(edge);
+            setPos(mutablePos, edge);
             result = this.stateFunc.get(this.world, state, mutablePos);
-            modelStates[corner.superOrdinal] = result;
+            modelStates[edge.superOrdinal] = result;
         }
         return result;
     }
@@ -215,8 +241,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
         Object result = modelStates[corner.superOrdinal];
         if (result == null) {
             BlockState state = blockState(corner);
-            final Vec3i vec = corner.vector;
-            mutablePos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
+            setPos(mutablePos, corner);
             result = this.stateFunc.get(this.world, state, mutablePos);
             modelStates[corner.superOrdinal] = result;
         }
@@ -236,27 +261,24 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
     }
     
     private boolean doTest(Direction face) {
-        if (stateFunc == null) {
-            return this.blockTest.apply(this.blockState(), null, blockState(face), null);
-        } else {
-            return this.blockTest.apply(this.blockState(), this.modelState(), blockState(face), modelState(face));
-        }
+        targetModelState = stateFunc == null ? null : modelState(face);
+        targetBlockState = blockState(face);
+        setPos(targetPos, face);
+        return blockTest.apply(this);
     }
 
-    private boolean doTest(BlockEdge corner) {
-        if (stateFunc == null) {
-            return this.blockTest.apply(this.blockState(), null, blockState(corner), null);
-        } else {
-            return this.blockTest.apply(this.blockState(), this.modelState(), blockState(corner), modelState(corner));
-        }
+    private boolean doTest(BlockEdge edge) {
+        targetModelState = stateFunc == null ? null : modelState(edge);
+        targetBlockState = blockState(edge);
+        setPos(targetPos, edge);
+        return blockTest.apply(this);
     }
 
     private boolean doTest(BlockCorner corner) {
-        if (stateFunc == null) {
-            return this.blockTest.apply(this.blockState(), null, blockState(corner), null);
-        } else {
-            return this.blockTest.apply(this.blockState(), this.modelState(), blockState(corner), modelState(corner));
-        }
+        targetModelState = stateFunc == null ? null : modelState(corner);
+        targetBlockState = blockState(corner);
+        setPos(targetPos, corner);
+        return blockTest.apply(this);
     }
     
     @Override
@@ -318,5 +340,40 @@ public class BlocksNeighborsImpl implements BlockNeighbors {
             completionFlags |= corner.superOrdinalBit;
         }
         return (resultFlags & corner.superOrdinalBit) == corner.superOrdinalBit;
+    }
+
+    @Override
+    public BlockView world() {
+        return world;
+    }
+
+    @Override
+    public BlockPos fromPos() {
+        return myPos;
+    }
+
+    @Override
+    public BlockState fromBlockState() {
+        return blockState();
+    }
+
+    @Override
+    public Object fromModelState() {
+        return modelState();
+    }
+
+    @Override
+    public BlockPos toPos() {
+        return targetPos;
+    }
+
+    @Override
+    public BlockState toBlockState() {
+        return targetBlockState;
+    }
+
+    @Override
+    public Object toModelState() {
+        return targetModelState;
     }
 }

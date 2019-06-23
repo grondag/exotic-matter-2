@@ -12,7 +12,6 @@ import net.minecraft.util.math.Direction;
  * in implementation.
  */
 public class CollisionBoxEncoder {
-    @SuppressWarnings("unused")
     static final int MIN_X_SHIFT = 0;
     static final int MIN_Y_SHIFT = 4;
     static final int MIN_Z_SHIFT = 8;

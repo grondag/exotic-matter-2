@@ -1,13 +1,12 @@
 package grondag.brocade.legacy.block;
 
+import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.world.IBlockTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.ExtendedBlockView;
 
@@ -15,10 +14,10 @@ public interface ISuperBlock {
     public static final IntProperty SPECIES = IntProperty.of("brocade_species", 0, 15);
     
     /**
-     * Factory for block test that should be used for border/shape joins for this
+     * Block test that should be used for border/shape joins for this
      * block. Used in model state refresh from world.
      */
-    IBlockTest blockJoinTest(BlockView worldIn, BlockState state, BlockPos pos, ISuperModelState modelState);
+    public BlockTest blockJoinTest();
 
     /**
      * Returns an instance of the default model state for this block. Because model
@@ -70,7 +69,8 @@ public interface ISuperBlock {
     ISuperModelState computeModelState(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded);
 
-    int getOcclusionKey(BlockState state, BlockView world, BlockPos pos, Direction side);
+    
+    //int getOcclusionKey(BlockState state, BlockView world, BlockPos pos, Direction side);
 
     /**
      * True if this is an instance of an IFlowBlock and also a filler block. Avoids

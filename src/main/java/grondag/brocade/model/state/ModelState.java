@@ -20,6 +20,7 @@ import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
+import grondag.brocade.connect.api.world.BlockNeighbors;
 import grondag.brocade.connect.impl.CornerJoinStateSelector;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.mesh.BlockOrientationType;
@@ -31,9 +32,6 @@ import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.painting.VertexProcessors;
 import grondag.brocade.primitives.Transform;
 import grondag.brocade.terrain.TerrainState;
-import grondag.brocade.world.CornerJoinBlockStateSelector;
-import grondag.brocade.world.NeighborBlocks;
-import grondag.brocade.world.SimpleJoin;
 import grondag.brocade.world.SuperBlockMasonryMatch;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
@@ -257,28 +255,30 @@ public class ModelState implements ISuperModelState {
             if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS)
                 refreshBlockPosFromWorld(pos, 255);
 
-            NeighborBlocks neighbors = null;
+            BlockNeighbors neighbors = null;
 
             if ((STATE_FLAG_NEEDS_CORNER_JOIN & stateFlags) == STATE_FLAG_NEEDS_CORNER_JOIN) {
-                neighbors = new NeighborBlocks(world, pos, TEST_GETTER_STATIC);
-                NeighborBlocks.NeighborTestResults tests = neighbors.getNeighborTestResults(
-                        ((ISuperBlock) state.getBlock()).blockJoinTest(world, state, pos, this));
-                ModelStateData.BLOCK_JOIN.setValue(CornerJoinBlockStateSelector.findIndex(tests), this);
+                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, ((ISuperBlock) state.getBlock()).blockJoinTest());
+                ModelStateData.BLOCK_JOIN.setValue(CornerJoinState.fromWorld(neighbors).ordinal(), this);
+                
             } else if ((STATE_FLAG_NEEDS_SIMPLE_JOIN & stateFlags) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
-                neighbors = new NeighborBlocks(world, pos, TEST_GETTER_STATIC);
-                NeighborBlocks.NeighborTestResults tests = neighbors.getNeighborTestResults(
-                        ((ISuperBlock) state.getBlock()).blockJoinTest(world, state, pos, this));
-                ModelStateData.BLOCK_JOIN.setValue(SimpleJoin.getIndex(tests), this);
+                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, ((ISuperBlock) state.getBlock()).blockJoinTest());
+                ModelStateData.BLOCK_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
             }
 
             if ((STATE_FLAG_NEEDS_MASONRY_JOIN & stateFlags) == STATE_FLAG_NEEDS_MASONRY_JOIN) {
-                if (neighbors == null)
-                    neighbors = new NeighborBlocks(world, pos, TEST_GETTER_STATIC);
-                NeighborBlocks.NeighborTestResults masonryTests = neighbors.getNeighborTestResults(
-                        new SuperBlockMasonryMatch((ISuperBlock) state.getBlock(), this.getSpecies(), pos));
-                ModelStateData.MASONRY_JOIN.setValue(SimpleJoin.getIndex(masonryTests), this);
+                if (neighbors == null) {
+                    neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, SuperBlockMasonryMatch.INSTANCE);
+                } else {
+                    neighbors.withTest(SuperBlockMasonryMatch.INSTANCE);
+                }
+                ModelStateData.MASONRY_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
             }
 
+            if(neighbors != null) {
+                neighbors.release();
+            }
+            
             break;
 
         case FLOW:

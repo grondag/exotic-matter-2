@@ -18,11 +18,7 @@ package grondag.brocade.connect.api.world;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
-import javax.annotation.Nullable;
-
 import org.apiguardian.api.API;
-
-import net.minecraft.block.BlockState;
 
 /**
  * Implement to define when a block neighbor should be considered "present and matching" for purposes
@@ -39,5 +35,5 @@ import net.minecraft.block.BlockState;
 @API(status = STABLE)
 @FunctionalInterface
 public interface BlockTest {
-    boolean apply(BlockState fromBlockState, @Nullable Object fromModelState, BlockState toBlockState, @Nullable Object toModelState);
+    boolean apply(BlockTestContext context);
 }
