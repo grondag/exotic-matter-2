@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 import org.joml.Matrix4f;
 
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
@@ -25,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public class StackedPlatesMeshFactory extends ShapeMeshGenerator {
+public class StackedPlatesMeshFactory extends MeshFactory {
     // This may not be the right setup - refactored surfaces at a time this wasn't
     // being actively used.
     protected static Surface TOP_AND_BOTTOM_SURFACE = Surface.builder(SurfaceTopology.CUBIC)
@@ -109,20 +108,6 @@ public class StackedPlatesMeshFactory extends ShapeMeshGenerator {
     @Override
     public BlockOrientationType orientationType(ISuperModelState modelState) {
         return BlockOrientationType.FACE;
-    }
-
-    @Override
-    public SideShape sideShape(ISuperModelState modelState, Direction side) {
-        if (modelState.getMetaData() == 15)
-            return SideShape.SOLID;
-
-        if (side.getAxis() == modelState.getAxis()) {
-            return (side.getDirection() == Direction.AxisDirection.POSITIVE) == modelState.isAxisInverted()
-                    ? SideShape.SOLID
-                    : SideShape.MISSING;
-        } else {
-            return modelState.getMetaData() > 8 ? SideShape.PARTIAL : SideShape.MISSING;
-        }
     }
 
     @Override

@@ -10,7 +10,7 @@ import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.brocade.mesh.ModelShape;
-import grondag.brocade.mesh.ShapeMeshGenerator;
+import grondag.brocade.mesh.MeshFactory;
 import grondag.brocade.painting.PaintLayer;
 
 /**
@@ -22,7 +22,7 @@ import grondag.brocade.painting.PaintLayer;
 public class ModelStateFlagHelper {
     public static final int getFlags(ISuperModelState state) {
         final ModelShape<?> shape = state.getShape();
-        final ShapeMeshGenerator mesh = shape.meshFactory();
+        final MeshFactory mesh = shape.meshFactory();
 
         int flags = STATE_FLAG_IS_POPULATED | mesh.getStateFlags(state);
 

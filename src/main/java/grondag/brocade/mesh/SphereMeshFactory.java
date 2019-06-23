@@ -5,7 +5,6 @@ import static grondag.brocade.state.ModelStateData.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
@@ -21,7 +20,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class SphereMeshFactory extends ShapeMeshGenerator {
+public class SphereMeshFactory extends MeshFactory {
     private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.TILED).withAllowBorders(false)
             .withDisabledLayers(PaintLayer.LAMP, PaintLayer.CUT).build();
 
@@ -70,11 +69,6 @@ public class SphereMeshFactory extends ShapeMeshGenerator {
     @Override
     public int geometricSkyOcclusion(ISuperModelState modelState) {
         return 0;
-    }
-
-    @Override
-    public SideShape sideShape(ISuperModelState modelState, Direction side) {
-        return SideShape.MISSING;
     }
 
     @Override

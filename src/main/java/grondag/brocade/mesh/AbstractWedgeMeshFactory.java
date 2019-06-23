@@ -5,8 +5,6 @@ import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
 import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.connect.api.model.BlockEdge;
-import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
@@ -17,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public abstract class AbstractWedgeMeshFactory extends ShapeMeshGenerator {
+public abstract class AbstractWedgeMeshFactory extends MeshFactory {
 
     protected static final Surface BACK_AND_BOTTOM_SURFACE = Surface.builder(SurfaceTopology.CUBIC)
             .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
@@ -52,12 +50,6 @@ public abstract class AbstractWedgeMeshFactory extends ShapeMeshGenerator {
     @Override
     public BlockOrientationType orientationType(ISuperModelState modelState) {
         return BlockOrientationType.EDGE;
-    }
-
-    @Override
-    public SideShape sideShape(ISuperModelState modelState, Direction side) {
-        BlockEdge corner = BlockEdge.find(modelState.getAxis(), modelState.getAxisRotation());
-        return side == corner.face1 || side == corner.face2 ? SideShape.SOLID : SideShape.MISSING;
     }
 
     @Override

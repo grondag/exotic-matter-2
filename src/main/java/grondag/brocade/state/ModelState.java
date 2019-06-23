@@ -25,7 +25,6 @@ import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
 import grondag.brocade.connect.api.world.BlockNeighbors;
 import grondag.brocade.connect.impl.CornerJoinStateSelector;
-import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.mesh.ModelShapes;
@@ -813,11 +812,6 @@ public class ModelState implements ISuperModelState {
     @Override
     public boolean isAdditive() {
         return this.getShape().meshFactory().isAdditive();
-    }
-
-    @Override
-    public SideShape sideShape(Direction side) {
-        return getShape().meshFactory().sideShape(this, side);
     }
 
     @Override

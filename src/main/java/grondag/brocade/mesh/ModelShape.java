@@ -6,7 +6,7 @@ import grondag.brocade.Brocade;
 import grondag.brocade.state.MetaUsage;
 import net.minecraft.client.resource.language.I18n;
 
-public class ModelShape<T extends ShapeMeshGenerator> {
+public class ModelShape<T extends MeshFactory> {
     private static int nextOrdinal = 0;
 
     private final Class<T> meshFactoryClass;

@@ -7,7 +7,6 @@ import grondag.brocade.connect.api.model.FaceEdge;
 import grondag.brocade.connect.api.state.CornerJoinFaceState;
 import grondag.brocade.connect.api.state.CornerJoinFaceStates;
 import grondag.brocade.connect.api.state.CornerJoinState;
-import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.dispatch.SimpleQuadBounds;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
@@ -29,7 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public class SquareColumnMeshFactory extends ShapeMeshGenerator {
+public class SquareColumnMeshFactory extends MeshFactory {
     public static final int MIN_CUTS = 1;
     public static final int MAX_CUTS = 3;
 
@@ -110,11 +109,6 @@ public class SquareColumnMeshFactory extends ShapeMeshGenerator {
     @Override
     public BlockOrientationType orientationType(ISuperModelState modelState) {
         return BlockOrientationType.AXIS;
-    }
-
-    @Override
-    public SideShape sideShape(ISuperModelState modelState, Direction side) {
-        return SideShape.PARTIAL;
     }
 
     private void makeFaceQuads(ISuperModelState state, Direction face, FaceSpec spec, Consumer<IPolygon> target) {

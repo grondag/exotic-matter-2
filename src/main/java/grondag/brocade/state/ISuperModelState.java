@@ -7,11 +7,11 @@ import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
-import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
+import grondag.brocade.primitives.Transform;
 import grondag.brocade.terrain.TerrainState;
 import grondag.fermion.color.ColorMap;
 import grondag.fermion.color.ColorMap.EnumColorMap;
@@ -237,8 +237,6 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
 
     /** True if shape can be placed on itself to grow */
     boolean isAdditive();
-
-    SideShape sideShape(Direction side);
 
     /** returns true if geometry is a full 1x1x1 cube. */
     boolean isCube();

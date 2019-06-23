@@ -3,7 +3,6 @@ package grondag.brocade.mesh;
 import java.util.function.Consumer;
 
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.state.ISuperModelState;
 import grondag.brocade.state.StateFormat;
@@ -12,7 +11,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-public abstract class ShapeMeshGenerator {
+public abstract class MeshFactory {
     /**
      * used by ModelState to know why type of state representation is needed by this
      * shape
@@ -31,11 +30,11 @@ public abstract class ShapeMeshGenerator {
      */
     public final long defaultShapeStateBits;
 
-    protected ShapeMeshGenerator(StateFormat stateFormat, int stateFlags) {
+    protected MeshFactory(StateFormat stateFormat, int stateFlags) {
         this(stateFormat, stateFlags, 0L);
     }
 
-    protected ShapeMeshGenerator(StateFormat stateFormat, int stateFlags, long defaultShapeStateBits) {
+    protected MeshFactory(StateFormat stateFormat, int stateFlags, long defaultShapeStateBits) {
         this.stateFormat = stateFormat;
         this.stateFlags = stateFlags;
         this.defaultShapeStateBits = defaultShapeStateBits;
@@ -109,8 +108,6 @@ public abstract class ShapeMeshGenerator {
 
     public abstract boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis,
             ISuperBlock block, ISuperModelState modelState);
-
-    public abstract SideShape sideShape(ISuperModelState modelState, Direction side);
 
     public int getStateFlags(ISuperModelState modelState) {
         return stateFlags;

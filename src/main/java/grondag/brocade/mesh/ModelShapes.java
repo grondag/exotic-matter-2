@@ -17,12 +17,12 @@ public class ModelShapes {
     static final ArrayList<ModelShape<?>> allByOrdinal = new ArrayList<>();
     static List<ModelShape<?>> guiAvailableShapes = ImmutableList.of();
 
-    public static <V extends ShapeMeshGenerator> ModelShape<V> create(String systemName, Class<V> meshFactoryClass,
+    public static <V extends MeshFactory> ModelShape<V> create(String systemName, Class<V> meshFactoryClass,
             MetaUsage metaUsage, boolean isAvailableInGui) {
         return new ModelShape<V>(systemName, meshFactoryClass, metaUsage, isAvailableInGui);
     }
 
-    public static <V extends ShapeMeshGenerator> ModelShape<V> create(String systemName, Class<V> meshFactoryClass,
+    public static <V extends MeshFactory> ModelShape<V> create(String systemName, Class<V> meshFactoryClass,
             MetaUsage metaUsage) {
         return new ModelShape<V>(systemName, meshFactoryClass, metaUsage);
     }
