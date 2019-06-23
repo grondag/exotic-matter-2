@@ -8,7 +8,7 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import grondag.fermion.world.Rotation;
 import net.minecraft.util.math.Direction;
 

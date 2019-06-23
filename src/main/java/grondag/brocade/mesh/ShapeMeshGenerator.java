@@ -3,10 +3,10 @@ package grondag.brocade.mesh;
 import java.util.function.Consumer;
 
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.model.dispatch.SideShape;
-import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.StateFormat;
+import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.primitives.polygon.IPolygon;
+import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.StateFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;

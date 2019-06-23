@@ -4,7 +4,7 @@ import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.SuperBlock;
 import grondag.brocade.block.SuperBlockStackHelper;
 import grondag.brocade.collision.CollisionBoxDispatcher;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

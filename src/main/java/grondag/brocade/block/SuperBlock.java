@@ -6,9 +6,9 @@ import javax.annotation.Nullable;
 
 import grondag.brocade.collision.CollisionBoxDispatcher;
 import grondag.brocade.connect.api.world.BlockTest;
-import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.ModelState;
 import grondag.brocade.painting.PaintLayer;
+import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.ModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;

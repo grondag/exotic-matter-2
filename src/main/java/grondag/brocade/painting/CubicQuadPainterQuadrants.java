@@ -2,11 +2,11 @@ package grondag.brocade.painting;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.state.ISuperModelState;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.connect.api.model.FaceCorner;
 import grondag.brocade.connect.api.state.CornerJoinFaceState;
 import grondag.brocade.connect.api.state.CornerJoinFaceStates;
-import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.util.math.Direction;
 
 /**

@@ -2,9 +2,9 @@ package grondag.brocade.painting;
 
 import grondag.brocade.painting.QuadPainter.IPaintMethod;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.state.ISuperModelState;
 import grondag.brocade.api.texture.TextureScale;
 import grondag.brocade.api.texture.TextureSet;
-import grondag.brocade.model.state.ISuperModelState;
 
 public class QuadPainterFactory {
     private static IPaintMethod DO_NOTHING = new IPaintMethod() {

@@ -2,7 +2,7 @@ package grondag.brocade.block;
 
 import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.connect.api.world.BlockTestContext;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 

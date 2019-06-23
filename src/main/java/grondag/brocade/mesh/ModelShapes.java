@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.brocade.model.state.MetaUsage;
+import grondag.brocade.state.MetaUsage;
 
 public class ModelShapes {
 

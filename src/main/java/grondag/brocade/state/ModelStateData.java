@@ -1,4 +1,4 @@
-package grondag.brocade.model.state;
+package grondag.brocade.state;
 
 
 

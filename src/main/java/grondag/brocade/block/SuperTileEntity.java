@@ -1,7 +1,7 @@
 package grondag.brocade.block;
 
-import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.ModelState;
+import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.ModelState;
 import grondag.fermion.serialization.NBTDictionary;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;

@@ -1,4 +1,4 @@
-package grondag.brocade.model.dispatch;
+package grondag.brocade.dispatch;
 
 import net.minecraft.util.math.Direction;
 

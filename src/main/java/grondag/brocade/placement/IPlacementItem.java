@@ -7,7 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.SuperBlockStackHelper;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.structures.BinaryEnumSet;
 import grondag.fermion.varia.FixedRegionBounds;

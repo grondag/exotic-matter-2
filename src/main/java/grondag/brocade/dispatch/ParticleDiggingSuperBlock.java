@@ -1,4 +1,4 @@
-package grondag.brocade.model.dispatch;
+package grondag.brocade.dispatch;
 //TODO: restore or remove
 
 //package grondag.brocade.model.varia;

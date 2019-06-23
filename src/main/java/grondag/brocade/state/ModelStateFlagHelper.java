@@ -1,16 +1,14 @@
-package grondag.brocade.model.state;
+package grondag.brocade.state;
 
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_DISABLE_BLOCK_ONLY;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_IS_POPULATED;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_DISABLE_BLOCK_ONLY;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_IS_POPULATED;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
-
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
-
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.mesh.ShapeMeshGenerator;
 import grondag.brocade.painting.PaintLayer;

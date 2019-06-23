@@ -1,9 +1,9 @@
-package grondag.brocade.model.dispatch;
+package grondag.brocade.dispatch;
 
 import grondag.fermion.color.BlockColorMapProvider;
 import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.brocade.painting.PaintLayer;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import net.minecraft.item.Item;
 
 /**

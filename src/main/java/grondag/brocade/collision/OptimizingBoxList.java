@@ -2,7 +2,7 @@ package grondag.brocade.collision;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import grondag.fermion.config.FermionConfig;
 import grondag.fermion.varia.Useful;
 import net.minecraft.util.math.BoundingBox;

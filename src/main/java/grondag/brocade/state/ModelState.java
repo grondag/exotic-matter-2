@@ -1,16 +1,16 @@
-package grondag.brocade.model.state;
+package grondag.brocade.state;
 
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_POS;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
-import static grondag.brocade.model.state.ModelStateData.TEST_GETTER_STATIC;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_POS;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
+import static grondag.brocade.state.ModelStateData.TEST_GETTER_STATIC;
 
 import org.joml.Matrix4f;
 
@@ -25,10 +25,10 @@ import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
 import grondag.brocade.connect.api.world.BlockNeighbors;
 import grondag.brocade.connect.impl.CornerJoinStateSelector;
+import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.mesh.ModelShapes;
-import grondag.brocade.model.dispatch.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.painting.VertexProcessors;

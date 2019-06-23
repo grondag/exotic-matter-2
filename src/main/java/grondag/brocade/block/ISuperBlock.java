@@ -1,7 +1,7 @@
 package grondag.brocade.block;
 
 import grondag.brocade.connect.api.world.BlockTest;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

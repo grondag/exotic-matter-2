@@ -4,11 +4,11 @@ import java.util.IdentityHashMap;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
-import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
+import grondag.brocade.state.ISuperModelState;
 
 /**
  * Low-garbage consumer for quads from mesh generators that manages

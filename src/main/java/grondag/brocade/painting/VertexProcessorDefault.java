@@ -1,7 +1,7 @@
 package grondag.brocade.painting;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import grondag.fermion.color.ColorHelper;
 
 public class VertexProcessorDefault extends VertexProcessor {

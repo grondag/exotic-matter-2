@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import grondag.brocade.api.texture.TextureRotation;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.api.texture.TextureSetBuilder;
-import grondag.brocade.model.state.ModelStateData;
+import grondag.brocade.state.ModelStateData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;

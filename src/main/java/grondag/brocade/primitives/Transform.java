@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import grondag.brocade.connect.api.model.ClockwiseRotation;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;

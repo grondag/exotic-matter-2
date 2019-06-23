@@ -4,7 +4,7 @@ import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.block.SuperBlockStackHelper;
 import grondag.brocade.connect.api.model.BlockEdge;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import grondag.fermion.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

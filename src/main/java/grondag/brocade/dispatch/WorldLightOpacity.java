@@ -1,8 +1,8 @@
-package grondag.brocade.model.dispatch;
+package grondag.brocade.dispatch;
 
 import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.painting.PaintLayer;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 
 /**
  * Less granular representation of block translucency than Translucency.

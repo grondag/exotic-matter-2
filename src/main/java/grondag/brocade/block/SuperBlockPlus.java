@@ -1,7 +1,7 @@
 package grondag.brocade.block;
 
-import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.MetaUsage;
+import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MetaUsage;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

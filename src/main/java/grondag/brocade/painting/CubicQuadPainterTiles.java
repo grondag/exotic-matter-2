@@ -2,8 +2,8 @@ package grondag.brocade.painting;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.state.ISuperModelState;
 import grondag.brocade.api.texture.TextureSet;
-import grondag.brocade.model.state.ISuperModelState;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
 import it.unimi.dsi.fastutil.HashCommon;

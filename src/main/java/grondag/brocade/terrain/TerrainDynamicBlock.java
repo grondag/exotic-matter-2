@@ -1,7 +1,7 @@
 package grondag.brocade.terrain;
 
 import grondag.brocade.init.ModShapes;
-import grondag.brocade.model.state.ISuperModelState;
+import grondag.brocade.state.ISuperModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

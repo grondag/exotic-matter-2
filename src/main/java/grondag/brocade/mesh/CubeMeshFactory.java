@@ -1,13 +1,11 @@
 package grondag.brocade.mesh;
 
-import static grondag.brocade.model.state.ModelStateData.STATE_FLAG_NONE;
+import static grondag.brocade.state.ModelStateData.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
 import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.model.dispatch.SideShape;
-import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.StateFormat;
+import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
@@ -16,6 +14,8 @@ import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IPolyStream;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
+import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.StateFormat;
 import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

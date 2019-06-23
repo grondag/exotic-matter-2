@@ -1,4 +1,4 @@
-package grondag.brocade.model.dispatch;
+package grondag.brocade.dispatch;
 
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.client.render.BufferBuilder;

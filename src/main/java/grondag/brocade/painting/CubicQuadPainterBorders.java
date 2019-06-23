@@ -3,10 +3,10 @@ package grondag.brocade.painting;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.connect.api.state.CornerJoinFaceStates;
 import grondag.brocade.connect.api.state.CornerJoinState;
-import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.primitives.FaceQuadInputs;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.state.ISuperModelState;
 import grondag.fermion.world.Rotation;
 import net.minecraft.util.math.Direction;
 

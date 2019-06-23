@@ -13,11 +13,11 @@ import org.joml.Vector3f;
 
 import com.google.common.collect.ImmutableList;
 
+import grondag.brocade.state.ISuperModelState;
 import grondag.fermion.cache.ObjectSimpleCacheLoader;
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
 import net.minecraft.util.math.BoundingBox;
 import net.minecraft.util.shape.VoxelShape;
-import grondag.brocade.model.state.ISuperModelState;
 
 public class CollisionBoxDispatcher {
     static final BlockingQueue<Runnable> QUEUE = new LinkedBlockingQueue<Runnable>();

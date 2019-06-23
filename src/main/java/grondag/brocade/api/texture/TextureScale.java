@@ -1,6 +1,6 @@
 package grondag.brocade.api.texture;
 
-import static grondag.brocade.model.state.ModelStateData.*;
+import static grondag.brocade.state.ModelStateData.*;
 
 public enum TextureScale {
     /** 1x1 */

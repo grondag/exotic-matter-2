@@ -1,4 +1,4 @@
-package grondag.brocade.model.state;
+package grondag.brocade.state;
 
 import org.joml.Matrix4f;
 
@@ -7,9 +7,9 @@ import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
+import grondag.brocade.dispatch.SideShape;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
-import grondag.brocade.model.dispatch.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.terrain.TerrainState;
