@@ -1,10 +1,9 @@
-package grondag.brocade.legacy.block;
+package grondag.brocade.block;
 
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import grondag.brocade.block.SuperBlockBorderMatch;
 import grondag.brocade.collision.CollisionBoxDispatcher;
 import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.model.state.ISuperModelState;

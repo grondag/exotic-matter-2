@@ -1,9 +1,9 @@
 package grondag.brocade.placement;
 
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlockStackHelper;
 import grondag.brocade.connect.api.model.BlockEdge;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
-import grondag.brocade.legacy.block.ISuperBlock;
-import grondag.brocade.legacy.block.SuperBlockStackHelper;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.fermion.world.WorldHelper;
 import net.minecraft.block.Block;

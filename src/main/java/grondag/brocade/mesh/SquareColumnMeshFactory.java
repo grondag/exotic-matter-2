@@ -2,16 +2,16 @@ package grondag.brocade.mesh;
 
 import java.util.function.Consumer;
 
+import grondag.brocade.block.ISuperBlock;
 import grondag.brocade.connect.api.model.FaceEdge;
 import grondag.brocade.connect.api.state.CornerJoinFaceState;
 import grondag.brocade.connect.api.state.CornerJoinFaceStates;
 import grondag.brocade.connect.api.state.CornerJoinState;
-import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.model.dispatch.SideShape;
+import grondag.brocade.model.dispatch.SimpleQuadBounds;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.ModelStateData;
 import grondag.brocade.model.state.StateFormat;
-import grondag.brocade.model.varia.SideShape;
-import grondag.brocade.model.varia.SimpleQuadBounds;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;

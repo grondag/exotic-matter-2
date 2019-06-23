@@ -4,9 +4,9 @@ package grondag.brocade.placement;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlockStackHelper;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
-import grondag.brocade.legacy.block.ISuperBlock;
-import grondag.brocade.legacy.block.SuperBlockStackHelper;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.structures.BinaryEnumSet;

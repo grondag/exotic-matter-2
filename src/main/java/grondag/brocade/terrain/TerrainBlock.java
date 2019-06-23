@@ -1,6 +1,6 @@
 package grondag.brocade.terrain;
 
-import grondag.brocade.legacy.block.SuperBlock;
+import grondag.brocade.block.SuperBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;

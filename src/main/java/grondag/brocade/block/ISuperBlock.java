@@ -1,4 +1,4 @@
-package grondag.brocade.legacy.block;
+package grondag.brocade.block;
 
 import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.model.state.ISuperModelState;

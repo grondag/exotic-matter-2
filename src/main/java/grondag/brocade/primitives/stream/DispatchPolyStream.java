@@ -2,7 +2,7 @@ package grondag.brocade.primitives.stream;
 
 import java.util.function.Consumer;
 
-import grondag.brocade.legacy.render.QuadListKeyBuilder;
+import grondag.brocade.model.dispatch.QuadListKeyBuilder;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.polygon.IStreamReaderPolygon;
 import grondag.fermion.intstream.IntStreams;

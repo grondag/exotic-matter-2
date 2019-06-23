@@ -1,4 +1,4 @@
-package grondag.brocade.model.varia;
+package grondag.brocade.model.dispatch;
 
 //TODO: remove
 public enum SideShape {

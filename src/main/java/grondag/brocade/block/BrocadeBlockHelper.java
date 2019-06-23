@@ -2,7 +2,6 @@ package grondag.brocade.block;
 
 
 
-import grondag.brocade.legacy.block.SuperBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

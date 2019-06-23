@@ -1,4 +1,4 @@
-package grondag.brocade.model.varia;
+package grondag.brocade.model.dispatch;
 
 import grondag.fermion.color.BlockColorMapProvider;
 import grondag.fermion.color.ColorMap.EnumColorMap;

@@ -4,7 +4,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
-import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.block.ISuperBlock;
 import grondag.fermion.world.PackedBlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

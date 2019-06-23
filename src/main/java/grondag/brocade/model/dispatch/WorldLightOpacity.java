@@ -1,4 +1,4 @@
-package grondag.brocade.model.varia;
+package grondag.brocade.model.dispatch;
 
 import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.painting.PaintLayer;

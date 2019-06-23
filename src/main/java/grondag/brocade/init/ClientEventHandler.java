@@ -1,3 +1,4 @@
+package grondag.brocade.init;
 //TODO: remove or redo
 
 //package grondag.brocade.legacy;

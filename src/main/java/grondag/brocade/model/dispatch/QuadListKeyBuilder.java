@@ -1,4 +1,4 @@
-package grondag.brocade.legacy.render;
+package grondag.brocade.model.dispatch;
 
 import java.util.TreeSet;
 import java.util.function.Consumer;

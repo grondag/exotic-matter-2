@@ -1,6 +1,6 @@
 package grondag.brocade.placement;
 
-import grondag.brocade.legacy.block.ISuperBlock;
+import grondag.brocade.block.ISuperBlock;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;

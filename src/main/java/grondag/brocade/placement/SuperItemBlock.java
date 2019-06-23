@@ -1,9 +1,9 @@
 package grondag.brocade.placement;
 
+import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.SuperBlock;
+import grondag.brocade.block.SuperBlockStackHelper;
 import grondag.brocade.collision.CollisionBoxDispatcher;
-import grondag.brocade.legacy.block.ISuperBlock;
-import grondag.brocade.legacy.block.SuperBlock;
-import grondag.brocade.legacy.block.SuperBlockStackHelper;
 import grondag.brocade.model.state.ISuperModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

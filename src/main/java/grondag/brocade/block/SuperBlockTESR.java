@@ -1,3 +1,4 @@
+package grondag.brocade.block;
 //TODO: remove or restore
 
 //package grondag.brocade.legacy.block;
