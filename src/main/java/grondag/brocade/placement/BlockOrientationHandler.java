@@ -1,18 +1,18 @@
 package grondag.brocade.placement;
 
+import grondag.brocade.connect.api.model.BlockEdge;
+import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.legacy.block.SuperBlockStackHelper;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.world.BlockCorner;
-import grondag.fermion.world.Rotation;
 import grondag.fermion.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -140,12 +140,12 @@ public class BlockOrientationHandler {
             Direction adjacentFace = WorldHelper.closestAdjacentFace(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY,
                     (float) pPos.hitZ);
 
-            BlockCorner corner = BlockCorner.find(pPos.onFace.getOpposite(), adjacentFace);
+            BlockEdge corner = BlockEdge.find(pPos.onFace.getOpposite(), adjacentFace);
 
-            outputModelState.setAxis(corner.orthogonalAxis);
+            outputModelState.setAxis(corner.parallelAxis);
 
             if (outputModelState.hasAxisRotation()) {
-                outputModelState.setAxisRotation(corner.modelRotation);
+                outputModelState.setAxisRotation(corner.rotation);
                 isRotationDone = true;
             }
         } else {
@@ -156,7 +156,7 @@ public class BlockOrientationHandler {
         }
 
         if (!isRotationDone && outputModelState.hasAxisRotation()) {
-            outputModelState.setAxisRotation(Rotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
+            outputModelState.setAxisRotation(ClockwiseRotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
         }
 
         SuperBlockStackHelper.setStackModelState(stack, outputModelState);

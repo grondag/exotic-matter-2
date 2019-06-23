@@ -4,9 +4,9 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
+import grondag.brocade.connect.api.model.BlockEdge;
 import grondag.brocade.connect.api.model.FaceEdge;
-import grondag.brocade.world.BlockCorner;
-import grondag.brocade.world.NeighborBlocks;
+import grondag.brocade.connect.api.world.BlockNeighbors;
 import net.minecraft.util.math.Direction;
 
 @API(status = STABLE)
@@ -69,7 +69,7 @@ public enum SimpleJoinFaceState {
     }
 
     
-    public static SimpleJoinFaceState find(Direction face, NeighborBlocks.NeighborTestResults tests) {
+    public static SimpleJoinFaceState find(Direction face, BlockNeighbors tests) {
         int faceFlags = 0;
 
         SimpleJoinFaceState fjs;
@@ -79,7 +79,7 @@ public enum SimpleJoinFaceState {
         } else {
             for (FaceEdge fside : EDGES) {
                 Direction joinFace = fside.toWorld(face);
-                if (tests.result(joinFace) && !tests.result(BlockCorner.find(face, joinFace))) {
+                if (tests.result(joinFace) && !tests.result(BlockEdge.find(face, joinFace))) {
                     faceFlags |= fside.ordinalBit;
                 }
             }

@@ -3,16 +3,16 @@ package grondag.brocade.model.state;
 
 
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
+import grondag.brocade.connect.api.model.ClockwiseRotation;
+import grondag.brocade.connect.api.state.CornerJoinState;
+import grondag.brocade.connect.api.state.SimpleJoinState;
 import grondag.brocade.connect.api.world.ModelStateFunction;
 import grondag.brocade.legacy.block.SuperBlock;
 import grondag.brocade.mesh.ModelShapes;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessors;
 import grondag.brocade.terrain.TerrainState;
-import grondag.brocade.world.CornerJoinBlockStateSelector;
-import grondag.brocade.world.SimpleJoin;
 import grondag.fermion.varia.BitPacker64;
-import grondag.fermion.world.Rotation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -33,8 +33,8 @@ public class ModelStateData {
     public static final BitPacker64<ModelState>.EnumElement<Direction.Axis> AXIS = PACKER_CORE
             .createEnumElement(Direction.Axis.class);
     public static final BitPacker64<ModelState>.BooleanElement AXIS_INVERTED = PACKER_CORE.createBooleanElement();
-    public static final BitPacker64<ModelState>.EnumElement<Rotation> AXIS_ROTATION = PACKER_CORE
-            .createEnumElement(Rotation.class);
+    public static final BitPacker64<ModelState>.EnumElement<ClockwiseRotation> AXIS_ROTATION = PACKER_CORE
+            .createEnumElement(ClockwiseRotation.class);
 
     public static final BitPacker64<ModelState> PACKER_LAYER_BASE = new BitPacker64<ModelState>(m -> m.layerBitsBase,
             (m, b) -> m.layerBitsBase = b);
@@ -67,9 +67,9 @@ public class ModelStateData {
             (m, b) -> m.shapeBits0 = b);
     public static final BitPacker64<ModelState>.IntElement SPECIES = PACKER_SHAPE_BLOCK.createIntElement(16);
     public static final BitPacker64<ModelState>.IntElement BLOCK_JOIN = PACKER_SHAPE_BLOCK
-            .createIntElement(CornerJoinBlockStateSelector.BLOCK_JOIN_STATE_COUNT);
+            .createIntElement(CornerJoinState.STATE_COUNT);
     public static final BitPacker64<ModelState>.IntElement MASONRY_JOIN = PACKER_SHAPE_BLOCK
-            .createIntElement(SimpleJoin.STATE_COUNT);
+            .createIntElement(SimpleJoinState.STATE_COUNT);
 
     public static final BitPacker64<ModelState> PACKER_SHAPE_FLOW = new BitPacker64<ModelState>(m -> m.shapeBits0,
             (m, b) -> m.shapeBits0 = b);

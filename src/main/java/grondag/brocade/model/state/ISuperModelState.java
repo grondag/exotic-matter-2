@@ -3,6 +3,7 @@ package grondag.brocade.model.state;
 import org.joml.Matrix4f;
 
 import grondag.brocade.api.texture.TextureSet;
+import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
 import grondag.brocade.legacy.block.ISuperBlock;
@@ -16,7 +17,6 @@ import grondag.fermion.color.ColorMap;
 import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.serialization.PacketSerializable;
-import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -159,13 +159,13 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
      * For machines and other blocks with a privileged horizontal face, North is
      * considered the zero rotation.
      */
-    Rotation getAxisRotation();
+    ClockwiseRotation getAxisRotation();
 
     /**
      * For machines and other blocks with a privileged horizontal face, North is
      * considered the zero rotation.
      */
-    void setAxisRotation(Rotation rotation);
+    void setAxisRotation(ClockwiseRotation rotation);
 
     /**
      * Multiblock shapes also get a full 64 bits of information - does not update

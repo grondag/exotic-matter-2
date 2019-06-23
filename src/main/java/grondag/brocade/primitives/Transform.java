@@ -4,8 +4,8 @@ package grondag.brocade.primitives;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
+import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.fermion.world.Rotation;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -26,17 +26,16 @@ public class Transform {
     static {
         final Axis[] avals = { Axis.X, Axis.Y, Axis.Z, null };
         for (Axis axis : avals) {
-            for (int r = 0; r < Rotation.COUNT; r++) {
-                final Rotation rot = Rotation.VALUES[r];
+            for (ClockwiseRotation rot : ClockwiseRotation.values()) {
                 populateLookups(axis, false, rot);
                 populateLookups(axis, true, rot);
             }
         }
 
-        IDENTITY_FACEMAP = getFaceMap(computeKey(null, false, Rotation.ROTATE_NONE));
+        IDENTITY_FACEMAP = getFaceMap(computeKey(null, false, ClockwiseRotation.ROTATE_NONE));
     }
 
-    private static void populateLookups(Axis axis, boolean isAxisInverted, Rotation rotation) {
+    private static void populateLookups(Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
         int key = computeKey(axis, isAxisInverted, rotation);
         Matrix4f matrix = computeMatrix(axis, isAxisInverted, rotation);
 //        Log.info(String.format("key=%d axis=%s isInverted=%s rotation=%s", 
@@ -92,14 +91,14 @@ public class Transform {
         return MATRIX_LOOKUP[computeTransformKey(modelState)];
     }
 
-    private static Matrix4f computeMatrix(Direction.Axis axis, boolean isAxisInverted, Rotation rotation) {
+    private static Matrix4f computeMatrix(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
         if (axis != null) {
-            if (rotation != Rotation.ROTATE_NONE) {
+            if (rotation != ClockwiseRotation.ROTATE_NONE) {
                 return getMatrixForAxisAndRotation(axis, isAxisInverted, rotation);
             } else {
                 return getMatrixForAxis(axis, isAxisInverted);
             }
-        } else if (rotation != Rotation.ROTATE_NONE) {
+        } else if (rotation != ClockwiseRotation.ROTATE_NONE) {
             return getMatrixForRotation(rotation);
         } else {
             return new Matrix4f().identity();
@@ -129,7 +128,7 @@ public class Transform {
      * @param isAxisInverted is ignored if axis
      * @param axisRotation   null handled as no axis rotation
      */
-    private static int computeKey(Direction.Axis axis, boolean isAxisInverted, Rotation rotation) {
+    private static int computeKey(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
         int bits = 0;
         if (axis != null) {
             bits = (axis.ordinal() + 1) | (isAxisInverted ? 4 : 0);
@@ -184,7 +183,7 @@ public class Transform {
     /**
      * See {@link #getMatrix4f()}t
      */
-    private static Matrix4f getMatrixForRotation(Rotation rotation) {
+    private static Matrix4f getMatrixForRotation(ClockwiseRotation rotation) {
         switch (rotation) {
         default:
         case ROTATE_NONE:
@@ -208,7 +207,7 @@ public class Transform {
      * See {@link #getMatrix4f()}t
      */
     private static Matrix4f getMatrixForAxisAndRotation(Direction.Axis axis, boolean isAxisInverted,
-            Rotation rotation) {
+            ClockwiseRotation rotation) {
         Matrix4f result = getMatrixForAxis(axis, isAxisInverted);
         result.mul(getMatrixForRotation(rotation));
         return result;

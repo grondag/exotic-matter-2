@@ -3,23 +3,32 @@ package grondag.brocade.placement;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;
-import grondag.brocade.world.BlockCorner;
+import grondag.brocade.connect.api.model.BlockEdge;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.client.resource.language.I18n;
 
 public enum BlockOrientationEdge implements ILocalized {
-    DYNAMIC(null), MATCH_CLOSEST(null), UP_EAST(BlockCorner.UP_EAST), UP_WEST(BlockCorner.UP_WEST),
-    UP_NORTH(BlockCorner.UP_NORTH), UP_SOUTH(BlockCorner.UP_SOUTH), NORTH_EAST(BlockCorner.NORTH_EAST),
-    NORTH_WEST(BlockCorner.NORTH_WEST), SOUTH_EAST(BlockCorner.SOUTH_EAST), SOUTH_WEST(BlockCorner.SOUTH_WEST),
-    DOWN_EAST(BlockCorner.DOWN_EAST), DOWN_WEST(BlockCorner.DOWN_WEST), DOWN_NORTH(BlockCorner.DOWN_NORTH),
-    DOWN_SOUTH(BlockCorner.DOWN_SOUTH);
+    DYNAMIC(null), 
+    MATCH_CLOSEST(null), 
+    UP_EAST(BlockEdge.UP_EAST), 
+    UP_WEST(BlockEdge.UP_WEST),
+    UP_NORTH(BlockEdge.UP_NORTH), 
+    UP_SOUTH(BlockEdge.UP_SOUTH), 
+    NORTH_EAST(BlockEdge.NORTH_EAST),
+    NORTH_WEST(BlockEdge.NORTH_WEST), 
+    SOUTH_EAST(BlockEdge.SOUTH_EAST), 
+    SOUTH_WEST(BlockEdge.SOUTH_WEST),
+    DOWN_EAST(BlockEdge.DOWN_EAST), 
+    DOWN_WEST(BlockEdge.DOWN_WEST), 
+    DOWN_NORTH(BlockEdge.DOWN_NORTH),
+    DOWN_SOUTH(BlockEdge.DOWN_SOUTH);
 
-    public final BlockCorner edge;
+    public final BlockEdge edge;
 
     private static final String TAG_NAME = NBTDictionary.claim("blockOrientEdge");
 
-    private BlockOrientationEdge(BlockCorner edge) {
+    private BlockOrientationEdge(BlockEdge edge) {
         this.edge = edge;
     }
 

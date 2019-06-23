@@ -18,6 +18,8 @@ import grondag.brocade.Brocade;
 import grondag.brocade.BrocadeConfig;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
+import grondag.brocade.block.SuperBlockMasonryMatch;
+import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
 import grondag.brocade.connect.api.world.BlockNeighbors;
@@ -32,10 +34,8 @@ import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.painting.VertexProcessors;
 import grondag.brocade.primitives.Transform;
 import grondag.brocade.terrain.TerrainState;
-import grondag.brocade.world.SuperBlockMasonryMatch;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
-import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
@@ -613,12 +613,12 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public Rotation getAxisRotation() {
+    public ClockwiseRotation getAxisRotation() {
         return ModelStateData.AXIS_ROTATION.getValue(this);
     }
 
     @Override
-    public void setAxisRotation(Rotation rotation) {
+    public void setAxisRotation(ClockwiseRotation rotation) {
         populateStateFlagsIfNeeded();
         if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
             if (BrocadeConfig.BLOCKS.debugModelState)

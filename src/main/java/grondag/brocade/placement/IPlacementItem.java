@@ -4,6 +4,7 @@ package grondag.brocade.placement;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.legacy.block.SuperBlockStackHelper;
 import grondag.brocade.model.state.ISuperModelState;
@@ -12,7 +13,6 @@ import grondag.fermion.structures.BinaryEnumSet;
 import grondag.fermion.varia.FixedRegionBounds;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.PackedBlockPos;
-import grondag.fermion.world.Rotation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -179,13 +179,13 @@ public interface IPlacementItem {
         }
     }
 
-    public default Rotation getBlockPlacementRotation(ItemStack stack) {
+    public default ClockwiseRotation getBlockPlacementRotation(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
-            return Rotation.ROTATE_NONE;
+            return ClockwiseRotation.ROTATE_NONE;
 
         switch (SuperBlockStackHelper.getStackModelState(stack).orientationType()) {
         case EDGE:
-            return this.getBlockOrientationEdge(stack).edge.modelRotation;
+            return this.getBlockOrientationEdge(stack).edge.rotation;
 
         case CORNER:
             // TODO
@@ -194,7 +194,7 @@ public interface IPlacementItem {
         case FACE:
         case AXIS:
         default:
-            return Rotation.ROTATE_NONE;
+            return ClockwiseRotation.ROTATE_NONE;
         }
     }
 

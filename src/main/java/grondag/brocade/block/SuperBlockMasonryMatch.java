@@ -1,4 +1,4 @@
-package grondag.brocade.world;
+package grondag.brocade.block;
 
 import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.connect.api.world.BlockTestContext;
