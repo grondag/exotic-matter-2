@@ -44,12 +44,12 @@ public class BrocadeTextures {
     // blocks if test textures are temporarily disabled
 
     public static final TextureSet BIGTEX_TEST_SINGLE = TextureSet.builder().displayNameToken("bigtex_test_single")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "bigtex_single" : "noise_moderate_0_0")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/bigtex_single" : "blocks/noise_moderate_0_0")
             .versionCount(1).scale(SMALL).layout(SIMPLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("brocade", "bigtex_test_single");
 
     public static final TextureSet BIGTEX_TEST1 = TextureSet.builder().displayNameToken("big_tex_test1")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "bigtex" : "noise_moderate_0")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/bigtex" : "blocks/noise_moderate_0")
             .versionCount(4).scale(TINY).layout(SIMPLE).rotation(ROTATE_RANDOM).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("brocade", "big_tex_test1");
 
@@ -66,7 +66,7 @@ public class BrocadeTextures {
             .displayNameToken("big_tex_test5").scale(GIANT).build("brocade", "big_tex_test5");
 
     public static final TextureSet TEST = TextureSet.builder().displayNameToken("test")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "test" : "noise_moderate_0")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/test" : "blocks/noise_moderate_0")
             .versionCount(2).scale(SINGLE).layout(SIMPLE).rotation(ROTATE_NONE)
             .renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("brocade","test");
     
@@ -92,7 +92,7 @@ public class BrocadeTextures {
             .scale(TINY).build("brocade", "test_270_zoom");
 
     public static final TextureSet TEST_4X4 = TextureSet.builder().displayNameToken("test4x4")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "test4x4" : "noise_moderate_0_0")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/test4x4" : "blocks/noise_moderate_0_0")
             .versionCount(1).scale(SMALL).layout(SIMPLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("brocade", "test4x4");
 
@@ -112,35 +112,35 @@ public class BrocadeTextures {
     // ======================================================================
 
     public static final TextureSet BLOCK_COBBLE = TextureSet.builder().displayNameToken("cobble")
-            .baseTextureName("cobble").versionCount(4).scale(SINGLE).layout(SPLIT_X_8).rotation(ROTATE_RANDOM)
+            .baseTextureName("blocks/cobble").versionCount(4).scale(SINGLE).layout(SPLIT_X_8).rotation(ROTATE_RANDOM)
             .renderIntent(BASE_ONLY).groups(STATIC_TILES).build("brocade", "cobble");
 
     public static final TextureSet BLOCK_COBBLE_ZOOM = TextureSet.builder(BLOCK_COBBLE).displayNameToken("cobble_zoom")
             .scale(TINY).build("brocade", "cobble_zoom");
 
     public static final TextureSet BLOCK_NOISE_STRONG = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_strong")
-            .baseTextureName("noise_strong").build("brocade", "noise_strong");
+            .baseTextureName("blocks/noise_strong").build("brocade", "noise_strong");
     
     public static final TextureSet BLOCK_NOISE_STRONG_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_strong_zoom")
             .scale(TINY).build("brocade", "noise_strong_zoom");
 
     public static final TextureSet BLOCK_NOISE_MODERATE = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_moderate")
-            .baseTextureName("noise_moderate").build("brocade", "noise_moderate");
+            .baseTextureName("blocks/noise_moderate").build("brocade", "noise_moderate");
     
     public static final TextureSet BLOCK_NOISE_MODERATE_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_moderate_zoom")
             .scale(TINY).build("brocade", "noise_moderate_zoom");
     
     public static final TextureSet BLOCK_NOISE_SUBTLE = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_subtle")
-            .baseTextureName("noise_subtle").build("brocade", "noise_subtle");
+            .baseTextureName("blocks/noise_subtle").build("brocade", "noise_subtle");
     
     public static final TextureSet BLOCK_NOISE_SUBTLE_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_subtle_zoom")
             .scale(TINY).build("brocade", "noise_subtle_zoom");
 
     public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white")
-            .baseTextureName("white").versionCount(1).scale(SINGLE).layout(SPLIT_X_8)
+            .baseTextureName("blocks/white").versionCount(1).scale(SINGLE).layout(SPLIT_X_8)
             .rotation(ROTATE_NONE).groups(STATIC_TILES).build("brocade", "white");
 
     public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
-            .baseTextureName("border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13)
+            .baseTextureName("blocks/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13)
             .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("brocade", "border_smooth_blended");
 }

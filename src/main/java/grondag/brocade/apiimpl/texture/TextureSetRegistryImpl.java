@@ -51,7 +51,7 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
     }
     
     static {
-        DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("noise_moderate").versionCount(4).scale(TextureScale.SINGLE)
+        DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("blocks/noise_moderate").versionCount(4).scale(TextureScale.SINGLE)
                 .layout(TextureLayout.SPLIT_X_8).rotation(TextureRotation.ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_ONLY)
                 .groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
     }

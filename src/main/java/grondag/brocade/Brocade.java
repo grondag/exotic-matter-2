@@ -34,7 +34,6 @@ public class Brocade implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        BrocadeTextures.init();
         BrocadeBlocks.init();
     }
 

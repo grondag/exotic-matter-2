@@ -8,18 +8,17 @@
     "Grondag"
   ],
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/frex",
-    "sources": "https://github.com/grondag/frex"
+    "homepage": "https://minecraft.curseforge.com/projects/brocade",
+    "sources": "https://github.com/grondag/brocade"
   },
   
   "license": "Apache-2.0",
   "icon": "assets/canvas/brocade_icon.png",
   
-  "environment": "client",
+  "environment": "*",
   "entrypoints": {
-    "main": [
-      "grondag.brocade.Brocade"
-    ]
+    "main": [ "grondag.brocade.Brocade" ],
+    "client": [ "grondag.brocade.BrocadeClient" ]
   },
   "mixins": [
   ],
