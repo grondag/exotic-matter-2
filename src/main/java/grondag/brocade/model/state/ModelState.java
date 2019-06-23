@@ -18,6 +18,9 @@ import grondag.brocade.Brocade;
 import grondag.brocade.BrocadeConfig;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
+import grondag.brocade.connect.api.state.CornerJoinState;
+import grondag.brocade.connect.api.state.SimpleJoinState;
+import grondag.brocade.connect.impl.CornerJoinStateSelector;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
@@ -28,7 +31,6 @@ import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.painting.VertexProcessors;
 import grondag.brocade.primitives.Transform;
 import grondag.brocade.terrain.TerrainState;
-import grondag.brocade.world.CornerJoinBlockState;
 import grondag.brocade.world.CornerJoinBlockStateSelector;
 import grondag.brocade.world.NeighborBlocks;
 import grondag.brocade.world.SimpleJoin;
@@ -521,7 +523,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public CornerJoinBlockState getCornerJoin() {
+    public CornerJoinState getCornerJoin() {
         if (BrocadeConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
@@ -529,12 +531,12 @@ public class ModelState implements ISuperModelState {
                 Brocade.LOG.warn("getCornerJoin on model state does not apply for shape");
         }
 
-        return CornerJoinBlockStateSelector.getJoinState(MathHelper.clamp(ModelStateData.BLOCK_JOIN.getValue(this), 0,
-                CornerJoinBlockStateSelector.BLOCK_JOIN_STATE_COUNT - 1));
+        return CornerJoinStateSelector.fromOrdinal(MathHelper.clamp(ModelStateData.BLOCK_JOIN.getValue(this), 0,
+                CornerJoinState.STATE_COUNT - 1));
     }
 
     @Override
-    public void setCornerJoin(CornerJoinBlockState join) {
+    public void setCornerJoin(CornerJoinState join) {
         if (BrocadeConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
@@ -542,12 +544,12 @@ public class ModelState implements ISuperModelState {
                 Brocade.LOG.warn("setCornerJoin on model state does not apply for shape");
         }
 
-        ModelStateData.BLOCK_JOIN.setValue(join.getIndex(), this);
+        ModelStateData.BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
 
     @Override
-    public SimpleJoin getSimpleJoin() {
+    public SimpleJoinState getSimpleJoin() {
         if (BrocadeConfig.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.BLOCK)
             Brocade.LOG.warn("getSimpleJoin on model state does not apply for shape");
 
@@ -555,12 +557,12 @@ public class ModelState implements ISuperModelState {
         // and so need to derive simple join from the corner join
         populateStateFlagsIfNeeded();
         return ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
-                ? new SimpleJoin(ModelStateData.BLOCK_JOIN.getValue(this))
-                : getCornerJoin().simpleJoin;
+                ? SimpleJoinState.fromOrdinal(ModelStateData.BLOCK_JOIN.getValue(this))
+                : getCornerJoin().simpleJoin();
     }
 
     @Override
-    public void setSimpleJoin(SimpleJoin join) {
+    public void setSimpleJoin(SimpleJoinState join) {
         if (BrocadeConfig.BLOCKS.debugModelState) {
             if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
                 Brocade.LOG.warn("Ignored setSimpleJoin on model state that does not apply for shape");
@@ -574,12 +576,12 @@ public class ModelState implements ISuperModelState {
             }
         }
 
-        ModelStateData.BLOCK_JOIN.setValue(join.getIndex(), this);
+        ModelStateData.BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
 
     @Override
-    public SimpleJoin getMasonryJoin() {
+    public SimpleJoinState getMasonryJoin() {
         if (BrocadeConfig.BLOCKS.debugModelState
                 && (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK
                         || (stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
@@ -587,11 +589,11 @@ public class ModelState implements ISuperModelState {
             Brocade.LOG.warn("getMasonryJoin on model state does not apply for shape");
 
         populateStateFlagsIfNeeded();
-        return new SimpleJoin(ModelStateData.MASONRY_JOIN.getValue(this));
+        return SimpleJoinState.fromOrdinal(ModelStateData.MASONRY_JOIN.getValue(this));
     }
 
     @Override
-    public void setMasonryJoin(SimpleJoin join) {
+    public void setMasonryJoin(SimpleJoinState join) {
         if (BrocadeConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
@@ -606,7 +608,7 @@ public class ModelState implements ISuperModelState {
             }
         }
 
-        ModelStateData.MASONRY_JOIN.setValue(join.getIndex(), this);
+        ModelStateData.MASONRY_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
 

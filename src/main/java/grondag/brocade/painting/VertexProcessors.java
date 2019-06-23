@@ -16,7 +16,7 @@ public class VertexProcessors {
 
     public static void register(VertexProcessor vp) {
         if (allByName.containsKey(vp.registryName)) {
-            Brocade.INSTANCE.warn(
+            Brocade.LOG.warn(
                     "Duplicate registration of vertex processor %s was ignored. Probable bug or configuration issue.");
         } else {
             allByName.put(vp.registryName, vp);

@@ -1,12 +1,10 @@
 package grondag.brocade.placement;
 
-
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.math.Direction;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
 /**
@@ -43,14 +41,14 @@ public class PlacementPosition {
      * @param isExcavation           if true will select *in* starting block vs *on*
      *                               it
      */
-    public PlacementPosition(EntityPlayer player, BlockPos onPos, Direction onFace,
+    public PlacementPosition(PlayerEntity player, BlockPos onPos, Direction onFace,
             Vec3d hitVec, int floatingSelectionRange, boolean isExcavation) {
 
         this.isFloating = floatingSelectionRange > 0;
         if (this.isFloating || onPos == null || onFace == null || hitVec == null) {
 
-            Vec3d start = player.getPositionEyes(1);
-            Vec3d end = start.add(player.getLookVec().scale(floatingSelectionRange));
+            Vec3d start = player.getCameraPosVec(1);
+            Vec3d end = start.add(player.getRotationVector().multiply(floatingSelectionRange));
 
             this.inPos = new BlockPos(end);
 
@@ -58,14 +56,15 @@ public class PlacementPosition {
             // Do this by tracing towards the viewer from other side of block
             // to get the far-side hit. Hit coordinates are same irrespective
             // of face but need to the flip the face we get.
-            RayTraceResult hit = Blocks.DIRT.getDefaultState().collisionRayTrace(player.world, this.inPos,
-                    start.add(player.getLookVec().scale(10)), start);
+            BlockHitResult hit = Blocks.DIRT.getDefaultState().getRayTraceShape(player.world, this.inPos).rayTrace(
+                    start.add(player.getRotationVector().multiply(10)), start, inPos);
 
-            this.onPos = isExcavation ? this.inPos : this.inPos.offset(hit.sideHit);
-            this.onFace = hit.sideHit.getOpposite();
-            this.hitX = hit.hitVec.x;
-            this.hitY = hit.hitVec.y;
-            this.hitZ = hit.hitVec.z;
+            this.onPos = isExcavation ? this.inPos : this.inPos.offset(hit.getSide());
+            this.onFace = hit.getSide().getOpposite();
+            Vec3d hitPos = hit.getPos();
+            this.hitX = hitPos.x;
+            this.hitY = hitPos.y;
+            this.hitZ = hitPos.z;
         } else {
             this.onFace = onFace;
             this.onPos = onPos;

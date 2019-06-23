@@ -1,16 +1,16 @@
 package grondag.brocade.painting;
 
+import grondag.brocade.api.texture.TextureScale;
+import grondag.brocade.api.texture.TextureSet;
+import grondag.brocade.api.texture.TextureSetRegistry;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
-import grondag.brocade.model.state.ISuperModelState;
-import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.model.texture.TexturePaletteRegistry;
-import grondag.exotic_matter.model.texture.TextureScale;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
+import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
 public abstract class QuadPainter {
@@ -41,12 +41,12 @@ public abstract class QuadPainter {
     }
 
     public static int firstAvailableTextureLayer(IPolygon poly) {
-        return poly.textureName(0) == null ? 0 : poly.textureName(1) == null ? 1 : 2;
+        return poly.getTextureName(0) == null ? 0 : poly.getTextureName(1) == null ? 1 : 2;
     }
 
-    protected static ITexturePalette getTexture(ISuperModelState modelState, PaintLayer paintLayer) {
-        ITexturePalette tex = modelState.getTexture(paintLayer);
-        return tex == TexturePaletteRegistry.NONE ? modelState.getTexture(PaintLayer.BASE) : tex;
+    protected static TextureSet getTexture(ISuperModelState modelState, PaintLayer paintLayer) {
+        TextureSet tex = modelState.getTexture(paintLayer);
+        return tex.id().equals(TextureSetRegistry.NONE_ID) ? modelState.getTexture(PaintLayer.BASE) : tex;
     }
 
     /**
@@ -170,37 +170,37 @@ public abstract class QuadPainter {
         }
     }
 
-    protected static int textureVersionForFace(Direction face, ITexturePalette tex, ISuperModelState modelState) {
-        if (tex.textureVersionCount() == 0)
+    protected static int textureVersionForFace(Direction face, TextureSet tex, ISuperModelState modelState) {
+        if (tex.versionCount() == 0)
             return 0;
         return textureHashForFace(face, tex, modelState) & tex.versionMask();
     }
-
-    protected static int textureHashForFace(Direction face, ITexturePalette tex, ISuperModelState modelState) {
+    
+    protected static int textureHashForFace(Direction face, TextureSet tex, ISuperModelState modelState) {
         final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
         final int speciesBits = species << 16;
-        final int shift = tex.textureScale().power;
+        final int shift = tex.scale().power;
 
         switch (face) {
         case DOWN:
         case UP: {
             final int yBits = (((modelState.getPosX() >> shift) & 0xFF) << 8) | ((modelState.getPosZ() >> shift) & 0xFF)
                     | speciesBits;
-            return MathHelper.hash(yBits);
+            return HashCommon.mix(yBits);
         }
 
         case EAST:
         case WEST: {
             final int xBits = (((modelState.getPosY() >> shift) & 0xFF) << 8) | ((modelState.getPosZ() >> shift) & 0xFF)
                     | speciesBits;
-            return MathHelper.hash(xBits);
+            return HashCommon.mix(xBits);
         }
 
         case NORTH:
         case SOUTH: {
             final int zBits = (((modelState.getPosX() >> shift) & 0xFF) << 8) | ((modelState.getPosY() >> shift) & 0xFF)
                     | speciesBits;
-            return MathHelper.hash(zBits);
+            return HashCommon.mix(zBits);
         }
 
         default:
@@ -215,21 +215,20 @@ public abstract class QuadPainter {
      * rotation type is RANDOM, is based on position (chunked by texture size) and
      * species (if applies).
      */
-    protected static Rotation textureRotationForFace(Direction face, ITexturePalette tex,
+    protected static Rotation textureRotationForFace(Direction face, TextureSet tex,
             ISuperModelState modelState) {
         final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
-        switch (tex.rotation().rotationType()) {
-        case CONSISTENT:
-            return species == 0 ? tex.rotation().rotation
-                    : Useful.offsetEnumValue(tex.rotation().rotation, MathHelper.hash(species) & 3);
-
-        case FIXED:
+        switch (tex.rotation()) {
+        case ROTATE_RANDOM:
+            if(tex.scale() == TextureScale.SINGLE) {
+                return Useful.offsetEnumValue(tex.rotation().rotation,
+                        (textureHashForFace(face, tex, modelState) >> 8) & 3);
+            } else {
+                return species == 0 ? tex.rotation().rotation
+                        : Useful.offsetEnumValue(tex.rotation().rotation, HashCommon.mix(species) & 3);
+            }
         default:
             return tex.rotation().rotation;
-
-        case RANDOM:
-            return Useful.offsetEnumValue(tex.rotation().rotation,
-                    (textureHashForFace(face, tex, modelState) >> 8) & 3);
         }
     }
 }

@@ -1,8 +1,8 @@
 package grondag.brocade.painting;
 
+import grondag.brocade.connect.api.model.FaceCorner;
+import grondag.brocade.connect.api.model.FaceEdge;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
-import grondag.fermion.world.FaceCorner;
-import grondag.fermion.world.FaceSide;
 import grondag.fermion.world.Rotation;
 
 /**
@@ -64,12 +64,12 @@ public enum TextureQuadrant {
     /**
      * Holds u offset when mapping the side texture to the right side of a quadrant
      */
-    private static final float RIGHT_SIDE_U_SHIFT[] = new float[FaceSide.values().length];
+    private static final float RIGHT_SIDE_U_SHIFT[] = new float[FaceEdge.values().length];
 
     /**
      * Holds v offset when mapping the side texture to the right side of a quadrant
      */
-    private static final float RIGHT_SIDE_V_SHIFT[] = new float[FaceSide.values().length];
+    private static final float RIGHT_SIDE_V_SHIFT[] = new float[FaceEdge.values().length];
 
     static {
         FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_LEFT.ordinal()] = Rotation.ROTATE_NONE.ordinal();
@@ -77,10 +77,10 @@ public enum TextureQuadrant {
         FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_RIGHT.ordinal()] = Rotation.ROTATE_180.ordinal();
         FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_LEFT.ordinal()] = Rotation.ROTATE_270.ordinal();
 
-        RIGHT_SIDE_U_SHIFT[FaceSide.BOTTOM.ordinal()] = -0.5f;
-        RIGHT_SIDE_U_SHIFT[FaceSide.TOP.ordinal()] = 0.5f;
-        RIGHT_SIDE_V_SHIFT[FaceSide.LEFT.ordinal()] = -0.5f;
-        RIGHT_SIDE_V_SHIFT[FaceSide.RIGHT.ordinal()] = 0.5f;
+        RIGHT_SIDE_U_SHIFT[FaceEdge.BOTTOM_EDGE.ordinal()] = -0.5f;
+        RIGHT_SIDE_U_SHIFT[FaceEdge.TOP_EDGE.ordinal()] = 0.5f;
+        RIGHT_SIDE_V_SHIFT[FaceEdge.LEFT_EDGE.ordinal()] = -0.5f;
+        RIGHT_SIDE_V_SHIFT[FaceEdge.RIGHT_EDGE.ordinal()] = 0.5f;
     }
 
     /**

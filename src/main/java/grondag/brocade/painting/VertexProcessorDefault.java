@@ -2,7 +2,7 @@ package grondag.brocade.painting;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.fermion.varia.ColorHelper;
+import grondag.fermion.color.ColorHelper;
 
 public class VertexProcessorDefault extends VertexProcessor {
     public final static VertexProcessor INSTANCE = new VertexProcessorDefault();

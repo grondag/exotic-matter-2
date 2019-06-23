@@ -2,6 +2,10 @@ package grondag.brocade.mesh;
 
 import java.util.function.Consumer;
 
+import grondag.brocade.connect.api.model.FaceEdge;
+import grondag.brocade.connect.api.state.CornerJoinFaceState;
+import grondag.brocade.connect.api.state.CornerJoinFaceStates;
+import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.model.state.ModelStateData;
@@ -17,9 +21,6 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.brocade.world.CornerJoinBlockState;
-import grondag.brocade.world.CornerJoinFaceState;
-import grondag.brocade.world.FaceSide;
 import grondag.fermion.color.Color;
 import grondag.fermion.varia.BitPacker64;
 import grondag.fermion.varia.DirectionHelper;
@@ -123,7 +124,7 @@ public class SquareColumnMeshFactory extends ShapeMeshGenerator {
         // PERF: if have a consumer and doing this dynamically - should consumer simply be a stream?
         // Why create a stream just to pipe it to the consumer?  Or cache the result.
         
-        CornerJoinBlockState bjs = state.getCornerJoin();
+        CornerJoinState bjs = state.getCornerJoin();
         Direction.Axis axis = state.getAxis();
         IWritablePolyStream stream = PolyStreams.claimWritable();
         
@@ -134,9 +135,9 @@ public class SquareColumnMeshFactory extends ShapeMeshGenerator {
         Surface cutSurface = state.isEmissive(PaintLayer.LAMP) ? INSTANCE_CUT_LAMP : INSTANCE_CUT;
 
         if (face.getAxis() == axis) {
-            makeCapFace(face, stream, bjs.getFaceJoinState(face), spec, axis, cutSurface);
+            makeCapFace(face, stream, bjs.faceState(face), spec, axis, cutSurface);
         } else {
-            makeSideFace(face, stream, bjs.getFaceJoinState(face), spec, axis, cutSurface);
+            makeSideFace(face, stream, bjs.faceState(face), spec, axis, cutSurface);
         }
         
         if (stream.origin()) {
@@ -151,7 +152,7 @@ public class SquareColumnMeshFactory extends ShapeMeshGenerator {
 
     private void makeSideFace(Direction face, IWritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec,
             Direction.Axis axis, Surface cutSurface) {
-        if (fjs == CornerJoinFaceState.NO_FACE)
+        if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
         final IMutablePolygon writer = stream.writer();
@@ -338,7 +339,7 @@ public class SquareColumnMeshFactory extends ShapeMeshGenerator {
 
     private void makeCapFace(Direction face, IWritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec,
             Direction.Axis axis, Surface cutSurface) {
-        if (fjs == CornerJoinFaceState.NO_FACE)
+        if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
         final IMutablePolygon writer = stream.writer();
@@ -349,20 +350,20 @@ public class SquareColumnMeshFactory extends ShapeMeshGenerator {
         // lamp bottom can be a single poly
         {
             writer.setSurface(INSTANCE_LAMP);
-            writer.setupFaceQuad(face, fjs.isJoined(FaceSide.LEFT) ? 0 : spec.baseMarginWidth,
-                    fjs.isJoined(FaceSide.BOTTOM) ? 0 : spec.baseMarginWidth,
-                    fjs.isJoined(FaceSide.RIGHT) ? 1 : 1 - spec.baseMarginWidth,
-                    fjs.isJoined(FaceSide.TOP) ? 1 : 1 - spec.baseMarginWidth, spec.cutDepth,
-                    FaceSide.TOP.getRelativeFace(face));
+            writer.setupFaceQuad(face, fjs.isJoined(FaceEdge.LEFT_EDGE) ? 0 : spec.baseMarginWidth,
+                    fjs.isJoined(FaceEdge.BOTTOM_EDGE) ? 0 : spec.baseMarginWidth,
+                    fjs.isJoined(FaceEdge.RIGHT_EDGE) ? 1 : 1 - spec.baseMarginWidth,
+                    fjs.isJoined(FaceEdge.TOP_EDGE) ? 1 : 1 - spec.baseMarginWidth, spec.cutDepth,
+                            FaceEdge.TOP_EDGE.toWorld(face));
             stream.append();
         }
 
         // build quarter slice of cap for each side separately
         // specifications below are oriented with the side at top of cap face
 
-        for (FaceSide joinSide : FaceSide.values()) {
-
-            Direction side = joinSide.getRelativeFace(face);
+        for (int f = 0; f < FaceEdge.COUNT; f++) {
+            final FaceEdge joinSide = FaceEdge.fromOrdinal(f);
+            Direction side = joinSide.toWorld(face);
 
             if (fjs.isJoined(joinSide)) {
                 // This side is joined, so connect cuts to other block on this side.

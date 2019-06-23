@@ -2,11 +2,11 @@ package grondag.brocade.painting;
 
 
 
+import grondag.brocade.connect.api.model.FaceCorner;
 import grondag.brocade.primitives.QuadHelper;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
-import grondag.fermion.world.FaceCorner;
 
 /**
  * Helper class to splits UV-locked quads into four quadrants at the u,v = 0.5,

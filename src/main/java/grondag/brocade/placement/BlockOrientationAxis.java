@@ -1,7 +1,5 @@
 package grondag.brocade.placement;
 
-import grondag.exotic_matter.serialization.IMessagePlusImmutable;
-import grondag.exotic_matter.serialization.IReadWriteNBTImmutable;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;
@@ -10,8 +8,7 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 import net.minecraft.client.resource.language.I18n;
 
-public enum BlockOrientationAxis implements IMessagePlusImmutable<BlockOrientationAxis>,
-        IReadWriteNBTImmutable<BlockOrientationAxis>, ILocalized {
+public enum BlockOrientationAxis implements ILocalized {
 
     DYNAMIC(null), MATCH_CLOSEST(null), X(Direction.Axis.X), Y(Direction.Axis.Y), Z(Direction.Axis.Z);
 
@@ -23,27 +20,22 @@ public enum BlockOrientationAxis implements IMessagePlusImmutable<BlockOrientati
         this.axis = axis;
     }
 
-    @Override
     public BlockOrientationAxis deserializeNBT(CompoundTag tag) {
         return Useful.safeEnumFromTag(tag, TAG_ORIENTATION, this);
     }
 
-    @Override
     public void serializeNBT(CompoundTag tag) {
         Useful.saveEnumToTag(tag, TAG_ORIENTATION, this);
     }
 
-    @Override
     public BlockOrientationAxis fromBytes(PacketByteBuf pBuff) {
-        return pBuff.readEnumValue(BlockOrientationAxis.class);
+        return pBuff.readEnumConstant(BlockOrientationAxis.class);
     }
 
-    @Override
     public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeEnumValue(this);
+        pBuff.writeEnumConstant(this);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public String localizedName() {
         return I18n.translate("placement.orientation.axis." + this.name().toLowerCase());

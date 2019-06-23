@@ -1,11 +1,7 @@
 package grondag.brocade.placement;
 
-import grondag.exotic_matter.simulator.IWorldTask;
 import grondag.fermion.world.IBlockRegion;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-
+import net.minecraft.server.network.ServerPlayerEntity;
 
 
 public interface IPlacementSpec {
@@ -38,7 +34,8 @@ public interface IPlacementSpec {
      * some of the obstacles are (if not too expensive).
      */
     
-    void renderPreview(RenderWorldLastEvent event, EntityPlayerSP player);
+    //TODO: make an hook that calls thhis
+    void renderPreview();
 
     /**
      * Encapsulates all work needed to build a spec and apply it to the world. What
@@ -59,7 +56,7 @@ public interface IPlacementSpec {
      * construction job in the player's active domain. The entries will also be
      * saved with the build (for later re-used if desired) and the build closed.
      */
-    public abstract IWorldTask worldTask(EntityPlayerMP player);
+    public abstract Runnable worldTask(ServerPlayerEntity player);
 
     /**
      * True if builder is consistent with EXCAVATION placement result type.

@@ -27,7 +27,7 @@ public class BlockOrientationHandler {
      * placed on (are solid) and that the space in which the block will be placed is
      * empty or replaceable.
      */
-    public static void configureStackForPlacement(ItemStack stack, EntityPlayer player, PlacementPosition pPos) {
+    public static void configureStackForPlacement(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // does not attempt to configure non super-blocks
         if (!(stack.getItem() instanceof IPlacementItem))
             return;
@@ -94,11 +94,11 @@ public class BlockOrientationHandler {
                             BlockPos testPos = pPos.onPos.add(x, y, z);
                             BlockState testBlockState = world.getBlockState(testPos);
                             if (testBlockState.getBlock() instanceof ISuperBlock) {
-                                double distSq = location.squareDistanceTo(pPos.onPos.getX() + 0.5 + x,
+                                double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x,
                                         pPos.onPos.getY() + 0.5 + y, pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
                                     ISuperBlock testBlock = (ISuperBlock) testBlockState.getBlock();
-                                    ISuperModelState testModelState = access.getModelState(testBlock, testPos, true);
+                                    ISuperModelState testModelState = testBlock.getModelStateAssumeStateIsCurrent(testBlockState, world, testPos, true);
                                     if (testModelState.getShape() == outputModelState.getShape()) {
                                         closestDistSq = distSq;
                                         closestModelState = testModelState;
@@ -131,7 +131,7 @@ public class BlockOrientationHandler {
     }
 
     /** handle hit-sensitive placement for stairs, wedges */
-    public static void applyDynamicOrientation(ItemStack stack, EntityPlayer player, PlacementPosition pPos) {
+    public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         ISuperModelState outputModelState = SuperBlockStackHelper.getStackModelState(stack);
 
         boolean isRotationDone = false;
@@ -151,7 +151,7 @@ public class BlockOrientationHandler {
         } else {
             outputModelState.setAxis(pPos.onFace.getAxis());
             if (outputModelState.hasAxisOrientation()) {
-                outputModelState.setAxisInverted(pPos.onFace.getAxisDirection() == AxisDirection.NEGATIVE);
+                outputModelState.setAxisInverted(pPos.onFace.getDirection() == AxisDirection.NEGATIVE);
             }
         }
 

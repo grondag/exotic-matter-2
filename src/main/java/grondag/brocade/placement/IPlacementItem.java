@@ -4,33 +4,30 @@ package grondag.brocade.placement;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import grondag.brocade.block.BlockSubstance;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.legacy.block.SuperBlockStackHelper;
-import grondag.brocade.legacy.block.SuperModelBlock;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.state.MetaUsage;
 import grondag.fermion.serialization.NBTDictionary;
+import grondag.fermion.structures.BinaryEnumSet;
 import grondag.fermion.varia.FixedRegionBounds;
 import grondag.fermion.varia.Useful;
-import grondag.fermion.structures.BinaryEnumSet;
 import grondag.fermion.world.PackedBlockPos;
 import grondag.fermion.world.Rotation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.client.resource.language.I18n;
 
 public interface IPlacementItem {
     /////////////////////////////////////////////////////
@@ -51,13 +48,13 @@ public interface IPlacementItem {
      * in primary hand.
      */
     
-    public static ItemStack getHeldPlacementItem(EntityPlayer player) {
-        ItemStack stack = MinecraftClient.getMinecraft().player.getHeldItemMainhand();
+    public static ItemStack getHeldPlacementItem(PlayerEntity player) {
+        ItemStack stack = MinecraftClient.getInstance().player.getMainHandStack();
 
         if (stack.getItem() instanceof IPlacementItem)
             return stack;
 
-        stack = MinecraftClient.getMinecraft().player.getHeldItemOffhand();
+        stack = MinecraftClient.getInstance().player.getOffHandStack();
 
         if (stack.getItem() instanceof IPlacementItem)
             return stack;
@@ -108,7 +105,7 @@ public interface IPlacementItem {
         return false;
     }
 
-    public default void displayGui(EntityPlayer player) {
+    public default void displayGui(PlayerEntity player) {
         // noop
     }
 
@@ -166,12 +163,12 @@ public interface IPlacementItem {
             return false;
 
         case FACE:
-            return this.getBlockOrientationFace(stack).face.getAxisDirection() == Direction.AxisDirection.NEGATIVE;
+            return this.getBlockOrientationFace(stack).face.getDirection() == Direction.AxisDirection.NEGATIVE;
 
         case EDGE:
             // FIXME: is this right?
             return this.getBlockOrientationEdge(stack).edge.face1
-                    .getAxisDirection() == Direction.AxisDirection.POSITIVE;
+                    .getDirection() == Direction.AxisDirection.POSITIVE;
 
         case CORNER:
             // TODO
@@ -280,7 +277,7 @@ public interface IPlacementItem {
     }
 
     public default BlockOrientationAxis getBlockOrientationAxis(ItemStack stack) {
-        return BlockOrientationAxis.DYNAMIC.deserializeNBT(stack.getTagCompound());
+        return BlockOrientationAxis.DYNAMIC.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -302,7 +299,7 @@ public interface IPlacementItem {
     }
 
     public default BlockOrientationFace getBlockOrientationFace(ItemStack stack) {
-        return BlockOrientationFace.DYNAMIC.deserializeNBT(stack.getTagCompound());
+        return BlockOrientationFace.DYNAMIC.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -325,7 +322,7 @@ public interface IPlacementItem {
     }
 
     public default BlockOrientationEdge getBlockOrientationEdge(ItemStack stack) {
-        return BlockOrientationEdge.DYNAMIC.deserializeNBT(stack.getTagCompound());
+        return BlockOrientationEdge.DYNAMIC.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -348,7 +345,7 @@ public interface IPlacementItem {
     }
 
     public default BlockOrientationCorner getBlockOrientationCorner(ItemStack stack) {
-        return BlockOrientationCorner.DYNAMIC.deserializeNBT(stack.getTagCompound());
+        return BlockOrientationCorner.DYNAMIC.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -438,7 +435,7 @@ public interface IPlacementItem {
      */
     public default RegionOrientation getRegionOrientation(ItemStack stack) {
         return isFixedRegionSelectionInProgress(stack) ? RegionOrientation.XYZ
-                : RegionOrientation.XYZ.deserializeNBT(stack.getTagCompound());
+                : RegionOrientation.XYZ.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -465,7 +462,7 @@ public interface IPlacementItem {
     }
 
     public default TargetMode getTargetMode(ItemStack stack) {
-        return TargetMode.FILL_REGION.deserializeNBT(stack.getTagCompound());
+        return TargetMode.FILL_REGION.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -492,7 +489,7 @@ public interface IPlacementItem {
     }
 
     public default FilterMode getFilterMode(ItemStack stack) {
-        return FilterMode.FILL_REPLACEABLE.deserializeNBT(stack.getTagCompound());
+        return FilterMode.FILL_REPLACEABLE.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -519,7 +516,7 @@ public interface IPlacementItem {
     }
 
     public default SpeciesMode getSpeciesMode(ItemStack stack) {
-        return SpeciesMode.MATCH_CLICKED.deserializeNBT(stack.getTagCompound());
+        return SpeciesMode.MATCH_CLICKED.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -551,23 +548,26 @@ public interface IPlacementItem {
             if (modelState == null)
                 return null;
 
-            Block targetBlock = ((ItemBlock) stack.getItem()).getBlock();
-            final ISuperBlock sBlock = (ISuperBlock) targetBlock;
+            Block targetBlock = ((BlockItem) stack.getItem()).getBlock();
 
-            if (!sBlock.isVirtual() && targetBlock instanceof SuperModelBlock) {
-                BlockSubstance substance = SuperBlockStackHelper.getStackSubstance(stack);
-                if (substance == null)
-                    return null;
-                targetBlock = SuperModelBlock.findAppropriateSuperModelBlock(substance, modelState);
+            //TODO: remove when confirmed no longer be needed
+//            if (!sBlock.isVirtual() && targetBlock instanceof SuperBlock) {
+//                BlockSubstance substance = SuperBlockStackHelper.getStackSubstance(stack);
+//                if (substance == null)
+//                    return null;
+//                targetBlock = SuperModelBlock.findAppropriateSuperModelBlock(substance, modelState);
+//            }
+
+            //TODO: may need to handle other properties/make dynamic somehow
+            BlockState result = targetBlock.getDefaultState();
+            if(modelState.hasSpecies()) {
+                result = result.with(ISuperBlock.SPECIES, modelState.getSpecies());
             }
 
-            int meta = modelState.metaUsage() == MetaUsage.NONE ? 0
-                    : Math.min(sBlock.getMetaCount() - 1, stack.getMetadata());
-
-            return targetBlock.getStateFromMeta(meta);
-        } else if (item instanceof ItemBlock) {
-            Block targetBlock = (Block) ((ItemBlock) stack.getItem()).getBlock();
-            return targetBlock.getStateFromMeta(Math.min(15, stack.getMetadata()));
+            return result;
+        } else if (item instanceof BlockItem) {
+            Block targetBlock = (Block) ((BlockItem) stack.getItem()).getBlock();
+            return targetBlock.getDefaultState();
         } else {
             return Blocks.AIR.getDefaultState();
         }
@@ -632,7 +632,7 @@ public interface IPlacementItem {
         if (!this.isFixedRegionSupported(stack))
             return;
 
-        Useful.getOrCreateTagCompound(stack).setBoolean(NBT_FIXED_REGION_ENABLED, isFixedRegion);
+        Useful.getOrCreateTagCompound(stack).putBoolean(NBT_FIXED_REGION_ENABLED, isFixedRegion);
     }
 
     public default FixedRegionBounds getFixedRegion(ItemStack stack) {
@@ -662,7 +662,7 @@ public interface IPlacementItem {
 
         CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 
-        tag.setLong(NBT_FIXED_REGION_SELECT_POS, PackedBlockPos.pack(pos, isCenter ? 1 : 0));
+        tag.putLong(NBT_FIXED_REGION_SELECT_POS, PackedBlockPos.pack(pos, isCenter ? 1 : 0));
 
         TargetMode currentMode = getTargetMode(stack);
         // assume user wants to fill a region and
@@ -675,7 +675,7 @@ public interface IPlacementItem {
         if (!this.isFixedRegionSupported(stack) || !this.isFixedRegionEnabled(stack))
             return false;
 
-        return Useful.getOrCreateTagCompound(stack).hasKey(NBT_FIXED_REGION_SELECT_POS);
+        return Useful.getOrCreateTagCompound(stack).containsKey(NBT_FIXED_REGION_SELECT_POS);
     }
 
     public default void fixedRegionCancel(ItemStack stack) {
@@ -683,11 +683,11 @@ public interface IPlacementItem {
             return;
 
         CompoundTag tag = Useful.getOrCreateTagCompound(stack);
-        tag.removeTag(NBT_FIXED_REGION_SELECT_POS);
+        tag.remove(NBT_FIXED_REGION_SELECT_POS);
 
         // disable fixed region if we don't have one
         if (!FixedRegionBounds.isPresentInTag(tag))
-            tag.setBoolean(NBT_FIXED_REGION_ENABLED, false);
+            tag.putBoolean(NBT_FIXED_REGION_ENABLED, false);
     }
 
     /**
@@ -702,7 +702,7 @@ public interface IPlacementItem {
 
         CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 
-        if (tag.hasKey(NBT_FIXED_REGION_SELECT_POS)) {
+        if (tag.containsKey(NBT_FIXED_REGION_SELECT_POS)) {
             long packed = tag.getLong(NBT_FIXED_REGION_SELECT_POS);
             return Pair.of(PackedBlockPos.unpack(packed), PackedBlockPos.getExtra(packed) == 1);
         } else {
@@ -710,7 +710,7 @@ public interface IPlacementItem {
         }
     }
 
-    public default void fixedRegionFinish(ItemStack stack, EntityPlayer player, BlockPos pos, boolean isCenter) {
+    public default void fixedRegionFinish(ItemStack stack, PlayerEntity player, BlockPos pos, boolean isCenter) {
         if (!this.isFixedRegionSupported(stack))
             return;
 
@@ -722,7 +722,7 @@ public interface IPlacementItem {
         if (fromPos == null)
             return;
 
-        tag.removeTag(NBT_FIXED_REGION_SELECT_POS);
+        tag.remove(NBT_FIXED_REGION_SELECT_POS);
 
         setFixedRegion(new FixedRegionBounds(fromPos.getLeft(), fromPos.getRight(), pos, isCenter), stack);
 
@@ -763,8 +763,8 @@ public interface IPlacementItem {
      * Region rotation is or isn't applied according to parameter.<br>
      */
     public default BlockPos getRegionSize(ItemStack stack, boolean applyRegionRotation) {
-        CompoundTag tag = stack.getTagCompound();
-        if (tag == null || !tag.hasKey(NBT_REGION_SIZE))
+        CompoundTag tag = stack.getTag();
+        if (tag == null || !tag.containsKey(NBT_REGION_SIZE))
             return new BlockPos(1, 1, 1);
 
         BlockPos result = BlockPos.fromLong(tag.getLong(NBT_REGION_SIZE));
@@ -779,8 +779,8 @@ public interface IPlacementItem {
         if (!this.isRegionSizeSupported(stack))
             return;
 
-        CompoundTag tag = stack.getTagCompound();
-        tag.setLong(NBT_REGION_SIZE, pos.toLong());
+        CompoundTag tag = stack.getTag();
+        tag.putLong(NBT_REGION_SIZE, pos.asLong());
     }
 
     /**
@@ -797,7 +797,7 @@ public interface IPlacementItem {
         BlockPos newPos = new BlockPos(MathHelper.clamp(oldPos.getX() + dx, 1, 9),
                 MathHelper.clamp(oldPos.getY() + dy, 1, 9),
                 MathHelper.clamp(oldPos.getZ() + dz, 1, this.isExcavator(stack) ? 64 : 9));
-        tag.setLong(NBT_REGION_SIZE, newPos.toLong());
+        tag.putLong(NBT_REGION_SIZE, newPos.asLong());
 
         if (newPos.getX() == 1 && newPos.getY() == 1 && newPos.getZ() == 1) {
             // change to single-block mode if region size is single block
@@ -836,7 +836,7 @@ public interface IPlacementItem {
             if (!this.isRegionSizeSupported(stack))
                 return "";
             BlockPos pos = getRegionSize(stack, false);
-            return I18n.translateFormatted("placement.message.region_box", pos.getX(), pos.getY(), pos.getZ());
+            return I18n.translate("placement.message.region_box", pos.getX(), pos.getY(), pos.getZ());
 
         case ON_CLICKED_SURFACE:
             return I18n.translate("placement.message.region_additive");
@@ -862,7 +862,7 @@ public interface IPlacementItem {
         // subtract because external values jump from 0 to 2
         if (range > 0)
             range--;
-        Useful.getOrCreateTagCompound(stack).setByte(NBT_REGION_FLOATING_RANGE, (byte) range);
+        Useful.getOrCreateTagCompound(stack).putByte(NBT_REGION_FLOATING_RANGE, (byte) range);
     }
 
     /**
@@ -872,7 +872,7 @@ public interface IPlacementItem {
         if (!this.isSelectionRangeSupported(stack))
             return 0;
 
-        CompoundTag tag = stack.getTagCompound();
+        CompoundTag tag = stack.getTag();
         int range = tag == null ? 0 : MathHelper.clamp(tag.getByte(NBT_REGION_FLOATING_RANGE), 0, 4);
         return range == 0 ? 0 : range + 1;
     }
@@ -890,7 +890,7 @@ public interface IPlacementItem {
             range = 0;
         if (range < 0)
             range = 4;
-        tag.setByte(NBT_REGION_FLOATING_RANGE, (byte) range);
+        tag.putByte(NBT_REGION_FLOATING_RANGE, (byte) range);
         return true;
     }
 
@@ -909,10 +909,11 @@ public interface IPlacementItem {
     public default BlockPos getFloatingSelectionBlockPos(ItemStack stack, LivingEntity entity) {
         int range = getFloatingSelectionRange(stack);
 
-        Vec3d look = entity.getLookVec();
-        int blockX = MathHelper.floor(look.x * range + entity.posX);
-        int blockY = MathHelper.floor(look.y * range + entity.posY + entity.getEyeHeight());
-        int blockZ = MathHelper.floor(look.z * range + entity.posZ);
+        Vec3d look = entity.getRotationVector();
+        Vec3d pos = entity.getPos();
+        int blockX = MathHelper.floor(look.x * range + pos.x);
+        int blockY = MathHelper.floor(look.y * range + pos.y + entity.getEyeHeight(entity.getPose()));
+        int blockZ = MathHelper.floor(look.z * range + pos.z);
 
         return new BlockPos(blockX, blockY, blockZ);
     }

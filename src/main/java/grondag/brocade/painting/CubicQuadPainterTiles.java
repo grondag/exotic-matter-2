@@ -2,12 +2,12 @@ package grondag.brocade.painting;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.exotic_matter.model.texture.ITexturePalette;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
+import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 
 public abstract class CubicQuadPainterTiles extends QuadPainter {
     public static void paintQuads(IMutablePolyStream stream, ISuperModelState modelState, PaintLayer paintLayer) {
@@ -18,14 +18,14 @@ public abstract class CubicQuadPainterTiles extends QuadPainter {
             editor.assignLockedUVCoordinates(layerIndex);
 
             final Direction nominalFace = editor.getNominalFace();
-            final ITexturePalette tex = getTexture(modelState, paintLayer);
+            final TextureSet tex = getTexture(modelState, paintLayer);
 
             Rotation rotation = textureRotationForFace(nominalFace, tex, modelState);
             int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
 
             final int salt = editor.getTextureSalt();
             if (salt != 0) {
-                int saltHash = MathHelper.hash(salt);
+                int saltHash = HashCommon.mix(salt);
                 rotation = Useful.offsetEnumValue(rotation, saltHash & 3);
                 textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();
             }

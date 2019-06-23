@@ -3,6 +3,8 @@ package grondag.brocade.model.state;
 import org.joml.Matrix4f;
 
 import grondag.brocade.api.texture.TextureSet;
+import grondag.brocade.connect.api.state.CornerJoinState;
+import grondag.brocade.connect.api.state.SimpleJoinState;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
@@ -10,8 +12,6 @@ import grondag.brocade.model.varia.SideShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.terrain.TerrainState;
-import grondag.brocade.world.CornerJoinBlockState;
-import grondag.brocade.world.SimpleJoin;
 import grondag.fermion.color.ColorMap;
 import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.fermion.serialization.IReadWriteNBT;
@@ -143,17 +143,17 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
 
     void setSpecies(int species);
 
-    CornerJoinBlockState getCornerJoin();
+    CornerJoinState getCornerJoin();
 
-    void setCornerJoin(CornerJoinBlockState join);
+    void setCornerJoin(CornerJoinState join);
 
-    SimpleJoin getSimpleJoin();
+    SimpleJoinState getSimpleJoin();
 
-    void setSimpleJoin(SimpleJoin join);
+    void setSimpleJoin(SimpleJoinState join);
 
-    SimpleJoin getMasonryJoin();
+    SimpleJoinState getMasonryJoin();
 
-    void setMasonryJoin(SimpleJoin join);
+    void setMasonryJoin(SimpleJoinState join);
 
     /**
      * For machines and other blocks with a privileged horizontal face, North is

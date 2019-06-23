@@ -8,11 +8,11 @@ import org.joml.Vector4f;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.frex.api.core.ModelHelper;
 import grondag.brocade.primitives.vertex.IVec3f;
 import grondag.brocade.primitives.vertex.IVertexCollection;
 import grondag.brocade.primitives.vertex.Vec3Function;
 import grondag.brocade.primitives.vertex.Vec3f;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;

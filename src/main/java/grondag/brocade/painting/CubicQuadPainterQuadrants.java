@@ -2,10 +2,11 @@ package grondag.brocade.painting;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.api.texture.TextureSet;
+import grondag.brocade.connect.api.model.FaceCorner;
+import grondag.brocade.connect.api.state.CornerJoinFaceState;
+import grondag.brocade.connect.api.state.CornerJoinFaceStates;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.fermion.world.CornerJoinFaceState;
-import grondag.fermion.world.FaceCorner;
 import net.minecraft.util.math.Direction;
 
 /**
@@ -14,7 +15,7 @@ import net.minecraft.util.math.Direction;
  */
 public abstract class CubicQuadPainterQuadrants extends QuadPainter {
     private static final TextureQuadrant[][] TEXTURE_MAP = new TextureQuadrant[FaceCorner
-            .values().length][CornerJoinFaceState.values().length];
+            .values().length][CornerJoinFaceStates.COUNT];
 
     private static TextureQuadrant textureMap(FaceCorner corner, CornerJoinFaceState faceState) {
         if (faceState.isJoined(corner.leftSide)) {
@@ -30,9 +31,9 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
 
     static {
         for (FaceCorner corner : FaceCorner.values()) {
-            for (CornerJoinFaceState faceState : CornerJoinFaceState.values()) {
+            CornerJoinFaceStates.forEach( faceState -> {
                 TEXTURE_MAP[corner.ordinal()][faceState.ordinal()] = textureMap(corner, faceState);
-            }
+            });
         }
     }
 
@@ -53,14 +54,14 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
             }
 
             final Direction nominalFace = editor.getNominalFace();
-            ITexturePalette tex = getTexture(modelState, paintLayer);
+            TextureSet tex = getTexture(modelState, paintLayer);
             final int textureVersion = tex.versionMask()
                     & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
 
             editor.setTextureName(layerIndex, tex.textureName(textureVersion));
             editor.setShouldContractUVs(layerIndex, true);
 
-            final CornerJoinFaceState faceState = modelState.getCornerJoin().getFaceJoinState(nominalFace);
+            final CornerJoinFaceState faceState = modelState.getCornerJoin().faceState(nominalFace);
 
             TEXTURE_MAP[quadrant.ordinal()][faceState.ordinal()].applyForQuadrant(editor, layerIndex, quadrant);
 

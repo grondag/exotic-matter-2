@@ -8,10 +8,11 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.polygon.IStreamPolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.api.texture.TextureRotation;
+import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.model.texture.TextureRotationType;
 import grondag.fermion.varia.Useful;
+import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
@@ -379,7 +380,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
             final int layerIndex = firstAvailableTextureLayer(editor);
             final Surface surfIn = editor.getSurface();
             final Direction face = editor.getNominalFace();
-            final ITexturePalette tex = getTexture(modelState, paintLayer);
+            final TextureSet tex = getTexture(modelState, paintLayer);
 
             /**
              * The smallest UV distance that can be tiled with single texture. Equivalently,
@@ -388,7 +389,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
              * closest to 1:1.
              * 
              */
-            final float tilingDistance = tilingDistance(surfIn.uvWrapDistance, tex.textureScale().sliceCount);
+            final float tilingDistance = tilingDistance(surfIn.uvWrapDistance, tex.scale().sliceCount);
 
             /**
              * See if we will need to split the quad on a UV boundary.
@@ -452,12 +453,12 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                             // (would it?)
                             // For now, always use uv 0,0 as tiling origin.
 
-                            final int salt = MathHelper.hash(baseSalt | (uIndexFinal << 16) | (vIndexFinal << 22));
+                            final int salt = HashCommon.mix(baseSalt | (uIndexFinal << 16) | (vIndexFinal << 22));
                             int textureVersion = tex.versionMask() & (salt >> 4);
                             editor.setTextureName(layerIndex, tex.textureName(textureVersion));
 
                             editor.setRotation(layerIndex,
-                                    tex.rotation().rotationType() == TextureRotation.RANDOM
+                                    tex.rotation() == TextureRotation.ROTATE_RANDOM
                                             ? Useful.offsetEnumValue(tex.rotation().rotation, (salt >> 16) & 3)
                                             : tex.rotation().rotation);
 

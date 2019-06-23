@@ -4,14 +4,11 @@ import java.util.IdentityHashMap;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
-import grondag.acuity.api.TextureFormat;
-import grondag.exotic_matter.ClientProxy;
-import grondag.brocade.Brocade;
+import grondag.brocade.model.state.ISuperModelState;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.brocade.model.state.ISuperModelState;
 
 /**
  * Low-garbage consumer for quads from mesh generators that manages
@@ -44,9 +41,9 @@ public class QuadPaintManager implements Consumer<IPolygon> {
         editor.setLayerCount(3);
 
         // should have no textures assigned at start
-        assert editor.textureName(0) == null;
-        assert editor.textureName(1) == null;
-        assert editor.textureName(2) == null;
+        assert editor.getTextureName(0) == null;
+        assert editor.getTextureName(1) == null;
+        assert editor.getTextureName(2) == null;
 
         // Copy generator UVs (quad and vertex)
         // from layer 0 to upper layers.
@@ -76,9 +73,7 @@ public class QuadPaintManager implements Consumer<IPolygon> {
         }
     }
 
-    @SuppressWarnings("null")
-    public void producePaintedQuads(final ISuperModelState modelState, final boolean isItem,
-            final Consumer<IPolygon> target) {
+    public void producePaintedQuads(final ISuperModelState modelState, final boolean isItem, final Consumer<IPolygon> target) {
         for (Entry<Surface, IMutablePolyStream> entry : surfaces.entrySet()) {
             Surface surface = entry.getKey();
             IMutablePolyStream stream = entry.getValue();
@@ -93,18 +88,11 @@ public class QuadPaintManager implements Consumer<IPolygon> {
                 final IMutablePolygon editor = stream.editor();
                 do {
                     // omit polys that weren't textured by any painter
-                    if (editor.textureName(0) != null) {
-                        final int layerCount = editor.textureName(1) == null ? 1
-                                : editor.textureName(2) == null ? 2 : 3;
+                    if (editor.getTextureName(0) != null) {
+                        final int layerCount = editor.getTextureName(1) == null ? 1
+                                : editor.getTextureName(2) == null ? 2 : 3;
 
                         editor.setLayerCount(layerCount);
-
-                        // make sure has an appropriate pipeline, some models may set up before we get
-                        // here
-                        if (layerCount > 1 && Brocade.proxy.isAcuityEnabled()
-                                && editor.getPipeline().textureFormat().layerCount() != layerCount)
-                            editor.setPipeline(layerCount == 2 ? ClientProxy.acuityDefaultPipeline(TextureFormat.DOUBLE)
-                                    : ClientProxy.acuityDefaultPipeline(TextureFormat.TRIPLE));
                     }
 
                     target.accept(editor);

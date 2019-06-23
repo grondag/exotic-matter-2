@@ -33,6 +33,8 @@ import net.minecraft.util.math.Direction;
  */
 @API(status = STABLE)
 public interface CornerJoinState {
+    int STATE_COUNT = CornerJoinStateSelector.BLOCK_JOIN_STATE_COUNT;
+    
     int ordinal();
 
     CornerJoinFaceState faceState(Direction face);

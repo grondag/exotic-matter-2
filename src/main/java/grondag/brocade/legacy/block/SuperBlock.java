@@ -409,10 +409,4 @@ public class SuperBlock extends Block implements ISuperBlock {
     public boolean isVirtual() {
         return false;
     }
-
-    @Override
-    public String getItemStackDisplayName(ItemStack stack) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 }

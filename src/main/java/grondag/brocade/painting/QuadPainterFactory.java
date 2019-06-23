@@ -2,9 +2,9 @@ package grondag.brocade.painting;
 
 import grondag.brocade.painting.QuadPainter.IPaintMethod;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
+import grondag.brocade.api.texture.TextureScale;
+import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.exotic_matter.model.texture.ITexturePalette;
-import grondag.exotic_matter.model.texture.TextureScale;
 
 public class QuadPainterFactory {
     private static IPaintMethod DO_NOTHING = new IPaintMethod() {
@@ -18,12 +18,12 @@ public class QuadPainterFactory {
         if (surface.isLayerDisabled(paintLayer))
             return DO_NOTHING;
 
-        ITexturePalette texture = modelState.getTexture(paintLayer);
+        TextureSet texture = modelState.getTexture(paintLayer);
 
         switch (surface.topology) {
 
         case TILED:
-            switch (texture.textureLayout()) {
+            switch (texture.layout()) {
             case SIMPLE:
             case BIGTEX_ANIMATED:
             case SPLIT_X_8:
@@ -40,11 +40,11 @@ public class QuadPainterFactory {
             }
 
         case CUBIC:
-            switch (texture.textureLayout()) {
+            switch (texture.layout()) {
             case SIMPLE:
             case BIGTEX_ANIMATED:
             case SPLIT_X_8:
-                return (texture.textureScale() == TextureScale.SINGLE) ? CubicQuadPainterTiles::paintQuads
+                return (texture.scale() == TextureScale.SINGLE) ? CubicQuadPainterTiles::paintQuads
                         : CubicQuadPainterBigTex::paintQuads;
 
             case BORDER_13:

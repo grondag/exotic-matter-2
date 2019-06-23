@@ -1,96 +1,44 @@
 package grondag.brocade.placement;
 
-
-
-
-import grondag.brocade.init.IItemModelRegistrant;
+import grondag.brocade.collision.CollisionBoxDispatcher;
 import grondag.brocade.legacy.block.ISuperBlock;
 import grondag.brocade.legacy.block.SuperBlock;
 import grondag.brocade.legacy.block.SuperBlockStackHelper;
-import grondag.brocade.legacy.block.SuperTileEntity;
 import grondag.brocade.model.state.ISuperModelState;
-import grondag.brocade.model.varia.SuperDispatcher;
 import net.minecraft.block.Block;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.item.ItemUsageContext;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * Provides sub-items and handles item logic for NiceBlocks.
  */
-public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemModelRegistrant {
+public class SuperItemBlock extends BlockItem implements IPlacementItem {
 
     public static final int FEATURE_FLAGS = IPlacementItem.BENUMSET_FEATURES
             .getFlagsForIncludedValues(PlacementItemFeature.BLOCK_ORIENTATION, PlacementItemFeature.SPECIES_MODE);
 
-    @Override
-    public void handleRegister(IForgeRegistry<Item> itemReg) {
-        SuperBlock block = (SuperBlock) this.getBlock();
-        for (ItemStack stack : block.getSubItems()) {
-            String variantName = SuperDispatcher.INSTANCE.getDelegate(block).getModelResourceString() + "."
-                    + stack.getMetadata();
-            ModelBakery.registerItemVariants(this, new ResourceLocation(variantName));
-            ModelLoader.setCustomModelResourceLocation(this, stack.getMetadata(),
-                    new ModelResourceLocation(variantName, "inventory"));
-        }
-    }
-
-    @Override
-    public void handleBake(ModelBakeEvent event) {
-        SuperBlock block = (SuperBlock) this.getBlock();
-        for (ItemStack stack : block.getSubItems()) {
-            event.getModelRegistry().putObject(
-                    new ModelResourceLocation(this.getRegistryName() + "." + stack.getMetadata(), "inventory"),
-                    SuperDispatcher.INSTANCE.getDelegate(block));
-        }
-    }
-
-    /**
-     * Called client-side before
-     * {@link #onItemUse(EntityPlayer, World, BlockPos, EnumHand, Direction, float, float, float)}.
-     * If returns false for an itemBlock that method will never be called. We do all
-     * of our "can we put there here" checks in that method, so we always return
-     * true.
-     */
-    @Override
-    public boolean canPlaceBlockOnSide(World worldIn, BlockPos pos, Direction side,
-            EntityPlayer player, ItemStack stack) {
-        return true;
-    }
-
-    public SuperItemBlock(SuperBlock block) {
-        super(block);
-        setHasSubtypes(true);
+    public SuperItemBlock(SuperBlock block, Item.Settings settings) {
+        super(block, settings);
     }
 
     @Override
     public int featureFlags(ItemStack stack) {
         return FEATURE_FLAGS;
-    }
-
-    @Override
-    public int getMetadata(int damage) {
-        return damage;
     }
 
 //    public List<String> getWailaBody(ItemStack itemStack, List<String> current tip, IWailaDataAccessor accessor, IWailaConfigHandler config)
@@ -109,15 +57,11 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
      * {@inheritDoc}
      */
     
-    @Override
-    public final CompoundTag getNBTShareTag(ItemStack stack) {
-        return SuperTileEntity.withoutServerTag(super.getNBTShareTag(stack));
-    }
-
-    @Override
-    public String getItemStackDisplayName(ItemStack stack) {
-        return ((ISuperBlock) this.block).getItemStackDisplayName(stack);
-    }
+    //TODO: remove or rework
+//    @Override
+//    public final CompoundTag getNBTShareTag(ItemStack stack) {
+//        return SuperTileEntity.withoutServerTag(super.getNBTShareTag(stack));
+//    }
 
     @Override
     public boolean isVirtual(ItemStack stack) {
@@ -126,7 +70,7 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
 
     @Override
     public ISuperBlock getSuperBlock() {
-        return (ISuperBlock) this.block;
+        return (ISuperBlock) this.getBlock();
     }
 
     @Override
@@ -145,94 +89,94 @@ public class SuperItemBlock extends ItemBlock implements IPlacementItem, IItemMo
      * @param side   The side the player (or machine) right-clicked on.
      */
     @Override
-    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world,
-            BlockPos pos, Direction side, float hitX, float hitY, float hitZ,
-            BlockState newState) {
+    public boolean place(ItemPlacementContext context, BlockState newState) {
         // world.setBlockState returns false if the state was already the requested
         // state
         // this is OK normally, but if we need to update the TileEntity it is the
         // opposite of OK
-        boolean wasUpdated = world.setBlockState(pos, newState, 3) || world.getBlockState(pos) == newState;
+        BlockPos pos = context.getBlockPos();
+        World world = context.getWorld();
+        
+        boolean wasUpdated = world.setBlockState(pos, newState, 11) || world.getBlockState(pos) == newState;
 
         if (!wasUpdated)
             return false;
 
-        this.block.onBlockPlacedBy(world, pos, newState, player, stack);
+        // TODO: remove if not needed
+//        this.block.onBlockPlacedBy(world, pos, newState, player, stack);
         return true;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
-            EnumHand hand) {
-        return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(hand));
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        return new TypedActionResult<ItemStack>(ActionResult.PASS, player.getStackInHand(hand));
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos,
-            EnumHand hand, Direction facing, float hitX, float hitY, float hitZ) {
+    public ActionResult useOnBlock(ItemUsageContext context) {
 
-        ItemStack stackIn = playerIn.getHeldItem(hand);
-
+        ItemStack stackIn = context.getStack();
+        World worldIn = context.getWorld();
+        BlockPos pos = context.getBlockPos();
+        PlayerEntity player = context.getPlayer();
+        Direction facing = context.getSide();
+        ItemPlacementContext pctx = new ItemPlacementContext(context);
+        
         // NB: block is to limit scope of vars
         {
+            
             BlockState currentState = worldIn.getBlockState(pos);
             Block block = currentState.getBlock();
 
-            if (!block.isReplaceable(worldIn, pos)) {
-                if (currentState.getBlockFaceShape(worldIn, pos, facing) == BlockFaceShape.UNDEFINED
-                        && !playerIn.isSneaking())
-                    return EnumActionResult.FAIL;
-
-                pos = pos.offset(facing);
-            }
-
+            
             currentState = worldIn.getBlockState(pos);
             block = currentState.getBlock();
 
             // this check will probably need to be adjusted for additive blocks
             // but not having this for normal blocks means we replace cables or
             // other block that don't fully occlude the targeted face.
-            if (!block.isReplaceable(worldIn, pos))
-                return EnumActionResult.FAIL;
+            if (!block.canReplace(currentState, pctx))
+                return ActionResult.FAIL;
 
-            if (stackIn.isEmpty() || !playerIn.canPlayerEdit(pos, facing, stackIn))
-                return EnumActionResult.FAIL;
+            if (stackIn.isEmpty())
+                return ActionResult.FAIL;
 
         }
 
         ISuperModelState modelState = SuperBlockStackHelper.getStackModelState(stackIn);
         if (modelState == null)
-            return EnumActionResult.FAIL;
+            return ActionResult.FAIL;
 
-        BoundingBox BoundingBox = modelState.getShape().meshFactory().collisionHandler()
-                .getCollisionBoundingBox(modelState);
+        BoundingBox shape = CollisionBoxDispatcher.getOutlineShape(modelState).getBoundingBox();
 
-        if (!worldIn.checkNoEntityCollision(BoundingBox.offset(pos)))
-            return EnumActionResult.FAIL;
+        if (!worldIn.doesNotCollide(shape.offset(pos)))
+            return ActionResult.FAIL;
 
         BlockState placedState = IPlacementItem.getPlacementBlockStateFromStackStatically(stackIn);
 
         /**
          * Adjust block rotation if supported.
          */
+        final Vec3d hitPos = context.getHitPos();
+        
         ItemStack placedStack = stackIn.copy();
         if (!modelState.isStatic()) {
             IPlacementItem item = (IPlacementItem) placedStack.getItem();
 
-            BlockOrientationHandler.applyDynamicOrientation(placedStack, playerIn,
-                    new PlacementPosition(playerIn, pos, facing, new Vec3d(hitX, hitY, hitZ),
+            BlockOrientationHandler.applyDynamicOrientation(placedStack, player,
+                    new PlacementPosition(player, pos, facing, new Vec3d(hitPos.x, hitPos.y, hitPos.z),
                             item.getFloatingSelectionRange(placedStack), item.isExcavator(placedStack)));
         }
 
-        if (placeBlockAt(placedStack, playerIn, worldIn, pos, facing, hitX, hitY, hitZ, placedState)) {
+        if (place(pctx, placedState)) {
             placedState = worldIn.getBlockState(pos);
-            BlockSoundGroup soundtype = placedState.getBlock().getBlockSoundGroup(placedState, worldIn, pos, playerIn);
-            worldIn.playSound(playerIn, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS,
+            BlockSoundGroup soundtype = placedState.getBlock().getSoundGroup(placedState);
+            worldIn.playSound(player, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS,
                     (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            if (!(playerIn.isCreative()))
-                stackIn.shrink(1);
+            if (!(player.isCreative()))
+                stackIn.decrement(1);
         }
 
-        return EnumActionResult.SUCCESS;
+        return ActionResult.SUCCESS;
     }
 }

@@ -30,7 +30,8 @@ import net.minecraft.util.math.Direction;
  */
 @API(status = STABLE)
 public interface SimpleJoinState {
-
+    int STATE_COUNT = 64; // 2^6
+    
     boolean isJoined(Direction face);
 
     int ordinal();

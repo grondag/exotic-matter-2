@@ -6,12 +6,10 @@ import org.joml.Vector4f;
 
 import grondag.brocade.model.state.ISuperModelState;
 import grondag.fermion.world.Rotation;
-import grondag.frex.api.core.ModelHelper;
-import net.minecraft.client.render.model.ModelRotation;
-import net.minecraft.client.util.math.Quaternion;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.Vec3i;
 
 public class Transform {
     private final static Matrix4f[] MATRIX_LOOKUP = new Matrix4f[32];
@@ -104,22 +102,24 @@ public class Transform {
         } else if (rotation != Rotation.ROTATE_NONE) {
             return getMatrixForRotation(rotation);
         } else {
-            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y0);
+            return new Matrix4f().identity();
         }
     }
 
-    public static Matrix4f matrixFromRotation(ModelRotation modelRotation)
-    {
-        Quaternion quat = modelRotation.getQuaternion();
-        Matrix4f ret = new Matrix4f(TRSRTransformation.toVecmath(modelRotation.getQuaternion())), tmp = new Matrix4f();
-        tmp.setIdentity();
-        tmp.m03 = tmp.m13 = tmp.m23 = .5f;
-        ret.mul(tmp, ret);
-        tmp.invert();
-        //tmp.m03 = tmp.m13 = tmp.m23 = -.5f;
-        ret.mul(tmp);
-        return ret;
-    }
+    //TODO: restore or remove
+//    public static Matrix4f matrixFromRotation(ModelRotation modelRotation)
+//    {
+//        Quaternion quat = modelRotation.getQuaternion();
+//        Matrix4f ret = new Matrix4f(TRSRTransformation.toVecmath(modelRotation.getQuaternion())), tmp = new Matrix4f();
+//        tmp.setIdentity();
+//        tmp.m03 = tmp.m13 = tmp.m23 = .5f;
+//        ret.mul(tmp, ret);
+//        tmp.invert();
+//        //tmp.m03 = tmp.m13 = tmp.m23 = -.5f;
+//        ret.mul(tmp);
+//        return ret;
+//    }
+    
     /**
      * Compute array lookup index. Key space is not efficient, because no axis is
      * equivalent to Y axis, but only 32 values vs 16 and allows us to use bit
@@ -150,26 +150,37 @@ public class Transform {
                 : computeKey(null, false, modelState.getAxisRotation());
     }
 
+    // PERF: re-use instances
+    
     /**
      * See {@link #getMatrix4f()}t
      */
     private static Matrix4f getMatrixForAxis(Direction.Axis axis, boolean isAxisInverted) {
         switch (axis) {
         case X:
-            return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X90_Y270 : ModelRotation.X90_Y90);
+            return isAxisInverted 
+                    ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0).rotate((float) Math.toRadians(90), 1, 0, 0)
+                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(90), 1, 0, 0);
+            //return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X90_Y270 : ModelRotation.X90_Y90);
 
         case Y:
-            return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X180_Y0 : ModelRotation.X0_Y0);
+            return isAxisInverted 
+                    ? new Matrix4f().identity().rotate((float) Math.toRadians(180), 1, 0, 0)
+                    : new Matrix4f().identity();
 
         case Z:
-            return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X90_Y0 : ModelRotation.X270_Y0);
+            return isAxisInverted 
+                    ? new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0)
+                    : new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0);
+            //return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X90_Y0 : ModelRotation.X270_Y0);
 
         default:
-            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y0);
+            return new Matrix4f().identity();
 
         }
     }
 
+    // PERF: re-use instances
     /**
      * See {@link #getMatrix4f()}t
      */
@@ -177,16 +188,19 @@ public class Transform {
         switch (rotation) {
         default:
         case ROTATE_NONE:
-            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y0);
+            return new Matrix4f().identity();
 
         case ROTATE_90:
-            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y90);
+            return new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0);
+            //return ForgeHooksClient.getMatrix(ModelRotation.X0_Y90);
 
         case ROTATE_180:
-            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y180);
+            return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
+//            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y180);
 
         case ROTATE_270:
-            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y270);
+            return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
+//            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y270);
         }
     }
 

@@ -44,7 +44,7 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
     }
 
     private static final Direction[] FACES = Direction.values();
-    public static final int STATE_COUNT = 64; // 2^6
+    
     private static final SimpleJoinStateImpl JOINS[] = new SimpleJoinStateImpl[STATE_COUNT];
 
     static {

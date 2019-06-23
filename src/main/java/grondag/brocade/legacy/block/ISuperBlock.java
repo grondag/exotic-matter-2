@@ -5,7 +5,6 @@ import grondag.brocade.world.IBlockTest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -15,8 +14,6 @@ import net.minecraft.world.ExtendedBlockView;
 public interface ISuperBlock {
     public static final IntProperty SPECIES = IntProperty.of("brocade_species", 0, 15);
     
-    String getItemStackDisplayName(ItemStack stack);
-
     /**
      * Factory for block test that should be used for border/shape joins for this
      * block. Used in model state refresh from world.
