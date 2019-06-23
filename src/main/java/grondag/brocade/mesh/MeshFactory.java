@@ -2,9 +2,9 @@ package grondag.brocade.mesh;
 
 import java.util.function.Consumer;
 
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.primitives.polygon.IPolygon;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.brocade.state.StateFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +44,7 @@ public abstract class MeshFactory {
      * Override if shape has any kind of orientation to it that can be selected
      * during placement.
      */
-    public BlockOrientationType orientationType(ISuperModelState modelState) {
+    public BlockOrientationType orientationType(MeshState modelState) {
         return BlockOrientationType.NONE;
     }
 
@@ -53,7 +53,7 @@ public abstract class MeshFactory {
      * alone, not transparency. Returns 0 if no occlusion (unlikely result). 1-15 if
      * some occlusion. 255 if fully occludes sky.
      */
-    public abstract int geometricSkyOcclusion(ISuperModelState modelState);
+    public abstract int geometricSkyOcclusion(MeshState modelState);
 
     /**
      * Generator will output polygons and they will be quads or tris.
@@ -61,16 +61,16 @@ public abstract class MeshFactory {
      * 
      * Consumer MUST NOT hold references to any of the polys received.
      */
-    public abstract void produceShapeQuads(ISuperModelState modelState, Consumer<IPolygon> target);
+    public abstract void produceShapeQuads(MeshState modelState, Consumer<IPolygon> target);
 
     /** Returns true if geometry is a full 1x1x1 cube. */
-    public abstract boolean isCube(ISuperModelState modelState);
+    public abstract boolean isCube(MeshState modelState);
 
     /**
      * If this shape uses metadata to affect geometry, retrieves the block/item
      * metadata value that should correspond to this modelstate
      */
-    public int getMetaData(ISuperModelState modelState) {
+    public int getMetaData(MeshState modelState) {
         return 0;
     }
 
@@ -80,7 +80,7 @@ public abstract class MeshFactory {
      * another mechanism for synchronizing with block meta. (TerrainBlocks get it
      * via TerrainState, for example)
      */
-    public void setMetaData(ISuperModelState modelState, int meta) {
+    public void setMetaData(MeshState modelState, int meta) {
         // Default is to do nothing
     }
 
@@ -96,7 +96,7 @@ public abstract class MeshFactory {
      * model state. Used by model state to detect if model has translucent geometry
      * and possibly other qualitative attributes without generating a mesh.
      */
-    public abstract boolean hasLampSurface(ISuperModelState modelState);
+    public abstract boolean hasLampSurface(MeshState modelState);
 
     /**
      * Override to true for blocks like stairs and wedges. CubicPlacementHandler
@@ -107,9 +107,9 @@ public abstract class MeshFactory {
     }
 
     public abstract boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis,
-            ISuperBlock block, ISuperModelState modelState);
+            BrocadeBlock block, MeshState modelState);
 
-    public int getStateFlags(ISuperModelState modelState) {
+    public int getStateFlags(MeshState modelState) {
         return stateFlags;
     }
 }

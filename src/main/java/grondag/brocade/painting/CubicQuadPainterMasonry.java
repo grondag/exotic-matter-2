@@ -6,7 +6,7 @@ import grondag.brocade.connect.api.state.SimpleJoinState;
 import grondag.brocade.primitives.FaceQuadInputs;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.world.Rotation;
 import net.minecraft.util.math.Direction;
 
@@ -59,7 +59,7 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
         }
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ISuperModelState modelState, PaintLayer paintLayer) {
+    public static void paintQuads(IMutablePolyStream stream, MeshState modelState, PaintLayer paintLayer) {
         IMutablePolygon editor = stream.editor();
         do {
             final SimpleJoinState bjs = modelState.getMasonryJoin();

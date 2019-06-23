@@ -5,7 +5,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
 import grondag.brocade.connect.api.model.ClockwiseRotation;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -87,7 +87,7 @@ public class Transform {
      * opposite of what I just described. See this in
      * {@link #getMatrixForAxisAndRotation(net.minecraft.util.math.Direction.Axis, boolean, Rotation)}
      */
-    public static Matrix4f getMatrix4f(ISuperModelState modelState) {
+    public static Matrix4f getMatrix4f(MeshState modelState) {
         return MATRIX_LOOKUP[computeTransformKey(modelState)];
     }
 
@@ -143,7 +143,7 @@ public class Transform {
      * Returns a key that can be used to retrieve values without the input model
      * state. Useful for some serialization scenarios.
      */
-    public static int computeTransformKey(ISuperModelState modelState) {
+    public static int computeTransformKey(MeshState modelState) {
         return modelState.hasAxis()
                 ? computeKey(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation())
                 : computeKey(null, false, modelState.getAxisRotation());
@@ -219,7 +219,7 @@ public class Transform {
      * (or doesn't have any orientation to be transformed) then simply returns the
      * input face.
      */
-    public static Direction rotateFace(ISuperModelState modelState, Direction face) {
+    public static Direction rotateFace(MeshState modelState, Direction face) {
         return FACE_MAPS[computeTransformKey(modelState)].map(face);
     }
 
@@ -230,16 +230,16 @@ public class Transform {
      * <p>
      * 
      * Equivalently, list containing results of calling
-     * {@link #rotateFace(ISuperModelState, Direction)} for each face in Enum
+     * {@link #rotateFace(MeshState, Direction)} for each face in Enum
      * order.
      */
-    public static FaceMap getFaceMap(ISuperModelState modelState) {
+    public static FaceMap getFaceMap(MeshState modelState) {
         return FACE_MAPS[computeTransformKey(modelState)];
     }
 
     /**
-     * Same as {@link #getFaceMap(ISuperModelState)} but uses the output of
-     * {@link #computeTransformKey(ISuperModelState)} instead of modelstate.
+     * Same as {@link #getFaceMap(MeshState)} but uses the output of
+     * {@link #computeTransformKey(MeshState)} instead of modelstate.
      */
     public static FaceMap getFaceMap(int transformKey) {
         return FACE_MAPS[transformKey];

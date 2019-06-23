@@ -7,8 +7,8 @@ import javax.annotation.Nullable;
 import grondag.brocade.collision.CollisionBoxDispatcher;
 import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.painting.PaintLayer;
-import grondag.brocade.state.ISuperModelState;
-import grondag.brocade.state.ModelState;
+import grondag.brocade.state.MeshState;
+import grondag.brocade.state.MeshStateImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -25,11 +25,11 @@ import net.minecraft.world.BlockView;
 /**
  * Base class for HardScience building blocks.
  */
-public class SuperBlock extends Block implements ISuperBlock {
+public class SimpleBrocadeBlock extends Block implements BrocadeBlock {
     /** change in constructor to have different appearance */
     protected int[] defaultModelStateBits;
 
-    public SuperBlock(Settings blockSettings, ISuperModelState defaultModelState) {
+    public SimpleBrocadeBlock(Settings blockSettings, MeshState defaultModelState) {
         super(blockSettings);
         this.defaultModelStateBits = defaultModelState.serializeToInts();
     }
@@ -40,12 +40,12 @@ public class SuperBlock extends Block implements ISuperBlock {
      */
     @Override
     public BlockTest blockJoinTest() {
-        return SuperBlockBorderMatch.INSTANCE;
+        return BrocadeBlockBorderMatch.INSTANCE;
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, EntityContext entityContext) {
-        ISuperModelState modelState = getModelStateAssumeStateIsCurrent(state, blockView, pos, true);
+        MeshState modelState = getModelStateAssumeStateIsCurrent(state, blockView, pos, true);
         return CollisionBoxDispatcher.getOutlineShape(modelState);
     }
 
@@ -162,7 +162,7 @@ public class SuperBlock extends Block implements ISuperBlock {
         super.buildTooltip(stack, world, tooltip, context);
         tooltip.add(new TranslatableComponent("label.meta", stack.getDamage()));
 
-        ISuperModelState modelState = SuperBlockStackHelper.getStackModelState(stack);
+        MeshState modelState = BrocadeBlockStackHelper.getStackModelState(stack);
 
         if (modelState != null) {
             tooltip.add(new TranslatableComponent("label.shape", modelState.getShape().localizedName()));
@@ -180,7 +180,7 @@ public class SuperBlock extends Block implements ISuperBlock {
                 tooltip.add(new TranslatableComponent("label.species", modelState.getSpecies()));
             }
         }
-        tooltip.add(new TranslatableComponent("label.material", SuperBlockStackHelper.getStackSubstance(stack).localizedName()));
+        tooltip.add(new TranslatableComponent("label.material", BrocadeBlockStackHelper.getStackSubstance(stack).localizedName()));
     }
 
     //TODO: add hook for landing effects
@@ -278,8 +278,8 @@ public class SuperBlock extends Block implements ISuperBlock {
      * states are mutable, every call returns a new instance.
      */
     @Override
-    public ISuperModelState getDefaultModelState() {
-        return new ModelState(this.defaultModelStateBits);
+    public MeshState getDefaultModelState() {
+        return new MeshStateImpl(this.defaultModelStateBits);
     }
 
     /**
@@ -290,7 +290,7 @@ public class SuperBlock extends Block implements ISuperBlock {
      * 
      */
     @Override
-    public ISuperModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+    public MeshState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         return getModelStateAssumeStateIsCurrent(world.getBlockState(pos), world, pos, refreshFromWorldIfNeeded);
     }
 
@@ -316,9 +316,9 @@ public class SuperBlock extends Block implements ISuperBlock {
      * those changes may not be detected by path finding.
      */
     @Override
-    public ISuperModelState computeModelState(BlockState state, BlockView world, BlockPos pos,
+    public MeshState computeModelState(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
-        ISuperModelState result = this.getDefaultModelState();
+        MeshState result = this.getDefaultModelState();
         if (refreshFromWorldIfNeeded) {
             result.refreshFromWorld(state, world, pos);
         } else if(state.contains(SPECIES)) {
@@ -332,7 +332,7 @@ public class SuperBlock extends Block implements ISuperBlock {
      * Use when absolutely certain given block state is current.
      */
     @Override
-    public ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+    public MeshState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         // for mundane (non-TE) blocks don't need to worry about state being persisted,
         // logic is same for old and current states
         return computeModelState(state, world, pos, refreshFromWorldIfNeeded);

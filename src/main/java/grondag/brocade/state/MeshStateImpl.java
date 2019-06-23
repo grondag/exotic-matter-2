@@ -1,16 +1,16 @@
 package grondag.brocade.state;
 
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_POS;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
-import static grondag.brocade.state.ModelStateData.TEST_GETTER_STATIC;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_POS;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
+import static grondag.brocade.state.MeshStateData.TEST_GETTER_STATIC;
 
 import org.joml.Matrix4f;
 
@@ -18,8 +18,8 @@ import grondag.brocade.Brocade;
 import grondag.brocade.BrocadeConfig;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.SuperBlockMasonryMatch;
+import grondag.brocade.block.BrocadeBlock;
+import grondag.brocade.block.BrocadeBlockMasonryMatch;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
@@ -46,7 +46,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class ModelState implements ISuperModelState {
+public class MeshStateImpl implements MeshState {
     private static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
     private static final String NBT_SHAPE = NBTDictionary.claim("shape");
     /**
@@ -82,14 +82,14 @@ public class ModelState implements ISuperModelState {
     /** contains indicators derived from shape and painters */
     protected int stateFlags;
 
-    public ModelState() {
+    public MeshStateImpl() {
     }
 
-    public ModelState(int[] bits) {
+    public MeshStateImpl(int[] bits) {
         this.deserializeFromInts(bits);
     }
 
-    public ModelState(long coreBits, long shapeBits0, long shapeBits1, long layerBitsBase, long layerBitsCut,
+    public MeshStateImpl(long coreBits, long shapeBits0, long shapeBits1, long layerBitsBase, long layerBitsCut,
             long layerBitsLamp, long layerBitsMiddle, long layerBitsOuter) {
         this.coreBits = coreBits;
         this.shapeBits0 = shapeBits0;
@@ -102,8 +102,8 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public ModelState clone() {
-        return new ModelState(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut, layerBitsLamp,
+    public MeshStateImpl clone() {
+        return new MeshStateImpl(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut, layerBitsLamp,
                 layerBitsMiddle, layerBitsOuter);
     }
 
@@ -157,7 +157,7 @@ public class ModelState implements ISuperModelState {
 
     private void populateStateFlagsIfNeeded() {
         if (this.stateFlags == 0) {
-            this.stateFlags = ModelStateFlagHelper.getFlags(this);
+            this.stateFlags = MeshStateFlagHelper.getFlags(this);
         }
     }
 
@@ -188,8 +188,8 @@ public class ModelState implements ISuperModelState {
         if (this == obj)
             return true;
 
-        if (obj instanceof ModelState) {
-            ModelState other = (ModelState) obj;
+        if (obj instanceof MeshStateImpl) {
+            MeshStateImpl other = (MeshStateImpl) obj;
             return this.coreBits == other.coreBits && this.shapeBits0 == other.shapeBits0
                     && this.shapeBits1 == other.shapeBits1 && this.layerBitsBase == other.layerBitsBase
                     && this.layerBitsCut == other.layerBitsCut && this.layerBitsLamp == other.layerBitsLamp
@@ -204,8 +204,8 @@ public class ModelState implements ISuperModelState {
         if (this == obj)
             return true;
 
-        if (obj instanceof ModelState) {
-            ModelState other = (ModelState) obj;
+        if (obj instanceof MeshStateImpl) {
+            MeshStateImpl other = (MeshStateImpl) obj;
             return this.isStatic == other.isStatic && this.coreBits == other.coreBits
                     && this.shapeBits0 == other.shapeBits0 && this.shapeBits1 == other.shapeBits1
                     && this.layerBitsBase == other.layerBitsBase && this.layerBitsCut == other.layerBitsCut
@@ -230,7 +230,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public ISuperModelState refreshFromWorld(BlockState state, BlockView world, BlockPos pos) {
+    public MeshState refreshFromWorld(BlockState state, BlockView world, BlockPos pos) {
         // Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
         // " @" + pos.toString());
         if (this.isStatic)
@@ -238,10 +238,10 @@ public class ModelState implements ISuperModelState {
 
         populateStateFlagsIfNeeded();
 
-        if (state.getBlock() instanceof ISuperBlock) {
+        if (state.getBlock() instanceof BrocadeBlock) {
             // FIXME: - doesn't work when block state is something other than species
             // needs to be a method that serializes block state to an int and back
-            this.setMetaData(state.get(ISuperBlock.SPECIES));
+            this.setMetaData(state.get(BrocadeBlock.SPECIES));
         } else {
             // prevent strangeness - shouldn't get called by non-superblock but modded MC is
             // crazy biz
@@ -257,21 +257,21 @@ public class ModelState implements ISuperModelState {
             BlockNeighbors neighbors = null;
 
             if ((STATE_FLAG_NEEDS_CORNER_JOIN & stateFlags) == STATE_FLAG_NEEDS_CORNER_JOIN) {
-                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, ((ISuperBlock) state.getBlock()).blockJoinTest());
-                ModelStateData.BLOCK_JOIN.setValue(CornerJoinState.fromWorld(neighbors).ordinal(), this);
+                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, ((BrocadeBlock) state.getBlock()).blockJoinTest());
+                MeshStateData.BLOCK_JOIN.setValue(CornerJoinState.fromWorld(neighbors).ordinal(), this);
                 
             } else if ((STATE_FLAG_NEEDS_SIMPLE_JOIN & stateFlags) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
-                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, ((ISuperBlock) state.getBlock()).blockJoinTest());
-                ModelStateData.BLOCK_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
+                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, ((BrocadeBlock) state.getBlock()).blockJoinTest());
+                MeshStateData.BLOCK_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
             }
 
             if ((STATE_FLAG_NEEDS_MASONRY_JOIN & stateFlags) == STATE_FLAG_NEEDS_MASONRY_JOIN) {
                 if (neighbors == null) {
-                    neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, SuperBlockMasonryMatch.INSTANCE);
+                    neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, BrocadeBlockMasonryMatch.INSTANCE);
                 } else {
-                    neighbors.withTest(SuperBlockMasonryMatch.INSTANCE);
+                    neighbors.withTest(BrocadeBlockMasonryMatch.INSTANCE);
                 }
-                ModelStateData.MASONRY_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
+                MeshStateData.MASONRY_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
             }
 
             if(neighbors != null) {
@@ -286,8 +286,8 @@ public class ModelState implements ISuperModelState {
             if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS)
                 refreshBlockPosFromWorld(pos, 255);
             TerrainState.produceBitsFromWorldStatically(state, world, pos, (t, h) -> {
-                ModelStateData.FLOW_JOIN.setValue(t, this);
-                ModelStateData.EXTRA_SHAPE_BITS.setValue(h, this);
+                MeshStateData.FLOW_JOIN.setValue(t, this);
+                MeshStateData.EXTRA_SHAPE_BITS.setValue(h, this);
                 return null;
             });
 
@@ -311,9 +311,9 @@ public class ModelState implements ISuperModelState {
      * BigTex surface painting for texture randomization on non-multiblock shapes.
      */
     private void refreshBlockPosFromWorld(BlockPos pos, int mask) {
-        ModelStateData.POS_X.setValue((pos.getX() & mask), this);
-        ModelStateData.POS_Y.setValue((pos.getY() & mask), this);
-        ModelStateData.POS_Z.setValue((pos.getZ() & mask), this);
+        MeshStateData.POS_X.setValue((pos.getX() & mask), this);
+        MeshStateData.POS_Y.setValue((pos.getY() & mask), this);
+        MeshStateData.POS_Z.setValue((pos.getZ() & mask), this);
     }
 
     ////////////////////////////////////////////////////
@@ -322,14 +322,14 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public ModelShape<?> getShape() {
-        return ModelShapes.get(ModelStateData.SHAPE.getValue(this));
+        return ModelShapes.get(MeshStateData.SHAPE.getValue(this));
     }
 
     @Override
     public void setShape(ModelShape<?> shape) {
-        if (shape.ordinal() != ModelStateData.SHAPE.getValue(this)) {
-            ModelStateData.SHAPE.setValue(shape.ordinal(), this);
-            ModelStateData.EXTRA_SHAPE_BITS.setValue(shape.meshFactory().defaultShapeStateBits, this);
+        if (shape.ordinal() != MeshStateData.SHAPE.getValue(this)) {
+            MeshStateData.SHAPE.setValue(shape.ordinal(), this);
+            MeshStateData.EXTRA_SHAPE_BITS.setValue(shape.meshFactory().defaultShapeStateBits, this);
             invalidateHashCode();
             clearStateFlags();
         }
@@ -337,24 +337,24 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public final int getColorARGB(PaintLayer layer) {
-        final int alpha = this.isTranslucent(layer) ? ModelStateData.PAINT_ALPHA[layer.ordinal()].getValue(this) : 0xFF;
-        return (alpha << 24) | ModelStateData.PAINT_COLOR[layer.ordinal()].getValue(this);
+        final int alpha = this.isTranslucent(layer) ? MeshStateData.PAINT_ALPHA[layer.ordinal()].getValue(this) : 0xFF;
+        return (alpha << 24) | MeshStateData.PAINT_COLOR[layer.ordinal()].getValue(this);
     }
 
     @Override
     public final void setColorRGB(PaintLayer layer, int rgb) {
-        ModelStateData.PAINT_COLOR[layer.ordinal()].setValue(rgb & 0xFFFFFF, this);
+        MeshStateData.PAINT_COLOR[layer.ordinal()].setValue(rgb & 0xFFFFFF, this);
         invalidateHashCode();
     }
 
     @Override
     public final int getAlpha(PaintLayer layer) {
-        return ModelStateData.PAINT_ALPHA[layer.ordinal()].getValue(this);
+        return MeshStateData.PAINT_ALPHA[layer.ordinal()].getValue(this);
     }
 
     @Override
     public final void setAlpha(PaintLayer layer, int translucency) {
-        ModelStateData.PAINT_ALPHA[layer.ordinal()].setValue(translucency & 0xFF, this);
+        MeshStateData.PAINT_ALPHA[layer.ordinal()].setValue(translucency & 0xFF, this);
         invalidateHashCode();
     }
 
@@ -365,23 +365,23 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public Direction.Axis getAxis() {
-        return ModelStateData.AXIS.getValue(this);
+        return MeshStateData.AXIS.getValue(this);
     }
 
     @Override
     public void setAxis(Direction.Axis axis) {
-        ModelStateData.AXIS.setValue(axis, this);
+        MeshStateData.AXIS.setValue(axis, this);
         invalidateHashCode();
     }
 
     @Override
     public boolean isAxisInverted() {
-        return ModelStateData.AXIS_INVERTED.getValue(this);
+        return MeshStateData.AXIS_INVERTED.getValue(this);
     }
 
     @Override
     public void setAxisInverted(boolean isInverted) {
-        ModelStateData.AXIS_INVERTED.setValue(isInverted, this);
+        MeshStateData.AXIS_INVERTED.setValue(isInverted, this);
         invalidateHashCode();
     }
 
@@ -397,12 +397,12 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public boolean isTranslucent(PaintLayer layer) {
-        return ModelStateData.PAINT_IS_TRANSLUCENT[layer.ordinal()].getValue(this);
+        return MeshStateData.PAINT_IS_TRANSLUCENT[layer.ordinal()].getValue(this);
     }
 
     @Override
     public void setTranslucent(PaintLayer layer, boolean isTranslucent) {
-        ModelStateData.PAINT_IS_TRANSLUCENT[layer.ordinal()].setValue(isTranslucent, this);
+        MeshStateData.PAINT_IS_TRANSLUCENT[layer.ordinal()].setValue(isTranslucent, this);
         clearStateFlags();
         invalidateHashCode();
     }
@@ -413,35 +413,35 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public TextureSet getTexture(PaintLayer layer) {
-        return TextureSetRegistryImpl.INSTANCE.getByIndex(ModelStateData.PAINT_TEXTURE[layer.ordinal()].getValue(this));
+        return TextureSetRegistryImpl.INSTANCE.getByIndex(MeshStateData.PAINT_TEXTURE[layer.ordinal()].getValue(this));
     }
 
     @Override
     public void setTexture(PaintLayer layer, TextureSet tex) {
-        ModelStateData.PAINT_TEXTURE[layer.ordinal()].setValue(tex.index(), this);
+        MeshStateData.PAINT_TEXTURE[layer.ordinal()].setValue(tex.index(), this);
         invalidateHashCode();
         clearStateFlags();
     }
 
     @Override
     public void setVertexProcessor(PaintLayer layer, VertexProcessor vp) {
-        ModelStateData.PAINT_VERTEX_PROCESSOR[layer.ordinal()].setValue(vp.ordinal, this);
+        MeshStateData.PAINT_VERTEX_PROCESSOR[layer.ordinal()].setValue(vp.ordinal, this);
         invalidateHashCode();
     }
 
     @Override
     public VertexProcessor getVertexProcessor(PaintLayer layer) {
-        return VertexProcessors.get(ModelStateData.PAINT_VERTEX_PROCESSOR[layer.ordinal()].getValue(this));
+        return VertexProcessors.get(MeshStateData.PAINT_VERTEX_PROCESSOR[layer.ordinal()].getValue(this));
     }
 
     @Override
     public boolean isEmissive(PaintLayer layer) {
-        return ModelStateData.PAINT_EMISSIVE[layer.ordinal()].getValue(this);
+        return MeshStateData.PAINT_EMISSIVE[layer.ordinal()].getValue(this);
     }
 
     @Override
     public void setEmissive(PaintLayer layer, boolean isEmissive) {
-        ModelStateData.PAINT_EMISSIVE[layer.ordinal()].setValue(isEmissive, this);
+        MeshStateData.PAINT_EMISSIVE[layer.ordinal()].setValue(isEmissive, this);
         clearStateFlags();
         invalidateHashCode();
     }
@@ -452,45 +452,45 @@ public class ModelState implements ISuperModelState {
 
     @Override
     public int getPosX() {
-        return ModelStateData.POS_X.getValue(this);
+        return MeshStateData.POS_X.getValue(this);
     }
 
     @Override
     public void setPosX(int index) {
-        ModelStateData.POS_X.setValue(index, this);
+        MeshStateData.POS_X.setValue(index, this);
         invalidateHashCode();
     }
 
     @Override
     public int getPosY() {
-        return ModelStateData.POS_Y.getValue(this);
+        return MeshStateData.POS_Y.getValue(this);
     }
 
     @Override
     public void setPosY(int index) {
-        ModelStateData.POS_Y.setValue(index, this);
+        MeshStateData.POS_Y.setValue(index, this);
         invalidateHashCode();
     }
 
     @Override
     public int getPosZ() {
-        return ModelStateData.POS_Z.getValue(this);
+        return MeshStateData.POS_Z.getValue(this);
     }
 
     @Override
     public void setPosZ(int index) {
-        ModelStateData.POS_Z.setValue(index, this);
+        MeshStateData.POS_Z.setValue(index, this);
         invalidateHashCode();
     }
 
     @Override
     public long getStaticShapeBits() {
-        return ModelStateData.EXTRA_SHAPE_BITS.getValue(this);
+        return MeshStateData.EXTRA_SHAPE_BITS.getValue(this);
     }
 
     @Override
     public void setStaticShapeBits(long bits) {
-        ModelStateData.EXTRA_SHAPE_BITS.setValue(bits, this);
+        MeshStateData.EXTRA_SHAPE_BITS.setValue(bits, this);
         invalidateHashCode();
     }
 
@@ -505,7 +505,7 @@ public class ModelState implements ISuperModelState {
         if (BrocadeConfig.BLOCKS.debugModelState && !this.hasSpecies())
             Brocade.LOG.warn("getSpecies on model state does not apply for shape");
 
-        return this.hasSpecies() ? ModelStateData.SPECIES.getValue(this) : 0;
+        return this.hasSpecies() ? MeshStateData.SPECIES.getValue(this) : 0;
     }
 
     @Override
@@ -516,7 +516,7 @@ public class ModelState implements ISuperModelState {
             Brocade.LOG.warn("setSpecies on model state does not apply for shape");
 
         if (this.hasSpecies()) {
-            ModelStateData.SPECIES.setValue(species, this);
+            MeshStateData.SPECIES.setValue(species, this);
             invalidateHashCode();
         }
     }
@@ -530,7 +530,7 @@ public class ModelState implements ISuperModelState {
                 Brocade.LOG.warn("getCornerJoin on model state does not apply for shape");
         }
 
-        return CornerJoinStateSelector.fromOrdinal(MathHelper.clamp(ModelStateData.BLOCK_JOIN.getValue(this), 0,
+        return CornerJoinStateSelector.fromOrdinal(MathHelper.clamp(MeshStateData.BLOCK_JOIN.getValue(this), 0,
                 CornerJoinState.STATE_COUNT - 1));
     }
 
@@ -543,7 +543,7 @@ public class ModelState implements ISuperModelState {
                 Brocade.LOG.warn("setCornerJoin on model state does not apply for shape");
         }
 
-        ModelStateData.BLOCK_JOIN.setValue(join.ordinal(), this);
+        MeshStateData.BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
 
@@ -556,7 +556,7 @@ public class ModelState implements ISuperModelState {
         // and so need to derive simple join from the corner join
         populateStateFlagsIfNeeded();
         return ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
-                ? SimpleJoinState.fromOrdinal(ModelStateData.BLOCK_JOIN.getValue(this))
+                ? SimpleJoinState.fromOrdinal(MeshStateData.BLOCK_JOIN.getValue(this))
                 : getCornerJoin().simpleJoin();
     }
 
@@ -575,7 +575,7 @@ public class ModelState implements ISuperModelState {
             }
         }
 
-        ModelStateData.BLOCK_JOIN.setValue(join.ordinal(), this);
+        MeshStateData.BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
 
@@ -588,7 +588,7 @@ public class ModelState implements ISuperModelState {
             Brocade.LOG.warn("getMasonryJoin on model state does not apply for shape");
 
         populateStateFlagsIfNeeded();
-        return SimpleJoinState.fromOrdinal(ModelStateData.MASONRY_JOIN.getValue(this));
+        return SimpleJoinState.fromOrdinal(MeshStateData.MASONRY_JOIN.getValue(this));
     }
 
     @Override
@@ -607,13 +607,13 @@ public class ModelState implements ISuperModelState {
             }
         }
 
-        ModelStateData.MASONRY_JOIN.setValue(join.ordinal(), this);
+        MeshStateData.MASONRY_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
 
     @Override
     public ClockwiseRotation getAxisRotation() {
-        return ModelStateData.AXIS_ROTATION.getValue(this);
+        return MeshStateData.AXIS_ROTATION.getValue(this);
     }
 
     @Override
@@ -631,7 +631,7 @@ public class ModelState implements ISuperModelState {
             return;
         }
 
-        ModelStateData.AXIS_ROTATION.setValue(rotation, this);
+        MeshStateData.AXIS_ROTATION.setValue(rotation, this);
         invalidateHashCode();
     }
 
@@ -664,37 +664,37 @@ public class ModelState implements ISuperModelState {
     public long getTerrainStateKey() {
         assert this.getShape()
                 .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
-        return ModelStateData.FLOW_JOIN.getValue(this);
+        return MeshStateData.FLOW_JOIN.getValue(this);
     }
 
     @Override
     public int getTerrainHotness() {
         assert this.getShape()
                 .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
-        return (int) ModelStateData.EXTRA_SHAPE_BITS.getValue(this);
+        return (int) MeshStateData.EXTRA_SHAPE_BITS.getValue(this);
     }
 
     @Override
     public void setTerrainStateKey(long terrainStateKey) {
         assert this.getShape()
                 .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
-        ModelStateData.FLOW_JOIN.setValue(terrainStateKey, this);
+        MeshStateData.FLOW_JOIN.setValue(terrainStateKey, this);
     }
 
     @Override
     public TerrainState getTerrainState() {
         assert this.getShape()
                 .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
-        return new TerrainState(ModelStateData.FLOW_JOIN.getValue(this),
-                (int) ModelStateData.EXTRA_SHAPE_BITS.getValue(this));
+        return new TerrainState(MeshStateData.FLOW_JOIN.getValue(this),
+                (int) MeshStateData.EXTRA_SHAPE_BITS.getValue(this));
     }
 
     @Override
     public void setTerrainState(TerrainState flowState) {
         assert this.getShape()
                 .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
-        ModelStateData.FLOW_JOIN.setValue(flowState.getStateKey(), this);
-        ModelStateData.EXTRA_SHAPE_BITS.setValue(flowState.getHotness(), this);
+        MeshStateData.FLOW_JOIN.setValue(flowState.getStateKey(), this);
+        MeshStateData.EXTRA_SHAPE_BITS.setValue(flowState.getHotness(), this);
         invalidateHashCode();
     }
 
@@ -820,7 +820,7 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block) {
+    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, BrocadeBlock block) {
         return getShape().meshFactory().rotateBlock(blockState, world, pos, axis, block, this);
     }
 
@@ -830,20 +830,20 @@ public class ModelState implements ISuperModelState {
     }
 
     @Override
-    public final boolean doShapeAndAppearanceMatch(ISuperModelState other) {
-        final ModelState o = (ModelState) other;
-        return (this.coreBits & ModelStateData.SHAPE_COMPARISON_MASK_0) == (o.coreBits
-                & ModelStateData.SHAPE_COMPARISON_MASK_0)
-                && (this.shapeBits1 & ModelStateData.SHAPE_COMPARISON_MASK_1) == (o.shapeBits1
-                        & ModelStateData.SHAPE_COMPARISON_MASK_1)
+    public final boolean doShapeAndAppearanceMatch(MeshState other) {
+        final MeshStateImpl o = (MeshStateImpl) other;
+        return (this.coreBits & MeshStateData.SHAPE_COMPARISON_MASK_0) == (o.coreBits
+                & MeshStateData.SHAPE_COMPARISON_MASK_0)
+                && (this.shapeBits1 & MeshStateData.SHAPE_COMPARISON_MASK_1) == (o.shapeBits1
+                        & MeshStateData.SHAPE_COMPARISON_MASK_1)
                 && this.layerBitsBase == o.layerBitsBase && this.layerBitsCut == o.layerBitsCut
                 && this.layerBitsLamp == o.layerBitsLamp && this.layerBitsMiddle == o.layerBitsMiddle
                 && this.layerBitsOuter == o.layerBitsOuter;
     }
 
     @Override
-    public boolean doesAppearanceMatch(ISuperModelState other) {
-        final ModelState o = (ModelState) other;
+    public boolean doesAppearanceMatch(MeshState other) {
+        final MeshStateImpl o = (MeshStateImpl) other;
         return this.layerBitsBase == o.layerBitsBase && this.layerBitsCut == o.layerBitsCut
                 && this.layerBitsLamp == o.layerBitsLamp && this.layerBitsMiddle == o.layerBitsMiddle
                 && this.layerBitsOuter == o.layerBitsOuter;
@@ -851,9 +851,9 @@ public class ModelState implements ISuperModelState {
 
     // PERF: bottleneck for Pyroclasm
     @Override
-    public ISuperModelState geometricState() {
+    public MeshState geometricState() {
         this.populateStateFlagsIfNeeded();
-        ModelState result = new ModelState();
+        MeshStateImpl result = new MeshStateImpl();
         result.setShape(this.getShape());
 
         switch (this.getShape().meshFactory().stateFormat) {
@@ -875,7 +875,7 @@ public class ModelState implements ISuperModelState {
             break;
 
         case FLOW:
-            ModelStateData.FLOW_JOIN.setValue(ModelStateData.FLOW_JOIN.getValue(this), result);
+            MeshStateData.FLOW_JOIN.setValue(MeshStateData.FLOW_JOIN.getValue(this), result);
             break;
 
         case MULTIBLOCK:
@@ -889,9 +889,9 @@ public class ModelState implements ISuperModelState {
         return result;
     }
 
-    public static ModelState deserializeFromNBTIfPresent(CompoundTag tag) {
+    public static MeshStateImpl deserializeFromNBTIfPresent(CompoundTag tag) {
         if (tag.containsKey(NBT_MODEL_BITS)) {
-            ModelState result = new ModelState();
+            MeshStateImpl result = new MeshStateImpl();
             result.deserializeNBT(tag);
             return result;
         }
@@ -924,7 +924,7 @@ public class ModelState implements ISuperModelState {
         // mods/config change
         ModelShape<?> shape = ModelShapes.get(tag.getString(NBT_SHAPE));
         if (shape != null)
-            ModelStateData.SHAPE.setValue(shape.ordinal(), this);
+            MeshStateData.SHAPE.setValue(shape.ordinal(), this);
 
         // textures and vertex processors serialized by name because registered can
         // change if mods/config change
@@ -934,16 +934,16 @@ public class ModelState implements ISuperModelState {
             if (names.length != 0) {
                 int i = 0;
                 for (PaintLayer l : PaintLayer.VALUES) {
-                    if (ModelStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
+                    if (MeshStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
                         TextureSet tex = TextureSetRegistryImpl.INSTANCE.getById(new Identifier(names[i++]));
-                        ModelStateData.PAINT_TEXTURE[l.ordinal()].setValue(tex.index(), this);
+                        MeshStateData.PAINT_TEXTURE[l.ordinal()].setValue(tex.index(), this);
                         if (i == names.length)
                             break;
                     }
 
-                    if (ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
+                    if (MeshStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
                         VertexProcessor vp = VertexProcessors.get(names[i++]);
-                        ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].setValue(vp.ordinal, this);
+                        MeshStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].setValue(vp.ordinal, this);
                         if (i == names.length)
                             break;
                     }
@@ -965,13 +965,13 @@ public class ModelState implements ISuperModelState {
         // change if mods/config change
         StringBuilder layers = new StringBuilder();
         for (PaintLayer l : PaintLayer.VALUES) {
-            if (ModelStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
+            if (MeshStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
                 if (layers.length() != 0)
                     layers.append(",");
                 layers.append(this.getTexture(l).id().toString());
             }
 
-            if (ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
+            if (MeshStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
                 if (layers.length() != 0)
                     layers.append(",");
                 layers.append(this.getVertexProcessor(l).registryName);

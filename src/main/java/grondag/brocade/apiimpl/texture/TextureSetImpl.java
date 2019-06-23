@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import grondag.brocade.api.texture.TextureRotation;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.api.texture.TextureSetBuilder;
-import grondag.brocade.state.ModelStateData;
+import grondag.brocade.state.MeshStateData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
@@ -40,11 +40,11 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
         // textures with randomization options also require position information
 
         if (template.rotation == TextureRotation.ROTATE_RANDOM) {
-            flags |= (ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION | ModelStateData.STATE_FLAG_NEEDS_POS);
+            flags |= (MeshStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION | MeshStateData.STATE_FLAG_NEEDS_POS);
         }
 
         if (template.versionCount > 1) {
-            flags |= ModelStateData.STATE_FLAG_NEEDS_POS;
+            flags |= MeshStateData.STATE_FLAG_NEEDS_POS;
         }
         
         this.stateFlags = flags;

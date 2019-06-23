@@ -1,8 +1,8 @@
 package grondag.brocade.terrain;
 
-import grondag.brocade.block.SuperBlockPlus;
+import grondag.brocade.block.StatefulBrocadeBlock;
 import grondag.brocade.init.ModShapes;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -15,15 +15,15 @@ import net.minecraft.world.World;
 
 
 
-public class TerrainStaticBlock extends SuperBlockPlus implements IHotBlock {
+public class TerrainStaticBlock extends StatefulBrocadeBlock implements IHotBlock {
     private final boolean isFiller;
 
-    public TerrainStaticBlock(Settings blockSettings, ISuperModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
+    public TerrainStaticBlock(Settings blockSettings, MeshState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
         super(blockSettings, defaultModelState, blockEntityType);
         this.isFiller = isFiller;
 
         // make sure proper shape is set
-        ISuperModelState modelState = defaultModelState.clone();
+        MeshState modelState = defaultModelState.clone();
         modelState.setShape(this.isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
         this.defaultModelStateBits = modelState.serializeToInts();
     }

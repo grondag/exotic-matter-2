@@ -1,7 +1,7 @@
 package grondag.brocade.block;
 
-import grondag.brocade.state.ISuperModelState;
-import grondag.brocade.state.ModelState;
+import grondag.brocade.state.MeshState;
+import grondag.brocade.state.MeshStateImpl;
 import grondag.fermion.serialization.NBTDictionary;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
@@ -14,12 +14,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 
-public class SuperTileEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class BrocadeTileEntity extends BlockEntity implements BlockEntityClientSerializable {
     ////////////////////////////////////////////////////////////////////////
     // STATIC MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    public SuperTileEntity(BlockEntityType<?> blockEntityType) {
+    public BrocadeTileEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
     }
 
@@ -60,7 +60,7 @@ public class SuperTileEntity extends BlockEntity implements BlockEntityClientSer
     // INSTANCE MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    protected ISuperModelState modelState = null;
+    protected MeshState modelState = null;
 
     // public IExtendedBlockState exBlockState;
     private boolean isModelStateCacheDirty = true;
@@ -131,15 +131,15 @@ public class SuperTileEntity extends BlockEntity implements BlockEntityClientSer
 
     private void invalidateClientCache(BlockPos updatePos) {
         BlockEntity target = this.world.getBlockEntity(updatePos);
-        if (target != null && target instanceof SuperTileEntity) {
-            ((SuperTileEntity) target).isModelStateCacheDirty = true;
+        if (target != null && target instanceof BrocadeTileEntity) {
+            ((BrocadeTileEntity) target).isModelStateCacheDirty = true;
         }
     }
 
     @Override
     public void fromTag(CompoundTag compound) {
         super.fromTag(compound);
-        this.modelState = ModelState.deserializeFromNBTIfPresent(compound);
+        this.modelState = MeshStateImpl.deserializeFromNBTIfPresent(compound);
         this.onModelStateChange(true);
     }
 
@@ -150,12 +150,12 @@ public class SuperTileEntity extends BlockEntity implements BlockEntityClientSer
         return compound;
     }
 
-    public ISuperModelState getModelState(BlockState state, BlockView world, BlockPos pos,
+    public MeshState getModelState(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded) {
-        ISuperModelState result = this.modelState;
+        MeshState result = this.modelState;
 
         if (result == null) {
-            result = ((ISuperBlock) state.getBlock()).getDefaultModelState();
+            result = ((BrocadeBlock) state.getBlock()).getDefaultModelState();
             this.modelState = result;
             this.isModelStateCacheDirty = true;
 
@@ -174,7 +174,7 @@ public class SuperTileEntity extends BlockEntity implements BlockEntityClientSer
     /**
      * Use this version when you don't have world state handy
      */
-    public ISuperModelState getModelState() {
+    public MeshState getModelState() {
         if (!(this.modelState == null || this.isModelStateCacheDirty)) {
             return this.modelState;
         } else {
@@ -193,7 +193,7 @@ public class SuperTileEntity extends BlockEntity implements BlockEntityClientSer
 //                : this.modelState;
 //    }
 
-    public void setModelState(ISuperModelState modelState) {
+    public void setModelState(MeshState modelState) {
         // if making existing appearance static, don't need to refresh on client side
         boolean needsClientRefresh = this.world != null && this.world.isClient
                 && !(this.modelState != null && this.modelState.equals(modelState) && modelState.isStatic()

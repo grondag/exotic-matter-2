@@ -1,14 +1,14 @@
 package grondag.brocade.mesh;
 
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_SPECIES;
 
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.brocade.state.StateFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -31,24 +31,24 @@ public abstract class AbstractWedgeMeshFactory extends MeshFactory {
     }
 
     @Override
-    public boolean isCube(ISuperModelState modelState) {
+    public boolean isCube(MeshState modelState) {
         return false;
     }
 
     @Override
-    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block,
-            ISuperModelState modelState) {
+    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, BrocadeBlock block,
+            MeshState modelState) {
         // not currently implemented - ambivalent about it
         return false;
     }
 
     @Override
-    public int geometricSkyOcclusion(ISuperModelState modelState) {
+    public int geometricSkyOcclusion(MeshState modelState) {
         return modelState.getAxis() == Direction.Axis.Y ? 7 : 255;
     }
 
     @Override
-    public BlockOrientationType orientationType(ISuperModelState modelState) {
+    public BlockOrientationType orientationType(MeshState modelState) {
         return BlockOrientationType.EDGE;
     }
 

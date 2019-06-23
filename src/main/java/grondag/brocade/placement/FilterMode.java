@@ -1,6 +1,6 @@
 package grondag.brocade.placement;
 
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.BrocadeBlock;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;
@@ -62,13 +62,13 @@ public enum FilterMode implements ILocalized {
 
         switch (this) {
         case FILL_REPLACEABLE:
-            return block.getMaterial(blockState).isReplaceable() && !ISuperBlock.isVirtualBlock(block);
+            return block.getMaterial(blockState).isReplaceable() && !BrocadeBlock.isVirtualBlock(block);
 
         case REPLACE_ALL:
             if (isVirtual) {
-                return block.getMaterial(blockState).isReplaceable() || ISuperBlock.isVirtualBlock(block);
+                return block.getMaterial(blockState).isReplaceable() || BrocadeBlock.isVirtualBlock(block);
             } else {
-                return !ISuperBlock.isVirtualBlock(block);
+                return !BrocadeBlock.isVirtualBlock(block);
             }
 
         case REPLACE_ALL_EXCEPT:
@@ -81,7 +81,7 @@ public enum FilterMode implements ILocalized {
 
         case REPLACE_SOLID:
             // test for non-virtual relies on fact that all virtual blocks are replaceable
-            return isVirtual ? ISuperBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
+            return isVirtual ? BrocadeBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
 
         default:
             return false;

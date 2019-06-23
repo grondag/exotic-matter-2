@@ -3,7 +3,7 @@ package grondag.brocade.state;
 
 
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
-import grondag.brocade.block.SuperBlock;
+import grondag.brocade.block.SimpleBrocadeBlock;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
@@ -19,73 +19,73 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-public class ModelStateData {
+public class MeshStateData {
     /**
      * note that sign bit on core packer is reserved to persist static state during
      * serialization
      */
-    public static final BitPacker64<ModelState> PACKER_CORE = new BitPacker64<ModelState>(m -> m.coreBits,
+    public static final BitPacker64<MeshStateImpl> PACKER_CORE = new BitPacker64<MeshStateImpl>(m -> m.coreBits,
             (m, b) -> m.coreBits = b);
-    public static final BitPacker64<ModelState>.IntElement SHAPE = PACKER_CORE.createIntElement(ModelShapes.MAX_SHAPES);
-    public static final BitPacker64<ModelState>.IntElement POS_X = PACKER_CORE.createIntElement(256);
-    public static final BitPacker64<ModelState>.IntElement POS_Y = PACKER_CORE.createIntElement(256);
-    public static final BitPacker64<ModelState>.IntElement POS_Z = PACKER_CORE.createIntElement(256);
-    public static final BitPacker64<ModelState>.EnumElement<Direction.Axis> AXIS = PACKER_CORE
+    public static final BitPacker64<MeshStateImpl>.IntElement SHAPE = PACKER_CORE.createIntElement(ModelShapes.MAX_SHAPES);
+    public static final BitPacker64<MeshStateImpl>.IntElement POS_X = PACKER_CORE.createIntElement(256);
+    public static final BitPacker64<MeshStateImpl>.IntElement POS_Y = PACKER_CORE.createIntElement(256);
+    public static final BitPacker64<MeshStateImpl>.IntElement POS_Z = PACKER_CORE.createIntElement(256);
+    public static final BitPacker64<MeshStateImpl>.EnumElement<Direction.Axis> AXIS = PACKER_CORE
             .createEnumElement(Direction.Axis.class);
-    public static final BitPacker64<ModelState>.BooleanElement AXIS_INVERTED = PACKER_CORE.createBooleanElement();
-    public static final BitPacker64<ModelState>.EnumElement<ClockwiseRotation> AXIS_ROTATION = PACKER_CORE
+    public static final BitPacker64<MeshStateImpl>.BooleanElement AXIS_INVERTED = PACKER_CORE.createBooleanElement();
+    public static final BitPacker64<MeshStateImpl>.EnumElement<ClockwiseRotation> AXIS_ROTATION = PACKER_CORE
             .createEnumElement(ClockwiseRotation.class);
 
-    public static final BitPacker64<ModelState> PACKER_LAYER_BASE = new BitPacker64<ModelState>(m -> m.layerBitsBase,
+    public static final BitPacker64<MeshStateImpl> PACKER_LAYER_BASE = new BitPacker64<MeshStateImpl>(m -> m.layerBitsBase,
             (m, b) -> m.layerBitsBase = b);
-    public static final BitPacker64<ModelState> PACKER_LAYER_LAMP = new BitPacker64<ModelState>(m -> m.layerBitsLamp,
+    public static final BitPacker64<MeshStateImpl> PACKER_LAYER_LAMP = new BitPacker64<MeshStateImpl>(m -> m.layerBitsLamp,
             (m, b) -> m.layerBitsLamp = b);
-    public static final BitPacker64<ModelState> PACKER_LAYER_MIDDLE = new BitPacker64<ModelState>(
+    public static final BitPacker64<MeshStateImpl> PACKER_LAYER_MIDDLE = new BitPacker64<MeshStateImpl>(
             m -> m.layerBitsMiddle, (m, b) -> m.layerBitsMiddle = b);
-    public static final BitPacker64<ModelState> PACKER_LAYER_OUTER = new BitPacker64<ModelState>(m -> m.layerBitsOuter,
+    public static final BitPacker64<MeshStateImpl> PACKER_LAYER_OUTER = new BitPacker64<MeshStateImpl>(m -> m.layerBitsOuter,
             (m, b) -> m.layerBitsOuter = b);
-    public static final BitPacker64<ModelState> PACKER_LAYER_CUT = new BitPacker64<ModelState>(m -> m.layerBitsCut,
+    public static final BitPacker64<MeshStateImpl> PACKER_LAYER_CUT = new BitPacker64<MeshStateImpl>(m -> m.layerBitsCut,
             (m, b) -> m.layerBitsCut = b);
 
     @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelState>[] PACKER_LAYERS = (BitPacker64<ModelState>[]) new BitPacker64<?>[PaintLayer.SIZE];
+    public static final BitPacker64<MeshStateImpl>[] PACKER_LAYERS = (BitPacker64<MeshStateImpl>[]) new BitPacker64<?>[PaintLayer.SIZE];
 
     @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelState>.IntElement[] PAINT_COLOR = (BitPacker64<ModelState>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
+    public static final BitPacker64<MeshStateImpl>.IntElement[] PAINT_COLOR = (BitPacker64<MeshStateImpl>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
     @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelState>.BooleanElement[] PAINT_IS_TRANSLUCENT = (BitPacker64<ModelState>.BooleanElement[]) new BitPacker64<?>.BooleanElement[PaintLayer.SIZE];
+    public static final BitPacker64<MeshStateImpl>.BooleanElement[] PAINT_IS_TRANSLUCENT = (BitPacker64<MeshStateImpl>.BooleanElement[]) new BitPacker64<?>.BooleanElement[PaintLayer.SIZE];
     @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelState>.IntElement[] PAINT_ALPHA = (BitPacker64<ModelState>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
+    public static final BitPacker64<MeshStateImpl>.IntElement[] PAINT_ALPHA = (BitPacker64<MeshStateImpl>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
     @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelState>.IntElement[] PAINT_TEXTURE = (BitPacker64<ModelState>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
+    public static final BitPacker64<MeshStateImpl>.IntElement[] PAINT_TEXTURE = (BitPacker64<MeshStateImpl>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
     @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelState>.BooleanElement[] PAINT_EMISSIVE = (BitPacker64<ModelState>.BooleanElement[]) new BitPacker64<?>.BooleanElement[PaintLayer.SIZE];
+    public static final BitPacker64<MeshStateImpl>.BooleanElement[] PAINT_EMISSIVE = (BitPacker64<MeshStateImpl>.BooleanElement[]) new BitPacker64<?>.BooleanElement[PaintLayer.SIZE];
     @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelState>.IntElement[] PAINT_VERTEX_PROCESSOR = (BitPacker64<ModelState>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
+    public static final BitPacker64<MeshStateImpl>.IntElement[] PAINT_VERTEX_PROCESSOR = (BitPacker64<MeshStateImpl>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
 
-    public static final BitPacker64<ModelState> PACKER_SHAPE_BLOCK = new BitPacker64<ModelState>(m -> m.shapeBits0,
+    public static final BitPacker64<MeshStateImpl> PACKER_SHAPE_BLOCK = new BitPacker64<MeshStateImpl>(m -> m.shapeBits0,
             (m, b) -> m.shapeBits0 = b);
-    public static final BitPacker64<ModelState>.IntElement SPECIES = PACKER_SHAPE_BLOCK.createIntElement(16);
-    public static final BitPacker64<ModelState>.IntElement BLOCK_JOIN = PACKER_SHAPE_BLOCK
+    public static final BitPacker64<MeshStateImpl>.IntElement SPECIES = PACKER_SHAPE_BLOCK.createIntElement(16);
+    public static final BitPacker64<MeshStateImpl>.IntElement BLOCK_JOIN = PACKER_SHAPE_BLOCK
             .createIntElement(CornerJoinState.STATE_COUNT);
-    public static final BitPacker64<ModelState>.IntElement MASONRY_JOIN = PACKER_SHAPE_BLOCK
+    public static final BitPacker64<MeshStateImpl>.IntElement MASONRY_JOIN = PACKER_SHAPE_BLOCK
             .createIntElement(SimpleJoinState.STATE_COUNT);
 
-    public static final BitPacker64<ModelState> PACKER_SHAPE_FLOW = new BitPacker64<ModelState>(m -> m.shapeBits0,
+    public static final BitPacker64<MeshStateImpl> PACKER_SHAPE_FLOW = new BitPacker64<MeshStateImpl>(m -> m.shapeBits0,
             (m, b) -> m.shapeBits0 = b);
-    public static final BitPacker64<ModelState>.LongElement FLOW_JOIN = PACKER_SHAPE_FLOW
+    public static final BitPacker64<MeshStateImpl>.LongElement FLOW_JOIN = PACKER_SHAPE_FLOW
             .createLongElement(TerrainState.STATE_BIT_MASK + 1);
 
-    public static final BitPacker64<ModelState> PACKER_SHAPE_MULTIBLOCK = new BitPacker64<ModelState>(m -> m.shapeBits0,
+    public static final BitPacker64<MeshStateImpl> PACKER_SHAPE_MULTIBLOCK = new BitPacker64<MeshStateImpl>(m -> m.shapeBits0,
             (m, b) -> m.shapeBits0 = b);
 
-    public static final BitPacker64<ModelState> PACKER_SHAPE_EXTRA = new BitPacker64<ModelState>(m -> m.shapeBits1,
+    public static final BitPacker64<MeshStateImpl> PACKER_SHAPE_EXTRA = new BitPacker64<MeshStateImpl>(m -> m.shapeBits1,
             (m, b) -> m.shapeBits1 = b);
     /**
      * value semantics are owned by consumer - only constraints are size (39 bits)
      * and does not update from world
      */
-    public static final BitPacker64<ModelState>.LongElement EXTRA_SHAPE_BITS = PACKER_SHAPE_EXTRA
+    public static final BitPacker64<MeshStateImpl>.LongElement EXTRA_SHAPE_BITS = PACKER_SHAPE_EXTRA
             .createLongElement(1L << 39);
 
     /** used to compare states quickly for border joins */
@@ -123,8 +123,8 @@ public class ModelStateData {
         @Override
         public Object get(BlockView world, BlockState blockState, BlockPos pos) {
             Block block = blockState.getBlock();
-            return (block instanceof SuperBlock)
-                    ? ((SuperBlock)block).getModelStateAssumeStateIsCurrent(blockState, world, pos, false)
+            return (block instanceof SimpleBrocadeBlock)
+                    ? ((SimpleBrocadeBlock)block).getModelStateAssumeStateIsCurrent(blockState, world, pos, false)
                     : null;
         }
     };
@@ -137,13 +137,13 @@ public class ModelStateData {
         @Override
         public Object get(BlockView worldIn, BlockState state, BlockPos pos) {
             Block block = state.getBlock();
-            return (block instanceof SuperBlock)
-                    ? ((SuperBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, true)
+            return (block instanceof SimpleBrocadeBlock)
+                    ? ((SimpleBrocadeBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, true)
                     : null;
         }
     };
 
-    public static final BitPacker64<ModelState> STATE_PACKER = new BitPacker64<ModelState>(m -> m.stateFlags,
+    public static final BitPacker64<MeshStateImpl> STATE_PACKER = new BitPacker64<MeshStateImpl>(m -> m.stateFlags,
             (m, b) -> m.stateFlags = (int) b);
 
     /**
@@ -152,7 +152,7 @@ public class ModelStateData {
     public static final int STATE_FLAG_NONE = 0;
 
     /** see {@link #STATE_FLAG_IS_POPULATED} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_IS_POPULATED = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_IS_POPULATED = STATE_PACKER
             .createBooleanElement();
     /*
      * Enables lazy derivation - set after derivation is complete. NB - check logic
@@ -161,7 +161,7 @@ public class ModelStateData {
     public static final int STATE_FLAG_IS_POPULATED = (int) STATE_BIT_IS_POPULATED.comparisonMask();
 
     /** see {@link #STATE_FLAG_NEEDS_CORNER_JOIN} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_NEEDS_CORNER_JOIN = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_NEEDS_CORNER_JOIN = STATE_PACKER
             .createBooleanElement();
     /**
      * Applies to block-type states. True if is a block type state and requires full
@@ -170,7 +170,7 @@ public class ModelStateData {
     public static final int STATE_FLAG_NEEDS_CORNER_JOIN = (int) STATE_BIT_NEEDS_CORNER_JOIN.comparisonMask();
 
     /** see {@link #STATE_FLAG_NEEDS_SIMPLE_JOIN} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_NEEDS_SIMPLE_JOIN = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_NEEDS_SIMPLE_JOIN = STATE_PACKER
             .createBooleanElement();
     /**
      * Applies to block-type states. True if is a block type state and requires full
@@ -179,7 +179,7 @@ public class ModelStateData {
     public static final int STATE_FLAG_NEEDS_SIMPLE_JOIN = (int) STATE_BIT_NEEDS_SIMPLE_JOIN.comparisonMask();
 
     /** see {@link #STATE_FLAG_NEEDS_MASONRY_JOIN} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_NEEDS_MASONRY_JOIN = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_NEEDS_MASONRY_JOIN = STATE_PACKER
             .createBooleanElement();
 
     /**
@@ -189,7 +189,7 @@ public class ModelStateData {
     public static final int STATE_FLAG_NEEDS_MASONRY_JOIN = (int) STATE_BIT_NEEDS_MASONRY_JOIN.comparisonMask();
 
     /** see {@link #STATE_FLAG_NEEDS_POS} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_NEEDS_POS = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_NEEDS_POS = STATE_PACKER
             .createBooleanElement();
     /**
      * True if position (big-tex) world state is needed. Applies for block and flow
@@ -198,26 +198,26 @@ public class ModelStateData {
     public static final int STATE_FLAG_NEEDS_POS = (int) STATE_BIT_NEEDS_POS.comparisonMask();
 
     /** see {@link #STATE_FLAG_NEEDS_SPECIES} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_NEEDS_SPECIES = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_NEEDS_SPECIES = STATE_PACKER
             .createBooleanElement();
     public static final int STATE_FLAG_NEEDS_SPECIES = (int) STATE_BIT_NEEDS_SPECIES.comparisonMask();
 
     /** see {@link #STATE_FLAG_HAS_AXIS} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_HAS_AXIS = STATE_PACKER.createBooleanElement();
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_HAS_AXIS = STATE_PACKER.createBooleanElement();
     public static final int STATE_FLAG_HAS_AXIS = (int) STATE_BIT_HAS_AXIS.comparisonMask();
 
     /** see {@link #STATE_FLAG_NEEDS_TEXTURE_ROTATION} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_NEEDS_TEXTURE_ROTATION = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_NEEDS_TEXTURE_ROTATION = STATE_PACKER
             .createBooleanElement();
     public static final int STATE_FLAG_NEEDS_TEXTURE_ROTATION = (int) STATE_BIT_NEEDS_TEXTURE_ROTATION.comparisonMask();
 
     /** see {@link #STATE_FLAG_HAS_AXIS_ORIENTATION} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_HAS_AXIS_ORIENTATION = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_HAS_AXIS_ORIENTATION = STATE_PACKER
             .createBooleanElement();
     public static final int STATE_FLAG_HAS_AXIS_ORIENTATION = (int) STATE_BIT_HAS_AXIS_ORIENTATION.comparisonMask();
 
     /** see {@link #STATE_FLAG_HAS_AXIS_ROTATION} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_HAS_AXIS_ROTATION = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_HAS_AXIS_ROTATION = STATE_PACKER
             .createBooleanElement();
     /**
      * Set if shape can be rotated around an axis. Only applies to block models;
@@ -226,20 +226,20 @@ public class ModelStateData {
     public static final int STATE_FLAG_HAS_AXIS_ROTATION = (int) STATE_BIT_HAS_AXIS_ROTATION.comparisonMask();
 
     /** see {@link #STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_HAS_TRANSLUCENT_GEOMETRY = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_HAS_TRANSLUCENT_GEOMETRY = STATE_PACKER
             .createBooleanElement();
     /** Set if either Base/Cut or Lamp (if present) paint layers are translucent */
     public static final int STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY = (int) STATE_BIT_HAS_TRANSLUCENT_GEOMETRY
             .comparisonMask();
 
     /** see {@link #STATE_FLAG_HAS_SOLID_RENDER} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_HAS_SOLID_RENDER = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_HAS_SOLID_RENDER = STATE_PACKER
             .createBooleanElement();
     /** True if any layer sould render in the solid block render layer */
     public static final int STATE_FLAG_HAS_SOLID_RENDER = (int) STATE_BIT_HAS_SOLID_RENDER.comparisonMask();
 
     /** see {@link #STATE_FLAG_HAS_TRANSLUCENT_RENDER} */
-    public static final BitPacker64<ModelState>.BooleanElement STATE_BIT_HAS_TRANSLUCENT_RENDER = STATE_PACKER
+    public static final BitPacker64<MeshStateImpl>.BooleanElement STATE_BIT_HAS_TRANSLUCENT_RENDER = STATE_PACKER
             .createBooleanElement();
     /** True if any layer should render in the translucent block render layer */
     public static final int STATE_FLAG_HAS_TRANSLUCENT_RENDER = (int) STATE_BIT_HAS_TRANSLUCENT_RENDER.comparisonMask();
@@ -253,7 +253,7 @@ public class ModelStateData {
             | STATE_FLAG_NEEDS_TEXTURE_ROTATION);
 
     // hide constructor
-    private ModelStateData() {
+    private MeshStateData() {
         super();
     }
 }

@@ -2,7 +2,7 @@ package grondag.brocade.collision;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.config.FermionConfig;
 import grondag.fermion.varia.Useful;
 import net.minecraft.util.math.BoundingBox;
@@ -14,10 +14,10 @@ public class OptimizingBoxList implements Runnable {
     private static final OptimalBoxGenerator boxGen = new OptimalBoxGenerator();
 
     private ImmutableList<BoundingBox> wrapped;
-    private ISuperModelState modelState;
+    private MeshState modelState;
     private VoxelShape shape;
 
-    OptimizingBoxList(FastBoxGenerator generator, ISuperModelState modelState) {
+    OptimizingBoxList(FastBoxGenerator generator, MeshState modelState) {
         this.modelState = modelState;
         this.wrapped = generator.build();
         this.shape = makeShapeFromBoxes(wrapped);

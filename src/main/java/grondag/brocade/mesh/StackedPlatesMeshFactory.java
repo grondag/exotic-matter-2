@@ -1,14 +1,14 @@
 package grondag.brocade.mesh;
 
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_SPECIES;
 
 import java.util.function.Consumer;
 
 import org.joml.Matrix4f;
 
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
@@ -16,7 +16,7 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.brocade.state.StateFormat;
 import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockState;
@@ -40,7 +40,7 @@ public class StackedPlatesMeshFactory extends MeshFactory {
     private static final Direction[] HORIZONTAL_FACES = {Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH};
     
     @Override
-    public void produceShapeQuads(ISuperModelState modelState, Consumer<IPolygon> target) {
+    public void produceShapeQuads(MeshState modelState, Consumer<IPolygon> target) {
         final int meta = modelState.getMetaData();
         final Matrix4f matrix = modelState.getMatrix4f();
         final float height = (meta + 1) / 16;
@@ -90,38 +90,38 @@ public class StackedPlatesMeshFactory extends MeshFactory {
     }
 
     @Override
-    public boolean isCube(ISuperModelState modelState) {
+    public boolean isCube(MeshState modelState) {
         return modelState.getMetaData() == 15;
     }
 
     @Override
-    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block,
-            ISuperModelState modelState) {
+    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, BrocadeBlock block,
+            MeshState modelState) {
         return false;
     }
 
     @Override
-    public int geometricSkyOcclusion(ISuperModelState modelState) {
+    public int geometricSkyOcclusion(MeshState modelState) {
         return modelState.getAxis() == Direction.Axis.Y ? 255 : modelState.getMetaData();
     }
 
     @Override
-    public BlockOrientationType orientationType(ISuperModelState modelState) {
+    public BlockOrientationType orientationType(MeshState modelState) {
         return BlockOrientationType.FACE;
     }
 
     @Override
-    public int getMetaData(ISuperModelState modelState) {
+    public int getMetaData(MeshState modelState) {
         return (int) (modelState.getStaticShapeBits() & 0xF);
     }
 
     @Override
-    public void setMetaData(ISuperModelState modelState, int meta) {
+    public void setMetaData(MeshState modelState, int meta) {
         modelState.setStaticShapeBits(meta);
     }
 
     @Override
-    public boolean hasLampSurface(ISuperModelState modelState) {
+    public boolean hasLampSurface(MeshState modelState) {
         return false;
     }
 

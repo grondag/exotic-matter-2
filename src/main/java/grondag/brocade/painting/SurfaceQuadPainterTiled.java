@@ -8,7 +8,7 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.polygon.IStreamPolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.brocade.api.texture.TextureRotation;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.fermion.varia.Useful;
@@ -361,7 +361,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
         return remainderAddress;
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ISuperModelState modelState, PaintLayer paintLayer) {
+    public static void paintQuads(IMutablePolyStream stream, MeshState modelState, PaintLayer paintLayer) {
         /**
          * We add new polys, none of which need to be repainted by this routine. So,
          * when we get to this address we know we are done.

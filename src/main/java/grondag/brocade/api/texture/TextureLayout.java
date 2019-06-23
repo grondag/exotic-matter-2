@@ -1,9 +1,9 @@
 package grondag.brocade.api.texture;
 
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.brocade.state.ModelStateData.STATE_FLAG_NONE;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_NONE;
 
 public enum TextureLayout {
     /**

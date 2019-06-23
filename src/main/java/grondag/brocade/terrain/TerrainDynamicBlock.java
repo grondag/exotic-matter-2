@@ -1,7 +1,7 @@
 package grondag.brocade.terrain;
 
 import grondag.brocade.init.ModShapes;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,12 +13,12 @@ import net.minecraft.world.World;
 public class TerrainDynamicBlock extends TerrainBlock {
     private final boolean isFiller;
 
-    public TerrainDynamicBlock(Settings blockSettings, ISuperModelState defaultModelState, boolean isFiller) {
+    public TerrainDynamicBlock(Settings blockSettings, MeshState defaultModelState, boolean isFiller) {
         super(blockSettings, defaultModelState);
         this.isFiller = isFiller;
 
         // make sure proper shape is set
-        ISuperModelState modelState = defaultModelState.clone();
+        MeshState modelState = defaultModelState.clone();
         modelState.setShape(this.isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
         modelState.setStatic(false);
         this.defaultModelStateBits = modelState.serializeToInts();
@@ -33,7 +33,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
         if (staticVersion == null || state.getBlock() != this)
             return;
 
-        ISuperModelState myModelState = this.getModelStateAssumeStateIsCurrent(state, world, pos, true);
+        MeshState myModelState = this.getModelStateAssumeStateIsCurrent(state, world, pos, true);
         myModelState.setStatic(true);
         //TODO: transfer heat block state?
         world.setBlockState(pos, staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)), 7);

@@ -4,7 +4,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.BrocadeBlock;
 import grondag.fermion.world.PackedBlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -105,7 +105,7 @@ public class TerrainBlockHelper {
 
         final int SHOULD_BE_AIR = -1;
 
-        ISuperBlock fillBlock = null;
+        BrocadeBlock fillBlock = null;
 
         BlockState update = null;
 
@@ -125,7 +125,7 @@ public class TerrainBlockHelper {
         if (isFlowHeight(stateBelow) && worldObj.terrainState(stateBelow, posBelow).topFillerNeeded() > 0) {
             targetFill = 1;
 
-            fillBlock = (ISuperBlock) TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getFillerBlock(stateBelow.getBlock());
+            fillBlock = (BrocadeBlock) TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getFillerBlock(stateBelow.getBlock());
         } else {
             final long posTwoBelow = PackedBlockPos.down(packedBasePos, 2);
             final BlockState stateTwoBelow = worldObj.getBlockState(posTwoBelow);
@@ -133,7 +133,7 @@ public class TerrainBlockHelper {
             if ((isFlowHeight(stateTwoBelow)
                     && worldObj.terrainState(stateTwoBelow, posTwoBelow).topFillerNeeded() == 2)) {
                 targetFill = 2;
-                fillBlock = (ISuperBlock) TerrainBlockRegistry.TERRAIN_STATE_REGISTRY
+                fillBlock = (BrocadeBlock) TerrainBlockRegistry.TERRAIN_STATE_REGISTRY
                         .getFillerBlock(stateTwoBelow.getBlock());
             }
         }
@@ -163,7 +163,7 @@ public class TerrainBlockHelper {
      */
     public static boolean shouldBeFullCube(BlockState blockState, BlockView blockAccess, BlockPos pos) {
         if(isFlowBlock(blockState)) {
-            ISuperBlock block = (ISuperBlock)blockState.getBlock();
+            BrocadeBlock block = (BrocadeBlock)blockState.getBlock();
             return block.getModelStateAssumeStateIsCurrent(blockState, blockAccess, pos, true).getTerrainState().isFullCube();
         } else {
             return false;

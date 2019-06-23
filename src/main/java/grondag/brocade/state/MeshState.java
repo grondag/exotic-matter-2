@@ -3,7 +3,7 @@ package grondag.brocade.state;
 import org.joml.Matrix4f;
 
 import grondag.brocade.api.texture.TextureSet;
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.connect.api.state.CornerJoinState;
 import grondag.brocade.connect.api.state.SimpleJoinState;
@@ -24,7 +24,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
+public interface MeshState extends IReadWriteNBT, PacketSerializable {
     int[] serializeToInts();
 
     /**
@@ -41,7 +41,7 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
     int hashCode();
 
     /** returns self as convenience method */
-    ISuperModelState refreshFromWorld(BlockState state, BlockView world, BlockPos pos);
+    MeshState refreshFromWorld(BlockState state, BlockView world, BlockPos pos);
 
     ModelShape<?> getShape();
 
@@ -247,7 +247,7 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
      * 
      * @param blockState
      */
-    boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block);
+    boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, BrocadeBlock block);
 
     /**
      * How much of the sky is occluded by the shape of this block? Based on geometry
@@ -260,19 +260,19 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
      * Returns true if visual elements and geometry match. Does not consider species
      * in matching.
      */
-    boolean doShapeAndAppearanceMatch(ISuperModelState other);
+    boolean doShapeAndAppearanceMatch(MeshState other);
 
     /**
      * Returns true if visual elements match. Does not consider species or geometry
      * in matching.
      */
-    boolean doesAppearanceMatch(ISuperModelState other);
+    boolean doesAppearanceMatch(MeshState other);
 
     /**
      * Returns a copy of this model state with only the bits that matter for
      * geometry. Used as lookup key for block damage models.
      */
-    ISuperModelState geometricState();
+    MeshState geometricState();
 
     /**
      * See {@link Transform#rotateFace(ModelState, Direction)}
@@ -288,7 +288,7 @@ public interface ISuperModelState extends IReadWriteNBT, PacketSerializable {
      */
     Matrix4f getMatrix4f();
 
-    ISuperModelState clone();
+    MeshState clone();
 
     /**
      * For backwards compatibility with color maps

@@ -1,7 +1,7 @@
 package grondag.brocade.painting;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.color.ColorHelper;
 
 public class VertexProcessorDefault extends VertexProcessor {
@@ -16,7 +16,7 @@ public class VertexProcessorDefault extends VertexProcessor {
     }
 
     @Override
-    public final void process(IMutablePolygon poly, int layerIndex, ISuperModelState modelState,
+    public final void process(IMutablePolygon poly, int layerIndex, MeshState modelState,
             PaintLayer paintLayer) {
         int color = modelState.getColorARGB(paintLayer);
 

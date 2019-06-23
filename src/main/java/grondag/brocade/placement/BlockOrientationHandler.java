@@ -1,10 +1,10 @@
 package grondag.brocade.placement;
 
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.SuperBlockStackHelper;
+import grondag.brocade.block.BrocadeBlock;
+import grondag.brocade.block.BrocadeBlockStackHelper;
 import grondag.brocade.connect.api.model.BlockEdge;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,10 +29,10 @@ public class BlockOrientationHandler {
      */
     public static void configureStackForPlacement(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // does not attempt to configure non super-blocks
-        if (!(stack.getItem() instanceof IPlacementItem))
+        if (!(stack.getItem() instanceof PlacementItem))
             return;
 
-        IPlacementItem item = (IPlacementItem) stack.getItem();
+        PlacementItem item = (PlacementItem) stack.getItem();
 
         if (item.isBlockOrientationFixed(stack)) {
             applyFixedOrientation(stack);
@@ -44,12 +44,12 @@ public class BlockOrientationHandler {
     }
 
     private static void applyFixedOrientation(ItemStack stack) {
-        if (!IPlacementItem.isPlacementItem(stack))
+        if (!PlacementItem.isPlacementItem(stack))
             return;
 
-        IPlacementItem item = (IPlacementItem) stack.getItem();
+        PlacementItem item = (PlacementItem) stack.getItem();
 
-        ISuperModelState modelState = SuperBlockStackHelper.getStackModelState(stack);
+        MeshState modelState = BrocadeBlockStackHelper.getStackModelState(stack);
 
         if (modelState.hasAxis()) {
             modelState.setAxis(item.getBlockPlacementAxis(stack));
@@ -62,19 +62,19 @@ public class BlockOrientationHandler {
             modelState.setAxisRotation(item.getBlockPlacementRotation(stack));
         }
 
-        SuperBlockStackHelper.setStackModelState(stack, modelState);
+        BrocadeBlockStackHelper.setStackModelState(stack, modelState);
     }
 
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // find closest instance, starting with block placed on
-        ISuperModelState outputModelState = SuperBlockStackHelper.getStackModelState(stack);
-        ISuperModelState closestModelState = null;
+        MeshState outputModelState = BrocadeBlockStackHelper.getStackModelState(stack);
+        MeshState closestModelState = null;
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
         Block onBlock = onBlockState.getBlock();
 
-        if (onBlock instanceof ISuperBlock) {
-            closestModelState = ((ISuperBlock)onBlock).getModelStateAssumeStateIsCurrent(onBlockState, world, pPos.onPos, true);
+        if (onBlock instanceof BrocadeBlock) {
+            closestModelState = ((BrocadeBlock)onBlock).getModelStateAssumeStateIsCurrent(onBlockState, world, pPos.onPos, true);
 
             // can't use onBlock as reference if is of a different type
             if (closestModelState.getShape() != outputModelState.getShape())
@@ -93,12 +93,12 @@ public class BlockOrientationHandler {
                         if ((x | y | z) != 0) {
                             BlockPos testPos = pPos.onPos.add(x, y, z);
                             BlockState testBlockState = world.getBlockState(testPos);
-                            if (testBlockState.getBlock() instanceof ISuperBlock) {
+                            if (testBlockState.getBlock() instanceof BrocadeBlock) {
                                 double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x,
                                         pPos.onPos.getY() + 0.5 + y, pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
-                                    ISuperBlock testBlock = (ISuperBlock) testBlockState.getBlock();
-                                    ISuperModelState testModelState = testBlock.getModelStateAssumeStateIsCurrent(testBlockState, world, testPos, true);
+                                    BrocadeBlock testBlock = (BrocadeBlock) testBlockState.getBlock();
+                                    MeshState testModelState = testBlock.getModelStateAssumeStateIsCurrent(testBlockState, world, testPos, true);
                                     if (testModelState.getShape() == outputModelState.getShape()) {
                                         closestDistSq = distSq;
                                         closestModelState = testModelState;
@@ -127,12 +127,12 @@ public class BlockOrientationHandler {
             }
         }
 
-        SuperBlockStackHelper.setStackModelState(stack, outputModelState);
+        BrocadeBlockStackHelper.setStackModelState(stack, outputModelState);
     }
 
     /** handle hit-sensitive placement for stairs, wedges */
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
-        ISuperModelState outputModelState = SuperBlockStackHelper.getStackModelState(stack);
+        MeshState outputModelState = BrocadeBlockStackHelper.getStackModelState(stack);
 
         boolean isRotationDone = false;
 
@@ -159,6 +159,6 @@ public class BlockOrientationHandler {
             outputModelState.setAxisRotation(ClockwiseRotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
         }
 
-        SuperBlockStackHelper.setStackModelState(stack, outputModelState);
+        BrocadeBlockStackHelper.setStackModelState(stack, outputModelState);
     }
 }

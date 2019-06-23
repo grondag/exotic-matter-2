@@ -9,13 +9,13 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.world.Rotation;
 import net.minecraft.util.math.Direction;
 
 public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
     @Override
-    public void produceShapeQuads(ISuperModelState modelState, Consumer<IPolygon> target) {
+    public void produceShapeQuads(MeshState modelState, Consumer<IPolygon> target) {
         // Axis for this shape is along the face of the sloping surface
         // Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
         // Default geometry is Y orthogonalAxis with full sides against north/east
@@ -76,7 +76,7 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
     }
 
     @Override
-    public boolean hasLampSurface(ISuperModelState modelState) {
+    public boolean hasLampSurface(MeshState modelState) {
         return false;
     }
 }

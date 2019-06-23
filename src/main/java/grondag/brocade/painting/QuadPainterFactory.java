@@ -2,19 +2,19 @@ package grondag.brocade.painting;
 
 import grondag.brocade.painting.QuadPainter.IPaintMethod;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.brocade.api.texture.TextureScale;
 import grondag.brocade.api.texture.TextureSet;
 
 public class QuadPainterFactory {
     private static IPaintMethod DO_NOTHING = new IPaintMethod() {
         @Override
-        public void paintQuads(IMutablePolyStream stream, ISuperModelState modelState, PaintLayer paintLayer) {
+        public void paintQuads(IMutablePolyStream stream, MeshState modelState, PaintLayer paintLayer) {
             // Live up to our name...
         }
     };
 
-    public static IPaintMethod getPainter(ISuperModelState modelState, Surface surface, PaintLayer paintLayer) {
+    public static IPaintMethod getPainter(MeshState modelState, Surface surface, PaintLayer paintLayer) {
         if (surface.isLayerDisabled(paintLayer))
             return DO_NOTHING;
 

@@ -6,7 +6,7 @@ import grondag.brocade.api.texture.TextureSetRegistry;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
 import it.unimi.dsi.fastutil.HashCommon;
@@ -37,14 +37,14 @@ public abstract class QuadPainter {
          * <p>
          * 
          */
-        void paintQuads(IMutablePolyStream stream, ISuperModelState modelState, PaintLayer paintLayer);
+        void paintQuads(IMutablePolyStream stream, MeshState modelState, PaintLayer paintLayer);
     }
 
     public static int firstAvailableTextureLayer(IPolygon poly) {
         return poly.getTextureName(0) == null ? 0 : poly.getTextureName(1) == null ? 1 : 2;
     }
 
-    protected static TextureSet getTexture(ISuperModelState modelState, PaintLayer paintLayer) {
+    protected static TextureSet getTexture(MeshState modelState, PaintLayer paintLayer) {
         TextureSet tex = modelState.getTexture(paintLayer);
         return tex.id().equals(TextureSetRegistry.NONE_ID) ? modelState.getTexture(PaintLayer.BASE) : tex;
     }
@@ -53,7 +53,7 @@ public abstract class QuadPainter {
      * True if painter will render a solid surface. When Acuity API is enabled this
      * signals that overlay textures can be packed into single quad.
      */
-    public static boolean isSolid(ISuperModelState modelState, PaintLayer paintLayer) {
+    public static boolean isSolid(MeshState modelState, PaintLayer paintLayer) {
         switch (paintLayer) {
         case BASE:
         case CUT:
@@ -71,7 +71,7 @@ public abstract class QuadPainter {
      * Call from paint quad in sub classes to return results. Handles item scaling,
      * then adds to the output list.
      */
-    protected static void commonPostPaint(IMutablePolygon editor, int layerIndex, ISuperModelState modelState,
+    protected static void commonPostPaint(IMutablePolygon editor, int layerIndex, MeshState modelState,
             PaintLayer paintLayer) {
         editor.setRenderLayer(layerIndex, modelState.getRenderPass(paintLayer));
         editor.setEmissive(layerIndex, modelState.isEmissive(paintLayer));
@@ -170,13 +170,13 @@ public abstract class QuadPainter {
         }
     }
 
-    protected static int textureVersionForFace(Direction face, TextureSet tex, ISuperModelState modelState) {
+    protected static int textureVersionForFace(Direction face, TextureSet tex, MeshState modelState) {
         if (tex.versionCount() == 0)
             return 0;
         return textureHashForFace(face, tex, modelState) & tex.versionMask();
     }
     
-    protected static int textureHashForFace(Direction face, TextureSet tex, ISuperModelState modelState) {
+    protected static int textureHashForFace(Direction face, TextureSet tex, MeshState modelState) {
         final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
         final int speciesBits = species << 16;
         final int shift = tex.scale().power;
@@ -216,7 +216,7 @@ public abstract class QuadPainter {
      * species (if applies).
      */
     protected static Rotation textureRotationForFace(Direction face, TextureSet tex,
-            ISuperModelState modelState) {
+            MeshState modelState) {
         final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
         switch (tex.rotation()) {
         case ROTATE_RANDOM:

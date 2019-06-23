@@ -4,10 +4,10 @@ package grondag.brocade.placement;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.SuperBlockStackHelper;
+import grondag.brocade.block.BrocadeBlock;
+import grondag.brocade.block.BrocadeBlockStackHelper;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.structures.BinaryEnumSet;
 import grondag.fermion.varia.FixedRegionBounds;
@@ -29,7 +29,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-public interface IPlacementItem {
+public interface PlacementItem {
     /////////////////////////////////////////////////////
     // STATIC MEMBERS
     /////////////////////////////////////////////////////
@@ -51,23 +51,23 @@ public interface IPlacementItem {
     public static ItemStack getHeldPlacementItem(PlayerEntity player) {
         ItemStack stack = MinecraftClient.getInstance().player.getMainHandStack();
 
-        if (stack.getItem() instanceof IPlacementItem)
+        if (stack.getItem() instanceof PlacementItem)
             return stack;
 
         stack = MinecraftClient.getInstance().player.getOffHandStack();
 
-        if (stack.getItem() instanceof IPlacementItem)
+        if (stack.getItem() instanceof PlacementItem)
             return stack;
 
         return null;
     }
 
     public static boolean isPlacementItem(ItemStack stack) {
-        return stack.getItem() instanceof IPlacementItem;
+        return stack.getItem() instanceof PlacementItem;
     }
 
-    public static IPlacementItem getPlacementItem(ItemStack stack) {
-        return isPlacementItem(stack) ? (IPlacementItem) stack.getItem() : null;
+    public static PlacementItem getPlacementItem(ItemStack stack) {
+        return isPlacementItem(stack) ? (PlacementItem) stack.getItem() : null;
     }
 
     /////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ public interface IPlacementItem {
      * 
      * @return
      */
-    public ISuperBlock getSuperBlock();
+    public BrocadeBlock getSuperBlock();
 
     /** True if item places air blocks or carves empty space in CSG blocks */
     public boolean isExcavator(ItemStack placedStack);
@@ -128,7 +128,7 @@ public interface IPlacementItem {
         if (!isBlockOrientationSupported(stack))
             return Direction.Axis.Y;
 
-        ISuperModelState modelState = SuperBlockStackHelper.getStackModelState(stack);
+        MeshState modelState = BrocadeBlockStackHelper.getStackModelState(stack);
         if (modelState == null)
             return Direction.Axis.Y;
 
@@ -158,7 +158,7 @@ public interface IPlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (SuperBlockStackHelper.getStackModelState(stack).orientationType()) {
+        switch (BrocadeBlockStackHelper.getStackModelState(stack).orientationType()) {
         case AXIS:
             return false;
 
@@ -183,7 +183,7 @@ public interface IPlacementItem {
         if (!isBlockOrientationSupported(stack))
             return ClockwiseRotation.ROTATE_NONE;
 
-        switch (SuperBlockStackHelper.getStackModelState(stack).orientationType()) {
+        switch (BrocadeBlockStackHelper.getStackModelState(stack).orientationType()) {
         case EDGE:
             return this.getBlockOrientationEdge(stack).edge.rotation;
 
@@ -205,7 +205,7 @@ public interface IPlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (SuperBlockStackHelper.getStackModelState(stack).orientationType()) {
+        switch (BrocadeBlockStackHelper.getStackModelState(stack).orientationType()) {
         case AXIS:
             return getBlockOrientationAxis(stack) == BlockOrientationAxis.DYNAMIC;
 
@@ -231,7 +231,7 @@ public interface IPlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (SuperBlockStackHelper.getStackModelState(stack).orientationType()) {
+        switch (BrocadeBlockStackHelper.getStackModelState(stack).orientationType()) {
         case AXIS:
             return getBlockOrientationAxis(stack).isFixed();
 
@@ -257,7 +257,7 @@ public interface IPlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (SuperBlockStackHelper.getStackModelState(stack).orientationType()) {
+        switch (BrocadeBlockStackHelper.getStackModelState(stack).orientationType()) {
         case AXIS:
             return getBlockOrientationAxis(stack) == BlockOrientationAxis.MATCH_CLOSEST;
 
@@ -368,7 +368,7 @@ public interface IPlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (SuperBlockStackHelper.getStackModelState(stack).orientationType()) {
+        switch (BrocadeBlockStackHelper.getStackModelState(stack).orientationType()) {
         case AXIS:
             cycleBlockOrientationAxis(stack, reverse);
             break;
@@ -399,7 +399,7 @@ public interface IPlacementItem {
         if (!isBlockOrientationSupported(stack))
             return "NOT SUPPORTED";
 
-        switch (SuperBlockStackHelper.getStackModelState(stack).orientationType()) {
+        switch (BrocadeBlockStackHelper.getStackModelState(stack).orientationType()) {
         case AXIS:
             return getBlockOrientationAxis(stack).localizedName();
 
@@ -543,8 +543,8 @@ public interface IPlacementItem {
         // handle this here by substituting a stack different than what we received
         Item item = stack.getItem();
 
-        if (item instanceof IPlacementItem) {
-            ISuperModelState modelState = SuperBlockStackHelper.getStackModelState(stack);
+        if (item instanceof PlacementItem) {
+            MeshState modelState = BrocadeBlockStackHelper.getStackModelState(stack);
             if (modelState == null)
                 return null;
 
@@ -561,7 +561,7 @@ public interface IPlacementItem {
             //TODO: may need to handle other properties/make dynamic somehow
             BlockState result = targetBlock.getDefaultState();
             if(modelState.hasSpecies()) {
-                result = result.with(ISuperBlock.SPECIES, modelState.getSpecies());
+                result = result.with(BrocadeBlock.SPECIES, modelState.getSpecies());
             }
 
             return result;

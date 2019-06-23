@@ -1,10 +1,10 @@
 package grondag.brocade.placement;
 
-import grondag.brocade.block.ISuperBlock;
-import grondag.brocade.block.SuperBlock;
-import grondag.brocade.block.SuperBlockStackHelper;
+import grondag.brocade.block.BrocadeBlock;
+import grondag.brocade.block.SimpleBrocadeBlock;
+import grondag.brocade.block.BrocadeBlockStackHelper;
 import grondag.brocade.collision.CollisionBoxDispatcher;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,12 +27,12 @@ import net.minecraft.world.World;
 /**
  * Provides sub-items and handles item logic for NiceBlocks.
  */
-public class SuperItemBlock extends BlockItem implements IPlacementItem {
+public class BrocadeBlockItem extends BlockItem implements PlacementItem {
 
-    public static final int FEATURE_FLAGS = IPlacementItem.BENUMSET_FEATURES
+    public static final int FEATURE_FLAGS = PlacementItem.BENUMSET_FEATURES
             .getFlagsForIncludedValues(PlacementItemFeature.BLOCK_ORIENTATION, PlacementItemFeature.SPECIES_MODE);
 
-    public SuperItemBlock(SuperBlock block, Item.Settings settings) {
+    public BrocadeBlockItem(SimpleBrocadeBlock block, Item.Settings settings) {
         super(block, settings);
     }
 
@@ -69,8 +69,8 @@ public class SuperItemBlock extends BlockItem implements IPlacementItem {
     }
 
     @Override
-    public ISuperBlock getSuperBlock() {
-        return (ISuperBlock) this.getBlock();
+    public BrocadeBlock getSuperBlock() {
+        return (BrocadeBlock) this.getBlock();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class SuperItemBlock extends BlockItem implements IPlacementItem {
 
         }
 
-        ISuperModelState modelState = SuperBlockStackHelper.getStackModelState(stackIn);
+        MeshState modelState = BrocadeBlockStackHelper.getStackModelState(stackIn);
         if (modelState == null)
             return ActionResult.FAIL;
 
@@ -152,7 +152,7 @@ public class SuperItemBlock extends BlockItem implements IPlacementItem {
         if (!worldIn.doesNotCollide(shape.offset(pos)))
             return ActionResult.FAIL;
 
-        BlockState placedState = IPlacementItem.getPlacementBlockStateFromStackStatically(stackIn);
+        BlockState placedState = PlacementItem.getPlacementBlockStateFromStackStatically(stackIn);
 
         /**
          * Adjust block rotation if supported.
@@ -161,7 +161,7 @@ public class SuperItemBlock extends BlockItem implements IPlacementItem {
         
         ItemStack placedStack = stackIn.copy();
         if (!modelState.isStatic()) {
-            IPlacementItem item = (IPlacementItem) placedStack.getItem();
+            PlacementItem item = (PlacementItem) placedStack.getItem();
 
             BlockOrientationHandler.applyDynamicOrientation(placedStack, player,
                     new PlacementPosition(player, pos, facing, new Vec3d(hitPos.x, hitPos.y, hitPos.z),

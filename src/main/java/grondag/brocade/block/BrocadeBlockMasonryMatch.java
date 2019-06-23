@@ -2,15 +2,15 @@ package grondag.brocade.block;
 
 import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.connect.api.world.BlockTestContext;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
 // For masonry, true result means border IS present
-public class SuperBlockMasonryMatch implements BlockTest {
-    private SuperBlockMasonryMatch() {}
+public class BrocadeBlockMasonryMatch implements BlockTest {
+    private BrocadeBlockMasonryMatch() {}
     
-    public static final SuperBlockMasonryMatch INSTANCE = new SuperBlockMasonryMatch();
+    public static final BrocadeBlockMasonryMatch INSTANCE = new BrocadeBlockMasonryMatch();
     
     @Override
     public boolean apply(BlockTestContext context) {
@@ -19,8 +19,8 @@ public class SuperBlockMasonryMatch implements BlockTest {
             return false;
         }
         
-        final ISuperModelState fromState = (ISuperModelState)context.fromModelState();
-        final ISuperModelState toState = (ISuperModelState)context.toModelState();
+        final MeshState fromState = (MeshState)context.fromModelState();
+        final MeshState toState = (MeshState)context.toModelState();
         final BlockState toBlockState = context.toBlockState();
         final BlockState fromBlockState = context.fromBlockState();
         final BlockPos toPos = context.toPos();

@@ -1,7 +1,7 @@
 package grondag.brocade.painting;
 
 import grondag.brocade.primitives.polygon.IMutablePolygon;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 
 /**
  * Logic to apply color, brightness, glow and other attributes that depend on
@@ -32,6 +32,6 @@ public abstract class VertexProcessor {
         this.registryName = registryName;
     }
 
-    public abstract void process(IMutablePolygon result, int layerIndex, ISuperModelState modelState,
+    public abstract void process(IMutablePolygon result, int layerIndex, MeshState modelState,
             PaintLayer paintLayer);
 }

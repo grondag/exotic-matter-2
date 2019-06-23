@@ -2,7 +2,7 @@ package grondag.brocade.mesh;
 
 import java.util.function.Consumer;
 
-import grondag.brocade.block.ISuperBlock;
+import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.connect.api.model.FaceEdge;
 import grondag.brocade.connect.api.state.CornerJoinFaceState;
 import grondag.brocade.connect.api.state.CornerJoinFaceStates;
@@ -17,8 +17,8 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.brocade.state.ISuperModelState;
-import grondag.brocade.state.ModelStateData;
+import grondag.brocade.state.MeshState;
+import grondag.brocade.state.MeshStateData;
 import grondag.brocade.state.StateFormat;
 import grondag.fermion.color.Color;
 import grondag.fermion.varia.BitPacker64;
@@ -78,12 +78,12 @@ public class SquareColumnMeshFactory extends MeshFactory {
     }
 
     public SquareColumnMeshFactory() {
-        super(StateFormat.BLOCK, ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS,
+        super(StateFormat.BLOCK, MeshStateData.STATE_FLAG_NEEDS_CORNER_JOIN | MeshStateData.STATE_FLAG_HAS_AXIS,
                 STATE_CUT_COUNT.setValue(3, STATE_ARE_CUTS_ON_EDGE.setValue(true, 0)));
     }
 
     @Override
-    public void produceShapeQuads(ISuperModelState modelState, Consumer<IPolygon> target) {
+    public void produceShapeQuads(MeshState modelState, Consumer<IPolygon> target) {
         FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
         for (int i = 0; i < 6; i++) {
             this.makeFaceQuads(modelState, DirectionHelper.fromOrdinal(i), spec, target);
@@ -91,27 +91,27 @@ public class SquareColumnMeshFactory extends MeshFactory {
     }
 
     @Override
-    public boolean isCube(ISuperModelState modelState) {
+    public boolean isCube(MeshState modelState) {
         return false;
     }
 
     @Override
-    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, ISuperBlock block,
-            ISuperModelState modelState) {
+    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, BrocadeBlock block,
+            MeshState modelState) {
         return false;
     }
 
     @Override
-    public int geometricSkyOcclusion(ISuperModelState modelState) {
+    public int geometricSkyOcclusion(MeshState modelState) {
         return 255;
     }
 
     @Override
-    public BlockOrientationType orientationType(ISuperModelState modelState) {
+    public BlockOrientationType orientationType(MeshState modelState) {
         return BlockOrientationType.AXIS;
     }
 
-    private void makeFaceQuads(ISuperModelState state, Direction face, FaceSpec spec, Consumer<IPolygon> target) {
+    private void makeFaceQuads(MeshState state, Direction face, FaceSpec spec, Consumer<IPolygon> target) {
         if (face == null)
             return;
 
@@ -519,7 +519,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
      * If true, cuts in shape are on the block boundary. Reads value from static
      * shape bits in model state
      */
-    public static boolean areCutsOnEdge(ISuperModelState modelState) {
+    public static boolean areCutsOnEdge(MeshState modelState) {
         return STATE_ARE_CUTS_ON_EDGE.getValue(modelState.getStaticShapeBits());
     }
 
@@ -527,7 +527,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
      * If true, cuts in shape are on the block boundary. Saves value in static shape
      * bits in model state
      */
-    public static void setCutsOnEdge(boolean areCutsOnEdge, ISuperModelState modelState) {
+    public static void setCutsOnEdge(boolean areCutsOnEdge, MeshState modelState) {
         modelState.setStaticShapeBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, modelState.getStaticShapeBits()));
     }
 
@@ -535,7 +535,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
      * Number of cuts that appear on each face of model. Reads value from static
      * shape bits in model state
      */
-    public static int getCutCount(ISuperModelState modelState) {
+    public static int getCutCount(MeshState modelState) {
         return STATE_CUT_COUNT.getValue(modelState.getStaticShapeBits());
     }
 
@@ -543,12 +543,12 @@ public class SquareColumnMeshFactory extends MeshFactory {
      * Number of cuts that appear on each face of model. Saves value in static shape
      * bits in model state
      */
-    public static void setCutCount(int cutCount, ISuperModelState modelState) {
+    public static void setCutCount(int cutCount, MeshState modelState) {
         modelState.setStaticShapeBits(STATE_CUT_COUNT.setValue(cutCount, modelState.getStaticShapeBits()));
     }
 
     @Override
-    public boolean hasLampSurface(ISuperModelState modelState) {
+    public boolean hasLampSurface(MeshState modelState) {
         return true;
     }
 

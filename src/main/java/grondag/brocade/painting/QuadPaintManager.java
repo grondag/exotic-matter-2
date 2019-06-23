@@ -8,7 +8,7 @@ import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
 import grondag.brocade.primitives.stream.PolyStreams;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 
 /**
  * Low-garbage consumer for quads from mesh generators that manages
@@ -73,7 +73,7 @@ public class QuadPaintManager implements Consumer<IPolygon> {
         }
     }
 
-    public void producePaintedQuads(final ISuperModelState modelState, final boolean isItem, final Consumer<IPolygon> target) {
+    public void producePaintedQuads(final MeshState modelState, final boolean isItem, final Consumer<IPolygon> target) {
         for (Entry<Surface, IMutablePolyStream> entry : surfaces.entrySet()) {
             Surface surface = entry.getKey();
             IMutablePolyStream stream = entry.getValue();

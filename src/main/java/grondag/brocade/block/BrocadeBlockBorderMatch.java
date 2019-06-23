@@ -2,18 +2,18 @@ package grondag.brocade.block;
 
 import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.connect.api.world.BlockTestContext;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import net.minecraft.block.BlockState;
 
-public class SuperBlockBorderMatch implements BlockTest {
-    private SuperBlockBorderMatch() {}
+public class BrocadeBlockBorderMatch implements BlockTest {
+    private BrocadeBlockBorderMatch() {}
     
-    public static final SuperBlockBorderMatch INSTANCE = new SuperBlockBorderMatch();
+    public static final BrocadeBlockBorderMatch INSTANCE = new BrocadeBlockBorderMatch();
     
     @Override
     public boolean apply(BlockTestContext context) {
-        final ISuperModelState fromState = (ISuperModelState)context.fromModelState();
-        final ISuperModelState toState = (ISuperModelState)context.toModelState();
+        final MeshState fromState = (MeshState)context.fromModelState();
+        final MeshState toState = (MeshState)context.toModelState();
         final BlockState toBlockState = context.toBlockState();
         final BlockState fromBlockState = context.fromBlockState();
         

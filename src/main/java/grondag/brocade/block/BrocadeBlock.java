@@ -1,7 +1,7 @@
 package grondag.brocade.block;
 
 import grondag.brocade.connect.api.world.BlockTest;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.ExtendedBlockView;
 
-public interface ISuperBlock {
+public interface BrocadeBlock {
     public static final IntProperty SPECIES = IntProperty.of("brocade_species", 0, 15);
     
     /**
@@ -23,7 +23,7 @@ public interface ISuperBlock {
      * Returns an instance of the default model state for this block. Because model
      * states are mutable, every call returns a new instance.
      */
-    ISuperModelState getDefaultModelState();
+    MeshState getDefaultModelState();
 
     /**
      * If last parameter is false, does not perform a refresh from world for
@@ -33,12 +33,12 @@ public interface ISuperBlock {
      * 
      * 
      */
-    ISuperModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded);
+    MeshState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded);
 
     /**
      * Use when absolutely certain given block state is current.
      */
-    ISuperModelState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos,
+    MeshState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded);
 
     /**
@@ -66,7 +66,7 @@ public interface ISuperBlock {
      * based on other components of model state (orthogonalAxis, for example) and
      * those changes may not be detected by path finding.
      */
-    ISuperModelState computeModelState(BlockState state, BlockView world, BlockPos pos,
+    MeshState computeModelState(BlockState state, BlockView world, BlockPos pos,
             boolean refreshFromWorldIfNeeded);
 
     
@@ -107,7 +107,7 @@ public interface ISuperBlock {
      * ISuperBlock.
      */
     public static boolean isVirtualBlock(Block block) {
-        return block instanceof ISuperBlock && ((ISuperBlock) block).isVirtual();
+        return block instanceof BrocadeBlock && ((BrocadeBlock) block).isVirtual();
     }
 
     /**
@@ -131,7 +131,7 @@ public interface ISuperBlock {
      */
     public static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, PlayerEntity player) {
         Block block = state.getBlock();
-        return isVirtualBlock(block) ? ((ISuperBlock) block).isVirtuallySolid(pos, player)
+        return isVirtualBlock(block) ? ((BrocadeBlock) block).isVirtuallySolid(pos, player)
                 : !block.getMaterial(state).isReplaceable();
     }
 }

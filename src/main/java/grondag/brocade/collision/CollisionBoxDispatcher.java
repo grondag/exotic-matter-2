@@ -13,7 +13,7 @@ import org.joml.Vector3f;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.cache.ObjectSimpleCacheLoader;
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
 import net.minecraft.util.math.BoundingBox;
@@ -40,7 +40,7 @@ public class CollisionBoxDispatcher {
         }
     };
 
-    private static final ObjectSimpleLoadingCache<ISuperModelState, OptimizingBoxList> modelBounds = new ObjectSimpleLoadingCache<ISuperModelState, OptimizingBoxList>(
+    private static final ObjectSimpleLoadingCache<MeshState, OptimizingBoxList> modelBounds = new ObjectSimpleLoadingCache<MeshState, OptimizingBoxList>(
             new CollisionBoxLoader(), 0xFFF);
 
     private static ThreadLocal<FastBoxGenerator> fastBoxGen = new ThreadLocal<FastBoxGenerator>() {
@@ -50,11 +50,11 @@ public class CollisionBoxDispatcher {
         }
     };
 
-    public static ImmutableList<BoundingBox> getCollisionBoxes(ISuperModelState modelState) {
+    public static ImmutableList<BoundingBox> getCollisionBoxes(MeshState modelState) {
         return modelBounds.get(modelState.geometricState()).getList();
     }
 
-    public static VoxelShape getOutlineShape(ISuperModelState modelState) {
+    public static VoxelShape getOutlineShape(MeshState modelState) {
         return modelBounds.get(modelState.geometricState()).getShape();
     }
     
@@ -66,12 +66,12 @@ public class CollisionBoxDispatcher {
         QUEUE.clear();
     }
 
-    private static class CollisionBoxLoader implements ObjectSimpleCacheLoader<ISuperModelState, OptimizingBoxList> {
+    private static class CollisionBoxLoader implements ObjectSimpleCacheLoader<MeshState, OptimizingBoxList> {
 //        static AtomicInteger runCounter = new AtomicInteger();
 //        static AtomicLong totalNanos = new AtomicLong();
 
         @Override
-        public OptimizingBoxList load(ISuperModelState key) {
+        public OptimizingBoxList load(MeshState key) {
 //            final long start = System.nanoTime();
 
             final FastBoxGenerator generator = fastBoxGen.get();

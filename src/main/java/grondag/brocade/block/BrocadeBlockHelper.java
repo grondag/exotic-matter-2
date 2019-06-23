@@ -2,7 +2,7 @@ package grondag.brocade.block;
 
 
 
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -14,16 +14,16 @@ public class BrocadeBlockHelper {
     /**
      * returns null if not a brocade block at the position
      */
-    public static ISuperModelState getModelStateIfAvailable(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+    public static MeshState getModelStateIfAvailable(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         return getModelStateIfAvailable(world, world.getBlockState(pos), pos, refreshFromWorldIfNeeded);
     }
 
     /**
      * returns null if not a brocade block at the position
      */
-    public static ISuperModelState getModelStateIfAvailable(BlockView world, BlockState state, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        if (state.getBlock() instanceof SuperBlock) {
-            return ((SuperBlock)state.getBlock()).getModelStateAssumeStateIsCurrent(state, world, pos, refreshFromWorldIfNeeded);
+    public static MeshState getModelStateIfAvailable(BlockView world, BlockState state, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+        if (state.getBlock() instanceof SimpleBrocadeBlock) {
+            return ((SimpleBrocadeBlock)state.getBlock()).getModelStateAssumeStateIsCurrent(state, world, pos, refreshFromWorldIfNeeded);
         } else {
             return null;
         }
@@ -33,7 +33,7 @@ public class BrocadeBlockHelper {
      * Returns species at position if it could join with the given block/modelState
      * Returns -1 if no superblock at position or if join not possible.
      */
-    public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState, ISuperModelState withModelState) {
+    public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState, MeshState withModelState) {
         if (withBlockState == null || withModelState == null)
             return -1;
 
@@ -42,7 +42,7 @@ public class BrocadeBlockHelper {
 
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() == withBlockState.getBlock()) {
-            ISuperModelState mState = getModelStateIfAvailable(world, pos, false);
+            MeshState mState = getModelStateIfAvailable(world, pos, false);
             if (mState == null)
                 return -1;
 

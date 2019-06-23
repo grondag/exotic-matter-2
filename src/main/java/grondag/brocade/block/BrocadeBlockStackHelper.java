@@ -2,8 +2,8 @@ package grondag.brocade.block;
 
 
 
-import grondag.brocade.state.ISuperModelState;
-import grondag.brocade.state.ModelState;
+import grondag.brocade.state.MeshState;
+import grondag.brocade.state.MeshStateImpl;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import net.minecraft.item.BlockItem;
@@ -16,19 +16,19 @@ import net.minecraft.nbt.CompoundTag;
  * @author grondag
  *
  */
-public class SuperBlockStackHelper {
+public class BrocadeBlockStackHelper {
     public static String NBT_SUPERMODEL_LIGHT_VALUE = NBTDictionary.claim("smLight");
 
     public static void setStackLightValue(ItemStack stack, int lightValue) {
         // important that the tag used here matches that used in tile entity
-        Useful.getOrCreateTagCompound(stack).putByte(SuperBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE,
+        Useful.getOrCreateTagCompound(stack).putByte(BrocadeBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE,
                 (byte) lightValue);
     }
 
     public static byte getStackLightValue(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
         // important that the tag used here matches that used in tile entity
-        return tag == null ? 0 : tag.getByte(SuperBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
+        return tag == null ? 0 : tag.getByte(BrocadeBlockStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
     }
 
     public static void setStackSubstance(ItemStack stack, BlockSubstance substance) {
@@ -41,19 +41,19 @@ public class SuperBlockStackHelper {
         return tag == null ? BlockSubstance.DEFAULT : BlockSubstance.deserializeNBT(tag);
     }
 
-    public static void setStackModelState(ItemStack stack, ISuperModelState modelState) {
+    public static void setStackModelState(ItemStack stack, MeshState modelState) {
         CompoundTag tag = stack.getOrCreateTag();
         if (modelState == null) {
-            ModelState.clearNBTValues(tag);
+            MeshStateImpl.clearNBTValues(tag);
             return;
         }
         modelState.serializeNBT(tag);
     }
 
     
-    public static ISuperModelState getStackModelState(ItemStack stack) {
-        ISuperModelState stackState = stack.hasTag()
-                ? ModelState.deserializeFromNBTIfPresent(stack.getTag())
+    public static MeshState getStackModelState(ItemStack stack) {
+        MeshState stackState = stack.hasTag()
+                ? MeshStateImpl.deserializeFromNBTIfPresent(stack.getTag())
                 : null;
 
         // WAILA or other mods might create a stack with no NBT
@@ -62,8 +62,8 @@ public class SuperBlockStackHelper {
 
         if (stack.getItem() instanceof BlockItem) {
             BlockItem item = (BlockItem) stack.getItem();
-            if (item.getBlock() instanceof ISuperBlock) {
-                return ((ISuperBlock) item.getBlock()).getDefaultModelState();
+            if (item.getBlock() instanceof BrocadeBlock) {
+                return ((BrocadeBlock) item.getBlock()).getDefaultModelState();
             }
         }
         return null;

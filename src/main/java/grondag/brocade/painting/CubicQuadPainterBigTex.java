@@ -5,7 +5,7 @@ import grondag.brocade.api.texture.TextureScale;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.stream.IMutablePolyStream;
-import grondag.brocade.state.ISuperModelState;
+import grondag.brocade.state.MeshState;
 import grondag.fermion.varia.Useful;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
@@ -32,7 +32,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
     // layers.
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
-    public static void paintQuads(IMutablePolyStream stream, ISuperModelState modelState, PaintLayer paintLayer) {
+    public static void paintQuads(IMutablePolyStream stream, MeshState modelState, PaintLayer paintLayer) {
         IMutablePolygon editor = stream.editor();
         do {
             int layerIndex = firstAvailableTextureLayer(editor);
