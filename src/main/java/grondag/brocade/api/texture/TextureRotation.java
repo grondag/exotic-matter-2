@@ -7,7 +7,7 @@ public enum TextureRotation {
     ROTATE_90(Rotation.ROTATE_90),
     ROTATE_180(Rotation.ROTATE_180),
     ROTATE_270(Rotation.ROTATE_270),
-    ROTATE_RANDOM(null);
+    ROTATE_RANDOM(Rotation.ROTATE_NONE);
 
     public final Rotation rotation;
     

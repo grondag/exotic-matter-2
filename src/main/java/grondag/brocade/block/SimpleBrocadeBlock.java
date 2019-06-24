@@ -18,6 +18,7 @@ import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.state.StateFactory.Builder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -32,6 +33,12 @@ public class SimpleBrocadeBlock extends Block implements BrocadeBlock {
     public SimpleBrocadeBlock(Settings blockSettings, MeshState defaultModelState) {
         super(blockSettings);
         this.defaultModelStateBits = defaultModelState.serializeToInts();
+    }
+
+    @Override
+    protected void appendProperties(Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(SPECIES);
     }
 
     /**

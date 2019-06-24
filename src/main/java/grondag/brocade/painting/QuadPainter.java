@@ -1,5 +1,6 @@
 package grondag.brocade.painting;
 
+import grondag.brocade.api.texture.TextureRotation;
 import grondag.brocade.api.texture.TextureScale;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.api.texture.TextureSetRegistry;
@@ -218,16 +219,15 @@ public abstract class QuadPainter {
     protected static Rotation textureRotationForFace(Direction face, TextureSet tex,
             MeshState modelState) {
         final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
-        switch (tex.rotation()) {
-        case ROTATE_RANDOM:
+        if(tex.rotation() == TextureRotation.ROTATE_RANDOM) {
             if(tex.scale() == TextureScale.SINGLE) {
-                return Useful.offsetEnumValue(tex.rotation().rotation,
+                return Useful.offsetEnumValue(Rotation.ROTATE_NONE,
                         (textureHashForFace(face, tex, modelState) >> 8) & 3);
             } else {
-                return species == 0 ? tex.rotation().rotation
-                        : Useful.offsetEnumValue(tex.rotation().rotation, HashCommon.mix(species) & 3);
+                return species == 0 ? Rotation.ROTATE_NONE
+                        : Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
             }
-        default:
+        } else {
             return tex.rotation().rotation;
         }
     }

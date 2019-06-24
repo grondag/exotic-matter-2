@@ -34,6 +34,19 @@ public class WritablePolyStream extends AbstractPolyStream implements IWritableP
         writer.baseAddress = 0;
     }
 
+    @Override
+    public void clear() {
+        originAddress = newOrigin();
+        writeAddress = originAddress;
+        // force error on read
+        reader.invalidate();
+        polyA.invalidate();
+        polyB.invalidate();
+        internal.invalidate();
+        clearDefaults();
+        loadDefaults();
+    }
+    
     protected final void prepare(IIntStream stream, int formatFlags) {
         super.prepare(stream);
         copyFrom.stream = stream;

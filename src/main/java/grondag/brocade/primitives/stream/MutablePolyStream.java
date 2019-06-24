@@ -11,6 +11,12 @@ public class MutablePolyStream extends WritablePolyStream implements IMutablePol
         super.prepare(formatFlags);
         editor.stream = stream;
     }
+    
+    @Override
+    public void clear() {
+        super.clear();
+        editor.invalidate();
+    }
 
     @Override
     protected void doRelease() {

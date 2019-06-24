@@ -1,7 +1,6 @@
 package grondag.brocade.placement;
 
 import grondag.brocade.block.BrocadeBlock;
-import grondag.brocade.block.SimpleBrocadeBlock;
 import grondag.brocade.block.BrocadeBlockStackHelper;
 import grondag.brocade.collision.CollisionBoxDispatcher;
 import grondag.brocade.state.MeshState;
@@ -32,7 +31,7 @@ public class BrocadeBlockItem extends BlockItem implements PlacementItem {
     public static final int FEATURE_FLAGS = PlacementItem.BENUMSET_FEATURES
             .getFlagsForIncludedValues(PlacementItemFeature.BLOCK_ORIENTATION, PlacementItemFeature.SPECIES_MODE);
 
-    public BrocadeBlockItem(SimpleBrocadeBlock block, Item.Settings settings) {
+    public BrocadeBlockItem(Block block, Item.Settings settings) {
         super(block, settings);
     }
 

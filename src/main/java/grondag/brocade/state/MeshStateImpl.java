@@ -1004,4 +1004,15 @@ public class MeshStateImpl implements MeshState {
         pBuff.writeVarLong(this.layerBitsMiddle);
         pBuff.writeVarLong(this.layerBitsOuter);
     }
+
+    @Override
+    public boolean isImmutable() {
+        return false;
+    }
+
+    @Override
+    public ImmutableMeshState toImmutable() {
+        return new ImmutableMeshStateImpl(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut, layerBitsLamp,
+                layerBitsMiddle, layerBitsOuter);
+    }
 }

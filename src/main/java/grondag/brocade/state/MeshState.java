@@ -25,6 +25,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public interface MeshState extends IReadWriteNBT, PacketSerializable {
+    boolean isImmutable();
+    
+    ImmutableMeshState toImmutable();
+    
     int[] serializeToInts();
 
     /**

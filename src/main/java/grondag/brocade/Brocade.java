@@ -26,7 +26,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import grondag.brocade.init.BrocadeBlocks;
-import grondag.brocade.init.BrocadeTextures;
 import net.fabricmc.api.ModInitializer;
 
 public class Brocade implements ModInitializer {

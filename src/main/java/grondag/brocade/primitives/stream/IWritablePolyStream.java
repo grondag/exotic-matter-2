@@ -123,4 +123,6 @@ public interface IWritablePolyStream extends IPolyStream {
      * <p>
      */
     public int splitIfNeeded(int targetAddress);
+    
+    public void clear();
 }
