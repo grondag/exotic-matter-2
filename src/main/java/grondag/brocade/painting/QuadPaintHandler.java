@@ -40,7 +40,6 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
     private  Mesh handlePaint(ImmutableMeshStateImpl modelState) {
         this.modelState = modelState;
         modelState.getShape().meshFactory().produceShapeQuads(modelState, this);
-        work.clear();
         return builder.build();
     }
 
@@ -77,12 +76,12 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         
         final int vertexCount = editor.vertexCount();
         for (int i = 0; i < vertexCount; i++) {
-            int c = editor.getVertexColor(0, i);
+            final int c = editor.getVertexColor(0, i);
             editor.setVertexColor(1, i, c);
             editor.setVertexColor(2, i, c);
 
-            float u = editor.getVertexU(0, i);
-            float v = editor.getVertexV(0, i);
+            final float u = editor.getVertexU(0, i);
+            final float v = editor.getVertexV(0, i);
             editor.setVertexUV(1, i, u, v);
             editor.setVertexUV(2, i, u, v);
         }
@@ -90,8 +89,8 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         for (PaintLayer paintLayer : PaintLayer.VALUES)
             if (modelState.isLayerEnabled(paintLayer) && !surface.isLayerDisabled(paintLayer)
                     && stream.editorOrigin())
-                QuadPainterFactory.getPainter(modelState, surface, paintLayer).paintQuads(stream, modelState,
-                        paintLayer);
+                QuadPainterFactory.getPainter(modelState, surface, paintLayer)
+                    .paintQuads(stream, modelState, paintLayer);
 
         if (stream.editorOrigin()) {
             do {
@@ -105,6 +104,8 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
                 polyToMesh(editor, emitter);
             } while (stream.editorNext());
         }
+        
+        stream.clear();
     }
     
     

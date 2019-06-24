@@ -46,7 +46,6 @@ public class VertexProcessorDefault extends VertexProcessor {
         } else {
             // normal shaded surface - tint existing colors, usually WHITE to start with
             for (int i = 0; i < poly.vertexCount(); i++) {
-
                 final int c = ColorHelper.multiplyColor(color, poly.getVertexColor(layerIndex, i));
                 poly.setVertexColor(layerIndex, i, c);
             }

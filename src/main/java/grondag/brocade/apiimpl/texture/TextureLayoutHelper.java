@@ -34,7 +34,7 @@ public abstract class TextureLayoutHelper {
 
                 for (int i = 0; i < texture.versionCount(); i++) {
                     for (int j = 0; j < texCount; j++) {
-                        stitcher.accept(new Identifier(texture.id().getNamespace(), buildTextureName_X_8(texture, i * BORDER_13.blockTextureCount + j)));
+                        stitcher.accept(new Identifier(buildTextureName_X_8(texture, i * BORDER_13.blockTextureCount + j)));
                     }
                 }
             }
@@ -83,7 +83,7 @@ public abstract class TextureLayoutHelper {
     
     public void prestitch(TextureSet texture, Consumer<Identifier> stitcher) {
         for (int i = 0; i < texture.versionCount(); i++) {
-            stitcher.accept(new Identifier(texture.id().getNamespace(), this.buildTextureName(texture, i, 0)));
+            stitcher.accept(new Identifier(this.buildTextureName(texture, i, 0)));
         }
     }
 

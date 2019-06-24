@@ -237,7 +237,7 @@ public class MeshStateImpl implements MeshState {
             return this;
 
         populateStateFlagsIfNeeded();
-
+        // PERF avoid instance check for interface
         if (state.getBlock() instanceof BrocadeBlock) {
             // FIXME: - doesn't work when block state is something other than species
             // needs to be a method that serializes block state to an int and back

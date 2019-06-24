@@ -54,7 +54,7 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
 
     @Override
     public TextureSetBuilder baseTextureName(String baseTextureName) {
-        this.baseTextureName = baseTextureName;
+        this.rawBaseTextureName = baseTextureName;
         return this;
     }
 

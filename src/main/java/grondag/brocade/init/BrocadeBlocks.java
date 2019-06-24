@@ -22,14 +22,14 @@ public class BrocadeBlocks {
         
         MeshState workingModel = new MeshStateImpl();
         workingModel.setShape(ModShapes.CUBE);
-        workingModel.setTexture(PaintLayer.BASE, grondag.brocade.init.BrocadeTextures.BLOCK_NOISE_MODERATE);
+        workingModel.setTexture(PaintLayer.BASE, BrocadeTextures.BLOCK_NOISE_MODERATE);
         workingModel.setColorRGB(PaintLayer.BASE, 0xEBF0F5);
-        workingModel.setTexture(PaintLayer.MIDDLE, grondag.brocade.init.BrocadeTextures.BLOCK_COBBLE);
+        workingModel.setTexture(PaintLayer.MIDDLE, BrocadeTextures.BLOCK_COBBLE);
         workingModel.setColorRGB(PaintLayer.MIDDLE, 0xFF4444);
         workingModel.setTranslucent(PaintLayer.MIDDLE, true);
         workingModel.setAlpha(PaintLayer.MIDDLE, 32);
         workingModel.setEmissive(PaintLayer.MIDDLE, true);
-        workingModel.setTexture(PaintLayer.OUTER, grondag.brocade.init.BrocadeTextures.BORDER_SMOOTH_BLEND);
+        workingModel.setTexture(PaintLayer.OUTER, BrocadeTextures.BORDER_SMOOTH_BLEND);
         workingModel.setColorRGB(PaintLayer.OUTER, 0xD7FFFF);
         workingModel.setTranslucent(PaintLayer.OUTER, true);
         workingModel.setEmissive(PaintLayer.OUTER, true);

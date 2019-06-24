@@ -14,7 +14,7 @@ abstract class AbstractTextureSet {
     int textureGroupFlags = TextureGroup.ALWAYS_HIDDEN.bitFlag;
     int versionCount = 1;
     boolean renderNoBorderAsTile = false;
-    String baseTextureName;
+    String rawBaseTextureName;
     String displayNameToken;
     
     protected void copyFrom(AbstractTextureSet template) {
@@ -23,7 +23,7 @@ abstract class AbstractTextureSet {
         this.scale = template.scale;
         this.renderIntent = template.renderIntent;
         this.versionCount = template.versionCount;
-        this.baseTextureName = template.baseTextureName;
+        this.rawBaseTextureName = template.rawBaseTextureName;
         this.renderNoBorderAsTile = template.renderNoBorderAsTile;
         this.displayNameToken = template.displayNameToken;
         this.textureGroupFlags = template.textureGroupFlags;
@@ -49,10 +49,6 @@ abstract class AbstractTextureSet {
         return versionCount;
     }
     
-    public String baseTextureName() {
-        return baseTextureName;
-    }
-
     public boolean renderNoBorderAsTile() {
         return renderNoBorderAsTile;
     }
