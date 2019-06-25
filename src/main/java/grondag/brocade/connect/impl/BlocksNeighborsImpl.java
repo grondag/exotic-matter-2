@@ -106,6 +106,8 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
         myPos.set(x, y, z);
         this.stateFunc = stateFunc;
         this.blockTest = blockTest;
+        this.myBlockState = null;
+        this.myModelState = null;
         completionFlags = blockTest == null ? -1 : 0;
         resultFlags = 0;
         System.arraycopy(EMPTY_BLOCK_STATE, 0, blockStates, 0, STATE_COUNT);

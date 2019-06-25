@@ -52,9 +52,8 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         
         Surface surface = poly.getSurface();
 
-        int address = stream.writerAddress();
         stream.appendCopy(poly);
-        stream.moveEditor(address);
+        stream.editorOrigin();
         
         // assign three layers for painting and then correct after paint occurs
         editor.setLayerCount(3);
@@ -86,12 +85,13 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             editor.setVertexUV(2, i, u, v);
         }
         
-        for (PaintLayer paintLayer : PaintLayer.VALUES)
+        for (PaintLayer paintLayer : PaintLayer.VALUES) {
             if (modelState.isLayerEnabled(paintLayer) && !surface.isLayerDisabled(paintLayer)
                     && stream.editorOrigin())
                 QuadPainterFactory.getPainter(modelState, surface, paintLayer)
                     .paintQuads(stream, modelState, paintLayer);
-
+        }
+        
         if (stream.editorOrigin()) {
             do {
                 // omit polys that weren't textured by any painter
@@ -115,9 +115,6 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             throw new UnsupportedOperationException("Brocade currently requires FREX renderer.");
         }
         
-        emitter.cullFace(poly.getActualFace());
-        emitter.nominalFace(poly.getNominalFace());
-        emitter.tag(poly.getTag());
         
         final int depth = poly.layerCount();
         final MaterialFinder finder = this.finder;
@@ -144,7 +141,11 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
                 }
             }
         }
+        
         emitter.material(finder.find());
+        emitter.cullFace(poly.getActualFace());
+        emitter.nominalFace(poly.getNominalFace());
+        emitter.tag(poly.getTag());
         
         for(int v = 0; v < 4; v++) {   
             emitter.pos(v, poly.getVertexX(v), poly.getVertexY(v), poly.getVertexZ(v));
@@ -165,6 +166,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
                 }
             }
         }
+        
         emitter.emit();
     }
     

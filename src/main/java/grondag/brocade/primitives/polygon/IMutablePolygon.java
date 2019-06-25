@@ -500,13 +500,13 @@ public interface IMutablePolygon extends IPolygon {
         // transform vertices
         for(int i = 0; i < vertexCount; i++)
         {
-            vec4.set(getVertexX(i), getVertexZ(i), getVertexZ(i), 1);
+            vec4.set(getVertexX(i), getVertexY(i), getVertexZ(i), 1);
             matrix.transform(vec4);
             this.setVertexPos(i, vec4.x, vec4.y, vec4.z);
             
             if(this.hasVertexNormal(i))
             {
-                vec4.set(getVertexNormalX(i), getVertexNormalZ(i), getVertexNormalZ(i), 1);
+                vec4.set(getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i), 1);
                 matrix.transform(vec4);
                 float normScale = (float) (1f / Math.sqrt(vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z));
                 this.setVertexNormal(i, vec4.x * normScale, vec4.y * normScale, vec4.z * normScale);

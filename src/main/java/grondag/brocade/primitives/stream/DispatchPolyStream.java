@@ -9,6 +9,7 @@ import grondag.fermion.intstream.IntStreams;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
+//TODO: can probably remove this whole thing
 /**
  * Read-only stream that builds linked lists of quads based on actual face. Used
  * for space-efficient block render dispatch.
@@ -79,6 +80,8 @@ public class DispatchPolyStream extends AbstractPolyStream implements IReadOnlyP
 
     void prepare() {
         super.prepare(IntStreams.claim());
+        
+        //FIXME: needs to happen during clear, or maybe no longer needed - perhaps store in mesh or via tags
         isBuilt = false;
         lastAppendAddress = IPolygon.NO_LINK_OR_TAG;
 

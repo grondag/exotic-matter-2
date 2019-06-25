@@ -1,8 +1,27 @@
 package grondag.brocade.init;
 
-import static grondag.brocade.api.texture.TextureRotation.*;
+import static grondag.brocade.api.texture.TextureGroup.HIDDEN_TILES;
+import static grondag.brocade.api.texture.TextureGroup.STATIC_BORDERS;
+import static grondag.brocade.api.texture.TextureGroup.STATIC_TILES;
+import static grondag.brocade.api.texture.TextureLayout.BORDER_13;
+import static grondag.brocade.api.texture.TextureLayout.SIMPLE;
+import static grondag.brocade.api.texture.TextureLayout.SPLIT_X_8;
+import static grondag.brocade.api.texture.TextureRenderIntent.BASE_ONLY;
+import static grondag.brocade.api.texture.TextureRenderIntent.OVERLAY_ONLY;
+import static grondag.brocade.api.texture.TextureRotation.ROTATE_180;
+import static grondag.brocade.api.texture.TextureRotation.ROTATE_270;
+import static grondag.brocade.api.texture.TextureRotation.ROTATE_90;
+import static grondag.brocade.api.texture.TextureRotation.ROTATE_NONE;
+import static grondag.brocade.api.texture.TextureRotation.ROTATE_RANDOM;
+import static grondag.brocade.api.texture.TextureScale.GIANT;
+import static grondag.brocade.api.texture.TextureScale.LARGE;
+import static grondag.brocade.api.texture.TextureScale.MEDIUM;
+import static grondag.brocade.api.texture.TextureScale.SINGLE;
+import static grondag.brocade.api.texture.TextureScale.SMALL;
+import static grondag.brocade.api.texture.TextureScale.TINY;
 
 import grondag.brocade.Brocade;
+import grondag.brocade.api.texture.TextureRenderIntent;
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.apiimpl.texture.TextureSetImpl;
 import grondag.brocade.apiimpl.texture.TextureSetRegistryImpl;
@@ -10,11 +29,6 @@ import grondag.fermion.config.FermionConfig;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.SpriteAtlasTexture;
-
-import static grondag.brocade.api.texture.TextureGroup.*;
-import static grondag.brocade.api.texture.TextureLayout.*;
-import static grondag.brocade.api.texture.TextureRenderIntent.*;
-import static grondag.brocade.api.texture.TextureScale.*;
 
 public class BrocadeTextures {
     
@@ -143,4 +157,20 @@ public class BrocadeTextures {
     public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
             .baseTextureName("blocks/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13)
             .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("brocade", "border_smooth_blended");
+    
+    public static final TextureSet BORDER_CAUTION = TextureSet.builder().displayNameToken("border_caution")
+            .baseTextureName("blocks/border_caution").versionCount(1).scale(SINGLE).layout(BORDER_13)
+            .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("brocade", "border_caution");
+    
+    
+    public static final TextureSet SANDSTONE = TextureSet.builder().displayNameToken("sandstone")
+            .baseTextureName("blocks/sandstone")
+            .versionCount(1).scale(MEDIUM).layout(SIMPLE).rotation(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
+            .groups(STATIC_TILES).build("brocade", "sandstone");
+
+    public static final TextureSet SANDSTONE_ZOOM = TextureSet.builder(SANDSTONE)
+            .displayNameToken("sandstone_zoom").scale(LARGE).build("brocade", "sandstone_zoom");
+    
+    public static final TextureSet SANDSTONE_ZOOM2 = TextureSet.builder(SANDSTONE)
+            .displayNameToken("sandstone_zoom2").scale(GIANT).build("brocade", "sandstone_zoom2");
 }

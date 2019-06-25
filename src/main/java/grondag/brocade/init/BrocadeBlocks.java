@@ -6,6 +6,12 @@ import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.placement.BrocadeBlockItem;
 import grondag.brocade.state.MeshState;
 import grondag.brocade.state.MeshStateImpl;
+import grondag.fermion.color.BlockColorMapProvider;
+import grondag.fermion.color.Chroma;
+import grondag.fermion.color.ColorHelper;
+import grondag.fermion.color.ColorMap.EnumColorMap;
+import grondag.fermion.color.Hue;
+import grondag.fermion.color.Luminance;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -21,18 +27,19 @@ public class BrocadeBlocks {
         Brocade.LOG.debug("Registering Brocade Blocks");
         
         MeshState workingModel = new MeshStateImpl();
-        workingModel.setShape(ModShapes.CUBE);
-        workingModel.setTexture(PaintLayer.BASE, BrocadeTextures.BLOCK_NOISE_MODERATE);
-        workingModel.setColorRGB(PaintLayer.BASE, 0xEBF0F5);
-        workingModel.setTexture(PaintLayer.MIDDLE, BrocadeTextures.BLOCK_COBBLE);
-        workingModel.setColorRGB(PaintLayer.MIDDLE, 0xFF4444);
-        workingModel.setTranslucent(PaintLayer.MIDDLE, true);
-        workingModel.setAlpha(PaintLayer.MIDDLE, 32);
-        workingModel.setEmissive(PaintLayer.MIDDLE, true);
-        workingModel.setTexture(PaintLayer.OUTER, BrocadeTextures.BORDER_SMOOTH_BLEND);
-        workingModel.setColorRGB(PaintLayer.OUTER, 0xD7FFFF);
-        workingModel.setTranslucent(PaintLayer.OUTER, true);
-        workingModel.setEmissive(PaintLayer.OUTER, true);
+        workingModel.setShape(ModShapes.WEDGE);
+        workingModel.setTexture(PaintLayer.BASE, BrocadeTextures.SANDSTONE_ZOOM2);
+        workingModel.setColorRGB(PaintLayer.BASE, 0xFF656A70);
+//        workingModel.setTexture(PaintLayer.MIDDLE, BrocadeTextures.BLOCK_COBBLE);
+//        workingModel.setColorRGB(PaintLayer.MIDDLE, 0xFF4444);
+//        workingModel.setTranslucent(PaintLayer.MIDDLE, true);
+//        workingModel.setAlpha(PaintLayer.MIDDLE, 64);
+//        workingModel.setEmissive(PaintLayer.MIDDLE, true);
+//        workingModel.setTexture(PaintLayer.OUTER, BrocadeTextures.BORDER_CAUTION);
+//        workingModel.setColorRGB(PaintLayer.OUTER, 0xD7FFFF);
+//        workingModel.setColorRGB(PaintLayer.OUTER, 0xFFFFD300);
+//        workingModel.setTranslucent(PaintLayer.OUTER, true);
+//        workingModel.setEmissive(PaintLayer.OUTER, true);
         
         Block block = new SimpleBrocadeBlock(
                 FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), 

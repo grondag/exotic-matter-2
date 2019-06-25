@@ -108,7 +108,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:0.4.8+build.155"
     modCompile "net.fabricmc.fabric-api:fabric-api:0.3.0+build.185"
 	
-	modImplementation "grondag:canvas:0.7.1+alpha.+"
+	modImplementation "grondag:canvas:0.7.2+alpha.+"
 
     modImplementation "grondag:fermion:0.6.+"
     include "grondag:fermion:0.6.+"

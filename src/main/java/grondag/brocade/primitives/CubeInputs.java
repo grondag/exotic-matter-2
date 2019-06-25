@@ -63,38 +63,38 @@ public class CubeInputs {
             break;
 
         case DOWN:
-            q.setVertex(0, maxBound, minBound, maxBound, u0, v1, this.color);
-            q.setVertex(1, minBound, minBound, maxBound, u1, v1, this.color);
-            q.setVertex(2, minBound, minBound, minBound, u1, v0, this.color);
-            q.setVertex(3, maxBound, minBound, minBound, u0, v0, this.color);
-            break;
-
-        case WEST:
-            q.setVertex(0, minBound, minBound, minBound, u0, v1, this.color);
-            q.setVertex(1, minBound, minBound, maxBound, u1, v1, this.color);
-            q.setVertex(2, minBound, maxBound, maxBound, u1, v0, this.color);
-            q.setVertex(3, minBound, maxBound, minBound, u0, v0, this.color);
-            break;
-
-        case EAST:
-            q.setVertex(0, maxBound, minBound, minBound, u1, v1, this.color);
-            q.setVertex(1, maxBound, maxBound, minBound, u1, v0, this.color);
-            q.setVertex(2, maxBound, maxBound, maxBound, u0, v0, this.color);
+            q.setVertex(0, minBound, minBound, maxBound, u1, v1, this.color);
+            q.setVertex(1, minBound, minBound, minBound, u1, v0, this.color);
+            q.setVertex(2, maxBound, minBound, minBound, u0, v0, this.color);
             q.setVertex(3, maxBound, minBound, maxBound, u0, v1, this.color);
             break;
 
+        case WEST:
+            q.setVertex(0, minBound, maxBound, minBound, u0, v0, this.color);
+            q.setVertex(1, minBound, minBound, minBound, u0, v1, this.color);
+            q.setVertex(2, minBound, minBound, maxBound, u1, v1, this.color);
+            q.setVertex(3, minBound, maxBound, maxBound, u1, v0, this.color);
+            break;
+
+        case EAST:
+            q.setVertex(0, maxBound, maxBound, maxBound, u0, v0, this.color);
+            q.setVertex(1, maxBound, minBound, maxBound, u0, v1, this.color);
+            q.setVertex(2, maxBound, minBound, minBound, u1, v1, this.color);
+            q.setVertex(3, maxBound, maxBound, minBound, u1, v0, this.color);
+            break;
+
         case NORTH:
-            q.setVertex(0, minBound, minBound, minBound, u1, v1, this.color);
-            q.setVertex(1, minBound, maxBound, minBound, u1, v0, this.color);
-            q.setVertex(2, maxBound, maxBound, minBound, u0, v0, this.color);
-            q.setVertex(3, maxBound, minBound, minBound, u0, v1, this.color);
+            q.setVertex(0, maxBound, maxBound, minBound, u0, v0, this.color);
+            q.setVertex(1, maxBound, minBound, minBound, u0, v1, this.color);
+            q.setVertex(2, minBound, minBound, minBound, u1, v1, this.color);
+            q.setVertex(3, minBound, maxBound, minBound, u1, v0, this.color);
             break;
 
         case SOUTH:
-            q.setVertex(0, minBound, minBound, maxBound, u0, v1, this.color);
-            q.setVertex(1, maxBound, minBound, maxBound, u1, v1, this.color);
-            q.setVertex(2, maxBound, maxBound, maxBound, u1, v0, this.color);
-            q.setVertex(3, minBound, maxBound, maxBound, u0, v0, this.color);
+            q.setVertex(0, minBound, maxBound, maxBound, u0, v0, this.color);
+            q.setVertex(1, minBound, minBound, maxBound, u0, v1, this.color);
+            q.setVertex(2, maxBound, minBound, maxBound, u1, v1, this.color);
+            q.setVertex(3, maxBound, maxBound, maxBound, u1, v0, this.color);
             break;
         }
 

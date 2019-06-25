@@ -36,6 +36,7 @@ public class WritablePolyStream extends AbstractPolyStream implements IWritableP
 
     @Override
     public void clear() {
+        stream.clear();
         originAddress = newOrigin();
         writeAddress = originAddress;
         // force error on read
