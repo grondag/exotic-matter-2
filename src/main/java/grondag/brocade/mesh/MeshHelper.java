@@ -4,7 +4,7 @@ import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
@@ -287,7 +287,7 @@ public class MeshHelper {
     /**
      * Adds box to stream using current stream defaults.
      */
-    public static void makePaintableBox(BoundingBox box, IWritablePolyStream stream) {
+    public static void makePaintableBox(Box box, IWritablePolyStream stream) {
         IMutablePolygon quad = stream.writer();
         stream.setVertexCount(4);
         quad.setupFaceQuad(Direction.UP, 1 - box.maxX, box.minZ, 1 - box.minX, box.maxZ, 1 - box.maxY,

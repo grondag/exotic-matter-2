@@ -2,8 +2,6 @@ package grondag.brocade.block;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import grondag.brocade.collision.CollisionBoxDispatcher;
 import grondag.brocade.connect.api.world.BlockTest;
 import grondag.brocade.painting.PaintLayer;
@@ -16,9 +14,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.state.StateFactory.Builder;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -162,32 +160,34 @@ public class SimpleBrocadeBlock extends Block implements BrocadeBlock {
 //
 //        return true;
 //    }
+    
+    
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void buildTooltip(ItemStack stack, @Nullable BlockView world, List<Component> tooltip, TooltipContext context) {
+    public void buildTooltip(ItemStack stack, BlockView world, List<Text> tooltip, TooltipContext context) {
         super.buildTooltip(stack, world, tooltip, context);
-        tooltip.add(new TranslatableComponent("label.meta", stack.getDamage()));
+        tooltip.add(new TranslatableText("label.meta", stack.getDamage()));
 
         MeshState modelState = BrocadeBlockStackHelper.getStackModelState(stack);
 
         if (modelState != null) {
-            tooltip.add(new TranslatableComponent("label.shape", modelState.getShape().localizedName()));
-            tooltip.add(new TranslatableComponent("label.base_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.BASE))));
-            tooltip.add(new TranslatableComponent("label.base_texture", modelState.getTexture(PaintLayer.BASE).displayName()));
+            tooltip.add(new TranslatableText("label.shape", modelState.getShape().localizedName()));
+            tooltip.add(new TranslatableText("label.base_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.BASE))));
+            tooltip.add(new TranslatableText("label.base_texture", modelState.getTexture(PaintLayer.BASE).displayName()));
             if (modelState.isLayerEnabled(PaintLayer.OUTER)) {
-                tooltip.add(new TranslatableComponent("label.outer_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.OUTER))));
-                tooltip.add(new TranslatableComponent("label.outer_texture", modelState.getTexture(PaintLayer.OUTER).displayName()));
+                tooltip.add(new TranslatableText("label.outer_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.OUTER))));
+                tooltip.add(new TranslatableText("label.outer_texture", modelState.getTexture(PaintLayer.OUTER).displayName()));
             }
             if (modelState.isLayerEnabled(PaintLayer.MIDDLE)) {
-                tooltip.add(new TranslatableComponent("label.middle_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.MIDDLE))));
-                tooltip.add(new TranslatableComponent("label.middle_texture", modelState.getTexture(PaintLayer.MIDDLE).displayName()));
+                tooltip.add(new TranslatableText("label.middle_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.MIDDLE))));
+                tooltip.add(new TranslatableText("label.middle_texture", modelState.getTexture(PaintLayer.MIDDLE).displayName()));
             }
             if (modelState.hasSpecies()) {
-                tooltip.add(new TranslatableComponent("label.species", modelState.getSpecies()));
+                tooltip.add(new TranslatableText("label.species", modelState.getSpecies()));
             }
         }
-        tooltip.add(new TranslatableComponent("label.material", BrocadeBlockStackHelper.getStackSubstance(stack).localizedName()));
+        tooltip.add(new TranslatableText("label.material", BrocadeBlockStackHelper.getStackSubstance(stack).localizedName()));
     }
 
     //TODO: add hook for landing effects

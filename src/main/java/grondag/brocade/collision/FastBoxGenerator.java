@@ -11,7 +11,7 @@ import grondag.brocade.collision.octree.VoxelVolume8;
 import grondag.brocade.primitives.TriangleBoxTest;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.vertex.IVec3f;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 
 /**
  * Generates non-intersecting collision boxes for a model within a single block
@@ -149,7 +149,7 @@ public class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<I
         div1(polyData, voxelBits);
     }
 
-    public final ImmutableList<BoundingBox> build() {
+    public final ImmutableList<Box> build() {
         builder.clear();
         final long[] data = this.voxelBits;
         VoxelVolume8.fillVolume(data);

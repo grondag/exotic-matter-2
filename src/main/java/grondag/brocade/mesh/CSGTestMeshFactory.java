@@ -17,7 +17,7 @@ import grondag.brocade.state.MeshState;
 import grondag.brocade.state.StateFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
@@ -69,13 +69,13 @@ public class CSGTestMeshFactory extends MeshFactory {
         quadsA.writer().setLockUV(0, true);
         quadsA.writer().setSurface(SURFACE_MAIN);
         quadsA.saveDefaults();
-        MeshHelper.makePaintableBox(new BoundingBox(0, 0.4, 0.4, 1.0, 0.6, 0.6), quadsA);
+        MeshHelper.makePaintableBox(new Box(0, 0.4, 0.4, 1.0, 0.6, 0.6), quadsA);
 
         CsgPolyStream quadsB = PolyStreams.claimCSG();
         quadsB.writer().setLockUV(0, true);
         quadsB.writer().setSurface(SURFACE_LAMP);
         quadsB.saveDefaults();
-        MeshHelper.makePaintableBox(new BoundingBox(0.2, 0, 0.4, 0.6, 1.0, 0.8), quadsB);
+        MeshHelper.makePaintableBox(new Box(0.2, 0, 0.4, 0.6, 1.0, 0.8), quadsB);
 
         IWritablePolyStream output = PolyStreams.claimWritable();
         CSG.union(quadsA, quadsB, output);

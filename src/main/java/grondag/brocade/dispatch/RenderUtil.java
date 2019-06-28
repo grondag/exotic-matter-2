@@ -2,7 +2,7 @@ package grondag.brocade.dispatch;
 
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
 public class RenderUtil {
@@ -13,7 +13,7 @@ public class RenderUtil {
      * Draws block-aligned grid on sides of AABB if entity can see it from outside
      */
     
-    public static void drawGrid(BufferBuilder buffer, BoundingBox aabb, Vec3d viewFrom, double offsetX,
+    public static void drawGrid(BufferBuilder buffer, Box aabb, Vec3d viewFrom, double offsetX,
             double offsetY, double offsetZ, float red, float green, float blue, float alpha) {
         double minX = aabb.minX - offsetX;
         double minY = aabb.minY - offsetY;

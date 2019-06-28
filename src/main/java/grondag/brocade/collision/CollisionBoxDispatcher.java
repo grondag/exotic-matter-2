@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableList;
 import grondag.brocade.state.MeshState;
 import grondag.fermion.cache.ObjectSimpleCacheLoader;
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 
 public class CollisionBoxDispatcher {
@@ -50,7 +50,7 @@ public class CollisionBoxDispatcher {
         }
     };
 
-    public static ImmutableList<BoundingBox> getCollisionBoxes(MeshState modelState) {
+    public static ImmutableList<Box> getCollisionBoxes(MeshState modelState) {
         return modelBounds.get(modelState.geometricState()).getList();
     }
 
@@ -93,22 +93,22 @@ public class CollisionBoxDispatcher {
         }
     }
 
-    public static final BoundingBox FULL_BLOCK_BOX = new BoundingBox(0, 0, 0, 1, 1, 1);
+    public static final Box FULL_BLOCK_BOX = new Box(0, 0, 0, 1, 1, 1);
 
     /**
      * Creates an AABB with the bounds and rotation provided.
      */
-    public static BoundingBox makeRotatedAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Matrix4f rotation)
+    public static Box makeRotatedAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Matrix4f rotation)
     {
         Vector3f minPos = new Vector3f(minX, minY, minZ);
         Vector3f maxPos = new Vector3f(maxX, maxY, maxZ);
         rotation.transformPosition(minPos);
         rotation.transformPosition(maxPos);
-        return new BoundingBox(minPos.x, minPos.y, minPos.z, 
+        return new Box(minPos.x, minPos.y, minPos.z, 
                 maxPos.x, maxPos.y, maxPos.z);
     }
 
-    public static BoundingBox makeRotatedAABB(BoundingBox fromAABB, Matrix4f rotation)
+    public static Box makeRotatedAABB(Box fromAABB, Matrix4f rotation)
     {
         return makeRotatedAABB((float)fromAABB.minX, (float)fromAABB.minY, (float)fromAABB.minZ, (float)fromAABB.maxX, (float)fromAABB.maxY, (float)fromAABB.maxZ, rotation);
     }

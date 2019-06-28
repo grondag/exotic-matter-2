@@ -12,7 +12,7 @@ import grondag.brocade.collision.octree.VoxelVolume16;
 import grondag.brocade.primitives.TriangleBoxTest;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.vertex.IVec3f;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 
 public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<IPolygon> {
     private static void div1(final float[] polyData, final long[] voxelBits) {
@@ -289,7 +289,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
 //        builder.clear();
 //    }
 
-    public final ImmutableList<BoundingBox> build() {
+    public final ImmutableList<Box> build() {
         builder.clear();
         bf.outputBoxes(builder);
         return builder.build();

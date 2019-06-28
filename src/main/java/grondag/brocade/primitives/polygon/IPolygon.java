@@ -8,7 +8,7 @@ import grondag.brocade.primitives.vertex.Vec3f;
 import grondag.fermion.world.Rotation;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.BlockRenderLayer;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
@@ -31,7 +31,7 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
     public Direction getNominalFace();
 
-    public default BoundingBox getAABB() {
+    public default Box getAABB() {
         IVec3f p0 = getPos(0);
         IVec3f p1 = getPos(1);
         IVec3f p2 = getPos(2);
@@ -45,7 +45,7 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
         double maxY = Math.max(Math.max(p0.y(), p1.y()), Math.max(p2.y(), p3.y()));
         double maxZ = Math.max(Math.max(p0.z(), p1.z()), Math.max(p2.z(), p3.z()));
 
-        return new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+        return new Box(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     public static final int VERTEX_NOT_FOUND = -1;

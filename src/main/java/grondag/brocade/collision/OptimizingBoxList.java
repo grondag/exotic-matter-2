@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import grondag.brocade.state.MeshState;
 import grondag.fermion.config.FermionConfig;
 import grondag.fermion.varia.Useful;
-import net.minecraft.util.math.BoundingBox;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -13,7 +13,7 @@ public class OptimizingBoxList implements Runnable {
     // singleton is fine because called from a single thread
     private static final OptimalBoxGenerator boxGen = new OptimalBoxGenerator();
 
-    private ImmutableList<BoundingBox> wrapped;
+    private ImmutableList<Box> wrapped;
     private MeshState modelState;
     private VoxelShape shape;
 
@@ -23,7 +23,7 @@ public class OptimizingBoxList implements Runnable {
         this.shape = makeShapeFromBoxes(wrapped);
     }
 
-    protected ImmutableList<BoundingBox> getList() {
+    protected ImmutableList<Box> getList() {
         return wrapped;
     }
     
@@ -31,7 +31,7 @@ public class OptimizingBoxList implements Runnable {
         return shape;
     }
     
-    private static VoxelShape makeShapeFromBoxes(ImmutableList<BoundingBox> boxes) {
+    private static VoxelShape makeShapeFromBoxes(ImmutableList<Box> boxes) {
         if(boxes.isEmpty()) {
             return VoxelShapes.empty();
         }
