@@ -62,14 +62,14 @@ public class QuadPaintManager implements Consumer<IPolygon> {
 
         final int vertexCount = editor.vertexCount();
         for (int i = 0; i < vertexCount; i++) {
-            int c = editor.getVertexColor(0, i);
-            editor.setVertexColor(1, i, c);
-            editor.setVertexColor(2, i, c);
+            int c = editor.spriteColor(i, 0);
+            editor.spriteColor(i, 1, c);
+            editor.spriteColor(i, 2, c);
 
-            float u = editor.getVertexU(0, i);
-            float v = editor.getVertexV(0, i);
-            editor.setVertexUV(1, i, u, v);
-            editor.setVertexUV(2, i, u, v);
+            float u = editor.spriteU(i, 0);
+            float v = editor.spriteV(i, 0);
+            editor.sprite(i, 1, u, v);
+            editor.sprite(i, 2, u, v);
         }
     }
 

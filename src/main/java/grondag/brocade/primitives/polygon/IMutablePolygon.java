@@ -3,9 +3,6 @@ package grondag.brocade.primitives.polygon;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
-
 import grondag.brocade.painting.Surface;
 import grondag.brocade.primitives.FaceVertex;
 import grondag.brocade.primitives.QuadHelper;
@@ -18,7 +15,6 @@ import grondag.fermion.world.Rotation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 
 public interface IMutablePolygon extends IPolygon {
     class Helper {
@@ -30,24 +26,24 @@ public interface IMutablePolygon extends IPolygon {
         private static final UVLocker[] UVLOCKERS = new UVLocker[6];
 
         static {
-            UVLOCKERS[Direction.EAST.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, 1 - p.getVertexZ(v),
-                    1 - p.getVertexY(v));
+            UVLOCKERS[Direction.EAST.ordinal()] = (v, l, p) -> p.sprite(v, l, 1 - p.z(v),
+                    1 - p.y(v));
 
-            UVLOCKERS[Direction.WEST.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexZ(v),
-                    1 - p.getVertexY(v));
+            UVLOCKERS[Direction.WEST.ordinal()] = (v, l, p) -> p.sprite(v, l, p.z(v),
+                    1 - p.y(v));
 
-            UVLOCKERS[Direction.NORTH.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, 1 - p.getVertexX(v),
-                    1 - p.getVertexY(v));
+            UVLOCKERS[Direction.NORTH.ordinal()] = (v, l, p) -> p.sprite(v, l, 1 - p.x(v),
+                    1 - p.y(v));
 
-            UVLOCKERS[Direction.SOUTH.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v),
-                    1 - p.getVertexY(v));
+            UVLOCKERS[Direction.SOUTH.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v),
+                    1 - p.y(v));
 
-            UVLOCKERS[Direction.DOWN.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v),
-                    1 - p.getVertexZ(v));
+            UVLOCKERS[Direction.DOWN.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v),
+                    1 - p.z(v));
 
             // our default semantic for UP is different than MC
             // "top" is north instead of south
-            UVLOCKERS[Direction.UP.ordinal()] = (v, l, p) -> p.setVertexUV(l, v, p.getVertexX(v), p.getVertexZ(v));
+            UVLOCKERS[Direction.UP.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v), p.z(v));
         }
 
         static class ListAdapter implements Consumer<IMutablePolygon> {
@@ -76,7 +72,6 @@ public interface IMutablePolygon extends IPolygon {
         }
 
         final ListAdapter listAdapter = new ListAdapter();
-        final Vector4f transform = new Vector4f();
         final IMutableVertex swapVertex = new UnpackedVertex3();
     }
 
@@ -93,10 +88,10 @@ public interface IMutablePolygon extends IPolygon {
     /**
      * Sets all vertex colors to given color
      */
-    default IMutablePolygon setColor(int layerIndex, int color) {
+    default IMutablePolygon spriteColorAll(int layerIndex, int color) {
         final int limit = vertexCount();
         for (int i = 0; i < limit; i++) {
-            setVertexColor(layerIndex, i, color);
+            spriteColor(i, layerIndex, color);
         }
         return this;
     }
@@ -134,7 +129,7 @@ public interface IMutablePolygon extends IPolygon {
      */
     default IMutablePolygon setVertex(int vertexIndex, float x, float y, float z, float u, float v, int color,
             float normX, float normY, float normZ) {
-        return this.setVertex(vertexIndex, normX, normY, normZ, u, v, color).setVertexNormal(vertexIndex, normX, normY,
+        return this.setVertex(vertexIndex, normX, normY, normZ, u, v, color).normal(vertexIndex, normX, normY,
                 normZ);
     }
 
@@ -154,23 +149,23 @@ public interface IMutablePolygon extends IPolygon {
         IMutablePolygon result = setVertex(vertexIndex, (float) pos.x, (float) pos.y, (float) pos.z, (float) u,
                 (float) v, color, 0);
         return normal == null ? result
-                : result.setVertexNormal(vertexIndex, (float) normal.x, (float) normal.y, (float) normal.z);
+                : result.normal(vertexIndex, (float) normal.x, (float) normal.y, (float) normal.z);
     }
 
-    IMutablePolygon setVertexPos(int vertexIndex, float x, float y, float z);
+    IMutablePolygon pos(int vertexIndex, float x, float y, float z);
 
-    IMutablePolygon setVertexPos(int vertexIndex, Vec3f pos);
+    IMutablePolygon pos(int vertexIndex, Vec3f pos);
 
-    IMutablePolygon setVertexColor(int layerIndex, int vertexIndex, int color);
+    IMutablePolygon spriteColor(int vertexIndex, int layerIndex, int color);
 
-    IMutablePolygon setVertexUV(int layerIndex, int vertexIndex, float u, float v);
+    IMutablePolygon sprite(int vertexIndex, int layerIndex, float u, float v);
 
-    default IMutablePolygon setVertexU(int layerIndex, int vertexIndex, float u) {
-        return this.setVertexUV(layerIndex, vertexIndex, u, this.getVertexV(layerIndex, vertexIndex));
+    default IMutablePolygon spriteU(int vertexIndex, int layerIndex, float u) {
+        return this.sprite(vertexIndex, layerIndex, u, this.spriteV(vertexIndex, layerIndex));
     }
 
-    default IMutablePolygon setVertexV(int layerIndex, int vertexIndex, float v) {
-        return this.setVertexUV(layerIndex, vertexIndex, this.getVertexU(layerIndex, vertexIndex), v);
+    default IMutablePolygon spriteV(int vertexIndex, int layerIndex, float v) {
+        return this.sprite(vertexIndex, layerIndex, this.spriteU(vertexIndex, layerIndex), v);
     }
 
     /**
@@ -178,13 +173,13 @@ public interface IMutablePolygon extends IPolygon {
      */
     IMutablePolygon setVertexGlow(int vertexIndex, int glow);
 
-    IMutablePolygon setVertexNormal(int vertexIndex, Vec3f normal);
+    IMutablePolygon normal(int vertexIndex, Vec3f normal);
 
-    default IMutablePolygon setVertexNormal(int vertexIndex, IVec3f normal) {
-        return setVertexNormal(vertexIndex, normal.x(), normal.y(), normal.z());
+    default IMutablePolygon normal(int vertexIndex, IVec3f normal) {
+        return normal(vertexIndex, normal.x(), normal.y(), normal.z());
     }
 
-    IMutablePolygon setVertexNormal(int vertexIndex, float x, float y, float z);
+    IMutablePolygon normal(int vertexIndex, float x, float y, float z);
 
     // TODO: use materials
 //    default IMutablePolygon setPipeline( IRenderPipeline pipeline)
@@ -231,7 +226,7 @@ public interface IMutablePolygon extends IPolygon {
     default IMutablePolygon setupFaceQuad(FaceVertex vertexIn0, FaceVertex vertexIn1, FaceVertex vertexIn2,
             FaceVertex vertexIn3, Direction topFace) {
         assert vertexCount() <= 4;
-        Direction defaultTop = QuadHelper.defaultTopOf(this.getNominalFace());
+        Direction defaultTop = QuadHelper.defaultTopOf(this.nominalFace());
         if (topFace == null)
             topFace = defaultTop;
 
@@ -245,12 +240,12 @@ public interface IMutablePolygon extends IPolygon {
             rv1 = vertexIn1;
             rv2 = vertexIn2;
             rv3 = vertexIn3;
-        } else if (topFace == QuadHelper.rightOf(this.getNominalFace(), defaultTop)) {
+        } else if (topFace == QuadHelper.rightOf(this.nominalFace(), defaultTop)) {
             rv0 = vertexIn0.withXY(vertexIn0.y, 1 - vertexIn0.x);
             rv1 = vertexIn1.withXY(vertexIn1.y, 1 - vertexIn1.x);
             rv2 = vertexIn2.withXY(vertexIn2.y, 1 - vertexIn2.x);
             rv3 = vertexIn3.withXY(vertexIn3.y, 1 - vertexIn3.x);
-        } else if (topFace == QuadHelper.bottomOf(this.getNominalFace(), defaultTop)) {
+        } else if (topFace == QuadHelper.bottomOf(this.nominalFace(), defaultTop)) {
             rv0 = vertexIn0.withXY(1 - vertexIn0.x, 1 - vertexIn0.y);
             rv1 = vertexIn1.withXY(1 - vertexIn1.x, 1 - vertexIn1.y);
             rv2 = vertexIn2.withXY(1 - vertexIn2.x, 1 - vertexIn2.y);
@@ -263,7 +258,7 @@ public interface IMutablePolygon extends IPolygon {
             rv3 = vertexIn3.withXY(1 - vertexIn3.y, vertexIn3.x);
         }
 
-        switch (this.getNominalFace()) {
+        switch (this.nominalFace()) {
         case UP:
             setVertex(0, rv0.x, 1 - rv0.depth, 1 - rv0.y, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
             setVertex(1, rv1.x, 1 - rv1.depth, 1 - rv1.y, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
@@ -422,15 +417,15 @@ public interface IMutablePolygon extends IPolygon {
      */
     default IMutablePolygon offsetVertexUV(int layerIndex, float uShift, float vShift) {
         for (int i = 0; i < this.vertexCount(); i++) {
-            final float u = this.getVertexU(layerIndex, i) + uShift;
-            final float v = this.getVertexV(layerIndex, i) + vShift;
+            final float u = this.spriteU(i, layerIndex) + uShift;
+            final float v = this.spriteV(i, layerIndex) + vShift;
 
             assert u > -QuadHelper.EPSILON : "vertex uv offset out of bounds";
             assert u < 1 + QuadHelper.EPSILON : "vertex uv offset out of bounds";
             assert v > -QuadHelper.EPSILON : "vertex uv offset out of bounds";
             assert v < 1 + QuadHelper.EPSILON : "vertex uv offset out of bounds";
 
-            this.setVertexUV(layerIndex, i, u, v);
+            this.sprite(i, layerIndex, u, v);
         }
         return this;
     }
@@ -475,7 +470,7 @@ public interface IMutablePolygon extends IPolygon {
 
         final int limit = this.vertexCount();
         for (int i = 0; i < limit; i++)
-            setVertexPos(i, getVertexX(i) * scale + c, getVertexY(i) * scale + c, getVertexZ(i) * scale + c);
+            pos(i, x(i) * scale + c, y(i) * scale + c, z(i) * scale + c);
 
         return this;
     }
@@ -485,46 +480,12 @@ public interface IMutablePolygon extends IPolygon {
      * plane of the quad's face
      */
     public default IMutablePolygon assignLockedUVCoordinates(int layerIndex) {
-        UVLocker locker = Helper.UVLOCKERS[getNominalFace().ordinal()];
+        UVLocker locker = Helper.UVLOCKERS[nominalFace().ordinal()];
 
         final int vertexCount = vertexCount();
         for (int i = 0; i < vertexCount; i++)
             locker.apply(i, layerIndex, this);
 
-        return this;
-    }
-
-    public default IMutablePolygon transform(Matrix4f matrix) {
-        final int vertexCount = this.vertexCount();
-        final Vector4f vec4 = Helper.get().transform ;
-        // transform vertices
-        for(int i = 0; i < vertexCount; i++)
-        {
-            vec4.set(getVertexX(i), getVertexY(i), getVertexZ(i), 1);
-            matrix.transform(vec4);
-            this.setVertexPos(i, vec4.x, vec4.y, vec4.z);
-            
-            if(this.hasVertexNormal(i))
-            {
-                vec4.set(getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i), 1);
-                matrix.transform(vec4);
-                float normScale = (float) (1f / Math.sqrt(vec4.x * vec4.x + vec4.y * vec4.y + vec4.z * vec4.z));
-                this.setVertexNormal(i, vec4.x * normScale, vec4.y * normScale, vec4.z * normScale);
-            }
-        }
-        
-        // transform nominal face
-        // our matrix transform has block center as its origin,
-        // so need to translate face vectors to/from block center 
-        // origin before/applying matrix.
-        final Direction nomFace = this.getNominalFace();
-        final Vec3i curNorm = nomFace.getVector();
-        vec4.set(curNorm.getX() + 0.5f, curNorm.getY() + 0.5f, curNorm.getZ() + 0.5f, 1);
-        matrix.transform(vec4);
-        vec4.x -= 0.5;
-        vec4.y -= 0.5;
-        vec4.z -= 0.5;
-        this.setNominalFace(QuadHelper.computeFaceForNormal(vec4));
         return this;
     }
 
@@ -537,4 +498,8 @@ public interface IMutablePolygon extends IPolygon {
      * Does not copy links, marks, tags or deleted status.
      */
     void copyFrom(IPolygon polyIn, boolean includeVertices);
+    
+    default IMutablePolygon tag(int tag) {
+        throw new UnsupportedOperationException();
+    }
 }

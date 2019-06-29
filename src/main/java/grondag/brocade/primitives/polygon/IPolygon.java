@@ -29,8 +29,6 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
         return getFaceNormal().z();
     }
 
-    public Direction getNominalFace();
-
     public default Box getAABB() {
         IVec3f p0 = getPos(0);
         IVec3f p1 = getPos(1);
@@ -219,27 +217,21 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
      */
     public Vec3f getVertexNormal(int vertexIndex);
 
-    public boolean hasVertexNormal(int vertexIndex);
-
-    public float getVertexNormalX(int vertexIndex);
-
-    public float getVertexNormalY(int vertexIndex);
-
-    public float getVertexNormalZ(int vertexIndex);
-
     /**
      * Face to use for shading testing. Based on which way face points. Never null
      */
-    public default Direction getNormalFace() {
+    public default Direction lightFace() {
         return QuadHelper.computeFaceForNormal(this.getFaceNormal());
     }
 
+    Direction nominalFace();
+    
     /**
      * Face to use for occlusion testing. Null if not fully on one of the faces.
      * Fudges a bit because painted quads can be slightly offset from the plane.
      */
-    public default Direction getActualFace() {
-        Direction nominalFace = this.getNominalFace();
+    public default Direction cullFace() {
+        Direction nominalFace = this.nominalFace();
 
         // semantic face will be right most of the time
         if (this.isOnFace(nominalFace, QuadHelper.EPSILON))
@@ -269,25 +261,15 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
     Rotation getRotation(int layerIndex);
 
-    float getVertexX(int vertexIndex);
-
-    float getVertexY(int vertexIndex);
-
-    float getVertexZ(int vertexIndex);
-
     /**
      * Will return quad color if vertex color not set.
      */
-    int getVertexColor(int layerIndex, int vertexIndex);
+    int spriteColor(int vertexIndex, int layerIndex);
 
     /**
      * Will return zero if vertex color not set.
      */
     int getVertexGlow(int vertexIndex);
-
-    float getVertexU(int layerIndex, int vertexIndex);
-
-    float getVertexV(int layerIndex, int vertexIndex);
 
     int getTextureSalt();
 
@@ -398,4 +380,26 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
     default void releaseLast() {
         release();
     }
+    
+    default int tag() {
+        return NO_LINK_OR_TAG;
+    }
+
+    float x(int vertexIndex);
+
+    float y(int vertexIndex);
+
+    float z(int vertexIndex);
+
+    float spriteU(int vertexIndex, int layerIndex);
+
+    float spriteV(int vertexIndex, int layerIndex);
+
+    boolean hasNormal(int vertexIndex);
+
+    float normalX(int vertexIndex);
+
+    float normalY(int vertexIndex);
+
+    float normalZ(int vertexIndex);
 }

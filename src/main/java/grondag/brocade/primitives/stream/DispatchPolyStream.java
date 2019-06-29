@@ -131,7 +131,7 @@ public class DispatchPolyStream extends AbstractPolyStream implements IReadOnlyP
             final int nextAddress = p.getLink();
 
             // figure out what list it belongs in
-            final int listAddress = listHeadAddress(p.getRenderLayer(0), p.getActualFace());
+            final int listAddress = listHeadAddress(p.getRenderLayer(0), p.cullFace());
 
             // find current first address in the list, which could be "none"
             final int currentHead = stream.get(listAddress);

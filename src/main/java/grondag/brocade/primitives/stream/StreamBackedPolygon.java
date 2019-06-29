@@ -136,13 +136,13 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
-    public final int getTag() {
+    public final int tag() {
         return polyEncoder.getTag(stream, baseAddress);
     }
 
-    @Override
-    public final void setTag(int tag) {
+    public IPolygon tag(int tag) {
         polyEncoder.setTag(stream, baseAddress, tag);
+        return this;
     }
 
     @Override
@@ -163,7 +163,7 @@ public class StreamBackedPolygon implements IPolygon {
     @Override
     @Deprecated
     public final Vec3f getPos(int index) {
-        return Vec3f.create(getVertexX(index), getVertexY(index), getVertexZ(index));
+        return Vec3f.create(x(index), y(index), z(index));
     }
 
     /**
@@ -187,29 +187,29 @@ public class StreamBackedPolygon implements IPolygon {
 
     @Override
     public final Vec3f getFaceNormal() {
-        return checkFaceNormal() ? Vec3f.forFace(getNominalFace()) : polyEncoder.getFaceNormal(stream, baseAddress);
+        return checkFaceNormal() ? Vec3f.forFace(nominalFace()) : polyEncoder.getFaceNormal(stream, baseAddress);
     }
 
     @Override
     public final float getFaceNormalX() {
-        return checkFaceNormal() ? Vec3f.forFace(getNominalFace()).x()
+        return checkFaceNormal() ? Vec3f.forFace(nominalFace()).x()
                 : polyEncoder.getFaceNormalX(stream, baseAddress);
     }
 
     @Override
     public final float getFaceNormalY() {
-        return checkFaceNormal() ? Vec3f.forFace(getNominalFace()).y()
+        return checkFaceNormal() ? Vec3f.forFace(nominalFace()).y()
                 : polyEncoder.getFaceNormalY(stream, baseAddress);
     }
 
     @Override
     public final float getFaceNormalZ() {
-        return checkFaceNormal() ? Vec3f.forFace(getNominalFace()).z()
+        return checkFaceNormal() ? Vec3f.forFace(nominalFace()).z()
                 : polyEncoder.getFaceNormalZ(stream, baseAddress);
     }
 
     @Override
-    public final Direction getNominalFace() {
+    public final Direction nominalFace() {
         return PolyStreamFormat.getNominalFace(format());
     }
 
@@ -227,26 +227,26 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
-    public final boolean hasVertexNormal(int vertexIndex) {
+    public final boolean hasNormal(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex));
     }
 
     @Override
-    public final float getVertexNormalX(int vertexIndex) {
+    public final float normalX(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex))
                 ? vertexEncoder.getVertexNormalX(stream, vertexAddress, vertexIndexer.apply(vertexIndex))
                 : getFaceNormalX();
     }
 
     @Override
-    public final float getVertexNormalY(int vertexIndex) {
+    public final float normalY(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex))
                 ? vertexEncoder.getVertexNormalY(stream, vertexAddress, vertexIndexer.apply(vertexIndex))
                 : getFaceNormalY();
     }
 
     @Override
-    public final float getVertexNormalZ(int vertexIndex) {
+    public final float normalZ(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex))
                 ? vertexEncoder.getVertexNormalZ(stream, vertexAddress, vertexIndexer.apply(vertexIndex))
                 : getFaceNormalZ();
@@ -293,22 +293,22 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
-    public final float getVertexX(int vertexIndex) {
+    public final float x(int vertexIndex) {
         return vertexEncoder.getVertexX(stream, vertexAddress, vertexIndexer.apply(vertexIndex));
     }
 
     @Override
-    public final float getVertexY(int vertexIndex) {
+    public final float y(int vertexIndex) {
         return vertexEncoder.getVertexY(stream, vertexAddress, vertexIndexer.apply(vertexIndex));
     }
 
     @Override
-    public final float getVertexZ(int vertexIndex) {
+    public final float z(int vertexIndex) {
         return vertexEncoder.getVertexZ(stream, vertexAddress, vertexIndexer.apply(vertexIndex));
     }
 
     @Override
-    public final int getVertexColor(int layerIndex, int vertexIndex) {
+    public final int spriteColor(int vertexIndex, int layerIndex) {
         return vertexEncoder.hasColor()
                 ? vertexEncoder.getVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex))
                 : polyEncoder.getVertexColor(stream, baseAddress, layerIndex);
@@ -320,12 +320,12 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
-    public final float getVertexU(int layerIndex, int vertexIndex) {
+    public final float spriteU(int vertexIndex, int layerIndex) {
         return vertexEncoder.getVertexU(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex));
     }
 
     @Override
-    public final float getVertexV(int layerIndex, int vertexIndex) {
+    public final float spriteV(int vertexIndex, int layerIndex) {
         return vertexEncoder.getVertexV(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex));
     }
 

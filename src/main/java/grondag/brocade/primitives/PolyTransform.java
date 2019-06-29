@@ -2,17 +2,53 @@ package grondag.brocade.primitives;
 
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import grondag.brocade.connect.api.model.ClockwiseRotation;
+import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.state.MeshState;
+import grondag.fermion.world.Rotation;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
-public class Transform {
-    private final static Matrix4f[] MATRIX_LOOKUP = new Matrix4f[32];
+public class PolyTransform {
+
+    private final Matrix4f matrix;
+
+    public PolyTransform(Matrix4f matrix) {
+        this.matrix = matrix;
+    }
+
+    public void apply(IMutablePolygon poly) {
+        final Matrix4f matrix = this.matrix;
+        final int vertexCount = poly.vertexCount();
+        final Vector3f vec = VEC3.get();
+        final Vec3i oldVec = poly.nominalFace().getVector();
+        
+        // transform vertices
+        for(int i = 0; i < vertexCount; i++)
+        {
+            matrix.transformPosition(poly.x(i) - 0.5f, poly.y(i) - 0.5f, poly.z(i) - 0.5f, vec);
+            poly.pos(i, vec.x + 0.5f, vec.y + 0.5f, vec.z + 0.5f);
+
+            if(poly.hasNormal(i)) {
+                matrix.transformDirection(poly.normalX(i), poly.normalY(i), poly.normalZ(i), vec);
+                vec.normalize();
+                poly.normal(i, vec.x, vec.y, vec.z);
+            }
+        }
+
+        // transform nominal face
+        matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
+        poly.setNominalFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
+    }
+
+    private static final ThreadLocal<Vector3f> VEC3 = ThreadLocal.withInitial(Vector3f::new);
+
+    private final static PolyTransform[] LOOKUP = new PolyTransform[32];
 
     private final static Direction[][] FACING_MAP = new Direction[32][6];
     private final static Direction[][] FACING_MAP_INVERSE = new Direction[32][6];
@@ -38,12 +74,12 @@ public class Transform {
     private static void populateLookups(Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
         int key = computeKey(axis, isAxisInverted, rotation);
         Matrix4f matrix = computeMatrix(axis, isAxisInverted, rotation);
-//        Log.info(String.format("key=%d axis=%s isInverted=%s rotation=%s", 
-//                key,
-//                axis == null ? "null" : axis.toString(),
-//                Boolean.toString(isAxisInverted),
-//                rotation.toString()));
-        MATRIX_LOOKUP[key] = matrix;
+        //        Log.info(String.format("key=%d axis=%s isInverted=%s rotation=%s", 
+        //                key,
+        //                axis == null ? "null" : axis.toString(),
+        //                Boolean.toString(isAxisInverted),
+        //                rotation.toString()));
+        LOOKUP[key] = new PolyTransform(matrix);
 
         for (int i = 0; i < 6; i++) {
             Direction face = ModelHelper.faceFromIndex(i);
@@ -51,10 +87,10 @@ public class Transform {
             Vector4f vec = new Vector4f(dir.getX(), dir.getY(), dir.getZ(), 0);
             matrix.transform(vec);
             Direction mappedFace = Direction.getFacing(vec.x, vec.y, vec.z);
-            
+
             FACING_MAP[key][face.ordinal()] = mappedFace;
             FACING_MAP_INVERSE[key][mappedFace.ordinal()] = face;
-//            Log.info(String.format("%s -> %s", face.toString(), FACE_LOOKUP[key][face.ordinal()].toString()));
+            //            Log.info(String.format("%s -> %s", face.toString(), FACE_LOOKUP[key][face.ordinal()].toString()));
         }
         FACE_MAPS[key] = new FaceMap(key);
     }
@@ -87,8 +123,8 @@ public class Transform {
      * opposite of what I just described. See this in
      * {@link #getMatrixForAxisAndRotation(net.minecraft.util.math.Direction.Axis, boolean, Rotation)}
      */
-    public static Matrix4f getMatrix4f(MeshState modelState) {
-        return MATRIX_LOOKUP[computeTransformKey(modelState)];
+    public static PolyTransform get(MeshState modelState) {
+        return LOOKUP[computeTransformKey(modelState)];
     }
 
     private static Matrix4f computeMatrix(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
@@ -106,19 +142,19 @@ public class Transform {
     }
 
     //TODO: restore or remove
-//    public static Matrix4f matrixFromRotation(ModelRotation modelRotation)
-//    {
-//        Quaternion quat = modelRotation.getQuaternion();
-//        Matrix4f ret = new Matrix4f(TRSRTransformation.toVecmath(modelRotation.getQuaternion())), tmp = new Matrix4f();
-//        tmp.setIdentity();
-//        tmp.m03 = tmp.m13 = tmp.m23 = .5f;
-//        ret.mul(tmp, ret);
-//        tmp.invert();
-//        //tmp.m03 = tmp.m13 = tmp.m23 = -.5f;
-//        ret.mul(tmp);
-//        return ret;
-//    }
-    
+    //    public static Matrix4f matrixFromRotation(ModelRotation modelRotation)
+    //    {
+    //        Quaternion quat = modelRotation.getQuaternion();
+    //        Matrix4f ret = new Matrix4f(TRSRTransformation.toVecmath(modelRotation.getQuaternion())), tmp = new Matrix4f();
+    //        tmp.setIdentity();
+    //        tmp.m03 = tmp.m13 = tmp.m23 = .5f;
+    //        ret.mul(tmp, ret);
+    //        tmp.invert();
+    //        //tmp.m03 = tmp.m13 = tmp.m23 = -.5f;
+    //        ret.mul(tmp);
+    //        return ret;
+    //    }
+
     /**
      * Compute array lookup index. Key space is not efficient, because no axis is
      * equivalent to Y axis, but only 32 values vs 16 and allows us to use bit
@@ -146,11 +182,11 @@ public class Transform {
     public static int computeTransformKey(MeshState modelState) {
         return modelState.hasAxis()
                 ? computeKey(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation())
-                : computeKey(null, false, modelState.getAxisRotation());
+                        : computeKey(null, false, modelState.getAxisRotation());
     }
 
     // PERF: re-use instances
-    
+
     /**
      * See {@link #getMatrix4f()}t
      */
@@ -159,19 +195,19 @@ public class Transform {
         case X:
             return isAxisInverted 
                     ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0).rotate((float) Math.toRadians(90), 1, 0, 0)
-                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(90), 1, 0, 0);
-            //return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X90_Y270 : ModelRotation.X90_Y90);
+                            : new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(90), 1, 0, 0);
+                    //return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X90_Y270 : ModelRotation.X90_Y90);
 
         case Y:
             return isAxisInverted 
                     ? new Matrix4f().identity().rotate((float) Math.toRadians(180), 1, 0, 0)
-                    : new Matrix4f().identity();
+                            : new Matrix4f().identity();
 
         case Z:
             return isAxisInverted 
                     ? new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0)
-                    : new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0);
-            //return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X90_Y0 : ModelRotation.X270_Y0);
+                            : new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0);
+                    //return ForgeHooksClient.getMatrix(isAxisInverted ? ModelRotation.X90_Y0 : ModelRotation.X270_Y0);
 
         default:
             return new Matrix4f().identity();
@@ -195,11 +231,11 @@ public class Transform {
 
         case ROTATE_180:
             return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
-//            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y180);
+            //            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y180);
 
         case ROTATE_270:
             return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
-//            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y270);
+            //            return ForgeHooksClient.getMatrix(ModelRotation.X0_Y270);
         }
     }
 

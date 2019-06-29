@@ -6,12 +6,11 @@ import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_SPECIES;
 
 import java.util.function.Consumer;
 
-import org.joml.Matrix4f;
-
 import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.Surface;
 import grondag.brocade.painting.SurfaceTopology;
+import grondag.brocade.primitives.PolyTransform;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
@@ -42,7 +41,7 @@ public class StackedPlatesMeshFactory extends MeshFactory {
     @Override
     public void produceShapeQuads(MeshState modelState, Consumer<IPolygon> target) {
         final int meta = modelState.getMetaData();
-        final Matrix4f matrix = modelState.getMatrix4f();
+        final PolyTransform transform = PolyTransform.get(modelState);
         final float height = (meta + 1) / 16;
         
         // PERF: if have a consumer and doing this dynamically - should consumer simply be a stream?
@@ -57,21 +56,21 @@ public class StackedPlatesMeshFactory extends MeshFactory {
         writer.setSurface(TOP_AND_BOTTOM_SURFACE);
         writer.setNominalFace(Direction.UP);
         writer.setupFaceQuad(0, 0, 1, 1, 1 - height, Direction.NORTH);
-        writer.transform(matrix);
+        transform.apply(writer);
         stream.append();
 
         for (Direction face : HORIZONTAL_FACES) {
             writer.setSurface(SIDE_SURFACE);
             writer.setNominalFace(face);
             writer.setupFaceQuad(0, 0, 1, height, 0, Direction.UP);
-            writer.transform(matrix);
+            transform.apply(writer);
             stream.append();
         }
 
         writer.setSurface(TOP_AND_BOTTOM_SURFACE);
         writer.setNominalFace(Direction.DOWN);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
-        writer.transform(matrix);
+        transform.apply(writer);
         stream.append();
 
         if (stream.origin()) {

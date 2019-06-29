@@ -12,8 +12,6 @@ import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_SPECIES;
 import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
 import static grondag.brocade.state.MeshStateData.TEST_GETTER_STATIC;
 
-import org.joml.Matrix4f;
-
 import grondag.brocade.Brocade;
 import grondag.brocade.BrocadeConfig;
 import grondag.brocade.api.texture.TextureSet;
@@ -31,7 +29,7 @@ import grondag.brocade.mesh.ModelShapes;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
 import grondag.brocade.painting.VertexProcessors;
-import grondag.brocade.primitives.Transform;
+import grondag.brocade.primitives.PolyTransform;
 import grondag.brocade.terrain.TerrainState;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
@@ -900,12 +898,7 @@ public class MeshStateImpl implements MeshState {
 
     @Override
     public Direction rotateFace(Direction face) {
-        return Transform.rotateFace(this, face);
-    }
-
-    @Override
-    public Matrix4f getMatrix4f() {
-        return Transform.getMatrix4f(this);
+        return PolyTransform.rotateFace(this, face);
     }
 
     @Override

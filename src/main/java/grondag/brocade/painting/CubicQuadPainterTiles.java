@@ -17,7 +17,7 @@ public abstract class CubicQuadPainterTiles extends QuadPainter {
             editor.setLockUV(layerIndex, true);
             editor.assignLockedUVCoordinates(layerIndex);
 
-            final Direction nominalFace = editor.getNominalFace();
+            final Direction nominalFace = editor.nominalFace();
             final TextureSet tex = getTexture(modelState, paintLayer);
 
             Rotation rotation = textureRotationForFace(nominalFace, tex, modelState);

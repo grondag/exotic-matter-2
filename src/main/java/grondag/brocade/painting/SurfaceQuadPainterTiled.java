@@ -92,7 +92,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
 
         for (int i = 0; i < vCountIn; i++) {
             // vertex u where 0 corresponds to low split and 1 to high split
-            final float u = (uMin + reader.getVertexU(layerIndex, i) * (uMax - uMin) - uSplitLow) / uSpan;
+            final float u = (uMin + reader.spriteU(i, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
             vertexU[i] = u;
 
             final int t = vertexType(u);
@@ -117,7 +117,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
             editor.setMaxU(layerIndex, flipped ? 0 : 1);
 
             for (int i = 0; i < vCountIn; i++) {
-                editor.setVertexU(layerIndex, i, vertexU[i]);
+                editor.spriteU(i, layerIndex, vertexU[i]);
             }
             vSplitter.accept(targetAddress);
             return IPolygon.NO_LINK_OR_TAG;
@@ -154,14 +154,14 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
             final int nextType = vertexType(uNext);
 
             if (thisType == EDGE) {
-                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).setVertexU(layerIndex,
-                        iSliceVertex, uThis);
+                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).spriteU(iSliceVertex,
+                        layerIndex, uThis);
                 iSliceVertex++;
                 stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
                 iRemainderVertex++;
             } else if (thisType == SLICE) {
-                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).setVertexU(layerIndex,
-                        iSliceVertex, uThis);
+                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).spriteU(iSliceVertex,
+                        layerIndex, uThis);
                 iSliceVertex++;
                 if (nextType == REMAINDER) {
                     final float dist = (vertexSplitU - uThis) / (uNext - uThis);
@@ -169,10 +169,10 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                             iNext, dist);
 
                     final IPolygon remainder = stream.polyA(remainderAddress);
-                    final float uNew = (uMin + remainder.getVertexU(layerIndex, iRemainderVertex) * (uMax - uMin)
+                    final float uNew = (uMin + remainder.spriteU(iRemainderVertex, layerIndex) * (uMax - uMin)
                             - uSplitLow) / uSpan;
-                    stream.editor(sliceAddress).setVertexUV(layerIndex, iSliceVertex, uNew,
-                            remainder.getVertexV(layerIndex, iRemainderVertex));
+                    stream.editor(sliceAddress).sprite(iSliceVertex, layerIndex, uNew,
+                            remainder.spriteV(iRemainderVertex, layerIndex));
 
                     iRemainderVertex++;
                     iSliceVertex++;
@@ -186,10 +186,10 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                             iNext, dist);
 
                     final IPolygon remainder = stream.polyA(remainderAddress);
-                    final float uNew = (uMin + remainder.getVertexU(layerIndex, iRemainderVertex) * (uMax - uMin)
+                    final float uNew = (uMin + remainder.spriteU(iRemainderVertex, layerIndex) * (uMax - uMin)
                             - uSplitLow) / uSpan;
-                    stream.editor(sliceAddress).setVertexUV(layerIndex, iSliceVertex, uNew,
-                            remainder.getVertexV(layerIndex, iRemainderVertex));
+                    stream.editor(sliceAddress).sprite(iSliceVertex, layerIndex, uNew,
+                            remainder.spriteV(iRemainderVertex, layerIndex));
 
                     iRemainderVertex++;
                     iSliceVertex++;
@@ -245,7 +245,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
 
         for (int i = 0; i < vCountIn; i++) {
             // vertex u where 0 corresponds to low split and 1 to high split
-            final float v = (vMin + reader.getVertexV(layerIndex, i) * (vMax - vMin) - vSplitLow) / vSpan;
+            final float v = (vMin + reader.spriteV(i, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
             vertexV[i] = v;
 
             final int t = vertexType(v);
@@ -270,7 +270,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
             editor.setMaxV(layerIndex, flipped ? 0 : 1);
 
             for (int i = 0; i < vCountIn; i++) {
-                editor.setVertexV(layerIndex, i, vertexV[i]);
+                editor.spriteV(i, layerIndex, vertexV[i]);
             }
             output.accept(targetAddress);
             return IPolygon.NO_LINK_OR_TAG;
@@ -307,14 +307,14 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
             final int nextType = vertexType(vNext);
 
             if (thisType == EDGE) {
-                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).setVertexV(layerIndex,
-                        iSliceVertex, vThis);
+                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).spriteV(iSliceVertex,
+                        layerIndex, vThis);
                 iSliceVertex++;
                 stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
                 iRemainderVertex++;
             } else if (thisType == SLICE) {
-                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).setVertexV(layerIndex,
-                        iSliceVertex, vThis);
+                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).spriteV(iSliceVertex,
+                        layerIndex, vThis);
                 iSliceVertex++;
                 if (nextType == REMAINDER) {
                     final float dist = (vertexSplitV - vThis) / (vNext - vThis);
@@ -322,10 +322,10 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                             iNext, dist);
 
                     final IPolygon remainder = stream.polyA(remainderAddress);
-                    final float vNew = (vMin + remainder.getVertexV(layerIndex, iRemainderVertex) * (vMax - vMin)
+                    final float vNew = (vMin + remainder.spriteV(iRemainderVertex, layerIndex) * (vMax - vMin)
                             - vSplitLow) / vSpan;
-                    stream.editor(sliceAddress).setVertexUV(layerIndex, iSliceVertex,
-                            remainder.getVertexU(layerIndex, iRemainderVertex), vNew);
+                    stream.editor(sliceAddress).sprite(iSliceVertex, layerIndex,
+                            remainder.spriteU(iRemainderVertex, layerIndex), vNew);
 
                     iRemainderVertex++;
                     iSliceVertex++;
@@ -339,10 +339,10 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                             iNext, dist);
 
                     final IPolygon remainder = stream.polyA(remainderAddress);
-                    final float vNew = (vMin + remainder.getVertexV(layerIndex, iRemainderVertex) * (vMax - vMin)
+                    final float vNew = (vMin + remainder.spriteV(iRemainderVertex, layerIndex) * (vMax - vMin)
                             - vSplitLow) / vSpan;
-                    stream.editor(sliceAddress).setVertexUV(layerIndex, iSliceVertex,
-                            remainder.getVertexU(layerIndex, iRemainderVertex), vNew);
+                    stream.editor(sliceAddress).sprite(iSliceVertex, layerIndex,
+                            remainder.spriteU(iRemainderVertex, layerIndex), vNew);
 
                     iRemainderVertex++;
                     iSliceVertex++;
@@ -379,7 +379,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
 
             final int layerIndex = firstAvailableTextureLayer(editor);
             final Surface surfIn = editor.getSurface();
-            final Direction face = editor.getNominalFace();
+            final Direction face = editor.nominalFace();
             final TextureSet tex = getTexture(modelState, paintLayer);
 
             /**

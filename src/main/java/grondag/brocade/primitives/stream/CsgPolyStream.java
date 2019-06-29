@@ -56,7 +56,7 @@ public class CsgPolyStream extends MutablePolyStream {
 
     private static final int vertexType(IPolygon poly, int vertexIndex, float normalX, float normalY, float normalZ,
             float dist) {
-        return vertexType(poly.getVertexX(vertexIndex), poly.getVertexY(vertexIndex), poly.getVertexZ(vertexIndex),
+        return vertexType(poly.x(vertexIndex), poly.y(vertexIndex), poly.z(vertexIndex),
                 normalX, normalY, normalZ, dist);
     }
 
@@ -176,10 +176,10 @@ public class CsgPolyStream extends MutablePolyStream {
         super.appendCopy(polyIn, withFormat);
         internal.moveTo(newAddress);
 
-        int tag = polyIn.getTag();
+        int tag = polyIn.tag();
         if (tag <= 0)
             tag = NEXT_TAG.getAndIncrement();
-        internal.setTag(tag);
+        internal.tag(tag);
     }
 
     /**
@@ -201,7 +201,7 @@ public class CsgPolyStream extends MutablePolyStream {
         int newAddress = writerAddress();
         setVertexCount(vertexCount);
         writer.copyFromCSG(template);
-        writer.setTag(template.getTag());
+        writer.tag(template.tag());
         appendRawCopy(writer, formatFlags);
         loadDefaults();
         return newAddress;
@@ -240,7 +240,7 @@ public class CsgPolyStream extends MutablePolyStream {
             int combinedCount = 0;
 
             for (int i = 0; i < vCount; i++) {
-                combinedCount += vertexIncrement(polyB.getVertexX(i), polyB.getVertexY(i), polyB.getVertexZ(i), normalX,
+                combinedCount += vertexIncrement(polyB.x(i), polyB.y(i), polyB.z(i), normalX,
                         normalY, normalZ, dist);
             }
 
@@ -318,13 +318,13 @@ public class CsgPolyStream extends MutablePolyStream {
                             // If the next vertex will NOT be included in this side, we are starting the
                             // split line.
 
-                            final float ix = polyB.getVertexX(i);
-                            final float iy = polyB.getVertexY(i);
-                            final float iz = polyB.getVertexZ(i);
+                            final float ix = polyB.x(i);
+                            final float iy = polyB.y(i);
+                            final float iz = polyB.z(i);
 
-                            final float tx = polyB.getVertexX(j) - ix;
-                            final float ty = polyB.getVertexY(j) - iy;
-                            final float tz = polyB.getVertexZ(j) - iz;
+                            final float tx = polyB.x(j) - ix;
+                            final float ty = polyB.y(j) - iy;
+                            final float tz = polyB.z(j) - iz;
 
                             final float iDot = ix * normalX + iy * normalY + iz * normalZ;
                             final float tDot = tx * normalX + ty * normalY + tz * normalZ;
@@ -341,13 +341,13 @@ public class CsgPolyStream extends MutablePolyStream {
                             editor(backAddress).copyVertexFrom(iBack++, polyB, i);
 
                             // see notes for 5
-                            final float ix = polyB.getVertexX(i);
-                            final float iy = polyB.getVertexY(i);
-                            final float iz = polyB.getVertexZ(i);
+                            final float ix = polyB.x(i);
+                            final float iy = polyB.y(i);
+                            final float iz = polyB.z(i);
 
-                            final float tx = polyB.getVertexX(j) - ix;
-                            final float ty = polyB.getVertexY(j) - iy;
-                            final float tz = polyB.getVertexZ(j) - iz;
+                            final float tx = polyB.x(j) - ix;
+                            final float ty = polyB.y(j) - iy;
+                            final float tz = polyB.z(j) - iz;
 
                             final float iDot = ix * normalX + iy * normalY + iz * normalZ;
                             final float tDot = tx * normalX + ty * normalY + tz * normalZ;
@@ -484,7 +484,7 @@ public class CsgPolyStream extends MutablePolyStream {
             int combinedCount = 0;
 
             for (int i = 0; i < vCount; i++) {
-                combinedCount += vertexIncrement(polyB.getVertexX(i), polyB.getVertexY(i), polyB.getVertexZ(i), normalX,
+                combinedCount += vertexIncrement(polyB.x(i), polyB.y(i), polyB.z(i), normalX,
                         normalY, normalZ, dist);
             }
 
@@ -586,13 +586,13 @@ public class CsgPolyStream extends MutablePolyStream {
                             // If the next vertex will NOT be included in this side, we are starting the
                             // split line.
 
-                            final float ix = polyB.getVertexX(i);
-                            final float iy = polyB.getVertexY(i);
-                            final float iz = polyB.getVertexZ(i);
+                            final float ix = polyB.x(i);
+                            final float iy = polyB.y(i);
+                            final float iz = polyB.z(i);
 
-                            final float tx = polyB.getVertexX(j) - ix;
-                            final float ty = polyB.getVertexY(j) - iy;
-                            final float tz = polyB.getVertexZ(j) - iz;
+                            final float tx = polyB.x(j) - ix;
+                            final float ty = polyB.y(j) - iy;
+                            final float tz = polyB.z(j) - iz;
 
                             final float iDot = ix * normalX + iy * normalY + iz * normalZ;
                             final float tDot = tx * normalX + ty * normalY + tz * normalZ;
@@ -613,13 +613,13 @@ public class CsgPolyStream extends MutablePolyStream {
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
 
                             // see notes for 5
-                            final float ix = polyB.getVertexX(i);
-                            final float iy = polyB.getVertexY(i);
-                            final float iz = polyB.getVertexZ(i);
+                            final float ix = polyB.x(i);
+                            final float iy = polyB.y(i);
+                            final float iz = polyB.z(i);
 
-                            final float tx = polyB.getVertexX(j) - ix;
-                            final float ty = polyB.getVertexY(j) - iy;
-                            final float tz = polyB.getVertexZ(j) - iz;
+                            final float tx = polyB.x(j) - ix;
+                            final float ty = polyB.y(j) - iy;
+                            final float tz = polyB.z(j) - iz;
 
                             final float iDot = ix * normalX + iy * normalY + iz * normalZ;
                             final float tDot = tx * normalX + ty * normalY + tz * normalZ;
@@ -703,7 +703,7 @@ public class CsgPolyStream extends MutablePolyStream {
 
     private int createNode(int polyAddress) {
         IPolygon p = reader(polyAddress);
-        final int newNodeAddress = createNode(p.getFaceNormal(), p.getVertexX(0), p.getVertexY(0), p.getVertexZ(0));
+        final int newNodeAddress = createNode(p.getFaceNormal(), p.x(0), p.y(0), p.z(0));
         return newNodeAddress;
     }
 

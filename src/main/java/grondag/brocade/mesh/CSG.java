@@ -259,19 +259,19 @@ public abstract class CSG {
             do {
                 final int vCount = p.vertexCount();
                 for (int i = 1; i < vCount; i++) {
-                    final float x = p.getVertexX(i);
+                    final float x = p.x(i);
                     if (x < bMinX)
                         bMinX = x;
                     else if (x > bMaxX)
                         bMaxX = x;
 
-                    final float y = p.getVertexY(i);
+                    final float y = p.y(i);
                     if (y < bMinY)
                         bMinY = y;
                     else if (y > bMaxY)
                         bMaxY = y;
 
-                    final float z = p.getVertexZ(i);
+                    final float z = p.z(i);
                     if (z < bMinZ)
                         bMinZ = z;
                     else if (z > bMaxZ)
@@ -289,28 +289,28 @@ public abstract class CSG {
             // Considered using SAT tests developed for collisions boxes
             // but those require tris and re-packing of vertex data. Not worth.
 
-            float pMinX = p.getVertexX(0);
-            float pMinY = p.getVertexY(0);
-            float pMinZ = p.getVertexZ(0);
+            float pMinX = p.x(0);
+            float pMinY = p.y(0);
+            float pMinZ = p.z(0);
             float pMaxX = pMinX;
             float pMaxY = pMinY;
             float pMaxZ = pMinZ;
 
             final int vCount = p.vertexCount();
             for (int i = 1; i < vCount; i++) {
-                final float x = p.getVertexX(i);
+                final float x = p.x(i);
                 if (x < pMinX)
                     pMinX = x;
                 else if (x > pMaxX)
                     pMaxX = x;
 
-                final float y = p.getVertexY(i);
+                final float y = p.y(i);
                 if (y < pMinY)
                     pMinY = y;
                 else if (y > pMaxY)
                     pMaxY = y;
 
-                final float z = p.getVertexZ(i);
+                final float z = p.z(i);
                 if (z < pMinZ)
                     pMinZ = z;
                 else if (z > pMaxZ)

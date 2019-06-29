@@ -2,8 +2,7 @@ package grondag.brocade.mesh;
 
 import java.util.function.Consumer;
 
-import org.joml.Matrix4f;
-
+import grondag.brocade.primitives.PolyTransform;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
@@ -25,7 +24,7 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
         final IWritablePolyStream stream = PolyStreams.claimWritable();
         final IMutablePolygon quad = stream.writer();
         
-        Matrix4f matrix = modelState.getMatrix4f();
+        PolyTransform transform = PolyTransform.get(modelState);
 
         quad.setRotation(0, Rotation.ROTATE_NONE);
         quad.setLockUV(0, true);
@@ -34,13 +33,13 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
         quad.setSurface(BACK_AND_BOTTOM_SURFACE);
         quad.setNominalFace(Direction.NORTH);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(BACK_AND_BOTTOM_SURFACE);
         quad.setNominalFace(Direction.EAST);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         // Splitting sides into three quadrants vs one long strip plus one long quadrant
@@ -49,17 +48,17 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
 
         quad.setSurface(SIDE_SURFACE);
         quad.setupFaceQuad(Direction.UP, 0.0, 0.5, 0.5, 1.0, 0.0, Direction.NORTH);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(SIDE_SURFACE);
         quad.setupFaceQuad(Direction.UP, 0.5, 0.5, 1.0, 1.0, 0.0, Direction.NORTH);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(SIDE_SURFACE);
         quad.setupFaceQuad(Direction.UP, 0.5, 0.0, 1.0, 0.5, 0.0, Direction.NORTH);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         // Splitting sides into three quadrants vs one long strip plus one long quadrant
@@ -68,22 +67,22 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
 
         quad.setSurface(SIDE_SURFACE);
         quad.setupFaceQuad(Direction.DOWN, 0.0, 0.5, 0.5, 1.0, 0.0, Direction.NORTH);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(SIDE_SURFACE);
         quad.setupFaceQuad(Direction.DOWN, 0.5, 0.5, 1.0, 1.0, 0.0, Direction.NORTH);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(SIDE_SURFACE);
         quad.setupFaceQuad(Direction.DOWN, 0.0, 0.0, 0.5, 0.5, 0.0, Direction.NORTH);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(SIDE_SURFACE);
         quad.setupFaceQuad(Direction.SOUTH, 0.5, 0.0, 1.0, 1.0, 0.0, Direction.UP);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(TOP_SURFACE);
@@ -92,18 +91,18 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
         // so doesn't hurt them
         quad.setTextureSalt(1);
         quad.setupFaceQuad(Direction.SOUTH, 0.0, 0.0, 0.5, 1.0, 0.5, Direction.UP);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(SIDE_SURFACE);
         quad.setupFaceQuad(Direction.WEST, 0.0, 0.0, 0.5, 1.0, 0.0, Direction.UP);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         quad.setSurface(TOP_SURFACE);
         quad.setTextureSalt(1);
         quad.setupFaceQuad(Direction.WEST, 0.5, 0.0, 1.0, 1.0, 0.5, Direction.UP);
-        quad.transform(matrix);
+        transform.apply(quad);
         stream.append();
 
         if (stream.origin()) {

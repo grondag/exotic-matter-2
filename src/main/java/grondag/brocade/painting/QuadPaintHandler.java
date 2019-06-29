@@ -75,14 +75,14 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         
         final int vertexCount = editor.vertexCount();
         for (int i = 0; i < vertexCount; i++) {
-            final int c = editor.getVertexColor(0, i);
-            editor.setVertexColor(1, i, c);
-            editor.setVertexColor(2, i, c);
+            final int c = editor.spriteColor(i, 0);
+            editor.spriteColor(i, 1, c);
+            editor.spriteColor(i, 2, c);
 
-            final float u = editor.getVertexU(0, i);
-            final float v = editor.getVertexV(0, i);
-            editor.setVertexUV(1, i, u, v);
-            editor.setVertexUV(2, i, u, v);
+            final float u = editor.spriteU(i, 0);
+            final float v = editor.spriteV(i, 0);
+            editor.sprite(i, 1, u, v);
+            editor.sprite(i, 2, u, v);
         }
         
         for (PaintLayer paintLayer : PaintLayer.VALUES) {
@@ -143,26 +143,26 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         }
         
         emitter.material(finder.find());
-        emitter.cullFace(poly.getActualFace());
-        emitter.nominalFace(poly.getNominalFace());
-        emitter.tag(poly.getTag());
+        emitter.cullFace(poly.cullFace());
+        emitter.nominalFace(poly.nominalFace());
+        emitter.tag(poly.tag());
         
         for(int v = 0; v < 4; v++) {   
-            emitter.pos(v, poly.getVertexX(v), poly.getVertexY(v), poly.getVertexZ(v));
-            if(poly.hasVertexNormal(v)) {
-                emitter.normal(v, poly.getVertexNormalX(v), poly.getVertexNormalY(v), poly.getVertexNormalZ(v));
+            emitter.pos(v, poly.x(v), poly.y(v), poly.z(v));
+            if(poly.hasNormal(v)) {
+                emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
             }
             
-            emitter.sprite(v, 0, poly.getVertexU(0, v), poly.getVertexV(0, v));
-            emitter.spriteColor(v, 0, poly.getVertexColor(0, v));
+            emitter.sprite(v, 0, poly.spriteU(v, 0), poly.spriteV(v, 0));
+            emitter.spriteColor(v, 0, poly.spriteColor(v, 0));
             
             if(depth > 1) {
-                emitter.sprite(v, 1, poly.getVertexU(1, v), poly.getVertexV(1, v));
-                emitter.spriteColor(v, 1, poly.getVertexColor(1, v));
+                emitter.sprite(v, 1, poly.spriteU(v, 1), poly.spriteV(v, 1));
+                emitter.spriteColor(v, 1, poly.spriteColor(v, 1));
                 
                 if(depth == 3) {
-                    emitter.sprite(v, 2, poly.getVertexU(2, v), poly.getVertexV(2, v));
-                    emitter.spriteColor(v, 2, poly.getVertexColor(2, v));
+                    emitter.sprite(v, 2, poly.spriteU(v, 2), poly.spriteV(v, 2));
+                    emitter.spriteColor(v, 2, poly.spriteColor(v, 2));
                 }
             }
         }
@@ -181,9 +181,9 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         
         // scale UV coordinates to size of texture sub-region
         for(int v = 0; v < 4; v++) {
-            poly.setVertexUV(spriteIndex, v, 
-                    minU + spanU * poly.getVertexU(spriteIndex, v),
-                    minV + spanV * poly.getVertexV(spriteIndex, v));
+            poly.sprite(v, spriteIndex, 
+                    minU + spanU * poly.spriteU(v, spriteIndex),
+                    minV + spanV * poly.spriteV(v, spriteIndex));
         }
         
         final Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(poly.getTextureName(spriteIndex));
@@ -199,9 +199,9 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         
         // doing interpolation here vs using sprite methods to avoid wasteful multiply and divide by 16
         for(int v = 0; v < 4; v++) {
-            poly.setVertexUV(spriteIndex, v, 
-                    spriteMinU + spriteSpanU * poly.getVertexU(spriteIndex, v),
-                    spriteMinV + spriteSpanV * poly.getVertexV(spriteIndex, v));
+            poly.sprite(v, spriteIndex, 
+                    spriteMinU + spriteSpanU * poly.spriteU(v, spriteIndex),
+                    spriteMinV + spriteSpanV * poly.spriteV(v, spriteIndex));
         }
         
     }
@@ -219,25 +219,25 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             
         case ROTATE_90:
             for(int i = 0; i < 4; i++) {
-                final float uOld = poly.getVertexU(spriteIndex, i);
-                final float vOld = poly.getVertexV(spriteIndex, i);
-                poly.setVertexUV(spriteIndex, i, vOld, 1 - uOld);
+                final float uOld = poly.spriteU(i, spriteIndex);
+                final float vOld = poly.spriteV(i, spriteIndex);
+                poly.sprite(i, spriteIndex, vOld, 1 - uOld);
             }
             break;
 
         case ROTATE_180:
             for(int i = 0; i < 4; i++) {
-                final float uOld = poly.getVertexU(spriteIndex, i);
-                final float vOld = poly.getVertexV(spriteIndex, i);
-                poly.setVertexUV(spriteIndex, i, 1 - uOld, 1 - vOld);
+                final float uOld = poly.spriteU(i, spriteIndex);
+                final float vOld = poly.spriteV(i, spriteIndex);
+                poly.sprite(i, spriteIndex, 1 - uOld, 1 - vOld);
             }
             break;
         
         case ROTATE_270:
             for(int i = 0; i < 4; i++) {
-                final float uOld = poly.getVertexU(spriteIndex, i);
-                final float vOld = poly.getVertexV(spriteIndex, i);
-                poly.setVertexUV(spriteIndex, i, 1 - vOld, uOld);
+                final float uOld = poly.spriteU(i, spriteIndex);
+                final float vOld = poly.spriteV(i, spriteIndex);
+                poly.sprite(i, spriteIndex, 1 - vOld, uOld);
             }
          break;
         

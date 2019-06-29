@@ -39,7 +39,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
             editor.setLockUV(layerIndex, true);
             editor.assignLockedUVCoordinates(layerIndex);
 
-            final Direction nominalFace = editor.getNominalFace();
+            final Direction nominalFace = editor.nominalFace();
             final TextureSet tex = getTexture(modelState, paintLayer);
             final boolean allowTexRotation = tex.rotation() != TextureRotation.ROTATE_NONE;
             final TextureScale scale = tex.scale();

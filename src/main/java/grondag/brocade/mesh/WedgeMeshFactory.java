@@ -2,9 +2,8 @@ package grondag.brocade.mesh;
 
 import java.util.function.Consumer;
 
-import org.joml.Matrix4f;
-
 import grondag.brocade.primitives.FaceVertex;
+import grondag.brocade.primitives.PolyTransform;
 import grondag.brocade.primitives.polygon.IMutablePolygon;
 import grondag.brocade.primitives.polygon.IPolygon;
 import grondag.brocade.primitives.stream.IWritablePolyStream;
@@ -26,9 +25,7 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
         final IWritablePolyStream stream = PolyStreams.claimWritable();
         final IMutablePolygon writer = stream.writer();
         
-        Matrix4f matrix = modelState.getMatrix4f();
-        //TODO: remove
-        //matrix.identity();
+        PolyTransform transform = PolyTransform.get(modelState);
         
         writer.setRotation(0, Rotation.ROTATE_NONE);
         writer.setLockUV(0, true);
@@ -37,34 +34,34 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
         writer.setSurface(BACK_AND_BOTTOM_SURFACE);
         writer.setNominalFace(Direction.NORTH);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
-//        writer.transform(matrix);
+        transform.apply(writer);
         stream.append();
 
         writer.setSurface(BACK_AND_BOTTOM_SURFACE);
         writer.setNominalFace(Direction.EAST);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
-//        writer.transform(matrix);
+        transform.apply(writer);
         stream.append();
 
         writer.setSurface(SIDE_SURFACE);
         writer.setNominalFace(Direction.UP);
         writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 1, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
                 Direction.NORTH);
-//        writer.transform(matrix);
+        transform.apply(writer);
         stream.append();
 
         writer.setSurface(SIDE_SURFACE);
         writer.setNominalFace(Direction.DOWN);
         writer.setupFaceQuad(Direction.DOWN, new FaceVertex(0, 0, 0), new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0),
                 Direction.NORTH);
-//        writer.transform(matrix);
+        transform.apply(writer);
         stream.append();
 
         writer.setSurface(TOP_SURFACE);
         writer.setNominalFace(Direction.SOUTH);
         writer.setupFaceQuad(Direction.SOUTH, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
                 new FaceVertex(0, 1, 1), Direction.UP);
-//        writer.transform(matrix);
+        transform.apply(writer);
         stream.append();
         
         if (stream.origin()) {

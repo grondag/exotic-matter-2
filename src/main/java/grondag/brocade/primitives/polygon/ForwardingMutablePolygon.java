@@ -94,26 +94,26 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
     }
 
     @Override
-    public IMutablePolygon setVertexPos(int vertexIndex, float x, float y, float z) {
-        ((IMutablePolygon) wrapped).setVertexPos(vertexIndex, x, y, z);
+    public IMutablePolygon pos(int vertexIndex, float x, float y, float z) {
+        ((IMutablePolygon) wrapped).pos(vertexIndex, x, y, z);
         return this;
     }
 
     @Override
-    public IMutablePolygon setVertexPos(int vertexIndex, Vec3f pos) {
-        ((IMutablePolygon) wrapped).setVertexPos(vertexIndex, pos);
+    public IMutablePolygon pos(int vertexIndex, Vec3f pos) {
+        ((IMutablePolygon) wrapped).pos(vertexIndex, pos);
         return this;
     }
 
     @Override
-    public IMutablePolygon setVertexColor(int layerIndex, int vertexIndex, int color) {
-        ((IMutablePolygon) wrapped).setVertexColor(layerIndex, vertexIndex, color);
+    public IMutablePolygon spriteColor(int vertexIndex, int layerIndex, int color) {
+        ((IMutablePolygon) wrapped).spriteColor(vertexIndex, layerIndex, color);
         return this;
     }
 
     @Override
-    public IMutablePolygon setVertexUV(int layerIndex, int vertexIndex, float u, float v) {
-        ((IMutablePolygon) wrapped).setVertexUV(layerIndex, vertexIndex, u, v);
+    public IMutablePolygon sprite(int vertexIndex, int layerIndex, float u, float v) {
+        ((IMutablePolygon) wrapped).sprite(vertexIndex, layerIndex, u, v);
         return this;
     }
 
@@ -124,14 +124,14 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
     }
 
     @Override
-    public IMutablePolygon setVertexNormal(int vertexIndex, Vec3f normal) {
-        ((IMutablePolygon) wrapped).setVertexNormal(vertexIndex, normal);
+    public IMutablePolygon normal(int vertexIndex, Vec3f normal) {
+        ((IMutablePolygon) wrapped).normal(vertexIndex, normal);
         return this;
     }
 
     @Override
-    public IMutablePolygon setVertexNormal(int vertexIndex, float x, float y, float z) {
-        ((IMutablePolygon) wrapped).setVertexNormal(vertexIndex, x, y, z);
+    public IMutablePolygon normal(int vertexIndex, float x, float y, float z) {
+        ((IMutablePolygon) wrapped).normal(vertexIndex, x, y, z);
         return this;
     }
 
@@ -210,5 +210,11 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
     @Override
     public void copyFrom(IPolygon polyIn, boolean includeVertices) {
         throw new UnsupportedOperationException();
+    }
+    
+    @Override
+    public IMutablePolygon tag(int tag) {
+        tagSetter.setValue(tag);
+        return this;
     }
 }

@@ -53,7 +53,7 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
                 continue;
             }
 
-            final Direction nominalFace = editor.getNominalFace();
+            final Direction nominalFace = editor.nominalFace();
             TextureSet tex = getTexture(modelState, paintLayer);
             final int textureVersion = tex.versionMask()
                     & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));

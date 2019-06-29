@@ -188,7 +188,7 @@ public class CsgPolyRecombinator
         IPolygon reader = input.reader();
         do 
         {
-            long tag = reader.getTag();
+            long tag = reader.tag();
             assert tag > 0;
             assert !reader.isDeleted();
             tagPolyPairs.add((tag << TAG_SHIFT) | reader.streamAddress());
@@ -271,15 +271,15 @@ public class CsgPolyRecombinator
 
         for(int a = 0; a < aLimit; a++)
         {
-            final float aX = polyA.getVertexX(a);
-            final float aY = polyA.getVertexY(a);
-            final float aZ = polyA.getVertexZ(a);
+            final float aX = polyA.x(a);
+            final float aY = polyA.y(a);
+            final float aZ = polyA.z(a);
             
             for(int b = 0; b < bLimit; b++)
             {
-                final float bX = polyB.getVertexX(b);
-                final float bY = polyB.getVertexY(b);
-                final float bZ = polyB.getVertexZ(b);
+                final float bX = polyB.x(b);
+                final float bY = polyB.y(b);
+                final float bZ = polyB.z(b);
                 
                 if(aX == bX && aY == bY && aZ == bZ)
                 {
@@ -330,9 +330,9 @@ public class CsgPolyRecombinator
     
     private int joinAtVertex(CsgPolyStream input, IPolygon polyA, int aTargetIndex, IPolygon polyB, int bTargetIndex)
     {
-        assert polyA.getVertexX(aTargetIndex) ==  polyB.getVertexX(bTargetIndex);
-        assert polyA.getVertexY(aTargetIndex) ==  polyB.getVertexY(bTargetIndex);
-        assert polyA.getVertexZ(aTargetIndex) ==  polyB.getVertexZ(bTargetIndex);
+        assert polyA.x(aTargetIndex) ==  polyB.x(bTargetIndex);
+        assert polyA.y(aTargetIndex) ==  polyB.y(bTargetIndex);
+        assert polyA.z(aTargetIndex) ==  polyB.z(bTargetIndex);
         
         final int aSize = polyA.vertexCount();
         final int bSize = polyB.vertexCount();
@@ -370,9 +370,9 @@ public class CsgPolyRecombinator
         int bAfterSharedIndex;
 
         // look for a second matching vertex on either side of known shared vertex
-        if(polyA.getVertexX(aAfterTargetIndex) == polyB.getVertexX(bBeforeTargetIndex)
-                && polyA.getVertexY(aAfterTargetIndex) == polyB.getVertexY(bBeforeTargetIndex)
-                && polyA.getVertexZ(aAfterTargetIndex) == polyB.getVertexZ(bBeforeTargetIndex))
+        if(polyA.x(aAfterTargetIndex) == polyB.x(bBeforeTargetIndex)
+                && polyA.y(aAfterTargetIndex) == polyB.y(bBeforeTargetIndex)
+                && polyA.z(aAfterTargetIndex) == polyB.z(bBeforeTargetIndex))
         {
             aFirstSharedIndex = aTargetIndex;
             aSecondSharedIndex = aAfterTargetIndex;
@@ -383,9 +383,9 @@ public class CsgPolyRecombinator
             aAfterSharedIndex = aSecondSharedIndex == aMaxIndex ? 0 : aSecondSharedIndex + 1;
             bAfterSharedIndex = bAfterTargetIndex;
         }
-        else if(polyA.getVertexX(aBeforeTargetIndex) == polyB.getVertexX(bAfterTargetIndex)
-            && polyA.getVertexY(aBeforeTargetIndex) == polyB.getVertexY(bAfterTargetIndex)
-            && polyA.getVertexZ(aBeforeTargetIndex) == polyB.getVertexZ(bAfterTargetIndex))
+        else if(polyA.x(aBeforeTargetIndex) == polyB.x(bAfterTargetIndex)
+            && polyA.y(aBeforeTargetIndex) == polyB.y(bAfterTargetIndex)
+            && polyA.z(aBeforeTargetIndex) == polyB.z(bAfterTargetIndex))
         {
             aFirstSharedIndex = aBeforeTargetIndex;
             aSecondSharedIndex = aTargetIndex;
@@ -414,9 +414,9 @@ public class CsgPolyRecombinator
             {
                 //if vertex is on the same line as prev and next vertex, leave it out.
                 if(!IVec3f.isPointOnLine(
-                        polyA.getVertexX(aFirstSharedIndex), polyA.getVertexY(aFirstSharedIndex), polyA.getVertexZ(aFirstSharedIndex),
-                        polyA.getVertexX(aBeforeSharedIndex), polyA.getVertexY(aBeforeSharedIndex), polyA.getVertexZ(aBeforeSharedIndex),
-                        polyB.getVertexX(bAfterSharedIndex), polyB.getVertexY(bAfterSharedIndex), polyB.getVertexZ(bAfterSharedIndex)))
+                        polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex), polyA.z(aFirstSharedIndex),
+                        polyA.x(aBeforeSharedIndex), polyA.y(aBeforeSharedIndex), polyA.z(aBeforeSharedIndex),
+                        polyB.x(bAfterSharedIndex), polyB.y(bAfterSharedIndex), polyB.z(bAfterSharedIndex)))
                 {
                     joinedVertex.add(a + 1);
                 }
@@ -433,9 +433,9 @@ public class CsgPolyRecombinator
             {
                 //if vertex is on the same line as prev and next vertex, leave it out
                 if(!IVec3f.isPointOnLine(
-                        polyA.getVertexX(aSecondSharedIndex), polyA.getVertexY(aSecondSharedIndex), polyA.getVertexZ(aSecondSharedIndex),
-                        polyA.getVertexX(aAfterSharedIndex), polyA.getVertexY(aAfterSharedIndex), polyA.getVertexZ(aAfterSharedIndex),
-                        polyB.getVertexX(bBeforeSharedIndex), polyB.getVertexY(bBeforeSharedIndex), polyB.getVertexZ(bBeforeSharedIndex)))
+                        polyA.x(aSecondSharedIndex), polyA.y(aSecondSharedIndex), polyA.z(aSecondSharedIndex),
+                        polyA.x(aAfterSharedIndex), polyA.y(aAfterSharedIndex), polyA.z(aAfterSharedIndex),
+                        polyB.x(bBeforeSharedIndex), polyB.y(bBeforeSharedIndex), polyB.z(bBeforeSharedIndex)))
                 {
                     joinedVertex.add(a + 1);
                 }
@@ -459,7 +459,7 @@ public class CsgPolyRecombinator
         IMutablePolygon writer = input.writer();
         input.setVertexCount(size);
         writer.copyFrom(polyA, false);
-        writer.setTag(polyA.getTag());
+        writer.tag(polyA.tag());
         for(int i = 0; i < size; i++)
         {
             int j = joinedVertex.getInt(i);

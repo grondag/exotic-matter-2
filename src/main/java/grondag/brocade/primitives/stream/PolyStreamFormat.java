@@ -323,7 +323,7 @@ public class PolyStreamFormat {
 
         assert !polyIn.isDeleted();
 
-        Direction nominalFace = polyIn.getNominalFace();
+        Direction nominalFace = polyIn.nominalFace();
         result = setNominalFace(result, nominalFace);
 
         Vec3f faceNormal = polyIn.getFaceNormal();
@@ -337,9 +337,9 @@ public class PolyStreamFormat {
         boolean allSameGlow = true;
         boolean allSameUV = layerCount > 1;
 
-        int color0 = polyIn.getVertexColor(0, 0);
-        int color1 = layerCount > 1 ? polyIn.getVertexColor(1, 0) : 0;
-        int color2 = layerCount == 3 ? polyIn.getVertexColor(2, 0) : 0;
+        int color0 = polyIn.spriteColor(0, 0);
+        int color1 = layerCount > 1 ? polyIn.spriteColor(0, 1) : 0;
+        int color2 = layerCount == 3 ? polyIn.spriteColor(0, 2) : 0;
         /**
          * True if all vertices in each layer are same color as each other. Does not
          * mean all layers are same color.
@@ -352,30 +352,30 @@ public class PolyStreamFormat {
                 allSameGlow = false;
 
             // vertex normal
-            if (allFaceNormal && polyIn.hasVertexNormal(v) && !polyIn.getVertexNormal(v).equals(faceNormal))
+            if (allFaceNormal && polyIn.hasNormal(v) && !polyIn.getVertexNormal(v).equals(faceNormal))
                 allFaceNormal = false;
 
-            if (allVertexSameColor & v > 0 && polyIn.getVertexColor(0, v) != color0)
+            if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 0) != color0)
                 allVertexSameColor = false;
 
             if (layerCount > 1) {
                 // vertex uv format
-                if (allSameUV && (polyIn.getVertexU(0, v) != polyIn.getVertexU(1, v)
-                        || polyIn.getVertexV(0, v) != polyIn.getVertexV(1, v)))
+                if (allSameUV && (polyIn.spriteU(v, 0) != polyIn.spriteU(v, 1)
+                        || polyIn.spriteV(v, 0) != polyIn.spriteV(v, 1)))
                     allSameUV = false;
 
                 // vertex color
-                if (allVertexSameColor & v > 0 && polyIn.getVertexColor(1, v) != color1)
+                if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 1) != color1)
                     allVertexSameColor = false;
 
                 if (layerCount == 3) {
                     // vertex uv format
-                    if (allSameUV && (polyIn.getVertexU(0, v) != polyIn.getVertexU(2, v)
-                            || polyIn.getVertexV(0, v) != polyIn.getVertexV(2, v)))
+                    if (allSameUV && (polyIn.spriteU(v, 0) != polyIn.spriteU(v, 2)
+                            || polyIn.spriteV(v, 0) != polyIn.spriteV(v, 2)))
                         allSameUV = false;
 
                     // vertex color
-                    if (allVertexSameColor & v > 0 && polyIn.getVertexColor(2, v) != color2)
+                    if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 2) != color2)
                         allVertexSameColor = false;
                 }
             }

@@ -18,14 +18,14 @@ public class QuadrantSplitter {
     public final static FaceCorner uvQuadrant(IMutablePolygon quad, int layerIndex) {
         final int vCount = quad.vertexCount();
 
-        float uMin = quad.getVertexU(layerIndex, 0);
+        float uMin = quad.spriteU(0, layerIndex);
         float uMax = uMin;
-        float vMin = quad.getVertexV(layerIndex, 0);
+        float vMin = quad.spriteV(0, layerIndex);
         float vMax = vMin;
 
         for (int i = 1; i < vCount; i++) {
-            float u = quad.getVertexU(layerIndex, i);
-            float v = quad.getVertexV(layerIndex, i);
+            float u = quad.spriteU(i, layerIndex);
+            float v = quad.spriteV(i, layerIndex);
             if (u < uMin)
                 uMin = u;
             else if (u > uMax)
@@ -90,7 +90,7 @@ public class QuadrantSplitter {
         final int vCount = reader.vertexCount();
 
         for (int i = 0; i < vCount; i++) {
-            final int t = vertexType(reader.getVertexU(layerIndex, i));
+            final int t = vertexType(reader.spriteU(i, layerIndex));
             if (t == HIGH)
                 highCount++;
             else if (t == LOW)
@@ -120,11 +120,11 @@ public class QuadrantSplitter {
             stream.append();
 
             int iThis = vCount - 1;
-            float uThis = reader.getVertexU(layerIndex, iThis);
+            float uThis = reader.spriteU(iThis, layerIndex);
             int thisType = vertexType(uThis);
 
             for (int iNext = 0; iNext < vCount; iNext++) {
-                final float uNext = reader.getVertexU(layerIndex, iNext);
+                final float uNext = reader.spriteU(iNext, layerIndex);
                 final int nextType = vertexType(uNext);
 
                 if (thisType == EDGE) {
@@ -175,7 +175,7 @@ public class QuadrantSplitter {
         final int vCount = reader.vertexCount();
 
         for (int i = 0; i < vCount; i++) {
-            final int t = vertexType(reader.getVertexV(layerIndex, i));
+            final int t = vertexType(reader.spriteV(i, layerIndex));
             if (t == HIGH)
                 highCount++;
             else if (t == LOW)
@@ -205,11 +205,11 @@ public class QuadrantSplitter {
             stream.append();
 
             int iThis = vCount - 1;
-            float vThis = reader.getVertexV(layerIndex, iThis);
+            float vThis = reader.spriteV(iThis, layerIndex);
             int thisType = vertexType(vThis);
 
             for (int iNext = 0; iNext < vCount; iNext++) {
-                final float vNext = reader.getVertexV(layerIndex, iNext);
+                final float vNext = reader.spriteV(iNext, layerIndex);
                 final int nextType = vertexType(vNext);
 
                 if (thisType == EDGE) {

@@ -67,8 +67,8 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public Direction getNominalFace() {
-        return wrapped.getNominalFace();
+    public Direction nominalFace() {
+        return wrapped.nominalFace();
     }
 
     @Override
@@ -82,23 +82,23 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public boolean hasVertexNormal(int vertexIndex) {
-        return wrapped.hasVertexNormal(vertexIndex);
+    public boolean hasNormal(int vertexIndex) {
+        return wrapped.hasNormal(vertexIndex);
     }
 
     @Override
-    public float getVertexNormalX(int vertexIndex) {
-        return wrapped.getVertexNormalX(vertexIndex);
+    public float normalX(int vertexIndex) {
+        return wrapped.normalX(vertexIndex);
     }
 
     @Override
-    public float getVertexNormalY(int vertexIndex) {
-        return wrapped.getVertexNormalY(vertexIndex);
+    public float normalY(int vertexIndex) {
+        return wrapped.normalY(vertexIndex);
     }
 
     @Override
-    public float getVertexNormalZ(int vertexIndex) {
-        return wrapped.getVertexNormalZ(vertexIndex);
+    public float normalZ(int vertexIndex) {
+        return wrapped.normalZ(vertexIndex);
     }
 
     @Override
@@ -142,23 +142,23 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public float getVertexX(int vertexIndex) {
-        return wrapped.getVertexX(vertexIndex);
+    public float x(int vertexIndex) {
+        return wrapped.x(vertexIndex);
     }
 
     @Override
-    public float getVertexY(int vertexIndex) {
-        return wrapped.getVertexY(vertexIndex);
+    public float y(int vertexIndex) {
+        return wrapped.y(vertexIndex);
     }
 
     @Override
-    public float getVertexZ(int vertexIndex) {
-        return wrapped.getVertexZ(vertexIndex);
+    public float z(int vertexIndex) {
+        return wrapped.z(vertexIndex);
     }
 
     @Override
-    public int getVertexColor(int layerIndex, int vertexIndex) {
-        return wrapped.getVertexColor(layerIndex, vertexIndex);
+    public int spriteColor(int vertexIndex, int layerIndex) {
+        return wrapped.spriteColor(vertexIndex, layerIndex);
     }
 
     @Override
@@ -167,13 +167,13 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public float getVertexU(int layerIndex, int vertexIndex) {
-        return wrapped.getVertexU(layerIndex, vertexIndex);
+    public float spriteU(int vertexIndex, int layerIndex) {
+        return wrapped.spriteU(vertexIndex, layerIndex);
     }
 
     @Override
-    public float getVertexV(int layerIndex, int vertexIndex) {
-        return wrapped.getVertexV(layerIndex, vertexIndex);
+    public float spriteV(int vertexIndex, int layerIndex) {
+        return wrapped.spriteV(vertexIndex, layerIndex);
     }
 
     @Override
@@ -232,12 +232,7 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public void setTag(int tag) {
-        tagSetter.setValue(tag);
-    }
-
-    @Override
-    public int getTag() {
+    public int tag() {
         return tagGetter.getValue();
     }
 }

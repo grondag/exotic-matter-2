@@ -14,8 +14,8 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     public final IMutablePolygon setVertexLayer(int layerIndex, int vertexIndex, float u, float v, int color,
             int glow) {
         vertexIndex = vertexIndexer.apply(vertexIndex);
-        setVertexColor(layerIndex, vertexIndex, color);
-        setVertexUV(layerIndex, vertexIndex, u, v);
+        spriteColor(vertexIndex, layerIndex, color);
+        sprite(vertexIndex, layerIndex, u, v);
         setVertexGlow(vertexIndex, glow);
         return this;
     }
@@ -102,27 +102,27 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     public final IMutablePolygon setVertex(int vertexIndex, float x, float y, float z, float u, float v, int color,
             int glow) {
         vertexIndex = vertexIndexer.apply(vertexIndex);
-        setVertexPos(vertexIndex, x, y, z);
-        setVertexUV(0, vertexIndex, u, v);
-        setVertexColor(0, vertexIndex, color);
+        pos(vertexIndex, x, y, z);
+        sprite(vertexIndex, 0, u, v);
+        spriteColor(vertexIndex, 0, color);
         setVertexGlow(vertexIndex, glow);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setVertexPos(int vertexIndex, float x, float y, float z) {
+    public final IMutablePolygon pos(int vertexIndex, float x, float y, float z) {
         vertexEncoder.setVertexPos(stream, vertexAddress, vertexIndexer.apply(vertexIndex), x, y, z);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setVertexPos(int vertexIndex, Vec3f pos) {
+    public final IMutablePolygon pos(int vertexIndex, Vec3f pos) {
         vertexEncoder.setVertexPos(stream, vertexAddress, vertexIndexer.apply(vertexIndex), pos.x(), pos.y(), pos.z());
         return this;
     }
 
     @Override
-    public final IMutablePolygon setVertexColor(int layerIndex, int vertexIndex, int color) {
+    public final IMutablePolygon spriteColor(int vertexIndex, int layerIndex, int color) {
         if (vertexEncoder.hasColor())
             vertexEncoder.setVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex), color);
         else
@@ -131,19 +131,19 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     }
 
     @Override
-    public final IMutablePolygon setVertexU(int layerIndex, int vertexIndex, float u) {
+    public final IMutablePolygon spriteU(int vertexIndex, int layerIndex, float u) {
         vertexEncoder.setVertexU(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex), u);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setVertexV(int layerIndex, int vertexIndex, float v) {
+    public final IMutablePolygon spriteV(int vertexIndex, int layerIndex, float v) {
         vertexEncoder.setVertexV(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex), v);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setVertexUV(int layerIndex, int vertexIndex, float u, float v) {
+    public final IMutablePolygon sprite(int vertexIndex, int layerIndex, float u, float v) {
         vertexEncoder.setVertexUV(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex), u, v);
         return this;
     }
@@ -155,7 +155,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     }
 
     @Override
-    public final IMutablePolygon setVertexNormal(int vertexIndex, Vec3f normal) {
+    public final IMutablePolygon normal(int vertexIndex, Vec3f normal) {
         if (vertexEncoder.hasNormals()) {
             if (normal == null)
                 vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), Float.NaN,
@@ -168,7 +168,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     }
 
     @Override
-    public final IMutablePolygon setVertexNormal(int vertexIndex, float x, float y, float z) {
+    public final IMutablePolygon normal(int vertexIndex, float x, float y, float z) {
         if (vertexEncoder.hasNormals())
             vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), x, y, z);
         return this;
@@ -205,15 +205,15 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
 
     @Override
     public final IMutablePolygon copyVertexFrom(int targetIndex, IPolygon source, int sourceIndex) {
-        if (source.hasVertexNormal(sourceIndex)) {
+        if (source.hasNormal(sourceIndex)) {
             assert vertexEncoder.hasNormals();
-            setVertexNormal(targetIndex, source.getVertexNormalX(sourceIndex), source.getVertexNormalY(sourceIndex),
-                    source.getVertexNormalZ(sourceIndex));
+            normal(targetIndex, source.normalX(sourceIndex), source.normalY(sourceIndex),
+                    source.normalZ(sourceIndex));
         } else if (vertexEncoder.hasNormals())
-            setVertexNormal(targetIndex, null);
+            this.normal(targetIndex, (Vec3f)null);
 
-        setVertexPos(targetIndex, source.getVertexX(sourceIndex), source.getVertexY(sourceIndex),
-                source.getVertexZ(sourceIndex));
+        pos(targetIndex, source.x(sourceIndex), source.y(sourceIndex),
+                source.z(sourceIndex));
 
         if (glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_PER_VERTEX)
             setVertexGlow(targetIndex, source.getVertexGlow(sourceIndex));
@@ -225,20 +225,20 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
 
         // do for all vertices even if all the same - slightly wasteful but fewer logic
         // paths
-        setVertexColor(0, targetIndex, source.getVertexColor(0, sourceIndex));
+        spriteColor(targetIndex, 0, source.spriteColor(sourceIndex, 0));
         if (layerCount > 1) {
-            setVertexColor(1, targetIndex, source.getVertexColor(1, sourceIndex));
+            spriteColor(targetIndex, 1, source.spriteColor(sourceIndex, 1));
 
             if (layerCount == 3)
-                setVertexColor(2, targetIndex, source.getVertexColor(2, sourceIndex));
+                spriteColor(targetIndex, 2, source.spriteColor(sourceIndex, 2));
         }
 
-        setVertexUV(0, targetIndex, source.getVertexU(0, sourceIndex), source.getVertexV(0, sourceIndex));
+        sprite(targetIndex, 0, source.spriteU(sourceIndex, 0), source.spriteV(sourceIndex, 0));
         if (vertexEncoder.multiUV() && layerCount > 1) {
-            setVertexUV(1, targetIndex, source.getVertexU(1, sourceIndex), source.getVertexV(1, sourceIndex));
+            sprite(targetIndex, 1, source.spriteU(sourceIndex, 1), source.spriteV(sourceIndex, 1));
 
             if (layerCount == 3)
-                setVertexUV(2, targetIndex, source.getVertexU(2, sourceIndex), source.getVertexV(2, sourceIndex));
+                sprite(targetIndex, 2, source.spriteU(sourceIndex, 2), source.spriteV(sourceIndex, 2));
         }
 
         return this;
@@ -247,7 +247,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     @Override
     public final void copyFrom(IPolygon polyIn, boolean includeVertices) {
         // PERF: make this faster for other stream-based polys
-        setNominalFace(polyIn.getNominalFace());
+        setNominalFace(polyIn.nominalFace());
         //TODO replace with render material
 //        setPipeline(polyIn.getPipeline());
         setSurface(polyIn.getSurface());
@@ -293,7 +293,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
      */
     public void copyFromCSG(IPolygon polyIn) {
         copyFrom(polyIn, false);
-        setTag(polyIn.getTag());
+        tag(polyIn.tag());
         setMark(polyIn.isMarked());
     }
 
@@ -307,5 +307,11 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
         setMaxV(2, 1f);
 
         clearFaceNormal();
+    }
+    
+    @Override
+    public IMutablePolygon tag(int tag) {
+        polyEncoder.setTag(stream, baseAddress, tag);
+        return this;
     }
 }

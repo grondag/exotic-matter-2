@@ -1,7 +1,5 @@
 package grondag.brocade.state;
 
-import org.joml.Matrix4f;
-
 import grondag.brocade.api.texture.TextureSet;
 import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
@@ -11,7 +9,7 @@ import grondag.brocade.mesh.BlockOrientationType;
 import grondag.brocade.mesh.ModelShape;
 import grondag.brocade.painting.PaintLayer;
 import grondag.brocade.painting.VertexProcessor;
-import grondag.brocade.primitives.Transform;
+import grondag.brocade.primitives.PolyTransform;
 import grondag.brocade.terrain.TerrainState;
 import grondag.fermion.color.ColorMap;
 import grondag.fermion.color.ColorMap.EnumColorMap;
@@ -279,18 +277,9 @@ public interface MeshState extends IReadWriteNBT, PacketSerializable {
     MeshState geometricState();
 
     /**
-     * See {@link Transform#rotateFace(ModelState, Direction)}
+     * See {@link PolyTransform#rotateFace(ModelState, Direction)}
      */
     Direction rotateFace(Direction face);
-
-    /**
-     * Find appropriate transformation assuming base model is oriented to Y
-     * orthogonalAxis, positive. This is different than the Minecraft/Forge default
-     * because I brain that way.<br>
-     * <br>
-     * See {@link Transform#getMatrix4f(ModelState)}
-     */
-    Matrix4f getMatrix4f();
 
     MeshState clone();
 

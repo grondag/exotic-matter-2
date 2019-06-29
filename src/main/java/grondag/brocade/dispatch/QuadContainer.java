@@ -95,7 +95,7 @@ public class QuadContainer {
 
         @Override
         public void accept(IPolygon quad) {
-            final Direction facing = quad.getActualFace();
+            final Direction facing = quad.cullFace();
             final int index = facing == null ? 6 : facing.ordinal();
 
             SimpleUnorderedArrayList<IPolygon> bucket = buckets[index];

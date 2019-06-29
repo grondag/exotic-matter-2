@@ -63,7 +63,7 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
         IMutablePolygon editor = stream.editor();
         do {
             final SimpleJoinState bjs = modelState.getMasonryJoin();
-            final Direction face = editor.getNominalFace();
+            final Direction face = editor.nominalFace();
             final SimpleJoinFaceState fjs = SimpleJoinFaceState.find(face, bjs);
             final FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][fjs.ordinal()];
 

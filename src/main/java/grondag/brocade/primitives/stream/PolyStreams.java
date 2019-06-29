@@ -70,7 +70,7 @@ public class PolyStreams {
                 result.setVertexCount(reader.vertexCount());
                 result.setLayerCount(reader.layerCount());
                 writer.copyFrom(reader, true);
-                writer.setColor(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
+                writer.spriteColorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
                 result.append();
             } while (input.next());
         }

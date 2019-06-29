@@ -196,26 +196,26 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
     @Override
     public void setTag(int tag) {
-        reader.setTag(tag);
+        reader.tag(tag);
     }
 
     @Override
     public void setTag(int address, int tag) {
         validateAddress(address);
         internal.moveTo(address);
-        internal.setTag(tag);
+        internal.tag(tag);
     }
 
     @Override
     public int getTag() {
-        return hasValue() ? reader.getTag() : IPolygon.NO_LINK_OR_TAG;
+        return hasValue() ? reader.tag() : IPolygon.NO_LINK_OR_TAG;
     }
 
     @Override
     public int getTag(int address) {
         validateAddress(address);
         internal.moveTo(address);
-        return internal.getTag();
+        return internal.tag();
     }
 
     @Override

@@ -44,14 +44,6 @@ public interface IStreamPolygon {
      */
     public static final int NO_LINK_OR_TAG = Integer.MIN_VALUE;
 
-    default int getTag() {
-        return NO_LINK_OR_TAG;
-    }
-
-    default void setTag(int tag) {
-        throw new UnsupportedOperationException();
-    }
-
     default int getLink() {
         return NO_LINK_OR_TAG;
     }
