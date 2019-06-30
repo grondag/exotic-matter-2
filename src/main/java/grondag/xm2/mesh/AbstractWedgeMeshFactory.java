@@ -21,7 +21,7 @@ public abstract class AbstractWedgeMeshFactory extends MeshFactory {
     protected static final Surface BACK_AND_BOTTOM_SURFACE = Surface.builder(SurfaceTopology.CUBIC)
             .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
 
-    protected static final Surface SIDE_SURFACE = Surface.builder(BACK_AND_BOTTOM_SURFACE).withAllowBorders(false)
+    public static final Surface SIDE_SURFACE = Surface.builder(BACK_AND_BOTTOM_SURFACE).withAllowBorders(false)
             .build();
 
     protected static final Surface TOP_SURFACE = Surface.builder(SIDE_SURFACE).withIgnoreDepthForRandomization(true)

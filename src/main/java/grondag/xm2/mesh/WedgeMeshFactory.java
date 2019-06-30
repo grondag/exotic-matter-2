@@ -32,11 +32,13 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
         writer.setSurface(BACK_AND_BOTTOM_SURFACE);
         writer.setNominalFace(Direction.NORTH);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
+        writer.spriteColorAll(0, 0xFF00FFFF);
         transform.apply(writer);
         stream.append();
 
         writer.setSurface(BACK_AND_BOTTOM_SURFACE);
         writer.setNominalFace(Direction.DOWN);
+        writer.spriteColorAll(0, 0xFFFF0000);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
         stream.append();

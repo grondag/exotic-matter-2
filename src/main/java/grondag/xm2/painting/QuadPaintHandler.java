@@ -115,7 +115,6 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             throw new UnsupportedOperationException("Exotic Matter currently requires FREX renderer.");
         }
         
-        
         final int depth = poly.layerCount();
         final MaterialFinder finder = this.finder;
         
@@ -180,7 +179,8 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         applyTextureRotation(spriteIndex, poly);
         
         // scale UV coordinates to size of texture sub-region
-        for(int v = 0; v < 4; v++) {
+        final int vCount = poly.vertexCount();
+        for(int v = 0; v < vCount; v++) {
             poly.sprite(v, spriteIndex, 
                     minU + spanU * poly.spriteU(v, spriteIndex),
                     minV + spanV * poly.spriteV(v, spriteIndex));
@@ -198,7 +198,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         final float spriteSpanV = sprite.getMaxV() - spriteMinV;
         
         // doing interpolation here vs using sprite methods to avoid wasteful multiply and divide by 16
-        for(int v = 0; v < 4; v++) {
+        for(int v = 0; v < vCount; v++) {
             poly.sprite(v, spriteIndex, 
                     spriteMinU + spriteSpanU * poly.spriteU(v, spriteIndex),
                     spriteMinV + spriteSpanV * poly.spriteV(v, spriteIndex));
@@ -211,6 +211,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
     }
 
     private void applyTextureRotation(int spriteIndex, IMutablePolygon poly) {
+        final int vCount = poly.vertexCount();
         switch(poly.getRotation(spriteIndex))
         {
         case ROTATE_NONE:
@@ -218,7 +219,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             break;
             
         case ROTATE_90:
-            for(int i = 0; i < 4; i++) {
+            for(int i = 0; i < vCount; i++) {
                 final float uOld = poly.spriteU(i, spriteIndex);
                 final float vOld = poly.spriteV(i, spriteIndex);
                 poly.sprite(i, spriteIndex, vOld, 1 - uOld);
@@ -226,7 +227,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             break;
 
         case ROTATE_180:
-            for(int i = 0; i < 4; i++) {
+            for(int i = 0; i < vCount; i++) {
                 final float uOld = poly.spriteU(i, spriteIndex);
                 final float vOld = poly.spriteV(i, spriteIndex);
                 poly.sprite(i, spriteIndex, 1 - uOld, 1 - vOld);
@@ -234,7 +235,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             break;
         
         case ROTATE_270:
-            for(int i = 0; i < 4; i++) {
+            for(int i = 0; i < vCount; i++) {
                 final float uOld = poly.spriteU(i, spriteIndex);
                 final float vOld = poly.spriteV(i, spriteIndex);
                 poly.sprite(i, spriteIndex, 1 - vOld, uOld);

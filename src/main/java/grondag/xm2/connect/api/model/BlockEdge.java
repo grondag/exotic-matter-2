@@ -51,8 +51,8 @@ public enum BlockEdge implements StringIdentifiable {
     UP_WEST(Direction.UP, Direction.WEST, ROTATE_270), 
     NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90), 
     NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270), 
-    SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_90), 
-    SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_180); 
+    SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_270), 
+    SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_90); 
 
     public final Direction face1;
     public final Direction face2;
