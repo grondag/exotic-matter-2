@@ -35,7 +35,7 @@ public class BrocadeBlocks {
 //        workingModel.setTranslucent(PaintLayer.OUTER, true);
 //        workingModel.setEmissive(PaintLayer.OUTER, true);
         
-        Block block = new SimpleBrocadeBlock(
+        Block block = SimpleBrocadeBlock.create(
                 FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), 
                 workingModel);
         

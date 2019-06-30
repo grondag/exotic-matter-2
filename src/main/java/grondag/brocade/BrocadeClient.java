@@ -1,5 +1,6 @@
 package grondag.brocade;
 
+import grondag.brocade.collision.CollisionBoxDispatcher;
 import grondag.brocade.dispatch.BrocadeDispatcher;
 import grondag.brocade.dispatch.BrocadeModelVariantProvider;
 import grondag.brocade.init.BrocadeTextures;
@@ -12,6 +13,11 @@ public class BrocadeClient implements ClientModInitializer {
     public void onInitializeClient() {
         BrocadeTextures.init();
         ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new BrocadeModelVariantProvider());
-        InvalidateRenderStateCallback.EVENT.register(BrocadeDispatcher.INSTANCE::clear);
+        InvalidateRenderStateCallback.EVENT.register(BrocadeClient::invalidate);
+    }
+    
+    public static void invalidate() {
+        BrocadeDispatcher.INSTANCE.clear();
+        CollisionBoxDispatcher.clear();
     }
 }

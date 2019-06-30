@@ -227,6 +227,8 @@ public class MeshStateImpl implements MeshState {
         return hashCode;
     }
 
+    //TODO: remove - blocks should know how to refresh their state - state should not be coupled
+    @Deprecated
     @Override
     public MeshState refreshFromWorld(BlockState state, BlockView world, BlockPos pos) {
         // Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
@@ -235,16 +237,6 @@ public class MeshStateImpl implements MeshState {
             return this;
 
         populateStateFlagsIfNeeded();
-        // PERF avoid instance check for interface
-        if (state.getBlock() instanceof BrocadeBlock) {
-            // FIXME: - doesn't work when block state is something other than species
-            // needs to be a method that serializes block state to an int and back
-            this.setMetaData(state.get(BrocadeBlock.SPECIES));
-        } else {
-            // prevent strangeness - shouldn't get called by non-superblock but modded MC is
-            // crazy biz
-            return this;
-        }
 
         switch (this.getShape().meshFactory().stateFormat) {
         case BLOCK:

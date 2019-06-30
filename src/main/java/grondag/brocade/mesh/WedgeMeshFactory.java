@@ -15,13 +15,11 @@ import net.minecraft.util.math.Direction;
 public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
     @Override
     public void produceShapeQuads(MeshState modelState, Consumer<IPolygon> target) {
-        // Axis for this shape is along the face of the sloping surface
+        // Axis for this shape is through the face of the sloping surface
         // Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
-        // Default geometry is Y orthogonalAxis with full sides against north/east
-        // faces.
+        // Default geometry is Y axis with full sides against north/down faces.
 
-        // PERF: if have a consumer and doing this dynamically - should consumer simply be a stream?
-        // Why create a stream just to pipe it to the consumer?  Or cache the result.
+        // PERF: caching
         final IWritablePolyStream stream = PolyStreams.claimWritable();
         final IMutablePolygon writer = stream.writer();
         
@@ -38,29 +36,32 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
         stream.append();
 
         writer.setSurface(BACK_AND_BOTTOM_SURFACE);
-        writer.setNominalFace(Direction.EAST);
-        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
-        stream.append();
-
-        writer.setSurface(SIDE_SURFACE);
-        writer.setNominalFace(Direction.UP);
-        writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 1, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
-                Direction.NORTH);
-        transform.apply(writer);
-        stream.append();
-
-        writer.setSurface(SIDE_SURFACE);
         writer.setNominalFace(Direction.DOWN);
-        writer.setupFaceQuad(Direction.DOWN, new FaceVertex(0, 0, 0), new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0),
-                Direction.NORTH);
+        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
         stream.append();
 
+        stream.setVertexCount(3);
+        writer.setSurface(SIDE_SURFACE);
+        writer.setNominalFace(Direction.EAST);
+        writer.setupFaceQuad(Direction.EAST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0), Direction.UP);
+        writer.assignLockedUVCoordinates(0);
+        transform.apply(writer);
+        stream.append();
+
+        stream.setVertexCount(3);
+        writer.setSurface(SIDE_SURFACE);
+        writer.setNominalFace(Direction.WEST);
+        writer.setupFaceQuad(Direction.WEST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(0, 1, 0), Direction.UP);
+        writer.assignLockedUVCoordinates(0);
+        transform.apply(writer);
+        stream.append();
+
+        stream.setVertexCount(4);
         writer.setSurface(TOP_SURFACE);
-        writer.setNominalFace(Direction.SOUTH);
-        writer.setupFaceQuad(Direction.SOUTH, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
-                new FaceVertex(0, 1, 1), Direction.UP);
+        writer.setNominalFace(Direction.UP);
+        writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 1), new FaceVertex(1, 1, 0),
+                new FaceVertex(0, 1, 0), Direction.NORTH);
         transform.apply(writer);
         stream.append();
         

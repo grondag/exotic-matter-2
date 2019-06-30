@@ -2,6 +2,7 @@ package grondag.brocade.placement;
 
 import grondag.brocade.block.BrocadeBlock;
 import grondag.brocade.block.BrocadeBlockStackHelper;
+import grondag.brocade.connect.api.model.BlockCorner;
 import grondag.brocade.connect.api.model.BlockEdge;
 import grondag.brocade.connect.api.model.ClockwiseRotation;
 import grondag.brocade.state.MeshState;
@@ -9,9 +10,12 @@ import grondag.fermion.world.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -130,6 +134,7 @@ public class BlockOrientationHandler {
         BrocadeBlockStackHelper.setStackModelState(stack, outputModelState);
     }
 
+    //FIX: pretty sure this doesn't work now
     /** handle hit-sensitive placement for stairs, wedges */
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         MeshState outputModelState = BrocadeBlockStackHelper.getStackModelState(stack);
@@ -140,12 +145,12 @@ public class BlockOrientationHandler {
             Direction adjacentFace = WorldHelper.closestAdjacentFace(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY,
                     (float) pPos.hitZ);
 
-            BlockEdge corner = BlockEdge.find(pPos.onFace.getOpposite(), adjacentFace);
+            BlockEdge edge = BlockEdge.find(pPos.onFace.getOpposite(), adjacentFace);
 
-            outputModelState.setAxis(corner.parallelAxis);
+            outputModelState.setAxis(edge.face1.getAxis());
 
             if (outputModelState.hasAxisRotation()) {
-                outputModelState.setAxisRotation(corner.rotation);
+                outputModelState.setAxisRotation(edge.rotation);
                 isRotationDone = true;
             }
         } else {
@@ -160,5 +165,77 @@ public class BlockOrientationHandler {
         }
 
         BrocadeBlockStackHelper.setStackModelState(stack, outputModelState);
+    }
+    
+    public static final EnumProperty<Axis> AXIS_PROP = EnumProperty.of("xm2_axis", Axis.class);
+    public static final EnumProperty<Direction> FACE_PROP = EnumProperty.of("xm2_face", Direction.class);
+    public static final EnumProperty<BlockEdge> EDGE_PROP = EnumProperty.of("xm2_edge", BlockEdge.class);
+    public static final EnumProperty<BlockCorner> CORNER_PROP = EnumProperty.of("xm2_corner", BlockCorner.class);
+    
+    /** returns updated block state based on placement context */
+    public static BlockState axisBlockState(BlockState stateIn, ItemPlacementContext context) {
+        //TODO: implement
+        return stateIn;
+    }
+    
+    /** returns updated block state based on placement context */
+    public static BlockState faceBlockState(BlockState stateIn, ItemPlacementContext context) {
+        //TODO: implement
+        return stateIn;
+    }
+    
+    /** returns updated block state based on placement context */
+    public static BlockState edgeBlockState(BlockState stateIn, ItemPlacementContext context) {
+        final Direction onFace = context.getSide();
+        final BlockPos pos = context.getBlockPos();
+        final Vec3d hit = context.getHitPos();
+        
+        final Direction adjacentFace;
+        
+        if(onFace.getAxis() == Axis.Y) {
+            adjacentFace = context.getPlayerFacing();
+        } else {
+        
+            adjacentFace = WorldHelper.closestAdjacentFace(onFace, 
+                (float) (hit.x - pos.getX()), 
+                (float) (hit.y - pos.getY()),
+                (float) (hit.z - pos.getZ()));
+        }
+        
+        final BlockEdge edge = BlockEdge.find(onFace.getOpposite(), adjacentFace);
+        
+        return edge == null ? stateIn : stateIn.with(EDGE_PROP, edge);
+    }
+    
+    /** returns updated block state based on placement context */
+    public static BlockState cornerBlockState(BlockState stateIn, ItemPlacementContext context) {
+        //TODO: implement
+        return stateIn;
+    }
+    
+    
+    /** updates model state from block state */
+    public static void axisModelState(BlockState stateIn, MeshState modelState) {
+        //TODO: implement
+    }
+    
+    /** updates model state from block state */
+    public static void faceModelState(BlockState stateIn, MeshState modelState) {
+        //TODO: implement
+    }
+    
+    /** updates model state from block state */
+    public static void edgeModelState(BlockState stateIn, MeshState modelState) {
+        final BlockEdge edge = (BlockEdge) stateIn.getEntries().get(EDGE_PROP);
+        if(edge != null) {
+            modelState.setAxis(edge.face1.getAxis());
+            modelState.setAxisInverted(edge.face1.getDirection() != AxisDirection.NEGATIVE);
+            modelState.setAxisRotation(edge.rotation);
+        }
+    }
+    
+    /** updates model state from block state */
+    public static void cornerModelState(BlockState stateIn, MeshState modelState) {
+        //TODO: implement
     }
 }

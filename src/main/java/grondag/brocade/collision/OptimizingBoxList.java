@@ -13,6 +13,7 @@ public class OptimizingBoxList implements Runnable {
     // singleton is fine because called from a single thread
     private static final OptimalBoxGenerator boxGen = new OptimalBoxGenerator();
 
+    // PERF: may no longer need these?
     private ImmutableList<Box> wrapped;
     private MeshState modelState;
     private VoxelShape shape;

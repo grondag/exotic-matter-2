@@ -14,6 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+//TODO: still needed?
 /**
  * Provides sub-items and handles item logic for NiceBlocks.
  */
@@ -68,16 +69,6 @@ public class BrocadeBlockItem extends BlockItem implements PlacementItem {
         return false;
     }
 
-    /**
-     * Called to actually place the block, after the location is determined and all
-     * permission checks have been made.
-     *
-     * @param stack  The item stack that was used to place the block. This can be
-     *               changed inside the method.
-     * @param player The player who is placing the block. Can be null if the block
-     *               is not being placed by a player.
-     * @param side   The side the player (or machine) right-clicked on.
-     */
     @Override
     public boolean place(ItemPlacementContext context, BlockState newState) {
         return super.place(context, newState);

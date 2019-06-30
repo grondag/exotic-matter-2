@@ -41,34 +41,29 @@ import net.minecraft.util.math.Vec3i;
  */
 @API(status = STABLE)
 public enum BlockEdge implements StringIdentifiable {
-    UP_EAST(Direction.UP, Direction.EAST, ROTATE_NONE), // Z AXIS
-    UP_WEST(Direction.UP, Direction.WEST, ROTATE_270), // Z AXIS
-    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), // X AXIS
-    UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_90), // X AXIS
-    NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_NONE), // Y AXIS
-    NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270), // Y AXIS
-    SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_90), // Y AXIS
-    SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_180), // Y AXIS
-    DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90), // Z AXIS
-    DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_180), // Z AXIS
-    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_270), // X AXIS
-    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_NONE); // X AXIS
+    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE), // Default
+    DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90), 
+    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), 
+    DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
+    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), 
+    UP_EAST(Direction.UP, Direction.EAST, ROTATE_90), 
+    UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE), 
+    UP_WEST(Direction.UP, Direction.WEST, ROTATE_270), 
+    NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90), 
+    NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270), 
+    SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_90), 
+    SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_180); 
 
     public final Direction face1;
     public final Direction face2;
     public final String name;
 
     /**
-     * Axis parallel to both faces.  
-     * Equivalently, the axis orthogonal to the axes of both faces.
-     */
-    public final Direction.Axis parallelAxis;
-
-    /**
      * Used to position models like stairs/wedges. Representation rotation around
      * the parallel axis such that face1 and face2 are most occluded. Based on
-     * "default" model having Y axis and occluding north and east faces.
+     * "default" model occluding north and down faces. Use the axis implied by face1.
      */
+    
     public final ClockwiseRotation rotation;
     
     public final Vec3i vector;
@@ -96,9 +91,6 @@ public enum BlockEdge implements StringIdentifiable {
         this.rotation = rotation;
         superOrdinal = 6 + this.ordinal();
         superOrdinalBit = 1 << superOrdinal;
-        boolean hasX = (face1.getAxis() == Direction.Axis.X || face2.getAxis() == Direction.Axis.X);
-        boolean hasY = (face1.getAxis() == Direction.Axis.Y || face2.getAxis() == Direction.Axis.Y);
-        parallelAxis = hasX && hasY ? Direction.Axis.Z : hasX ? Direction.Axis.Y : Direction.Axis.X;
 
         Vec3i v1 = face1.getVector();
         Vec3i v2 = face2.getVector();
@@ -118,10 +110,6 @@ public enum BlockEdge implements StringIdentifiable {
     @Nullable
     public static BlockEdge find(Direction face1, Direction face2) {
         return BlockEdgeHelper.find(face1, face2);
-    }
-
-    public static BlockEdge find(Direction.Axis axis, ClockwiseRotation rotation) {
-        return BlockEdgeHelper.find(axis, rotation);
     }
     
     public static final BlockEdge fromOrdinal(int ordinal) {

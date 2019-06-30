@@ -13,8 +13,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityContext;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory.Builder;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
@@ -22,13 +24,22 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
 /**
- * Base class for HardScience building blocks.
+ * Base class for static building blocks.
  */
 public class SimpleBrocadeBlock extends Block implements BrocadeBlock {
+    //TODO: use an immutable instance instead?
     /** change in constructor to have different appearance */
     protected int[] defaultModelStateBits;
 
-    public SimpleBrocadeBlock(Settings blockSettings, MeshState defaultModelState) {
+    /** Hacky hack to let us inspect default model state during constructor before it is saved */
+    protected static final ThreadLocal<MeshState> INIT_STATE = new ThreadLocal<>();
+    
+    public static SimpleBrocadeBlock create(Settings blockSettings, MeshState defaultModelState) {
+        INIT_STATE.set(defaultModelState);
+        return new SimpleBrocadeBlock(blockSettings, defaultModelState);
+    }
+    
+    protected SimpleBrocadeBlock(Settings blockSettings, MeshState defaultModelState) {
         super(blockSettings);
         this.defaultModelStateBits = defaultModelState.serializeToInts();
     }
@@ -36,7 +47,16 @@ public class SimpleBrocadeBlock extends Block implements BrocadeBlock {
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(SPECIES);
+        final MeshState defaultState = INIT_STATE.get();
+        if(defaultState != null) {
+            if(defaultState.hasSpecies()) {
+                builder.add(SPECIES);
+            }
+            final EnumProperty<?> orientationProp = defaultState.getShape().meshFactory().orientationType(defaultState).property;
+            if(orientationProp != null) {
+                builder.add(orientationProp);
+            }
+        }
     }
 
     /**
@@ -323,15 +343,19 @@ public class SimpleBrocadeBlock extends Block implements BrocadeBlock {
      * those changes may not be detected by path finding.
      */
     @Override
-    public MeshState computeModelState(BlockState state, BlockView world, BlockPos pos,
-            boolean refreshFromWorldIfNeeded) {
+    public MeshState computeModelState(BlockState state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         MeshState result = this.getDefaultModelState();
-        if (refreshFromWorldIfNeeded) {
-            result.refreshFromWorld(state, world, pos);
-        } else if(state.contains(SPECIES)) {
-            // do a "lite" refresh that won't cause a stack overflow
+        
+        if(state.contains(SPECIES)) {
             result.setMetaData(state.get(SPECIES));
         }
+        
+        result.getShape().meshFactory().orientationType(result).stateFunc.accept(state, result);
+
+        if (refreshFromWorldIfNeeded) {
+            result.refreshFromWorld(state, world, pos);
+        }
+        
         return result;
     }
 
@@ -413,5 +437,12 @@ public class SimpleBrocadeBlock extends Block implements BrocadeBlock {
     @Override
     public boolean isVirtual() {
         return false;
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        //TODO: add species handling
+        final MeshState modelState = this.getDefaultModelState();
+        return modelState.getShape().meshFactory().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
     }
 }

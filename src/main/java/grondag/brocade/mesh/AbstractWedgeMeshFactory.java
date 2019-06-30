@@ -1,6 +1,7 @@
 package grondag.brocade.mesh;
 
 import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
 import static grondag.brocade.state.MeshStateData.STATE_FLAG_HAS_AXIS_ROTATION;
 import static grondag.brocade.state.MeshStateData.STATE_FLAG_NEEDS_SPECIES;
 
@@ -27,7 +28,7 @@ public abstract class AbstractWedgeMeshFactory extends MeshFactory {
             .build();
 
     public AbstractWedgeMeshFactory() {
-        super(StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION);
+        super(StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
     @Override
