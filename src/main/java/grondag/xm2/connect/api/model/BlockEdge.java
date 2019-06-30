@@ -41,10 +41,10 @@ import net.minecraft.util.math.Vec3i;
  */
 @API(status = STABLE)
 public enum BlockEdge implements StringIdentifiable {
-    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE), // Default
-    DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90), 
     DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), 
     DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
+    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE),
+    DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90), 
     UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), 
     UP_EAST(Direction.UP, Direction.EAST, ROTATE_90), 
     UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE), 

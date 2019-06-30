@@ -41,6 +41,7 @@ public class XmSimpleBlock extends Block implements XmBlock {
     
     protected XmSimpleBlock(Settings blockSettings, ModelState defaultModelState) {
         super(blockSettings);
+        defaultModelState.getShape().meshFactory().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(), defaultModelState);
         this.defaultModelStateBits = defaultModelState.serializeToInts();
     }
 
