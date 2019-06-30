@@ -1,32 +1,32 @@
 {
   "schemaVersion": 1,
-  "id": "brocade",
+  "id": "xm2",
   "version": "${version}",
-  "name": "Brocade",
+  "name": "Exotic Matter 2",
   "description": "Model generation and texturing functions for Minecraft Fabric mods",
   "authors": [
     "Grondag"
   ],
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/brocade",
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/exotic-matter-library",
     "sources": "https://github.com/grondag/brocade"
   },
   
   "license": "Apache-2.0",
-  "icon": "assets/canvas/brocade_icon.png",
+  "icon": "assets/xm2/xm2_icon.png",
   
   "environment": "*",
   "entrypoints": {
-    "main": [ "grondag.brocade.Brocade" ],
-    "client": [ "grondag.brocade.BrocadeClient" ]
+    "main": [ "grondag.xm2.Xm" ],
+    "client": [ "grondag.xm2.XmClient" ]
   },
   "mixins": [
   ],
   "requires": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
-    "frex": ">=0.3.2",
-    "fermion": ">=0.3.2"
+    "frex": ">=0.7.3",
+    "fermion": ">=0.6.3"
   },
   "custom": {
     "modmenu:api": true,
