@@ -110,11 +110,14 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
     
     
     private void polyToMesh(IMutablePolygon poly, QuadEmitter emitter) {
-        if(!FREX_ACTIVE) {
-            //TODO: handle non-FREX output
-            throw new UnsupportedOperationException("Exotic Matter currently requires FREX renderer.");
+        if(FREX_ACTIVE) {
+            polyToMeshFrex(poly, emitter);
+        } else {
+            polyToMeshIndigo(poly, emitter);
         }
-        
+    }
+    
+    private void polyToMeshFrex(IMutablePolygon poly, QuadEmitter emitter) {
         final int depth = poly.layerCount();
         final MaterialFinder finder = this.finder;
         
@@ -166,6 +169,58 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             }
         }
         
+        emitter.emit();
+    }
+    
+    private void polyToMeshIndigo(IMutablePolygon poly, QuadEmitter emitter) {
+        final int depth = poly.layerCount();
+        final MaterialFinder finder = this.finder;
+        
+        finder.clear();
+        
+        finder.blendMode(0, poly.getRenderLayer(0));
+        if(poly.isEmissive(0)) {
+            finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
+        }
+        bakeSprite(0, poly);
+        emitter.material(finder.find());
+        outputIndigoQuad(poly, emitter, 0);
+        
+        if(depth > 1) {
+            bakeSprite(1, poly);
+            finder.clear().blendMode(0, poly.getRenderLayer(1));
+            if(poly.isEmissive(1)) {
+                finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
+            }
+            emitter.material(finder.find());
+            outputIndigoQuad(poly, emitter, 1);
+            
+            if(depth == 3) {
+                bakeSprite(2, poly);
+                finder.clear().blendMode(0, poly.getRenderLayer(2));
+                if(poly.isEmissive(2)) {
+                    finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
+                }
+                emitter.material(finder.find());
+                outputIndigoQuad(poly, emitter, 2);
+            }
+        }
+    }
+    
+    private static void outputIndigoQuad(IMutablePolygon poly, QuadEmitter emitter, int spriteIndex) {
+        emitter.cullFace(poly.cullFace());
+        emitter.nominalFace(poly.nominalFace());
+        emitter.tag(poly.tag());
+        
+        for(int v = 0; v < 4; v++) {   
+            emitter.pos(v, poly.x(v), poly.y(v), poly.z(v));
+            if(poly.hasNormal(v)) {
+                emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
+            }
+            
+            emitter.sprite(v, 0, poly.spriteU(v, spriteIndex), poly.spriteV(v, spriteIndex));
+            emitter.spriteColor(v, 0, poly.spriteColor(v, spriteIndex));
+        }
         emitter.emit();
     }
     

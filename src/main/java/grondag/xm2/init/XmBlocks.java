@@ -18,12 +18,21 @@ public class XmBlocks {
     
     
     public static final void init() {
-        Xm.LOG.debug("Registering Brocade Blocks");
+        Xm.LOG.debug("Registering Exotic Matter Test Blocks");
         
         ModelState workingModel = new ModelStateImpl();
         workingModel.setShape(ModShapes.WEDGE);
-        workingModel.setTexture(PaintLayer.BASE, XmTextures.SANDSTONE_ZOOM2);
-        workingModel.setColorRGB(PaintLayer.BASE, 0xFF656A70);
+        workingModel.setTexture(PaintLayer.BASE, XmTextures.WHITE);
+        workingModel.setColorRGB(PaintLayer.BASE, 0xFFFFFFFF);
+        register(XmSimpleBlock.create(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_wedge");
+        
+        workingModel = new ModelStateImpl();
+        workingModel.setShape(ModShapes.CUBE);
+        workingModel.setTexture(PaintLayer.BASE, XmTextures.WHITE);
+        workingModel.setColorRGB(PaintLayer.BASE, 0xFFFFFFFF);
+        register(XmSimpleBlock.create(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_cube");
+    }
+    
 //        workingModel.setTexture(PaintLayer.MIDDLE, BrocadeTextures.BLOCK_COBBLE);
 //        workingModel.setColorRGB(PaintLayer.MIDDLE, 0xFF4444);
 //        workingModel.setTranslucent(PaintLayer.MIDDLE, true);
@@ -34,13 +43,6 @@ public class XmBlocks {
 //        workingModel.setColorRGB(PaintLayer.OUTER, 0xFFFFD300);
 //        workingModel.setTranslucent(PaintLayer.OUTER, true);
 //        workingModel.setEmissive(PaintLayer.OUTER, true);
-        
-        Block block = XmSimpleBlock.create(
-                FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), 
-                workingModel);
-        
-        register(block, "test");
-    }
     
     private static void register(Block block, String name) {
         Identifier id = new Identifier(Xm.MODID, name);
