@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 public class QuadPaintHandler implements Consumer<IPolygon> {
@@ -258,11 +259,34 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
                     spriteMinU + spriteSpanU * poly.spriteU(v, spriteIndex),
                     spriteMinV + spriteSpanV * poly.spriteV(v, spriteIndex));
         }
-        
     }
 
+    /**
+     * Prevents pinholes or similar artifacts along texture seams by nudging all
+     * texture coordinates slightly towards the vertex centroid of the UV coordinates.
+     */
     private void contractUVs(int spriteIndex, Sprite sprite, IMutablePolygon poly) {
-        //TODO: implement UV contract - refer to vanilla for example
+        final float uPixels = (float)sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU());
+        final float vPixels = (float)sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV());
+        final float nudge = 4.0f / Math.max(vPixels, uPixels);
+        
+        final float u0 = poly.spriteU(0, spriteIndex);
+        final float u1 = poly.spriteU(1, spriteIndex);
+        final float u2 = poly.spriteU(2, spriteIndex);
+        final float u3 = poly.spriteU(3, spriteIndex);
+        
+        final float v0 = poly.spriteV(0, spriteIndex);
+        final float v1 = poly.spriteV(1, spriteIndex);
+        final float v2 = poly.spriteV(2, spriteIndex);
+        final float v3 = poly.spriteV(3, spriteIndex);
+        
+        final float uCenter = (u0 + u1 + u2 + u3) * 0.25F;
+        final float vCenter = (v0 + v1 + v2 + v3) * 0.25F;
+        
+        poly.sprite(0, spriteIndex, MathHelper.lerp(nudge, u0, uCenter), MathHelper.lerp(nudge, v0, vCenter));
+        poly.sprite(1, spriteIndex, MathHelper.lerp(nudge, u1, uCenter), MathHelper.lerp(nudge, v1, vCenter));
+        poly.sprite(2, spriteIndex, MathHelper.lerp(nudge, u2, uCenter), MathHelper.lerp(nudge, v2, vCenter));
+        poly.sprite(3, spriteIndex, MathHelper.lerp(nudge, u3, uCenter), MathHelper.lerp(nudge, v3, vCenter));
     }
 
     private void applyTextureRotation(int spriteIndex, IMutablePolygon poly) {
