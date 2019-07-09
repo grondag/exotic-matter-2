@@ -11,7 +11,6 @@ import net.fabricmc.indigo.renderer.RenderMaterialImpl;
 import net.fabricmc.indigo.renderer.helper.ColorHelper;
 import net.fabricmc.indigo.renderer.helper.ColorHelper.ShadeableQuad;
 
-//TODO: move to FREX
 public class QuadRotation implements QuadTransform {
     
     public static Builder builder() {

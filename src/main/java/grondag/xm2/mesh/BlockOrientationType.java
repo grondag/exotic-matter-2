@@ -3,7 +3,8 @@ package grondag.xm2.mesh;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-import grondag.fermion.shadow.jankson.annotation.Nullable;
+import javax.annotation.Nullable;
+
 import grondag.xm2.placement.BlockOrientationHandler;
 import grondag.xm2.state.ModelState;
 import net.minecraft.block.BlockState;

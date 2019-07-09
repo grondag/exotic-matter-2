@@ -1,6 +1,7 @@
 package grondag.xm2.connect.api.world;
 
-import grondag.fermion.shadow.jankson.annotation.Nullable;
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
