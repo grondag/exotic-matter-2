@@ -72,7 +72,7 @@ public class QuadRotation implements QuadTransform {
     public boolean transform(MutableQuadView quad) {
       //  Direction oldFace = quad.nominalFace();
         
-        // TODO: Find a better way than this hack.
+        // UGLY: Find a better way than this hack.
         // For Indigo, need to reverse and re-apply diffuse shading
         final boolean reshade = relight && isIndigo && ((RenderMaterialImpl.Value)quad.material()).disableDiffuse(0) == false;
         if(reshade) {
