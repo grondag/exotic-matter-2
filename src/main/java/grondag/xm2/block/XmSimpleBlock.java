@@ -1,12 +1,14 @@
 package grondag.xm2.block;
 
 import java.util.List;
+import java.util.function.Function;
 
+import grondag.xm2.block.wip.XmBlockState;
+import grondag.xm2.block.wip.XmBlockStateAccess;
+import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
-import grondag.xm2.connect.api.world.BlockTest;
 import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.state.ModelState;
-import grondag.xm2.state.ModelStateImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory.Builder;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
@@ -31,12 +34,22 @@ public class XmSimpleBlock extends Block implements XmBlock {
     /** change in constructor to have different appearance */
     protected int[] defaultModelStateBits;
 
+	public static final IntProperty SPECIES = IntProperty.of("xm2_species", 0, 15);
+
     /** Hacky hack to let us inspect default model state during constructor before it is saved */
     protected static final ThreadLocal<ModelState> INIT_STATE = new ThreadLocal<>();
     
     public static XmSimpleBlock create(Settings blockSettings, ModelState defaultModelState) {
         INIT_STATE.set(defaultModelState);
         return new XmSimpleBlock(blockSettings, defaultModelState);
+    }
+    
+    public static ModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
+    	ModelState result = xmState.defaultModelState().clone();
+    	if(refreshFromWorld) {
+    		result = result.clone().refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
+    	}
+    	return result;
     }
     
     protected XmSimpleBlock(Settings blockSettings, ModelState defaultModelState) {
@@ -51,7 +64,7 @@ public class XmSimpleBlock extends Block implements XmBlock {
         final ModelState defaultState = INIT_STATE.get();
         if(defaultState != null) {
             if(defaultState.hasSpecies()) {
-                builder.add(SPECIES);
+                builder.add(XmSimpleBlock.SPECIES);
             }
             final EnumProperty<?> orientationProp = defaultState.getShape().meshFactory().orientationType(defaultState).property;
             if(orientationProp != null) {
@@ -60,18 +73,9 @@ public class XmSimpleBlock extends Block implements XmBlock {
         }
     }
 
-    /**
-     * Factory for block test that should be used for border/shape joins for this
-     * block. Used in model state refresh from world.
-     */
-    @Override
-    public BlockTest blockJoinTest() {
-        return XmBorderMatch.INSTANCE;
-    }
-
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, EntityContext entityContext) {
-        ModelState modelState = getModelStateAssumeStateIsCurrent(state, blockView, pos, true);
+        final ModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
         return CollisionBoxDispatcher.getOutlineShape(modelState);
     }
 
@@ -301,75 +305,6 @@ public class XmSimpleBlock extends Block implements XmBlock {
 //    }
 
 
-    /**
-     * Returns an instance of the default model state for this block. Because model
-     * states are mutable, every call returns a new instance.
-     */
-    @Override
-    public ModelState getDefaultModelState() {
-        return new ModelStateImpl(this.defaultModelStateBits);
-    }
-
-    /**
-     * If last parameter is false, does not perform a refresh from world for
-     * world-dependent state attributes. Use this option to prevent infinite
-     * recursion when need to reference some static state ) information in order to
-     * determine dynamic world state. Block tests are main use case for false.
-     * 
-     */
-    @Override
-    public ModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        return getModelStateAssumeStateIsCurrent(world.getBlockState(pos), world, pos, refreshFromWorldIfNeeded);
-    }
-
-    /**
-     * At least one vanilla routine passes in a block state that does not match
-     * world. (After block updates, passes in previous state to detect collision box
-     * changes.) <br>
-     * <br>
-     * 
-     * We don't want to update our current state based on stale block state, so for
-     * TE blocks the refresh must be coded so we don't inject bad (stale) modelState
-     * into TE. <br>
-     * <br>
-     * 
-     * However, we do want to honor the given world state if species is different
-     * than current. We do this by directly changing species, because that is only
-     * thing that can changed in model state based on block state, and also affects
-     * collision box. <br>
-     * <br>
-     * 
-     * NOTE: there is probably still a bug here, because collision box can change
-     * based on other components of model state (orthogonalAxis, for example) and
-     * those changes may not be detected by path finding.
-     */
-    @Override
-    public ModelState computeModelState(BlockState state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        ModelState result = this.getDefaultModelState();
-        
-        if(state.contains(SPECIES)) {
-            result.setMetaData(state.get(SPECIES));
-        }
-        
-        result.getShape().meshFactory().orientationType(result).stateFunc.accept(state, result);
-
-        if (refreshFromWorldIfNeeded) {
-            result.refreshFromWorld(state, world, pos);
-        }
-        
-        return result;
-    }
-
-    /**
-     * Use when absolutely certain given block state is current.
-     */
-    @Override
-    public ModelState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        // for mundane (non-TE) blocks don't need to worry about state being persisted,
-        // logic is same for old and current states
-        return computeModelState(state, world, pos, refreshFromWorldIfNeeded);
-    }
-
   //TODO: restore or remove
 //    @Override
 //    public int getOcclusionKey(BlockState state, BlockView world, BlockPos pos, Direction side) {
@@ -412,15 +347,6 @@ public class XmSimpleBlock extends Block implements XmBlock {
 //        }
 //    }
 
-    /**
-     * True if this is an instance of an IFlowBlock and also a filler block. Avoids
-     * performance hit of casting to the IFlowBlock Interface. (Based on performance
-     * profile results.)
-     */
-    @Override
-    public boolean isFlowFiller() {
-        return false;
-    }
 
     /**
      * True if this is an instance of an IFlowBlock and also a height block. Avoids
@@ -443,7 +369,21 @@ public class XmSimpleBlock extends Block implements XmBlock {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         //TODO: add species handling
-        final ModelState modelState = this.getDefaultModelState();
+        final ModelState modelState = XmBlockStateAccess.get(this).defaultModelState;
         return modelState.getShape().meshFactory().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
     }
+
+	public static Function<BlockState, ModelState> defaultModelStateFunc(ModelState baseModelState) {
+		return  (state) -> {
+			ModelState result = baseModelState.clone();
+			
+	        if(state.contains(SPECIES)) {
+	            result.setMetaData(state.get(SPECIES));
+	        }
+	        
+	        result.getShape().meshFactory().orientationType(result).stateFunc.accept(state, result);
+	        
+	        return result.toImmutable();
+		};
+	}
 }

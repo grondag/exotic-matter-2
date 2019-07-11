@@ -23,14 +23,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.world.BlockView;
 
-public class ImmutableMeshStateImpl extends ModelStateImpl implements ImmutableModelState {
+public class ImmutableModelStateImpl extends ModelStateImpl implements ImmutableModelState {
 
-    public ImmutableMeshStateImpl(long coreBits, long shapeBits0, long shapeBits1, long layerBitsBase, long layerBitsCut,
+    public ImmutableModelStateImpl(long coreBits, long shapeBits0, long shapeBits1, long layerBitsBase, long layerBitsCut,
             long layerBitsLamp, long layerBitsMiddle, long layerBitsOuter) {
         super(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut,
                 layerBitsLamp, layerBitsMiddle, layerBitsOuter);
@@ -38,11 +36,6 @@ public class ImmutableMeshStateImpl extends ModelStateImpl implements ImmutableM
 
     @Override
     public void setStatic(boolean isStatic) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public ModelState refreshFromWorld(BlockState state, BlockView world, BlockPos pos) {
         throw new IllegalStateException();
     }
 

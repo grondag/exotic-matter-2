@@ -3,11 +3,11 @@ package grondag.xm2.placement;
 import grondag.fermion.world.WorldHelper;
 import grondag.xm2.block.XmBlock;
 import grondag.xm2.block.XmStackHelper;
+import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.connect.api.model.BlockCorner;
 import grondag.xm2.connect.api.model.BlockEdge;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.state.ModelState;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -75,14 +75,11 @@ public class BlockOrientationHandler {
         ModelState closestModelState = null;
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
-        Block onBlock = onBlockState.getBlock();
 
-        if (onBlock instanceof XmBlock) {
-            closestModelState = ((XmBlock)onBlock).getModelStateAssumeStateIsCurrent(onBlockState, world, pPos.onPos, true);
-
-            // can't use onBlock as reference if is of a different type
-            if (closestModelState.getShape() != outputModelState.getShape())
-                closestModelState = null;
+        closestModelState = XmBlockStateAccess.modelState(onBlockState, world, pPos.onPos, true);
+        // can't use onBlock as reference if is of a different type
+        if(closestModelState != null && closestModelState.getShape() != outputModelState.getShape()) {
+        	closestModelState = null;
         }
 
         // block placed on was bust, so look around
@@ -101,8 +98,7 @@ public class BlockOrientationHandler {
                                 double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x,
                                         pPos.onPos.getY() + 0.5 + y, pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
-                                    XmBlock testBlock = (XmBlock) testBlockState.getBlock();
-                                    ModelState testModelState = testBlock.getModelStateAssumeStateIsCurrent(testBlockState, world, testPos, true);
+                                    ModelState testModelState = XmBlockStateAccess.modelState(testBlockState, world, testPos, true);
                                     if (testModelState.getShape() == outputModelState.getShape()) {
                                         closestDistSq = distSq;
                                         closestModelState = testModelState;

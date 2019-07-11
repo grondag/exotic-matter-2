@@ -1,9 +1,9 @@
 package grondag.xm2.block;
 
+import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm2.block.wip.XmBlockState;
 import grondag.xm2.state.ModelState;
-import grondag.xm2.state.MetaUsage;
 import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
@@ -44,39 +44,14 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
         return result;
     }
 
-    @Override
-    public ModelState computeModelState(BlockState state, BlockView world, BlockPos pos,
-            boolean refreshFromWorldIfNeeded) {
-        BlockEntity myTE = world.getBlockEntity(pos);
+    public static ModelState computeModelState(XmBlockState xmStateIn, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+        final BlockEntity myTE = world.getBlockEntity(pos);
+        final XmBlockStateImpl xmState = (XmBlockStateImpl)xmStateIn;
+        
         if (myTE != null && myTE instanceof XmTileEntity) {
-            BlockState currentState = world.getBlockState(pos);
-            ModelState result = ((XmTileEntity) myTE).getModelState(currentState, world, pos,
-                    refreshFromWorldIfNeeded);
-
-            // honor passed in species if different
-            if (result.metaUsage() != MetaUsage.NONE && currentState.get(SPECIES) != state.get(SPECIES)) {
-                result = result.clone();
-                result.setMetaData(state.get(SPECIES));
-            }
-            return result;
+            return ((XmTileEntity) myTE).getModelState(xmState, world, pos, refreshFromWorldIfNeeded);
         } else {
-            return super.computeModelState(state, world, pos, refreshFromWorldIfNeeded);
-        }
-    }
-
-    /**
-     * Use when absolutely certain given block state is current.
-     */
-    @Override
-    public ModelState getModelStateAssumeStateIsCurrent(BlockState state, BlockView world, BlockPos pos,
-            boolean refreshFromWorldIfNeeded) {
-
-        BlockEntity myTE = world.getBlockEntity(pos);
-        if (myTE != null && myTE instanceof XmTileEntity) {
-            return ((XmTileEntity) myTE).getModelState(state, world, pos, refreshFromWorldIfNeeded);
-
-        } else {
-            return computeModelState(state, world, pos, refreshFromWorldIfNeeded);
+            return XmSimpleBlock.computeModelState(xmState, world, pos, refreshFromWorldIfNeeded);
         }
     }
 

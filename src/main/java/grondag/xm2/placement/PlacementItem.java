@@ -10,6 +10,7 @@ import grondag.fermion.varia.FixedRegionBounds;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.PackedBlockPos;
 import grondag.xm2.block.XmBlock;
+import grondag.xm2.block.XmSimpleBlock;
 import grondag.xm2.block.XmStackHelper;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.state.ModelState;
@@ -561,7 +562,7 @@ public interface PlacementItem {
             //TODO: may need to handle other properties/make dynamic somehow
             BlockState result = targetBlock.getDefaultState();
             if(modelState.hasSpecies()) {
-                result = result.with(XmBlock.SPECIES, modelState.getSpecies());
+                result = result.with(XmSimpleBlock.SPECIES, modelState.getSpecies());
             }
 
             return result;

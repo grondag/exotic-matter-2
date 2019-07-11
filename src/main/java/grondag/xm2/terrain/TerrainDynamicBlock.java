@@ -1,5 +1,6 @@
 package grondag.xm2.terrain;
 
+import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.init.ModShapes;
 import grondag.xm2.state.ModelState;
 import net.minecraft.block.Block;
@@ -33,7 +34,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
         if (staticVersion == null || state.getBlock() != this)
             return;
 
-        ModelState myModelState = this.getModelStateAssumeStateIsCurrent(state, world, pos, true);
+        ModelState myModelState = XmBlockStateAccess.modelState(state, world, pos, true);
         myModelState.setStatic(true);
         //TODO: transfer heat block state?
         world.setBlockState(pos, staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)), 7);

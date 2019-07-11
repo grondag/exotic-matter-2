@@ -8,9 +8,11 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.block.XmStackHelper;
+import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.dispatch.XmDispatcher;
+import grondag.xm2.state.ModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -35,17 +37,24 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
     
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand) {
-        return XmDispatcher.INSTANCE.get(((XmBlock)state.getBlock()).getDefaultModelState()).getBakedQuads(state, face, rand);
+    	final XmBlockStateImpl xmState = XmBlockStateAccess.get(state);
+    	return xmState == null ? Collections.emptyList() : XmDispatcher.INSTANCE.get(xmState.defaultModelState).getBakedQuads(state, face, rand);
     }
     
     @Override
     public void emitBlockQuads(ExtendedBlockView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        XmDispatcher.INSTANCE.get(((XmBlock)state.getBlock()).getModelStateAssumeStateIsCurrent(state, blockView, pos, true)).emitQuads(context);
+        final ModelState modelState = XmBlockStateAccess.modelState(state, blockView, pos, true);
+    	if(modelState != null) {
+    		XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
+    	}
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        XmDispatcher.INSTANCE.get(XmStackHelper.getStackModelState(stack)).emitQuads(context);
+    	final ModelState modelState = XmStackHelper.getStackModelState(stack);
+    	if(modelState != null) {
+    		XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
+    	}
     }
 
     @Override

@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 
 import grondag.fermion.world.PackedBlockPos;
 import grondag.xm2.block.XmBlock;
+import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm2.block.wip.XmBlockStateAccess;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -162,9 +164,9 @@ public class TerrainBlockHelper {
      * block.
      */
     public static boolean shouldBeFullCube(BlockState blockState, BlockView blockAccess, BlockPos pos) {
-        if(isFlowBlock(blockState)) {
-            XmBlock block = (XmBlock)blockState.getBlock();
-            return block.getModelStateAssumeStateIsCurrent(blockState, blockAccess, pos, true).getTerrainState().isFullCube();
+    	final XmBlockStateImpl xmState = XmBlockStateAccess.get(blockState);
+        if(isFlowBlock(xmState.blockState)) {
+            return xmState.getModelState(blockAccess, pos, true).getTerrainState().isFullCube();
         } else {
             return false;
         }

@@ -20,6 +20,7 @@ import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.xm2.block.XmBlock;
 import grondag.xm2.block.XmMasonryMatch;
+import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
@@ -230,7 +231,8 @@ public class ModelStateImpl implements ModelState {
     //TODO: remove - blocks should know how to refresh their state - state should not be coupled
     @Deprecated
     @Override
-    public ModelState refreshFromWorld(BlockState state, BlockView world, BlockPos pos) {
+    public ModelState refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
+    	
         // Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
         // " @" + pos.toString());
         if (this.isStatic)
@@ -247,11 +249,11 @@ public class ModelStateImpl implements ModelState {
             BlockNeighbors neighbors = null;
 
             if ((STATE_FLAG_NEEDS_CORNER_JOIN & stateFlags) == STATE_FLAG_NEEDS_CORNER_JOIN) {
-                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, ((XmBlock) state.getBlock()).blockJoinTest());
+                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, xmState.blockJoinTest());
                 ModelStateData.BLOCK_JOIN.setValue(CornerJoinState.fromWorld(neighbors).ordinal(), this);
                 
             } else if ((STATE_FLAG_NEEDS_SIMPLE_JOIN & stateFlags) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
-                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, ((XmBlock) state.getBlock()).blockJoinTest());
+                neighbors = BlockNeighbors.claim(world, pos, TEST_GETTER_STATIC, xmState.blockJoinTest());
                 ModelStateData.BLOCK_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
             }
 
@@ -275,7 +277,7 @@ public class ModelStateImpl implements ModelState {
             // because doesn't have per-block rotation or version
             if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS)
                 refreshBlockPosFromWorld(pos, 255);
-            TerrainState.produceBitsFromWorldStatically(state, world, pos, (t, h) -> {
+            TerrainState.produceBitsFromWorldStatically(xmState.blockState, world, pos, (t, h) -> {
                 ModelStateData.FLOW_JOIN.setValue(t, this);
                 ModelStateData.EXTRA_SHAPE_BITS.setValue(h, this);
                 return null;
@@ -997,7 +999,7 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public ImmutableModelState toImmutable() {
-        return new ImmutableMeshStateImpl(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut, layerBitsLamp,
+        return new ImmutableModelStateImpl(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut, layerBitsLamp,
                 layerBitsMiddle, layerBitsOuter);
     }
 }

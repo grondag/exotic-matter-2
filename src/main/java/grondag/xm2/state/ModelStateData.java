@@ -4,7 +4,7 @@ package grondag.xm2.state;
 
 import grondag.fermion.varia.BitPacker64;
 import grondag.xm2.apiimpl.texture.TextureSetRegistryImpl;
-import grondag.xm2.block.XmSimpleBlock;
+import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
@@ -13,11 +13,7 @@ import grondag.xm2.mesh.ModelShapes;
 import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.painting.VertexProcessors;
 import grondag.xm2.terrain.TerrainState;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 
 public class ModelStateData {
     /**
@@ -119,29 +115,13 @@ public class ModelStateData {
      * Use this as factory for model state block tests that DON'T need to refresh
      * from world.
      */
-    public static final ModelStateFunction TEST_GETTER_STATIC = new ModelStateFunction() {
-        @Override
-        public Object get(BlockView world, BlockState blockState, BlockPos pos) {
-            Block block = blockState.getBlock();
-            return (block instanceof XmSimpleBlock)
-                    ? ((XmSimpleBlock)block).getModelStateAssumeStateIsCurrent(blockState, world, pos, false)
-                    : null;
-        }
-    };
+    public static final ModelStateFunction TEST_GETTER_STATIC = (w, b, p) -> XmBlockStateAccess.modelState(b, w, p, false);
 
     /**
      * Use this as factory for model state block tests that DO need to refresh from
      * world.
      */
-    public static final ModelStateFunction TEST_GETTER_DYNAMIC = new ModelStateFunction() {
-        @Override
-        public Object get(BlockView worldIn, BlockState state, BlockPos pos) {
-            Block block = state.getBlock();
-            return (block instanceof XmSimpleBlock)
-                    ? ((XmSimpleBlock)block).getModelStateAssumeStateIsCurrent(state, worldIn, pos, true)
-                    : null;
-        }
-    };
+    public static final ModelStateFunction TEST_GETTER_DYNAMIC = (w, b, p) -> XmBlockStateAccess.modelState(b, w, p, true);
 
     public static final BitPacker64<ModelStateImpl> STATE_PACKER = new BitPacker64<ModelStateImpl>(m -> m.stateFlags,
             (m, b) -> m.stateFlags = (int) b);

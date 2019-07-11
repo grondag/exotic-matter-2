@@ -6,6 +6,7 @@ import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.serialization.PacketSerializable;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.block.XmBlock;
+import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
@@ -43,7 +44,7 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     int hashCode();
 
     /** returns self as convenience method */
-    ModelState refreshFromWorld(BlockState state, BlockView world, BlockPos pos);
+    ModelState refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
 
     ModelShape<?> getShape();
 

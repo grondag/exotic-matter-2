@@ -1,10 +1,11 @@
 package grondag.xm2.block;
 
 import grondag.fermion.serialization.NBTDictionary;
+import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.ModelStateImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
@@ -150,20 +151,22 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
         return compound;
     }
 
-    public ModelState getModelState(BlockState state, BlockView world, BlockPos pos,
-            boolean refreshFromWorldIfNeeded) {
+    public ModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         ModelState result = this.modelState;
 
         if (result == null) {
-            result = ((XmBlock) state.getBlock()).getDefaultModelState();
-            this.modelState = result;
-            this.isModelStateCacheDirty = true;
-
-            // necessary for species
-            refreshFromWorldIfNeeded = true;
+    		result = state.defaultModelState;
+    		this.modelState = result;
+    		this.isModelStateCacheDirty = true;
+        } else {
+            // honor passed in species if different
+            if (result.hasSpecies() && result.getSpecies() != state.defaultModelState.getSpecies()) {
+                result = result.clone();
+                result.setSpecies(state.defaultModelState.getSpecies());
+            }
         }
 
-        if (this.isModelStateCacheDirty && refreshFromWorldIfNeeded) {
+        if (result != null && this.isModelStateCacheDirty && refreshFromWorldIfNeeded) {
             result.refreshFromWorld(state, world, pos);
             this.isModelStateCacheDirty = false;
         }
@@ -178,7 +181,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
         if (!(this.modelState == null || this.isModelStateCacheDirty)) {
             return this.modelState;
         } else {
-            return getModelState(world.getBlockState(pos), world, pos, true);
+            return getModelState(XmBlockStateAccess.get(world.getBlockState(pos)), world, pos, true);
         }
     }
 
