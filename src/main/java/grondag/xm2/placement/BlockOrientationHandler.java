@@ -1,9 +1,9 @@
 package grondag.xm2.placement;
 
 import grondag.fermion.world.WorldHelper;
+import grondag.xm2.block.XmBlockState;
+import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmStackHelper;
-import grondag.xm2.block.wip.XmBlockState;
-import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.connect.api.model.BlockCorner;
 import grondag.xm2.connect.api.model.BlockEdge;
 import grondag.xm2.connect.api.model.ClockwiseRotation;

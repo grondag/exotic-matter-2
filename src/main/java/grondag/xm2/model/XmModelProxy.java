@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmStackHelper;
-import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.block.wip.XmBlockStateAccess;
+import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.dispatch.XmDispatcher;
 import grondag.xm2.state.ModelState;
 import net.fabricmc.api.EnvType;

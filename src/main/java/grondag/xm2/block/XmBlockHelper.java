@@ -2,7 +2,6 @@ package grondag.xm2.block;
 
 
 
-import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.state.ModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

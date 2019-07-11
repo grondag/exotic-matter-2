@@ -3,9 +3,9 @@ package grondag.xm2.block;
 import java.util.List;
 import java.util.function.Function;
 
-import grondag.xm2.block.wip.XmBlockState;
-import grondag.xm2.block.wip.XmBlockStateAccess;
-import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm2.block.XmBlockState;
+import grondag.xm2.block.XmBlockStateAccess;
+import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
 import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.state.ModelState;
@@ -30,10 +30,6 @@ import net.minecraft.world.BlockView;
  * Base class for static building blocks.
  */
 public class XmSimpleBlock extends Block {
-    //TODO: use an immutable instance instead?
-    /** change in constructor to have different appearance */
-    protected int[] defaultModelStateBits;
-
 	public static final IntProperty SPECIES = IntProperty.of("xm2_species", 0, 15);
 
     /** Hacky hack to let us inspect default model state during constructor before it is saved */
@@ -41,7 +37,10 @@ public class XmSimpleBlock extends Block {
     
     public static XmSimpleBlock create(Settings blockSettings, ModelState defaultModelState) {
         INIT_STATE.set(defaultModelState);
-        return new XmSimpleBlock(blockSettings, defaultModelState);
+        XmSimpleBlock result = new XmSimpleBlock(blockSettings, defaultModelState);
+        // UGLY: should happen elsewhere
+        XmBlockRegistryImpl.register(result, defaultModelStateFunc(defaultModelState), XmSimpleBlock::computeModelState, XmBorderMatch.INSTANCE);
+        return result;
     }
     
     public static ModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
@@ -55,7 +54,6 @@ public class XmSimpleBlock extends Block {
     protected XmSimpleBlock(Settings blockSettings, ModelState defaultModelState) {
         super(blockSettings);
         defaultModelState.getShape().meshFactory().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(), defaultModelState);
-        this.defaultModelStateBits = defaultModelState.serializeToInts();
     }
 
     @Override

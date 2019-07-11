@@ -4,7 +4,7 @@ package grondag.xm2.state;
 
 import grondag.fermion.varia.BitPacker64;
 import grondag.xm2.apiimpl.texture.TextureSetRegistryImpl;
-import grondag.xm2.block.wip.XmBlockStateAccess;
+import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;

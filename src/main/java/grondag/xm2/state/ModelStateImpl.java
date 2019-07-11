@@ -19,7 +19,7 @@ import grondag.xm2.XmConfig;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.apiimpl.texture.TextureSetRegistryImpl;
 import grondag.xm2.block.XmMasonryMatch;
-import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;

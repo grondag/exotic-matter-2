@@ -1,4 +1,4 @@
-package grondag.xm2.block.wip;
+package grondag.xm2.block;
 
 import java.util.function.Function;
 

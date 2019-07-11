@@ -2,8 +2,8 @@ package grondag.xm2.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.block.wip.XmBlockStateAccess;
+import grondag.xm2.block.XmBlockStateAccess;
+import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import net.minecraft.block.BlockState;
 
 @Mixin(BlockState.class)

@@ -1,8 +1,7 @@
 package grondag.xm2.block;
 
 import grondag.fermion.serialization.NBTDictionary;
-import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.block.wip.XmBlockStateAccess;
+import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.ModelStateImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;

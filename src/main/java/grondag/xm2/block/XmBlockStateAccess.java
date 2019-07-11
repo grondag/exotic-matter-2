@@ -1,8 +1,8 @@
-package grondag.xm2.block.wip;
+package grondag.xm2.block;
 
 import javax.annotation.Nullable;
 
-import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.state.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -4,8 +4,7 @@ package grondag.xm2.block;
 
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
-import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.block.wip.XmBlockStateAccess;
+import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.ModelStateImpl;
 import net.minecraft.item.BlockItem;

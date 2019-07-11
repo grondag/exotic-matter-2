@@ -18,13 +18,15 @@ import net.minecraft.world.World;
 public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
 
     public TerrainStaticBlock(Settings blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
-        super(blockSettings, defaultModelState, blockEntityType);
-
-        // make sure proper shape is set
-        ModelState modelState = defaultModelState.clone();
-        modelState.setShape(isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
-        this.defaultModelStateBits = modelState.serializeToInts();
+        super(blockSettings, adjustShape(defaultModelState, isFiller), blockEntityType);
     }
+    
+    private static ModelState adjustShape(ModelState stateIn, boolean isFiller) {
+    	ModelState result = stateIn.clone();
+   	 	result.setShape(isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
+   	 	result.setStatic(true);
+   	 	return result;
+   }
 
 //  TODO: remove or restore
 //    @Override

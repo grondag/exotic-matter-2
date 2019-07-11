@@ -1,6 +1,6 @@
 package grondag.xm2.terrain;
 
-import grondag.xm2.block.wip.XmBlockStateAccess;
+import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.init.ModShapes;
 import grondag.xm2.state.ModelState;
 import net.minecraft.block.Block;
@@ -12,19 +12,17 @@ import net.minecraft.world.World;
 
 
 public class TerrainDynamicBlock extends TerrainBlock {
-    private final boolean isFiller;
-
     public TerrainDynamicBlock(Settings blockSettings, ModelState defaultModelState, boolean isFiller) {
-        super(blockSettings, defaultModelState);
-        this.isFiller = isFiller;
-
-        // make sure proper shape is set
-        ModelState modelState = defaultModelState.clone();
-        modelState.setShape(this.isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
-        modelState.setStatic(false);
-        this.defaultModelStateBits = modelState.serializeToInts();
+        super(blockSettings, adjustShape(defaultModelState, isFiller));
     }
 
+    private static ModelState adjustShape(ModelState stateIn, boolean isFiller) {
+    	 ModelState result = stateIn.clone();
+    	 result.setShape(isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
+    	 result.setStatic(false);
+    	 return result;
+    }
+    
     /**
      * Convert this block to a static version of itself if a static version was
      * given.

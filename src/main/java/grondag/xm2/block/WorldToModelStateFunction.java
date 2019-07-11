@@ -1,4 +1,4 @@
-package grondag.xm2.block.wip;
+package grondag.xm2.block;
 
 import grondag.xm2.state.ModelState;
 import net.minecraft.util.math.BlockPos;

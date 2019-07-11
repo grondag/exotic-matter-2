@@ -1,7 +1,6 @@
 package grondag.xm2.init;
 
 import grondag.xm2.Xm;
-import grondag.xm2.block.XmBorderMatch;
 import grondag.xm2.block.XmSimpleBlock;
 import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.placement.XmBlockItem;
@@ -20,10 +19,6 @@ public class XmBlocks {
     
     public static final void init() {
         Xm.LOG.debug("Registering Exotic Matter Test Blocks");
-        
-        // use for registration
-        // XmBorderMatch.INSTANCE
-        // XmBlock.defaultModelStateFunc
         
         ModelState workingModel = new ModelStateImpl();
         workingModel.setShape(ModShapes.WEDGE);
