@@ -5,7 +5,6 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
@@ -16,10 +15,7 @@ import grondag.xm2.primitives.stream.IWritablePolyStream;
 import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 
 public class CubeMeshFactory extends MeshFactory {
     private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.CUBIC)
@@ -75,12 +71,6 @@ public class CubeMeshFactory extends MeshFactory {
     @Override
     public boolean isCube(ModelState modelState) {
         return true;
-    }
-
-    @Override
-    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, XmBlock block,
-            ModelState modelState) {
-        return false;
     }
 
     @Override

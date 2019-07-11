@@ -9,7 +9,6 @@ import grondag.fermion.structures.BinaryEnumSet;
 import grondag.fermion.varia.FixedRegionBounds;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.PackedBlockPos;
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.block.XmSimpleBlock;
 import grondag.xm2.block.XmStackHelper;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
@@ -74,14 +73,6 @@ public interface PlacementItem {
     /////////////////////////////////////////////////////
     // ABSTRACT MEMBERS
     /////////////////////////////////////////////////////
-
-    /**
-     * Returns the SuperBlock instance of the item implementing this interface, if
-     * it is an ItemBlock. Could be null if it isn't an item block.
-     * 
-     * @return
-     */
-    public XmBlock getSuperBlock();
 
     /** True if item places air blocks or carves empty space in CSG blocks */
     public boolean isExcavator(ItemStack placedStack);

@@ -5,16 +5,12 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 
 public abstract class AbstractWedgeMeshFactory extends MeshFactory {
 
@@ -33,13 +29,6 @@ public abstract class AbstractWedgeMeshFactory extends MeshFactory {
 
     @Override
     public boolean isCube(ModelState modelState) {
-        return false;
-    }
-
-    @Override
-    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, XmBlock block,
-            ModelState modelState) {
-        // not currently implemented - ambivalent about it
         return false;
     }
 

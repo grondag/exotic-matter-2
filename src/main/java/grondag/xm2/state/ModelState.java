@@ -5,7 +5,6 @@ import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.serialization.PacketSerializable;
 import grondag.xm2.api.texture.TextureSet;
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
@@ -17,11 +16,9 @@ import grondag.xm2.painting.VertexProcessor;
 import grondag.xm2.primitives.PolyTransform;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.block.BlockRenderLayer;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
 public interface ModelState extends IReadWriteNBT, PacketSerializable {
     boolean isImmutable();
@@ -243,14 +240,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
 
     /** returns true if geometry is a full 1x1x1 cube. */
     boolean isCube();
-
-    /**
-     * Rotate this block around the given orthogonalAxis if possible, making
-     * necessary changes to world state. Return true if successful.
-     * 
-     * @param blockState
-     */
-    boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, XmBlock block);
 
     /**
      * How much of the sky is occluded by the shape of this block? Based on geometry

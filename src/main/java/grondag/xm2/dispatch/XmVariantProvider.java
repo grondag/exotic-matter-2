@@ -1,6 +1,6 @@
 package grondag.xm2.dispatch;
 
-import grondag.xm2.block.XmBlock;
+import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.model.XmModelProxy;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
@@ -16,7 +16,7 @@ public class XmVariantProvider implements ModelVariantProvider {
     public XmVariantProvider() {
         targets.clear();
         Registry.BLOCK.forEach(b -> {
-            if(b instanceof XmBlock) {
+            if(XmBlockStateAccess.get(b) != null) {
                 targets.add(Registry.BLOCK.getId(b).toString());
             }
         });

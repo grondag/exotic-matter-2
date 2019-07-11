@@ -5,7 +5,6 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import grondag.fermion.world.PackedBlockPos;
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.block.wip.XmBlockStateAccess;
 import net.minecraft.block.Block;
@@ -107,7 +106,7 @@ public class TerrainBlockHelper {
 
         final int SHOULD_BE_AIR = -1;
 
-        XmBlock fillBlock = null;
+        Block fillBlock = null;
 
         BlockState update = null;
 
@@ -127,7 +126,7 @@ public class TerrainBlockHelper {
         if (isFlowHeight(stateBelow) && worldObj.terrainState(stateBelow, posBelow).topFillerNeeded() > 0) {
             targetFill = 1;
 
-            fillBlock = (XmBlock) TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getFillerBlock(stateBelow.getBlock());
+            fillBlock = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getFillerBlock(stateBelow.getBlock());
         } else {
             final long posTwoBelow = PackedBlockPos.down(packedBasePos, 2);
             final BlockState stateTwoBelow = worldObj.getBlockState(posTwoBelow);
@@ -135,7 +134,7 @@ public class TerrainBlockHelper {
             if ((isFlowHeight(stateTwoBelow)
                     && worldObj.terrainState(stateTwoBelow, posTwoBelow).topFillerNeeded() == 2)) {
                 targetFill = 2;
-                fillBlock = (XmBlock) TerrainBlockRegistry.TERRAIN_STATE_REGISTRY
+                fillBlock = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY
                         .getFillerBlock(stateTwoBelow.getBlock());
             }
         }

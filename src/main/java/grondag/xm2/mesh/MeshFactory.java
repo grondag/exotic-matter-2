@@ -2,14 +2,9 @@ package grondag.xm2.mesh;
 
 import java.util.function.Consumer;
 
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 
 public abstract class MeshFactory {
     /**
@@ -105,9 +100,6 @@ public abstract class MeshFactory {
     public boolean isAxisOrthogonalToPlacementFace() {
         return false;
     }
-
-    public abstract boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis,
-            XmBlock block, ModelState modelState);
 
     public int getStateFlags(ModelState modelState) {
         return stateFlags;

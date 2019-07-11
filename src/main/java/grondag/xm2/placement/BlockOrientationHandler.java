@@ -1,8 +1,8 @@
 package grondag.xm2.placement;
 
 import grondag.fermion.world.WorldHelper;
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.block.XmStackHelper;
+import grondag.xm2.block.wip.XmBlockState;
 import grondag.xm2.block.wip.XmBlockStateAccess;
 import grondag.xm2.connect.api.model.BlockCorner;
 import grondag.xm2.connect.api.model.BlockEdge;
@@ -93,12 +93,12 @@ public class BlockOrientationHandler {
                     for (int z = -1; z <= 1; z++) {
                         if ((x | y | z) != 0) {
                             BlockPos testPos = pPos.onPos.add(x, y, z);
-                            BlockState testBlockState = world.getBlockState(testPos);
-                            if (testBlockState.getBlock() instanceof XmBlock) {
+                            XmBlockState testBlockState = XmBlockStateAccess.get(world.getBlockState(testPos));
+                            if (testBlockState != null) {
                                 double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x,
                                         pPos.onPos.getY() + 0.5 + y, pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
-                                    ModelState testModelState = XmBlockStateAccess.modelState(testBlockState, world, testPos, true);
+                                    ModelState testModelState = testBlockState.getModelState(world, testPos, true);
                                     if (testModelState.getShape() == outputModelState.getShape()) {
                                         closestDistSq = distSq;
                                         closestModelState = testModelState;

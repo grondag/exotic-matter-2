@@ -16,28 +16,16 @@ import net.minecraft.world.World;
 
 
 public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
-    private final boolean isFiller;
 
     public TerrainStaticBlock(Settings blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
         super(blockSettings, defaultModelState, blockEntityType);
-        this.isFiller = isFiller;
 
         // make sure proper shape is set
         ModelState modelState = defaultModelState.clone();
-        modelState.setShape(this.isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
+        modelState.setShape(isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
         this.defaultModelStateBits = modelState.serializeToInts();
     }
 
-    @Override
-    public boolean isFlowFiller() {
-        return isFiller;
-    }
-
-    @Override
-    public boolean isFlowHeight() {
-        return !isFiller;
-    }
-    
 //  TODO: remove or restore
 //    @Override
 //    public int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state) {

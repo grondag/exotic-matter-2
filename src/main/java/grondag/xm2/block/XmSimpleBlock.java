@@ -29,7 +29,7 @@ import net.minecraft.world.BlockView;
 /**
  * Base class for static building blocks.
  */
-public class XmSimpleBlock extends Block implements XmBlock {
+public class XmSimpleBlock extends Block {
     //TODO: use an immutable instance instead?
     /** change in constructor to have different appearance */
     protected int[] defaultModelStateBits;
@@ -346,25 +346,6 @@ public class XmSimpleBlock extends Block implements XmBlock {
 //            harvesters.set(null);
 //        }
 //    }
-
-
-    /**
-     * True if this is an instance of an IFlowBlock and also a height block. Avoids
-     * performance hit of casting to the IFlowBlock Interface. (Based on performance
-     * profile results.)
-     */
-    @Override
-    public boolean isFlowHeight() {
-        return false;
-    }
-
-    /**
-     * Only true for virtual blocks. Prevents "instanceof" checking.
-     */
-    @Override
-    public boolean isVirtual() {
-        return false;
-    }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {

@@ -6,28 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ExtendedBlockView;
 
-public interface XmBlock {
-    /**
-     * True if this is an instance of an IFlowBlock and also a filler block. Avoids
-     * performance hit of casting to the IFlowBlock Interface. (Based on performance
-     * profile results.)
-     */
-    boolean isFlowFiller();
-
-    /**
-     * True if this is an instance of an IFlowBlock and also a height block. Avoids
-     * performance hit of casting to the IFlowBlock Interface. (Based on performance
-     * profile results.)
-     */
-    boolean isFlowHeight();
-
-    /**
-     * Only true for virtual blocks. Avoids "instanceof" checking.
-     */
-    default boolean isVirtual() {
-        return false;
-    }
-
+public interface VirtualBlock {
     /**
      * True if block at the given position is actually solid (not replaceable) or is
      * virtual and visible to the given player.
@@ -42,7 +21,7 @@ public interface XmBlock {
      * ISuperBlock.
      */
     public static boolean isVirtualBlock(Block block) {
-        return block instanceof XmBlock && ((XmBlock) block).isVirtual();
+        return block instanceof VirtualBlock;
     }
 
     /**
@@ -66,7 +45,7 @@ public interface XmBlock {
      */
     public static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, PlayerEntity player) {
         Block block = state.getBlock();
-        return isVirtualBlock(block) ? ((XmBlock) block).isVirtuallySolid(pos, player)
+        return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player)
                 : !block.getMaterial(state).isReplaceable();
     }
 }

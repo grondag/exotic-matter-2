@@ -1,6 +1,5 @@
 package grondag.xm2.placement;
 
-import grondag.xm2.block.XmBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,11 +53,6 @@ public class XmBlockItem extends BlockItem implements PlacementItem {
     @Override
     public boolean isVirtual(ItemStack stack) {
         return false;
-    }
-
-    @Override
-    public XmBlock getSuperBlock() {
-        return (XmBlock) this.getBlock();
     }
 
     @Override

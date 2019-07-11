@@ -3,7 +3,7 @@ package grondag.xm2.placement;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;
-import grondag.xm2.block.XmBlock;
+import grondag.xm2.block.VirtualBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -62,13 +62,13 @@ public enum FilterMode implements ILocalized {
 
         switch (this) {
         case FILL_REPLACEABLE:
-            return block.getMaterial(blockState).isReplaceable() && !XmBlock.isVirtualBlock(block);
+            return block.getMaterial(blockState).isReplaceable() && !VirtualBlock.isVirtualBlock(block);
 
         case REPLACE_ALL:
             if (isVirtual) {
-                return block.getMaterial(blockState).isReplaceable() || XmBlock.isVirtualBlock(block);
+                return block.getMaterial(blockState).isReplaceable() || VirtualBlock.isVirtualBlock(block);
             } else {
-                return !XmBlock.isVirtualBlock(block);
+                return !VirtualBlock.isVirtualBlock(block);
             }
 
         case REPLACE_ALL_EXCEPT:
@@ -81,7 +81,7 @@ public enum FilterMode implements ILocalized {
 
         case REPLACE_SOLID:
             // test for non-virtual relies on fact that all virtual blocks are replaceable
-            return isVirtual ? XmBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
+            return isVirtual ? VirtualBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
 
         default:
             return false;

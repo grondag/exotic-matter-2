@@ -18,7 +18,6 @@ import grondag.xm2.Xm;
 import grondag.xm2.XmConfig;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.apiimpl.texture.TextureSetRegistryImpl;
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.block.wip.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
@@ -35,7 +34,6 @@ import grondag.xm2.painting.VertexProcessors;
 import grondag.xm2.primitives.PolyTransform;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.block.BlockRenderLayer;
-import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -43,7 +41,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
 public class ModelStateImpl implements ModelState {
     private static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
@@ -809,11 +806,6 @@ public class ModelStateImpl implements ModelState {
     @Override
     public boolean isCube() {
         return getShape().meshFactory().isCube(this);
-    }
-
-    @Override
-    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, XmBlock block) {
-        return getShape().meshFactory().rotateBlock(blockState, world, pos, axis, block, this);
     }
 
     @Override

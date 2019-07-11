@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import grondag.fermion.color.Color;
 import grondag.fermion.varia.BitPacker64;
 import grondag.fermion.varia.DirectionHelper;
-import grondag.xm2.block.XmBlock;
 import grondag.xm2.connect.api.model.FaceEdge;
 import grondag.xm2.connect.api.state.CornerJoinFaceState;
 import grondag.xm2.connect.api.state.CornerJoinFaceStates;
@@ -23,10 +22,7 @@ import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.ModelStateData;
 import grondag.xm2.state.StateFormat;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 
 public class SquareColumnMeshFactory extends MeshFactory {
     public static final int MIN_CUTS = 1;
@@ -92,12 +88,6 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
     @Override
     public boolean isCube(ModelState modelState) {
-        return false;
-    }
-
-    @Override
-    public boolean rotateBlock(BlockState blockState, World world, BlockPos pos, Direction axis, XmBlock block,
-            ModelState modelState) {
         return false;
     }
 
