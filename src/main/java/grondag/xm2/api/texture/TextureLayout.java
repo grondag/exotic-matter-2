@@ -59,8 +59,6 @@ public enum TextureLayout {
     private TextureLayout(int stateFlags, int textureCount) {
         this.modelStateFlag = stateFlags;
         this.textureCount = textureCount;
-        this.blockRowCount = (textureCount + 7) / 8;
-        this.blockTextureCount = blockRowCount * 8;
     }
 
     /**
@@ -72,21 +70,4 @@ public enum TextureLayout {
      * Textures per variant in this layout.
      */
     public final int textureCount;
-
-    /**
-     * If the texture is arranged as blocks with primary and secondary numbers, <br>
-     * The number of distinct primary values per variant.
-     * <p>
-     * 
-     * Equivalently if the first number is row, the second number is column, and
-     * this is the number of rows.
-     * 
-     */
-    public final int blockRowCount;
-
-    /**
-     * Count of texture positions per variant, assuming 8-column rows, is simply
-     * {@link #blockRowCount} * 8.
-     */
-    public final int blockTextureCount;
 }

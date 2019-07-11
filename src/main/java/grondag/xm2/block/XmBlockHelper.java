@@ -16,6 +16,7 @@ public class XmBlockHelper {
      * Returns species at position if it could join with the given block/modelState
      * Returns -1 if no XM block at position or if join not possible.
      */
+	//TODO: remove if not used
     public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState, ModelState withModelState) {
         if (withBlockState == null || withModelState == null)
             return -1;

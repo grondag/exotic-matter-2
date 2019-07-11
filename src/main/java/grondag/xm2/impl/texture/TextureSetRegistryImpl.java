@@ -1,4 +1,4 @@
-package grondag.xm2.apiimpl.texture;
+package grondag.xm2.impl.texture;
 
 import java.util.HashMap;
 

@@ -8,7 +8,7 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_IS_POPULATED;
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.xm2.api.texture.TextureSet;
-import grondag.xm2.apiimpl.texture.TextureSetRegistryImpl;
+import grondag.xm2.impl.texture.TextureSetRegistryImpl;
 import grondag.xm2.mesh.MeshFactory;
 import grondag.xm2.mesh.ModelShape;
 import grondag.xm2.painting.PaintLayer;

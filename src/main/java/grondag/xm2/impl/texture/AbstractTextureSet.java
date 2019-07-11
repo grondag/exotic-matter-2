@@ -1,4 +1,4 @@
-package grondag.xm2.apiimpl.texture;
+package grondag.xm2.impl.texture;
 
 import grondag.xm2.api.texture.TextureGroup;
 import grondag.xm2.api.texture.TextureLayout;

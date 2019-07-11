@@ -2,7 +2,7 @@ package grondag.xm2.api.texture;
 
 import java.util.function.Consumer;
 
-import grondag.xm2.apiimpl.texture.TextureSetImpl;
+import grondag.xm2.impl.texture.TextureSetImpl;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 

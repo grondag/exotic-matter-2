@@ -1,4 +1,4 @@
-package grondag.xm2.apiimpl.texture;
+package grondag.xm2.impl.texture;
 
 import static grondag.xm2.api.texture.TextureLayout.*;
 
@@ -10,6 +10,11 @@ import net.minecraft.util.Identifier;
 
 public abstract class TextureLayoutHelper {
     static final TextureLayoutHelper HELPERS[] = new TextureLayoutHelper[TextureLayout.values().length];
+    /** 16 because two GIMP output rows per border, w/ 8 textures each */
+    private static final int GIMP_BORDER_SPOTS_PER_VARIANT = 16;
+    
+    /** 8 because one GIMP output rows per border, w/ 8 textures each */
+    private static final int GIMP_MASONRY_SPOTS_PER_VARIANT = 8;
     
     static {
         HELPERS[SPLIT_X_8.ordinal()] = new TextureLayoutHelper() {
@@ -24,7 +29,7 @@ public abstract class TextureLayoutHelper {
         HELPERS[BORDER_13.ordinal()] = new TextureLayoutHelper() {
             @Override
             public final String buildTextureName(TextureSet texture, int version, int index) {
-                return buildTextureName_X_8(texture, version * BORDER_13.blockTextureCount + index);
+                return buildTextureName_X_8(texture, version * GIMP_BORDER_SPOTS_PER_VARIANT + index);
             }
 
             @Override
@@ -34,7 +39,8 @@ public abstract class TextureLayoutHelper {
 
                 for (int i = 0; i < texture.versionCount(); i++) {
                     for (int j = 0; j < texCount; j++) {
-                        stitcher.accept(new Identifier(buildTextureName_X_8(texture, i * BORDER_13.blockTextureCount + j)));
+                    	// 16 because two GIMP output rows per border, w/ 8 textures each
+                        stitcher.accept(new Identifier(buildTextureName_X_8(texture, i * GIMP_BORDER_SPOTS_PER_VARIANT + j)));
                     }
                 }
             }
@@ -48,14 +54,15 @@ public abstract class TextureLayoutHelper {
         HELPERS[MASONRY_5.ordinal()] = new TextureLayoutHelper() {
             @Override
             public final String buildTextureName(TextureSet texture, int version, int index) {
-                return buildTextureName_X_8(texture, version * MASONRY_5.blockTextureCount + index);
+            	// 8
+                return buildTextureName_X_8(texture, version * GIMP_MASONRY_SPOTS_PER_VARIANT + index);
             }
 
             @Override
             public void prestitch(TextureSet texture, Consumer<Identifier> stitcher) {
                 for (int i = 0; i < texture.versionCount(); i++) {
                     for (int j = 0; j < MASONRY_5.textureCount; j++) {
-                        stitcher.accept(new Identifier(texture.id().getNamespace(), buildTextureName_X_8(texture, i * MASONRY_5.blockTextureCount + j)));
+                        stitcher.accept(new Identifier(texture.id().getNamespace(), buildTextureName_X_8(texture, i * GIMP_MASONRY_SPOTS_PER_VARIANT + j)));
                     }
                 }
             }
