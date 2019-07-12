@@ -73,12 +73,12 @@ public class XmTextures {
     // blocks if test textures are temporarily disabled
 
     public static final TextureSet BIGTEX_TEST_SINGLE = TextureSet.builder().displayNameToken("bigtex_test_single")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/bigtex_single" : "blocks/noise_moderate_0_0")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/bigtex_single" : "xm2:blocks/noise_moderate_0_0")
             .versionCount(1).scale(SMALL).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("xm2", "bigtex_test_single");
 
     public static final TextureSet BIGTEX_TEST1 = TextureSet.builder().displayNameToken("big_tex_test1")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/bigtex" : "blocks/noise_moderate_0")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/bigtex" : "xm2:blocks/noise_moderate_0")
             .versionCount(4).scale(TINY).layout(TextureLayoutMap.VERSIONED).rotation(ROTATE_RANDOM).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("xm2", "big_tex_test1");
 
@@ -95,8 +95,8 @@ public class XmTextures {
             .displayNameToken("big_tex_test5").scale(GIANT).build("xm2", "big_tex_test5");
 
     public static final TextureSet TEST = TextureSet.builder().displayNameToken("test")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/test" : "blocks/noise_moderate_0")
-            .versionCount(2).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_NONE)
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/test" : "xm2:blocks/noise_moderate_0")
+            .versionCount(2).scale(SINGLE).layout(TextureLayoutMap.VERSIONED).rotation(ROTATE_NONE)
             .renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("xm2","test");
     
     public static final TextureSet TEST_ZOOM = TextureSet.builder(TEST).displayNameToken("test_zoom")
@@ -121,7 +121,7 @@ public class XmTextures {
             .scale(TINY).build("xm2", "test_270_zoom");
 
     public static final TextureSet TEST_4X4 = TextureSet.builder().displayNameToken("test4x4")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/test4x4" : "blocks/noise_moderate_0_0")
+            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/test4x4" : "xm2:blocks/noise_moderate_0_0")
             .versionCount(1).scale(SMALL).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("xm2", "test4x4");
 
@@ -141,45 +141,45 @@ public class XmTextures {
     // ======================================================================
 
     public static final TextureSet BLOCK_COBBLE = TextureSet.builder().displayNameToken("cobble")
-            .baseTextureName("blocks/cobble").versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_RANDOM)
+            .baseTextureName("xm2:blocks/cobble").versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_RANDOM)
             .renderIntent(BASE_ONLY).groups(STATIC_TILES).build("xm2", "cobble");
 
     public static final TextureSet BLOCK_COBBLE_ZOOM = TextureSet.builder(BLOCK_COBBLE).displayNameToken("cobble_zoom")
             .scale(TINY).build("xm2", "cobble_zoom");
 
     public static final TextureSet BLOCK_NOISE_STRONG = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_strong")
-            .baseTextureName("blocks/noise_strong").build("xm2", "noise_strong");
+            .baseTextureName("xm2:blocks/noise_strong").build("xm2", "noise_strong");
     
     public static final TextureSet BLOCK_NOISE_STRONG_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_strong_zoom")
             .scale(TINY).build("xm2", "noise_strong_zoom");
 
     public static final TextureSet BLOCK_NOISE_MODERATE = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_moderate")
-            .baseTextureName("blocks/noise_moderate").build("xm2", "noise_moderate");
+            .baseTextureName("xm2:blocks/noise_moderate").build("xm2", "noise_moderate");
     
     public static final TextureSet BLOCK_NOISE_MODERATE_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_moderate_zoom")
             .scale(TINY).build("xm2", "noise_moderate_zoom");
     
     public static final TextureSet BLOCK_NOISE_SUBTLE = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_subtle")
-            .baseTextureName("blocks/noise_subtle").build("xm2", "noise_subtle");
+            .baseTextureName("xm2:blocks/noise_subtle").build("xm2", "noise_subtle");
     
     public static final TextureSet BLOCK_NOISE_SUBTLE_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_subtle_zoom")
             .scale(TINY).build("xm2", "noise_subtle_zoom");
 
     public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white")
-            .baseTextureName("blocks/white").versionCount(1).scale(SINGLE).layout(TextureLayoutMap.SINGLE)
+            .baseTextureName("xm2:blocks/white").versionCount(1).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8)
             .rotation(ROTATE_NONE).groups(STATIC_TILES).build("xm2", "white");
 
     public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
-            .baseTextureName("blocks/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13)
+            .baseTextureName("xm2:blocks/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13)
             .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("xm2", "border_smooth_blended");
     
     public static final TextureSet BORDER_CAUTION = TextureSet.builder().displayNameToken("border_caution")
-            .baseTextureName("blocks/border_caution").versionCount(1).scale(SINGLE).layout(BORDER_13)
+            .baseTextureName("xm2:blocks/border_caution").versionCount(1).scale(SINGLE).layout(BORDER_13)
             .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("xm2", "border_caution");
     
     
     public static final TextureSet SANDSTONE = TextureSet.builder().displayNameToken("sandstone")
-            .baseTextureName("blocks/sandstone")
+            .baseTextureName("xm2:blocks/sandstone")
             .versionCount(1).scale(MEDIUM).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
             .groups(STATIC_TILES).build("xm2", "sandstone");
 

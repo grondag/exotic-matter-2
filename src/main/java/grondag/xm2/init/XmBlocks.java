@@ -47,18 +47,18 @@ public class XmBlocks {
         workingModel.setTexture(PaintLayer.BASE, XmTextures.WHITE);
         workingModel.setColorRGB(PaintLayer.BASE, 0xFFFFFFFF);
         register(XmSimpleBlock.create(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_cube");
+        
+        workingModel = new ModelStateImpl();
+        workingModel.setShape(ModShapes.CUBE);
+        workingModel.setTexture(PaintLayer.BASE, XmTextures.SANDSTONE_ZOOM);
+        workingModel.setColorRGB(PaintLayer.BASE, 0xFF808590);
+	    workingModel.setTexture(PaintLayer.OUTER, XmTextures.BORDER_CAUTION);
+	    workingModel.setColorRGB(PaintLayer.OUTER, 0xD7FFFF);
+	    workingModel.setColorRGB(PaintLayer.OUTER, 0xFFFFD300);
+	    workingModel.setTranslucent(PaintLayer.OUTER, true);
+	    workingModel.setEmissive(PaintLayer.OUTER, true);
+        register(XmSimpleBlock.create(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_borders");
     }
-    
-//        workingModel.setTexture(PaintLayer.MIDDLE, BrocadeTextures.BLOCK_COBBLE);
-//        workingModel.setColorRGB(PaintLayer.MIDDLE, 0xFF4444);
-//        workingModel.setTranslucent(PaintLayer.MIDDLE, true);
-//        workingModel.setAlpha(PaintLayer.MIDDLE, 64);
-//        workingModel.setEmissive(PaintLayer.MIDDLE, true);
-//        workingModel.setTexture(PaintLayer.OUTER, BrocadeTextures.BORDER_CAUTION);
-//        workingModel.setColorRGB(PaintLayer.OUTER, 0xD7FFFF);
-//        workingModel.setColorRGB(PaintLayer.OUTER, 0xFFFFD300);
-//        workingModel.setTranslucent(PaintLayer.OUTER, true);
-//        workingModel.setEmissive(PaintLayer.OUTER, true);
     
     private static void register(Block block, String name) {
         Identifier id = new Identifier(Xm.MODID, name);

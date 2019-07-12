@@ -33,6 +33,9 @@ public interface TextureSetBuilder {
 
     TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile);
     
+    /** 
+     * Include namespace!
+     */
     TextureSetBuilder baseTextureName(String baseTextureName);
     
     TextureSetBuilder displayNameToken(String displayNameToken);

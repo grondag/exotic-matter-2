@@ -84,7 +84,7 @@ public interface TextureSet {
     /**
      * Base texture file name - used to construct other text name methods. Exposed
      * to enable programmatic construction of semantically different palates that
-     * use the same underlying texture file(s).
+     * use the same underlying texture file(s).  Should include namespace.
      */
     String baseTextureName();
     

@@ -46,7 +46,7 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     
     TextureSetImpl(Identifier id, AbstractTextureSet template) {
         this.id = id;
-        this.baseTextureName = id.getNamespace() + ":" + template.rawBaseTextureName;
+        this.baseTextureName = template.rawBaseTextureName;
         this.index = TextureSetRegistryImpl.INSTANCE.claimIndex();
         copyFrom(template);
         this.versionMask = Math.max(0, template.versionCount - 1);
