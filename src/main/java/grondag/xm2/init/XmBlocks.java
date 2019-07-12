@@ -31,8 +31,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class XmBlocks {
-    
-    
     public static final void init() {
         Xm.LOG.debug("Registering Exotic Matter Test Blocks");
         
@@ -40,13 +38,13 @@ public class XmBlocks {
         workingModel.setShape(ModShapes.WEDGE);
         workingModel.setTexture(PaintLayer.BASE, XmTextures.WHITE);
         workingModel.setColorRGB(PaintLayer.BASE, 0xFFFFFFFF);
-        register(XmSimpleBlock.create(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_wedge");
+        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_wedge");
         
         workingModel = new ModelStateImpl();
         workingModel.setShape(ModShapes.CUBE);
         workingModel.setTexture(PaintLayer.BASE, XmTextures.WHITE);
         workingModel.setColorRGB(PaintLayer.BASE, 0xFFFFFFFF);
-        register(XmSimpleBlock.create(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_cube");
+        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_cube");
         
         workingModel = new ModelStateImpl();
         workingModel.setShape(ModShapes.CUBE);
@@ -57,7 +55,7 @@ public class XmBlocks {
 	    workingModel.setColorRGB(PaintLayer.OUTER, 0xFFFFD300);
 	    workingModel.setTranslucent(PaintLayer.OUTER, true);
 	    workingModel.setEmissive(PaintLayer.OUTER, true);
-        register(XmSimpleBlock.create(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_borders");
+        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_borders");
     }
     
     private static void register(Block block, String name) {

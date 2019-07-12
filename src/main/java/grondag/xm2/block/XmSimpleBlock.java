@@ -51,12 +51,9 @@ public class XmSimpleBlock extends Block {
     /** Hacky hack to let us inspect default model state during constructor before it is saved */
     protected static final ThreadLocal<ModelState> INIT_STATE = new ThreadLocal<>();
     
-    public static XmSimpleBlock create(Settings blockSettings, ModelState defaultModelState) {
+    protected static Settings prepareInit(Settings blockSettings, ModelState defaultModelState) {
         INIT_STATE.set(defaultModelState);
-        XmSimpleBlock result = new XmSimpleBlock(blockSettings, defaultModelState);
-        // UGLY: should happen elsewhere
-        XmBlockRegistryImpl.register(result, defaultModelStateFunc(defaultModelState), XmSimpleBlock::computeModelState, XmBorderMatch.INSTANCE);
-        return result;
+        return blockSettings;
     }
     
     public static ModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
@@ -67,9 +64,10 @@ public class XmSimpleBlock extends Block {
     	return result;
     }
     
-    protected XmSimpleBlock(Settings blockSettings, ModelState defaultModelState) {
-        super(blockSettings);
+    public XmSimpleBlock(Settings blockSettings, ModelState defaultModelState) {
+        super(prepareInit(blockSettings, defaultModelState));
         defaultModelState.getShape().meshFactory().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(), defaultModelState);
+        XmBlockRegistryImpl.register(this, defaultModelStateFunc(defaultModelState), XmSimpleBlock::computeModelState, XmBorderMatch.INSTANCE);
     }
 
     @Override
