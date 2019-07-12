@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
+
 package grondag.xm2.api.texture;
 
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
@@ -19,15 +35,18 @@ public enum TextureLayout {
     SIMPLE(STATE_FLAG_NONE),
 
     /**
-     * Separate files with naming convention same as SPLIT_X_8 except only the start
-     * 13 textures out of every 16 are used for borders. Texture 14 contains the
-     * face that should be rendered if the border is rendered in the solid render
-     * layer. It is IMPORTANT that texture 14 have a solid alpha channel - otherwise
-     * mipmap generation will be borked. The solid face won't be used at all if
-     * rendering in a non-solid layer. Files won't exist or will be blank for 14 and
-     * 15.
+     * Separate files with naming convention same as SPLIT_X_8 except only the first
+     * 13 textures out of every 16 are used for borders. 
      */
-    BORDER_13(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 14),
+    BORDER_13(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 13),
+    
+    /**
+     * Like BORDER_13 but with an extra texture 14 that to should be rendered if the 
+     * border is rendered in the solid render layer. It is IMPORTANT that texture 14 
+     * have a solid alpha channel - otherwise mipmap generation will be borked. 
+     * The solid face won't be used at all if rendering in a non-solid layer.
+     */
+    BORDER_14(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 14),
 
     /**
      * Separate files with naming convention same as SPLIT_X_8 except only the start

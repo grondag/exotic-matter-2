@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
+
 package grondag.xm2.impl.texture;
 
 import java.util.function.Consumer;
@@ -27,7 +43,6 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     public final int versionMask;
     public final int stateFlags;
     public final String baseTextureName;
-    private final TextureLayoutHelper layoutHelper;
     
     TextureSetImpl(Identifier id, AbstractTextureSet template) {
         this.id = id;
@@ -35,9 +50,9 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
         this.index = TextureSetRegistryImpl.INSTANCE.claimIndex();
         copyFrom(template);
         this.versionMask = Math.max(0, template.versionCount - 1);
-        this.layoutHelper = TextureLayoutHelper.HELPERS[layout.ordinal()];
+        this.layoutMap = template.layoutMap;
         
-        int flags = template.scale.modelStateFlag | template.layout.modelStateFlag;
+        int flags = template.scale.modelStateFlag | template.layoutMap.layout.modelStateFlag;
 
         // textures with randomization options also require position information
 
@@ -69,12 +84,12 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     
     @Override
     public void prestitch(Consumer<Identifier> stitcher) {
-        layoutHelper.prestitch(this, stitcher);
+        layoutMap.prestitch(this, stitcher);
     }
 
     @Override
     public String sampleTextureName() {
-        return layoutHelper.sampleTextureName(this);
+        return layoutMap.sampleTextureName(this);
     }
     
     private Sprite sampleSprite;
@@ -91,12 +106,12 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 
     @Override
     public String textureName(int version) {
-        return layoutHelper.buildTextureName(this, version & versionMask, 0);
+        return layoutMap.buildTextureName(this, version & versionMask, 0);
     }
 
     @Override
     public String textureName(int version, int index) {
-        return layoutHelper.buildTextureName(this, version & versionMask, index);
+        return layoutMap.buildTextureName(this, version & versionMask, index);
     }
     
     @Override

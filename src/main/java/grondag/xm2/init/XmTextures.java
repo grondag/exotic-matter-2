@@ -1,11 +1,25 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
+
 package grondag.xm2.init;
 
 import static grondag.xm2.api.texture.TextureGroup.HIDDEN_TILES;
 import static grondag.xm2.api.texture.TextureGroup.STATIC_BORDERS;
 import static grondag.xm2.api.texture.TextureGroup.STATIC_TILES;
-import static grondag.xm2.api.texture.TextureLayout.BORDER_13;
-import static grondag.xm2.api.texture.TextureLayout.SIMPLE;
-import static grondag.xm2.api.texture.TextureLayout.SPLIT_X_8;
+import static grondag.xm2.api.texture.TextureLayoutMap.BORDER_13;
 import static grondag.xm2.api.texture.TextureRenderIntent.BASE_ONLY;
 import static grondag.xm2.api.texture.TextureRenderIntent.OVERLAY_ONLY;
 import static grondag.xm2.api.texture.TextureRotation.ROTATE_180;
@@ -22,6 +36,7 @@ import static grondag.xm2.api.texture.TextureScale.TINY;
 
 import grondag.fermion.config.FermionConfig;
 import grondag.xm2.Xm;
+import grondag.xm2.api.texture.TextureLayoutMap;
 import grondag.xm2.api.texture.TextureRenderIntent;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.impl.texture.TextureSetImpl;
@@ -59,12 +74,12 @@ public class XmTextures {
 
     public static final TextureSet BIGTEX_TEST_SINGLE = TextureSet.builder().displayNameToken("bigtex_test_single")
             .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/bigtex_single" : "blocks/noise_moderate_0_0")
-            .versionCount(1).scale(SMALL).layout(SIMPLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
+            .versionCount(1).scale(SMALL).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("xm2", "bigtex_test_single");
 
     public static final TextureSet BIGTEX_TEST1 = TextureSet.builder().displayNameToken("big_tex_test1")
             .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/bigtex" : "blocks/noise_moderate_0")
-            .versionCount(4).scale(TINY).layout(SIMPLE).rotation(ROTATE_RANDOM).renderIntent(BASE_ONLY)
+            .versionCount(4).scale(TINY).layout(TextureLayoutMap.VERSIONED).rotation(ROTATE_RANDOM).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("xm2", "big_tex_test1");
 
     public static final TextureSet BIGTEX_TEST2 = TextureSet.builder(BIGTEX_TEST1)
@@ -81,7 +96,7 @@ public class XmTextures {
 
     public static final TextureSet TEST = TextureSet.builder().displayNameToken("test")
             .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/test" : "blocks/noise_moderate_0")
-            .versionCount(2).scale(SINGLE).layout(SIMPLE).rotation(ROTATE_NONE)
+            .versionCount(2).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_NONE)
             .renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("xm2","test");
     
     public static final TextureSet TEST_ZOOM = TextureSet.builder(TEST).displayNameToken("test_zoom")
@@ -107,7 +122,7 @@ public class XmTextures {
 
     public static final TextureSet TEST_4X4 = TextureSet.builder().displayNameToken("test4x4")
             .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "blocks/test4x4" : "blocks/noise_moderate_0_0")
-            .versionCount(1).scale(SMALL).layout(SIMPLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
+            .versionCount(1).scale(SMALL).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
             .groups(HIDDEN_TILES).build("xm2", "test4x4");
 
     public static final TextureSet TEST_4x4_90 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_90")
@@ -126,7 +141,7 @@ public class XmTextures {
     // ======================================================================
 
     public static final TextureSet BLOCK_COBBLE = TextureSet.builder().displayNameToken("cobble")
-            .baseTextureName("blocks/cobble").versionCount(4).scale(SINGLE).layout(SPLIT_X_8).rotation(ROTATE_RANDOM)
+            .baseTextureName("blocks/cobble").versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_RANDOM)
             .renderIntent(BASE_ONLY).groups(STATIC_TILES).build("xm2", "cobble");
 
     public static final TextureSet BLOCK_COBBLE_ZOOM = TextureSet.builder(BLOCK_COBBLE).displayNameToken("cobble_zoom")
@@ -151,7 +166,7 @@ public class XmTextures {
             .scale(TINY).build("xm2", "noise_subtle_zoom");
 
     public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white")
-            .baseTextureName("blocks/white").versionCount(1).scale(SINGLE).layout(SPLIT_X_8)
+            .baseTextureName("blocks/white").versionCount(1).scale(SINGLE).layout(TextureLayoutMap.SINGLE)
             .rotation(ROTATE_NONE).groups(STATIC_TILES).build("xm2", "white");
 
     public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
@@ -165,7 +180,7 @@ public class XmTextures {
     
     public static final TextureSet SANDSTONE = TextureSet.builder().displayNameToken("sandstone")
             .baseTextureName("blocks/sandstone")
-            .versionCount(1).scale(MEDIUM).layout(SIMPLE).rotation(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
+            .versionCount(1).scale(MEDIUM).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
             .groups(STATIC_TILES).build("xm2", "sandstone");
 
     public static final TextureSet SANDSTONE_ZOOM = TextureSet.builder(SANDSTONE)
