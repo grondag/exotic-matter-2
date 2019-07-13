@@ -216,6 +216,12 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
         ((IMutablePolygon) wrapped).setSurface(surface);
         return this;
     }
+    
+    @Override
+    public IMutablePolygon surfaceIndex(int surfaceIndex) {
+        ((IMutablePolygon) wrapped).surfaceIndex(surfaceIndex);
+        return this;
+    }
 
     @Override
     public IMutablePolygon copyVertexFrom(int targetIndex, IPolygon source, int sourceIndex) {

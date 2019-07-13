@@ -23,6 +23,8 @@ import grondag.xm2.primitives.stream.IWritablePolyStream;
 import net.minecraft.util.math.Direction;
 
 public class CubeInputs {
+	public static final int NO_SURFACE = -1;
+	
     public float u0;
     public float v0;
     public float u1;
@@ -35,6 +37,7 @@ public class CubeInputs {
     public boolean isItem = false;
     public boolean isFullBrightness = false;
     public Surface surfaceInstance;
+    public int surfaceIndex;
 
     public CubeInputs() {
         // Minimum needed to prevent NPE
@@ -65,6 +68,7 @@ public class CubeInputs {
                 : this.textureRotation);
         q.setTextureName(0, this.textureName);
         q.setSurface(this.surfaceInstance);
+        q.surfaceIndex(this.surfaceIndex);
 
         float minBound = this.isOverlay ? -0.0002f : 0.0f;
         float maxBound = this.isOverlay ? 1.0002f : 1.0f;

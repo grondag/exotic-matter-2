@@ -76,6 +76,7 @@ public class CubeMeshFactory extends MeshFactory {
         cube.v1 = 1;
         cube.isOverlay = false;
         cube.surfaceInstance = SURFACE_MAIN;
+        cube.surfaceIndex = 0;
 
         IWritablePolyStream stream = PolyStreams.claimWritable();
         cube.appendFace(stream, Direction.DOWN);

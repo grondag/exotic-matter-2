@@ -227,6 +227,8 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
     }
 
     public Surface getSurface();
+    
+    public int surfaceIndex();
 
     /**
      * Returns computed face normal if no explicit normal assigned.

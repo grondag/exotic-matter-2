@@ -428,6 +428,8 @@ public interface IMutablePolygon extends IPolygon {
 
     IMutablePolygon setSurface(Surface surface);
 
+    IMutablePolygon surfaceIndex(int surfaceIndex);
+    
     /**
      * Adds given offsets to u,v values of each vertex.
      */

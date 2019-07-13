@@ -218,6 +218,12 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
         StaticEncoder.setSurface(stream, baseAddress, surface);
         return this;
     }
+    
+    @Override
+    public final IMutablePolygon surfaceIndex(int surfaceIndex) {
+        StaticEncoder.surfaceIndex(stream, baseAddress, surfaceIndex);
+        return this;
+    }
 
     @Override
     public final IMutablePolygon copyVertexFrom(int targetIndex, IPolygon source, int sourceIndex) {

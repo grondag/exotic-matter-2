@@ -30,12 +30,14 @@ public class StaticEncoder {
 
     private static final int BIT_OFFSET = 1;
     private static final int TEXTURE_PIPELINE_OFFSET = 2;
-
+    // PERF: can probably pack this into bitpacker once old surface is gone and using paint
+    private static final int SURFACE_OFFSET = 3;
+    
     /**
      * How many integers in the stream are needed for static encoding. This is in
      * addition to the format header.
      */
-    public static final int INTEGER_WIDTH = 2;
+    public static final int INTEGER_WIDTH = 3;
 
     public static Surface getSurface(IIntStream stream, int baseAddress) {
         return surfaceHandler.fromHandle(stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) & 0xFFFF);
@@ -49,6 +51,14 @@ public class StaticEncoder {
         stream.set(baseAddress + TEXTURE_PIPELINE_OFFSET, pipelineVal | handle);
     }
 
+    public static int surfaceIndex(IIntStream stream, int baseAddress) {
+    	return stream.get(baseAddress + SURFACE_OFFSET);
+    }
+    
+    public static void surfaceIndex(IIntStream stream, int baseAddress, int surfaceIndex) {
+    	stream.set(baseAddress + SURFACE_OFFSET, surfaceIndex);
+    }
+    
     public static int getPipelineIndex(IIntStream stream, int baseAddress) {
         return stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) >>> 16;
     }

@@ -93,6 +93,11 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
+    public int surfaceIndex() {
+        return wrapped.surfaceIndex();
+    }
+    
+    @Override
     public Vec3f getVertexNormal(int vertexIndex) {
         return wrapped.getVertexNormal(vertexIndex);
     }

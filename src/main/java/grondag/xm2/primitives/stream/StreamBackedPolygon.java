@@ -235,6 +235,11 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
+    public final int surfaceIndex() {
+        return StaticEncoder.surfaceIndex(stream, baseAddress);
+    }
+    
+    @Override
     @Deprecated
     public final Vec3f getVertexNormal(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex))
