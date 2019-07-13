@@ -165,6 +165,7 @@ public class MeshHelper {
             final float uvMax = (float) (2 * s);
             writer.setMaxU(0, uvMax);
             writer.setMaxV(0, uvMax);
+            writer.uvWrapDistance(uvMax);
             surfBuilder.withWrapDistance(uvMax);
         }
 

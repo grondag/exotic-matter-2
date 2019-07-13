@@ -22,6 +22,7 @@ import grondag.fermion.world.Rotation;
 import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.vertex.Vec3f;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
@@ -235,8 +236,8 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
-    public final int surfaceIndex() {
-        return StaticEncoder.surfaceIndex(stream, baseAddress);
+    public final XmSurfaceImpl surface() {
+        return StaticEncoder.surface(stream, baseAddress);
     }
     
     @Override

@@ -20,6 +20,7 @@ import grondag.fermion.world.Rotation;
 import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.FaceVertex;
 import grondag.xm2.primitives.vertex.Vec3f;
+import grondag.xm2.surface.api.XmSurface;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
@@ -224,8 +225,8 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
     }
     
     @Override
-    public IMutablePolygon surfaceIndex(int surfaceIndex) {
-        ((IMutablePolygon) wrapped).surfaceIndex(surfaceIndex);
+    public IMutablePolygon surface(XmSurface surface) {
+        ((IMutablePolygon) wrapped).surface(surface);
         return this;
     }
 

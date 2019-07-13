@@ -21,6 +21,7 @@ import grondag.fermion.structures.IndexedInterner;
 import grondag.fermion.varia.BitPacker32;
 import grondag.fermion.world.Rotation;
 import grondag.xm2.painting.Surface;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 
 public class StaticEncoder {
@@ -28,6 +29,8 @@ public class StaticEncoder {
 
     private static final IndexedInterner<Surface> surfaceHandler = new IndexedInterner<Surface>(Surface.class);
 
+    private static final IndexedInterner<XmSurfaceImpl> xmSurfaces = new IndexedInterner<>(XmSurfaceImpl.class);
+    
     private static final int BIT_OFFSET = 1;
     private static final int TEXTURE_PIPELINE_OFFSET = 2;
     // PERF: can probably pack this into bitpacker once old surface is gone and using paint
@@ -52,12 +55,12 @@ public class StaticEncoder {
         stream.set(baseAddress + TEXTURE_PIPELINE_OFFSET, pipelineVal | handle);
     }
 
-    public static int surfaceIndex(IIntStream stream, int baseAddress) {
-    	return stream.get(baseAddress + SURFACE_OFFSET);
+    public static XmSurfaceImpl surface(IIntStream stream, int baseAddress) {
+    	return xmSurfaces.fromHandle(stream.get(baseAddress + SURFACE_OFFSET));
     }
     
-    public static void surfaceIndex(IIntStream stream, int baseAddress, int surfaceIndex) {
-    	stream.set(baseAddress + SURFACE_OFFSET, surfaceIndex);
+    public static void surface(IIntStream stream, int baseAddress, XmSurfaceImpl surface) {
+    	stream.set(baseAddress + SURFACE_OFFSET, xmSurfaces.toHandle(surface));
     }
     
     public static float uvWrapDistance(IIntStream stream, int baseAddress) {

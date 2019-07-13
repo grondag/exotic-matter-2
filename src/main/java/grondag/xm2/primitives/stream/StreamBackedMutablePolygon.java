@@ -22,6 +22,8 @@ import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.vertex.Vec3f;
+import grondag.xm2.surface.api.XmSurface;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
@@ -225,11 +227,15 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
         return this;
     }
     
-    @Override
-    public final IMutablePolygon surfaceIndex(int surfaceIndex) {
-        StaticEncoder.surfaceIndex(stream, baseAddress, surfaceIndex);
+    public final IMutablePolygon surface(XmSurfaceImpl surface) {
+        StaticEncoder.surface(stream, baseAddress, surface);
         return this;
     }
+    
+	@Override
+	public IMutablePolygon surface(XmSurface surface) {
+		return surface((XmSurfaceImpl) surface);
+	}
 
     @Override
     public final IMutablePolygon copyVertexFrom(int targetIndex, IPolygon source, int sourceIndex) {

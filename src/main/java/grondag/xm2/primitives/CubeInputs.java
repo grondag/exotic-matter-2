@@ -20,6 +20,7 @@ import grondag.fermion.world.Rotation;
 import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IWritablePolyStream;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
 import net.minecraft.util.math.Direction;
 
 public class CubeInputs {
@@ -37,7 +38,7 @@ public class CubeInputs {
     public boolean isItem = false;
     public boolean isFullBrightness = false;
     public Surface surfaceInstance;
-    public int surfaceIndex;
+    public XmSurfaceImpl surface;
 
     public CubeInputs() {
         // Minimum needed to prevent NPE
@@ -68,7 +69,7 @@ public class CubeInputs {
                 : this.textureRotation);
         q.setTextureName(0, this.textureName);
         q.setSurface(this.surfaceInstance);
-        q.surfaceIndex(this.surfaceIndex);
+        q.surface(this.surface);
 
         float minBound = this.isOverlay ? -0.0002f : 0.0f;
         float maxBound = this.isOverlay ? 1.0002f : 1.0f;

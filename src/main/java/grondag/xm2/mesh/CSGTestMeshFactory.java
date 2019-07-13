@@ -90,14 +90,14 @@ public class CSGTestMeshFactory extends MeshFactory {
         CsgPolyStream quadsA = PolyStreams.claimCSG();
         quadsA.writer().setLockUV(0, true);
         quadsA.writer().setSurface(SURFACE_MAIN);
-        quadsA.writer().surfaceIndex(SURFACE_A.ordinal);
+        quadsA.writer().surface(SURFACE_A);
         quadsA.saveDefaults();
         MeshHelper.makePaintableBox(new Box(0, 0.4, 0.4, 1.0, 0.6, 0.6), quadsA);
 
         CsgPolyStream quadsB = PolyStreams.claimCSG();
         quadsB.writer().setLockUV(0, true);
         quadsB.writer().setSurface(SURFACE_LAMP);
-        quadsB.writer().surfaceIndex(SURFACE_B.ordinal);
+        quadsB.writer().surface(SURFACE_B);
         quadsB.saveDefaults();
         MeshHelper.makePaintableBox(new Box(0.2, 0, 0.4, 0.6, 1.0, 0.8), quadsB);
 

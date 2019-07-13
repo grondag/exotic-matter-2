@@ -23,6 +23,7 @@ import grondag.xm2.primitives.QuadHelper;
 import grondag.xm2.primitives.vertex.IVec3f;
 import grondag.xm2.primitives.vertex.IVertexCollection;
 import grondag.xm2.primitives.vertex.Vec3f;
+import grondag.xm2.surface.api.XmSurface;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Box;
@@ -229,7 +230,7 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
     public Surface getSurface();
     
-    public int surfaceIndex();
+    public XmSurface surface();
 
     /**
      * Returns computed face normal if no explicit normal assigned.

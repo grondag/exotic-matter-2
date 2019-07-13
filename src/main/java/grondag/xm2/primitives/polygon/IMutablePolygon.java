@@ -28,6 +28,7 @@ import grondag.xm2.primitives.vertex.IMutableVertex;
 import grondag.xm2.primitives.vertex.IVec3f;
 import grondag.xm2.primitives.vertex.UnpackedVertex3;
 import grondag.xm2.primitives.vertex.Vec3f;
+import grondag.xm2.surface.api.XmSurface;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -430,7 +431,7 @@ public interface IMutablePolygon extends IPolygon {
 
     IMutablePolygon setSurface(Surface surface);
 
-    IMutablePolygon surfaceIndex(int surfaceIndex);
+    IMutablePolygon surface(XmSurface surface);
     
     /**
      * Adds given offsets to u,v values of each vertex.
