@@ -38,9 +38,22 @@ import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.ModelStateData;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.api.XmSurface;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class SquareColumnMeshFactory extends MeshFactory {
+	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+			.add("main", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("cut", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_LAMP_GRADIENT)
+			.add("lamp", SurfaceTopology.CUBIC, 0, 0)
+			.build();
+	
+	public static final XmSurfaceImpl SURFACE_MAIN = SURFACES.get(0);
+	public static final XmSurfaceImpl SURFACE_CUT = SURFACES.get(1);
+	public static final XmSurfaceImpl SURFACE_LAMP = SURFACES.get(2);
+	
     public static final int MIN_CUTS = 1;
     public static final int MAX_CUTS = 3;
 
@@ -90,7 +103,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
     }
 
     public SquareColumnMeshFactory() {
-        super(StateFormat.BLOCK, ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS,
+        super(SURFACES, StateFormat.BLOCK, ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS,
                 STATE_CUT_COUNT.setValue(3, STATE_ARE_CUTS_ON_EDGE.setValue(true, 0)));
     }
 

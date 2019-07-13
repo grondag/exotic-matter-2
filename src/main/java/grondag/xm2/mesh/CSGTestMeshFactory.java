@@ -30,9 +30,19 @@ import grondag.xm2.primitives.stream.IWritablePolyStream;
 import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Box;
 
 public class CSGTestMeshFactory extends MeshFactory {
+	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+			.add("main", SurfaceTopology.CUBIC, 0, 0)
+			.add("lamp", SurfaceTopology.CUBIC, 0, 0)
+			.build();
+	
+	public static final XmSurfaceImpl SURFACE_A = SURFACES.get(0);
+	public static final XmSurfaceImpl SURFACE_B = SURFACES.get(1);
+	
     private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.CUBIC)
             .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
     private static final Surface SURFACE_LAMP = Surface.builder(SurfaceTopology.CUBIC)
@@ -42,7 +52,7 @@ public class CSGTestMeshFactory extends MeshFactory {
     private final IPolyStream cachedQuads;
 
     public CSGTestMeshFactory() {
-        super(StateFormat.BLOCK, STATE_FLAG_NONE);
+        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = getTestQuads();
     }
 

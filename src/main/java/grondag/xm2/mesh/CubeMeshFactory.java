@@ -31,9 +31,18 @@ import grondag.xm2.primitives.stream.IWritablePolyStream;
 import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.api.XmSurface;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class CubeMeshFactory extends MeshFactory {
+	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+			.add("back", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
+			.build();
+	
+	public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
+	
     private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.CUBIC)
             .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
 
@@ -41,7 +50,7 @@ public class CubeMeshFactory extends MeshFactory {
     private final IPolyStream cachedQuads;
 
     public CubeMeshFactory() {
-        super(StateFormat.BLOCK, STATE_FLAG_NONE);
+        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = getCubeQuads();
     }
 

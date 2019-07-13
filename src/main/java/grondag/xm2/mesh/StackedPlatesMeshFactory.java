@@ -33,9 +33,22 @@ import grondag.xm2.primitives.stream.IWritablePolyStream;
 import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.api.XmSurface;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class StackedPlatesMeshFactory extends MeshFactory {
+	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+			.add("bottom", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("top", SurfaceTopology.CUBIC, 0, 0)
+			.add("sides", SurfaceTopology.CUBIC, 0, 0)
+			.build();
+	
+	public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);
+	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
+	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
+	
     // This may not be the right setup - refactored surfaces at a time this wasn't
     // being actively used.
     protected static Surface TOP_AND_BOTTOM_SURFACE = Surface.builder(SurfaceTopology.CUBIC)
@@ -45,7 +58,7 @@ public class StackedPlatesMeshFactory extends MeshFactory {
             .withAllowBorders(false).build();
 
     public StackedPlatesMeshFactory() {
-        super(StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
+        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
     private static final Direction[] HORIZONTAL_FACES = {Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH};

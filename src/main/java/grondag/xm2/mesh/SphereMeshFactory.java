@@ -29,9 +29,17 @@ import grondag.xm2.primitives.stream.IWritablePolyStream;
 import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
 public class SphereMeshFactory extends MeshFactory {
+	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+			.add("back", SurfaceTopology.TILED, 0, 0)
+			.build();
+	
+	public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
+	
     private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.TILED).withAllowBorders(false)
             .withDisabledLayers(PaintLayer.LAMP, PaintLayer.CUT).build();
 
@@ -39,7 +47,7 @@ public class SphereMeshFactory extends MeshFactory {
     private final IPolyStream cachedQuads;
 
     public SphereMeshFactory() {
-        super(StateFormat.BLOCK, STATE_FLAG_NONE);
+        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = generateQuads();
     }
 

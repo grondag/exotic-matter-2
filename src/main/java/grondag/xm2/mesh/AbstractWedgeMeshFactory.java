@@ -26,10 +26,25 @@ import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.api.XmSurface;
+import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public abstract class AbstractWedgeMeshFactory extends MeshFactory {
-
+	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+			.add("back", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("bottom", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("top", SurfaceTopology.CUBIC, 0, 0)
+			.add("sides", SurfaceTopology.CUBIC, 0, 0)
+			.build();
+	
+	
+	public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(0);
+	public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(1);
+	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(2);
+	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
+	
     protected static final Surface BACK_AND_BOTTOM_SURFACE = Surface.builder(SurfaceTopology.CUBIC)
             .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
 
@@ -40,7 +55,7 @@ public abstract class AbstractWedgeMeshFactory extends MeshFactory {
             .build();
 
     public AbstractWedgeMeshFactory() {
-        super(StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
+        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
     @Override

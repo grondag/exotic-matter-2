@@ -21,8 +21,11 @@ import java.util.function.Consumer;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 
 public abstract class MeshFactory {
+	public final XmSurfaceListImpl surfaces;
+	
     /**
      * used by ModelState to know why type of state representation is needed by this
      * shape
@@ -41,11 +44,12 @@ public abstract class MeshFactory {
      */
     public final long defaultShapeStateBits;
 
-    protected MeshFactory(StateFormat stateFormat, int stateFlags) {
-        this(stateFormat, stateFlags, 0L);
+    protected MeshFactory(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
+        this(surfaces, stateFormat, stateFlags, 0L);
     }
 
-    protected MeshFactory(StateFormat stateFormat, int stateFlags, long defaultShapeStateBits) {
+    protected MeshFactory(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags, long defaultShapeStateBits) {
+    	this.surfaces = surfaces;
         this.stateFormat = stateFormat;
         this.stateFlags = stateFlags;
         this.defaultShapeStateBits = defaultShapeStateBits;
