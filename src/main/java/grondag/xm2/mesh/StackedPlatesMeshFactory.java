@@ -40,9 +40,9 @@ import net.minecraft.util.math.Direction;
 
 public class StackedPlatesMeshFactory extends MeshFactory {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("bottom", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("top", SurfaceTopology.CUBIC, 0, 0)
-			.add("sides", SurfaceTopology.CUBIC, 0, 0)
+			.add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+			.add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
 			.build();
 	
 	public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);

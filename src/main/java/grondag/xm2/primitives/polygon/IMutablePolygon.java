@@ -100,6 +100,8 @@ public interface IMutablePolygon extends IPolygon {
     IMutablePolygon setMinU(int layerIndex, float minU);
 
     IMutablePolygon setMinV(int layerIndex, float minV);
+    
+    IMutablePolygon uvWrapDistance(float uvWrapDistance);
 
     /**
      * Sets all vertex colors to given color

@@ -30,14 +30,15 @@ import grondag.xm2.primitives.stream.IWritablePolyStream;
 import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Box;
 
 public class CSGTestMeshFactory extends MeshFactory {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("main", SurfaceTopology.CUBIC, 0, 0)
-			.add("lamp", SurfaceTopology.CUBIC, 0, 0)
+			.add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+			.add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
 			.build();
 	
 	public static final XmSurfaceImpl SURFACE_A = SURFACES.get(0);
@@ -89,12 +90,14 @@ public class CSGTestMeshFactory extends MeshFactory {
         CsgPolyStream quadsA = PolyStreams.claimCSG();
         quadsA.writer().setLockUV(0, true);
         quadsA.writer().setSurface(SURFACE_MAIN);
+        quadsA.writer().surfaceIndex(SURFACE_A.ordinal);
         quadsA.saveDefaults();
         MeshHelper.makePaintableBox(new Box(0, 0.4, 0.4, 1.0, 0.6, 0.6), quadsA);
 
         CsgPolyStream quadsB = PolyStreams.claimCSG();
         quadsB.writer().setLockUV(0, true);
         quadsB.writer().setSurface(SURFACE_LAMP);
+        quadsB.writer().surfaceIndex(SURFACE_B.ordinal);
         quadsB.saveDefaults();
         MeshHelper.makePaintableBox(new Box(0.2, 0, 0.4, 0.6, 1.0, 0.8), quadsB);
 

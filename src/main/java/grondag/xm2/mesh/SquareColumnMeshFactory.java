@@ -45,9 +45,9 @@ import net.minecraft.util.math.Direction;
 
 public class SquareColumnMeshFactory extends MeshFactory {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("main", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("cut", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_LAMP_GRADIENT)
-			.add("lamp", SurfaceTopology.CUBIC, 0, 0)
+			.add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
+			.add("lamp", SurfaceTopology.CUBIC, 0)
 			.build();
 	
 	public static final XmSurfaceImpl SURFACE_MAIN = SURFACES.get(0);

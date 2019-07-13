@@ -142,6 +142,11 @@ public class ForwardingPolygon implements IPolygon {
         return wrapped.getMinV(layerIndex);
     }
 
+	@Override
+	public float uvWrapDistance() {
+		return wrapped.uvWrapDistance();
+	}
+	
     @Override
     public int layerCount() {
         return wrapped.layerCount();

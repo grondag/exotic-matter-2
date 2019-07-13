@@ -38,7 +38,7 @@ import net.minecraft.util.math.Direction;
 
 public class CubeMeshFactory extends MeshFactory {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("back", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
 			.build();
 	
 	public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
@@ -76,7 +76,7 @@ public class CubeMeshFactory extends MeshFactory {
         cube.v1 = 1;
         cube.isOverlay = false;
         cube.surfaceInstance = SURFACE_MAIN;
-        cube.surfaceIndex = 0;
+        cube.surfaceIndex = SURFACE_ALL.ordinal;
 
         IWritablePolyStream stream = PolyStreams.claimWritable();
         cube.appendFace(stream, Direction.DOWN);

@@ -293,6 +293,11 @@ public class StreamBackedPolygon implements IPolygon {
         return polyEncoder.getMinV(stream, baseAddress, layerIndex);
     }
 
+	@Override
+	public float uvWrapDistance() {
+		return StaticEncoder.uvWrapDistance(stream, baseAddress);
+	}
+	
     @Override
     public final int layerCount() {
         return PolyStreamFormat.getLayerCount(format());

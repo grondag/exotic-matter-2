@@ -18,6 +18,7 @@ package grondag.xm2.primitives.polygon;
 
 import grondag.fermion.world.Rotation;
 import grondag.xm2.painting.Surface;
+import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.primitives.QuadHelper;
 import grondag.xm2.primitives.vertex.IVec3f;
 import grondag.xm2.primitives.vertex.IVertexCollection;
@@ -271,6 +272,31 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
     float getMinV(int layerIndex);
 
+    /**
+     * The maximum wrapping uv distance for either dimension on this surface.
+     * <p>
+     * 
+     * Must be zero or positive. Setting to zero disable uvWrapping - painter will
+     * use a 1:1 scale.
+     * <p>
+     * 
+     * If the surface is painted with a texture larger than this distance, the
+     * texture will be scaled down to fit in order to prevent visible seams. A scale
+     * of 4, for example, would force a 32x32 texture to be rendered at 1/8 scale.
+     * <p>
+     * 
+     * If the surface is painted with a texture smaller than this distance, then the
+     * texture will be zoomed tiled to fill the surface.
+     * <p>
+     * 
+     * Default is 0 and generally only comes into play for non-cubic surface
+     * painters.
+     * <p>
+     * 
+     * See also {@link SurfaceTopology#TILED}
+     */
+    float uvWrapDistance();
+    
     int layerCount();
 
     String getTextureName(int layerIndex);

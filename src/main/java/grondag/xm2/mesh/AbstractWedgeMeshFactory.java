@@ -33,10 +33,10 @@ import net.minecraft.util.math.Direction;
 
 public abstract class AbstractWedgeMeshFactory extends MeshFactory {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("back", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("bottom", SurfaceTopology.CUBIC, 0, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("top", SurfaceTopology.CUBIC, 0, 0)
-			.add("sides", SurfaceTopology.CUBIC, 0, 0)
+			.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+			.add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
 			.build();
 	
 	

@@ -10,14 +10,12 @@ public class XmSurfaceImpl implements XmSurface {
 	public final int ordinal;
 	public final String nameKey;
 	public final SurfaceTopology topology;
-	public final float uvWrapDistance;
 	public final int flags;
 	
-	private XmSurfaceImpl(int ordinal, String nameKey, SurfaceTopology topology, float uvWrapDistance, int flags) {
+	private XmSurfaceImpl(int ordinal, String nameKey, SurfaceTopology topology, int flags) {
 		this.ordinal = ordinal;
 		this.nameKey = nameKey;
 		this.topology = topology;
-		this.uvWrapDistance = uvWrapDistance;
 		this.flags = flags;
 	}
 	
@@ -37,11 +35,6 @@ public class XmSurfaceImpl implements XmSurface {
 	}
 
 	@Override
-	public float uvWrapDistance() {
-		return uvWrapDistance;
-	}
-
-	@Override
 	public int flags() {
 		return flags;
 	}
@@ -55,8 +48,8 @@ public class XmSurfaceImpl implements XmSurface {
 		private Builder() {}
 		
 		@Override
-		public Builder add(String nameKey, SurfaceTopology topology, float uvWrapDistance, int flags) {
-			surfaces.add(new XmSurfaceImpl(surfaces.size(), nameKey, topology, uvWrapDistance, flags));
+		public Builder add(String nameKey, SurfaceTopology topology, int flags) {
+			surfaces.add(new XmSurfaceImpl(surfaces.size(), nameKey, topology, flags));
 			return this;
 		}
 

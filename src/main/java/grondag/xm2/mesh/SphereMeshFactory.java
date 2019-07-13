@@ -29,13 +29,14 @@ import grondag.xm2.primitives.stream.IWritablePolyStream;
 import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
 public class SphereMeshFactory extends MeshFactory {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("back", SurfaceTopology.TILED, 0, 0)
+			.add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE)
 			.build();
 	
 	public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);

@@ -53,6 +53,12 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
         ((IMutablePolygon) wrapped).setMinV(layerIndex, minV);
         return this;
     }
+    
+	@Override
+	public IMutablePolygon uvWrapDistance(float uvWrapDistance) {
+		((IMutablePolygon) wrapped).uvWrapDistance(uvWrapDistance);
+		return this;
+	}
 
     @Override
     public IMutablePolygon setTextureSalt(int salt) {

@@ -59,6 +59,12 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
         polyEncoder.setMinV(stream, baseAddress, layerIndex, minV);
         return this;
     }
+    
+	@Override
+	public IMutablePolygon uvWrapDistance(float uvWrapDistance) {
+		StaticEncoder.uvWrapDistance(stream, baseAddress, uvWrapDistance);
+		return this;
+	}
 
     @Override
     public final IMutablePolygon setTextureSalt(int salt) {
