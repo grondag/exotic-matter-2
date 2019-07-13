@@ -20,14 +20,14 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 import grondag.fermion.varia.Useful;
-import grondag.xm2.api.texture.TextureRotation;
-import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.primitives.QuadHelper;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.polygon.IStreamPolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.texture.api.TextureRotation;
+import grondag.xm2.texture.api.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;

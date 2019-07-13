@@ -24,11 +24,11 @@ import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.connect.api.world.ModelStateFunction;
-import grondag.xm2.impl.texture.TextureSetRegistryImpl;
 import grondag.xm2.mesh.ModelShapes;
 import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.painting.VertexProcessors;
 import grondag.xm2.terrain.TerrainState;
+import grondag.xm2.texture.impl.TextureSetRegistryImpl;
 import net.minecraft.util.math.Direction;
 
 public class ModelStateData {

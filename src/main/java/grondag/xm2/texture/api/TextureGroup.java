@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.api.texture;
+package grondag.xm2.texture.api;
 
 public enum TextureGroup {
     STATIC_TILES,

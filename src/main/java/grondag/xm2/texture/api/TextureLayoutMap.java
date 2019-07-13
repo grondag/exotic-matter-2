@@ -14,9 +14,9 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.api.texture;
+package grondag.xm2.texture.api;
 
-import grondag.xm2.impl.texture.TextureLayoutMapImpl;
+import grondag.xm2.texture.impl.TextureLayoutMapImpl;
 
 public interface TextureLayoutMap {
 	static TextureLayoutMap create(TextureLayout layout, TextureNameFunction nameFunc) {

@@ -16,11 +16,11 @@
 
 package grondag.xm2.painting;
 
-import grondag.xm2.api.texture.TextureScale;
-import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.painting.QuadPainter.IPaintMethod;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.texture.api.TextureScale;
+import grondag.xm2.texture.api.TextureSet;
 
 public class QuadPainterFactory {
     private static IPaintMethod DO_NOTHING = new IPaintMethod() {

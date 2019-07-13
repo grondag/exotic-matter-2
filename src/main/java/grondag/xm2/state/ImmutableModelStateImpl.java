@@ -21,7 +21,6 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
@@ -30,6 +29,7 @@ import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.painting.QuadPaintHandler;
 import grondag.xm2.painting.VertexProcessor;
 import grondag.xm2.terrain.TerrainState;
+import grondag.xm2.texture.api.TextureSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;

@@ -23,11 +23,11 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_IS_POPULATED;
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
-import grondag.xm2.api.texture.TextureSet;
-import grondag.xm2.impl.texture.TextureSetRegistryImpl;
 import grondag.xm2.mesh.MeshFactory;
 import grondag.xm2.mesh.ModelShape;
 import grondag.xm2.painting.PaintLayer;
+import grondag.xm2.texture.api.TextureSet;
+import grondag.xm2.texture.impl.TextureSetRegistryImpl;
 
 /**
  * Populates state flags for a given model state.

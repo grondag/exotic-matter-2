@@ -16,13 +16,13 @@
 
 package grondag.xm2.painting;
 
-import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.connect.api.model.FaceCorner;
 import grondag.xm2.connect.api.state.CornerJoinFaceState;
 import grondag.xm2.connect.api.state.CornerJoinFaceStates;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.texture.api.TextureSet;
 import net.minecraft.util.math.Direction;
 
 /**

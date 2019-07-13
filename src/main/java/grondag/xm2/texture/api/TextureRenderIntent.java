@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.api.texture;
+package grondag.xm2.texture.api;
 
 import net.minecraft.block.BlockRenderLayer;
 

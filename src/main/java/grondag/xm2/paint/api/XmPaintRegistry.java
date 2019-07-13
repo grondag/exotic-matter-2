@@ -14,23 +14,19 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.api.texture;
+package grondag.xm2.paint.api;
 
-import grondag.fermion.world.Rotation;
+import grondag.xm2.paint.impl.XmPaintRegistryImpl;
+import net.minecraft.util.Identifier;
 
-// TODO: Restore RANDOM_CONSISTENT to distinguish multi-block textures that can and can't have rotations intermingled per-plane.
-// As is, have to assume can't, but 2x2 cobble would be an example that could.
+public interface XmPaintRegistry {
+	static XmPaintRegistry INSTANCE = XmPaintRegistryImpl.INSTANCE;
+	
+	XmPaintFinder finder();
 
-public enum TextureRotation {
-    ROTATE_NONE(Rotation.ROTATE_NONE),
-    ROTATE_90(Rotation.ROTATE_90),
-    ROTATE_180(Rotation.ROTATE_180),
-    ROTATE_270(Rotation.ROTATE_270),
-    ROTATE_RANDOM(Rotation.ROTATE_NONE);
-
-    public final Rotation rotation;
-    
-    private TextureRotation(Rotation rotation) {
-        this.rotation = rotation;
-    }
+	boolean register(Identifier id, XmPaint paint);
+	
+	XmPaint get(int paintIndex);
+	
+	XmPaint get(Identifier paintId);
 }

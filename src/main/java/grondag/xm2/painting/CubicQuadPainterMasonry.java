@@ -17,13 +17,13 @@
 package grondag.xm2.painting;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.connect.api.state.SimpleJoinFaceState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.primitives.FaceQuadInputs;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.texture.api.TextureSet;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterMasonry extends QuadPainter {

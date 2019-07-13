@@ -14,13 +14,13 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.impl.texture;
+package grondag.xm2.texture.impl;
 
-import grondag.xm2.api.texture.TextureGroup;
-import grondag.xm2.api.texture.TextureLayoutMap;
-import grondag.xm2.api.texture.TextureRenderIntent;
-import grondag.xm2.api.texture.TextureRotation;
-import grondag.xm2.api.texture.TextureScale;
+import grondag.xm2.texture.api.TextureGroup;
+import grondag.xm2.texture.api.TextureLayoutMap;
+import grondag.xm2.texture.api.TextureRenderIntent;
+import grondag.xm2.texture.api.TextureRotation;
+import grondag.xm2.texture.api.TextureScale;
 
 abstract class AbstractTextureSet {
 	TextureLayoutMapImpl layoutMap = (TextureLayoutMapImpl) TextureLayoutMap.SINGLE;

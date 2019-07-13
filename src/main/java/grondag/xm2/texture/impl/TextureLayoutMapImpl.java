@@ -14,14 +14,14 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.impl.texture;
+package grondag.xm2.texture.impl;
 
 import java.util.function.Consumer;
 
-import grondag.xm2.api.texture.TextureLayout;
-import grondag.xm2.api.texture.TextureLayoutMap;
-import grondag.xm2.api.texture.TextureNameFunction;
-import grondag.xm2.api.texture.TextureSet;
+import grondag.xm2.texture.api.TextureLayout;
+import grondag.xm2.texture.api.TextureLayoutMap;
+import grondag.xm2.texture.api.TextureNameFunction;
+import grondag.xm2.texture.api.TextureSet;
 import net.minecraft.util.Identifier;
 
 public class TextureLayoutMapImpl implements TextureLayoutMap {

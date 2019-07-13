@@ -14,18 +14,18 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.impl.texture;
+package grondag.xm2.texture.impl;
 
 import java.util.HashMap;
 
 import grondag.fermion.structures.NullHandler;
-import grondag.xm2.api.texture.TextureGroup;
-import grondag.xm2.api.texture.TextureLayoutMap;
-import grondag.xm2.api.texture.TextureRenderIntent;
-import grondag.xm2.api.texture.TextureRotation;
-import grondag.xm2.api.texture.TextureScale;
-import grondag.xm2.api.texture.TextureSet;
-import grondag.xm2.api.texture.TextureSetRegistry;
+import grondag.xm2.texture.api.TextureGroup;
+import grondag.xm2.texture.api.TextureLayoutMap;
+import grondag.xm2.texture.api.TextureRenderIntent;
+import grondag.xm2.texture.api.TextureRotation;
+import grondag.xm2.texture.api.TextureScale;
+import grondag.xm2.texture.api.TextureSet;
+import grondag.xm2.texture.api.TextureSetRegistry;
 import net.minecraft.util.Identifier;
 
 public class TextureSetRegistryImpl implements TextureSetRegistry {

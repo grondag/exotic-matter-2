@@ -17,12 +17,12 @@
 package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
-import grondag.xm2.api.texture.TextureRotation;
-import grondag.xm2.api.texture.TextureScale;
-import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.texture.api.TextureRotation;
+import grondag.xm2.texture.api.TextureScale;
+import grondag.xm2.texture.api.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;

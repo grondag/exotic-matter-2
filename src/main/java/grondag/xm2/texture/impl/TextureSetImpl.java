@@ -14,14 +14,14 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.impl.texture;
+package grondag.xm2.texture.impl;
 
 import java.util.function.Consumer;
 
-import grondag.xm2.api.texture.TextureRotation;
-import grondag.xm2.api.texture.TextureSet;
-import grondag.xm2.api.texture.TextureSetBuilder;
 import grondag.xm2.state.ModelStateData;
+import grondag.xm2.texture.api.TextureRotation;
+import grondag.xm2.texture.api.TextureSet;
+import grondag.xm2.texture.api.TextureSetBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;

@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.api.texture;
+package grondag.xm2.texture.api;
 
 /**
  * Implement to map XM2 texture indexes to custom content texture names */

@@ -18,10 +18,10 @@ package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
-import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.texture.api.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 

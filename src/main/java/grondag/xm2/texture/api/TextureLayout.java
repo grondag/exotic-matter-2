@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.api.texture;
+package grondag.xm2.texture.api;
 
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
