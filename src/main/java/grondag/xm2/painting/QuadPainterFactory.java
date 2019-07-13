@@ -19,6 +19,7 @@ package grondag.xm2.painting;
 import grondag.xm2.painting.QuadPainter.IPaintMethod;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureScale;
 import grondag.xm2.texture.api.TextureSet;
 
@@ -30,13 +31,11 @@ public class QuadPainterFactory {
         }
     };
 
-    public static IPaintMethod getPainter(ModelState modelState, Surface surface, PaintLayer paintLayer) {
-        if (surface.isLayerDisabled(paintLayer))
-            return DO_NOTHING;
+    public static IPaintMethod getPainter(ModelState modelState, XmSurface surface, int textureDepth) {
 
         TextureSet texture = modelState.getTexture(paintLayer);
 
-        switch (surface.topology) {
+        switch (surface.topology()) {
 
         case TILED:
             switch (texture.map().layout()) {
@@ -64,13 +63,13 @@ public class QuadPainterFactory {
                         : CubicQuadPainterBigTex::paintQuads;
 
             case BORDER_13:
-                return surface.allowBorders ? CubicQuadPainterBorders::paintQuads : null;
+                return surface.allowBorders() ? CubicQuadPainterBorders::paintQuads : null;
 
             case MASONRY_5:
-                return surface.allowBorders ? CubicQuadPainterMasonry::paintQuads : null;
+                return surface.allowBorders() ? CubicQuadPainterMasonry::paintQuads : null;
 
             case QUADRANT_CONNECTED:
-                return surface.allowBorders ? CubicQuadPainterQuadrants::paintQuads : null;
+                return surface.allowBorders() ? CubicQuadPainterQuadrants::paintQuads : null;
 
             default:
                 return null;

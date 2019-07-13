@@ -26,8 +26,6 @@ import grondag.xm2.connect.api.state.CornerJoinFaceState;
 import grondag.xm2.connect.api.state.CornerJoinFaceStates;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.dispatch.SimpleQuadBounds;
-import grondag.xm2.painting.PaintLayer;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.primitives.FaceVertex;
 import grondag.xm2.primitives.QuadHelper;
@@ -56,18 +54,6 @@ public class SquareColumnMeshFactory extends MeshFactory {
 	
     public static final int MIN_CUTS = 1;
     public static final int MAX_CUTS = 3;
-
-    private static final Surface INSTANCE_CUT = Surface.builder(SurfaceTopology.CUBIC).withAllowBorders(false)
-            .withEnabledLayers(PaintLayer.CUT).build();
-
-    private static final Surface INSTANCE_CUT_LAMP = Surface.builder(INSTANCE_CUT).withLampGradient(true)
-            .withEnabledLayers(PaintLayer.CUT).build();
-
-    private static final Surface INSTANCE_MAIN = Surface.builder(SurfaceTopology.CUBIC)
-            .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
-
-    private static final Surface INSTANCE_LAMP = Surface.builder(SurfaceTopology.CUBIC)
-            .withEnabledLayers(PaintLayer.LAMP).build();
 
     private static final BitPacker64<SquareColumnMeshFactory> STATE_PACKER = new BitPacker64<SquareColumnMeshFactory>(
             null, null);
@@ -145,8 +131,10 @@ public class SquareColumnMeshFactory extends MeshFactory {
         stream.writer().setLockUV(0, true);
         stream.saveDefaults();
         
-        Surface cutSurface = state.isEmissive(PaintLayer.LAMP) ? INSTANCE_CUT_LAMP : INSTANCE_CUT;
-
+        //FIXME: find a way to handle lamp gradient
+        //Surface cutSurface = state.isEmissive(PaintLayer.LAMP) ? INSTANCE_CUT_LAMP : INSTANCE_CUT;
+        XmSurfaceImpl cutSurface = SURFACE_CUT;
+        
         if (face.getAxis() == axis) {
             makeCapFace(face, stream, bjs.faceState(face), spec, axis, cutSurface);
         } else {
@@ -164,7 +152,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
     }
 
     private void makeSideFace(Direction face, IWritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec,
-            Direction.Axis axis, Surface cutSurface) {
+            Direction.Axis axis, XmSurfaceImpl cutSurface) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
@@ -197,35 +185,35 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
         // bottom
         if (!hasBottomJoin) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, 0, 0, 1, bottomCapHeight, 0, topFace);
             stream.append();
         }
 
         // top
         if (!hasTopJoin) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, 0, 1 - topCapHeight, 1, 1, 0, topFace);
             stream.append();
         }
 
         // left margin
         if (leftMarginWidth > 0) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, 0, bottomCapHeight, leftMarginWidth, 1 - topCapHeight, 0, topFace);
             stream.append();
         }
 
         // right margin
         if (rightMarginWidth > 0) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, 1 - rightMarginWidth, bottomCapHeight, 1, 1 - topCapHeight, 0, topFace);
             stream.append();
         }
 
         // splines
         for (int i = 0; i < actualCutCount - 1; i++) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, leftMarginWidth + spec.cutWidth * 2 * i + spec.cutWidth, bottomCapHeight,
                     leftMarginWidth + spec.cutWidth * 2 * (i + 1), 1 - topCapHeight, 0, topFace);
             stream.append();
@@ -233,7 +221,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
         // top left corner
         if (fjs.needsCorner(topFace, leftFace, face)) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, Math.max(leftMarginWidth, 0), 1 - spec.baseMarginWidth,
                     leftMarginWidth + spec.cutWidth, 1, 0, topFace);
             stream.append();
@@ -241,7 +229,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
         // bottom left corner
         if (fjs.needsCorner(bottomFace, leftFace, face)) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, Math.max(leftMarginWidth, 0), 0, leftMarginWidth + spec.cutWidth,
                     spec.baseMarginWidth, 0, topFace);
             stream.append();
@@ -249,7 +237,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
         // top right corner
         if (fjs.needsCorner(topFace, rightFace, face)) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, 1 - rightMarginWidth - spec.cutWidth, 1 - spec.baseMarginWidth,
                     Math.min(1 - rightMarginWidth, 1), 1, 0, topFace);
             stream.append();
@@ -257,7 +245,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
         // bottom right corner
         if (fjs.needsCorner(bottomFace, rightFace, face)) {
-            writer.setSurface(INSTANCE_MAIN);
+            writer.surface(SURFACE_MAIN);
             writer.setupFaceQuad(face, 1 - rightMarginWidth - spec.cutWidth, 0, Math.min(1 - rightMarginWidth, 1),
                     spec.baseMarginWidth, 0, topFace);
             stream.append();
@@ -269,7 +257,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
             // left face
             if (sx0 > 0.0001f) {
-                writer.setSurface(cutSurface);
+                writer.surface(cutSurface);
                 writer.setTextureSalt(salt++);
                 setupCutSideQuad(writer, new SimpleQuadBounds(rightFace, bottomCapHeight, 1 - spec.cutDepth,
                         1 - topCapHeight, 1, 1 - sx0, face));
@@ -278,7 +266,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
             // right face
             if (sx1 < 0.9999) {
-                writer.setSurface(cutSurface);
+                writer.surface(cutSurface);
                 writer.setTextureSalt(salt++);
                 setupCutSideQuad(writer, new SimpleQuadBounds(leftFace, topCapHeight, 1 - spec.cutDepth,
                         1 - bottomCapHeight, 1, sx1, face));
@@ -287,7 +275,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
             // top face
             if (topCapHeight > 0) {
-                writer.setSurface(cutSurface);
+                writer.surface(cutSurface);
                 writer.setTextureSalt(salt++);
                 setupCutSideQuad(writer,
                         new SimpleQuadBounds(bottomFace, sx0, 1 - spec.cutDepth, sx1, 1, 1 - topCapHeight, face));
@@ -296,7 +284,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
             // bottom face
             if (bottomCapHeight > 0) {
-                writer.setSurface(cutSurface);
+                writer.surface(cutSurface);
                 writer.setTextureSalt(salt++);
                 setupCutSideQuad(writer, new SimpleQuadBounds(topFace, 1 - sx1, 1 - spec.cutDepth, 1 - sx0, 1,
                         1 - bottomCapHeight, face));
@@ -305,7 +293,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
             // top left corner
             if (fjs.needsCorner(topFace, leftFace, face)) {
-                writer.setSurface(cutSurface);
+                writer.surface(cutSurface);
                 writer.setTextureSalt(salt++);
                 setupCutSideQuad(writer, new SimpleQuadBounds(bottomFace, Math.max(leftMarginWidth, 0), 1 - spec.cutDepth,
                         leftMarginWidth + spec.cutWidth, 1, 1 - spec.baseMarginWidth, face));
@@ -314,7 +302,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
             // bottom left corner
             if (fjs.needsCorner(bottomFace, leftFace, face)) {
-                writer.setSurface(cutSurface);
+                writer.surface(cutSurface);
                 writer.setTextureSalt(salt++);
                 setupCutSideQuad(writer, new SimpleQuadBounds(topFace, 1 - leftMarginWidth - spec.cutWidth,
                         1 - spec.cutDepth, Math.min(1 - leftMarginWidth, 1), 1, 1 - spec.baseMarginWidth, face));
@@ -324,7 +312,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
             // top right corner
             if (fjs.needsCorner(topFace, rightFace, face)) {
-                writer.setSurface(cutSurface);
+                writer.surface(cutSurface);
                 writer.setTextureSalt(salt++);
                 setupCutSideQuad(writer, new SimpleQuadBounds(bottomFace, 1 - rightMarginWidth - spec.cutWidth,
                         1 - spec.cutDepth, Math.min(1 - rightMarginWidth, 1), 1, 1 - spec.baseMarginWidth, face));
@@ -333,7 +321,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
             // bottom right corner
             if (fjs.needsCorner(bottomFace, rightFace, face)) {
-                writer.setSurface(cutSurface);
+                writer.surface(cutSurface);
                 writer.setTextureSalt(salt++);
                 setupCutSideQuad(writer, new SimpleQuadBounds(topFace, Math.max(rightMarginWidth, 0), 1 - spec.cutDepth,
                         rightMarginWidth + spec.cutWidth, 1, 1 - spec.baseMarginWidth, face));
@@ -343,7 +331,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
         // inner lamp surface can be a single poly
         {
-            writer.setSurface(INSTANCE_LAMP);
+            writer.surface(SURFACE_LAMP);
             writer.setupFaceQuad(face, Math.max(0, leftMarginWidth), bottomCapHeight, Math.min(1, 1 - rightMarginWidth),
                     1 - topCapHeight, spec.cutDepth, topFace);
             stream.append();
@@ -351,7 +339,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
     }
 
     private void makeCapFace(Direction face, IWritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec,
-            Direction.Axis axis, Surface cutSurface) {
+            Direction.Axis axis, XmSurfaceImpl cutSurface) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
@@ -362,7 +350,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
         // lamp bottom can be a single poly
         {
-            writer.setSurface(INSTANCE_LAMP);
+            writer.surface(SURFACE_LAMP);
             writer.setupFaceQuad(face, fjs.isJoined(FaceEdge.LEFT_EDGE) ? 0 : spec.baseMarginWidth,
                     fjs.isJoined(FaceEdge.BOTTOM_EDGE) ? 0 : spec.baseMarginWidth,
                     fjs.isJoined(FaceEdge.RIGHT_EDGE) ? 1 : 1 - spec.baseMarginWidth,
@@ -384,14 +372,14 @@ public class SquareColumnMeshFactory extends MeshFactory {
                 // margin corner faces
                 {
                     stream.setVertexCount(3);
-                    writer.setSurface(INSTANCE_MAIN);
+                    writer.surface(SURFACE_MAIN);
                     writer.setupFaceQuad(face, new FaceVertex(spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0),
                             new FaceVertex(spec.baseMarginWidth, 1, 0), new FaceVertex(0, 1, 0), side);
                     stream.append();
                 }
                 {
                     stream.setVertexCount(3);
-                    writer.setSurface(INSTANCE_MAIN);
+                    writer.surface(SURFACE_MAIN);
                     writer.setupFaceQuad(face, new FaceVertex(1 - spec.baseMarginWidth, 1, 0),
                             new FaceVertex(1 - spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0),
                             new FaceVertex(1, 1, 0), side);
@@ -400,14 +388,14 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
                 // margin corner sides
                 {
-                    writer.setSurface(cutSurface);
+                    writer.surface(cutSurface);
                     writer.setTextureSalt(salt++);
                     setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side),
                             1 - spec.baseMarginWidth, 1 - spec.cutDepth, 1, 1, 1 - spec.baseMarginWidth, face));
                     stream.append();
                 }
                 {
-                    writer.setSurface(cutSurface);
+                    writer.surface(cutSurface);
                     writer.setTextureSalt(salt++);
                     setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0, 1 - spec.cutDepth,
                             spec.baseMarginWidth, 1, 1 - spec.baseMarginWidth, face));
@@ -420,7 +408,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
                     float xRight = Math.min(xLeft + spec.cutWidth, 0.5f);
 
                     {
-                        writer.setSurface(INSTANCE_MAIN);
+                        writer.surface(SURFACE_MAIN);
                         writer.setupFaceQuad(face, new FaceVertex(xLeft, 1 - xLeft, 0),
                                 new FaceVertex(xRight, 1 - xRight, 0), new FaceVertex(xRight, 1, 0),
                                 new FaceVertex(xLeft, 1, 0), side);
@@ -428,7 +416,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
                     }
                     {
                         // mirror on right side, reverse winding order
-                        writer.setSurface(INSTANCE_MAIN);
+                        writer.surface(SURFACE_MAIN);
                         writer.setupFaceQuad(face, new FaceVertex(1 - xRight, 1 - xRight, 0),
                                 new FaceVertex(1 - xLeft, 1 - xLeft, 0), new FaceVertex(1 - xLeft, 1, 0),
                                 new FaceVertex(1 - xRight, 1, 0), side);
@@ -440,14 +428,14 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
                     if (xLeft < 0.4999) {
                         {
-                            writer.setSurface(cutSurface);
+                            writer.surface(cutSurface);
                             writer.setTextureSalt(salt++);
                             setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0,
                                     1 - spec.cutDepth, xLeft, 1, xLeft, face));
                             stream.append();
                         }
                         {
-                            writer.setSurface(cutSurface);
+                            writer.surface(cutSurface);
                             writer.setTextureSalt(salt++);
                             setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - xLeft,
                                     1 - spec.cutDepth, 1, 1, xLeft, face));
@@ -456,14 +444,14 @@ public class SquareColumnMeshFactory extends MeshFactory {
                     }
                     if (xRight < 0.4999) {
                         {
-                            writer.setSurface(cutSurface);
+                            writer.surface(cutSurface);
                             writer.setTextureSalt(salt++);
                             setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - xRight,
                                     1 - spec.cutDepth, 1, 1, 1 - xRight, face));
                             stream.append();
                         }
                         {
-                            writer.setSurface(cutSurface);
+                            writer.surface(cutSurface);
                             writer.setTextureSalt(salt++);
                             setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0,
                                     1 - spec.cutDepth, xRight, 1, 1 - xRight, face));
@@ -476,7 +464,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
                 {
                     // outer face
-                    writer.setSurface(INSTANCE_MAIN);
+                    writer.surface(SURFACE_MAIN);
                     writer.setupFaceQuad(face, new FaceVertex(spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0),
                             new FaceVertex(1 - spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0),
                             new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0), side);
@@ -488,7 +476,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
                     for (int i = 0; i < (spec.cutCount + 1) / 2; i++) {
                         float offset = spec.baseMarginWidth + (spec.cutWidth * 2 * i);
 
-                        writer.setSurface(cutSurface);
+                        writer.surface(cutSurface);
                         writer.setTextureSalt(salt++);
                         setupCutSideQuad(writer, new SimpleQuadBounds(side.getOpposite(), offset, 1 - spec.cutDepth,
                                 1 - offset, 1, 1 - offset, face));
@@ -502,7 +490,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
                     {
                         // inner cut sides
-                        writer.setSurface(cutSurface);
+                        writer.surface(cutSurface);
                         writer.setTextureSalt(salt++);
                         setupCutSideQuad(writer,
                                 new SimpleQuadBounds(side, offset, 1 - spec.cutDepth, 1 - offset, 1, offset, face));
@@ -511,7 +499,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
 
                     {
                         // spline / center
-                        writer.setSurface(INSTANCE_MAIN);
+                        writer.surface(SURFACE_MAIN);
                         writer.setupFaceQuad(face,
                                 new FaceVertex(Math.min(0.5f, offset + spec.cutWidth), 1 - offset - spec.cutWidth, 0),
                                 new FaceVertex(Math.max(0.5f, 1 - offset - spec.cutWidth), 1 - offset - spec.cutWidth,
@@ -526,7 +514,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
     }
 
     private void setupCutSideQuad(IMutablePolygon qi, SimpleQuadBounds qb) {
-        final int glow = qi.getSurface().isLampGradient ? 128 : 0;
+        final int glow = qi.surface().isLampGradient() ? 128 : 0;
 
         qi.setupFaceQuad(qb.face, new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, Color.WHITE, glow),
                 new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, Color.WHITE, glow),

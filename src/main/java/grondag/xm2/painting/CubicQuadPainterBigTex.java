@@ -69,7 +69,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 
                 // abs is necessary so that hash input components combine together properly
                 // Small random numbers already have most bits set.
-                int depthAndSpeciesHash = editor.getSurface().ignoreDepthForRandomization
+                int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization()
                         ? HashCommon.mix((modelState.getSpecies() << 8) | editor.getTextureSalt())
                         : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.getSpecies() << 8)
                                 | (editor.getTextureSalt() << 12));
@@ -110,7 +110,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 
                 // abs is necessary so that hash input components combine together properly
                 // Small random numbers already have most bits set.
-                final int depthHash = editor.getSurface().ignoreDepthForRandomization && editor.getTextureSalt() == 0
+                final int depthHash = editor.surface().ignoreDepthForRandomization() && editor.getTextureSalt() == 0
                         ? 0
                         : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (editor.getTextureSalt() << 8));
 

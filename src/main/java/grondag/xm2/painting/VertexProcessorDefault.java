@@ -45,7 +45,7 @@ public class VertexProcessorDefault extends VertexProcessor {
         // to blend the lamp color/brighness with the nominal color/brightness.
         // This does not apply with the lamp paint layer itself (makes no sense).
         // (Generally gradient surfaces should not be painted by lamp color)
-        if (paintLayer != PaintLayer.LAMP && poly.getSurface().isLampGradient) {
+        if (paintLayer != PaintLayer.LAMP && poly.surface().isLampGradient()) {
             int lampColor = modelState.getColorARGB(PaintLayer.LAMP);
             int lampBrightness = modelState.isEmissive(PaintLayer.LAMP) ? 255 : 0;
 

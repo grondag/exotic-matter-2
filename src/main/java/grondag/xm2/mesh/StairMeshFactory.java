@@ -46,13 +46,13 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
         quad.setLockUV(0, true);
         stream.saveDefaults();
 
-        quad.setSurface(BACK_AND_BOTTOM_SURFACE);
+        quad.surface(SURFACE_BACK);
         quad.setNominalFace(Direction.NORTH);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(BACK_AND_BOTTOM_SURFACE);
+        quad.surface(SURFACE_BOTTOM);
         quad.setNominalFace(Direction.EAST);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         transform.apply(quad);
@@ -62,17 +62,17 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
         // is necessary to avoid AO lighting artifacts. AO is done by vertex, and having
         // a T-junction tends to mess about with the results.
 
-        quad.setSurface(SIDE_SURFACE);
+        quad.surface(SURFACE_SIDES);
         quad.setupFaceQuad(Direction.UP, 0.0, 0.5, 0.5, 1.0, 0.0, Direction.NORTH);
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(SIDE_SURFACE);
+        quad.surface(SURFACE_SIDES);
         quad.setupFaceQuad(Direction.UP, 0.5, 0.5, 1.0, 1.0, 0.0, Direction.NORTH);
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(SIDE_SURFACE);
+        quad.surface(SURFACE_SIDES);
         quad.setupFaceQuad(Direction.UP, 0.5, 0.0, 1.0, 0.5, 0.0, Direction.NORTH);
         transform.apply(quad);
         stream.append();
@@ -81,27 +81,27 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
         // is necessary to avoid AO lighting artifacts. AO is done by vertex, and having
         // a T-junction tends to mess about with the results.
 
-        quad.setSurface(SIDE_SURFACE);
+        quad.surface(SURFACE_SIDES);
         quad.setupFaceQuad(Direction.DOWN, 0.0, 0.5, 0.5, 1.0, 0.0, Direction.NORTH);
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(SIDE_SURFACE);
+        quad.surface(SURFACE_SIDES);
         quad.setupFaceQuad(Direction.DOWN, 0.5, 0.5, 1.0, 1.0, 0.0, Direction.NORTH);
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(SIDE_SURFACE);
+        quad.surface(SURFACE_SIDES);
         quad.setupFaceQuad(Direction.DOWN, 0.0, 0.0, 0.5, 0.5, 0.0, Direction.NORTH);
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(SIDE_SURFACE);
+        quad.surface(SURFACE_SIDES);
         quad.setupFaceQuad(Direction.SOUTH, 0.5, 0.0, 1.0, 1.0, 0.0, Direction.UP);
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(TOP_SURFACE);
+        quad.surface(SURFACE_TOP);
         // salt is so cuts appear different from top/front face
         // wedges can't connect textures with adjacent flat blocks consistently anyway,
         // so doesn't hurt them
@@ -110,12 +110,12 @@ public class StairMeshFactory extends AbstractWedgeMeshFactory {
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(SIDE_SURFACE);
+        quad.surface(SURFACE_TOP);
         quad.setupFaceQuad(Direction.WEST, 0.0, 0.0, 0.5, 1.0, 0.0, Direction.UP);
         transform.apply(quad);
         stream.append();
 
-        quad.setSurface(TOP_SURFACE);
+        quad.surface(SURFACE_TOP);
         quad.setTextureSalt(1);
         quad.setupFaceQuad(Direction.WEST, 0.5, 0.0, 1.0, 1.0, 0.5, Direction.UP);
         transform.apply(quad);

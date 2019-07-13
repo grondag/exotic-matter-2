@@ -394,7 +394,6 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                 break;
 
             final int layerIndex = firstAvailableTextureLayer(editor);
-            final Surface surfIn = editor.getSurface();
             final Direction face = editor.nominalFace();
             final TextureSet tex = getTexture(modelState, paintLayer);
 
@@ -405,7 +404,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
              * closest to 1:1.
              * 
              */
-            final float tilingDistance = tilingDistance(surfIn.uvWrapDistance, tex.scale().sliceCount);
+            final float tilingDistance = tilingDistance(editor.uvWrapDistance(), tex.scale().sliceCount);
 
             /**
              * See if we will need to split the quad on a UV boundary.

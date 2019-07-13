@@ -19,7 +19,6 @@ package grondag.xm2.primitives.stream;
 import grondag.fermion.functions.PrimitiveFunctions.IntToIntFunction;
 import grondag.fermion.intstream.IIntStream;
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.vertex.Vec3f;
 import grondag.xm2.surface.impl.XmSurfaceImpl;
@@ -228,11 +227,6 @@ public class StreamBackedPolygon implements IPolygon {
     @Override
     public final Direction nominalFace() {
         return PolyStreamFormat.getNominalFace(format());
-    }
-
-    @Override
-    public final Surface getSurface() {
-        return StaticEncoder.getSurface(stream, baseAddress);
     }
 
     @Override

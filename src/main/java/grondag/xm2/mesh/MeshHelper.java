@@ -16,10 +16,10 @@
 
 package grondag.xm2.mesh;
 
-import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IWritablePolyStream;
+import grondag.xm2.surface.api.XmSurface;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -160,16 +160,13 @@ public class MeshHelper {
         stream.setVertexCount(3);
         IMutablePolygon writer = stream.writer();
 
-        Surface.Builder surfBuilder = Surface.builder(writer.getSurface());
-        if (surfBuilder.topology() == SurfaceTopology.TILED) {
+        XmSurface surface = writer.surface();
+        if (surface.topology() == SurfaceTopology.TILED) {
             final float uvMax = (float) (2 * s);
             writer.setMaxU(0, uvMax);
             writer.setMaxV(0, uvMax);
             writer.uvWrapDistance(uvMax);
-            surfBuilder.withWrapDistance(uvMax);
         }
-
-        writer.setSurface(surfBuilder.build());
 
         // enable texture randomization
         int salt = 0;

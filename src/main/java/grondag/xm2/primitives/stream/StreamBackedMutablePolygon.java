@@ -18,7 +18,6 @@ package grondag.xm2.primitives.stream;
 
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.vertex.Vec3f;
@@ -221,12 +220,6 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
         return this;
     }
 
-    @Override
-    public final IMutablePolygon setSurface(Surface surface) {
-        StaticEncoder.setSurface(stream, baseAddress, surface);
-        return this;
-    }
-    
     public final IMutablePolygon surface(XmSurfaceImpl surface) {
         StaticEncoder.surface(stream, baseAddress, surface);
         return this;
@@ -282,9 +275,6 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     public final void copyFrom(IPolygon polyIn, boolean includeVertices) {
         // PERF: make this faster for other stream-based polys
         setNominalFace(polyIn.nominalFace());
-        //TODO replace with render material
-//        setPipeline(polyIn.getPipeline());
-        setSurface(polyIn.getSurface());
 
         final int faceNormalFormat = PolyStreamFormat.getFaceNormalFormat(format());
         if (faceNormalFormat == PolyStreamFormat.FACE_NORMAL_FORMAT_COMPUTED)

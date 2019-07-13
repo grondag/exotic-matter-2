@@ -17,7 +17,6 @@
 package grondag.xm2.primitives.polygon;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.primitives.QuadHelper;
 import grondag.xm2.primitives.vertex.IVec3f;
@@ -228,8 +227,6 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
         return area;
     }
 
-    public Surface getSurface();
-    
     public XmSurface surface();
 
     /**

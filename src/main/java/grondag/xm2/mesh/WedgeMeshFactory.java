@@ -45,20 +45,20 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
         writer.setLockUV(0, true);
         stream.saveDefaults();
 
-        writer.setSurface(BACK_AND_BOTTOM_SURFACE);
+        writer.surface(SURFACE_BOTTOM);
         writer.setNominalFace(Direction.NORTH);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
         stream.append();
 
-        writer.setSurface(BACK_AND_BOTTOM_SURFACE);
+        writer.surface(SURFACE_BOTTOM);
         writer.setNominalFace(Direction.DOWN);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
         stream.append();
 
         stream.setVertexCount(3);
-        writer.setSurface(SIDE_SURFACE);
+        writer.surface(SURFACE_SIDES);
         writer.setNominalFace(Direction.EAST);
         writer.setupFaceQuad(Direction.EAST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0), Direction.UP);
         writer.assignLockedUVCoordinates(0);
@@ -66,7 +66,7 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
         stream.append();
 
         stream.setVertexCount(3);
-        writer.setSurface(SIDE_SURFACE);
+        writer.surface(SURFACE_SIDES);
         writer.setNominalFace(Direction.WEST);
         writer.setupFaceQuad(Direction.WEST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(0, 1, 0), Direction.UP);
         writer.assignLockedUVCoordinates(0);
@@ -74,7 +74,7 @@ public class WedgeMeshFactory extends AbstractWedgeMeshFactory {
         stream.append();
 
         stream.setVertexCount(4);
-        writer.setSurface(TOP_SURFACE);
+        writer.surface(SURFACE_TOP);
         writer.setNominalFace(Direction.UP);
         writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 1), new FaceVertex(1, 1, 0),
                 new FaceVertex(0, 1, 0), Direction.NORTH);

@@ -17,7 +17,6 @@
 package grondag.xm2.primitives;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IWritablePolyStream;
 import grondag.xm2.surface.impl.XmSurfaceImpl;
@@ -37,13 +36,11 @@ public class CubeInputs {
     public boolean isOverlay = false;
     public boolean isItem = false;
     public boolean isFullBrightness = false;
-    public Surface surfaceInstance;
     public XmSurfaceImpl surface;
 
     public CubeInputs() {
         // Minimum needed to prevent NPE
         this.textureRotation = Rotation.ROTATE_NONE;
-        this.surfaceInstance = Surface.NO_SURFACE;
     }
 
     public CubeInputs(int color, Rotation textureRotation, String textureName, boolean flipU, boolean flipV,
@@ -58,7 +55,6 @@ public class CubeInputs {
         this.u1 = flipU ? 0 : 1;
         this.v1 = flipV ? 0 : 1;
         this.rotateBottom = true;
-        this.surfaceInstance = Surface.NO_SURFACE;
     }
 
     public void appendFace(IWritablePolyStream stream, Direction side) {
@@ -68,7 +64,6 @@ public class CubeInputs {
         q.setRotation(0, (rotateBottom && side == Direction.DOWN) ? this.textureRotation.clockwise().clockwise()
                 : this.textureRotation);
         q.setTextureName(0, this.textureName);
-        q.setSurface(this.surfaceInstance);
         q.surface(this.surface);
 
         float minBound = this.isOverlay ? -0.0002f : 0.0f;

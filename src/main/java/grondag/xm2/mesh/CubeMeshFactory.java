@@ -21,8 +21,6 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.PaintLayer;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.primitives.CubeInputs;
 import grondag.xm2.primitives.polygon.IPolygon;
@@ -43,9 +41,6 @@ public class CubeMeshFactory extends MeshFactory {
 	
 	public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 	
-    private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.CUBIC)
-            .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
-
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
@@ -75,7 +70,6 @@ public class CubeMeshFactory extends MeshFactory {
         cube.u1 = 1;
         cube.v1 = 1;
         cube.isOverlay = false;
-        cube.surfaceInstance = SURFACE_MAIN;
         cube.surface = SURFACE_ALL;
 
         IWritablePolyStream stream = PolyStreams.claimWritable();

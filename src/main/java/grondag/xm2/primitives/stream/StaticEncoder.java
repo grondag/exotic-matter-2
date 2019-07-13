@@ -20,14 +20,11 @@ import grondag.fermion.intstream.IIntStream;
 import grondag.fermion.structures.IndexedInterner;
 import grondag.fermion.varia.BitPacker32;
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.surface.impl.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 
 public class StaticEncoder {
     private static final BitPacker32<StaticEncoder> BITPACKER = new BitPacker32<StaticEncoder>(null, null);
-
-    private static final IndexedInterner<Surface> surfaceHandler = new IndexedInterner<Surface>(Surface.class);
 
     private static final IndexedInterner<XmSurfaceImpl> xmSurfaces = new IndexedInterner<>(XmSurfaceImpl.class);
     
@@ -42,18 +39,6 @@ public class StaticEncoder {
      * addition to the format header.
      */
     public static final int INTEGER_WIDTH = 4;
-
-    public static Surface getSurface(IIntStream stream, int baseAddress) {
-        return surfaceHandler.fromHandle(stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) & 0xFFFF);
-    }
-
-    public static void setSurface(IIntStream stream, int baseAddress, Surface surface) {
-        final int pipelineVal = stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) & 0xFFFF0000;
-        final int handle = surfaceHandler.toHandle(surface);
-        assert handle > 0;
-        assert handle <= 0xFFFF;
-        stream.set(baseAddress + TEXTURE_PIPELINE_OFFSET, pipelineVal | handle);
-    }
 
     public static XmSurfaceImpl surface(IIntStream stream, int baseAddress) {
     	return xmSurfaces.fromHandle(stream.get(baseAddress + SURFACE_OFFSET));

@@ -17,7 +17,6 @@
 package grondag.xm2.primitives.polygon;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.FaceVertex;
 import grondag.xm2.primitives.vertex.Vec3f;
 import grondag.xm2.surface.api.XmSurface;
@@ -218,12 +217,6 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements IMuta
         return this;
     }
 
-    @Override
-    public IMutablePolygon setSurface(Surface surface) {
-        ((IMutablePolygon) wrapped).setSurface(surface);
-        return this;
-    }
-    
     @Override
     public IMutablePolygon surface(XmSurface surface) {
         ((IMutablePolygon) wrapped).surface(surface);

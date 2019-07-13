@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.FaceVertex;
 import grondag.xm2.primitives.QuadHelper;
 import grondag.xm2.primitives.polygon.IMutablePolygon.Helper.UVLocker;
@@ -428,8 +427,6 @@ public interface IMutablePolygon extends IPolygon {
 
         return this;
     }
-
-    IMutablePolygon setSurface(Surface surface);
 
     IMutablePolygon surface(XmSurface surface);
     

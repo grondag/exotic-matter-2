@@ -20,8 +20,6 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
-import grondag.xm2.painting.PaintLayer;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.stream.IPolyStream;
@@ -41,9 +39,6 @@ public class SphereMeshFactory extends MeshFactory {
 	
 	public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 	
-    private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.TILED).withAllowBorders(false)
-            .withDisabledLayers(PaintLayer.LAMP, PaintLayer.CUT).build();
-
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
@@ -68,7 +63,7 @@ public class SphereMeshFactory extends MeshFactory {
     private IPolyStream generateQuads() {
         IWritablePolyStream stream = PolyStreams.claimWritable();
         stream.writer().setLockUV(0, false);
-        stream.writer().setSurface(SURFACE_MAIN);
+        stream.writer().surface(SURFACE_ALL);
         stream.saveDefaults();
 
         MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);

@@ -20,8 +20,6 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
-import grondag.xm2.painting.PaintLayer;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.stream.CsgPolyStream;
@@ -44,11 +42,6 @@ public class CSGTestMeshFactory extends MeshFactory {
 	public static final XmSurfaceImpl SURFACE_A = SURFACES.get(0);
 	public static final XmSurfaceImpl SURFACE_B = SURFACES.get(1);
 	
-    private static final Surface SURFACE_MAIN = Surface.builder(SurfaceTopology.CUBIC)
-            .withDisabledLayers(PaintLayer.CUT, PaintLayer.LAMP).build();
-    private static final Surface SURFACE_LAMP = Surface.builder(SurfaceTopology.CUBIC)
-            .withEnabledLayers(PaintLayer.LAMP).build();
-
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
@@ -89,14 +82,12 @@ public class CSGTestMeshFactory extends MeshFactory {
 
         CsgPolyStream quadsA = PolyStreams.claimCSG();
         quadsA.writer().setLockUV(0, true);
-        quadsA.writer().setSurface(SURFACE_MAIN);
         quadsA.writer().surface(SURFACE_A);
         quadsA.saveDefaults();
         MeshHelper.makePaintableBox(new Box(0, 0.4, 0.4, 1.0, 0.6, 0.6), quadsA);
 
         CsgPolyStream quadsB = PolyStreams.claimCSG();
         quadsB.writer().setLockUV(0, true);
-        quadsB.writer().setSurface(SURFACE_LAMP);
         quadsB.writer().surface(SURFACE_B);
         quadsB.saveDefaults();
         MeshHelper.makePaintableBox(new Box(0.2, 0, 0.4, 0.6, 1.0, 0.8), quadsB);

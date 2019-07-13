@@ -24,6 +24,7 @@ import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ImmutableModelStateImpl;
+import grondag.xm2.surface.api.XmSurface;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
@@ -67,7 +68,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         final IMutablePolyStream stream = this.work;
         IMutablePolygon editor = stream.editor();
         
-        Surface surface = poly.getSurface();
+        XmSurface surface = poly.surface();
 
         stream.appendCopy(poly);
         stream.editorOrigin();

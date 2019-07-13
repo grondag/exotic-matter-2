@@ -17,7 +17,6 @@
 package grondag.xm2.primitives.polygon;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.primitives.vertex.Vec3f;
 import grondag.xm2.surface.api.XmSurface;
 import net.minecraft.block.BlockRenderLayer;
@@ -86,11 +85,6 @@ public class ForwardingPolygon implements IPolygon {
     @Override
     public Direction nominalFace() {
         return wrapped.nominalFace();
-    }
-
-    @Override
-    public Surface getSurface() {
-        return wrapped.getSurface();
     }
 
     @Override

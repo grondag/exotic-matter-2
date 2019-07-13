@@ -23,8 +23,6 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 import java.util.function.Consumer;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.painting.PaintLayer;
-import grondag.xm2.painting.Surface;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.primitives.PolyTransform;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
@@ -49,14 +47,6 @@ public class StackedPlatesMeshFactory extends MeshFactory {
 	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
 	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
 	
-    // This may not be the right setup - refactored surfaces at a time this wasn't
-    // being actively used.
-    protected static Surface TOP_AND_BOTTOM_SURFACE = Surface.builder(SurfaceTopology.CUBIC)
-            .withEnabledLayers(PaintLayer.BASE, PaintLayer.MIDDLE, PaintLayer.OUTER).withAllowBorders(false).build();
-
-    protected static Surface SIDE_SURFACE = Surface.builder(SurfaceTopology.CUBIC).withEnabledLayers(PaintLayer.CUT)
-            .withAllowBorders(false).build();
-
     public StackedPlatesMeshFactory() {
         super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
@@ -78,21 +68,21 @@ public class StackedPlatesMeshFactory extends MeshFactory {
         writer.setLockUV(0, true);
         stream.saveDefaults();
         
-        writer.setSurface(TOP_AND_BOTTOM_SURFACE);
+        writer.surface(SURFACE_TOP);
         writer.setNominalFace(Direction.UP);
         writer.setupFaceQuad(0, 0, 1, 1, 1 - height, Direction.NORTH);
         transform.apply(writer);
         stream.append();
 
         for (Direction face : HORIZONTAL_FACES) {
-            writer.setSurface(SIDE_SURFACE);
+            writer.surface(SURFACE_SIDES);
             writer.setNominalFace(face);
             writer.setupFaceQuad(0, 0, 1, height, 0, Direction.UP);
             transform.apply(writer);
             stream.append();
         }
 
-        writer.setSurface(TOP_AND_BOTTOM_SURFACE);
+        writer.surface(SURFACE_BOTTOM);
         writer.setNominalFace(Direction.DOWN);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
