@@ -18,7 +18,7 @@ package grondag.xm2.block;
 
 import grondag.xm2.api.connect.world.BlockTest;
 import grondag.xm2.api.connect.world.BlockTestContext;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.minecraft.block.BlockState;
 
 public class XmBorderMatch implements BlockTest {
@@ -29,8 +29,8 @@ public class XmBorderMatch implements BlockTest {
 
     @Override
     public boolean apply(BlockTestContext context) {
-	final ModelState fromState = (ModelState) context.fromModelState();
-	final ModelState toState = (ModelState) context.toModelState();
+	final MutableModelState fromState = (MutableModelState) context.fromModelState();
+	final MutableModelState toState = (MutableModelState) context.toModelState();
 	final BlockState toBlockState = context.toBlockState();
 	final BlockState fromBlockState = context.fromBlockState();
 
@@ -38,6 +38,6 @@ public class XmBorderMatch implements BlockTest {
 	    return false;
 	}
 
-	return fromState.doShapeAndAppearanceMatch(toState) && fromState.getSpecies() == toState.getSpecies();
+	return fromState.doShapeAndAppearanceMatch(toState) && fromState.worldState().species() == toState.worldState().species();
     }
 }

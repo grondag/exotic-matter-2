@@ -20,7 +20,7 @@ import grondag.fermion.color.BlockColorMapProvider;
 import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.init.XmTextures;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.minecraft.item.Item;
 
 /**
@@ -28,10 +28,10 @@ import net.minecraft.item.Item;
  * creative tab for mod that uses it.
  */
 public class CraftingItem extends Item {
-    public final ModelState modelState;
+    public final MutableModelState modelState;
 
     // TODO: pretty sure this doesn't work after big refactor - is even stil needed?
-    public CraftingItem(Settings settings, ModelState modelState) {
+    public CraftingItem(Settings settings, MutableModelState modelState) {
 	super(settings);
 	this.modelState = modelState;
 	final int colorIndex = this.hashCode() % BlockColorMapProvider.INSTANCE.getColorMapCount();

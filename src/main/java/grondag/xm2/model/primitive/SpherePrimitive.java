@@ -25,7 +25,7 @@ import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.MeshHelper;
 import grondag.xm2.painting.SurfaceTopology;
@@ -48,7 +48,7 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(MutableModelState modelState, Consumer<IPolygon> target) {
 	if (cachedQuads.isEmpty())
 	    return;
 

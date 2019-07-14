@@ -54,17 +54,17 @@ public interface ModelPrimitive {
     /**
      * Override if shape has an orientation to be selected during placement.
      */
-    default BlockOrientationType orientationType(ModelState modelState) {
+    default BlockOrientationType orientationType(MutableModelState modelState) {
 	return BlockOrientationType.NONE;
     }
 
-    int stateFlags(ModelState modelState);
+    int stateFlags(MutableModelState modelState);
 
     /**
      * Output polygons must be quads or tris. Consumer MUST NOT hold references to
      * any of the polys received.
      */
-    void produceQuads(ModelState modelState, Consumer<IPolygon> target);
+    void produceQuads(MutableModelState modelState, Consumer<IPolygon> target);
 
     // UGLY: really needed?
     /**
@@ -72,7 +72,7 @@ public interface ModelPrimitive {
      * by applying this consumer to a mutable model state instance. Only need to
      * change if shape needs some preset state.
      */
-    default void applyDefaultState(ModelState modelState) {
+    default void applyDefaultState(MutableModelState modelState) {
 	// NOOP
     }
 
@@ -91,15 +91,15 @@ public interface ModelPrimitive {
 	return false;
     }
 
-    default boolean hasAxis(ModelState modelState) {
+    default boolean hasAxis(MutableModelState modelState) {
 	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS) == STATE_FLAG_HAS_AXIS;
     }
 
-    default boolean hasAxisOrientation(ModelState modelState) {
+    default boolean hasAxisOrientation(MutableModelState modelState) {
 	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
     }
 
-    default boolean hasAxisRotation(ModelState modelState) {
+    default boolean hasAxisRotation(MutableModelState modelState) {
 	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
     }
 }

@@ -26,7 +26,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.math.Direction;
 
-public interface ImmutableModelState extends ModelState {
+public interface ImmutableModelState extends MutableModelState {
 
     @Environment(EnvType.CLIENT)
     List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);

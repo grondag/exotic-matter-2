@@ -29,7 +29,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.polygon.IStreamPolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -379,7 +379,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
 	return remainderAddress;
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint,
+    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint,
 	    int textureIndex) {
 	/**
 	 * We add new polys, none of which need to be repainted by this routine. So,

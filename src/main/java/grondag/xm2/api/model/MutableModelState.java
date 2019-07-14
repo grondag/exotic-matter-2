@@ -19,8 +19,6 @@ package grondag.xm2.api.model;
 import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.serialization.PacketSerializable;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
-import grondag.xm2.api.connect.state.CornerJoinState;
-import grondag.xm2.api.connect.state.SimpleJoinState;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintRegistry;
 import grondag.xm2.api.surface.XmSurface;
@@ -33,7 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-public interface ModelState extends IReadWriteNBT, PacketSerializable {
+public interface MutableModelState extends IReadWriteNBT, PacketSerializable {
     boolean isImmutable();
 
     ImmutableModelState toImmutable();
@@ -56,7 +54,7 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     int hashCode();
 
     /** returns self as convenience method */
-    ModelState refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
+    MutableModelState refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
 
     ModelPrimitive getShape();
 
@@ -116,28 +114,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     void setStaticShapeBits(long bits);
 
     /**
-     * Will return 0 if model state does not include species. This is more
-     * convenient than checking each place species is used.
-     * 
-     * @return
-     */
-    int getSpecies();
-
-    void setSpecies(int species);
-
-    CornerJoinState getCornerJoin();
-
-    void setCornerJoin(CornerJoinState join);
-
-    SimpleJoinState getSimpleJoin();
-
-    void setSimpleJoin(SimpleJoinState join);
-
-    SimpleJoinState getMasonryJoin();
-
-    void setMasonryJoin(SimpleJoinState join);
-
-    /**
      * For machines and other blocks with a privileged horizontal face, North is
      * considered the zero rotation.
      */
@@ -191,26 +167,26 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
      * Returns true if visual elements and geometry match. Does not consider species
      * in matching.
      */
-    boolean doShapeAndAppearanceMatch(ModelState other);
+    boolean doShapeAndAppearanceMatch(MutableModelState other);
 
     /**
      * Returns true if visual elements match. Does not consider species or geometry
      * in matching.
      */
-    boolean doesAppearanceMatch(ModelState other);
+    boolean doesAppearanceMatch(MutableModelState other);
 
     /**
      * Returns a copy of this model state with only the bits that matter for
      * geometry. Used as lookup key for block damage models.
      */
-    ModelState geometricState();
+    MutableModelState geometricState();
 
     /**
-     * See {@link PolyTransform#rotateFace(ModelState, Direction)}
+     * See {@link PolyTransform#rotateFace(MutableModelState, Direction)}
      */
     Direction rotateFace(Direction face);
 
-    ModelState clone();
+    MutableModelState clone();
 
     default boolean hasAxis() {
 	return getShape().hasAxis(this);

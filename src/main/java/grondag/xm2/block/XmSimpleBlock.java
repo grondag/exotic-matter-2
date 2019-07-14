@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -49,23 +49,23 @@ public class XmSimpleBlock extends Block {
      * Hacky hack to let us inspect default model state during constructor before it
      * is saved
      */
-    protected static final ThreadLocal<ModelState> INIT_STATE = new ThreadLocal<>();
+    protected static final ThreadLocal<MutableModelState> INIT_STATE = new ThreadLocal<>();
 
-    protected static Settings prepareInit(Settings blockSettings, ModelState defaultModelState) {
+    protected static Settings prepareInit(Settings blockSettings, MutableModelState defaultModelState) {
 	INIT_STATE.set(defaultModelState);
 	return blockSettings;
     }
 
-    public static ModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos,
+    public static MutableModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos,
 	    boolean refreshFromWorld) {
-	ModelState result = xmState.defaultModelState().clone();
+	MutableModelState result = xmState.defaultModelState().clone();
 	if (refreshFromWorld) {
 	    result = result.clone().refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
 	}
 	return result;
     }
 
-    public XmSimpleBlock(Settings blockSettings, ModelState defaultModelState) {
+    public XmSimpleBlock(Settings blockSettings, MutableModelState defaultModelState) {
 	super(prepareInit(blockSettings, defaultModelState));
 	defaultModelState.getShape().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(),
 		defaultModelState);
@@ -76,7 +76,7 @@ public class XmSimpleBlock extends Block {
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
 	super.appendProperties(builder);
-	final ModelState defaultState = INIT_STATE.get();
+	final MutableModelState defaultState = INIT_STATE.get();
 	if (defaultState != null) {
 	    if (defaultState.hasSpecies()) {
 		builder.add(XmSimpleBlock.SPECIES);
@@ -91,7 +91,7 @@ public class XmSimpleBlock extends Block {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos,
 	    EntityContext entityContext) {
-	final ModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
+	final MutableModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
 	return CollisionBoxDispatcher.getOutlineShape(modelState);
     }
 
@@ -208,7 +208,7 @@ public class XmSimpleBlock extends Block {
 	super.buildTooltip(stack, world, tooltip, context);
 	tooltip.add(new TranslatableText("label.meta", stack.getDamage()));
 
-	ModelState modelState = XmStackHelper.getStackModelState(stack);
+	MutableModelState modelState = XmStackHelper.getStackModelState(stack);
 
 	if (modelState != null) {
 	    tooltip.add(new TranslatableText("label.shape", modelState.getShape().translationKey()));
@@ -364,16 +364,16 @@ public class XmSimpleBlock extends Block {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
 	// TODO: add species handling
-	final ModelState modelState = XmBlockStateAccess.get(this).defaultModelState;
+	final MutableModelState modelState = XmBlockStateAccess.get(this).defaultModelState;
 	return modelState.getShape().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
     }
 
-    public static Function<BlockState, ModelState> defaultModelStateFunc(ModelState baseModelState) {
+    public static Function<BlockState, MutableModelState> defaultModelStateFunc(MutableModelState baseModelState) {
 	return (state) -> {
-	    ModelState result = baseModelState.clone();
+	    MutableModelState result = baseModelState.clone();
 
 	    if (state.contains(SPECIES)) {
-		result.setSpecies(state.get(SPECIES));
+		result.worldState().species(state.get(SPECIES));
 	    }
 
 	    result.getShape().orientationType(result).stateFunc.accept(state, result);

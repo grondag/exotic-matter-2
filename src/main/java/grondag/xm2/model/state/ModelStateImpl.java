@@ -37,7 +37,7 @@ import grondag.xm2.api.connect.world.BlockNeighbors;
 import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.model.MutableModelWorldState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.block.XmMasonryMatch;
@@ -53,7 +53,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
-public class ModelStateImpl implements ModelState, MutableModelWorldState {
+public class ModelStateImpl implements MutableModelState, MutableModelWorldState {
     private static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
     private static final String NBT_SHAPE = NBTDictionary.claim("shape");
     /**
@@ -268,7 +268,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     // not be coupled
     @Deprecated
     @Override
-    public ModelState refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
+    public MutableModelState refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
 
 	// Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
 	// " @" + pos.toString());
@@ -439,7 +439,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     ////////////////////////////////////////////////////
 
     @Override
-    public int getSpecies() {
+    public int species() {
 	this.populateStateFlagsIfNeeded();
 
 	if (XmConfig.BLOCKS.debugModelState && !this.hasSpecies())
@@ -449,7 +449,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     }
 
     @Override
-    public void setSpecies(int species) {
+    public void species(int species) {
 	this.populateStateFlagsIfNeeded();
 
 	if (XmConfig.BLOCKS.debugModelState && !this.hasSpecies())
@@ -462,7 +462,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     }
 
     @Override
-    public CornerJoinState getCornerJoin() {
+    public CornerJoinState cornerJoin() {
 	if (XmConfig.BLOCKS.debugModelState) {
 	    populateStateFlagsIfNeeded();
 	    if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
@@ -475,7 +475,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     }
 
     @Override
-    public void setCornerJoin(CornerJoinState join) {
+    public void cornerJoin(CornerJoinState join) {
 	if (XmConfig.BLOCKS.debugModelState) {
 	    populateStateFlagsIfNeeded();
 	    if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
@@ -488,7 +488,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     }
 
     @Override
-    public SimpleJoinState getSimpleJoin() {
+    public SimpleJoinState simpleJoin() {
 	if (XmConfig.BLOCKS.debugModelState && ((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK)
 	    Xm.LOG.warn("getSimpleJoin on model state does not apply for shape");
 
@@ -497,11 +497,11 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
 	populateStateFlagsIfNeeded();
 	return ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
 		? SimpleJoinState.fromOrdinal(ModelStateData.BLOCK_JOIN.getValue(this))
-		: getCornerJoin().simpleJoin();
+		: cornerJoin().simpleJoin();
     }
 
     @Override
-    public void setSimpleJoin(SimpleJoinState join) {
+    public void simpleJoin(SimpleJoinState join) {
 	if (XmConfig.BLOCKS.debugModelState) {
 	    if (((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK) {
 		Xm.LOG.warn("Ignored setSimpleJoin on model state that does not apply for shape");
@@ -520,7 +520,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     }
 
     @Override
-    public SimpleJoinState getMasonryJoin() {
+    public SimpleJoinState masonryJoin() {
 	if (XmConfig.BLOCKS.debugModelState
 		&& (((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK
 			|| (stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
@@ -532,7 +532,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     }
 
     @Override
-    public void setMasonryJoin(SimpleJoinState join) {
+    public void masonryJoin(SimpleJoinState join) {
 	if (XmConfig.BLOCKS.debugModelState) {
 	    populateStateFlagsIfNeeded();
 	    if (((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK) {
@@ -660,7 +660,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     }
 
     @Override
-    public final boolean doShapeAndAppearanceMatch(ModelState other) {
+    public final boolean doShapeAndAppearanceMatch(MutableModelState other) {
 	final ModelStateImpl o = (ModelStateImpl) other;
 	return (this.coreBits & ModelStateData.SHAPE_COMPARISON_MASK_0) == (o.coreBits
 		& ModelStateData.SHAPE_COMPARISON_MASK_0)
@@ -672,7 +672,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
     }
 
     @Override
-    public boolean doesAppearanceMatch(ModelState other) {
+    public boolean doesAppearanceMatch(MutableModelState other) {
 	final ModelStateImpl o = (ModelStateImpl) other;
 	return this.layerBitsBase == o.layerBitsBase && this.layerBitsCut == o.layerBitsCut
 		&& this.layerBitsLamp == o.layerBitsLamp && this.layerBitsMiddle == o.layerBitsMiddle
@@ -681,7 +681,7 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
 
     // PERF: bottleneck for Pyroclasm
     @Override
-    public ModelState geometricState() {
+    public MutableModelState geometricState() {
 	this.populateStateFlagsIfNeeded();
 	ModelStateImpl result = new ModelStateImpl();
 	result.setShape(this.getShape());
@@ -696,10 +696,10 @@ public class ModelStateImpl implements ModelState, MutableModelWorldState {
 	    if (this.hasAxisRotation())
 		result.setAxisRotation(this.getAxisRotation());
 	    if ((this.getShape().stateFlags(this) & STATE_FLAG_NEEDS_CORNER_JOIN) == STATE_FLAG_NEEDS_CORNER_JOIN) {
-		result.setCornerJoin(this.getCornerJoin());
+		result.cornerJoin(this.cornerJoin());
 	    } else if ((this.getShape().stateFlags(this)
 		    & STATE_FLAG_NEEDS_SIMPLE_JOIN) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
-		result.setSimpleJoin(this.getSimpleJoin());
+		result.simpleJoin(this.simpleJoin());
 	    }
 	    break;
 

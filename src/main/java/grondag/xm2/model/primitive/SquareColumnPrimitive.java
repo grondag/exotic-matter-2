@@ -33,7 +33,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.model.state.ModelStateData;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.BlockOrientationType;
@@ -89,7 +89,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public void applyDefaultState(ModelState modelState) {
+    public void applyDefaultState(MutableModelState modelState) {
 	// FIX: re-implement after model state refactor
 	// STATE_CUT_COUNT.setValue(3, STATE_ARE_CUTS_ON_EDGE.setValue(true, 0)
     }
@@ -100,7 +100,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(MutableModelState modelState, Consumer<IPolygon> target) {
 	FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
 	for (int i = 0; i < 6; i++) {
 	    this.makeFaceQuads(modelState, DirectionHelper.fromOrdinal(i), spec, target);
@@ -108,11 +108,11 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(ModelState modelState) {
+    public BlockOrientationType orientationType(MutableModelState modelState) {
 	return BlockOrientationType.AXIS;
     }
 
-    private void makeFaceQuads(ModelState state, Direction face, FaceSpec spec, Consumer<IPolygon> target) {
+    private void makeFaceQuads(MutableModelState state, Direction face, FaceSpec spec, Consumer<IPolygon> target) {
 	if (face == null)
 	    return;
 
@@ -120,7 +120,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
 	// be a stream?
 	// Why create a stream just to pipe it to the consumer? Or cache the result.
 
-	CornerJoinState bjs = state.getCornerJoin();
+	CornerJoinState bjs = state.worldState().cornerJoin();
 	Direction.Axis axis = state.getAxis();
 	IWritablePolyStream stream = PolyStreams.claimWritable();
 
@@ -524,7 +524,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * If true, cuts in shape are on the block boundary. Reads value from static
      * shape bits in model state
      */
-    public static boolean areCutsOnEdge(ModelState modelState) {
+    public static boolean areCutsOnEdge(MutableModelState modelState) {
 	return STATE_ARE_CUTS_ON_EDGE.getValue(modelState.getStaticShapeBits());
     }
 
@@ -532,7 +532,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * If true, cuts in shape are on the block boundary. Saves value in static shape
      * bits in model state
      */
-    public static void setCutsOnEdge(boolean areCutsOnEdge, ModelState modelState) {
+    public static void setCutsOnEdge(boolean areCutsOnEdge, MutableModelState modelState) {
 	modelState.setStaticShapeBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, modelState.getStaticShapeBits()));
     }
 
@@ -540,7 +540,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * Number of cuts that appear on each face of model. Reads value from static
      * shape bits in model state
      */
-    public static int getCutCount(ModelState modelState) {
+    public static int getCutCount(MutableModelState modelState) {
 	return STATE_CUT_COUNT.getValue(modelState.getStaticShapeBits());
     }
 
@@ -548,7 +548,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * Number of cuts that appear on each face of model. Saves value in static shape
      * bits in model state
      */
-    public static void setCutCount(int cutCount, ModelState modelState) {
+    public static void setCutCount(int cutCount, MutableModelState modelState) {
 	modelState.setStaticShapeBits(STATE_CUT_COUNT.setValue(cutCount, modelState.getStaticShapeBits()));
     }
 }

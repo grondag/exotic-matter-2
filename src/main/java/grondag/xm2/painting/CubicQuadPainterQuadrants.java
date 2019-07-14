@@ -24,7 +24,7 @@ import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.minecraft.util.math.Direction;
 
 /**
@@ -55,7 +55,7 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
 	}
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint,
+    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint,
 	    int textureIndex) {
 	IMutablePolygon editor = stream.editor();
 
@@ -79,7 +79,7 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
 	    editor.setTextureName(textureIndex, tex.textureName(textureVersion));
 	    editor.setShouldContractUVs(textureIndex, true);
 
-	    final CornerJoinFaceState faceState = modelState.getCornerJoin().faceState(nominalFace);
+	    final CornerJoinFaceState faceState = modelState.worldState().cornerJoin().faceState(nominalFace);
 
 	    TEXTURE_MAP[quadrant.ordinal()][faceState.ordinal()].applyForQuadrant(editor, textureIndex, quadrant);
 

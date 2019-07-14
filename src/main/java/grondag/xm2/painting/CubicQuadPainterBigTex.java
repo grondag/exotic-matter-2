@@ -24,7 +24,7 @@ import grondag.xm2.api.texture.TextureScale;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.model.ModelWorldState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
@@ -51,7 +51,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
     // layers.
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint,
+    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint,
 	    int textureIndex) {
 	IMutablePolygon editor = stream.editor();
 	do {
@@ -74,8 +74,8 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 		// abs is necessary so that hash input components combine together properly
 		// Small random numbers already have most bits set.
 		int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization()
-			? HashCommon.mix((modelState.getSpecies() << 8) | editor.getTextureSalt())
-			: HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.getSpecies() << 8)
+			? HashCommon.mix((worldState.species() << 8) | editor.getTextureSalt())
+			: HashCommon.mix(Math.abs(surfaceVec.getZ()) | (worldState.species() << 8)
 				| (editor.getTextureSalt() << 12));
 
 		// rotation

@@ -23,7 +23,7 @@ import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.block.XmBlockState;
 import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmStackHelper;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -69,7 +69,7 @@ public class BlockOrientationHandler {
 
 	PlacementItem item = (PlacementItem) stack.getItem();
 
-	ModelState modelState = XmStackHelper.getStackModelState(stack);
+	MutableModelState modelState = XmStackHelper.getStackModelState(stack);
 
 	if (modelState.hasAxis()) {
 	    modelState.setAxis(item.getBlockPlacementAxis(stack));
@@ -87,8 +87,8 @@ public class BlockOrientationHandler {
 
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
 	// find closest instance, starting with block placed on
-	ModelState outputModelState = XmStackHelper.getStackModelState(stack);
-	ModelState closestModelState = null;
+	MutableModelState outputModelState = XmStackHelper.getStackModelState(stack);
+	MutableModelState closestModelState = null;
 	World world = player.world;
 	BlockState onBlockState = world.getBlockState(pPos.onPos);
 
@@ -114,7 +114,7 @@ public class BlockOrientationHandler {
 				double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x,
 					pPos.onPos.getY() + 0.5 + y, pPos.onPos.getZ() + 0.5 + z);
 				if (distSq < closestDistSq) {
-				    ModelState testModelState = testBlockState.getModelState(world, testPos, true);
+				    MutableModelState testModelState = testBlockState.getModelState(world, testPos, true);
 				    if (testModelState.getShape() == outputModelState.getShape()) {
 					closestDistSq = distSq;
 					closestModelState = testModelState;
@@ -149,7 +149,7 @@ public class BlockOrientationHandler {
     // FIX: pretty sure this doesn't work now
     /** handle hit-sensitive placement for stairs, wedges */
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
-	ModelState outputModelState = XmStackHelper.getStackModelState(stack);
+	MutableModelState outputModelState = XmStackHelper.getStackModelState(stack);
 
 	boolean isRotationDone = false;
 
@@ -225,17 +225,17 @@ public class BlockOrientationHandler {
     }
 
     /** updates model state from block state */
-    public static void axisModelState(BlockState stateIn, ModelState modelState) {
+    public static void axisModelState(BlockState stateIn, MutableModelState modelState) {
 	// TODO: implement
     }
 
     /** updates model state from block state */
-    public static void faceModelState(BlockState stateIn, ModelState modelState) {
+    public static void faceModelState(BlockState stateIn, MutableModelState modelState) {
 	// TODO: implement
     }
 
     /** updates model state from block state */
-    public static void edgeModelState(BlockState stateIn, ModelState modelState) {
+    public static void edgeModelState(BlockState stateIn, MutableModelState modelState) {
 	final BlockEdge edge = (BlockEdge) stateIn.getEntries().get(EDGE_PROP);
 	if (edge != null) {
 	    modelState.setAxis(edge.face1.getAxis());
@@ -245,7 +245,7 @@ public class BlockOrientationHandler {
     }
 
     /** updates model state from block state */
-    public static void cornerModelState(BlockState stateIn, ModelState modelState) {
+    public static void cornerModelState(BlockState stateIn, MutableModelState modelState) {
 	// TODO: implement
     }
 }

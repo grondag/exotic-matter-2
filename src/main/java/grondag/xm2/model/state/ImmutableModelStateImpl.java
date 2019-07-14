@@ -87,22 +87,22 @@ public class ImmutableModelStateImpl extends ModelStateImpl implements Immutable
     }
 
     @Override
-    public void setSpecies(int species) {
+    public void species(int species) {
 	throw new IllegalStateException();
     }
 
     @Override
-    public void setCornerJoin(CornerJoinState join) {
+    public void cornerJoin(CornerJoinState join) {
 	throw new IllegalStateException();
     }
 
     @Override
-    public void setSimpleJoin(SimpleJoinState join) {
+    public void simpleJoin(SimpleJoinState join) {
 	throw new IllegalStateException();
     }
 
     @Override
-    public void setMasonryJoin(SimpleJoinState join) {
+    public void masonryJoin(SimpleJoinState join) {
 	throw new IllegalStateException();
     }
 

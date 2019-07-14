@@ -18,7 +18,7 @@ package grondag.xm2.terrain;
 
 import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.init.XmPrimitives;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,12 +26,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TerrainDynamicBlock extends TerrainBlock {
-    public TerrainDynamicBlock(Settings blockSettings, ModelState defaultModelState, boolean isFiller) {
+    public TerrainDynamicBlock(Settings blockSettings, MutableModelState defaultModelState, boolean isFiller) {
 	super(blockSettings, adjustShape(defaultModelState, isFiller));
     }
 
-    private static ModelState adjustShape(ModelState stateIn, boolean isFiller) {
-	ModelState result = stateIn.clone();
+    private static MutableModelState adjustShape(MutableModelState stateIn, boolean isFiller) {
+	MutableModelState result = stateIn.clone();
 	result.setShape(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
 	result.setStatic(false);
 	return result;
@@ -46,7 +46,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
 	if (staticVersion == null || state.getBlock() != this)
 	    return;
 
-	ModelState myModelState = XmBlockStateAccess.modelState(state, world, pos, true);
+	MutableModelState myModelState = XmBlockStateAccess.modelState(state, world, pos, true);
 	myModelState.setStatic(true);
 	// TODO: transfer heat block state?
 	world.setBlockState(pos,

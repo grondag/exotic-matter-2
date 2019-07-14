@@ -18,7 +18,7 @@ package grondag.xm2.block;
 
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.model.state.ModelStateImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
@@ -75,7 +75,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     // INSTANCE MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    protected ModelState modelState = null;
+    protected MutableModelState modelState = null;
 
     // public IExtendedBlockState exBlockState;
     private boolean isModelStateCacheDirty = true;
@@ -165,9 +165,9 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 	return compound;
     }
 
-    public ModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos,
+    public MutableModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos,
 	    boolean refreshFromWorldIfNeeded) {
-	ModelState result = this.modelState;
+	MutableModelState result = this.modelState;
 
 	if (result == null) {
 	    result = state.defaultModelState;
@@ -175,9 +175,9 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 	    this.isModelStateCacheDirty = true;
 	} else {
 	    // honor passed in species if different
-	    if (result.hasSpecies() && result.getSpecies() != state.defaultModelState.getSpecies()) {
+	    if (result.hasSpecies() && result.worldState().species() != state.defaultModelState.worldState().species()) {
 		result = result.clone();
-		result.setSpecies(state.defaultModelState.getSpecies());
+		result.worldState().species(state.defaultModelState.worldState().species());
 	    }
 	}
 
@@ -192,7 +192,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     /**
      * Use this version when you don't have world state handy
      */
-    public ModelState getModelState() {
+    public MutableModelState getModelState() {
 	if (!(this.modelState == null || this.isModelStateCacheDirty)) {
 	    return this.modelState;
 	} else {
@@ -211,7 +211,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 //                : this.modelState;
 //    }
 
-    public void setModelState(ModelState modelState) {
+    public void setModelState(MutableModelState modelState) {
 	// if making existing appearance static, don't need to refresh on client side
 	boolean needsClientRefresh = this.world != null && this.world.isClient
 		&& !(this.modelState != null && this.modelState.equals(modelState) && modelState.isStatic()

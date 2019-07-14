@@ -21,7 +21,7 @@ import java.util.function.BiFunction;
 
 import javax.annotation.Nullable;
 
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.placement.BlockOrientationHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -46,11 +46,11 @@ public enum BlockOrientationType {
     /**
      * Updates the model state from block state for orientation.
      */
-    public final BiConsumer<BlockState, ModelState> stateFunc;
+    public final BiConsumer<BlockState, MutableModelState> stateFunc;
 
     private BlockOrientationType(EnumProperty<?> property,
 	    BiFunction<BlockState, ItemPlacementContext, BlockState> placementFunc,
-	    BiConsumer<BlockState, ModelState> stateFunc) {
+	    BiConsumer<BlockState, MutableModelState> stateFunc) {
 	this.property = property;
 	this.placementFunc = placementFunc;
 	this.stateFunc = stateFunc;

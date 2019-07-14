@@ -25,7 +25,7 @@ import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.helper.FaceQuadInputs;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterMasonry extends QuadPainter {
@@ -77,11 +77,11 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
 	}
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint,
+    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint,
 	    int textureIndex) {
 	IMutablePolygon editor = stream.editor();
 	do {
-	    final SimpleJoinState bjs = modelState.getMasonryJoin();
+	    final SimpleJoinState bjs = modelState.worldState().masonryJoin();
 	    final Direction face = editor.nominalFace();
 	    final SimpleJoinFaceState fjs = SimpleJoinFaceState.find(face, bjs);
 	    final FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][fjs.ordinal()];

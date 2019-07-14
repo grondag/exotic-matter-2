@@ -23,7 +23,7 @@ import org.joml.Vector4f;
 import grondag.fermion.world.Rotation;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -132,7 +132,7 @@ public class PolyTransform {
      * opposite of what I just described. See this in
      * {@link #getMatrixForAxisAndRotation(net.minecraft.util.math.Direction.Axis, boolean, Rotation)}
      */
-    public static PolyTransform get(ModelState modelState) {
+    public static PolyTransform get(MutableModelState modelState) {
 
 	// TODO: put back
 	return new PolyTransform(
@@ -178,7 +178,7 @@ public class PolyTransform {
      * Returns a key that can be used to retrieve values without the input model
      * state. Useful for some serialization scenarios.
      */
-    public static int computeTransformKey(ModelState modelState) {
+    public static int computeTransformKey(MutableModelState modelState) {
 	return modelState.hasAxis()
 		? computeKey(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation())
 		: computeKey(null, false, modelState.getAxisRotation());
@@ -241,7 +241,7 @@ public class PolyTransform {
      * (or doesn't have any orientation to be transformed) then simply returns the
      * input face.
      */
-    public static Direction rotateFace(ModelState modelState, Direction face) {
+    public static Direction rotateFace(MutableModelState modelState, Direction face) {
 	return FACE_MAPS[computeTransformKey(modelState)].map(face);
     }
 
@@ -252,15 +252,15 @@ public class PolyTransform {
      * <p>
      * 
      * Equivalently, list containing results of calling
-     * {@link #rotateFace(ModelState, Direction)} for each face in Enum order.
+     * {@link #rotateFace(MutableModelState, Direction)} for each face in Enum order.
      */
-    public static FaceMap getFaceMap(ModelState modelState) {
+    public static FaceMap getFaceMap(MutableModelState modelState) {
 	return FACE_MAPS[computeTransformKey(modelState)];
     }
 
     /**
-     * Same as {@link #getFaceMap(ModelState)} but uses the output of
-     * {@link #computeTransformKey(ModelState)} instead of modelstate.
+     * Same as {@link #getFaceMap(MutableModelState)} but uses the output of
+     * {@link #computeTransformKey(MutableModelState)} instead of modelstate.
      */
     public static FaceMap getFaceMap(int transformKey) {
 	return FACE_MAPS[transformKey];

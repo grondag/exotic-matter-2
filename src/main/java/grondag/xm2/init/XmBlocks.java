@@ -20,7 +20,7 @@ import grondag.xm2.Xm;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintFinder;
 import grondag.xm2.block.XmSimpleBlock;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.model.state.ModelStateImpl;
 import grondag.xm2.placement.XmBlockItem;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -38,7 +38,7 @@ public class XmBlocks {
 
 	final XmPaintFinder paintFinder = XmPaint.finder();
 	XmPaint paint = paintFinder.texture(0, XmTextures.WHITE).textureColor(0, 0xFFFFFFFF).find();
-	ModelState workingModel = new ModelStateImpl();
+	MutableModelState workingModel = new ModelStateImpl();
 	workingModel.setShape(XmPrimitives.WEDGE);
 	workingModel.paintAll(paint);
 	register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel),

@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 import grondag.xm2.Xm;
 import grondag.xm2.api.connect.world.BlockTest;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +30,7 @@ public class XmBlockRegistryImpl {
     private XmBlockRegistryImpl() {
     }
 
-    public static void register(Block block, Function<BlockState, ModelState> defaultStateFunc,
+    public static void register(Block block, Function<BlockState, MutableModelState> defaultStateFunc,
 	    WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest) {
 
 	for (BlockState blockState : block.getStateFactory().getStates()) {
@@ -49,10 +49,10 @@ public class XmBlockRegistryImpl {
     public static class XmBlockStateImpl implements XmBlockState {
 	public final WorldToModelStateFunction worldStateFunc;
 	public final BlockTest blockJoinTest;
-	public final ModelState defaultModelState;
+	public final MutableModelState defaultModelState;
 	public final BlockState blockState;
 
-	private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction worldStateFunc,
+	private XmBlockStateImpl(MutableModelState defaultModelState, WorldToModelStateFunction worldStateFunc,
 		BlockTest blockJoinTest, BlockState blockState) {
 
 	    this.defaultModelState = defaultModelState;
@@ -67,12 +67,12 @@ public class XmBlockRegistryImpl {
 	}
 
 	@Override
-	public ModelState defaultModelState() {
+	public MutableModelState defaultModelState() {
 	    return defaultModelState;
 	}
 
 	@Override
-	public ModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
+	public MutableModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
 	    return worldStateFunc.apply(this, world, pos, refreshFromWorld);
 	}
 

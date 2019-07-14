@@ -28,7 +28,7 @@ import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmStackHelper;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.dispatch.XmDispatcher;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -62,7 +62,7 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
     @Override
     public void emitBlockQuads(ExtendedBlockView blockView, BlockState state, BlockPos pos,
 	    Supplier<Random> randomSupplier, RenderContext context) {
-	final ModelState modelState = XmBlockStateAccess.modelState(state, blockView, pos, true);
+	final MutableModelState modelState = XmBlockStateAccess.modelState(state, blockView, pos, true);
 	if (modelState != null) {
 	    XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
 	}
@@ -70,7 +70,7 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-	final ModelState modelState = XmStackHelper.getStackModelState(stack);
+	final MutableModelState modelState = XmStackHelper.getStackModelState(stack);
 	if (modelState != null) {
 	    XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
 	}
