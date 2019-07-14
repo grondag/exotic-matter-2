@@ -21,13 +21,13 @@ import grondag.fermion.serialization.PacketSerializable;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
+import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintRegistry;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.surface.XmSurfaceList;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.model.registry.ModelShape;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.util.math.BlockPos;
@@ -57,13 +57,13 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     /** returns self as convenience method */
     ModelState refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
 
-    ModelShape<?> getShape();
+    ModelPrimitive getShape();
 
     /**
      * Also resets shape-specific bits to default for the given shape. Does nothing
      * if shape is the same as existing.
      */
-    void setShape(ModelShape<?> shape);
+    void setShape(ModelPrimitive shape);
 
     default void paint(XmSurface surface, XmPaint paint) {
     	paint(surface.ordinal(), paint.index());
@@ -80,7 +80,7 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     }
     
     default void paintAll(int paintIndex) {
-    	XmSurfaceList slist = getShape().meshFactory().surfaces();
+    	XmSurfaceList slist = getShape().surfaces();
     	final int limit = slist.size();
     	for(int i = 0; i < limit; i++) {
     		paint(i, paintIndex);

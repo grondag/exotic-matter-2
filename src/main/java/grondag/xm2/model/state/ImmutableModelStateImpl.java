@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
-import grondag.xm2.model.registry.ModelShape;
+import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.painting.QuadPaintHandler;
 import grondag.xm2.terrain.TerrainState;
 import net.fabricmc.api.EnvType;
@@ -51,7 +51,7 @@ public class ImmutableModelStateImpl extends ModelStateImpl implements Immutable
     }
 
     @Override
-    public void setShape(ModelShape<?> shape) {
+    public void setShape(ModelPrimitive shape) {
         throw new IllegalStateException();
     }
 

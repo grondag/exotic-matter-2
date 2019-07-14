@@ -91,7 +91,7 @@ public class CollisionBoxDispatcher {
 //            final long start = System.nanoTime();
 
             final FastBoxGenerator generator = fastBoxGen.get();
-            key.getShape().meshFactory().produceQuads(key, generator);
+            key.getShape().produceQuads(key, generator);
 
             // note that build clears for next use
             OptimizingBoxList result = new OptimizingBoxList(generator, key);

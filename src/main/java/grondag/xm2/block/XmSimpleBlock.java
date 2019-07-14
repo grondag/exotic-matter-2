@@ -63,7 +63,7 @@ public class XmSimpleBlock extends Block {
     
     public XmSimpleBlock(Settings blockSettings, ModelState defaultModelState) {
         super(prepareInit(blockSettings, defaultModelState));
-        defaultModelState.getShape().meshFactory().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(), defaultModelState);
+        defaultModelState.getShape().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(), defaultModelState);
         XmBlockRegistryImpl.register(this, defaultModelStateFunc(defaultModelState), XmSimpleBlock::computeModelState, XmBorderMatch.INSTANCE);
     }
 
@@ -75,7 +75,7 @@ public class XmSimpleBlock extends Block {
             if(defaultState.hasSpecies()) {
                 builder.add(XmSimpleBlock.SPECIES);
             }
-            final EnumProperty<?> orientationProp = defaultState.getShape().meshFactory().orientationType(defaultState).property;
+            final EnumProperty<?> orientationProp = defaultState.getShape().orientationType(defaultState).property;
             if(orientationProp != null) {
                 builder.add(orientationProp);
             }
@@ -206,7 +206,7 @@ public class XmSimpleBlock extends Block {
         ModelState modelState = XmStackHelper.getStackModelState(stack);
 
         if (modelState != null) {
-            tooltip.add(new TranslatableText("label.shape", modelState.getShape().localizedName()));
+            tooltip.add(new TranslatableText("label.shape", modelState.getShape().translationKey()));
             //TODO: restore some info about color/texture?
 //            tooltip.add(new TranslatableText("label.base_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.BASE))));
 //            tooltip.add(new TranslatableText("label.base_texture", modelState.getTexture(PaintLayer.BASE).displayName()));
@@ -361,7 +361,7 @@ public class XmSimpleBlock extends Block {
     public BlockState getPlacementState(ItemPlacementContext context) {
         //TODO: add species handling
         final ModelState modelState = XmBlockStateAccess.get(this).defaultModelState;
-        return modelState.getShape().meshFactory().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
+        return modelState.getShape().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
     }
 
 	public static Function<BlockState, ModelState> defaultModelStateFunc(ModelState baseModelState) {
@@ -372,7 +372,7 @@ public class XmSimpleBlock extends Block {
 	            result.setSpecies(state.get(SPECIES));
 	        }
 	        
-	        result.getShape().meshFactory().orientationType(result).stateFunc.accept(state, result);
+	        result.getShape().orientationType(result).stateFunc.accept(state, result);
 	        
 	        return result.toImmutable();
 		};

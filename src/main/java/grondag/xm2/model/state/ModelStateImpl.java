@@ -36,12 +36,14 @@ import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
 import grondag.xm2.api.connect.world.BlockNeighbors;
+import grondag.xm2.api.model.ModelPrimitive;
+import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.connect.CornerJoinStateSelector;
 import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.model.registry.ModelShape;
-import grondag.xm2.model.registry.ModelShapes;
+import grondag.xm2.model.ModelPrimitiveRegistryImpl;
+import grondag.xm2.model.primitive.AbstractModelPrimitive;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
@@ -274,7 +276,7 @@ public class ModelStateImpl implements ModelState {
 
         populateStateFlagsIfNeeded();
 
-        switch (this.getShape().meshFactory().stateFormat) {
+        switch (((AbstractModelPrimitive)getShape()).stateFormat) {
         case BLOCK:
 
             if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS)
@@ -347,15 +349,15 @@ public class ModelStateImpl implements ModelState {
     ////////////////////////////////////////////////////
 
     @Override
-    public ModelShape<?> getShape() {
-        return ModelShapes.get(ModelStateData.SHAPE.getValue(this));
+    public ModelPrimitive getShape() {
+        return ModelPrimitiveRegistryImpl.INSTANCE.get(ModelStateData.SHAPE.getValue(this));
     }
 
     @Override
-    public void setShape(ModelShape<?> shape) {
-        if (shape.ordinal() != ModelStateData.SHAPE.getValue(this)) {
-            ModelStateData.SHAPE.setValue(shape.ordinal(), this);
-            shape.meshFactory().applyDefaultState(this);
+    public void setShape(ModelPrimitive shape) {
+        if (shape.index() != ModelStateData.SHAPE.getValue(this)) {
+            ModelStateData.SHAPE.setValue(shape.index(), this);
+            shape.applyDefaultState(this);
             invalidateHashCode();
             clearStateFlags();
         }
@@ -363,7 +365,7 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public BlockOrientationType orientationType() {
-        return getShape().meshFactory().orientationType(this);
+        return getShape().orientationType(this);
     }
 
     @Override
@@ -468,7 +470,7 @@ public class ModelStateImpl implements ModelState {
         if (XmConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
-                    || this.getShape().meshFactory().stateFormat != StateFormat.BLOCK)
+                    || ((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.BLOCK)
                 Xm.LOG.warn("getCornerJoin on model state does not apply for shape");
         }
 
@@ -481,7 +483,7 @@ public class ModelStateImpl implements ModelState {
         if (XmConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
-                    || this.getShape().meshFactory().stateFormat != StateFormat.BLOCK)
+                    || ((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.BLOCK)
                 Xm.LOG.warn("setCornerJoin on model state does not apply for shape");
         }
 
@@ -491,7 +493,7 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public SimpleJoinState getSimpleJoin() {
-        if (XmConfig.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.BLOCK)
+        if (XmConfig.BLOCKS.debugModelState && ((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.BLOCK)
             Xm.LOG.warn("getSimpleJoin on model state does not apply for shape");
 
         // If this state is using corner join, join index is for a corner join
@@ -505,7 +507,7 @@ public class ModelStateImpl implements ModelState {
     @Override
     public void setSimpleJoin(SimpleJoinState join) {
         if (XmConfig.BLOCKS.debugModelState) {
-            if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
+            if (((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.BLOCK) {
                 Xm.LOG.warn("Ignored setSimpleJoin on model state that does not apply for shape");
                 return;
             }
@@ -524,7 +526,7 @@ public class ModelStateImpl implements ModelState {
     @Override
     public SimpleJoinState getMasonryJoin() {
         if (XmConfig.BLOCKS.debugModelState
-                && (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK
+                && (((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.BLOCK
                         || (stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
                 || ((stateFlags & STATE_FLAG_NEEDS_MASONRY_JOIN) == 0))
             Xm.LOG.warn("getMasonryJoin on model state does not apply for shape");
@@ -537,7 +539,7 @@ public class ModelStateImpl implements ModelState {
     public void setMasonryJoin(SimpleJoinState join) {
         if (XmConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
-            if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
+            if (((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.BLOCK) {
                 Xm.LOG.warn("Ignored setMasonryJoin on model state that does not apply for shape");
                 return;
             }
@@ -561,7 +563,7 @@ public class ModelStateImpl implements ModelState {
     @Override
     public void setAxisRotation(ClockwiseRotation rotation) {
         populateStateFlagsIfNeeded();
-        if (this.getShape().meshFactory().stateFormat != StateFormat.BLOCK) {
+        if (((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.BLOCK) {
             if (XmConfig.BLOCKS.debugModelState)
                 Xm.LOG.warn("Ignored setAxisRotation on model state that does not apply for shape");
             return;
@@ -583,7 +585,7 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public long getMultiBlockBits() {
-        if (XmConfig.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.MULTIBLOCK)
+        if (XmConfig.BLOCKS.debugModelState && ((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.MULTIBLOCK)
             Xm.LOG.warn("getMultiBlockBits on model state does not apply for shape");
 
         return shapeBits0;
@@ -591,7 +593,7 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public void setMultiBlockBits(long bits) {
-        if (XmConfig.BLOCKS.debugModelState && this.getShape().meshFactory().stateFormat != StateFormat.MULTIBLOCK)
+        if (XmConfig.BLOCKS.debugModelState && ((AbstractModelPrimitive)getShape()).stateFormat != StateFormat.MULTIBLOCK)
             Xm.LOG.warn("setMultiBlockBits on model state does not apply for shape");
 
         shapeBits0 = bits;
@@ -604,37 +606,32 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public long getTerrainStateKey() {
-        assert this.getShape()
-                .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive)getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         return ModelStateData.FLOW_JOIN.getValue(this);
     }
 
     @Override
     public int getTerrainHotness() {
-        assert this.getShape()
-                .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive)getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         return (int) ModelStateData.EXTRA_SHAPE_BITS.getValue(this);
     }
 
     @Override
     public void setTerrainStateKey(long terrainStateKey) {
-        assert this.getShape()
-                .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive)getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         ModelStateData.FLOW_JOIN.setValue(terrainStateKey, this);
     }
 
     @Override
     public TerrainState getTerrainState() {
-        assert this.getShape()
-                .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive)getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         return new TerrainState(ModelStateData.FLOW_JOIN.getValue(this),
                 (int) ModelStateData.EXTRA_SHAPE_BITS.getValue(this));
     }
 
     @Override
     public void setTerrainState(TerrainState flowState) {
-        assert this.getShape()
-                .meshFactory().stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive)getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         ModelStateData.FLOW_JOIN.setValue(flowState.getStateKey(), this);
         ModelStateData.EXTRA_SHAPE_BITS.setValue(flowState.getHotness(), this);
         invalidateHashCode();
@@ -684,12 +681,12 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public boolean isAxisOrthogonalToPlacementFace() {
-        return this.getShape().meshFactory().isAxisOrthogonalToPlacementFace();
+        return this.getShape().isAxisOrthogonalToPlacementFace();
     }
 
     @Override
     public boolean isAdditive() {
-        return this.getShape().meshFactory().isAdditive();
+        return this.getShape().isAdditive();
     }
 
     @Override
@@ -719,7 +716,7 @@ public class ModelStateImpl implements ModelState {
         ModelStateImpl result = new ModelStateImpl();
         result.setShape(this.getShape());
 
-        switch (this.getShape().meshFactory().stateFormat) {
+        switch (((AbstractModelPrimitive)getShape()).stateFormat) {
         case BLOCK:
             result.setStaticShapeBits(this.getStaticShapeBits());
             if (this.hasAxis())
@@ -728,10 +725,10 @@ public class ModelStateImpl implements ModelState {
                 result.setAxisInverted(this.isAxisInverted());
             if (this.hasAxisRotation())
                 result.setAxisRotation(this.getAxisRotation());
-            if ((this.getShape().meshFactory().stateFlags(this)
+            if ((this.getShape().stateFlags(this)
                     & STATE_FLAG_NEEDS_CORNER_JOIN) == STATE_FLAG_NEEDS_CORNER_JOIN) {
                 result.setCornerJoin(this.getCornerJoin());
-            } else if ((this.getShape().meshFactory().stateFlags(this)
+            } else if ((this.getShape().stateFlags(this)
                     & STATE_FLAG_NEEDS_SIMPLE_JOIN) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
                 result.setSimpleJoin(this.getSimpleJoin());
             }
@@ -780,9 +777,9 @@ public class ModelStateImpl implements ModelState {
 
         // shape is serialized by name because registered shapes can change if
         // mods/config change
-        ModelShape<?> shape = ModelShapes.get(tag.getString(NBT_SHAPE));
+        ModelPrimitive shape = ModelPrimitiveRegistry.INSTANCE.get(tag.getString(NBT_SHAPE));
         if (shape != null)
-            ModelStateData.SHAPE.setValue(shape.ordinal(), this);
+            ModelStateData.SHAPE.setValue(shape.index(), this);
 
         // textures and vertex processors serialized by name because registered can
         // change if mods/config change
@@ -817,7 +814,7 @@ public class ModelStateImpl implements ModelState {
 
         // shape is serialized by name because registered shapes can change if
         // mods/config change
-        tag.putString(NBT_SHAPE, this.getShape().systemName());
+        tag.putString(NBT_SHAPE, this.getShape().id().toString());
 
         // TODO: serialization for paint/surface map
         // textures and vertex processors serialized by name because registered can

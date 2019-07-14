@@ -22,6 +22,13 @@ public interface ModelPrimitive {
 		return ModelPrimitiveRegistry.INSTANCE.indexOf(this);
 	}
 	
+	/**
+	 * This convention is used by XM2 but 3rd-party primitives can use a different one.
+	 */
+	default String translationKey() {
+		return "xm2_primitive_name." + id().getNamespace() + "." + id().getPath();
+	}
+	
 	XmSurfaceList surfaces();
 	
     /**

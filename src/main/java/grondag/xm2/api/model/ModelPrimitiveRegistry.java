@@ -12,13 +12,21 @@ public interface ModelPrimitiveRegistry {
 	
 	ModelPrimitive get(int primitiveIndex);
 	
-	ModelPrimitive get(Identifier primitiveId);
+	default ModelPrimitive get(Identifier primitiveId) {
+		return get(primitiveId.toString());
+	}
+	
+	ModelPrimitive get(String idString);
 	
 	void forEach(Consumer<ModelPrimitive> consumer);
 	
 	int count();
 
-	int indexOf(Identifier id);
+	int indexOf(String idString);
+	
+	default int indexOf(Identifier primitiveId) {
+		return indexOf(primitiveId.toString());
+	}
 	
 	default int indexOf(ModelPrimitive primitive) {
 		return indexOf(primitive.id());

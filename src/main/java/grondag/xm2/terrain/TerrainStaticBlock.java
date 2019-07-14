@@ -17,7 +17,7 @@
 package grondag.xm2.terrain;
 
 import grondag.xm2.block.XmStatefulBlock;
-import grondag.xm2.init.ModShapes;
+import grondag.xm2.init.XmPrimitives;
 import grondag.xm2.model.state.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -39,7 +39,7 @@ public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
     
     private static ModelState adjustShape(ModelState stateIn, boolean isFiller) {
     	ModelState result = stateIn.clone();
-   	 	result.setShape(isFiller ? ModShapes.TERRAIN_FILLER : ModShapes.TERRAIN_HEIGHT);
+   	 	result.setShape(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
    	 	result.setStatic(true);
    	 	return result;
    }

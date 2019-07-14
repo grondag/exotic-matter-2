@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	public static ModelPrimitiveRegistryImpl INSTANCE = new ModelPrimitiveRegistryImpl();
 	
-	private final Object2ObjectOpenHashMap<Identifier, ModelPrimitive> map = new Object2ObjectOpenHashMap<>();
+	private final Object2ObjectOpenHashMap<String, ModelPrimitive> map = new Object2ObjectOpenHashMap<>();
 	private final ObjectArrayList<ModelPrimitive> list = new ObjectArrayList<>();
 	private final Object2IntOpenHashMap<ModelPrimitive> reverseMap = new Object2IntOpenHashMap<>();
 	
@@ -20,7 +20,7 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	
 	@Override
 	public synchronized boolean register(Identifier id, ModelPrimitive primitive) {
-		boolean result = map.putIfAbsent(id, primitive) == null;
+		boolean result = map.putIfAbsent(id.toString(), primitive) == null;
 		if(result) {
 			final int index = list.size();
 			list.add(primitive);
@@ -35,8 +35,8 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	}
 
 	@Override
-	public ModelPrimitive get(Identifier primitiveId) {
-		return map.get(primitiveId);
+	public ModelPrimitive get(String idString) {
+		return map.get(idString);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	}
 	
 	@Override
-	public int indexOf(Identifier id) {
-		return reverseMap.getInt(id);
+	public int indexOf(String idString) {
+		return reverseMap.getInt(idString);
 	}
 }

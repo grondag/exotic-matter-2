@@ -39,17 +39,17 @@ public class XmBlocks {
         final XmPaintFinder paintFinder = XmPaint.finder();
         XmPaint paint = paintFinder.texture(0, XmTextures.WHITE).textureColor(0, 0xFFFFFFFF).find();
         ModelState workingModel = new ModelStateImpl();
-        workingModel.setShape(ModShapes.WEDGE);
+        workingModel.setShape(XmPrimitives.WEDGE);
         workingModel.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_wedge");
         
         workingModel = new ModelStateImpl();
-        workingModel.setShape(ModShapes.CUBE);
+        workingModel.setShape(XmPrimitives.CUBE);
         workingModel.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_cube");
         
         workingModel = new ModelStateImpl();
-        workingModel.setShape(ModShapes.CUBE);
+        workingModel.setShape(XmPrimitives.CUBE);
         paint = paintFinder.textureDepth(2).texture(0, XmTextures.SANDSTONE_ZOOM).textureColor(0, 0xFF808590)
         		.blendMode(1, BlockRenderLayer.TRANSLUCENT).emissive(1, true)
         		.texture(1, XmTextures.BORDER_CAUTION).textureColor(1, 0xFFFFD300).find();

@@ -22,9 +22,9 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_IS_POPULATED;
 
+import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.model.primitive.AbstractModelPrimitive;
-import grondag.xm2.model.registry.ModelShape;
 import net.minecraft.block.BlockRenderLayer;
 
 /**
@@ -35,8 +35,7 @@ import net.minecraft.block.BlockRenderLayer;
  */
 public class ModelStateFlagHelper {
     public static final int getFlags(ModelState state) {
-        final ModelShape<?> shape = state.getShape();
-        final AbstractModelPrimitive mesh = shape.meshFactory();
+        final ModelPrimitive mesh = state.getShape();
 
         int flags = STATE_FLAG_IS_POPULATED | mesh.stateFlags(state);
 
@@ -61,7 +60,7 @@ public class ModelStateFlagHelper {
 
         // turn off this.stateFlags that don't apply to non-block formats if we aren't
         // one
-        if (mesh.stateFormat != StateFormat.BLOCK)
+        if (((AbstractModelPrimitive)mesh).stateFormat != StateFormat.BLOCK)
             flags &= STATE_FLAG_DISABLE_BLOCK_ONLY;
 
         return flags;

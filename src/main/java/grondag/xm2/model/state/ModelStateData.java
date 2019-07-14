@@ -24,7 +24,6 @@ import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
 import grondag.xm2.api.connect.world.ModelStateFunction;
 import grondag.xm2.block.XmBlockStateAccess;
-import grondag.xm2.model.registry.ModelShapes;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.util.math.Direction;
 
@@ -35,7 +34,7 @@ public class ModelStateData {
      */
     public static final BitPacker64<ModelStateImpl> PACKER_CORE = new BitPacker64<ModelStateImpl>(m -> m.coreBits,
             (m, b) -> m.coreBits = b);
-    public static final BitPacker64<ModelStateImpl>.IntElement SHAPE = PACKER_CORE.createIntElement(ModelShapes.MAX_SHAPES);
+    public static final BitPacker64<ModelStateImpl>.IntElement SHAPE = PACKER_CORE.createIntElement(128);
     public static final BitPacker64<ModelStateImpl>.IntElement POS_X = PACKER_CORE.createIntElement(256);
     public static final BitPacker64<ModelStateImpl>.IntElement POS_Y = PACKER_CORE.createIntElement(256);
     public static final BitPacker64<ModelStateImpl>.IntElement POS_Z = PACKER_CORE.createIntElement(256);
