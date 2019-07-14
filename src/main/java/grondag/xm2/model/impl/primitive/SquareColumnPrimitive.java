@@ -95,8 +95,8 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     	//STATE_CUT_COUNT.setValue(3, STATE_ARE_CUTS_ON_EDGE.setValue(true, 0)
 	}
 
-	public SquareColumnPrimitive() {
-        super(SURFACES, StateFormat.BLOCK, ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS);
+	public SquareColumnPrimitive(String idString) {
+        super(idString, SURFACES, StateFormat.BLOCK, ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS);
     }
 
     @Override

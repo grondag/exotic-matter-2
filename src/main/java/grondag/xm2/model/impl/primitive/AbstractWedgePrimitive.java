@@ -43,8 +43,8 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(2);
 	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
 	
-    public AbstractWedgePrimitive() {
-        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
+    public AbstractWedgePrimitive(String idString) {
+        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
     @Override

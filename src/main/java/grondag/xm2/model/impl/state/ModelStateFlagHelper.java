@@ -40,7 +40,7 @@ public class ModelStateFlagHelper {
 
         int flags = STATE_FLAG_IS_POPULATED | mesh.stateFlags(state);
 
-        final int surfCount = mesh.surfaces.size();
+        final int surfCount = mesh.surfaces().size();
         for(int i = 0; i < surfCount; i++) {
         	XmPaint p = state.paint(i);
         	final int texDepth = p.textureDepth();

@@ -43,8 +43,8 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
-    public SpherePrimitive() {
-        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
+    public SpherePrimitive(String idString) {
+        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = generateQuads();
     }
 

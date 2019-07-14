@@ -47,8 +47,8 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
-    public CSGTestPrimitive() {
-        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
+    public CSGTestPrimitive(String idString) {
+        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = getTestQuads();
     }
 

@@ -48,8 +48,8 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
 	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
 	
-    public StackedPlatesPrimitive() {
-        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
+    public StackedPlatesPrimitive(String idString) {
+        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
     private static final Direction[] HORIZONTAL_FACES = {Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH};

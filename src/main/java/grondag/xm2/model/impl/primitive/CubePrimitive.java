@@ -44,8 +44,8 @@ public class CubePrimitive extends AbstractModelPrimitive {
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
-    public CubePrimitive() {
-        super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
+    public CubePrimitive(String idString) {
+        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = getCubeQuads();
     }
 

@@ -80,7 +80,7 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     }
     
     default void paintAll(int paintIndex) {
-    	XmSurfaceList slist = getShape().meshFactory().surfaces;
+    	XmSurfaceList slist = getShape().meshFactory().surfaces();
     	final int limit = slist.size();
     	for(int i = 0; i < limit; i++) {
     		paint(i, paintIndex);

@@ -20,9 +20,10 @@ import grondag.xm2.model.api.primitive.ModelPrimitive;
 import grondag.xm2.model.impl.state.ModelState;
 import grondag.xm2.model.impl.state.StateFormat;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
+import net.minecraft.util.Identifier;
 
 public abstract class AbstractModelPrimitive implements ModelPrimitive {
-	public final XmSurfaceListImpl surfaces;
+	private final XmSurfaceListImpl surfaces;
 	
     /**
      * used by ModelState to know why type of state representation is needed by this
@@ -30,35 +31,37 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
      */
     public final StateFormat stateFormat;
 
+    private final Identifier id;
+    
     /**
      * bits flags used by ModelState to know which optional state elements are
      * needed by this shape
      */
     private final int stateFlags;
 
-    protected AbstractModelPrimitive(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
+    protected AbstractModelPrimitive(Identifier id, XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
     	this.surfaces = surfaces;
         this.stateFormat = stateFormat;
         this.stateFlags = stateFlags;
+        this.id = id;
     }
 
-    /**
-     * If true, shape can be placed on itself to become bigger.
-     */
-    public boolean isAdditive() {
-        return false;
+    protected AbstractModelPrimitive(String idString, XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
+    	this(new Identifier(idString), surfaces, stateFormat, stateFlags);
     }
-
-    /**
-     * Override to true for blocks like stairs and wedges. CubicPlacementHandler
-     * will know they need to be placed in a corner instead of a face.
-     */
-    public boolean isAxisOrthogonalToPlacementFace() {
-        return false;
-    }
-
+    
     @Override
     public int stateFlags(ModelState modelState) {
         return stateFlags;
+    }
+    
+    @Override
+    public Identifier id() {
+    	return id;
+    }
+    
+    @Override
+    public XmSurfaceListImpl surfaces() {
+    	return surfaces;
     }
 }
