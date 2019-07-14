@@ -25,22 +25,24 @@ import grondag.xm2.api.connect.model.FaceEdge;
 import net.minecraft.util.math.Direction;
 
 /**
- * Describes the connected-texture state of a block face for 
- * a face within a {@link CornerJoinState}. Result interpretation
- * may vary depending on the test used to derive the state.<p>
+ * Describes the connected-texture state of a block face for a face within a
+ * {@link CornerJoinState}. Result interpretation may vary depending on the test
+ * used to derive the state.
+ * <p>
  * 
- * Can also be applied to shapes if the shape has some sort of
- * meaningful face with an appearance that varies based on connections.<p>
+ * Can also be applied to shapes if the shape has some sort of meaningful face
+ * with an appearance that varies based on connections.
+ * <p>
  * 
- * All information is <em>relative</em> to the block face for which this
- * state was returned.  You must obtain and retain that information
- * separately - it is not part of this object.
+ * All information is <em>relative</em> to the block face for which this state
+ * was returned. You must obtain and retain that information separately - it is
+ * not part of this object.
  */
 @API(status = STABLE)
 public interface CornerJoinFaceState {
 
     int ordinal();
-    
+
     boolean isJoined(FaceEdge side);
 
     boolean isJoined(Direction toFace, Direction onFace);
@@ -55,8 +57,8 @@ public interface CornerJoinFaceState {
      * True if connected-texture/shape blocks need to render corner due to
      * missing/covered block in adjacent corner.
      * 
-     * Note that to use this version you must know which block face
-     * this state is on. 
+     * Note that to use this version you must know which block face this state is
+     * on.
      */
     boolean needsCorner(Direction face1, Direction face2, Direction onFace);
 }

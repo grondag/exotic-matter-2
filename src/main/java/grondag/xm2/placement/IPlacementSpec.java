@@ -19,7 +19,6 @@ package grondag.xm2.placement;
 import grondag.fermion.world.IBlockRegion;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-
 public interface IPlacementSpec {
 
     /**
@@ -49,8 +48,8 @@ public interface IPlacementSpec {
      * obstacles, uses color to indicate obstructed/invalid and show where at least
      * some of the obstacles are (if not too expensive).
      */
-    
-    //TODO: make an hook that calls thhis
+
+    // TODO: make an hook that calls thhis
     void renderPreview();
 
     /**

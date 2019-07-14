@@ -36,23 +36,17 @@ import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
 /**
- * Defines the twelve edges of a block and the relative position of
- * neighboring blocks diagonally adjacent to those edges.
+ * Defines the twelve edges of a block and the relative position of neighboring
+ * blocks diagonally adjacent to those edges.
  */
 @API(status = STABLE)
 public enum BlockEdge implements StringIdentifiable {
-    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), 
-    DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
-    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE),
-    DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90), 
-    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), 
-    UP_EAST(Direction.UP, Direction.EAST, ROTATE_90), 
-    UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE), 
-    UP_WEST(Direction.UP, Direction.WEST, ROTATE_270), 
-    NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90), 
-    NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270), 
-    SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_270), 
-    SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_90); 
+    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
+    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE), DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90),
+    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), UP_EAST(Direction.UP, Direction.EAST, ROTATE_90),
+    UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE), UP_WEST(Direction.UP, Direction.WEST, ROTATE_270),
+    NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90), NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270),
+    SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_270), SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_90);
 
     public final Direction face1;
     public final Direction face2;
@@ -61,20 +55,21 @@ public enum BlockEdge implements StringIdentifiable {
     /**
      * Used to position models like stairs/wedges. Representation rotation around
      * the parallel axis such that face1 and face2 are most occluded. Based on
-     * "default" model occluding north and down faces. Use the axis implied by face1.
+     * "default" model occluding north and down faces. Use the axis implied by
+     * face1.
      */
-    
+
     public final ClockwiseRotation rotation;
-    
+
     public final Vec3i vector;
-    
+
     /**
-     * Ordinal sequence that includes all faces, corner and far corners. 
-     * Used to index them in a mixed array.
+     * Ordinal sequence that includes all faces, corner and far corners. Used to
+     * index them in a mixed array.
      */
     @API(status = INTERNAL)
     public final int superOrdinal;
-    
+
     @API(status = INTERNAL)
     public final int superOrdinalBit;
 
@@ -83,45 +78,45 @@ public enum BlockEdge implements StringIdentifiable {
      */
     @Nullable
     public final HorizontalEdge horizontalEdge;
-    
+
     private BlockEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
-        this.name = this.name().toLowerCase();
-        this.face1 = face1;
-        this.face2 = face2;
-        this.rotation = rotation;
-        superOrdinal = 6 + this.ordinal();
-        superOrdinalBit = 1 << superOrdinal;
+	this.name = this.name().toLowerCase();
+	this.face1 = face1;
+	this.face2 = face2;
+	this.rotation = rotation;
+	superOrdinal = 6 + this.ordinal();
+	superOrdinalBit = 1 << superOrdinal;
 
-        Vec3i v1 = face1.getVector();
-        Vec3i v2 = face2.getVector();
-        vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
+	Vec3i v1 = face1.getVector();
+	Vec3i v2 = face2.getVector();
+	vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
 
-        if (face1.getAxis() == Axis.Y || face2.getAxis() == Axis.Y)
-            horizontalEdge = null;
-        else
-            horizontalEdge = HorizontalEdge.find(HorizontalFace.find(face1), HorizontalFace.find(face2));
+	if (face1.getAxis() == Axis.Y || face2.getAxis() == Axis.Y)
+	    horizontalEdge = null;
+	else
+	    horizontalEdge = HorizontalEdge.find(HorizontalFace.find(face1), HorizontalFace.find(face2));
     }
 
     public static final int COUNT = BlockEdgeHelper.COUNT;
-    
+
     /**
      * Will be null if the inputs do not specify an edge.
      */
     @Nullable
     public static BlockEdge find(Direction face1, Direction face2) {
-        return BlockEdgeHelper.find(face1, face2);
+	return BlockEdgeHelper.find(face1, face2);
     }
-    
+
     public static final BlockEdge fromOrdinal(int ordinal) {
-        return BlockEdgeHelper.fromOrdinal(ordinal);
+	return BlockEdgeHelper.fromOrdinal(ordinal);
     }
-    
+
     public static void forEach(Consumer<BlockEdge> consumer) {
-        BlockEdgeHelper.forEach(consumer);
+	BlockEdgeHelper.forEach(consumer);
     }
 
     @Override
     public String asString() {
-        return name;
+	return name;
     }
 }

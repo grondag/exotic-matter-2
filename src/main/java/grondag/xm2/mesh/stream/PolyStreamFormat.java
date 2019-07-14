@@ -27,11 +27,11 @@ public class PolyStreamFormat {
     private static final BitPacker32<PolyStreamFormat>.BooleanElement IS_MUTABLE = BITPACKER.createBooleanElement();
 
     public static boolean isMutable(int formatIn) {
-        return IS_MUTABLE.getValue(formatIn);
+	return IS_MUTABLE.getValue(formatIn);
     }
 
     public static int setMutable(int formatIn, boolean isMarked) {
-        return IS_MUTABLE.setValue(isMarked, formatIn);
+	return IS_MUTABLE.setValue(isMarked, formatIn);
     }
 
     public static final int MUTABLE_FLAG = IS_MUTABLE.comparisonMask();
@@ -39,44 +39,44 @@ public class PolyStreamFormat {
     private static final BitPacker32<PolyStreamFormat>.IntElement VERTEX_COUNT = BITPACKER.createIntElement(3, 3 + 127);
 
     public static int getVertexCount(int formatIn) {
-        return VERTEX_COUNT.getValue(formatIn);
+	return VERTEX_COUNT.getValue(formatIn);
     }
 
     public static int setVertexCount(int formatIn, int vertexCount) {
-        assert vertexCount > 2;
-        assert vertexCount <= 3 + 127;
-        return VERTEX_COUNT.setValue(vertexCount, formatIn);
+	assert vertexCount > 2;
+	assert vertexCount <= 3 + 127;
+	return VERTEX_COUNT.setValue(vertexCount, formatIn);
     }
 
     private static final BitPacker32<PolyStreamFormat>.EnumElement<Direction> NOMINAL_FACE = BITPACKER
-            .createEnumElement(Direction.class);
+	    .createEnumElement(Direction.class);
 
     public static Direction getNominalFace(int formatIn) {
-        return NOMINAL_FACE.getValue(formatIn);
+	return NOMINAL_FACE.getValue(formatIn);
     }
 
     public static int setNominalFace(int formatIn, Direction face) {
-        return NOMINAL_FACE.setValue(face, formatIn);
+	return NOMINAL_FACE.setValue(face, formatIn);
     }
 
     private static final BitPacker32<PolyStreamFormat>.BooleanElement IS_MARKED = BITPACKER.createBooleanElement();
 
     public static boolean isMarked(int formatIn) {
-        return IS_MARKED.getValue(formatIn);
+	return IS_MARKED.getValue(formatIn);
     }
 
     public static int setMarked(int formatIn, boolean isMarked) {
-        return IS_MARKED.setValue(isMarked, formatIn);
+	return IS_MARKED.setValue(isMarked, formatIn);
     }
 
     private static final BitPacker32<PolyStreamFormat>.BooleanElement IS_DELETED = BITPACKER.createBooleanElement();
 
     public static boolean isDeleted(int formatIn) {
-        return IS_DELETED.getValue(formatIn);
+	return IS_DELETED.getValue(formatIn);
     }
 
     public static int setDeleted(int formatIn, boolean isDeleted) {
-        return IS_DELETED.setValue(isDeleted, formatIn);
+	return IS_DELETED.setValue(isDeleted, formatIn);
     }
 
     // Note the packers below that affect poly / vertex layouts need to be adjacent
@@ -87,28 +87,28 @@ public class PolyStreamFormat {
     public static final int HAS_LINK_FLAG = HAS_LINK.comparisonMask();
 
     public static boolean isLinked(int formatIn) {
-        return HAS_LINK.getValue(formatIn);
+	return HAS_LINK.getValue(formatIn);
     }
 
     /**
      * IMPORTANT: changes poly layout and must be set before poly is written.
      */
     public static int setLinked(int formatIn, boolean isLinked) {
-        return HAS_LINK.setValue(isLinked, formatIn);
+	return HAS_LINK.setValue(isLinked, formatIn);
     }
 
     private static final BitPacker32<PolyStreamFormat>.BooleanElement HAS_TAG = BITPACKER.createBooleanElement();
     public static final int HAS_TAG_FLAG = HAS_TAG.comparisonMask();
 
     public static boolean isTagged(int formatIn) {
-        return HAS_TAG.getValue(formatIn);
+	return HAS_TAG.getValue(formatIn);
     }
 
     /**
      * IMPORTANT: changes poly layout and must be set before poly is written.
      */
     public static int setTagged(int formatIn, boolean isTagged) {
-        return HAS_TAG.setValue(isTagged, formatIn);
+	return HAS_TAG.setValue(isTagged, formatIn);
     }
 
     /**
@@ -126,32 +126,32 @@ public class PolyStreamFormat {
     private static final BitPacker32<PolyStreamFormat>.IntElement FACE_NORMAL_FORMAT = BITPACKER.createIntElement(4);
 
     public static int getFaceNormalFormat(int formatIn) {
-        return FACE_NORMAL_FORMAT.getValue(formatIn);
+	return FACE_NORMAL_FORMAT.getValue(formatIn);
     }
 
     public static int setFaceNormalFormat(int formatIn, int format) {
-        return FACE_NORMAL_FORMAT.setValue(format, formatIn);
+	return FACE_NORMAL_FORMAT.setValue(format, formatIn);
     }
 
     private static final BitPacker32<PolyStreamFormat>.BooleanElement HALF_PRECISION_POLY_UV = BITPACKER
-            .createBooleanElement();
+	    .createBooleanElement();
 
     public static boolean isHalfPrecisionPolyUV(int formatIn) {
-        return HALF_PRECISION_POLY_UV.getValue(formatIn);
+	return HALF_PRECISION_POLY_UV.getValue(formatIn);
     }
 
     public static int setHalfPrecisionPolyUV(int formatIn, boolean isHalf) {
-        return HALF_PRECISION_POLY_UV.setValue(isHalf, formatIn);
+	return HALF_PRECISION_POLY_UV.setValue(isHalf, formatIn);
     }
 
     private static final BitPacker32<PolyStreamFormat>.IntElement LAYER_COUNT = BITPACKER.createIntElement(1, 3);
 
     public static int getLayerCount(int formatIn) {
-        return LAYER_COUNT.getValue(formatIn);
+	return LAYER_COUNT.getValue(formatIn);
     }
 
     public static int setLayerCount(int formatIn, int layerCount) {
-        return LAYER_COUNT.setValue(layerCount, formatIn);
+	return LAYER_COUNT.setValue(layerCount, formatIn);
     }
 
     /** all vertices are white */
@@ -166,21 +166,21 @@ public class PolyStreamFormat {
     private static final BitPacker32<PolyStreamFormat>.IntElement VERTEX_COLOR_FORMAT = BITPACKER.createIntElement(4);
 
     public static int getVertexColorFormat(int formatIn) {
-        return VERTEX_COLOR_FORMAT.getValue(formatIn);
+	return VERTEX_COLOR_FORMAT.getValue(formatIn);
     }
 
     public static int setVertexColorFormat(int formatIn, int colorFormat) {
-        return VERTEX_COLOR_FORMAT.setValue(colorFormat, formatIn);
+	return VERTEX_COLOR_FORMAT.setValue(colorFormat, formatIn);
     }
 
     private static final BitPacker32<PolyStreamFormat>.BooleanElement QUANTIZED_POS = BITPACKER.createBooleanElement();
 
     public static boolean isQuantizedPos(int formatIn) {
-        return QUANTIZED_POS.getValue(formatIn);
+	return QUANTIZED_POS.getValue(formatIn);
     }
 
     public static int setQuantizedPos(int formatIn, boolean isQuantized) {
-        return QUANTIZED_POS.setValue(isQuantized, formatIn);
+	return QUANTIZED_POS.setValue(isQuantized, formatIn);
     }
 
     /** use face normal as vertex normals */
@@ -193,11 +193,11 @@ public class PolyStreamFormat {
     private static final BitPacker32<PolyStreamFormat>.IntElement VERTEX_NORMAL_FORMAT = BITPACKER.createIntElement(3);
 
     public static int getVertexNormalFormat(int formatIn) {
-        return VERTEX_NORMAL_FORMAT.getValue(formatIn);
+	return VERTEX_NORMAL_FORMAT.getValue(formatIn);
     }
 
     public static int setVertexNormalFormat(int formatIn, int normFormat) {
-        return VERTEX_NORMAL_FORMAT.setValue(normFormat, formatIn);
+	return VERTEX_NORMAL_FORMAT.setValue(normFormat, formatIn);
     }
 
     /** different UV in each layer */
@@ -212,11 +212,11 @@ public class PolyStreamFormat {
     private static final BitPacker32<PolyStreamFormat>.IntElement VERTEX_UV_FORMAT = BITPACKER.createIntElement(4);
 
     public static int getVertexUVFormat(int formatIn) {
-        return VERTEX_UV_FORMAT.getValue(formatIn);
+	return VERTEX_UV_FORMAT.getValue(formatIn);
     }
 
     public static int setVertexUVFormat(int formatIn, int uvFormat) {
-        return VERTEX_UV_FORMAT.setValue(uvFormat, formatIn);
+	return VERTEX_UV_FORMAT.setValue(uvFormat, formatIn);
     }
 
     /** values are zero for every vertex */
@@ -229,11 +229,11 @@ public class PolyStreamFormat {
     private static final BitPacker32<PolyStreamFormat>.IntElement VERTEX_GLOW_FORMAT = BITPACKER.createIntElement(3);
 
     public static int getVertexGlowFormat(int formatIn) {
-        return VERTEX_GLOW_FORMAT.getValue(formatIn);
+	return VERTEX_GLOW_FORMAT.getValue(formatIn);
     }
 
     public static int setVertexGlowFormat(int formatIn, int glowFormat) {
-        return VERTEX_GLOW_FORMAT.setValue(glowFormat, formatIn);
+	return VERTEX_GLOW_FORMAT.setValue(glowFormat, formatIn);
     }
 
     // static features
@@ -274,46 +274,46 @@ public class PolyStreamFormat {
     final static int VERTEX_FORMAT_COUNT;
 
     static {
-        final int polyMask = HAS_LINK.comparisonMask() | HAS_TAG.comparisonMask() | FACE_NORMAL_FORMAT.comparisonMask()
-                | HALF_PRECISION_POLY_UV.comparisonMask() | LAYER_COUNT.comparisonMask()
-                | VERTEX_COLOR_FORMAT.comparisonMask();
+	final int polyMask = HAS_LINK.comparisonMask() | HAS_TAG.comparisonMask() | FACE_NORMAL_FORMAT.comparisonMask()
+		| HALF_PRECISION_POLY_UV.comparisonMask() | LAYER_COUNT.comparisonMask()
+		| VERTEX_COLOR_FORMAT.comparisonMask();
 
-        POLY_FORMAT_SHIFT = Integer.numberOfTrailingZeros(polyMask);
-        POLY_FORMAT_MASK = polyMask >> POLY_FORMAT_SHIFT;
-        POLY_FORMAT_COUNT = POLY_FORMAT_MASK + 1;
+	POLY_FORMAT_SHIFT = Integer.numberOfTrailingZeros(polyMask);
+	POLY_FORMAT_MASK = polyMask >> POLY_FORMAT_SHIFT;
+	POLY_FORMAT_COUNT = POLY_FORMAT_MASK + 1;
 
-        // force certain features to full flexibility for mutable formats
-        // doesn't include CSG bounds
-        POLY_FORMAT_MUTABLE_MASK = ~(HAS_LINK.comparisonMask() | HAS_TAG.comparisonMask()
-                | FACE_NORMAL_FORMAT.comparisonMask() | HALF_PRECISION_POLY_UV.comparisonMask()
-                | LAYER_COUNT.comparisonMask() | VERTEX_COLOR_FORMAT.comparisonMask());
+	// force certain features to full flexibility for mutable formats
+	// doesn't include CSG bounds
+	POLY_FORMAT_MUTABLE_MASK = ~(HAS_LINK.comparisonMask() | HAS_TAG.comparisonMask()
+		| FACE_NORMAL_FORMAT.comparisonMask() | HALF_PRECISION_POLY_UV.comparisonMask()
+		| LAYER_COUNT.comparisonMask() | VERTEX_COLOR_FORMAT.comparisonMask());
 
-        int mutableBits = setLinked(0, true);
-        mutableBits = setTagged(mutableBits, true);
-        mutableBits = setFaceNormalFormat(mutableBits, FACE_NORMAL_FORMAT_COMPUTED);
-        mutableBits = setHalfPrecisionPolyUV(mutableBits, false);
-        mutableBits = setLayerCount(mutableBits, 3);
-        mutableBits = setVertexColorFormat(mutableBits, VERTEX_COLOR_PER_VERTEX_LAYER);
-        POLY_FORMAT_MUTABLE_BITS = mutableBits;
+	int mutableBits = setLinked(0, true);
+	mutableBits = setTagged(mutableBits, true);
+	mutableBits = setFaceNormalFormat(mutableBits, FACE_NORMAL_FORMAT_COMPUTED);
+	mutableBits = setHalfPrecisionPolyUV(mutableBits, false);
+	mutableBits = setLayerCount(mutableBits, 3);
+	mutableBits = setVertexColorFormat(mutableBits, VERTEX_COLOR_PER_VERTEX_LAYER);
+	POLY_FORMAT_MUTABLE_BITS = mutableBits;
 
-        final int vertexMask = LAYER_COUNT.comparisonMask() | VERTEX_COLOR_FORMAT.comparisonMask()
-                | QUANTIZED_POS.comparisonMask() | VERTEX_NORMAL_FORMAT.comparisonMask()
-                | VERTEX_UV_FORMAT.comparisonMask();
+	final int vertexMask = LAYER_COUNT.comparisonMask() | VERTEX_COLOR_FORMAT.comparisonMask()
+		| QUANTIZED_POS.comparisonMask() | VERTEX_NORMAL_FORMAT.comparisonMask()
+		| VERTEX_UV_FORMAT.comparisonMask();
 
-        VERTEX_FORMAT_SHIFT = Integer.numberOfTrailingZeros(vertexMask);
-        VERTEX_FORMAT_MASK = vertexMask >> VERTEX_FORMAT_SHIFT;
-        VERTEX_FORMAT_COUNT = VERTEX_FORMAT_MASK + 1;
+	VERTEX_FORMAT_SHIFT = Integer.numberOfTrailingZeros(vertexMask);
+	VERTEX_FORMAT_MASK = vertexMask >> VERTEX_FORMAT_SHIFT;
+	VERTEX_FORMAT_COUNT = VERTEX_FORMAT_MASK + 1;
     }
 
     public static int polyFormatKey(int formatIn) {
-        // force certain features to full flexibility for mutable formats
-        if (isMutable(formatIn))
-            formatIn = (formatIn & POLY_FORMAT_MUTABLE_MASK) | POLY_FORMAT_MUTABLE_BITS;
-        return (formatIn >> POLY_FORMAT_SHIFT) & POLY_FORMAT_MASK;
+	// force certain features to full flexibility for mutable formats
+	if (isMutable(formatIn))
+	    formatIn = (formatIn & POLY_FORMAT_MUTABLE_MASK) | POLY_FORMAT_MUTABLE_BITS;
+	return (formatIn >> POLY_FORMAT_SHIFT) & POLY_FORMAT_MASK;
     }
 
     public static int vertexFormatKey(int formatIn) {
-        return (formatIn >> VERTEX_FORMAT_SHIFT) & VERTEX_FORMAT_MASK;
+	return (formatIn >> VERTEX_FORMAT_SHIFT) & VERTEX_FORMAT_MASK;
     }
 
     /**
@@ -327,94 +327,94 @@ public class PolyStreamFormat {
      * guarantee changes could be stored in the format.
      */
     public static int minimalFixedFormat(IPolygon polyIn, int formatFlags) {
-        int result = formatFlags;
-        final int layerCount = polyIn.layerCount();
-        assert layerCount >= 1;
+	int result = formatFlags;
+	final int layerCount = polyIn.layerCount();
+	assert layerCount >= 1;
 
-        final int vertexCount = polyIn.vertexCount();
-        assert vertexCount >= 3;
+	final int vertexCount = polyIn.vertexCount();
+	assert vertexCount >= 3;
 
-        result = setLayerCount(result, layerCount);
-        result = setVertexCount(result, vertexCount);
+	result = setLayerCount(result, layerCount);
+	result = setVertexCount(result, vertexCount);
 
-        assert !polyIn.isDeleted();
+	assert !polyIn.isDeleted();
 
-        Direction nominalFace = polyIn.nominalFace();
-        result = setNominalFace(result, nominalFace);
+	Direction nominalFace = polyIn.nominalFace();
+	result = setNominalFace(result, nominalFace);
 
-        Vec3f faceNormal = polyIn.getFaceNormal();
-        if (faceNormal.equals(Vec3f.forFace(nominalFace)))
-            result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_NOMINAL);
-        else
-            result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_COMPUTED);
+	Vec3f faceNormal = polyIn.getFaceNormal();
+	if (faceNormal.equals(Vec3f.forFace(nominalFace)))
+	    result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_NOMINAL);
+	else
+	    result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_COMPUTED);
 
-        boolean allFaceNormal = true;
-        int firstGlow = polyIn.getVertexGlow(0);
-        boolean allSameGlow = true;
-        boolean allSameUV = layerCount > 1;
+	boolean allFaceNormal = true;
+	int firstGlow = polyIn.getVertexGlow(0);
+	boolean allSameGlow = true;
+	boolean allSameUV = layerCount > 1;
 
-        int color0 = polyIn.spriteColor(0, 0);
-        int color1 = layerCount > 1 ? polyIn.spriteColor(0, 1) : 0;
-        int color2 = layerCount == 3 ? polyIn.spriteColor(0, 2) : 0;
-        /**
-         * True if all vertices in each layer are same color as each other. Does not
-         * mean all layers are same color.
-         */
-        boolean allVertexSameColor = true;
+	int color0 = polyIn.spriteColor(0, 0);
+	int color1 = layerCount > 1 ? polyIn.spriteColor(0, 1) : 0;
+	int color2 = layerCount == 3 ? polyIn.spriteColor(0, 2) : 0;
+	/**
+	 * True if all vertices in each layer are same color as each other. Does not
+	 * mean all layers are same color.
+	 */
+	boolean allVertexSameColor = true;
 
-        for (int v = 0; v < vertexCount; v++) {
-            // glow
-            if (allSameGlow && v > 0 && polyIn.getVertexGlow(v) != firstGlow)
-                allSameGlow = false;
+	for (int v = 0; v < vertexCount; v++) {
+	    // glow
+	    if (allSameGlow && v > 0 && polyIn.getVertexGlow(v) != firstGlow)
+		allSameGlow = false;
 
-            // vertex normal
-            if (allFaceNormal && polyIn.hasNormal(v) && !polyIn.getVertexNormal(v).equals(faceNormal))
-                allFaceNormal = false;
+	    // vertex normal
+	    if (allFaceNormal && polyIn.hasNormal(v) && !polyIn.getVertexNormal(v).equals(faceNormal))
+		allFaceNormal = false;
 
-            if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 0) != color0)
-                allVertexSameColor = false;
+	    if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 0) != color0)
+		allVertexSameColor = false;
 
-            if (layerCount > 1) {
-                // vertex uv format
-                if (allSameUV && (polyIn.spriteU(v, 0) != polyIn.spriteU(v, 1)
-                        || polyIn.spriteV(v, 0) != polyIn.spriteV(v, 1)))
-                    allSameUV = false;
+	    if (layerCount > 1) {
+		// vertex uv format
+		if (allSameUV && (polyIn.spriteU(v, 0) != polyIn.spriteU(v, 1)
+			|| polyIn.spriteV(v, 0) != polyIn.spriteV(v, 1)))
+		    allSameUV = false;
 
-                // vertex color
-                if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 1) != color1)
-                    allVertexSameColor = false;
+		// vertex color
+		if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 1) != color1)
+		    allVertexSameColor = false;
 
-                if (layerCount == 3) {
-                    // vertex uv format
-                    if (allSameUV && (polyIn.spriteU(v, 0) != polyIn.spriteU(v, 2)
-                            || polyIn.spriteV(v, 0) != polyIn.spriteV(v, 2)))
-                        allSameUV = false;
+		if (layerCount == 3) {
+		    // vertex uv format
+		    if (allSameUV && (polyIn.spriteU(v, 0) != polyIn.spriteU(v, 2)
+			    || polyIn.spriteV(v, 0) != polyIn.spriteV(v, 2)))
+			allSameUV = false;
 
-                    // vertex color
-                    if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 2) != color2)
-                        allVertexSameColor = false;
-                }
-            }
-        }
+		    // vertex color
+		    if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 2) != color2)
+			allVertexSameColor = false;
+		}
+	    }
+	}
 
-        result = setVertexNormalFormat(result, allFaceNormal ? VERTEX_NORMAL_FACE : VERTEX_NORMAL_REGULAR);
+	result = setVertexNormalFormat(result, allFaceNormal ? VERTEX_NORMAL_FACE : VERTEX_NORMAL_REGULAR);
 
-        if (allSameGlow)
-            result = setVertexGlowFormat(result, firstGlow == 0 ? VERTEX_GLOW_NONE : VERTEX_GLOW_SAME);
-        else
-            result = setVertexGlowFormat(result, VERTEX_GLOW_PER_VERTEX);
+	if (allSameGlow)
+	    result = setVertexGlowFormat(result, firstGlow == 0 ? VERTEX_GLOW_NONE : VERTEX_GLOW_SAME);
+	else
+	    result = setVertexGlowFormat(result, VERTEX_GLOW_PER_VERTEX);
 
-        result = setVertexUVFormat(result, allSameUV ? VERTEX_UV_SAME : VERTEX_UV_BY_LAYER);
+	result = setVertexUVFormat(result, allSameUV ? VERTEX_UV_SAME : VERTEX_UV_BY_LAYER);
 
-        if (allVertexSameColor) {
-            if (layerCount == 1 || (color0 == color1 && (layerCount == 2 || color1 == color2)))
-                result = setVertexColorFormat(result, color0 == 0xFFFFFFFF ? VERTEX_COLOR_WHITE : VERTEX_COLOR_SAME);
-            else
-                result = setVertexColorFormat(result, VERTEX_COLOR_SAME_BY_LAYER);
-        } else
-            result = setVertexColorFormat(result, VERTEX_COLOR_PER_VERTEX_LAYER);
+	if (allVertexSameColor) {
+	    if (layerCount == 1 || (color0 == color1 && (layerCount == 2 || color1 == color2)))
+		result = setVertexColorFormat(result, color0 == 0xFFFFFFFF ? VERTEX_COLOR_WHITE : VERTEX_COLOR_SAME);
+	    else
+		result = setVertexColorFormat(result, VERTEX_COLOR_SAME_BY_LAYER);
+	} else
+	    result = setVertexColorFormat(result, VERTEX_COLOR_PER_VERTEX_LAYER);
 
-        return result & ~MUTABLE_FLAG;
+	return result & ~MUTABLE_FLAG;
     }
 
     /**
@@ -423,7 +423,7 @@ public class PolyStreamFormat {
      * size vertex data.
      */
     public static int minimalFixedSize(IPolygon polyIn, int formatFlags) {
-        return polyStride(minimalFixedFormat(polyIn, formatFlags), true);
+	return polyStride(minimalFixedFormat(polyIn, formatFlags), true);
     }
 
     /**
@@ -431,10 +431,10 @@ public class PolyStreamFormat {
      * vertex data if specified. Otherwise everything except.
      */
     public static int polyStride(int newFormat, boolean includeVertices) {
-        int result = 1 + StaticEncoder.INTEGER_WIDTH + PolyEncoder.get(newFormat).stride();
-        if (includeVertices)
-            result += VertexEncoder.get(newFormat).vertexStride() * getVertexCount(newFormat)
-                    + GlowEncoder.get(newFormat).stride(newFormat);
-        return result;
+	int result = 1 + StaticEncoder.INTEGER_WIDTH + PolyEncoder.get(newFormat).stride();
+	if (includeVertices)
+	    result += VertexEncoder.get(newFormat).vertexStride() * getVertexCount(newFormat)
+		    + GlowEncoder.get(newFormat).stride(newFormat);
+	return result;
     }
 }

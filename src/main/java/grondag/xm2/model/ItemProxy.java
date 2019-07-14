@@ -26,13 +26,15 @@ import net.minecraft.world.World;
 
 public class ItemProxy extends ModelItemPropertyOverrideList {
     private final BakedModel owner;
+
     public ItemProxy(BakedModel owner) {
-        super(null, null, null, Collections.emptyList());
-        this.owner = owner;
+	super(null, null, null, Collections.emptyList());
+	this.owner = owner;
     }
-    
+
     @Override
-    public BakedModel apply(BakedModel bakedModel_1, ItemStack itemStack_1, World world_1, LivingEntity livingEntity_1) {
-        return owner;
+    public BakedModel apply(BakedModel bakedModel_1, ItemStack itemStack_1, World world_1,
+	    LivingEntity livingEntity_1) {
+	return owner;
     }
 }

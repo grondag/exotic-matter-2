@@ -31,46 +31,49 @@ import net.minecraft.util.Identifier;
 public class TextureSetRegistryImpl implements TextureSetRegistry {
     public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
     public static final TextureSetImpl DEFAULT_TEXTURE_SET;
-    
+
     public static TextureSet noTexture() {
-        return INSTANCE.getByIndex(0);
+	return INSTANCE.getByIndex(0);
     }
-    
+
     private final TextureSetImpl[] array = new TextureSetImpl[MAX_TEXTURE_SETS];
     private final HashMap<Identifier, TextureSetImpl> map = new HashMap<>();
     private int nextIndex = 0;
-    
+
     synchronized void add(TextureSetImpl newSet) {
-        if(array[newSet.index] == null && !map.containsKey(newSet.id)) {
-            array[newSet.index] = newSet;
-            map.put(newSet.id, newSet);
-        };
+	if (array[newSet.index] == null && !map.containsKey(newSet.id)) {
+	    array[newSet.index] = newSet;
+	    map.put(newSet.id, newSet);
+	}
+	;
     }
-    
+
     synchronized int claimIndex() {
-        return nextIndex++;
+	return nextIndex++;
     }
-    
+
     @Override
     public TextureSetImpl getById(Identifier id) {
-        return NullHandler.defaultIfNull(map.get(id), DEFAULT_TEXTURE_SET);
+	return NullHandler.defaultIfNull(map.get(id), DEFAULT_TEXTURE_SET);
     }
 
     @Override
     public TextureSetImpl getByIndex(int index) {
-        return index < 0 || index >= nextIndex ? DEFAULT_TEXTURE_SET : array[index];
+	return index < 0 || index >= nextIndex ? DEFAULT_TEXTURE_SET : array[index];
     }
 
     @Override
     public int size() {
-        return nextIndex;
+	return nextIndex;
     }
-    
+
     static {
-        DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("xm2:blocks/noise_moderate").versionCount(4).scale(TextureScale.SINGLE)
-                .layout(TextureLayoutMap.VERSION_X_8).rotation(TextureRotation.ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_ONLY)
-                .groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
-        
-        DEFAULT_TEXTURE_SET.use();
+	DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none")
+		.baseTextureName("xm2:blocks/noise_moderate").versionCount(4).scale(TextureScale.SINGLE)
+		.layout(TextureLayoutMap.VERSION_X_8).rotation(TextureRotation.ROTATE_RANDOM)
+		.renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN)
+		.build(TextureSetRegistry.NONE_ID);
+
+	DEFAULT_TEXTURE_SET.use();
     }
 }

@@ -27,7 +27,7 @@ public class Xm implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        XmBlocks.init();
+	XmBlocks.init();
     }
 
     public static Logger LOG = LogManager.getLogger("Exotic Matter");

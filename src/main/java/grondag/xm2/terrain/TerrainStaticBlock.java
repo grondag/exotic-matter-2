@@ -29,20 +29,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 
-
-
 public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
 
-    public TerrainStaticBlock(Settings blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
-        super(blockSettings, adjustShape(defaultModelState, isFiller), blockEntityType);
+    public TerrainStaticBlock(Settings blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType,
+	    boolean isFiller) {
+	super(blockSettings, adjustShape(defaultModelState, isFiller), blockEntityType);
     }
-    
+
     private static ModelState adjustShape(ModelState stateIn, boolean isFiller) {
-    	ModelState result = stateIn.clone();
-   	 	result.setShape(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
-   	 	result.setStatic(true);
-   	 	return result;
-   }
+	ModelState result = stateIn.clone();
+	result.setShape(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
+	result.setStatic(true);
+	return result;
+    }
 
 //  TODO: remove or restore
 //    @Override
@@ -62,8 +61,8 @@ public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
      */
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        TerrainDynamicBlock.freezeNeighbors(world, pos, state);
-        super.onBreak(world, pos, state, player);
+	TerrainDynamicBlock.freezeNeighbors(world, pos, state);
+	super.onBreak(world, pos, state, player);
     }
 
     /**
@@ -72,27 +71,27 @@ public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
      */
     @Override
     public void onPlaced(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        super.onPlaced(worldIn, pos, state, placer, stack);
-        TerrainDynamicBlock.freezeNeighbors(worldIn, pos, state);
+	super.onPlaced(worldIn, pos, state, placer, stack);
+	TerrainDynamicBlock.freezeNeighbors(worldIn, pos, state);
     }
 
     /**
      * Convert this block to a dynamic version of itself if one is known.
      */
     public void makeDynamic(BlockState state, World world, BlockPos pos) {
-        BlockState newState = dynamicState(state, world, pos);
-        if (newState != state)
-            world.setBlockState(pos, newState, 3);
+	BlockState newState = dynamicState(state, world, pos);
+	if (newState != state)
+	    world.setBlockState(pos, newState, 3);
     }
 
     /**
      * Returns dynamic version of self if one is known. Otherwise returns self.
      */
     public BlockState dynamicState(BlockState state, ExtendedBlockView world, BlockPos pos) {
-        Block dynamicVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getDynamicBlock(this);
-        if (dynamicVersion == null || state.getBlock() != this)
-            return state;
-        //TODO: transfer heat block state?
-        return dynamicVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE));
+	Block dynamicVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getDynamicBlock(this);
+	if (dynamicVersion == null || state.getBlock() != this)
+	    return state;
+	// TODO: transfer heat block state?
+	return dynamicVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE));
     }
 }

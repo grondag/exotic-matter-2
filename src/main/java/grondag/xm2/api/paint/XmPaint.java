@@ -25,22 +25,23 @@ import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.Identifier;
 
 public interface XmPaint {
-	static XmPaintFinder finder() {
-		return XmPaintImpl.finder();
-	}
-	
-	int MAX_TEXTURE_DEPTH = 3;
-	
-	int index();
-	
-    @Nullable BlockRenderLayer blendMode(int textureIndex);
+    static XmPaintFinder finder() {
+	return XmPaintImpl.finder();
+    }
+
+    int MAX_TEXTURE_DEPTH = 3;
+
+    int index();
+
+    @Nullable
+    BlockRenderLayer blendMode(int textureIndex);
 
     boolean disableColorIndex(int textureIndex);
 
     TextureSet texture(int textureIndex);
-    
-	int textureColor(int textureIndex);
-	
+
+    int textureColor(int textureIndex);
+
     int textureDepth();
 
     boolean emissive(int textureIndex);
@@ -48,10 +49,12 @@ public interface XmPaint {
     boolean disableDiffuse(int textureIndex);
 
     boolean disableAo(int textureIndex);
-    
-    @Nullable Identifier shader();
 
-    @Nullable Identifier condition();
-    
+    @Nullable
+    Identifier shader();
+
+    @Nullable
+    Identifier condition();
+
     VertexProcessor vertexProcessor(int textureIndex);
 }

@@ -28,16 +28,16 @@ public class SimpleBoxListBuilder implements ICollisionBoxListBuilder {
 
     @Override
     public void clear() {
-        boxes.clear();
+	boxes.clear();
     }
 
     @Override
     public IntCollection boxes() {
-        return boxes;
+	return boxes;
     }
 
     @Override
     public void add(int boxKey) {
-        boxes.add(boxKey);
+	boxes.add(boxKey);
     }
 }

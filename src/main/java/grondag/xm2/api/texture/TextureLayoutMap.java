@@ -19,27 +19,29 @@ package grondag.xm2.api.texture;
 import grondag.xm2.texture.TextureLayoutMapImpl;
 
 public interface TextureLayoutMap {
-	static TextureLayoutMap create(TextureLayout layout, TextureNameFunction nameFunc) {
-		return TextureLayoutMapImpl.create(layout, nameFunc);
-	}
-	
-    public static TextureLayoutMap SINGLE =  create(TextureLayout.SIMPLE, TextureNameFunction.SINGLE);
-    
-    public static TextureLayoutMap VERSIONED =  create(TextureLayout.SIMPLE, TextureNameFunction.VERSIONED);
-    
+    static TextureLayoutMap create(TextureLayout layout, TextureNameFunction nameFunc) {
+	return TextureLayoutMapImpl.create(layout, nameFunc);
+    }
+
+    public static TextureLayoutMap SINGLE = create(TextureLayout.SIMPLE, TextureNameFunction.SINGLE);
+
+    public static TextureLayoutMap VERSIONED = create(TextureLayout.SIMPLE, TextureNameFunction.VERSIONED);
+
     public static TextureLayoutMap VERSION_X_8 = create(TextureLayout.SPLIT_X_8, TextureNameFunction.VERSION_X_8);
-        
+
     public static TextureLayoutMap BORDER_13 = create(TextureLayout.BORDER_13, TextureNameFunction.BORDER_X_8);
 
     public static TextureLayoutMap BORDER_14 = create(TextureLayout.BORDER_14, TextureNameFunction.BORDER_X_8);
-        
+
     public static TextureLayoutMap MASONRY_5 = create(TextureLayout.MASONRY_5, TextureNameFunction.MASONRY_X_8);
-        
+
     public static TextureLayoutMap BIGTEX_ANIMATED = create(TextureLayout.BIGTEX_ANIMATED, TextureNameFunction.SINGLE);
-        
-    public static TextureLayoutMap QUADRANT_CONNECTED_SINGLE = create(TextureLayout.QUADRANT_CONNECTED, TextureNameFunction.SINGLE);
-    
-    public static TextureLayoutMap QUADRANT_CONNECTED_VERSIONED = create(TextureLayout.QUADRANT_CONNECTED, TextureNameFunction.SINGLE);
-	
-	TextureLayout layout();
+
+    public static TextureLayoutMap QUADRANT_CONNECTED_SINGLE = create(TextureLayout.QUADRANT_CONNECTED,
+	    TextureNameFunction.SINGLE);
+
+    public static TextureLayoutMap QUADRANT_CONNECTED_VERSIONED = create(TextureLayout.QUADRANT_CONNECTED,
+	    TextureNameFunction.SINGLE);
+
+    TextureLayout layout();
 }

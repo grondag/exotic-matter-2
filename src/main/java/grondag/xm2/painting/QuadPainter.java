@@ -33,28 +33,29 @@ import net.minecraft.util.math.Vec3i;
 public abstract class QuadPainter {
     @FunctionalInterface
     public static interface IPaintMethod {
-        /**
-         * Assigns specific texture and texture rotation based on model state and
-         * information in the polygon and surface. Also handles texture UV mapping.
-         * <p>
-         * 
-         * Implementations can and should assume locked UV coordinates are assigned
-         * before this is called if UV locking is enabled for the quad
-         * <p>
-         * 
-         * Implementation should claim and use first render layer with a null texture
-         * name.<br>
-         * (Claim by assigning a non-null texture name.)
-         * 
-         * Any polys in the input stream that are split should be deleted and new polys
-         * appended to the stream.
-         * <p>
-         * 
-         * Implementation may assume stream is non-empty and stream editor is at origin.
-         * <p>
-         * 
-         */
-        void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
+	/**
+	 * Assigns specific texture and texture rotation based on model state and
+	 * information in the polygon and surface. Also handles texture UV mapping.
+	 * <p>
+	 * 
+	 * Implementations can and should assume locked UV coordinates are assigned
+	 * before this is called if UV locking is enabled for the quad
+	 * <p>
+	 * 
+	 * Implementation should claim and use first render layer with a null texture
+	 * name.<br>
+	 * (Claim by assigning a non-null texture name.)
+	 * 
+	 * Any polys in the input stream that are split should be deleted and new polys
+	 * appended to the stream.
+	 * <p>
+	 * 
+	 * Implementation may assume stream is non-empty and stream editor is at origin.
+	 * <p>
+	 * 
+	 */
+	void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint,
+		int textureDepth);
     }
 
     /**
@@ -63,14 +64,14 @@ public abstract class QuadPainter {
      */
     // UGLY: change arg order to match others
     protected static void commonPostPaint(IMutablePolygon editor, int textureIndex, ModelState modelState,
-    		XmSurface surface, XmPaint paint) {
-        editor.setRenderLayer(textureIndex, paint.blendMode(textureIndex));
-        editor.setEmissive(textureIndex, paint.emissive(textureIndex));
+	    XmSurface surface, XmPaint paint) {
+	editor.setRenderLayer(textureIndex, paint.blendMode(textureIndex));
+	editor.setEmissive(textureIndex, paint.emissive(textureIndex));
 
-        paint.vertexProcessor(textureIndex).process(editor, textureIndex, modelState, surface, paint);
+	paint.vertexProcessor(textureIndex).process(editor, textureIndex, modelState, surface, paint);
 
-        // FIXME: not going to work with new primitives w/ shared geometry
-        // move this to baking if still needed
+	// FIXME: not going to work with new primitives w/ shared geometry
+	// move this to baking if still needed
 //        if(isItem)
 //        {
 //            switch(this.paintLayer)
@@ -108,33 +109,33 @@ public abstract class QuadPainter {
      * effect.
      */
     protected static Vec3i getSurfaceVector(int blockX, int blockY, int blockZ, Direction face, TextureScale scale) {
-        // PERF: reuse instances?
+	// PERF: reuse instances?
 
-        int sliceCountMask = scale.sliceCountMask;
-        int x = blockX & sliceCountMask;
-        int y = blockY & sliceCountMask;
-        int z = blockZ & sliceCountMask;
+	int sliceCountMask = scale.sliceCountMask;
+	int x = blockX & sliceCountMask;
+	int y = blockY & sliceCountMask;
+	int z = blockZ & sliceCountMask;
 
-        switch (face) {
-        case EAST:
-            return new Vec3i(sliceCountMask - z, sliceCountMask - y, -blockX);
+	switch (face) {
+	case EAST:
+	    return new Vec3i(sliceCountMask - z, sliceCountMask - y, -blockX);
 
-        case WEST:
-            return new Vec3i(z, sliceCountMask - y, blockX);
+	case WEST:
+	    return new Vec3i(z, sliceCountMask - y, blockX);
 
-        case NORTH:
-            return new Vec3i(sliceCountMask - x, sliceCountMask - y, blockZ);
+	case NORTH:
+	    return new Vec3i(sliceCountMask - x, sliceCountMask - y, blockZ);
 
-        case SOUTH:
-            return new Vec3i(x, sliceCountMask - y, -blockZ);
+	case SOUTH:
+	    return new Vec3i(x, sliceCountMask - y, -blockZ);
 
-        case DOWN:
-            return new Vec3i(x, sliceCountMask - z, blockY);
+	case DOWN:
+	    return new Vec3i(x, sliceCountMask - z, blockY);
 
-        case UP:
-        default:
-            return new Vec3i(x, z, -blockY);
-        }
+	case UP:
+	default:
+	    return new Vec3i(x, z, -blockY);
+	}
     }
 
     /**
@@ -143,60 +144,60 @@ public abstract class QuadPainter {
      * 
      */
     protected static Vec3i rotateFacePerspective(Vec3i vec, Rotation rotation, TextureScale scale) {
-        // PERF - reuse instances?
-        switch (rotation) {
-        case ROTATE_90:
-            return new Vec3i(vec.getY(), scale.sliceCountMask - vec.getX(), vec.getZ());
+	// PERF - reuse instances?
+	switch (rotation) {
+	case ROTATE_90:
+	    return new Vec3i(vec.getY(), scale.sliceCountMask - vec.getX(), vec.getZ());
 
-        case ROTATE_180:
-            return new Vec3i(scale.sliceCountMask - vec.getX(), scale.sliceCountMask - vec.getY(), vec.getZ());
+	case ROTATE_180:
+	    return new Vec3i(scale.sliceCountMask - vec.getX(), scale.sliceCountMask - vec.getY(), vec.getZ());
 
-        case ROTATE_270:
-            return new Vec3i(scale.sliceCountMask - vec.getY(), vec.getX(), vec.getZ());
+	case ROTATE_270:
+	    return new Vec3i(scale.sliceCountMask - vec.getY(), vec.getX(), vec.getZ());
 
-        case ROTATE_NONE:
-        default:
-            return vec;
+	case ROTATE_NONE:
+	default:
+	    return vec;
 
-        }
+	}
     }
 
     protected static int textureVersionForFace(Direction face, TextureSet tex, ModelState modelState) {
-        if (tex.versionCount() == 0)
-            return 0;
-        return textureHashForFace(face, tex, modelState) & tex.versionMask();
+	if (tex.versionCount() == 0)
+	    return 0;
+	return textureHashForFace(face, tex, modelState) & tex.versionMask();
     }
-    
+
     protected static int textureHashForFace(Direction face, TextureSet tex, ModelState modelState) {
-        final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
-        final int speciesBits = species << 16;
-        final int shift = tex.scale().power;
+	final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
+	final int speciesBits = species << 16;
+	final int shift = tex.scale().power;
 
-        switch (face) {
-        case DOWN:
-        case UP: {
-            final int yBits = (((modelState.getPosX() >> shift) & 0xFF) << 8) | ((modelState.getPosZ() >> shift) & 0xFF)
-                    | speciesBits;
-            return HashCommon.mix(yBits);
-        }
+	switch (face) {
+	case DOWN:
+	case UP: {
+	    final int yBits = (((modelState.getPosX() >> shift) & 0xFF) << 8) | ((modelState.getPosZ() >> shift) & 0xFF)
+		    | speciesBits;
+	    return HashCommon.mix(yBits);
+	}
 
-        case EAST:
-        case WEST: {
-            final int xBits = (((modelState.getPosY() >> shift) & 0xFF) << 8) | ((modelState.getPosZ() >> shift) & 0xFF)
-                    | speciesBits;
-            return HashCommon.mix(xBits);
-        }
+	case EAST:
+	case WEST: {
+	    final int xBits = (((modelState.getPosY() >> shift) & 0xFF) << 8) | ((modelState.getPosZ() >> shift) & 0xFF)
+		    | speciesBits;
+	    return HashCommon.mix(xBits);
+	}
 
-        case NORTH:
-        case SOUTH: {
-            final int zBits = (((modelState.getPosX() >> shift) & 0xFF) << 8) | ((modelState.getPosY() >> shift) & 0xFF)
-                    | speciesBits;
-            return HashCommon.mix(zBits);
-        }
+	case NORTH:
+	case SOUTH: {
+	    final int zBits = (((modelState.getPosX() >> shift) & 0xFF) << 8) | ((modelState.getPosY() >> shift) & 0xFF)
+		    | speciesBits;
+	    return HashCommon.mix(zBits);
+	}
 
-        default:
-            return 0;
-        }
+	default:
+	    return 0;
+	}
     }
 
     /**
@@ -206,19 +207,18 @@ public abstract class QuadPainter {
      * rotation type is RANDOM, is based on position (chunked by texture size) and
      * species (if applies).
      */
-    protected static Rotation textureRotationForFace(Direction face, TextureSet tex,
-            ModelState modelState) {
-        final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
-        if(tex.rotation() == TextureRotation.ROTATE_RANDOM) {
-            if(tex.scale() == TextureScale.SINGLE) {
-                return Useful.offsetEnumValue(Rotation.ROTATE_NONE,
-                        (textureHashForFace(face, tex, modelState) >> 8) & 3);
-            } else {
-                return species == 0 ? Rotation.ROTATE_NONE
-                        : Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
-            }
-        } else {
-            return tex.rotation().rotation;
-        }
+    protected static Rotation textureRotationForFace(Direction face, TextureSet tex, ModelState modelState) {
+	final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
+	if (tex.rotation() == TextureRotation.ROTATE_RANDOM) {
+	    if (tex.scale() == TextureScale.SINGLE) {
+		return Useful.offsetEnumValue(Rotation.ROTATE_NONE,
+			(textureHashForFace(face, tex, modelState) >> 8) & 3);
+	    } else {
+		return species == 0 ? Rotation.ROTATE_NONE
+			: Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
+	    }
+	} else {
+	    return tex.rotation().rotation;
+	}
     }
 }

@@ -22,21 +22,22 @@ import grondag.xm2.model.state.ModelState;
 import net.minecraft.block.BlockState;
 
 public class XmBorderMatch implements BlockTest {
-    private XmBorderMatch() {}
-    
+    private XmBorderMatch() {
+    }
+
     public static final XmBorderMatch INSTANCE = new XmBorderMatch();
-    
+
     @Override
     public boolean apply(BlockTestContext context) {
-        final ModelState fromState = (ModelState)context.fromModelState();
-        final ModelState toState = (ModelState)context.toModelState();
-        final BlockState toBlockState = context.toBlockState();
-        final BlockState fromBlockState = context.fromBlockState();
-        
-        if(fromBlockState.getBlock() != toBlockState.getBlock() || fromState == null || toState == null) {
-            return false;
-        }
-        
-        return fromState.doShapeAndAppearanceMatch(toState) && fromState.getSpecies() == toState.getSpecies();
+	final ModelState fromState = (ModelState) context.fromModelState();
+	final ModelState toState = (ModelState) context.toModelState();
+	final BlockState toBlockState = context.toBlockState();
+	final BlockState fromBlockState = context.fromBlockState();
+
+	if (fromBlockState.getBlock() != toBlockState.getBlock() || fromState == null || toState == null) {
+	    return false;
+	}
+
+	return fromState.doShapeAndAppearanceMatch(toState) && fromState.getSpecies() == toState.getSpecies();
     }
 }

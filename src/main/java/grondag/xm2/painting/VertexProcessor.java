@@ -39,18 +39,18 @@ public abstract class VertexProcessor {
     public final int ordinal;
 
     protected VertexProcessor(String registryName) {
-        this(registryName, nextOrdinal++);
+	this(registryName, nextOrdinal++);
     }
 
     /**
      * For default instance only
      */
     protected VertexProcessor(String registryName, int ordinal) {
-        this.ordinal = ordinal;
-        this.registryName = registryName;
+	this.ordinal = ordinal;
+	this.registryName = registryName;
     }
 
     // UGLY: fix parameter order to make consistent with related methods
-    public abstract void process(IMutablePolygon result, int textureIndex, ModelState modelState,
-    		XmSurface surface, XmPaint paint);
+    public abstract void process(IMutablePolygon result, int textureIndex, ModelState modelState, XmSurface surface,
+	    XmPaint paint);
 }

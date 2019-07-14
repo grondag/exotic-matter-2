@@ -26,25 +26,26 @@ import net.minecraft.util.math.Direction;
 
 /**
  * Describes the state of a block model with connected textures/shapes that
- * depend on only on six directly adjacent neighbors.<p>
+ * depend on only on six directly adjacent neighbors.
+ * <p>
  */
 @API(status = STABLE)
 public interface SimpleJoinState {
     int STATE_COUNT = 64; // 2^6
-    
+
     boolean isJoined(Direction face);
 
     int ordinal();
 
     public static SimpleJoinState fromOrdinal(int ordinal) {
-        return SimpleJoinStateImpl.fromOrdinal(ordinal);
+	return SimpleJoinStateImpl.fromOrdinal(ordinal);
     }
-    
+
     public static SimpleJoinState fromWorld(BlockNeighbors neighbors) {
-        return SimpleJoinStateImpl.fromWorld(neighbors);
+	return SimpleJoinStateImpl.fromWorld(neighbors);
     }
-    
+
     public static int ordinalFromWorld(BlockNeighbors neighbors) {
-        return SimpleJoinStateImpl.ordinalFromWorld(neighbors);
+	return SimpleJoinStateImpl.ordinalFromWorld(neighbors);
     }
 }

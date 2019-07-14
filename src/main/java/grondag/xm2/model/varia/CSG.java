@@ -81,13 +81,13 @@ public abstract class CSG {
      * </blockquote>
      */
     public static void difference(IPolyStream a, IPolyStream b, IWritablePolyStream output) {
-        CsgPolyStream aCSG = PolyStreams.claimCSG(a);
-        CsgPolyStream bCSG = PolyStreams.claimCSG(b);
+	CsgPolyStream aCSG = PolyStreams.claimCSG(a);
+	CsgPolyStream bCSG = PolyStreams.claimCSG(b);
 
-        difference(aCSG, bCSG, output);
+	difference(aCSG, bCSG, output);
 
-        aCSG.release();
-        bCSG.release();
+	aCSG.release();
+	bCSG.release();
     }
 
     /**
@@ -96,24 +96,24 @@ public abstract class CSG {
      * does not release them. Both input streams are modified.
      */
     public static void difference(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
-        a.complete();
-        b.complete();
+	a.complete();
+	b.complete();
 
-        // A outside of B bounds can be passed directly to output
-        if (outputDisjointA(a, b, output))
-            // if A is empty there is nothing to subtract from
-            return;
+	// A outside of B bounds can be passed directly to output
+	if (outputDisjointA(a, b, output))
+	    // if A is empty there is nothing to subtract from
+	    return;
 
-        // add portions of A within B bounds but not inside B mesh
-        a.invert();
-        a.clipTo(b);
-        b.clipTo(a);
-        b.invert();
-        b.clipTo(a);
-        a.invert();
+	// add portions of A within B bounds but not inside B mesh
+	a.invert();
+	a.clipTo(b);
+	b.clipTo(a);
+	b.invert();
+	b.clipTo(a);
+	a.invert();
 
-        a.outputRecombinedQuads(output);
-        b.outputRecombinedQuads(output);
+	a.outputRecombinedQuads(output);
+	b.outputRecombinedQuads(output);
     }
 
     /**
@@ -137,13 +137,13 @@ public abstract class CSG {
      * </blockquote>
      */
     public static void intersect(IPolyStream a, IPolyStream b, IWritablePolyStream output) {
-        CsgPolyStream aCSG = PolyStreams.claimCSG(a);
-        CsgPolyStream bCSG = PolyStreams.claimCSG(b);
+	CsgPolyStream aCSG = PolyStreams.claimCSG(a);
+	CsgPolyStream bCSG = PolyStreams.claimCSG(b);
 
-        intersect(aCSG, bCSG, output);
+	intersect(aCSG, bCSG, output);
 
-        aCSG.release();
-        bCSG.release();
+	aCSG.release();
+	bCSG.release();
     }
 
     /**
@@ -152,23 +152,23 @@ public abstract class CSG {
      * does not release them. Both input streams are modified.
      */
     public static void intersect(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
-        a.complete();
-        b.complete();
+	a.complete();
+	b.complete();
 
-        a.complete();
-        b.complete();
+	a.complete();
+	b.complete();
 
-        a.invert();
-        b.clipTo(a);
-        b.invert();
-        a.clipTo(b);
-        b.clipTo(a);
+	a.invert();
+	b.clipTo(a);
+	b.invert();
+	a.clipTo(b);
+	b.clipTo(a);
 
-        a.invert();
-        b.invert();
+	a.invert();
+	b.invert();
 
-        a.outputRecombinedQuads(output);
-        b.outputRecombinedQuads(output);
+	a.outputRecombinedQuads(output);
+	b.outputRecombinedQuads(output);
     }
 
     /**
@@ -193,13 +193,13 @@ public abstract class CSG {
      *
      */
     public static void union(IPolyStream a, IPolyStream b, IWritablePolyStream output) {
-        CsgPolyStream aCSG = PolyStreams.claimCSG(a);
-        CsgPolyStream bCSG = PolyStreams.claimCSG(b);
+	CsgPolyStream aCSG = PolyStreams.claimCSG(a);
+	CsgPolyStream bCSG = PolyStreams.claimCSG(b);
 
-        union(aCSG, bCSG, output);
+	union(aCSG, bCSG, output);
 
-        aCSG.release();
-        bCSG.release();
+	aCSG.release();
+	bCSG.release();
     }
 
     /**
@@ -208,26 +208,26 @@ public abstract class CSG {
      * does not release them. Both input streams are modified.
      */
     public static void union(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
-        a.complete();
-        b.complete();
+	a.complete();
+	b.complete();
 
-        // A outside of B bounds can be passed directly to output
-        if (outputDisjointA(a, b, output)) {
-            // A and B bounds don't overlap, so output all of original b
-            output.appendAll(b);
-        } else {
-            // some potential overlap
-            // add union of the overlapping bits,
-            // which will include any parts of B that need to be included
-            a.clipTo(b);
-            b.clipTo(a);
-            b.invert();
-            b.clipTo(a);
-            b.invert();
+	// A outside of B bounds can be passed directly to output
+	if (outputDisjointA(a, b, output)) {
+	    // A and B bounds don't overlap, so output all of original b
+	    output.appendAll(b);
+	} else {
+	    // some potential overlap
+	    // add union of the overlapping bits,
+	    // which will include any parts of B that need to be included
+	    a.clipTo(b);
+	    b.clipTo(a);
+	    b.invert();
+	    b.clipTo(a);
+	    b.invert();
 
-            a.outputRecombinedQuads(output);
-            b.outputRecombinedQuads(output);
-        }
+	    a.outputRecombinedQuads(output);
+	    b.outputRecombinedQuads(output);
+	}
     }
 
     /**
@@ -236,22 +236,22 @@ public abstract class CSG {
      * start, or because all A polygons have been deleted.
      */
     private static boolean outputDisjointA(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
-        if (a.origin()) {
-            if (b.origin())
-                // nominal case
-                return outputDisjointAInner(a, b, output);
-            else {
-                // B is empty, A is not, therefore output all of A and return false
-                final IPolygon p = a.reader();
-                do {
-                    output.appendCopy(p);
-                    p.setDeleted();
-                } while (a.next());
-                return false;
-            }
-        } else
-            // A already empty
-            return false;
+	if (a.origin()) {
+	    if (b.origin())
+		// nominal case
+		return outputDisjointAInner(a, b, output);
+	    else {
+		// B is empty, A is not, therefore output all of A and return false
+		final IPolygon p = a.reader();
+		do {
+		    output.appendCopy(p);
+		    p.setDeleted();
+		} while (a.next());
+		return false;
+	    }
+	} else
+	    // A already empty
+	    return false;
     }
 
     /**
@@ -259,92 +259,92 @@ public abstract class CSG {
      * origin.
      */
     private static boolean outputDisjointAInner(CsgPolyStream a, CsgPolyStream b, IWritablePolyStream output) {
-        boolean aIsEmpty = true;
+	boolean aIsEmpty = true;
 
-        // compute B mesh bounds
-        float bMinX = Float.MAX_VALUE;
-        float bMinY = Float.MAX_VALUE;
-        float bMinZ = Float.MAX_VALUE;
-        float bMaxX = Float.MIN_VALUE;
-        float bMaxY = Float.MIN_VALUE;
-        float bMaxZ = Float.MIN_VALUE;
+	// compute B mesh bounds
+	float bMinX = Float.MAX_VALUE;
+	float bMinY = Float.MAX_VALUE;
+	float bMinZ = Float.MAX_VALUE;
+	float bMaxX = Float.MIN_VALUE;
+	float bMaxY = Float.MIN_VALUE;
+	float bMaxZ = Float.MIN_VALUE;
 
-        // scoping
-        {
-            final IPolygon p = b.reader();
-            do {
-                final int vCount = p.vertexCount();
-                for (int i = 1; i < vCount; i++) {
-                    final float x = p.x(i);
-                    if (x < bMinX)
-                        bMinX = x;
-                    else if (x > bMaxX)
-                        bMaxX = x;
+	// scoping
+	{
+	    final IPolygon p = b.reader();
+	    do {
+		final int vCount = p.vertexCount();
+		for (int i = 1; i < vCount; i++) {
+		    final float x = p.x(i);
+		    if (x < bMinX)
+			bMinX = x;
+		    else if (x > bMaxX)
+			bMaxX = x;
 
-                    final float y = p.y(i);
-                    if (y < bMinY)
-                        bMinY = y;
-                    else if (y > bMaxY)
-                        bMaxY = y;
+		    final float y = p.y(i);
+		    if (y < bMinY)
+			bMinY = y;
+		    else if (y > bMaxY)
+			bMaxY = y;
 
-                    final float z = p.z(i);
-                    if (z < bMinZ)
-                        bMinZ = z;
-                    else if (z > bMaxZ)
-                        bMaxZ = z;
-                }
-            } while (b.next());
-        }
+		    final float z = p.z(i);
+		    if (z < bMinZ)
+			bMinZ = z;
+		    else if (z > bMaxZ)
+			bMaxZ = z;
+		}
+	    } while (b.next());
+	}
 
-        final IPolygon p = a.reader();
-        do {
-            // Note we don't do a point-by-point test here
-            // and instead compute a bounding box for the polygon.
-            // This correctly handles case when all poly points
-            // are outside the mesh box but plane of poly intersects.
-            // Considered using SAT tests developed for collisions boxes
-            // but those require tris and re-packing of vertex data. Not worth.
+	final IPolygon p = a.reader();
+	do {
+	    // Note we don't do a point-by-point test here
+	    // and instead compute a bounding box for the polygon.
+	    // This correctly handles case when all poly points
+	    // are outside the mesh box but plane of poly intersects.
+	    // Considered using SAT tests developed for collisions boxes
+	    // but those require tris and re-packing of vertex data. Not worth.
 
-            float pMinX = p.x(0);
-            float pMinY = p.y(0);
-            float pMinZ = p.z(0);
-            float pMaxX = pMinX;
-            float pMaxY = pMinY;
-            float pMaxZ = pMinZ;
+	    float pMinX = p.x(0);
+	    float pMinY = p.y(0);
+	    float pMinZ = p.z(0);
+	    float pMaxX = pMinX;
+	    float pMaxY = pMinY;
+	    float pMaxZ = pMinZ;
 
-            final int vCount = p.vertexCount();
-            for (int i = 1; i < vCount; i++) {
-                final float x = p.x(i);
-                if (x < pMinX)
-                    pMinX = x;
-                else if (x > pMaxX)
-                    pMaxX = x;
+	    final int vCount = p.vertexCount();
+	    for (int i = 1; i < vCount; i++) {
+		final float x = p.x(i);
+		if (x < pMinX)
+		    pMinX = x;
+		else if (x > pMaxX)
+		    pMaxX = x;
 
-                final float y = p.y(i);
-                if (y < pMinY)
-                    pMinY = y;
-                else if (y > pMaxY)
-                    pMaxY = y;
+		final float y = p.y(i);
+		if (y < pMinY)
+		    pMinY = y;
+		else if (y > pMaxY)
+		    pMaxY = y;
 
-                final float z = p.z(i);
-                if (z < pMinZ)
-                    pMinZ = z;
-                else if (z > pMaxZ)
-                    pMaxZ = z;
-            }
+		final float z = p.z(i);
+		if (z < pMinZ)
+		    pMinZ = z;
+		else if (z > pMaxZ)
+		    pMaxZ = z;
+	    }
 
-            // For CSG operations we consider a point on the edge to be intersecting.
-            if (bMinX <= pMaxX && bMaxX >= pMinX && bMinY <= pMaxY && bMaxY >= pMinY && bMinZ <= pMaxZ
-                    && bMaxZ >= pMinZ)
-                // potentially intersecting
-                aIsEmpty = false;
-            else {
-                // disjoint
-                output.appendCopy(p);
-                p.setDeleted();
-            }
-        } while (a.next());
+	    // For CSG operations we consider a point on the edge to be intersecting.
+	    if (bMinX <= pMaxX && bMaxX >= pMinX && bMinY <= pMaxY && bMaxY >= pMinY && bMinZ <= pMaxZ
+		    && bMaxZ >= pMinZ)
+		// potentially intersecting
+		aIsEmpty = false;
+	    else {
+		// disjoint
+		output.appendCopy(p);
+		p.setDeleted();
+	    }
+	} while (a.next());
 
-        return aIsEmpty;
+	return aIsEmpty;
     }
 }

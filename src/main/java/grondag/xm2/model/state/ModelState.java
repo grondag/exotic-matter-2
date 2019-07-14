@@ -36,9 +36,9 @@ import net.minecraft.world.BlockView;
 
 public interface ModelState extends IReadWriteNBT, PacketSerializable {
     boolean isImmutable();
-    
+
     ImmutableModelState toImmutable();
-    
+
     int[] serializeToInts();
 
     /**
@@ -66,37 +66,37 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     void setShape(ModelPrimitive shape);
 
     default void paint(XmSurface surface, XmPaint paint) {
-    	paint(surface.ordinal(), paint.index());
+	paint(surface.ordinal(), paint.index());
     }
-    
+
     default void paint(XmSurface surface, int paintIndex) {
-    	paint(surface.ordinal(), paintIndex);
+	paint(surface.ordinal(), paintIndex);
     }
 
     void paint(int surfaceIndex, int paintIndex);
-    
+
     default void paintAll(XmPaint paint) {
-    	paintAll(paint.index());
+	paintAll(paint.index());
     }
-    
+
     default void paintAll(int paintIndex) {
-    	XmSurfaceList slist = getShape().surfaces();
-    	final int limit = slist.size();
-    	for(int i = 0; i < limit; i++) {
-    		paint(i, paintIndex);
-    	}
+	XmSurfaceList slist = getShape().surfaces();
+	final int limit = slist.size();
+	for (int i = 0; i < limit; i++) {
+	    paint(i, paintIndex);
+	}
     }
-    
+
     int paintIndex(int surfaceIndex);
-    
+
     default XmPaint paint(int surfaceIndex) {
-    	return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
+	return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
     }
-    
+
     default XmPaint paint(XmSurface surface) {
-    	return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
+	return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
     }
-    
+
     Direction.Axis getAxis();
 
     void setAxis(Direction.Axis axis);
@@ -222,23 +222,23 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     Direction rotateFace(Direction face);
 
     ModelState clone();
-    
+
     default boolean hasAxis() {
-    	return getShape().hasAxis(this);
+	return getShape().hasAxis(this);
     }
-    
+
     default boolean hasAxisOrientation() {
-    	return getShape().hasAxisOrientation(this);
+	return getShape().hasAxisOrientation(this);
     }
-    
+
     default boolean hasAxisRotation() {
-    	return getShape().hasAxisRotation(this);
+	return getShape().hasAxisRotation(this);
     }
-    
+
     default BlockOrientationType orientationType() {
-        return getShape().orientationType(this);
+	return getShape().orientationType(this);
     }
-    
+
     default boolean isAxisOrthogonalToPlacementFace() {
 	return getShape().isAxisOrthogonalToPlacementFace();
     }

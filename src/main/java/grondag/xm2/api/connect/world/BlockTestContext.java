@@ -25,12 +25,18 @@ import net.minecraft.world.BlockView;
 //TODO: move this and others to separate world package - prevent conflict with earlier release
 public interface BlockTestContext {
     BlockView world();
-    
+
     BlockPos fromPos();
+
     BlockState fromBlockState();
-    @Nullable Object fromModelState();
+
+    @Nullable
+    Object fromModelState();
 
     BlockPos toPos();
+
     BlockState toBlockState();
-    @Nullable Object toModelState();
+
+    @Nullable
+    Object toModelState();
 }

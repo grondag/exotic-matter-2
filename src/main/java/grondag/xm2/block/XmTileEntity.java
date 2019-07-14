@@ -29,14 +29,13 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-
 public class XmTileEntity extends BlockEntity implements BlockEntityClientSerializable {
     ////////////////////////////////////////////////////////////////////////
     // STATIC MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
     public XmTileEntity(BlockEntityType<?> blockEntityType) {
-        super(blockEntityType);
+	super(blockEntityType);
     }
 
     /**
@@ -46,12 +45,12 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 
     /** Returns server-side tag if one is present, creating it if not. */
     public static CompoundTag getServerTag(CompoundTag fromTag) {
-        Tag result = fromTag.getTag(NBT_SERVER_SIDE_TAG);
-        if (result == null || result.getType() != 10) {
-            result = new CompoundTag();
-            fromTag.put(NBT_SERVER_SIDE_TAG, result);
-        }
-        return (CompoundTag) result;
+	Tag result = fromTag.getTag(NBT_SERVER_SIDE_TAG);
+	if (result == null || result.getType() != 10) {
+	    result = new CompoundTag();
+	    fromTag.put(NBT_SERVER_SIDE_TAG, result);
+	}
+	return (CompoundTag) result;
     }
 
     /**
@@ -60,11 +59,11 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
      * null if a null tag is passed in.
      */
     public static CompoundTag withoutServerTag(CompoundTag inputTag) {
-        if (inputTag != null && inputTag.containsKey(NBT_SERVER_SIDE_TAG)) {
-            inputTag = (CompoundTag) inputTag.copy();
-            inputTag.remove(NBT_SERVER_SIDE_TAG);
-        }
-        return inputTag;
+	if (inputTag != null && inputTag.containsKey(NBT_SERVER_SIDE_TAG)) {
+	    inputTag = (CompoundTag) inputTag.copy();
+	    inputTag.remove(NBT_SERVER_SIDE_TAG);
+	}
+	return inputTag;
     }
 
     /**
@@ -85,13 +84,13 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
      * Called client side at start up and when setting is changed.
      */
     public static void updateRenderDistance() {
-        int configuredDist = MinecraftClient.getInstance().options.viewDistance * 16;
-        maxSuperBlockRenderDistanceSq = configuredDist * configuredDist;
+	int configuredDist = MinecraftClient.getInstance().options.viewDistance * 16;
+	maxSuperBlockRenderDistanceSq = configuredDist * configuredDist;
     }
 
     @Override
     public double getSquaredRenderDistance() {
-        return maxSuperBlockRenderDistanceSq;
+	return maxSuperBlockRenderDistanceSq;
     }
 
     /**
@@ -100,104 +99,105 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     private static ThreadLocal<BlockPos.Mutable> updateClientPos = ThreadLocal.withInitial(BlockPos.Mutable::new);
 
     public void updateClientRenderState() {
-        this.isModelStateCacheDirty = true;
+	this.isModelStateCacheDirty = true;
 
-        BlockPos.Mutable mPos = updateClientPos.get();
-        final int x = pos.getX();
-        final int y = pos.getY();
-        final int z = pos.getZ();
+	BlockPos.Mutable mPos = updateClientPos.get();
+	final int x = pos.getX();
+	final int y = pos.getY();
+	final int z = pos.getZ();
 
-        invalidateClientCache(mPos.set(x - 1, y - 1, z - 1));
-        invalidateClientCache(mPos.set(x - 1, y - 1, z));
-        invalidateClientCache(mPos.set(x - 1, y - 1, z + 1));
+	invalidateClientCache(mPos.set(x - 1, y - 1, z - 1));
+	invalidateClientCache(mPos.set(x - 1, y - 1, z));
+	invalidateClientCache(mPos.set(x - 1, y - 1, z + 1));
 
-        invalidateClientCache(mPos.set(x - 1, y, z - 1));
-        invalidateClientCache(mPos.set(x - 1, y, z));
-        invalidateClientCache(mPos.set(x - 1, y, z + 1));
+	invalidateClientCache(mPos.set(x - 1, y, z - 1));
+	invalidateClientCache(mPos.set(x - 1, y, z));
+	invalidateClientCache(mPos.set(x - 1, y, z + 1));
 
-        invalidateClientCache(mPos.set(x - 1, y + 1, z - 1));
-        invalidateClientCache(mPos.set(x - 1, y + 1, z));
-        invalidateClientCache(mPos.set(x - 1, y + 1, z + 1));
+	invalidateClientCache(mPos.set(x - 1, y + 1, z - 1));
+	invalidateClientCache(mPos.set(x - 1, y + 1, z));
+	invalidateClientCache(mPos.set(x - 1, y + 1, z + 1));
 
-        invalidateClientCache(mPos.set(x, y - 1, z - 1));
-        invalidateClientCache(mPos.set(x, y - 1, z));
-        invalidateClientCache(mPos.set(x, y - 1, z + 1));
+	invalidateClientCache(mPos.set(x, y - 1, z - 1));
+	invalidateClientCache(mPos.set(x, y - 1, z));
+	invalidateClientCache(mPos.set(x, y - 1, z + 1));
 
-        invalidateClientCache(mPos.set(x, y, z - 1));
-        invalidateClientCache(mPos.set(x, y, z + 1));
+	invalidateClientCache(mPos.set(x, y, z - 1));
+	invalidateClientCache(mPos.set(x, y, z + 1));
 
-        invalidateClientCache(mPos.set(x, y + 1, z - 1));
-        invalidateClientCache(mPos.set(x, y + 1, z));
-        invalidateClientCache(mPos.set(x, y + 1, z + 1));
+	invalidateClientCache(mPos.set(x, y + 1, z - 1));
+	invalidateClientCache(mPos.set(x, y + 1, z));
+	invalidateClientCache(mPos.set(x, y + 1, z + 1));
 
-        invalidateClientCache(mPos.set(x + 1, y - 1, z - 1));
-        invalidateClientCache(mPos.set(x + 1, y - 1, z));
-        invalidateClientCache(mPos.set(x + 1, y - 1, z + 1));
+	invalidateClientCache(mPos.set(x + 1, y - 1, z - 1));
+	invalidateClientCache(mPos.set(x + 1, y - 1, z));
+	invalidateClientCache(mPos.set(x + 1, y - 1, z + 1));
 
-        invalidateClientCache(mPos.set(x + 1, y, z - 1));
-        invalidateClientCache(mPos.set(x + 1, y, z));
-        invalidateClientCache(mPos.set(x + 1, y, z + 1));
+	invalidateClientCache(mPos.set(x + 1, y, z - 1));
+	invalidateClientCache(mPos.set(x + 1, y, z));
+	invalidateClientCache(mPos.set(x + 1, y, z + 1));
 
-        invalidateClientCache(mPos.set(x + 1, y + 1, z - 1));
-        invalidateClientCache(mPos.set(x + 1, y + 1, z));
-        invalidateClientCache(mPos.set(x + 1, y + 1, z + 1));
+	invalidateClientCache(mPos.set(x + 1, y + 1, z - 1));
+	invalidateClientCache(mPos.set(x + 1, y + 1, z));
+	invalidateClientCache(mPos.set(x + 1, y + 1, z + 1));
 
-        MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1);
+	MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1);
     }
 
     private void invalidateClientCache(BlockPos updatePos) {
-        BlockEntity target = this.world.getBlockEntity(updatePos);
-        if (target != null && target instanceof XmTileEntity) {
-            ((XmTileEntity) target).isModelStateCacheDirty = true;
-        }
+	BlockEntity target = this.world.getBlockEntity(updatePos);
+	if (target != null && target instanceof XmTileEntity) {
+	    ((XmTileEntity) target).isModelStateCacheDirty = true;
+	}
     }
 
     @Override
     public void fromTag(CompoundTag compound) {
-        super.fromTag(compound);
-        this.modelState = ModelStateImpl.deserializeFromNBTIfPresent(compound);
-        this.onModelStateChange(true);
+	super.fromTag(compound);
+	this.modelState = ModelStateImpl.deserializeFromNBTIfPresent(compound);
+	this.onModelStateChange(true);
     }
 
     @Override
     public CompoundTag toTag(CompoundTag compound) {
-        compound = super.toTag(compound);
-        this.modelState.serializeNBT(compound);
-        return compound;
+	compound = super.toTag(compound);
+	this.modelState.serializeNBT(compound);
+	return compound;
     }
 
-    public ModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        ModelState result = this.modelState;
+    public ModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos,
+	    boolean refreshFromWorldIfNeeded) {
+	ModelState result = this.modelState;
 
-        if (result == null) {
-    		result = state.defaultModelState;
-    		this.modelState = result;
-    		this.isModelStateCacheDirty = true;
-        } else {
-            // honor passed in species if different
-            if (result.hasSpecies() && result.getSpecies() != state.defaultModelState.getSpecies()) {
-                result = result.clone();
-                result.setSpecies(state.defaultModelState.getSpecies());
-            }
-        }
+	if (result == null) {
+	    result = state.defaultModelState;
+	    this.modelState = result;
+	    this.isModelStateCacheDirty = true;
+	} else {
+	    // honor passed in species if different
+	    if (result.hasSpecies() && result.getSpecies() != state.defaultModelState.getSpecies()) {
+		result = result.clone();
+		result.setSpecies(state.defaultModelState.getSpecies());
+	    }
+	}
 
-        if (result != null && this.isModelStateCacheDirty && refreshFromWorldIfNeeded) {
-            result.refreshFromWorld(state, world, pos);
-            this.isModelStateCacheDirty = false;
-        }
+	if (result != null && this.isModelStateCacheDirty && refreshFromWorldIfNeeded) {
+	    result.refreshFromWorld(state, world, pos);
+	    this.isModelStateCacheDirty = false;
+	}
 
-        return result;
+	return result;
     }
 
     /**
      * Use this version when you don't have world state handy
      */
     public ModelState getModelState() {
-        if (!(this.modelState == null || this.isModelStateCacheDirty)) {
-            return this.modelState;
-        } else {
-            return getModelState(XmBlockStateAccess.get(world.getBlockState(pos)), world, pos, true);
-        }
+	if (!(this.modelState == null || this.isModelStateCacheDirty)) {
+	    return this.modelState;
+	} else {
+	    return getModelState(XmBlockStateAccess.get(world.getBlockState(pos)), world, pos, true);
+	}
     }
 
 //    /**
@@ -212,17 +212,17 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 //    }
 
     public void setModelState(ModelState modelState) {
-        // if making existing appearance static, don't need to refresh on client side
-        boolean needsClientRefresh = this.world != null && this.world.isClient
-                && !(this.modelState != null && this.modelState.equals(modelState) && modelState.isStatic()
-                        && this.modelState.isStatic() != modelState.isStatic());
-        {
-            this.modelState = modelState;
-            this.onModelStateChange(!modelState.isStatic());
-        }
+	// if making existing appearance static, don't need to refresh on client side
+	boolean needsClientRefresh = this.world != null && this.world.isClient
+		&& !(this.modelState != null && this.modelState.equals(modelState) && modelState.isStatic()
+			&& this.modelState.isStatic() != modelState.isStatic());
+	{
+	    this.modelState = modelState;
+	    this.onModelStateChange(!modelState.isStatic());
+	}
 
-        this.modelState = modelState;
-        this.onModelStateChange(needsClientRefresh);
+	this.modelState = modelState;
+	this.onModelStateChange(needsClientRefresh);
     }
 
     /**
@@ -231,36 +231,36 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
      * altering appearance.
      */
     protected void onModelStateChange(boolean refreshClientRenderState) {
-        /**
-         * This can be called by onBlockPlaced after we've already been established. If
-         * that happens, need to treat it like an update, markDirty(), refresh client
-         * state, etc.
-         */
-        this.isModelStateCacheDirty = true;
-        if (this.world != null) {
-            if (this.world.isClient) {
-                if (refreshClientRenderState)
-                    this.updateClientRenderState();
-            } else {
-                this.markDirty();
-            }
-        }
+	/**
+	 * This can be called by onBlockPlaced after we've already been established. If
+	 * that happens, need to treat it like an update, markDirty(), refresh client
+	 * state, etc.
+	 */
+	this.isModelStateCacheDirty = true;
+	if (this.world != null) {
+	    if (this.world.isClient) {
+		if (refreshClientRenderState)
+		    this.updateClientRenderState();
+	    } else {
+		this.markDirty();
+	    }
+	}
     }
 
     /**
      * Only true for virtual blocks. Prevents "instanceof" checking.
      */
     public boolean isVirtual() {
-        return false;
+	return false;
     }
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-        fromTag(tag);
+	fromTag(tag);
     }
 
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
-        return withoutServerTag(toTag(tag));
+	return withoutServerTag(toTag(tag));
     }
 }

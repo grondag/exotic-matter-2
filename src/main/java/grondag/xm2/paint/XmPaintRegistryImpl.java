@@ -22,24 +22,25 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.util.Identifier;
 
 public class XmPaintRegistryImpl implements XmPaintRegistry {
-	public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
+    public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
 
-	private XmPaintRegistryImpl() {};
-	
-	private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
+    private XmPaintRegistryImpl() {
+    };
 
-	@Override
-	public boolean register(Identifier id, XmPaint paint) {
-		return paints.putIfAbsent(id, (XmPaintImpl.Value)paint) == null;
-	}
+    private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
 
-	@Override
-	public XmPaintImpl.Value get(int paintIndex) {
-		return XmPaintImpl.byIndex(paintIndex);
-	}
+    @Override
+    public boolean register(Identifier id, XmPaint paint) {
+	return paints.putIfAbsent(id, (XmPaintImpl.Value) paint) == null;
+    }
 
-	@Override
-	public XmPaintImpl.Value get(Identifier paintId) {
-		return paints.get(paintId);
-	}
+    @Override
+    public XmPaintImpl.Value get(int paintIndex) {
+	return XmPaintImpl.byIndex(paintIndex);
+    }
+
+    @Override
+    public XmPaintImpl.Value get(Identifier paintId) {
+	return paints.get(paintId);
+    }
 }

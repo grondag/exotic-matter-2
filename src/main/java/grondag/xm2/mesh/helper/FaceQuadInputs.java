@@ -25,9 +25,9 @@ public class FaceQuadInputs {
     public final boolean flipV;
 
     public FaceQuadInputs(int textureOffset, Rotation rotation, boolean flipU, boolean flipV) {
-        this.textureOffset = textureOffset;
-        this.rotation = rotation;
-        this.flipU = flipU;
-        this.flipV = flipV;
+	this.textureOffset = textureOffset;
+	this.rotation = rotation;
+	this.flipU = flipU;
+	this.flipV = flipV;
     }
 }

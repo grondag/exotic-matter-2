@@ -30,30 +30,29 @@ import grondag.xm2.surface.XmSurfaceImpl;
 import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 
 public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
-	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-			.add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-			.build();
-	
-	
-	public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(0);
-	public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(1);
-	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(2);
-	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
-	
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+	    .add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+	    .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+	    .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+	    .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+
+    public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(0);
+    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(1);
+    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(2);
+    public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
+
     public AbstractWedgePrimitive(String idString) {
-        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
+	super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS
+		| STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
     @Override
     public BlockOrientationType orientationType(ModelState modelState) {
-        return BlockOrientationType.EDGE;
+	return BlockOrientationType.EDGE;
     }
 
     @Override
     public boolean isAxisOrthogonalToPlacementFace() {
-        return true;
+	return true;
     }
 }

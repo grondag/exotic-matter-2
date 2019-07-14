@@ -24,15 +24,15 @@ import net.minecraft.block.BlockState;
 
 @Mixin(BlockState.class)
 public abstract class MixinBlockState implements XmBlockStateAccess {
-	private XmBlockStateImpl xmBlockState;
-	
-	@Override
-	public void xm2_blockState(XmBlockStateImpl state) {
-		xmBlockState = state;
-	}
+    private XmBlockStateImpl xmBlockState;
 
-	@Override
-	public XmBlockStateImpl xm2_blockState() {
-		return xmBlockState;
-	}
+    @Override
+    public void xm2_blockState(XmBlockStateImpl state) {
+	xmBlockState = state;
+    }
+
+    @Override
+    public XmBlockStateImpl xm2_blockState() {
+	return xmBlockState;
+    }
 }

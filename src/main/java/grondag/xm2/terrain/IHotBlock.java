@@ -30,11 +30,11 @@ public interface IHotBlock {
     public static final int HEAT_LEVEL_COUNT = MAX_HEAT + 1;
 
     public default int heatLevel() {
-        return 0;
+	return 0;
     }
 
     public default boolean isHot() {
-        return this.heatLevel() != 0;
+	return this.heatLevel() != 0;
     }
 
 }

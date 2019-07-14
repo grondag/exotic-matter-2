@@ -30,68 +30,70 @@ import net.minecraft.util.math.Direction;
 
 public class WedgePrimitive extends AbstractWedgePrimitive {
     public WedgePrimitive(String idString) {
-		super(idString);
-	}
+	super(idString);
+    }
 
-	@Override
+    @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
-        // Axis for this shape is through the face of the sloping surface
-        // Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
-        // Default geometry is Y axis with full sides against north/down faces.
+	// Axis for this shape is through the face of the sloping surface
+	// Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
+	// Default geometry is Y axis with full sides against north/down faces.
 
-        // PERF: caching
-        final IWritablePolyStream stream = PolyStreams.claimWritable();
-        final IMutablePolygon writer = stream.writer();
-        
-        PolyTransform transform = PolyTransform.get(modelState);
-        
-        writer.setRotation(0, Rotation.ROTATE_NONE);
-        writer.setLockUV(0, true);
-        stream.saveDefaults();
+	// PERF: caching
+	final IWritablePolyStream stream = PolyStreams.claimWritable();
+	final IMutablePolygon writer = stream.writer();
 
-        writer.surface(SURFACE_BOTTOM);
-        writer.setNominalFace(Direction.NORTH);
-        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
-        stream.append();
+	PolyTransform transform = PolyTransform.get(modelState);
 
-        writer.surface(SURFACE_BOTTOM);
-        writer.setNominalFace(Direction.DOWN);
-        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
-        stream.append();
+	writer.setRotation(0, Rotation.ROTATE_NONE);
+	writer.setLockUV(0, true);
+	stream.saveDefaults();
 
-        stream.setVertexCount(3);
-        writer.surface(SURFACE_SIDES);
-        writer.setNominalFace(Direction.EAST);
-        writer.setupFaceQuad(Direction.EAST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0), Direction.UP);
-        writer.assignLockedUVCoordinates(0);
-        transform.apply(writer);
-        stream.append();
+	writer.surface(SURFACE_BOTTOM);
+	writer.setNominalFace(Direction.NORTH);
+	writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
+	transform.apply(writer);
+	stream.append();
 
-        stream.setVertexCount(3);
-        writer.surface(SURFACE_SIDES);
-        writer.setNominalFace(Direction.WEST);
-        writer.setupFaceQuad(Direction.WEST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(0, 1, 0), Direction.UP);
-        writer.assignLockedUVCoordinates(0);
-        transform.apply(writer);
-        stream.append();
+	writer.surface(SURFACE_BOTTOM);
+	writer.setNominalFace(Direction.DOWN);
+	writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
+	transform.apply(writer);
+	stream.append();
 
-        stream.setVertexCount(4);
-        writer.surface(SURFACE_TOP);
-        writer.setNominalFace(Direction.UP);
-        writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 1), new FaceVertex(1, 1, 0),
-                new FaceVertex(0, 1, 0), Direction.NORTH);
-        transform.apply(writer);
-        stream.append();
-        
-        if (stream.origin()) {
-            IPolygon reader = stream.reader();
+	stream.setVertexCount(3);
+	writer.surface(SURFACE_SIDES);
+	writer.setNominalFace(Direction.EAST);
+	writer.setupFaceQuad(Direction.EAST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
+		Direction.UP);
+	writer.assignLockedUVCoordinates(0);
+	transform.apply(writer);
+	stream.append();
 
-            do
-                target.accept(reader);
-            while (stream.next());
-        }
-        stream.release();
+	stream.setVertexCount(3);
+	writer.surface(SURFACE_SIDES);
+	writer.setNominalFace(Direction.WEST);
+	writer.setupFaceQuad(Direction.WEST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(0, 1, 0),
+		Direction.UP);
+	writer.assignLockedUVCoordinates(0);
+	transform.apply(writer);
+	stream.append();
+
+	stream.setVertexCount(4);
+	writer.surface(SURFACE_TOP);
+	writer.setNominalFace(Direction.UP);
+	writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 1), new FaceVertex(1, 1, 0),
+		new FaceVertex(0, 1, 0), Direction.NORTH);
+	transform.apply(writer);
+	stream.append();
+
+	if (stream.origin()) {
+	    IPolygon reader = stream.reader();
+
+	    do
+		target.accept(reader);
+	    while (stream.next());
+	}
+	stream.release();
     }
 }

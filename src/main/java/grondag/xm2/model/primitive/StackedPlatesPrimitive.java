@@ -38,75 +38,77 @@ import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class StackedPlatesPrimitive extends AbstractModelPrimitive {
-	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-			.add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-			.build();
-	
-	public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);
-	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
-	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
-	
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+	    .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+	    .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+	    .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+
+    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);
+    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
+    public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
+
     public StackedPlatesPrimitive(String idString) {
-        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
+	super(idString, SURFACES, StateFormat.BLOCK,
+		STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
-    private static final Direction[] HORIZONTAL_FACES = {Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH};
-    
+    private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH,
+	    Direction.SOUTH };
+
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
-    	// FIX: Add height to block/model state once model state refactor is complete
-        final int meta = 0; // modelState.getMetaData();
-        final PolyTransform transform = PolyTransform.get(modelState);
-        final float height = (meta + 1) / 16;
-        
-        // PERF: if have a consumer and doing this dynamically - should consumer simply be a stream?
-        // Why create a stream just to pipe it to the consumer?  Or cache the result.
-        final IWritablePolyStream stream = PolyStreams.claimWritable();
-        final IMutablePolygon writer = stream.writer();
+	// FIX: Add height to block/model state once model state refactor is complete
+	final int meta = 0; // modelState.getMetaData();
+	final PolyTransform transform = PolyTransform.get(modelState);
+	final float height = (meta + 1) / 16;
 
-        writer.setRotation(0, Rotation.ROTATE_NONE);
-        writer.setLockUV(0, true);
-        stream.saveDefaults();
-        
-        writer.surface(SURFACE_TOP);
-        writer.setNominalFace(Direction.UP);
-        writer.setupFaceQuad(0, 0, 1, 1, 1 - height, Direction.NORTH);
-        transform.apply(writer);
-        stream.append();
+	// PERF: if have a consumer and doing this dynamically - should consumer simply
+	// be a stream?
+	// Why create a stream just to pipe it to the consumer? Or cache the result.
+	final IWritablePolyStream stream = PolyStreams.claimWritable();
+	final IMutablePolygon writer = stream.writer();
 
-        for (Direction face : HORIZONTAL_FACES) {
-            writer.surface(SURFACE_SIDES);
-            writer.setNominalFace(face);
-            writer.setupFaceQuad(0, 0, 1, height, 0, Direction.UP);
-            transform.apply(writer);
-            stream.append();
-        }
+	writer.setRotation(0, Rotation.ROTATE_NONE);
+	writer.setLockUV(0, true);
+	stream.saveDefaults();
 
-        writer.surface(SURFACE_BOTTOM);
-        writer.setNominalFace(Direction.DOWN);
-        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
-        stream.append();
+	writer.surface(SURFACE_TOP);
+	writer.setNominalFace(Direction.UP);
+	writer.setupFaceQuad(0, 0, 1, 1, 1 - height, Direction.NORTH);
+	transform.apply(writer);
+	stream.append();
 
-        if (stream.origin()) {
-            IPolygon reader = stream.reader();
+	for (Direction face : HORIZONTAL_FACES) {
+	    writer.surface(SURFACE_SIDES);
+	    writer.setNominalFace(face);
+	    writer.setupFaceQuad(0, 0, 1, height, 0, Direction.UP);
+	    transform.apply(writer);
+	    stream.append();
+	}
 
-            do
-                target.accept(reader);
-            while (stream.next());
-        }
-        stream.release();
+	writer.surface(SURFACE_BOTTOM);
+	writer.setNominalFace(Direction.DOWN);
+	writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
+	transform.apply(writer);
+	stream.append();
+
+	if (stream.origin()) {
+	    IPolygon reader = stream.reader();
+
+	    do
+		target.accept(reader);
+	    while (stream.next());
+	}
+	stream.release();
     }
 
     @Override
     public boolean isAdditive() {
-        return true;
+	return true;
     }
 
     @Override
     public BlockOrientationType orientationType(ModelState modelState) {
-        return BlockOrientationType.FACE;
+	return BlockOrientationType.FACE;
     }
 }

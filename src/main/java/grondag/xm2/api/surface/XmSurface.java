@@ -22,20 +22,20 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
 
 public interface XmSurface {
-	int FLAG_NONE = 0;
-	
+    int FLAG_NONE = 0;
+
     /**
-     * If unset, border and masonry painters will not render on this surface. 
-     * Leave unset for topologies that don't play well with borders.
+     * If unset, border and masonry painters will not render on this surface. Leave
+     * unset for topologies that don't play well with borders.
      */
-	int FLAG_ALLOW_BORDERS = 1;
-	
+    int FLAG_ALLOW_BORDERS = 1;
+
     /**
      * If set, texture painting should not vary by axis orthogonal to the surface.
      * Ignored if {@link #textureSalt} is non-zero.
      */
-	int FLAG_IGNORE_DEPTH_FOR_RADOMIZATION = 2;
-	
+    int FLAG_IGNORE_DEPTH_FOR_RADOMIZATION = 2;
+
     /**
      * If set, generator will assign colors to vertexes to indicate proximity to
      * lamp surface. Vertices next to lamp have color WHITE and those away have
@@ -45,30 +45,30 @@ public interface XmSurface {
      * 
      * If the surface is full-brightness, need to re-color all vertices to white.
      */
-	int FLAG_LAMP_GRADIENT = 4;
-	
-	int ordinal();
-	
-	String nameKey();
-	
-	@Environment(EnvType.CLIENT)
-	default String name() {
-		return I18n.translate(nameKey());
-	}
-	
+    int FLAG_LAMP_GRADIENT = 4;
+
+    int ordinal();
+
+    String nameKey();
+
+    @Environment(EnvType.CLIENT)
+    default String name() {
+	return I18n.translate(nameKey());
+    }
+
     SurfaceTopology topology();
-    
+
     int flags();
 
     default boolean ignoreDepthForRandomization() {
-    	return (flags() & FLAG_IGNORE_DEPTH_FOR_RADOMIZATION) == FLAG_IGNORE_DEPTH_FOR_RADOMIZATION;
+	return (flags() & FLAG_IGNORE_DEPTH_FOR_RADOMIZATION) == FLAG_IGNORE_DEPTH_FOR_RADOMIZATION;
     }
-    
+
     default boolean allowBorders() {
-    	return (flags() & FLAG_ALLOW_BORDERS) == FLAG_ALLOW_BORDERS;
+	return (flags() & FLAG_ALLOW_BORDERS) == FLAG_ALLOW_BORDERS;
     }
-    
+
     default boolean isLampGradient() {
-    	return (flags() & FLAG_LAMP_GRADIENT) == FLAG_LAMP_GRADIENT;
+	return (flags() & FLAG_LAMP_GRADIENT) == FLAG_LAMP_GRADIENT;
     }
 }

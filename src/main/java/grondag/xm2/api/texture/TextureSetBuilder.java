@@ -33,21 +33,21 @@ public interface TextureSetBuilder {
     TextureSetBuilder groups(TextureGroup... groups);
 
     TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile);
-    
-    /** 
+
+    /**
      * Include namespace!
      */
     TextureSetBuilder baseTextureName(String baseTextureName);
-    
+
     TextureSetBuilder displayNameToken(String displayNameToken);
-    
+
     TextureSet build(Identifier id);
-    
+
     default TextureSet build(String nameSpace, String path) {
-        return build(new Identifier(nameSpace, path));
+	return build(new Identifier(nameSpace, path));
     }
-    
+
     default TextureSet build(String idString) {
-        return build(new Identifier(idString));
+	return build(new Identifier(idString));
     }
 }

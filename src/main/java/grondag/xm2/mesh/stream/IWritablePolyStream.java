@@ -29,7 +29,7 @@ public interface IWritablePolyStream extends IPolyStream {
      * Current setting for packed normals. See {@link #setPackedNormals(boolean)}
      */
     default boolean usePackedNormals() {
-        return false;
+	return false;
     }
 
     /**
@@ -44,7 +44,7 @@ public interface IWritablePolyStream extends IPolyStream {
      * simply ignore.
      */
     default void setPackedNormals(boolean usePacked) {
-        // NOOP
+	// NOOP
     }
 
     /**
@@ -100,7 +100,7 @@ public interface IWritablePolyStream extends IPolyStream {
      * Version of {@link #releaseAndConvertToReader(int)} that strips all metadata.
      */
     default IReadOnlyPolyStream releaseAndConvertToReader() {
-        return releaseAndConvertToReader(0);
+	return releaseAndConvertToReader(0);
     }
 
     /**
@@ -119,13 +119,13 @@ public interface IWritablePolyStream extends IPolyStream {
     void appendCopy(IPolygon poly);
 
     default void appendAll(IPolyStream stream) {
-        if (stream.origin()) {
-            IPolygon reader = stream.reader();
-            do {
-                assert !reader.isDeleted();
-                this.appendCopy(reader);
-            } while (stream.next());
-        }
+	if (stream.origin()) {
+	    IPolygon reader = stream.reader();
+	    do {
+		assert !reader.isDeleted();
+		this.appendCopy(reader);
+	    } while (stream.next());
+	}
     }
 
     /**
@@ -139,6 +139,6 @@ public interface IWritablePolyStream extends IPolyStream {
      * <p>
      */
     public int splitIfNeeded(int targetAddress);
-    
+
     public void clear();
 }

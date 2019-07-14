@@ -50,91 +50,91 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
     // layers.
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        IMutablePolygon editor = stream.editor();
-        do {
-            editor.setLockUV(textureIndex, true);
-            editor.assignLockedUVCoordinates(textureIndex);
+    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint,
+	    int textureIndex) {
+	IMutablePolygon editor = stream.editor();
+	do {
+	    editor.setLockUV(textureIndex, true);
+	    editor.assignLockedUVCoordinates(textureIndex);
 
-            final Direction nominalFace = editor.nominalFace();
-            final TextureSet tex = paint.texture(textureIndex);
-            final boolean allowTexRotation = tex.rotation() != TextureRotation.ROTATE_NONE;
-            final TextureScale scale = tex.scale();
+	    final Direction nominalFace = editor.nominalFace();
+	    final TextureSet tex = paint.texture(textureIndex);
+	    final boolean allowTexRotation = tex.rotation() != TextureRotation.ROTATE_NONE;
+	    final TextureScale scale = tex.scale();
 
-            Vec3i surfaceVec = getSurfaceVector(modelState.getPosX(), modelState.getPosY(), modelState.getPosZ(),
-                    nominalFace, scale);
+	    Vec3i surfaceVec = getSurfaceVector(modelState.getPosX(), modelState.getPosY(), modelState.getPosZ(),
+		    nominalFace, scale);
 
-            if (tex.versionCount() == 1) {
-                // no alternates, so do uv flip and offset and rotation based on depth & species
-                // only
+	    if (tex.versionCount() == 1) {
+		// no alternates, so do uv flip and offset and rotation based on depth & species
+		// only
 
-                // abs is necessary so that hash input components combine together properly
-                // Small random numbers already have most bits set.
-                int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization()
-                        ? HashCommon.mix((modelState.getSpecies() << 8) | editor.getTextureSalt())
-                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.getSpecies() << 8)
-                                | (editor.getTextureSalt() << 12));
+		// abs is necessary so that hash input components combine together properly
+		// Small random numbers already have most bits set.
+		int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization()
+			? HashCommon.mix((modelState.getSpecies() << 8) | editor.getTextureSalt())
+			: HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.getSpecies() << 8)
+				| (editor.getTextureSalt() << 12));
 
-                // rotation
-                editor.setRotation(textureIndex,
-                        allowTexRotation ? Useful.offsetEnumValue(tex.rotation().rotation, depthAndSpeciesHash & 3)
-                                : tex.rotation().rotation);
+		// rotation
+		editor.setRotation(textureIndex,
+			allowTexRotation ? Useful.offsetEnumValue(tex.rotation().rotation, depthAndSpeciesHash & 3)
+				: tex.rotation().rotation);
 
-                surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
+		surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
 
-                editor.setTextureName(textureIndex, tex.textureName(0));
+		editor.setTextureName(textureIndex, tex.textureName(0));
 
-                final int xOffset = (depthAndSpeciesHash >> 2) & scale.sliceCountMask;
-                final int yOffset = (depthAndSpeciesHash >> 8) & scale.sliceCountMask;
+		final int xOffset = (depthAndSpeciesHash >> 2) & scale.sliceCountMask;
+		final int yOffset = (depthAndSpeciesHash >> 8) & scale.sliceCountMask;
 
-                final int newX = (surfaceVec.getX() + xOffset) & scale.sliceCountMask;
-                final int newY = (surfaceVec.getY() + yOffset) & scale.sliceCountMask;
-                surfaceVec = new Vec3i(newX, newY, surfaceVec.getZ());
+		final int newX = (surfaceVec.getX() + xOffset) & scale.sliceCountMask;
+		final int newY = (surfaceVec.getY() + yOffset) & scale.sliceCountMask;
+		surfaceVec = new Vec3i(newX, newY, surfaceVec.getZ());
 
-                final boolean flipU = allowTexRotation && (depthAndSpeciesHash & 256) == 0;
-                final boolean flipV = allowTexRotation && (depthAndSpeciesHash & 512) == 0;
+		final boolean flipU = allowTexRotation && (depthAndSpeciesHash & 256) == 0;
+		final boolean flipV = allowTexRotation && (depthAndSpeciesHash & 512) == 0;
 
-                final float sliceIncrement = scale.sliceIncrement;
+		final float sliceIncrement = scale.sliceIncrement;
 
-                final int x = flipU ? scale.sliceCount - surfaceVec.getX() : surfaceVec.getX();
-                final int y = flipV ? scale.sliceCount - surfaceVec.getY() : surfaceVec.getY();
+		final int x = flipU ? scale.sliceCount - surfaceVec.getX() : surfaceVec.getX();
+		final int y = flipV ? scale.sliceCount - surfaceVec.getY() : surfaceVec.getY();
 
-                editor.setMinU(textureIndex, x * sliceIncrement);
-                editor.setMaxU(textureIndex, editor.getMinU(textureIndex) + (flipU ? -sliceIncrement : sliceIncrement));
+		editor.setMinU(textureIndex, x * sliceIncrement);
+		editor.setMaxU(textureIndex, editor.getMinU(textureIndex) + (flipU ? -sliceIncrement : sliceIncrement));
 
-                editor.setMinV(textureIndex, y * sliceIncrement);
-                editor.setMaxV(textureIndex, editor.getMinV(textureIndex) + (flipV ? -sliceIncrement : sliceIncrement));
+		editor.setMinV(textureIndex, y * sliceIncrement);
+		editor.setMaxV(textureIndex, editor.getMinV(textureIndex) + (flipV ? -sliceIncrement : sliceIncrement));
 
-            } else {
-                // multiple texture versions, so do rotation and alternation normally, except
-                // add additional variation for depth;
+	    } else {
+		// multiple texture versions, so do rotation and alternation normally, except
+		// add additional variation for depth;
 
-                // abs is necessary so that hash input components combine together properly
-                // Small random numbers already have most bits set.
-                final int depthHash = editor.surface().ignoreDepthForRandomization() && editor.getTextureSalt() == 0
-                        ? 0
-                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (editor.getTextureSalt() << 8));
+		// abs is necessary so that hash input components combine together properly
+		// Small random numbers already have most bits set.
+		final int depthHash = editor.surface().ignoreDepthForRandomization() && editor.getTextureSalt() == 0 ? 0
+			: HashCommon.mix(Math.abs(surfaceVec.getZ()) | (editor.getTextureSalt() << 8));
 
-                editor.setTextureName(textureIndex, tex.textureName(
-                        (textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.versionMask()));
+		editor.setTextureName(textureIndex, tex.textureName(
+			(textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.versionMask()));
 
-                editor.setRotation(textureIndex,
-                        allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState),
-                                (depthHash >> 16) & 3) : textureRotationForFace(nominalFace, tex, modelState));
+		editor.setRotation(textureIndex,
+			allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState),
+				(depthHash >> 16) & 3) : textureRotationForFace(nominalFace, tex, modelState));
 
-                surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
+		surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
 
-                final float sliceIncrement = scale.sliceIncrement;
+		final float sliceIncrement = scale.sliceIncrement;
 
-                editor.setMinU(textureIndex, surfaceVec.getX() * sliceIncrement);
-                editor.setMaxU(textureIndex, editor.getMinU(textureIndex) + sliceIncrement);
+		editor.setMinU(textureIndex, surfaceVec.getX() * sliceIncrement);
+		editor.setMaxU(textureIndex, editor.getMinU(textureIndex) + sliceIncrement);
 
-                editor.setMinV(textureIndex, surfaceVec.getY() * sliceIncrement);
-                editor.setMaxV(textureIndex, editor.getMinV(textureIndex) + sliceIncrement);
-            }
+		editor.setMinV(textureIndex, surfaceVec.getY() * sliceIncrement);
+		editor.setMaxV(textureIndex, editor.getMinV(textureIndex) + sliceIncrement);
+	    }
 
-            commonPostPaint(editor, textureIndex, modelState, surface, paint);
+	    commonPostPaint(editor, textureIndex, modelState, surface, paint);
 
-        } while (stream.editorNext());
+	} while (stream.editorNext());
     }
 }

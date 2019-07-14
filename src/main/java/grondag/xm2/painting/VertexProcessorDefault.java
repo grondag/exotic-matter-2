@@ -26,27 +26,28 @@ public class VertexProcessorDefault extends VertexProcessor {
     public final static VertexProcessor INSTANCE = new VertexProcessorDefault();
 
     static {
-        VertexProcessors.register(VertexProcessorDefault.INSTANCE);
+	VertexProcessors.register(VertexProcessorDefault.INSTANCE);
     }
 
     VertexProcessorDefault() {
-        super("default", 0);
+	super("default", 0);
     }
 
     @Override
-    public final void process(IMutablePolygon poly, int textureIndex, ModelState modelState, XmSurface surface, XmPaint paint) {
-        int color = paint.textureColor(textureIndex);
+    public final void process(IMutablePolygon poly, int textureIndex, ModelState modelState, XmSurface surface,
+	    XmPaint paint) {
+	int color = paint.textureColor(textureIndex);
 
-        // TODO: remove? Was causing problems when acuity is enabled because renderpass
-        // will be solid
+	// TODO: remove? Was causing problems when acuity is enabled because renderpass
+	// will be solid
 //        if(modelState.getRenderPass(paintLayer) != BlockRenderLayer.TRANSLUCENT)
 //            color =  0xFF000000 | color;
 
-        // If surface is a lamp gradient then glow bits are used
-        // to blend the lamp color/brighness with the nominal color/brightness.
-        // This does not apply with the lamp paint layer itself (makes no sense).
-        // (Generally gradient surfaces should not be painted by lamp color)
-        //TODO: put back lamp gradient processing
+	// If surface is a lamp gradient then glow bits are used
+	// to blend the lamp color/brighness with the nominal color/brightness.
+	// This does not apply with the lamp paint layer itself (makes no sense).
+	// (Generally gradient surfaces should not be painted by lamp color)
+	// TODO: put back lamp gradient processing
 //        if (surface.isLampGradient()) {
 //            int lampColor = .getColorARGB(PaintLayer.LAMP);
 //            int lampBrightness = modelState.isEmissive(PaintLayer.LAMP) ? 255 : 0;
@@ -62,11 +63,11 @@ public class VertexProcessorDefault extends VertexProcessor {
 //                poly.setVertexGlow(i, b);
 //            }
 //        } else {
-            // normal shaded surface - tint existing colors, usually WHITE to start with
-            for (int i = 0; i < poly.vertexCount(); i++) {
-                final int c = ColorHelper.multiplyColor(color, poly.spriteColor(i, textureIndex));
-                poly.spriteColor(i, textureIndex, c);
-            }
+	// normal shaded surface - tint existing colors, usually WHITE to start with
+	for (int i = 0; i < poly.vertexCount(); i++) {
+	    final int c = ColorHelper.multiplyColor(color, poly.spriteColor(i, textureIndex));
+	    poly.spriteColor(i, textureIndex, c);
+	}
 //        }
     }
 

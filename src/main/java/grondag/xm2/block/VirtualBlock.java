@@ -28,7 +28,7 @@ public interface VirtualBlock {
      * virtual and visible to the given player.
      */
     default boolean isVirtuallySolid(BlockPos pos, PlayerEntity player) {
-        return !((Block) this).getMaterial(player.world.getBlockState(pos)).isReplaceable();
+	return !((Block) this).getMaterial(player.world.getBlockState(pos)).isReplaceable();
     }
 
     /**
@@ -37,7 +37,7 @@ public interface VirtualBlock {
      * ISuperBlock.
      */
     public static boolean isVirtualBlock(Block block) {
-        return block instanceof VirtualBlock;
+	return block instanceof VirtualBlock;
     }
 
     /**
@@ -47,21 +47,22 @@ public interface VirtualBlock {
      * doesn't implement ISuperBlock.
      */
     public static boolean isVirtuallySolidBlock(BlockPos pos, PlayerEntity player) {
-        return isVirtuallySolidBlock(player.world.getBlockState(pos), pos, player);
+	return isVirtuallySolidBlock(player.world.getBlockState(pos), pos, player);
     }
 
     /**
      * Convenience call for
      * {@link #isVirtuallySolid(ExtendedBlockView, BlockPos, EntityPlayer)} when you
      * don't know what type of block it is. Will return negation of
-     * {@link #isReplaceable(ExtendedBlockView, BlockPos)} for any block that doesn't
-     * implement ISuperBlock.
+     * {@link #isReplaceable(ExtendedBlockView, BlockPos)} for any block that
+     * doesn't implement ISuperBlock.
      * 
-     * UGLY: really needed?  Seems redundant of isVirtuallySolid, plus have mixins now
+     * UGLY: really needed? Seems redundant of isVirtuallySolid, plus have mixins
+     * now
      */
     public static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, PlayerEntity player) {
-        Block block = state.getBlock();
-        return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player)
-                : !block.getMaterial(state).isReplaceable();
+	Block block = state.getBlock();
+	return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player)
+		: !block.getMaterial(state).isReplaceable();
     }
 }

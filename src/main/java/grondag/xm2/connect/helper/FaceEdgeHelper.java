@@ -29,32 +29,33 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public abstract class FaceEdgeHelper {
-    private FaceEdgeHelper() {}
-    
-    private static final FaceEdge[] VALUES = FaceEdge.values();
-    
-    public static final int COUNT = VALUES.length;
-    
-    public static final FaceEdge fromOrdinal(int ordinal) {
-        return VALUES[ordinal];
+    private FaceEdgeHelper() {
     }
-    
+
+    private static final FaceEdge[] VALUES = FaceEdge.values();
+
+    public static final int COUNT = VALUES.length;
+
+    public static final FaceEdge fromOrdinal(int ordinal) {
+	return VALUES[ordinal];
+    }
+
     // find the side for a given face orthogonal to a face
     private final static FaceEdge FACE_LOOKUP[][] = new FaceEdge[6][6];
 
     static {
-        for (Direction onFace : Direction.values()) {
-            for (Direction edgeFace : Direction.values()) {
-                FaceEdge match = null;
+	for (Direction onFace : Direction.values()) {
+	    for (Direction edgeFace : Direction.values()) {
+		FaceEdge match = null;
 
-                for (FaceEdge side : FaceEdge.values()) {
-                    if (side.toWorld(onFace) == edgeFace) {
-                        match = side;
-                    }
-                }
-                FACE_LOOKUP[onFace.ordinal()][edgeFace.ordinal()] = match;
-            }
-        }
+		for (FaceEdge side : FaceEdge.values()) {
+		    if (side.toWorld(onFace) == edgeFace) {
+			match = side;
+		    }
+		}
+		FACE_LOOKUP[onFace.ordinal()][edgeFace.ordinal()] = match;
+	    }
+	}
     }
 
     /**
@@ -64,12 +65,12 @@ public abstract class FaceEdgeHelper {
      */
     @Nullable
     public static FaceEdge fromWorld(Direction edgeFace, Direction onFace) {
-        return FACE_LOOKUP[onFace.ordinal()][edgeFace.ordinal()];
+	return FACE_LOOKUP[onFace.ordinal()][edgeFace.ordinal()];
     }
-    
+
     public static void forEach(Consumer<FaceEdge> consumer) {
-        for(FaceEdge val: VALUES) {
-            consumer.accept(val);
-        }
+	for (FaceEdge val : VALUES) {
+	    consumer.accept(val);
+	}
     }
 }

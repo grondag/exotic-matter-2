@@ -61,8 +61,8 @@ public enum PlacementEvent {
     public final boolean isSetRegion;
 
     private PlacementEvent(Boolean isPlacement, boolean isExcavation, boolean isSetRegion) {
-        this.isPlacement = isPlacement;
-        this.isExcavation = isExcavation;
-        this.isSetRegion = isSetRegion;
+	this.isPlacement = isPlacement;
+	this.isExcavation = isExcavation;
+	this.isSetRegion = isSetRegion;
     }
 }

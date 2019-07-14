@@ -21,6 +21,6 @@ import net.minecraft.block.Material;
 
 public class DepletedFluidBlock extends Block {
     public DepletedFluidBlock() {
-        super(Settings.of(Material.STRUCTURE_VOID));
+	super(Settings.of(Material.STRUCTURE_VOID));
     }
 }

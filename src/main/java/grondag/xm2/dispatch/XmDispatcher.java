@@ -27,10 +27,10 @@ import grondag.xm2.model.state.ModelState;
 // custom loading cache is at least 2X faster than guava LoadingCache for our
 // use case
 public class XmDispatcher extends ObjectSimpleLoadingCache<ModelState, ImmutableModelState> {
-   
+
     public static final XmDispatcher INSTANCE = new XmDispatcher(0xFFFF);
-    
+
     public XmDispatcher(int maxSize) {
-        super(k -> k.toImmutable(), maxSize);
+	super(k -> k.toImmutable(), maxSize);
     }
 }

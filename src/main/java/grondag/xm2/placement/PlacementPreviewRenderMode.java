@@ -16,10 +16,6 @@
 
 package grondag.xm2.placement;
 
-
-
-
-
 public enum PlacementPreviewRenderMode {
     SELECT(0x91BFBD), PLACE(0xA0FFFF), EXCAVATE(0xFC8D59), OBSTRUCTED(0xFFFFBF);
 
@@ -28,8 +24,8 @@ public enum PlacementPreviewRenderMode {
     public final float blue;
 
     private PlacementPreviewRenderMode(int rgbColor) {
-        this.red = ((rgbColor >> 16) & 0xFF) / 255f;
-        this.green = ((rgbColor >> 8) & 0xFF) / 255f;
-        this.blue = (rgbColor & 0xFF) / 255f;
+	this.red = ((rgbColor >> 16) & 0xFF) / 255f;
+	this.green = ((rgbColor >> 8) & 0xFF) / 255f;
+	this.blue = (rgbColor & 0xFF) / 255f;
     }
 }

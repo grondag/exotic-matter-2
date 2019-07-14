@@ -28,19 +28,19 @@ public interface ICollisionBoxListBuilder {
     void clear();
 
     default ImmutableList<Box> build() {
-        IntCollection boxes = boxes();
-        if (boxes.isEmpty())
-            return ImmutableList.of();
-        else {
-            ImmutableList.Builder<Box> builder = ImmutableList.builder();
+	IntCollection boxes = boxes();
+	if (boxes.isEmpty())
+	    return ImmutableList.of();
+	else {
+	    ImmutableList.Builder<Box> builder = ImmutableList.builder();
 
-            IntIterator it = boxes.iterator();
-            while (it.hasNext()) {
-                builder.add(CollisionBoxStore.getBox(it.nextInt()));
-            }
+	    IntIterator it = boxes.iterator();
+	    while (it.hasNext()) {
+		builder.add(CollisionBoxStore.getBox(it.nextInt()));
+	    }
 
-            return builder.build();
-        }
+	    return builder.build();
+	}
     }
 
     /**
@@ -48,7 +48,7 @@ public interface ICollisionBoxListBuilder {
      * be 0-8. Values do not need to be sorted but cannot be equal.
      */
     default void add(int x0, int y0, int z0, int x1, int y1, int z1) {
-        add(CollisionBoxEncoder.boxKey(x0, y0, z0, x1, y1, z1));
+	add(CollisionBoxEncoder.boxKey(x0, y0, z0, x1, y1, z1));
     }
 
     /**
@@ -58,29 +58,29 @@ public interface ICollisionBoxListBuilder {
      * {@link #add(int, int, int, int, int, int)}.
      */
     default void addSorted(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-        add(CollisionBoxEncoder.boxKeySorted(minX, minY, minZ, maxX, maxY, maxZ));
+	add(CollisionBoxEncoder.boxKeySorted(minX, minY, minZ, maxX, maxY, maxZ));
     }
 
     default int size() {
-        return boxes().size();
+	return boxes().size();
     }
 
     default boolean isEmpty() {
-        return boxes().isEmpty();
+	return boxes().isEmpty();
     }
 
     void add(int boxKey);
 
     default long checkSum() {
-        IntCollection boxes = boxes();
-        if (boxes.isEmpty())
-            return 0;
-        else {
-            long result = 0;
-            IntIterator it = boxes.iterator();
-            while (it.hasNext())
-                result += it.nextInt();
-            return result;
-        }
+	IntCollection boxes = boxes();
+	if (boxes.isEmpty())
+	    return 0;
+	else {
+	    long result = 0;
+	    IntIterator it = boxes.iterator();
+	    while (it.hasNext())
+		result += it.nextInt();
+	    return result;
+	}
     }
 }

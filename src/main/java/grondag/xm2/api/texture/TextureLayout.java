@@ -36,15 +36,15 @@ public enum TextureLayout {
 
     /**
      * Separate files with naming convention same as SPLIT_X_8 except only the first
-     * 13 textures out of every 16 are used for borders. 
+     * 13 textures out of every 16 are used for borders.
      */
     BORDER_13(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 13),
-    
+
     /**
-     * Like BORDER_13 but with an extra texture 14 that to should be rendered if the 
-     * border is rendered in the solid render layer. It is IMPORTANT that texture 14 
-     * have a solid alpha channel - otherwise mipmap generation will be borked. 
-     * The solid face won't be used at all if rendering in a non-solid layer.
+     * Like BORDER_13 but with an extra texture 14 that to should be rendered if the
+     * border is rendered in the solid render layer. It is IMPORTANT that texture 14
+     * have a solid alpha channel - otherwise mipmap generation will be borked. The
+     * solid face won't be used at all if rendering in a non-solid layer.
      */
     BORDER_14(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 14),
 
@@ -72,12 +72,12 @@ public enum TextureLayout {
     QUADRANT_CONNECTED(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES);
 
     private TextureLayout(int stateFlags) {
-        this(stateFlags, 1);
+	this(stateFlags, 1);
     }
 
     private TextureLayout(int stateFlags, int textureCount) {
-        this.modelStateFlag = stateFlags;
-        this.textureCount = textureCount;
+	this.modelStateFlag = stateFlags;
+	this.textureCount = textureCount;
     }
 
     /**

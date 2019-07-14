@@ -35,52 +35,52 @@ public class OptimizingBoxList implements Runnable {
     private VoxelShape shape;
 
     OptimizingBoxList(FastBoxGenerator generator, ModelState modelState) {
-        this.modelState = modelState;
-        this.wrapped = generator.build();
-        this.shape = makeShapeFromBoxes(wrapped);
+	this.modelState = modelState;
+	this.wrapped = generator.build();
+	this.shape = makeShapeFromBoxes(wrapped);
     }
 
     protected ImmutableList<Box> getList() {
-        return wrapped;
+	return wrapped;
     }
-    
+
     protected VoxelShape getShape() {
-        return shape;
+	return shape;
     }
-    
+
     private static VoxelShape makeShapeFromBoxes(ImmutableList<Box> boxes) {
-        if(boxes.isEmpty()) {
-            return VoxelShapes.empty();
-        }
-        VoxelShape shape = VoxelShapes.cuboid(boxes.get(0));
-        final int limit = boxes.size();
-        for(int i = 1; i < limit; i++) {
-            shape = VoxelShapes.union(shape, VoxelShapes.cuboid(boxes.get(i)));
-        }
-        return shape;
+	if (boxes.isEmpty()) {
+	    return VoxelShapes.empty();
+	}
+	VoxelShape shape = VoxelShapes.cuboid(boxes.get(0));
+	final int limit = boxes.size();
+	for (int i = 1; i < limit; i++) {
+	    shape = VoxelShapes.union(shape, VoxelShapes.cuboid(boxes.get(i)));
+	}
+	return shape;
     }
 
     @Override
     public void run() {
-        final OptimalBoxGenerator generator = boxGen;
-        modelState.getShape().produceQuads(modelState, generator);
+	final OptimalBoxGenerator generator = boxGen;
+	modelState.getShape().produceQuads(modelState, generator);
 
 //        generator.generateCalibrationOutput();
 
-        final int oldSize = wrapped.size();
-        double oldVolume = Useful.volumeAABB(wrapped);
-        double trueVolume = generator.prepare();
-        if (trueVolume == 0)
-            assert oldSize == 0 : "Fast collision box non-empty but detailed is empty";
-        else if (trueVolume != -1) {
-            if (oldSize > FermionConfig.BLOCKS.collisionBoxBudget
-                    || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2)
-                wrapped = generator.build();
-                shape = makeShapeFromBoxes(wrapped);
-        }
+	final int oldSize = wrapped.size();
+	double oldVolume = Useful.volumeAABB(wrapped);
+	double trueVolume = generator.prepare();
+	if (trueVolume == 0)
+	    assert oldSize == 0 : "Fast collision box non-empty but detailed is empty";
+	else if (trueVolume != -1) {
+	    if (oldSize > FermionConfig.BLOCKS.collisionBoxBudget
+		    || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2)
+		wrapped = generator.build();
+	    shape = makeShapeFromBoxes(wrapped);
+	}
 //        if((CollisionBoxDispatcher.QUEUE.size() & 0xFF) == 0)
 //            System.out.println("Queue depth = " + CollisionBoxDispatcher.QUEUE.size());
 
-        modelState = null;
+	modelState = null;
     }
 }

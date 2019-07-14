@@ -47,12 +47,12 @@ public enum TextureQuadrant {
      * Will position texture to border the right (clockwise) side of a quadrant
      */
     SIDE_RIGHT(1) {
-        @Override
-        public void applyForQuadrant(IMutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
-            super.applyForQuadrant(polygon, layerIndex, quadrant);
-            final int i = quadrant.rightSide.ordinal();
-            polygon.offsetVertexUV(layerIndex, RIGHT_SIDE_U_SHIFT[i], RIGHT_SIDE_V_SHIFT[i]);
-        }
+	@Override
+	public void applyForQuadrant(IMutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
+	    super.applyForQuadrant(polygon, layerIndex, quadrant);
+	    final int i = quadrant.rightSide.ordinal();
+	    polygon.offsetVertexUV(layerIndex, RIGHT_SIDE_U_SHIFT[i], RIGHT_SIDE_V_SHIFT[i]);
+	}
     },
 
     /**
@@ -68,7 +68,7 @@ public enum TextureQuadrant {
     public final int rotation;
 
     private TextureQuadrant(int rotation) {
-        this.rotation = rotation;
+	this.rotation = rotation;
     }
 
     /**
@@ -88,15 +88,15 @@ public enum TextureQuadrant {
     private static final float RIGHT_SIDE_V_SHIFT[] = new float[FaceEdge.values().length];
 
     static {
-        FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_LEFT.ordinal()] = Rotation.ROTATE_NONE.ordinal();
-        FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_RIGHT.ordinal()] = Rotation.ROTATE_90.ordinal();
-        FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_RIGHT.ordinal()] = Rotation.ROTATE_180.ordinal();
-        FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_LEFT.ordinal()] = Rotation.ROTATE_270.ordinal();
+	FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_LEFT.ordinal()] = Rotation.ROTATE_NONE.ordinal();
+	FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_RIGHT.ordinal()] = Rotation.ROTATE_90.ordinal();
+	FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_RIGHT.ordinal()] = Rotation.ROTATE_180.ordinal();
+	FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_LEFT.ordinal()] = Rotation.ROTATE_270.ordinal();
 
-        RIGHT_SIDE_U_SHIFT[FaceEdge.BOTTOM_EDGE.ordinal()] = -0.5f;
-        RIGHT_SIDE_U_SHIFT[FaceEdge.TOP_EDGE.ordinal()] = 0.5f;
-        RIGHT_SIDE_V_SHIFT[FaceEdge.LEFT_EDGE.ordinal()] = -0.5f;
-        RIGHT_SIDE_V_SHIFT[FaceEdge.RIGHT_EDGE.ordinal()] = 0.5f;
+	RIGHT_SIDE_U_SHIFT[FaceEdge.BOTTOM_EDGE.ordinal()] = -0.5f;
+	RIGHT_SIDE_U_SHIFT[FaceEdge.TOP_EDGE.ordinal()] = 0.5f;
+	RIGHT_SIDE_V_SHIFT[FaceEdge.LEFT_EDGE.ordinal()] = -0.5f;
+	RIGHT_SIDE_V_SHIFT[FaceEdge.RIGHT_EDGE.ordinal()] = 0.5f;
     }
 
     /**
@@ -105,7 +105,7 @@ public enum TextureQuadrant {
      * <p>
      */
     public void applyForQuadrant(IMutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
-        polygon.setRotation(layerIndex,
-                Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - this.rotation) & 3]);
+	polygon.setRotation(layerIndex,
+		Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - this.rotation) & 3]);
     }
 }

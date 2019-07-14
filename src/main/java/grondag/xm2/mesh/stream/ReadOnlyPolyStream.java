@@ -21,26 +21,26 @@ import grondag.xm2.mesh.polygon.IPolygon;
 
 public class ReadOnlyPolyStream extends AbstractPolyStream implements IReadOnlyPolyStream {
     void load(WritablePolyStream streamIn, int formatFlags) {
-        prepare(IntStreams.claim(streamIn.stream.capacity()));
+	prepare(IntStreams.claim(streamIn.stream.capacity()));
 
-        if (!streamIn.isEmpty()) {
-            streamIn.origin();
-            IPolygon reader = streamIn.reader();
-            do
-                this.appendCopy(reader, formatFlags);
-            while (streamIn.next());
-        }
+	if (!streamIn.isEmpty()) {
+	    streamIn.origin();
+	    IPolygon reader = streamIn.reader();
+	    do
+		this.appendCopy(reader, formatFlags);
+	    while (streamIn.next());
+	}
 
-        this.stream.compact();
+	this.stream.compact();
     }
 
     @Override
     protected void doRelease() {
-        super.doRelease();
+	super.doRelease();
     }
 
     @Override
     protected void returnToPool() {
-        PolyStreams.release(this);
+	PolyStreams.release(this);
     }
 }

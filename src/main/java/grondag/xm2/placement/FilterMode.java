@@ -45,63 +45,63 @@ public enum FilterMode implements ILocalized {
     public final boolean usesFilterBlock;
 
     private FilterMode(boolean usesFilterBlock) {
-        this.usesFilterBlock = usesFilterBlock;
+	this.usesFilterBlock = usesFilterBlock;
     }
 
     public FilterMode deserializeNBT(CompoundTag tag) {
-        return Useful.safeEnumFromTag(tag, NBT_TAG, this);
+	return Useful.safeEnumFromTag(tag, NBT_TAG, this);
     }
 
     public void serializeNBT(CompoundTag tag) {
-        Useful.saveEnumToTag(tag, NBT_TAG, this);
+	Useful.saveEnumToTag(tag, NBT_TAG, this);
     }
 
     public FilterMode fromBytes(PacketByteBuf pBuff) {
-        return pBuff.readEnumConstant(FilterMode.class);
+	return pBuff.readEnumConstant(FilterMode.class);
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeEnumConstant(this);
+	pBuff.writeEnumConstant(this);
     }
 
     @Override
     public String localizedName() {
-        return I18n.translate("placement.filter_mode." + this.name().toLowerCase());
+	return I18n.translate("placement.filter_mode." + this.name().toLowerCase());
     }
 
     /**
      * If isVirtual then will only affect virtual blocks and empty space.
      */
     public boolean shouldAffectBlock(BlockState blockState, World world, BlockPos pos, ItemStack stack,
-            boolean isVirtual) {
-        Block block = blockState.getBlock();
+	    boolean isVirtual) {
+	Block block = blockState.getBlock();
 
-        switch (this) {
-        case FILL_REPLACEABLE:
-            return block.getMaterial(blockState).isReplaceable() && !VirtualBlock.isVirtualBlock(block);
+	switch (this) {
+	case FILL_REPLACEABLE:
+	    return block.getMaterial(blockState).isReplaceable() && !VirtualBlock.isVirtualBlock(block);
 
-        case REPLACE_ALL:
-            if (isVirtual) {
-                return block.getMaterial(blockState).isReplaceable() || VirtualBlock.isVirtualBlock(block);
-            } else {
-                return !VirtualBlock.isVirtualBlock(block);
-            }
+	case REPLACE_ALL:
+	    if (isVirtual) {
+		return block.getMaterial(blockState).isReplaceable() || VirtualBlock.isVirtualBlock(block);
+	    } else {
+		return !VirtualBlock.isVirtualBlock(block);
+	    }
 
-        case REPLACE_ALL_EXCEPT:
-            // TODO
-            return true;
+	case REPLACE_ALL_EXCEPT:
+	    // TODO
+	    return true;
 
-        case REPLACE_ONLY:
-            // TODO
-            return false;
+	case REPLACE_ONLY:
+	    // TODO
+	    return false;
 
-        case REPLACE_SOLID:
-            // test for non-virtual relies on fact that all virtual blocks are replaceable
-            return isVirtual ? VirtualBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
+	case REPLACE_SOLID:
+	    // test for non-virtual relies on fact that all virtual blocks are replaceable
+	    return isVirtual ? VirtualBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
 
-        default:
-            return false;
+	default:
+	    return false;
 
-        }
+	}
     }
 }

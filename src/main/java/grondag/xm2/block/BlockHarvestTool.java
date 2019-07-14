@@ -23,10 +23,10 @@ public enum BlockHarvestTool {
      * String MC uses to compare test for this tool type. Null means any tool can
      * harvest.
      */
-    
+
     public final String toolString;
 
     private BlockHarvestTool(String toolString) {
-        this.toolString = toolString;
+	this.toolString = toolString;
     }
 }

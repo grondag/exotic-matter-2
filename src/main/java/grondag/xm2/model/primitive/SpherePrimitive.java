@@ -34,40 +34,39 @@ import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
 public class SpherePrimitive extends AbstractModelPrimitive {
-	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE)
-			.build();
-	
-	public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
-	
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+	    .add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
+
+    public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
+
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
     public SpherePrimitive(String idString) {
-        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
-        this.cachedQuads = generateQuads();
+	super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
+	this.cachedQuads = generateQuads();
     }
 
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
-        if (cachedQuads.isEmpty())
-            return;
+	if (cachedQuads.isEmpty())
+	    return;
 
-        cachedQuads.origin();
-        IPolygon reader = cachedQuads.reader();
+	cachedQuads.origin();
+	IPolygon reader = cachedQuads.reader();
 
-        do
-            target.accept(reader);
-        while (cachedQuads.next());
+	do
+	    target.accept(reader);
+	while (cachedQuads.next());
     }
 
     private IPolyStream generateQuads() {
-        IWritablePolyStream stream = PolyStreams.claimWritable();
-        stream.writer().setLockUV(0, false);
-        stream.writer().surface(SURFACE_ALL);
-        stream.saveDefaults();
+	IWritablePolyStream stream = PolyStreams.claimWritable();
+	stream.writer().setLockUV(0, false);
+	stream.writer().surface(SURFACE_ALL);
+	stream.saveDefaults();
 
-        MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
-        return stream.releaseAndConvertToReader();
+	MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
+	return stream.releaseAndConvertToReader();
     }
 }

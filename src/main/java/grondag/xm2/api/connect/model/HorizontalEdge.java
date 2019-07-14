@@ -29,14 +29,13 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Vec3i;
 
 /**
- * A subset of {@link BlockEdge}, includes only the edges in the horizontal plane.
+ * A subset of {@link BlockEdge}, includes only the edges in the horizontal
+ * plane.
  */
 @API(status = STABLE)
 public enum HorizontalEdge implements StringIdentifiable {
-    NORTH_EAST(HorizontalFace.NORTH, HorizontalFace.EAST), 
-    NORTH_WEST(HorizontalFace.NORTH, HorizontalFace.WEST),
-    SOUTH_EAST(HorizontalFace.SOUTH, HorizontalFace.EAST), 
-    SOUTH_WEST(HorizontalFace.SOUTH, HorizontalFace.WEST);
+    NORTH_EAST(HorizontalFace.NORTH, HorizontalFace.EAST), NORTH_WEST(HorizontalFace.NORTH, HorizontalFace.WEST),
+    SOUTH_EAST(HorizontalFace.SOUTH, HorizontalFace.EAST), SOUTH_WEST(HorizontalFace.SOUTH, HorizontalFace.WEST);
 
     public final HorizontalFace face1;
     public final HorizontalFace face2;
@@ -44,35 +43,35 @@ public enum HorizontalEdge implements StringIdentifiable {
     public final Vec3i vector;
 
     public final String name;
-    
+
     private HorizontalEdge(HorizontalFace face1, HorizontalFace face2) {
-        this.name = this.name().toLowerCase();
-        this.face1 = face1;
-        this.face2 = face2;
-        this.vector = new Vec3i(face1.face.getVector().getX() + face2.face.getVector().getX(), 0,
-                face1.face.getVector().getZ() + face2.face.getVector().getZ());
+	this.name = this.name().toLowerCase();
+	this.face1 = face1;
+	this.face2 = face2;
+	this.vector = new Vec3i(face1.face.getVector().getX() + face2.face.getVector().getX(), 0,
+		face1.face.getVector().getZ() + face2.face.getVector().getZ());
     }
 
     public static final int COUNT = HorizontalCornerHelper.COUNT;
-    
+
     /**
      * Will return null if inputs do not specify a horizontal block edge.
      */
     @Nullable
     public static HorizontalEdge find(HorizontalFace face1, HorizontalFace face2) {
-        return HorizontalCornerHelper.find(face1, face2);
+	return HorizontalCornerHelper.find(face1, face2);
     }
-    
+
     public static HorizontalEdge fromOrdinal(int ordinal) {
-        return HorizontalCornerHelper.fromOrdinal(ordinal);
+	return HorizontalCornerHelper.fromOrdinal(ordinal);
     }
-    
+
     public static void forEach(Consumer<HorizontalEdge> consumer) {
-        HorizontalCornerHelper.forEach(consumer);
+	HorizontalCornerHelper.forEach(consumer);
     }
 
     @Override
     public String asString() {
-        return name;
+	return name;
     }
 }

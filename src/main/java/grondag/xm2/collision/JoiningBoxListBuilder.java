@@ -42,7 +42,7 @@ public class JoiningBoxListBuilder implements ICollisionBoxListBuilder {
     private static final int[] EMPTY_FACE_BOX_MAP = new int[MAX_FACE_KEYS];
 
     static {
-        Arrays.fill(EMPTY_FACE_BOX_MAP, -1);
+	Arrays.fill(EMPTY_FACE_BOX_MAP, -1);
     }
 
     /**
@@ -54,35 +54,35 @@ public class JoiningBoxListBuilder implements ICollisionBoxListBuilder {
      * is the last. (Again, not counting exterior faces.)
      */
     static int faceKey(int axisOrdinal, int depth, int minA, int minB, int maxA, int maxB) {
-        return minA | (minB << MIN_B_SHIFT) | ((maxA - 1) << MAX_A_SHIFT) | ((maxB - 1) << MAX_B_SHIFT)
-                | ((axisOrdinal * 3 + depth) << AXIS_DEPTH_SHIFT);
+	return minA | (minB << MIN_B_SHIFT) | ((maxA - 1) << MAX_A_SHIFT) | ((maxB - 1) << MAX_B_SHIFT)
+		| ((axisOrdinal * 3 + depth) << AXIS_DEPTH_SHIFT);
     }
 
     static void forEachFaceKey(int boxKey, IntConsumer faceKeyConsumer) {
-        CollisionBoxEncoder.forBounds(boxKey, (minX, minY, minZ, maxX, maxY, maxZ) -> {
-            final int x0 = minX >> 1;
-            final int y0 = minY >> 1;
-            final int z0 = minZ >> 1;
-            final int x1 = maxX >> 1;
-            final int y1 = maxY >> 1;
-            final int z1 = maxZ >> 1;
+	CollisionBoxEncoder.forBounds(boxKey, (minX, minY, minZ, maxX, maxY, maxZ) -> {
+	    final int x0 = minX >> 1;
+	    final int y0 = minY >> 1;
+	    final int z0 = minZ >> 1;
+	    final int x1 = maxX >> 1;
+	    final int y1 = maxY >> 1;
+	    final int z1 = maxZ >> 1;
 
-            if (y1 != 4)
-                faceKeyConsumer.accept(faceKey(Y_AXIS, y1 - 1, x0, z0, x1, z1));
-            if (y0 != 0)
-                faceKeyConsumer.accept(faceKey(Y_AXIS, y0 - 1, x0, z0, x1, z1));
+	    if (y1 != 4)
+		faceKeyConsumer.accept(faceKey(Y_AXIS, y1 - 1, x0, z0, x1, z1));
+	    if (y0 != 0)
+		faceKeyConsumer.accept(faceKey(Y_AXIS, y0 - 1, x0, z0, x1, z1));
 
-            if (x1 != 4)
-                faceKeyConsumer.accept(faceKey(X_AXIS, x1 - 1, y0, z0, y1, z1));
-            if (x0 != 0)
-                faceKeyConsumer.accept(faceKey(X_AXIS, x0 - 1, y0, z0, y1, z1));
+	    if (x1 != 4)
+		faceKeyConsumer.accept(faceKey(X_AXIS, x1 - 1, y0, z0, y1, z1));
+	    if (x0 != 0)
+		faceKeyConsumer.accept(faceKey(X_AXIS, x0 - 1, y0, z0, y1, z1));
 
-            if (z1 != 4)
-                faceKeyConsumer.accept(faceKey(Z_AXIS, z1 - 1, x0, y0, x1, y1));
-            if (z0 != 0)
-                faceKeyConsumer.accept(faceKey(Z_AXIS, z0 - 1, x0, y0, x1, y1));
-            return 0;
-        });
+	    if (z1 != 4)
+		faceKeyConsumer.accept(faceKey(Z_AXIS, z1 - 1, x0, y0, x1, y1));
+	    if (z0 != 0)
+		faceKeyConsumer.accept(faceKey(Z_AXIS, z0 - 1, x0, y0, x1, y1));
+	    return 0;
+	});
     }
 
 //    private final Int2IntOpenHashMap faceToBoxMap = new Int2IntOpenHashMap();
@@ -92,26 +92,26 @@ public class JoiningBoxListBuilder implements ICollisionBoxListBuilder {
     private final IntOpenHashSet boxSet = new IntOpenHashSet();
 
     public JoiningBoxListBuilder() {
-        System.arraycopy(EMPTY_FACE_BOX_MAP, 0, faceBoxMap, 0, MAX_FACE_KEYS);
+	System.arraycopy(EMPTY_FACE_BOX_MAP, 0, faceBoxMap, 0, MAX_FACE_KEYS);
     }
 
     @Override
     public void clear() {
-        System.arraycopy(EMPTY_FACE_BOX_MAP, 0, faceBoxMap, 0, MAX_FACE_KEYS);
-        boxSet.clear();
+	System.arraycopy(EMPTY_FACE_BOX_MAP, 0, faceBoxMap, 0, MAX_FACE_KEYS);
+	boxSet.clear();
     }
 
     /**
      * Removes all faces keys in addition to box itself.
      */
     private void removeBox(int boxKey) {
-        forEachFaceKey(boxKey, k -> faceBoxMap[k] = -1);
-        boxSet.rem(boxKey);
+	forEachFaceKey(boxKey, k -> faceBoxMap[k] = -1);
+	boxSet.rem(boxKey);
     }
 
     private void addBox(int boxKey) {
-        boxSet.add(boxKey);
-        forEachFaceKey(boxKey, k -> faceBoxMap[k] = boxKey);
+	boxSet.add(boxKey);
+	forEachFaceKey(boxKey, k -> faceBoxMap[k] = boxKey);
     }
 
     // TODO: remove
@@ -146,46 +146,46 @@ public class JoiningBoxListBuilder implements ICollisionBoxListBuilder {
 
     @Override
     public void add(final int boxKey) {
-        final int x0 = (boxKey >> (MIN_X_SHIFT + 1)) & 0x7;
-        final int y0 = (boxKey >> (MIN_Y_SHIFT + 1)) & 0x7;
-        final int z0 = (boxKey >> (MIN_Z_SHIFT + 1)) & 0x7;
-        final int x1 = (boxKey >> (MAX_X_SHIFT + 1)) & 0x7;
-        final int y1 = (boxKey >> (MAX_Y_SHIFT + 1)) & 0x7;
-        final int z1 = (boxKey >> (MAX_Z_SHIFT + 1)) & 0x7;
+	final int x0 = (boxKey >> (MIN_X_SHIFT + 1)) & 0x7;
+	final int y0 = (boxKey >> (MIN_Y_SHIFT + 1)) & 0x7;
+	final int z0 = (boxKey >> (MIN_Z_SHIFT + 1)) & 0x7;
+	final int x1 = (boxKey >> (MAX_X_SHIFT + 1)) & 0x7;
+	final int y1 = (boxKey >> (MAX_Y_SHIFT + 1)) & 0x7;
+	final int z1 = (boxKey >> (MAX_Z_SHIFT + 1)) & 0x7;
 
-        if (y1 != 4 && tryCombine(boxKey, faceKey(Y_AXIS, y1 - 1, x0, z0, x1, z1)))
-            return;
+	if (y1 != 4 && tryCombine(boxKey, faceKey(Y_AXIS, y1 - 1, x0, z0, x1, z1)))
+	    return;
 
-        if (y0 != 0 && tryCombine(boxKey, faceKey(Y_AXIS, y0 - 1, x0, z0, x1, z1)))
-            return;
+	if (y0 != 0 && tryCombine(boxKey, faceKey(Y_AXIS, y0 - 1, x0, z0, x1, z1)))
+	    return;
 
-        if (x1 != 4 && tryCombine(boxKey, faceKey(X_AXIS, x1 - 1, y0, z0, y1, z1)))
-            return;
+	if (x1 != 4 && tryCombine(boxKey, faceKey(X_AXIS, x1 - 1, y0, z0, y1, z1)))
+	    return;
 
-        if (x0 != 0 && tryCombine(boxKey, faceKey(X_AXIS, x0 - 1, y0, z0, y1, z1)))
-            return;
+	if (x0 != 0 && tryCombine(boxKey, faceKey(X_AXIS, x0 - 1, y0, z0, y1, z1)))
+	    return;
 
-        if (z1 != 4 && tryCombine(boxKey, faceKey(Z_AXIS, z1 - 1, x0, y0, x1, y1)))
-            return;
+	if (z1 != 4 && tryCombine(boxKey, faceKey(Z_AXIS, z1 - 1, x0, y0, x1, y1)))
+	    return;
 
-        if (z0 != 0 && tryCombine(boxKey, faceKey(Z_AXIS, z0 - 1, x0, y0, x1, y1)))
-            return;
+	if (z0 != 0 && tryCombine(boxKey, faceKey(Z_AXIS, z0 - 1, x0, y0, x1, y1)))
+	    return;
 
-        addBox(boxKey);
+	addBox(boxKey);
     }
 
     boolean tryCombine(int boxKey, int faceKey) {
-        int k = faceBoxMap[faceKey];
-        if (k == -1)
-            return false;
+	int k = faceBoxMap[faceKey];
+	if (k == -1)
+	    return false;
 
-        removeBox(k);
-        add(CollisionBoxEncoder.combineBoxes(boxKey, k));
-        return true;
+	removeBox(k);
+	add(CollisionBoxEncoder.combineBoxes(boxKey, k));
+	return true;
     }
 
     @Override
     public IntCollection boxes() {
-        return this.boxSet;
+	return this.boxSet;
     }
 }

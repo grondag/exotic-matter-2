@@ -35,34 +35,34 @@ import net.minecraft.block.BlockRenderLayer;
  */
 public class ModelStateFlagHelper {
     public static final int getFlags(ModelState state) {
-        final ModelPrimitive mesh = state.getShape();
+	final ModelPrimitive mesh = state.getShape();
 
-        int flags = STATE_FLAG_IS_POPULATED | mesh.stateFlags(state);
+	int flags = STATE_FLAG_IS_POPULATED | mesh.stateFlags(state);
 
-        final int surfCount = mesh.surfaces().size();
-        for(int i = 0; i < surfCount; i++) {
-        	XmPaint p = state.paint(i);
-        	final int texDepth = p.textureDepth();
-        	
-        	for(int j = 0; j < texDepth; j++) {
-        		if(p.blendMode(j) == BlockRenderLayer.SOLID) {
-        			flags |= STATE_FLAG_HAS_SOLID_RENDER;
-            	} else {
-            		flags |= STATE_FLAG_HAS_TRANSLUCENT_RENDER;
-            		if(j == 0) {
-            			flags |= STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-            		}
-            	}
-        		
-                flags |=  p.texture(j).stateFlags();
-        	}
-        }
+	final int surfCount = mesh.surfaces().size();
+	for (int i = 0; i < surfCount; i++) {
+	    XmPaint p = state.paint(i);
+	    final int texDepth = p.textureDepth();
 
-        // turn off this.stateFlags that don't apply to non-block formats if we aren't
-        // one
-        if (((AbstractModelPrimitive)mesh).stateFormat != StateFormat.BLOCK)
-            flags &= STATE_FLAG_DISABLE_BLOCK_ONLY;
+	    for (int j = 0; j < texDepth; j++) {
+		if (p.blendMode(j) == BlockRenderLayer.SOLID) {
+		    flags |= STATE_FLAG_HAS_SOLID_RENDER;
+		} else {
+		    flags |= STATE_FLAG_HAS_TRANSLUCENT_RENDER;
+		    if (j == 0) {
+			flags |= STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
+		    }
+		}
 
-        return flags;
+		flags |= p.texture(j).stateFlags();
+	    }
+	}
+
+	// turn off this.stateFlags that don't apply to non-block formats if we aren't
+	// one
+	if (((AbstractModelPrimitive) mesh).stateFormat != StateFormat.BLOCK)
+	    flags &= STATE_FLAG_DISABLE_BLOCK_ONLY;
+
+	return flags;
     }
 }

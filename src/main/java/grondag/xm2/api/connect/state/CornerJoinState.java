@@ -26,33 +26,35 @@ import net.minecraft.util.math.Direction;
 
 /**
  * Describes the state of a block model with connected textures/shapes that
- * depend on the presence or absence of corner neighbors. (For a total of 26.)<p>
+ * depend on the presence or absence of corner neighbors. (For a total of 26.)
+ * <p>
  * 
- * A corner join state is a super set of and will always be consistent with
- * the {@link #simpleJoin()} state given the same block neighbors / test.<p>
+ * A corner join state is a super set of and will always be consistent with the
+ * {@link #simpleJoin()} state given the same block neighbors / test.
+ * <p>
  */
 @API(status = STABLE)
 public interface CornerJoinState {
     int STATE_COUNT = CornerJoinStateSelector.BLOCK_JOIN_STATE_COUNT;
-    
+
     int ordinal();
 
     CornerJoinFaceState faceState(Direction face);
-    
+
     /**
      * Access to underlying simple 6-sides join.
      */
     SimpleJoinState simpleJoin();
-    
+
     static int ordinalFromWorld(BlockNeighbors tests) {
-        return CornerJoinStateSelector.ordinalFromWorld(tests);
+	return CornerJoinStateSelector.ordinalFromWorld(tests);
     }
 
     static CornerJoinState fromWorld(BlockNeighbors tests) {
-        return CornerJoinStateSelector.fromWorld(tests);
+	return CornerJoinStateSelector.fromWorld(tests);
     }
-    
+
     static CornerJoinState fromOrdinal(int ordinal) {
-        return CornerJoinStateSelector.fromOrdinal(ordinal);
+	return CornerJoinStateSelector.fromOrdinal(ordinal);
     }
 }

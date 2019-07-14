@@ -16,7 +16,6 @@
 
 package grondag.xm2.mesh.helper;
 
-
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -35,31 +34,30 @@ public class PolyTransform {
     private final Matrix4f matrix;
 
     public PolyTransform(Matrix4f matrix) {
-        this.matrix = matrix;
+	this.matrix = matrix;
     }
 
     public void apply(IMutablePolygon poly) {
-        final Matrix4f matrix = this.matrix;
-        final int vertexCount = poly.vertexCount();
-        final Vector3f vec = VEC3.get();
-        final Vec3i oldVec = poly.nominalFace().getVector();
-        
-        // transform vertices
-        for(int i = 0; i < vertexCount; i++)
-        {
-            matrix.transformPosition(poly.x(i) - 0.5f, poly.y(i) - 0.5f, poly.z(i) - 0.5f, vec);
-            poly.pos(i, vec.x + 0.5f, vec.y + 0.5f, vec.z + 0.5f);
+	final Matrix4f matrix = this.matrix;
+	final int vertexCount = poly.vertexCount();
+	final Vector3f vec = VEC3.get();
+	final Vec3i oldVec = poly.nominalFace().getVector();
 
-            if(poly.hasNormal(i)) {
-                matrix.transformDirection(poly.normalX(i), poly.normalY(i), poly.normalZ(i), vec);
-                vec.normalize();
-                poly.normal(i, vec.x, vec.y, vec.z);
-            }
-        }
+	// transform vertices
+	for (int i = 0; i < vertexCount; i++) {
+	    matrix.transformPosition(poly.x(i) - 0.5f, poly.y(i) - 0.5f, poly.z(i) - 0.5f, vec);
+	    poly.pos(i, vec.x + 0.5f, vec.y + 0.5f, vec.z + 0.5f);
 
-        // transform nominal face
-        matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
-        poly.setNominalFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
+	    if (poly.hasNormal(i)) {
+		matrix.transformDirection(poly.normalX(i), poly.normalY(i), poly.normalZ(i), vec);
+		vec.normalize();
+		poly.normal(i, vec.x, vec.y, vec.z);
+	    }
+	}
+
+	// transform nominal face
+	matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
+	poly.setNominalFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
     }
 
     private static final ThreadLocal<Vector3f> VEC3 = ThreadLocal.withInitial(Vector3f::new);
@@ -70,40 +68,40 @@ public class PolyTransform {
     private final static Direction[][] FACING_MAP_INVERSE = new Direction[32][6];
 
     private final static FaceMap[] FACE_MAPS = new FaceMap[32];
-    
+
     /**
      * Facemap that contains identity transform.
      */
     public static final FaceMap IDENTITY_FACEMAP;
 
     static {
-        final Axis[] avals = { Axis.X, Axis.Y, Axis.Z, null };
-        for (Axis axis : avals) {
-            for (ClockwiseRotation rot : ClockwiseRotation.values()) {
-                populateLookups(axis, false, rot);
-                populateLookups(axis, true, rot);
-            }
-        }
+	final Axis[] avals = { Axis.X, Axis.Y, Axis.Z, null };
+	for (Axis axis : avals) {
+	    for (ClockwiseRotation rot : ClockwiseRotation.values()) {
+		populateLookups(axis, false, rot);
+		populateLookups(axis, true, rot);
+	    }
+	}
 
-        IDENTITY_FACEMAP = getFaceMap(computeKey(null, false, ClockwiseRotation.ROTATE_NONE));
+	IDENTITY_FACEMAP = getFaceMap(computeKey(null, false, ClockwiseRotation.ROTATE_NONE));
     }
 
     private static void populateLookups(Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
-        int key = computeKey(axis, isAxisInverted, rotation);
-        Matrix4f matrix = computeMatrix(axis, isAxisInverted, rotation);
-        LOOKUP[key] = new PolyTransform(matrix);
+	int key = computeKey(axis, isAxisInverted, rotation);
+	Matrix4f matrix = computeMatrix(axis, isAxisInverted, rotation);
+	LOOKUP[key] = new PolyTransform(matrix);
 
-        for (int i = 0; i < 6; i++) {
-            Direction face = ModelHelper.faceFromIndex(i);
-            Vec3i dir = face.getVector();
-            Vector4f vec = new Vector4f(dir.getX(), dir.getY(), dir.getZ(), 0);
-            matrix.transform(vec);
-            Direction mappedFace = Direction.getFacing(vec.x, vec.y, vec.z);
+	for (int i = 0; i < 6; i++) {
+	    Direction face = ModelHelper.faceFromIndex(i);
+	    Vec3i dir = face.getVector();
+	    Vector4f vec = new Vector4f(dir.getX(), dir.getY(), dir.getZ(), 0);
+	    matrix.transform(vec);
+	    Direction mappedFace = Direction.getFacing(vec.x, vec.y, vec.z);
 
-            FACING_MAP[key][face.ordinal()] = mappedFace;
-            FACING_MAP_INVERSE[key][mappedFace.ordinal()] = face;
-        }
-        FACE_MAPS[key] = new FaceMap(key);
+	    FACING_MAP[key][face.ordinal()] = mappedFace;
+	    FACING_MAP_INVERSE[key][mappedFace.ordinal()] = face;
+	}
+	FACE_MAPS[key] = new FaceMap(key);
     }
 
     /**
@@ -135,24 +133,25 @@ public class PolyTransform {
      * {@link #getMatrixForAxisAndRotation(net.minecraft.util.math.Direction.Axis, boolean, Rotation)}
      */
     public static PolyTransform get(ModelState modelState) {
-        
-        //TODO: put back
-        return new PolyTransform(computeMatrix(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation()));
-        //return LOOKUP[computeTransformKey(modelState)];
+
+	// TODO: put back
+	return new PolyTransform(
+		computeMatrix(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation()));
+	// return LOOKUP[computeTransformKey(modelState)];
     }
 
     private static Matrix4f computeMatrix(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
-        if (axis != null) {
-            if (rotation != ClockwiseRotation.ROTATE_NONE) {
-                return getMatrixForAxisAndRotation(axis, isAxisInverted, rotation);
-            } else {
-                return getMatrixForAxis(axis, isAxisInverted);
-            }
-        } else if (rotation != ClockwiseRotation.ROTATE_NONE) {
-            return getMatrixForRotation(rotation);
-        } else {
-            return new Matrix4f().identity();
-        }
+	if (axis != null) {
+	    if (rotation != ClockwiseRotation.ROTATE_NONE) {
+		return getMatrixForAxisAndRotation(axis, isAxisInverted, rotation);
+	    } else {
+		return getMatrixForAxis(axis, isAxisInverted);
+	    }
+	} else if (rotation != ClockwiseRotation.ROTATE_NONE) {
+	    return getMatrixForRotation(rotation);
+	} else {
+	    return new Matrix4f().identity();
+	}
     }
 
     /**
@@ -165,14 +164,14 @@ public class PolyTransform {
      * @param axisRotation   null handled as no axis rotation
      */
     private static int computeKey(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
-        int bits = 0;
-        if (axis != null) {
-            bits = (axis.ordinal() + 1) | (isAxisInverted ? 4 : 0);
-        }
-        if (rotation != null) {
-            bits |= rotation.ordinal() << 3;
-        }
-        return bits;
+	int bits = 0;
+	if (axis != null) {
+	    bits = (axis.ordinal() + 1) | (isAxisInverted ? 4 : 0);
+	}
+	if (rotation != null) {
+	    bits |= rotation.ordinal() << 3;
+	}
+	return bits;
     }
 
     /**
@@ -180,58 +179,60 @@ public class PolyTransform {
      * state. Useful for some serialization scenarios.
      */
     public static int computeTransformKey(ModelState modelState) {
-        return modelState.hasAxis()
-                ? computeKey(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation())
-                        : computeKey(null, false, modelState.getAxisRotation());
+	return modelState.hasAxis()
+		? computeKey(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation())
+		: computeKey(null, false, modelState.getAxisRotation());
     }
 
     private static Matrix4f getMatrixForAxis(Direction.Axis axis, boolean isAxisInverted) {
-        switch (axis) {
-        case X:
-            return isAxisInverted 
-                    ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 0, 1)
-                            : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 0, 1);
+	switch (axis) {
+	case X:
+	    return isAxisInverted
+		    ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0)
+			    .rotate((float) Math.toRadians(90), 0, 0, 1)
+		    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0)
+			    .rotate((float) Math.toRadians(270), 0, 0, 1);
 
-        case Y:
-            return isAxisInverted 
-                    ? new Matrix4f().identity().rotate((float) Math.toRadians(180), 1, 0, 0)
-                            : new Matrix4f().identity();
+	case Y:
+	    return isAxisInverted ? new Matrix4f().identity().rotate((float) Math.toRadians(180), 1, 0, 0)
+		    : new Matrix4f().identity();
 
-        case Z:
-            return isAxisInverted 
-                    ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(180), 0, 1, 0)
-                            : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0);
+	case Z:
+	    return isAxisInverted
+		    ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0)
+			    .rotate((float) Math.toRadians(180), 0, 1, 0)
+		    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0);
 
-        default:
-            return new Matrix4f().identity();
+	default:
+	    return new Matrix4f().identity();
 
-        }
+	}
     }
 
     private static Matrix4f getMatrixForRotation(ClockwiseRotation rotation) {
-        switch (rotation) {
-        default:
-        case ROTATE_NONE:
-            return new Matrix4f().identity();
+	switch (rotation) {
+	default:
+	case ROTATE_NONE:
+	    return new Matrix4f().identity();
 
-        case ROTATE_90:
-            // inverted because JOML is counter-clockwise with RH coordinates
-            return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
+	case ROTATE_90:
+	    // inverted because JOML is counter-clockwise with RH coordinates
+	    return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
 
-        case ROTATE_180:
-            return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
+	case ROTATE_180:
+	    return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
 
-        case ROTATE_270:
-            // inverted because JOML is counter-clockwise with RH coordinates
-            return new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0);
-        }
+	case ROTATE_270:
+	    // inverted because JOML is counter-clockwise with RH coordinates
+	    return new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0);
+	}
     }
 
     private static Matrix4f getMatrixForAxisAndRotation(Direction.Axis axis, boolean isAxisInverted,
-            ClockwiseRotation rotation) {
-        Matrix4f result = getMatrixForAxis(axis, isAxisInverted);
-        result.mul(getMatrixForRotation(rotation));
-        return result;
+	    ClockwiseRotation rotation) {
+	Matrix4f result = getMatrixForAxis(axis, isAxisInverted);
+	result.mul(getMatrixForRotation(rotation));
+	return result;
     }
 
     /**
@@ -241,7 +242,7 @@ public class PolyTransform {
      * input face.
      */
     public static Direction rotateFace(ModelState modelState, Direction face) {
-        return FACE_MAPS[computeTransformKey(modelState)].map(face);
+	return FACE_MAPS[computeTransformKey(modelState)].map(face);
     }
 
     /**
@@ -251,11 +252,10 @@ public class PolyTransform {
      * <p>
      * 
      * Equivalently, list containing results of calling
-     * {@link #rotateFace(ModelState, Direction)} for each face in Enum
-     * order.
+     * {@link #rotateFace(ModelState, Direction)} for each face in Enum order.
      */
     public static FaceMap getFaceMap(ModelState modelState) {
-        return FACE_MAPS[computeTransformKey(modelState)];
+	return FACE_MAPS[computeTransformKey(modelState)];
     }
 
     /**
@@ -263,30 +263,30 @@ public class PolyTransform {
      * {@link #computeTransformKey(ModelState)} instead of modelstate.
      */
     public static FaceMap getFaceMap(int transformKey) {
-        return FACE_MAPS[transformKey];
+	return FACE_MAPS[transformKey];
     }
 
     public static class FaceMap {
-        public final int index;
+	public final int index;
 
-        private FaceMap(int index) {
-            this.index = index;
-        }
+	private FaceMap(int index) {
+	    this.index = index;
+	}
 
-        /**
-         * Returns face that results from applying the transform associated with this
-         * map.
-         */
-        public Direction map(Direction fromFace) {
-            return FACING_MAP[this.index][fromFace.ordinal()];
-        }
+	/**
+	 * Returns face that results from applying the transform associated with this
+	 * map.
+	 */
+	public Direction map(Direction fromFace) {
+	    return FACING_MAP[this.index][fromFace.ordinal()];
+	}
 
-        /**
-         * Inverse of {@link #map(Direction)}. Maps from output face of transform back
-         * to input face.
-         */
-        public Direction inverseMap(Direction toFace) {
-            return FACING_MAP_INVERSE[this.index][toFace.ordinal()];
-        }
+	/**
+	 * Inverse of {@link #map(Direction)}. Maps from output face of transform back
+	 * to input face.
+	 */
+	public Direction inverseMap(Direction toFace) {
+	    return FACING_MAP_INVERSE[this.index][toFace.ordinal()];
+	}
     }
 }

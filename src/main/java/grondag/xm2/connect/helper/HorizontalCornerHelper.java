@@ -27,31 +27,32 @@ import grondag.xm2.api.connect.model.HorizontalFace;
 
 @API(status = INTERNAL)
 public abstract class HorizontalCornerHelper {
-    private HorizontalCornerHelper() {}
-    
+    private HorizontalCornerHelper() {
+    }
+
     private static final HorizontalEdge[] VALUES = HorizontalEdge.values();
     public static final int COUNT = VALUES.length;
 
     private static final HorizontalEdge[][] HORIZONTAL_CORNER_LOOKUP = new HorizontalEdge[4][4];
 
     static {
-        for (HorizontalEdge corner : HorizontalEdge.values()) {
-            HORIZONTAL_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()] = corner;
-            HORIZONTAL_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()] = corner;
-        }
+	for (HorizontalEdge corner : HorizontalEdge.values()) {
+	    HORIZONTAL_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()] = corner;
+	    HORIZONTAL_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()] = corner;
+	}
     }
-    
+
     public static HorizontalEdge find(HorizontalFace face1, HorizontalFace face2) {
-        return HORIZONTAL_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
+	return HORIZONTAL_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
     }
-    
+
     public static HorizontalEdge fromOrdinal(int ordinal) {
-        return VALUES[ordinal];
+	return VALUES[ordinal];
     }
-    
+
     public static void forEach(Consumer<HorizontalEdge> consumer) {
-        for(HorizontalEdge val: VALUES) {
-            consumer.accept(val);
-        }
+	for (HorizontalEdge val : VALUES) {
+	    consumer.accept(val);
+	}
     }
 }

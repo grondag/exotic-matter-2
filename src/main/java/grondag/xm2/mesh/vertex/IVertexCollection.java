@@ -27,6 +27,6 @@ public interface IVertexCollection {
      * Wraps around if index out of range.
      */
     public default Vec3f getPosModulo(int index) {
-        return getPos(index % vertexCount());
+	return getPos(index % vertexCount());
     }
 }

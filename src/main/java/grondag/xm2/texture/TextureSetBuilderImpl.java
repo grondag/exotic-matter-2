@@ -28,62 +28,62 @@ import net.minecraft.util.Identifier;
 public class TextureSetBuilderImpl extends AbstractTextureSet implements TextureSetBuilder {
     @Override
     public TextureSetBuilder versionCount(int versionCount) {
-        this.versionCount = versionCount;
-        return this;
+	this.versionCount = versionCount;
+	return this;
     }
 
     @Override
     public TextureSetBuilder scale(TextureScale scale) {
-        this.scale = scale;
-        return this;
+	this.scale = scale;
+	return this;
     }
 
     @Override
     public TextureSetBuilder layout(TextureLayoutMap layout) {
-        this.layoutMap = (TextureLayoutMapImpl) layout;
-        return this;
+	this.layoutMap = (TextureLayoutMapImpl) layout;
+	return this;
     }
 
     @Override
     public TextureSetBuilder rotation(TextureRotation rotation) {
-        this.rotation = rotation;
-        return this;
+	this.rotation = rotation;
+	return this;
     }
 
     @Override
     public TextureSetBuilder renderIntent(TextureRenderIntent renderIntent) {
-        this.renderIntent = renderIntent;
-        return this;
+	this.renderIntent = renderIntent;
+	return this;
     }
 
     @Override
     public TextureSetBuilder groups(TextureGroup... groups) {
-        this.textureGroupFlags = TextureGroup.makeTextureGroupFlags(groups);
-        return this;
+	this.textureGroupFlags = TextureGroup.makeTextureGroupFlags(groups);
+	return this;
     }
 
     @Override
     public TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile) {
-        this.renderNoBorderAsTile = renderNoBorderAsTile;
-        return this;
+	this.renderNoBorderAsTile = renderNoBorderAsTile;
+	return this;
     }
 
     @Override
     public TextureSetBuilder baseTextureName(String baseTextureName) {
-        this.rawBaseTextureName = baseTextureName;
-        return this;
+	this.rawBaseTextureName = baseTextureName;
+	return this;
     }
 
     @Override
     public TextureSetBuilder displayNameToken(String displayNameToken) {
-        this.displayNameToken = displayNameToken;
-        return this;
+	this.displayNameToken = displayNameToken;
+	return this;
     }
 
     @Override
     public TextureSet build(Identifier id) {
-        TextureSetImpl result = new TextureSetImpl(id, this);
-        TextureSetRegistryImpl.INSTANCE.add(result);
-        return result;
+	TextureSetImpl result = new TextureSetImpl(id, this);
+	TextureSetRegistryImpl.INSTANCE.add(result);
+	return result;
     }
 }

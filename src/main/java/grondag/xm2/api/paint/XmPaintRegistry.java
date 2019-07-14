@@ -20,11 +20,11 @@ import grondag.xm2.paint.XmPaintRegistryImpl;
 import net.minecraft.util.Identifier;
 
 public interface XmPaintRegistry {
-	static XmPaintRegistry INSTANCE = XmPaintRegistryImpl.INSTANCE;
-	
-	boolean register(Identifier id, XmPaint paint);
-	
-	XmPaint get(int paintIndex);
-	
-	XmPaint get(Identifier paintId);
+    static XmPaintRegistry INSTANCE = XmPaintRegistryImpl.INSTANCE;
+
+    boolean register(Identifier id, XmPaint paint);
+
+    XmPaint get(int paintIndex);
+
+    XmPaint get(Identifier paintId);
 }

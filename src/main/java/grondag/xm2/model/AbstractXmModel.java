@@ -26,45 +26,45 @@ import net.minecraft.client.texture.Sprite;
 
 public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
     protected ItemProxy itemProxy = null;
-    
+
     @Override
     public ModelItemPropertyOverrideList getItemPropertyOverrides() {
-        ItemProxy result = itemProxy;
-        if(result == null) {
-            result = new ItemProxy(this);
-            itemProxy = result;
-        }
-        return result;
+	ItemProxy result = itemProxy;
+	if (result == null) {
+	    result = new ItemProxy(this);
+	    itemProxy = result;
+	}
+	return result;
     }
-    
+
     @Override
     public ModelTransformation getTransformation() {
-        return ModelHelper.MODEL_TRANSFORM_BLOCK;
+	return ModelHelper.MODEL_TRANSFORM_BLOCK;
     }
 
     @Override
     public boolean useAmbientOcclusion() {
-        return true;
+	return true;
     }
 
     @Override
     public boolean hasDepthInGui() {
-        return true;
+	return true;
     }
 
     @Override
     public boolean isBuiltin() {
-        return false;
+	return false;
     }
 
     @Override
     public boolean isVanillaAdapter() {
-        return false;
+	return false;
     }
-    
+
     @Override
     public Sprite getSprite() {
-        return MissingSprite.getMissingSprite();
+	return MissingSprite.getMissingSprite();
     }
 
 }

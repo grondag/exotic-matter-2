@@ -23,7 +23,7 @@ import grondag.xm2.api.texture.TextureRotation;
 import grondag.xm2.api.texture.TextureScale;
 
 abstract class AbstractTextureSet {
-	TextureLayoutMapImpl layoutMap = (TextureLayoutMapImpl) TextureLayoutMap.SINGLE;
+    TextureLayoutMapImpl layoutMap = (TextureLayoutMapImpl) TextureLayoutMap.SINGLE;
     TextureRotation rotation = TextureRotation.ROTATE_NONE;
     TextureScale scale = TextureScale.SINGLE;
     TextureRenderIntent renderIntent = TextureRenderIntent.BASE_ONLY;
@@ -32,48 +32,48 @@ abstract class AbstractTextureSet {
     boolean renderNoBorderAsTile = false;
     String rawBaseTextureName;
     String displayNameToken;
-    
+
     protected void copyFrom(AbstractTextureSet template) {
-        this.layoutMap = template.layoutMap;
-        this.rotation = template.rotation;
-        this.scale = template.scale;
-        this.renderIntent = template.renderIntent;
-        this.versionCount = template.versionCount;
-        this.rawBaseTextureName = template.rawBaseTextureName;
-        this.renderNoBorderAsTile = template.renderNoBorderAsTile;
-        this.displayNameToken = template.displayNameToken;
-        this.textureGroupFlags = template.textureGroupFlags;
+	this.layoutMap = template.layoutMap;
+	this.rotation = template.rotation;
+	this.scale = template.scale;
+	this.renderIntent = template.renderIntent;
+	this.versionCount = template.versionCount;
+	this.rawBaseTextureName = template.rawBaseTextureName;
+	this.renderNoBorderAsTile = template.renderNoBorderAsTile;
+	this.displayNameToken = template.displayNameToken;
+	this.textureGroupFlags = template.textureGroupFlags;
     }
-    
+
     public TextureLayoutMap map() {
-        return layoutMap;
+	return layoutMap;
     }
 
     public TextureRotation rotation() {
-        return rotation;
+	return rotation;
     }
 
     public TextureScale scale() {
-        return scale;
+	return scale;
     }
 
     public TextureRenderIntent renderIntent() {
-        return renderIntent;
+	return renderIntent;
     }
 
     public int versionCount() {
-        return versionCount;
+	return versionCount;
     }
-    
+
     public boolean renderNoBorderAsTile() {
-        return renderNoBorderAsTile;
+	return renderNoBorderAsTile;
     }
 
     public String displayName() {
-        return displayNameToken;
+	return displayNameToken;
     }
 
     public int textureGroupFlags() {
-        return textureGroupFlags;
+	return textureGroupFlags;
     }
 }

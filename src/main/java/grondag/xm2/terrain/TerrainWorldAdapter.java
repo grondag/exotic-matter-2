@@ -35,8 +35,8 @@ import net.minecraft.world.World;
  * while not in active use, and all state changes must be single threaded and
  * occur through this instance.
  * 
- * TODO: add caching for flow height - do with as part of SuperBlockState
- * TODO: reinstate usage or remove
+ * TODO: add caching for flow height - do with as part of SuperBlockState TODO:
+ * reinstate usage or remove
  */
 public class TerrainWorldAdapter implements BlockView {
     protected World world;
@@ -44,34 +44,34 @@ public class TerrainWorldAdapter implements BlockView {
     @SuppressWarnings("serial")
 
     public static class FastMap<V> extends Long2ObjectOpenHashMap<V> {
-        /**
-         * DOES NOT SUPPORT ZERO-VALUED KEYS
-         * <p>
-         * 
-         * Only computes key 1x and scans arrays 1x for a modest savings. Here because
-         * block updates are the on-tick performance bottleneck for lava sim.
-         */
-        private V computeFast(final long k, final Supplier<V> v) {
-            final long[] key = this.key;
-            int pos = (int) it.unimi.dsi.fastutil.HashCommon.mix(k) & mask;
-            long curr = key[pos];
+	/**
+	 * DOES NOT SUPPORT ZERO-VALUED KEYS
+	 * <p>
+	 * 
+	 * Only computes key 1x and scans arrays 1x for a modest savings. Here because
+	 * block updates are the on-tick performance bottleneck for lava sim.
+	 */
+	private V computeFast(final long k, final Supplier<V> v) {
+	    final long[] key = this.key;
+	    int pos = (int) it.unimi.dsi.fastutil.HashCommon.mix(k) & mask;
+	    long curr = key[pos];
 
-            // The starting point.
-            if (curr != 0) {
-                if (curr == k)
-                    return value[pos];
-                while (!((curr = key[pos = (pos + 1) & mask]) == (0)))
-                    if (curr == k)
-                        return value[pos];
-            }
+	    // The starting point.
+	    if (curr != 0) {
+		if (curr == k)
+		    return value[pos];
+		while (!((curr = key[pos = (pos + 1) & mask]) == (0)))
+		    if (curr == k)
+			return value[pos];
+	    }
 
-            final V result = v.get();
-            key[pos] = k;
-            value[pos] = result;
-            if (size++ >= maxFill)
-                rehash(arraySize(size + 1, f));
-            return result;
-        }
+	    final V result = v.get();
+	    key[pos] = k;
+	    value[pos] = result;
+	    if (size++ >= maxFill)
+		rehash(arraySize(size + 1, f));
+	    return result;
+	}
     }
 
     protected FastMap<BlockState> blockStates = new FastMap<>();
@@ -82,47 +82,47 @@ public class TerrainWorldAdapter implements BlockView {
     }
 
     public TerrainWorldAdapter(World world) {
-        this.prepare(world);
+	this.prepare(world);
     }
 
     public void prepare(World world) {
-        this.world = world;
-        this.blockStates.clear();
-        this.terrainStates.clear();
+	this.world = world;
+	this.blockStates.clear();
+	this.terrainStates.clear();
     }
 
     public World wrapped() {
-        return this.world;
+	return this.world;
     }
 
     @Override
     public BlockState getBlockState(final BlockPos pos) {
-        long packedBlockPos = PackedBlockPos.pack(pos);
-        return blockStates.computeFast(packedBlockPos, () -> world.getBlockState(pos));
+	long packedBlockPos = PackedBlockPos.pack(pos);
+	return blockStates.computeFast(packedBlockPos, () -> world.getBlockState(pos));
     }
 
     private final BlockPos.Mutable getBlockPos = new BlockPos.Mutable();
 
     public BlockState getBlockState(long packedBlockPos) {
-        return blockStates.computeFast(packedBlockPos, () -> {
-            PackedBlockPos.unpackTo(packedBlockPos, getBlockPos);
-            return world.getBlockState(getBlockPos);
-        });
+	return blockStates.computeFast(packedBlockPos, () -> {
+	    PackedBlockPos.unpackTo(packedBlockPos, getBlockPos);
+	    return world.getBlockState(getBlockPos);
+	});
     }
 
     private final BlockPos.Mutable getTerrainPos = new BlockPos.Mutable();
 
     public TerrainState terrainState(BlockState state, long packedBlockPos) {
-        return terrainStates.computeFast(packedBlockPos, () -> {
-            PackedBlockPos.unpackTo(packedBlockPos, getTerrainPos);
-            return TerrainState.terrainState(this, state, getTerrainPos);
-        });
+	return terrainStates.computeFast(packedBlockPos, () -> {
+	    PackedBlockPos.unpackTo(packedBlockPos, getTerrainPos);
+	    return TerrainState.terrainState(this, state, getTerrainPos);
+	});
     }
 
     public TerrainState terrainState(BlockState state, BlockPos pos) {
-        return terrainStates.computeFast(PackedBlockPos.pack(pos), () -> {
-            return TerrainState.terrainState(this, state, pos);
-        });
+	return terrainStates.computeFast(PackedBlockPos.pack(pos), () -> {
+	    return TerrainState.terrainState(this, state, pos);
+	});
     }
 
     /**
@@ -130,7 +130,7 @@ public class TerrainWorldAdapter implements BlockView {
      * before using anything that needs it if changing terrain surface.
      */
     public void setBlockState(long packedBlockPos, BlockState newState) {
-        setBlockState(packedBlockPos, newState, true);
+	setBlockState(packedBlockPos, newState, true);
     }
 
     /**
@@ -138,16 +138,16 @@ public class TerrainWorldAdapter implements BlockView {
      * {@link #onBlockStateChange(long, BlockState, BlockState)} call back.
      */
     protected void setBlockState(long packedBlockPos, BlockState newState, boolean callback) {
-        BlockState oldState = getBlockState(packedBlockPos);
+	BlockState oldState = getBlockState(packedBlockPos);
 
-        if (newState == oldState)
-            return;
+	if (newState == oldState)
+	    return;
 
-        blockStates.put(packedBlockPos, newState);
-        applyBlockState(packedBlockPos, oldState, newState);
+	blockStates.put(packedBlockPos, newState);
+	applyBlockState(packedBlockPos, oldState, newState);
 
-        if (callback)
-            this.onBlockStateChange(packedBlockPos, oldState, newState);
+	if (callback)
+	    this.onBlockStateChange(packedBlockPos, oldState, newState);
     }
 
     /**
@@ -155,7 +155,7 @@ public class TerrainWorldAdapter implements BlockView {
      * use cases where world should not be affected directly.
      */
     protected void applyBlockState(long packedBlockPos, BlockState oldState, BlockState newState) {
-        world.setBlockState(PackedBlockPos.unpack(packedBlockPos), newState);
+	world.setBlockState(PackedBlockPos.unpack(packedBlockPos), newState);
     }
 
     /**
@@ -166,16 +166,16 @@ public class TerrainWorldAdapter implements BlockView {
     }
 
     public void setBlockState(BlockPos blockPos, BlockState newState) {
-        this.setBlockState(PackedBlockPos.pack(blockPos), newState);
+	this.setBlockState(PackedBlockPos.pack(blockPos), newState);
     }
 
     @Override
     public BlockEntity getBlockEntity(BlockPos pos) {
-        return world.getBlockEntity(pos);
+	return world.getBlockEntity(pos);
     }
 
     @Override
     public FluidState getFluidState(BlockPos pos) {
-        return world.getFluidState(pos);
+	return world.getFluidState(pos);
     }
 }

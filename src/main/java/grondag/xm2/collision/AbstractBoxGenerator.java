@@ -49,10 +49,10 @@ public abstract class AbstractBoxGenerator implements Consumer<IPolygon> {
 
     @Override
     public final void accept(IPolygon poly) {
-        acceptTriangle(poly.getPos(0), poly.getPos(1), poly.getPos(2));
+	acceptTriangle(poly.getPos(0), poly.getPos(1), poly.getPos(2));
 
-        if (poly.vertexCount() == 4)
-            acceptTriangle(poly.getPos(0), poly.getPos(2), poly.getPos(3));
+	if (poly.vertexCount() == 4)
+	    acceptTriangle(poly.getPos(0), poly.getPos(2), poly.getPos(3));
     }
 
     protected abstract void acceptTriangle(IVec3f v0, IVec3f v1, IVec3f v2);

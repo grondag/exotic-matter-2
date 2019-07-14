@@ -27,13 +27,13 @@ import net.fabricmc.fabric.api.client.render.InvalidateRenderStateCallback;
 public class XmClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        XmTextures.init();
-        ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
-        InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
+	XmTextures.init();
+	ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
+	InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
     }
-    
+
     public static void invalidate() {
-        XmDispatcher.INSTANCE.clear();
-        CollisionBoxDispatcher.clear();
+	XmDispatcher.INSTANCE.clear();
+	CollisionBoxDispatcher.clear();
     }
 }
