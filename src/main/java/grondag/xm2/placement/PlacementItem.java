@@ -28,7 +28,7 @@ import grondag.fermion.world.PackedBlockPos;
 import grondag.xm2.block.XmSimpleBlock;
 import grondag.xm2.block.XmStackHelper;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.model.impl.state.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

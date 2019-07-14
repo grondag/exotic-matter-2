@@ -14,27 +14,29 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.primitive;
+package grondag.xm2.model.impl.primitive;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NONE;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
+import grondag.fermion.world.Rotation;
+import grondag.xm2.mesh.helper.CubeInputs;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.ModelState;
-import grondag.xm2.model.state.StateFormat;
+import grondag.xm2.model.impl.state.ModelState;
+import grondag.xm2.model.impl.state.StateFormat;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Direction;
 
-public class SpherePrimitive extends AbstractModelPrimitive {
+public class CubePrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-			.add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE)
+			.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
 			.build();
 	
 	public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
@@ -42,46 +44,62 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
-    public SpherePrimitive() {
+    public CubePrimitive() {
         super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
-        this.cachedQuads = generateQuads();
+        this.cachedQuads = getCubeQuads();
     }
 
     @Override
     public void produceShapeQuads(ModelState modelState, Consumer<IPolygon> target) {
-        if (cachedQuads.isEmpty())
-            return;
+        if (cachedQuads.origin()) {
+            IPolygon reader = cachedQuads.reader();
 
-        cachedQuads.origin();
-        IPolygon reader = cachedQuads.reader();
-
-        do
-            target.accept(reader);
-        while (cachedQuads.next());
+            do
+                target.accept(reader);
+            while (cachedQuads.next());
+        }
     }
 
-    private IPolyStream generateQuads() {
-        IWritablePolyStream stream = PolyStreams.claimWritable();
-        stream.writer().setLockUV(0, false);
-        stream.writer().surface(SURFACE_ALL);
-        stream.saveDefaults();
+    private IPolyStream getCubeQuads() {
+        CubeInputs cube = new CubeInputs();
+        cube.color = 0xFFFFFFFF;
+        cube.textureRotation = Rotation.ROTATE_NONE;
+        cube.isFullBrightness = false;
+        cube.u0 = 0;
+        cube.v0 = 0;
+        cube.u1 = 1;
+        cube.v1 = 1;
+        cube.isOverlay = false;
+        cube.surface = SURFACE_ALL;
 
-        MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
-        return stream.releaseAndConvertToReader();
+        IWritablePolyStream stream = PolyStreams.claimWritable();
+        cube.appendFace(stream, Direction.DOWN);
+        cube.appendFace(stream, Direction.UP);
+        cube.appendFace(stream, Direction.EAST);
+        cube.appendFace(stream, Direction.WEST);
+        cube.appendFace(stream, Direction.NORTH);
+        cube.appendFace(stream, Direction.SOUTH);
+
+        IPolyStream result = stream.releaseAndConvertToReader();
+
+        result.origin();
+        assert result.reader().vertexCount() == 4;
+
+        return result;
     }
 
     @Override
     public boolean isCube(ModelState modelState) {
-        return false;
+        return true;
     }
 
     @Override
     public int geometricSkyOcclusion(ModelState modelState) {
-        return 0;
+        return 255;
     }
 
     @Override
     public boolean hasLampSurface(ModelState modelState) {
-        return false;
+        return true;
     }
 }

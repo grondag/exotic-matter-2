@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.state;
+package grondag.xm2.model.impl.state;
 
 
 
@@ -24,7 +24,7 @@ import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.connect.api.world.ModelStateFunction;
-import grondag.xm2.model.primitive.ModelShapes;
+import grondag.xm2.model.impl.primitive.ModelShapes;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.util.math.Direction;
 

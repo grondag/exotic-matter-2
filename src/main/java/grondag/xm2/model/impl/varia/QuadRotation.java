@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model;
+package grondag.xm2.model.impl.varia;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

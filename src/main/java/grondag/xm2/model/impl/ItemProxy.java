@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model;
+package grondag.xm2.model.impl;
 
 import java.util.Collections;
 

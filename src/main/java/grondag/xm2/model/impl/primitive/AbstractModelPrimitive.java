@@ -14,13 +14,14 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.primitive;
+package grondag.xm2.model.impl.primitive;
 
 import java.util.function.Consumer;
 
 import grondag.xm2.mesh.polygon.IPolygon;
-import grondag.xm2.model.state.ModelState;
-import grondag.xm2.model.state.StateFormat;
+import grondag.xm2.model.impl.state.ModelState;
+import grondag.xm2.model.impl.state.StateFormat;
+import grondag.xm2.model.impl.varia.BlockOrientationType;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 
 public abstract class AbstractModelPrimitive {

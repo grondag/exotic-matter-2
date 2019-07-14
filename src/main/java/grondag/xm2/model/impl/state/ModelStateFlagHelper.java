@@ -14,16 +14,16 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.state;
+package grondag.xm2.model.impl.state;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_DISABLE_BLOCK_ONLY;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_IS_POPULATED;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_DISABLE_BLOCK_ONLY;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_IS_POPULATED;
 
-import grondag.xm2.model.primitive.AbstractModelPrimitive;
-import grondag.xm2.model.primitive.ModelShape;
+import grondag.xm2.model.impl.primitive.AbstractModelPrimitive;
+import grondag.xm2.model.impl.primitive.ModelShape;
 import grondag.xm2.paint.api.XmPaint;
 import net.minecraft.block.BlockRenderLayer;
 

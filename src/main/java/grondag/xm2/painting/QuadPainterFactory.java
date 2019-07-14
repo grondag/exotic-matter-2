@@ -16,7 +16,7 @@
 
 package grondag.xm2.painting;
 
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.model.impl.state.ModelState;
 import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.painting.QuadPainter.IPaintMethod;
 import grondag.xm2.surface.api.XmSurface;

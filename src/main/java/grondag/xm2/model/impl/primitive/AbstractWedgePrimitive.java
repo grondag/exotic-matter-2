@@ -14,15 +14,16 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.primitive;
+package grondag.xm2.model.impl.primitive;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
-import grondag.xm2.model.state.ModelState;
-import grondag.xm2.model.state.StateFormat;
+import grondag.xm2.model.impl.state.ModelState;
+import grondag.xm2.model.impl.state.StateFormat;
+import grondag.xm2.model.impl.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.surface.impl.XmSurfaceImpl;

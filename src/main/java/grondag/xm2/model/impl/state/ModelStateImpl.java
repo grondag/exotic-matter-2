@@ -14,19 +14,19 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.state;
+package grondag.xm2.model.impl.state;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_POS;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
-import static grondag.xm2.model.state.ModelStateData.TEST_GETTER_STATIC;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_AXIS;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NEEDS_POS;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
+import static grondag.xm2.model.impl.state.ModelStateData.TEST_GETTER_STATIC;
 
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
@@ -40,9 +40,9 @@ import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.connect.api.world.BlockNeighbors;
 import grondag.xm2.connect.impl.CornerJoinStateSelector;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.model.primitive.BlockOrientationType;
-import grondag.xm2.model.primitive.ModelShape;
-import grondag.xm2.model.primitive.ModelShapes;
+import grondag.xm2.model.impl.primitive.ModelShape;
+import grondag.xm2.model.impl.primitive.ModelShapes;
+import grondag.xm2.model.impl.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
