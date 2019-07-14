@@ -21,7 +21,7 @@ import grondag.fermion.intstream.IIntStream;
 import grondag.fermion.world.Rotation;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.vertex.Vec3f;
-import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 

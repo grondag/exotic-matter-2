@@ -17,11 +17,11 @@
 package grondag.xm2.init;
 
 import grondag.xm2.Xm;
+import grondag.xm2.api.paint.XmPaint;
+import grondag.xm2.api.paint.XmPaintFinder;
 import grondag.xm2.block.XmSimpleBlock;
-import grondag.xm2.model.impl.state.ModelState;
-import grondag.xm2.model.impl.state.ModelStateImpl;
-import grondag.xm2.paint.api.XmPaint;
-import grondag.xm2.paint.api.XmPaintFinder;
+import grondag.xm2.model.state.ModelState;
+import grondag.xm2.model.state.ModelStateImpl;
 import grondag.xm2.placement.XmBlockItem;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;

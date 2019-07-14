@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableList;
 
 import grondag.fermion.cache.ObjectSimpleCacheLoader;
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
-import grondag.xm2.model.impl.state.ModelState;
+import grondag.xm2.model.state.ModelState;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 

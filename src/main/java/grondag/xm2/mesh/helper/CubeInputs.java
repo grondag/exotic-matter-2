@@ -19,7 +19,7 @@ package grondag.xm2.mesh.helper;
 import grondag.fermion.world.Rotation;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
-import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.XmSurfaceImpl;
 import net.minecraft.util.math.Direction;
 
 public class CubeInputs {

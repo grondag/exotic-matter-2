@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import grondag.fermion.world.Rotation;
+import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.helper.FaceVertex;
 import grondag.xm2.mesh.helper.QuadHelper;
 import grondag.xm2.mesh.polygon.IMutablePolygon.Helper.UVLocker;
@@ -27,7 +28,6 @@ import grondag.xm2.mesh.vertex.IMutableVertex;
 import grondag.xm2.mesh.vertex.IVec3f;
 import grondag.xm2.mesh.vertex.UnpackedVertex3;
 import grondag.xm2.mesh.vertex.Vec3f;
-import grondag.xm2.surface.api.XmSurface;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;

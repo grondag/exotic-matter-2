@@ -17,8 +17,8 @@
 package grondag.xm2.painting;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.connect.api.model.FaceCorner;
-import grondag.xm2.connect.api.model.FaceEdge;
+import grondag.xm2.api.connect.model.FaceCorner;
+import grondag.xm2.api.connect.model.FaceEdge;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 
 /**

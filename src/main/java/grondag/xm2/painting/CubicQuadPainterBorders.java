@@ -16,31 +16,31 @@
 
 package grondag.xm2.painting;
 
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_CORNERS_ALL;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_CORNERS_BL_TR;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_CORNERS_BL_TR_BR;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_CORNERS_TL_TR;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_CORNER_TR;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_MIXED_TOP_BL_BR;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_MIXED_TOP_BR;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_MIXED_TOP_RIGHT_BL;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_NONE;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_SIDES_ALL;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_SIDES_TOP_BOTTOM;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_SIDES_TOP_LEFT_RIGHT;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_SIDES_TOP_RIGHT;
-import static grondag.xm2.texture.api.TextureNameFunction.BORDER_SIDE_TOP;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_CORNERS_ALL;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_CORNERS_BL_TR;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_CORNERS_BL_TR_BR;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_CORNERS_TL_TR;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_CORNER_TR;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_MIXED_TOP_BL_BR;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_MIXED_TOP_BR;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_MIXED_TOP_RIGHT_BL;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_NONE;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_SIDES_ALL;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_SIDES_TOP_BOTTOM;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_SIDES_TOP_LEFT_RIGHT;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_SIDES_TOP_RIGHT;
+import static grondag.xm2.api.texture.TextureNameFunction.BORDER_SIDE_TOP;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.connect.api.state.CornerJoinFaceStates;
-import grondag.xm2.connect.api.state.CornerJoinState;
+import grondag.xm2.api.connect.state.CornerJoinFaceStates;
+import grondag.xm2.api.connect.state.CornerJoinState;
+import grondag.xm2.api.paint.XmPaint;
+import grondag.xm2.api.surface.XmSurface;
+import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.helper.FaceQuadInputs;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.model.impl.state.ModelState;
-import grondag.xm2.paint.api.XmPaint;
-import grondag.xm2.surface.api.XmSurface;
-import grondag.xm2.texture.api.TextureSet;
+import grondag.xm2.model.state.ModelState;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterBorders extends QuadPainter {

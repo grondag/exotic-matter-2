@@ -17,8 +17,8 @@
 package grondag.xm2.mesh.polygon;
 
 import grondag.fermion.world.Rotation;
+import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.vertex.Vec3f;
-import grondag.xm2.surface.api.XmSurface;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 

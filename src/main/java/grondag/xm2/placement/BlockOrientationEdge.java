@@ -19,7 +19,7 @@ package grondag.xm2.placement;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;
-import grondag.xm2.connect.api.model.BlockEdge;
+import grondag.xm2.api.connect.model.BlockEdge;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.client.resource.language.I18n;

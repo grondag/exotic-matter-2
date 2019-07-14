@@ -17,12 +17,12 @@
 package grondag.xm2.mesh.polygon;
 
 import grondag.fermion.world.Rotation;
+import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.helper.QuadHelper;
 import grondag.xm2.mesh.vertex.IVec3f;
 import grondag.xm2.mesh.vertex.IVertexCollection;
 import grondag.xm2.mesh.vertex.Vec3f;
 import grondag.xm2.painting.SurfaceTopology;
-import grondag.xm2.surface.api.XmSurface;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Box;

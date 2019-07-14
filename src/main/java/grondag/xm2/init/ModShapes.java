@@ -16,15 +16,15 @@
 
 package grondag.xm2.init;
 
-import grondag.xm2.model.impl.primitive.CSGTestPrimitive;
-import grondag.xm2.model.impl.primitive.CubePrimitive;
-import grondag.xm2.model.impl.primitive.SpherePrimitive;
-import grondag.xm2.model.impl.primitive.SquareColumnPrimitive;
-import grondag.xm2.model.impl.primitive.StackedPlatesPrimitive;
-import grondag.xm2.model.impl.primitive.StairPrimitive;
-import grondag.xm2.model.impl.primitive.WedgePrimitive;
-import grondag.xm2.model.impl.registry.ModelShape;
-import grondag.xm2.model.impl.registry.ModelShapes;
+import grondag.xm2.model.primitive.CSGTestPrimitive;
+import grondag.xm2.model.primitive.CubePrimitive;
+import grondag.xm2.model.primitive.SpherePrimitive;
+import grondag.xm2.model.primitive.SquareColumnPrimitive;
+import grondag.xm2.model.primitive.StackedPlatesPrimitive;
+import grondag.xm2.model.primitive.StairPrimitive;
+import grondag.xm2.model.primitive.WedgePrimitive;
+import grondag.xm2.model.registry.ModelShape;
+import grondag.xm2.model.registry.ModelShapes;
 
 public class ModShapes {
     public static final ModelShape<?> CUBE = ModelShapes.create("cube", CubePrimitive.class);

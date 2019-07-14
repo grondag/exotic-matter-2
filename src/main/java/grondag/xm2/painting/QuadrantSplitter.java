@@ -18,7 +18,7 @@ package grondag.xm2.painting;
 
 
 
-import grondag.xm2.connect.api.model.FaceCorner;
+import grondag.xm2.api.connect.model.FaceCorner;
 import grondag.xm2.mesh.helper.QuadHelper;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;

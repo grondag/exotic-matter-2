@@ -18,8 +18,8 @@ package grondag.xm2.block;
 
 import javax.annotation.Nullable;
 
-import grondag.xm2.connect.api.world.BlockTest;
-import grondag.xm2.model.impl.state.ModelState;
+import grondag.xm2.api.connect.world.BlockTest;
+import grondag.xm2.model.state.ModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;

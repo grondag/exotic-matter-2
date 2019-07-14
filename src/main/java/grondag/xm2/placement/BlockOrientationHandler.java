@@ -17,13 +17,13 @@
 package grondag.xm2.placement;
 
 import grondag.fermion.world.WorldHelper;
+import grondag.xm2.api.connect.model.BlockCorner;
+import grondag.xm2.api.connect.model.BlockEdge;
+import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.block.XmBlockState;
 import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmStackHelper;
-import grondag.xm2.connect.api.model.BlockCorner;
-import grondag.xm2.connect.api.model.BlockEdge;
-import grondag.xm2.connect.api.model.ClockwiseRotation;
-import grondag.xm2.model.impl.state.ModelState;
+import grondag.xm2.model.state.ModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;

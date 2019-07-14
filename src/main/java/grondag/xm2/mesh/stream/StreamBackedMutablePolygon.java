@@ -18,11 +18,11 @@ package grondag.xm2.mesh.stream;
 
 
 import grondag.fermion.world.Rotation;
+import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.vertex.Vec3f;
-import grondag.xm2.surface.api.XmSurface;
-import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 

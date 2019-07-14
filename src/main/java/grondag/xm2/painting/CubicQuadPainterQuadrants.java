@@ -16,15 +16,15 @@
 
 package grondag.xm2.painting;
 
-import grondag.xm2.connect.api.model.FaceCorner;
-import grondag.xm2.connect.api.state.CornerJoinFaceState;
-import grondag.xm2.connect.api.state.CornerJoinFaceStates;
+import grondag.xm2.api.connect.model.FaceCorner;
+import grondag.xm2.api.connect.state.CornerJoinFaceState;
+import grondag.xm2.api.connect.state.CornerJoinFaceStates;
+import grondag.xm2.api.paint.XmPaint;
+import grondag.xm2.api.surface.XmSurface;
+import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.model.impl.state.ModelState;
-import grondag.xm2.paint.api.XmPaint;
-import grondag.xm2.surface.api.XmSurface;
-import grondag.xm2.texture.api.TextureSet;
+import grondag.xm2.model.state.ModelState;
 import net.minecraft.util.math.Direction;
 
 /**

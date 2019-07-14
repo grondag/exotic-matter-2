@@ -20,7 +20,7 @@ import grondag.fermion.intstream.IIntStream;
 import grondag.fermion.structures.IndexedInterner;
 import grondag.fermion.varia.BitPacker32;
 import grondag.fermion.world.Rotation;
-import grondag.xm2.surface.impl.XmSurfaceImpl;
+import grondag.xm2.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 
 public class StaticEncoder {

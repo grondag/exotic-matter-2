@@ -19,13 +19,13 @@ package grondag.xm2.painting;
 import java.util.function.Consumer;
 
 import grondag.frex.Frex;
+import grondag.xm2.api.paint.XmPaint;
+import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.impl.state.ImmutableModelStateImpl;
-import grondag.xm2.paint.api.XmPaint;
-import grondag.xm2.surface.api.XmSurface;
+import grondag.xm2.model.state.ImmutableModelStateImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
