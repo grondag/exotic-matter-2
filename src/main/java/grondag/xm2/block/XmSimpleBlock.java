@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import grondag.xm2.api.model.ImmutablePrimitiveModelState;
 import grondag.xm2.api.model.MutablePrimitiveModelState;
-import grondag.xm2.api.model.PrimitiveModelState;
+import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
 import net.fabricmc.api.EnvType;
@@ -58,7 +58,7 @@ public class XmSimpleBlock extends Block {
         return blockSettings;
     }
 
-    public static PrimitiveModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
+    public static ModelPrimitiveState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
         if (refreshFromWorld) {
             MutablePrimitiveModelState result = xmState.defaultModelState().mutableCopy();
             return result.refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
@@ -92,7 +92,7 @@ public class XmSimpleBlock extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, EntityContext entityContext) {
-        final PrimitiveModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
+        final ModelPrimitiveState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
         return CollisionBoxDispatcher.getOutlineShape(modelState);
     }
 

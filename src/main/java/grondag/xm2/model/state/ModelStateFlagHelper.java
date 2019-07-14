@@ -23,7 +23,7 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_IS_POPULATED;
 
 import grondag.xm2.api.model.ModelPrimitive;
-import grondag.xm2.api.model.PrimitiveModelState;
+import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.model.primitive.AbstractModelPrimitive;
 import net.minecraft.block.BlockRenderLayer;
@@ -35,7 +35,7 @@ import net.minecraft.block.BlockRenderLayer;
  * persistence and usage within that class.
  */
 public class ModelStateFlagHelper {
-    public static final int getFlags(PrimitiveModelState state) {
+    public static final int getFlags(ModelPrimitiveState state) {
         final ModelPrimitive mesh = state.primitive();
 
         int flags = STATE_FLAG_IS_POPULATED | mesh.stateFlags(state);

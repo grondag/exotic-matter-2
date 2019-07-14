@@ -17,7 +17,7 @@
 package grondag.xm2.block;
 
 import grondag.xm2.api.model.MutablePrimitiveModelState;
-import grondag.xm2.api.model.PrimitiveModelState;
+import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.entity.BlockEntity;
@@ -60,7 +60,7 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
         return result;
     }
 
-    public static PrimitiveModelState computeModelState(XmBlockState xmStateIn, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+    public static ModelPrimitiveState computeModelState(XmBlockState xmStateIn, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         final BlockEntity myTE = world.getBlockEntity(pos);
         final XmBlockStateImpl xmState = (XmBlockStateImpl) xmStateIn;
 
@@ -78,7 +78,7 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
      * set, in the same thread, and so tile entity data always goes along with block
      * state packet.
      */
-    public void setModelState(World world, BlockPos pos, PrimitiveModelState modelState) {
+    public void setModelState(World world, BlockPos pos, ModelPrimitiveState modelState) {
         BlockEntity blockTE = world.getBlockEntity(pos);
         if (blockTE != null
                 && blockTE instanceof XmTileEntity) {

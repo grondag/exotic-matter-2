@@ -20,7 +20,7 @@ import grondag.fermion.serialization.NBTDictionary;
 import grondag.xm2.api.model.ImmutablePrimitiveModelState;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutablePrimitiveModelState;
-import grondag.xm2.api.model.PrimitiveModelState;
+import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.model.state.ModelStateImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -171,8 +171,8 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
         return compound;
     }
 
-    public PrimitiveModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        PrimitiveModelState myState = this.modelState;
+    public ModelPrimitiveState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+        ModelPrimitiveState myState = this.modelState;
 
         if (myState == null) {
             myState = state.defaultModelState;
@@ -223,7 +223,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     // : this.modelState;
     // }
 
-    public void setModelState(PrimitiveModelState modelState) {
+    public void setModelState(ModelPrimitiveState modelState) {
         // if making existing appearance static, don't need to refresh on client side
         boolean needsClientRefresh = this.world != null
                 && this.world.isClient

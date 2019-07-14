@@ -21,7 +21,7 @@ import java.util.function.Function;
 import grondag.xm2.Xm;
 import grondag.xm2.api.connect.world.BlockTest;
 import grondag.xm2.api.model.ImmutablePrimitiveModelState;
-import grondag.xm2.api.model.PrimitiveModelState;
+import grondag.xm2.api.model.ModelPrimitiveState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -71,7 +71,7 @@ public class XmBlockRegistryImpl {
         }
 
         @Override
-        public PrimitiveModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        public ModelPrimitiveState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
             return worldStateFunc.apply(this, world, pos, refreshFromWorld);
         }
 

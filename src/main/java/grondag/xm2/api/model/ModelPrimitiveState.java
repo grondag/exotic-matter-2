@@ -2,7 +2,7 @@ package grondag.xm2.api.model;
 
 import grondag.xm2.model.varia.BlockOrientationType;
 
-public interface PrimitiveModelState extends ModelState {
+public interface ModelPrimitiveState extends ModelState {
     ModelPrimitive primitive();
     
     default boolean hasAxisOrientation() {
@@ -36,5 +36,5 @@ public interface PrimitiveModelState extends ModelState {
      * geometry. Used as lookup key for block damage models.
      */
     @Override
-    PrimitiveModelState geometricState();
+    ModelPrimitiveState geometricState();
 }

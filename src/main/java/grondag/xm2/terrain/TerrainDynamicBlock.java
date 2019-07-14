@@ -17,7 +17,7 @@
 package grondag.xm2.terrain;
 
 import grondag.xm2.api.model.MutablePrimitiveModelState;
-import grondag.xm2.api.model.PrimitiveModelState;
+import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.init.XmPrimitives;
 import net.minecraft.block.Block;
@@ -27,11 +27,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TerrainDynamicBlock extends TerrainBlock {
-    public TerrainDynamicBlock(Settings blockSettings, PrimitiveModelState defaultModelState, boolean isFiller) {
+    public TerrainDynamicBlock(Settings blockSettings, ModelPrimitiveState defaultModelState, boolean isFiller) {
         super(blockSettings, adjustShape(defaultModelState, isFiller));
     }
 
-    private static MutablePrimitiveModelState adjustShape(PrimitiveModelState stateIn, boolean isFiller) {
+    private static MutablePrimitiveModelState adjustShape(ModelPrimitiveState stateIn, boolean isFiller) {
         MutablePrimitiveModelState result = stateIn.mutableCopy();
         result.primitive(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
         result.setStatic(false);
