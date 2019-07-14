@@ -286,7 +286,9 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
         assert layerCount == layerCount();
 
         setTextureSalt(polyIn.getTextureSalt());
-
+        surface(polyIn.surface());
+        uvWrapDistance(polyIn.uvWrapDistance());
+        
         for (int l = 0; l < layerCount; l++) {
             setMaxU(l, polyIn.getMaxU(l));
             setMaxV(l, polyIn.getMaxV(l));

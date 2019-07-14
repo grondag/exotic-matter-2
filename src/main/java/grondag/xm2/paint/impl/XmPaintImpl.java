@@ -176,7 +176,7 @@ public class XmPaintImpl {
     }
 
 	public TextureSet texture(int textureIndex) {
-		if (textureIndex < 1 || textureIndex > MAX_TEXTURE_DEPTH) {
+		if (textureIndex < 0 || textureIndex >= MAX_TEXTURE_DEPTH) {
             throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
         }
         return TextureSetRegistryImpl.INSTANCE.getByIndex(TEXTURES[textureIndex].getValue(this));
@@ -295,7 +295,7 @@ public class XmPaintImpl {
 
 		@Override
 		public XmPaintFinder texture(int textureIndex, TextureSet texture) {
-			if (textureIndex < 1 || textureIndex > MAX_TEXTURE_DEPTH) {
+			if (textureIndex < 0 || textureIndex >= MAX_TEXTURE_DEPTH) {
                 throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
             }
             TEXTURES[textureIndex].setValue(texture.index(), this);

@@ -23,8 +23,6 @@ import grondag.xm2.surface.impl.XmSurfaceImpl;
 import net.minecraft.util.math.Direction;
 
 public class CubeInputs {
-	public static final int NO_SURFACE = -1;
-	
     public float u0;
     public float v0;
     public float u1;
