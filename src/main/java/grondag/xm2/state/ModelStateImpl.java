@@ -97,22 +97,26 @@ public class ModelStateImpl implements ModelState {
         this.deserializeFromInts(bits);
     }
 
-    public ModelStateImpl(long coreBits, long shapeBits0, long shapeBits1, long layerBitsBase, long layerBitsCut,
-            long layerBitsLamp, long layerBitsMiddle, long layerBitsOuter) {
-        this.coreBits = coreBits;
-        this.shapeBits0 = shapeBits0;
-        this.shapeBits1 = shapeBits1;
-        this.layerBitsBase = layerBitsBase;
-        this.layerBitsCut = layerBitsCut;
-        this.layerBitsLamp = layerBitsLamp;
-        this.layerBitsMiddle = layerBitsMiddle;
-        this.layerBitsOuter = layerBitsOuter;
+    public ModelStateImpl(ModelStateImpl template) {
+        this.coreBits = template.coreBits;
+        this.shapeBits0 = template.shapeBits0;
+        this.shapeBits1 = template.shapeBits1;
+        this.layerBitsBase = template.layerBitsBase;
+        this.layerBitsCut = template.layerBitsCut;
+        this.layerBitsLamp = template.layerBitsLamp;
+        this.layerBitsMiddle = template.layerBitsMiddle;
+        this.layerBitsOuter = template.layerBitsOuter;
+        this.paints[0] = template.paints[0];
+        this.paints[1] = template.paints[1];
+        this.paints[2] = template.paints[2];
+        this.paints[3] = template.paints[3];
+        this.paints[4] = template.paints[4];
+        this.paints[5] = template.paints[5];
     }
 
     @Override
     public ModelStateImpl clone() {
-        return new ModelStateImpl(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut, layerBitsLamp,
-                layerBitsMiddle, layerBitsOuter);
+        return new ModelStateImpl(this);
     }
 
     @Override
@@ -922,8 +926,7 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public ImmutableModelState toImmutable() {
-        return new ImmutableModelStateImpl(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut, layerBitsLamp,
-                layerBitsMiddle, layerBitsOuter);
+        return new ImmutableModelStateImpl(this);
     }
 
 	@Override

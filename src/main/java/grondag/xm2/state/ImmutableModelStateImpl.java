@@ -41,10 +41,8 @@ import net.minecraft.util.math.Direction.Axis;
 
 public class ImmutableModelStateImpl extends ModelStateImpl implements ImmutableModelState {
 
-    public ImmutableModelStateImpl(long coreBits, long shapeBits0, long shapeBits1, long layerBitsBase, long layerBitsCut,
-            long layerBitsLamp, long layerBitsMiddle, long layerBitsOuter) {
-        super(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut,
-                layerBitsLamp, layerBitsMiddle, layerBitsOuter);
+    public ImmutableModelStateImpl(ModelStateImpl template) {
+        super(template);
     }
 
     @Override
