@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model;
+package grondag.xm2.model.impl;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;

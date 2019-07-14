@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.primitive;
+package grondag.xm2.model.impl.varia;
 
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;

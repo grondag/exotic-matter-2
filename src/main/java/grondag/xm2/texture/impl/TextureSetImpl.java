@@ -18,7 +18,7 @@ package grondag.xm2.texture.impl;
 
 import java.util.function.Consumer;
 
-import grondag.xm2.model.state.ModelStateData;
+import grondag.xm2.model.impl.state.ModelStateData;
 import grondag.xm2.texture.api.TextureRotation;
 import grondag.xm2.texture.api.TextureSet;
 import grondag.xm2.texture.api.TextureSetBuilder;

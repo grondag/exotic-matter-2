@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.primitive;
+package grondag.xm2.model.impl.primitive;
 
 import grondag.xm2.Xm;
 import net.minecraft.client.resource.language.I18n;

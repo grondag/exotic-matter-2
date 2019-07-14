@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 
 import grondag.fermion.config.FermionConfig;
 import grondag.fermion.varia.Useful;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.model.impl.state.ModelState;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;

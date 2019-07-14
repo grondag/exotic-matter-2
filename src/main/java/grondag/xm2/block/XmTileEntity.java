@@ -18,8 +18,8 @@ package grondag.xm2.block;
 
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.model.state.ModelState;
-import grondag.xm2.model.state.ModelStateImpl;
+import grondag.xm2.model.impl.state.ModelState;
+import grondag.xm2.model.impl.state.ModelStateImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;

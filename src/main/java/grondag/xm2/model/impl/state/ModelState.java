@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.state;
+package grondag.xm2.model.impl.state;
 
 import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.serialization.PacketSerializable;
@@ -23,8 +23,8 @@ import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.model.primitive.BlockOrientationType;
-import grondag.xm2.model.primitive.ModelShape;
+import grondag.xm2.model.impl.primitive.ModelShape;
+import grondag.xm2.model.impl.varia.BlockOrientationType;
 import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.paint.api.XmPaintRegistry;
 import grondag.xm2.surface.api.XmSurface;

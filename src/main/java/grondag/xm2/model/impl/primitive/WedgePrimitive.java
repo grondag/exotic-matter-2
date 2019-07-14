@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.primitive;
+package grondag.xm2.model.impl.primitive;
 
 import java.util.function.Consumer;
 
@@ -25,7 +25,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.model.impl.state.ModelState;
 import net.minecraft.util.math.Direction;
 
 public class WedgePrimitive extends AbstractWedgePrimitive {

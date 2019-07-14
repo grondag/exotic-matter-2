@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.state;
+package grondag.xm2.model.impl.state;
 
 import java.util.List;
 import java.util.Random;
@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
-import grondag.xm2.model.primitive.ModelShape;
+import grondag.xm2.model.impl.primitive.ModelShape;
 import grondag.xm2.painting.QuadPaintHandler;
 import grondag.xm2.terrain.TerrainState;
 import net.fabricmc.api.EnvType;

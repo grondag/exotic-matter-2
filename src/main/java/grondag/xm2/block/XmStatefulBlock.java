@@ -17,7 +17,7 @@
 package grondag.xm2.block;
 
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.model.impl.state.ModelState;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;

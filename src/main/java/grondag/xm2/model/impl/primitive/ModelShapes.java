@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.primitive;
+package grondag.xm2.model.impl.primitive;
 
 import java.util.ArrayList;
 import java.util.HashMap;

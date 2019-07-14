@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model;
+package grondag.xm2.model.impl;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -28,7 +28,7 @@ import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmStackHelper;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.dispatch.XmDispatcher;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.model.impl.state.ModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;

@@ -14,9 +14,9 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.primitive;
+package grondag.xm2.model.impl.primitive;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NONE;
+import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
@@ -25,8 +25,10 @@ import grondag.xm2.mesh.stream.CsgPolyStream;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.ModelState;
-import grondag.xm2.model.state.StateFormat;
+import grondag.xm2.model.impl.state.ModelState;
+import grondag.xm2.model.impl.state.StateFormat;
+import grondag.xm2.model.impl.varia.CSG;
+import grondag.xm2.model.impl.varia.MeshHelper;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.surface.impl.XmSurfaceImpl;

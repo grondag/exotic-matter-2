@@ -20,7 +20,7 @@ import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.model.impl.state.ModelState;
 import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureRotation;
