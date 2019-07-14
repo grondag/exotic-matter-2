@@ -16,8 +16,10 @@
 
 package grondag.xm2.model.primitive;
 
+import grondag.xm2.Xm;
 import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelPrimitive;
+import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.model.state.ModelStateImpl;
 import grondag.xm2.model.state.StateFormat;
@@ -48,6 +50,12 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
         this.stateFlags = stateFlags;
         this.id = id;
         this.stateFormat = stateFormat;
+        
+        // we handle registration here because model state currently relies on it for serialization
+        if (!ModelPrimitiveRegistry.INSTANCE.register(this)) {
+            Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + id.toString());
+        }
+        
         ModelStateImpl state = new ModelStateImpl(this);
         updateDefaultState(state);
         this.defaultState = state.toImmutable();
@@ -80,7 +88,5 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     /** 
      * Override if default state should be something other than the, erm... default.
      */
-    protected void updateDefaultState(ModelStateImpl modelState) {
-        
-    }
+    protected void updateDefaultState(ModelStateImpl modelState) { }
 }
