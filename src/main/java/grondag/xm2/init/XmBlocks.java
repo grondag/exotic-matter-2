@@ -20,7 +20,7 @@ import grondag.xm2.Xm;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintFinder;
 import grondag.xm2.block.XmSimpleBlock;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.model.state.ModelStateImpl;
 import grondag.xm2.placement.XmBlockItem;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;

@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;

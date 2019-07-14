@@ -19,7 +19,7 @@ package grondag.xm2.painting;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 
 /**
  * Logic to apply color, brightness, glow and other attributes that depend on

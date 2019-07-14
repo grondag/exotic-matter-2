@@ -36,6 +36,7 @@ import grondag.xm2.api.connect.state.SimpleJoinState;
 import grondag.xm2.api.connect.world.BlockNeighbors;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.connect.CornerJoinStateSelector;

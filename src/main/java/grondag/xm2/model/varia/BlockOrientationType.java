@@ -21,7 +21,7 @@ import java.util.function.BiFunction;
 
 import javax.annotation.Nullable;
 
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.placement.BlockOrientationHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;

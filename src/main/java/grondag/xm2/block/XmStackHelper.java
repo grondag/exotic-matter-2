@@ -19,7 +19,7 @@ package grondag.xm2.block;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.model.state.ModelStateImpl;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;

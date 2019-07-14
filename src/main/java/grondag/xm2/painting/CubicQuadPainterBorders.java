@@ -40,7 +40,7 @@ import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.helper.FaceQuadInputs;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterBorders extends QuadPainter {

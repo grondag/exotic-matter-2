@@ -24,7 +24,6 @@ import java.util.function.Consumer;
 
 import grondag.xm2.api.surface.XmSurfaceList;
 import grondag.xm2.mesh.polygon.IPolygon;
-import grondag.xm2.model.state.ModelState;
 import grondag.xm2.model.varia.BlockOrientationType;
 import net.minecraft.util.Identifier;
 

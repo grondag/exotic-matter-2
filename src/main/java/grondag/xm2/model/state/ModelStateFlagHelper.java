@@ -23,6 +23,7 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_IS_POPULATED;
 
 import grondag.xm2.api.model.ModelPrimitive;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.model.primitive.AbstractModelPrimitive;
 import net.minecraft.block.BlockRenderLayer;

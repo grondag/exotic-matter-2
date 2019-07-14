@@ -29,7 +29,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.polygon.IStreamPolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;

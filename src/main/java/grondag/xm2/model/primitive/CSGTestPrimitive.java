@@ -26,7 +26,7 @@ import grondag.xm2.mesh.stream.CsgPolyStream;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.CSG;
 import grondag.xm2.model.varia.MeshHelper;

@@ -18,7 +18,7 @@ package grondag.xm2.terrain;
 
 import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.init.XmPrimitives;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

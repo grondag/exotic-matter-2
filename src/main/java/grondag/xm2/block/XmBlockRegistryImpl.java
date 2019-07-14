@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 import grondag.xm2.Xm;
 import grondag.xm2.api.connect.world.BlockTest;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

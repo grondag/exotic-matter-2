@@ -25,7 +25,7 @@ import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.ModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.MeshHelper;
 import grondag.xm2.painting.SurfaceTopology;

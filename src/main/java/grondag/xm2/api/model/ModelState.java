@@ -14,20 +14,20 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.state;
+package grondag.xm2.api.model;
 
 import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.serialization.PacketSerializable;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
-import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintRegistry;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.surface.XmSurfaceList;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.mesh.helper.PolyTransform;
+import grondag.xm2.model.state.ImmutableModelState;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.util.math.BlockPos;
