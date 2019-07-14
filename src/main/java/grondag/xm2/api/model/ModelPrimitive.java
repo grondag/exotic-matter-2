@@ -54,11 +54,11 @@ public interface ModelPrimitive {
     /**
      * Override if shape has an orientation to be selected during placement.
      */
-    default BlockOrientationType orientationType(ModelState modelState) {
+    default BlockOrientationType orientationType(ModelPrimitiveState modelState) {
         return BlockOrientationType.NONE;
     }
 
-    int stateFlags(ModelState modelState);
+    int stateFlags(ModelPrimitiveState modelState);
 
     /**
      * Output polygons must be quads or tris. Consumer MUST NOT hold references to
@@ -91,15 +91,15 @@ public interface ModelPrimitive {
         return false;
     }
 
-    default boolean hasAxis(ModelState modelState) {
+    default boolean hasAxis(ModelPrimitiveState modelState) {
         return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS) == STATE_FLAG_HAS_AXIS;
     }
 
-    default boolean hasAxisOrientation(ModelState modelState) {
+    default boolean hasAxisOrientation(ModelPrimitiveState modelState) {
         return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
     }
 
-    default boolean hasAxisRotation(ModelState modelState) {
+    default boolean hasAxisRotation(ModelPrimitiveState modelState) {
         return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
     }
 }

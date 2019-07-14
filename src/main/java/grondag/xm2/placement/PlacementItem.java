@@ -568,7 +568,7 @@ public interface PlacementItem {
             // TODO: may need to handle other properties/make dynamic somehow
             BlockState result = targetBlock.getDefaultState();
             if (modelState.hasSpecies()) {
-                result = result.with(XmSimpleBlock.SPECIES, modelState.worldState().species());
+                result = result.with(XmSimpleBlock.SPECIES, modelState.species());
             }
 
             return result;

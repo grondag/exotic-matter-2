@@ -33,6 +33,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
+import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.model.state.ModelStateData;
@@ -109,7 +110,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(ModelState modelState) {
+    public BlockOrientationType orientationType(ModelPrimitiveState modelState) {
         return BlockOrientationType.AXIS;
     }
 
@@ -121,7 +122,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         // be a stream?
         // Why create a stream just to pipe it to the consumer? Or cache the result.
 
-        CornerJoinState bjs = state.worldState().cornerJoin();
+        CornerJoinState bjs = state.cornerJoin();
         Direction.Axis axis = state.getAxis();
         IWritablePolyStream stream = PolyStreams.claimWritable();
 

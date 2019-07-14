@@ -180,7 +180,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
         IMutablePolygon editor = stream.editor();
         do {
 
-            CornerJoinState bjs = modelState.worldState().cornerJoin();
+            CornerJoinState bjs = modelState.cornerJoin();
             Direction face = editor.nominalFace();
             FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][bjs.faceState(face).ordinal()];
 

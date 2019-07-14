@@ -21,7 +21,7 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTA
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.BlockOrientationType;
@@ -47,7 +47,7 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(ModelState modelState) {
+    public BlockOrientationType orientationType(ModelPrimitiveState modelState) {
         return BlockOrientationType.EDGE;
     }
 

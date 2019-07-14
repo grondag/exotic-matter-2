@@ -78,7 +78,7 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
             editor.setTextureName(textureIndex, tex.textureName(textureVersion));
             editor.setShouldContractUVs(textureIndex, true);
 
-            final CornerJoinFaceState faceState = modelState.worldState().cornerJoin().faceState(nominalFace);
+            final CornerJoinFaceState faceState = modelState.cornerJoin().faceState(nominalFace);
 
             TEXTURE_MAP[quadrant.ordinal()][faceState.ordinal()].applyForQuadrant(editor, textureIndex, quadrant);
 

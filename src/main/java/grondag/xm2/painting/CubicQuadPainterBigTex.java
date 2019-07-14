@@ -17,6 +17,7 @@
 package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.texture.TextureRotation;
@@ -24,8 +25,6 @@ import grondag.xm2.api.texture.TextureScale;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.api.model.MutableModelState;
-import grondag.xm2.api.model.ModelWorldState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -62,8 +61,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
             final boolean allowTexRotation = tex.rotation() != TextureRotation.ROTATE_NONE;
             final TextureScale scale = tex.scale();
 
-            final ModelWorldState worldState = modelState.worldState();
-            Vec3i surfaceVec = getSurfaceVector(worldState.posX(), worldState.posY(), worldState.posZ(), nominalFace,
+            Vec3i surfaceVec = getSurfaceVector(modelState.posX(), modelState.posY(), modelState.posZ(), nominalFace,
                     scale);
 
             if (tex.versionCount() == 1) {
@@ -73,8 +71,8 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                 // abs is necessary so that hash input components combine together properly
                 // Small random numbers already have most bits set.
                 int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization()
-                        ? HashCommon.mix((worldState.species() << 8) | editor.getTextureSalt())
-                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (worldState.species() << 8)
+                        ? HashCommon.mix((modelState.species() << 8) | editor.getTextureSalt())
+                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.species() << 8)
                                 | (editor.getTextureSalt() << 12));
 
                 // rotation

@@ -20,9 +20,8 @@ import grondag.fermion.world.WorldHelper;
 import grondag.xm2.api.connect.model.BlockCorner;
 import grondag.xm2.api.connect.model.BlockEdge;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
-import grondag.xm2.api.model.MutableModelPrimitiveState;
-import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockState;
 import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmStackHelper;
@@ -71,7 +70,7 @@ public class BlockOrientationHandler {
 
         PlacementItem item = (PlacementItem) stack.getItem();
 
-        MutableModelPrimitiveState modelState = XmStackHelper.getStackModelState(stack);
+        MutableModelState modelState = XmStackHelper.getStackModelState(stack);
 
         if (modelState.hasAxis()) {
             modelState.setAxis(item.getBlockPlacementAxis(stack));
@@ -89,8 +88,8 @@ public class BlockOrientationHandler {
 
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // find closest instance, starting with block placed on
-        MutableModelPrimitiveState outputModelState = XmStackHelper.getStackModelState(stack);
-        ModelPrimitiveState closestModelState = null;
+        MutableModelState outputModelState = XmStackHelper.getStackModelState(stack);
+        ModelState closestModelState = null;
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
 
@@ -117,7 +116,7 @@ public class BlockOrientationHandler {
                                 double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x,
                                         pPos.onPos.getY() + 0.5 + y, pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
-                                    ModelPrimitiveState testModelState = testBlockState.getModelState(world, testPos, true);
+                                    ModelState testModelState = testBlockState.getModelState(world, testPos, true);
                                     if (testModelState.primitive() == outputModelState.primitive()) {
                                         closestDistSq = distSq;
                                         closestModelState = testModelState.toImmutable();
@@ -152,7 +151,7 @@ public class BlockOrientationHandler {
     // FIX: pretty sure this doesn't work now
     /** handle hit-sensitive placement for stairs, wedges */
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
-        MutableModelPrimitiveState outputModelState = XmStackHelper.getStackModelState(stack);
+        MutableModelState outputModelState = XmStackHelper.getStackModelState(stack);
 
         boolean isRotationDone = false;
 

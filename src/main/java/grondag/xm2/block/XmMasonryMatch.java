@@ -49,7 +49,7 @@ public class XmMasonryMatch implements BlockTest {
         }
 
         // no mortar between siblings with same species
-        if (fromState.worldState().species() == toState.worldState().species()) {
+        if (fromState.species() == toState.species()) {
             return false;
         }
         ;

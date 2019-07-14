@@ -21,6 +21,7 @@ import grondag.fermion.serialization.PacketSerializable;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
+import grondag.xm2.api.surface.XmSurfaceList;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.mesh.helper.PolyTransform;
 import grondag.xm2.terrain.TerrainState;
@@ -28,7 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-public interface MutableModelState extends ModelState, IReadWriteNBT, PacketSerializable {
+public interface MutableModelState extends ModelState, MutableModelPrimitiveState, MutableModelWorldState, IReadWriteNBT, PacketSerializable {
     int[] serializeToInts();
 
     void setStatic(boolean isStatic);
@@ -52,10 +53,13 @@ public interface MutableModelState extends ModelState, IReadWriteNBT, PacketSeri
         paintAll(paint.index());
     }
 
-    void paintAll(int paintIndex);
-
-    @Override
-    MutableModelWorldState worldState();
+    default void paintAll(int paintIndex) {
+        XmSurfaceList slist = primitive().surfaces();
+        final int limit = slist.size();
+        for (int i = 0; i < limit; i++) {
+            paint(i, paintIndex);
+        }
+    }
     
     void setAxis(Direction.Axis axis);
 

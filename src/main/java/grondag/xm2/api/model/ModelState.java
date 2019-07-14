@@ -8,14 +8,12 @@ import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.Direction;
 
-public interface ModelState {
+public interface ModelState extends ModelWorldState, ModelPrimitiveState {
     boolean isImmutable();
 
     ImmutableModelState toImmutable();
 
     MutableModelState mutableCopy();
-
-    ModelWorldState worldState();
 
     /**
      * Persisted but not part of hash nor included in equals comparison. If true,

@@ -46,7 +46,7 @@ public class XmBlockHelper {
                 return -1;
 
             if (mState.doShapeAndAppearanceMatch(withModelState))
-                return mState.worldState().species();
+                return mState.species();
         }
         return -1;
     }

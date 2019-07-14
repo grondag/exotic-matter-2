@@ -41,6 +41,6 @@ public class XmBorderMatch implements BlockTest {
         }
 
         return fromState.doShapeAndAppearanceMatch(toState)
-                && fromState.worldState().species() == toState.worldState().species();
+                && fromState.species() == toState.species();
     }
 }

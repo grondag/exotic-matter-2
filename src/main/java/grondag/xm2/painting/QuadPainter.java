@@ -18,6 +18,7 @@ package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.texture.TextureRotation;
@@ -25,8 +26,6 @@ import grondag.xm2.api.texture.TextureScale;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
-import grondag.xm2.api.model.MutableModelState;
-import grondag.xm2.api.model.ModelWorldState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -168,29 +167,28 @@ public abstract class QuadPainter {
     }
 
     protected static int textureHashForFace(Direction face, TextureSet tex, MutableModelState modelState) {
-        final int species = modelState.hasSpecies() ? modelState.worldState().species() : 0;
+        final int species = modelState.hasSpecies() ? modelState.species() : 0;
         final int speciesBits = species << 16;
         final int shift = tex.scale().power;
-        final ModelWorldState worldState = modelState.worldState();
 
         switch (face) {
             case DOWN:
             case UP: {
-                final int yBits = (((worldState.posX() >> shift) & 0xFF) << 8) | ((worldState.posZ() >> shift) & 0xFF)
+                final int yBits = (((modelState.posX() >> shift) & 0xFF) << 8) | ((modelState.posZ() >> shift) & 0xFF)
                         | speciesBits;
                 return HashCommon.mix(yBits);
             }
 
             case EAST:
             case WEST: {
-                final int xBits = (((worldState.posY() >> shift) & 0xFF) << 8) | ((worldState.posZ() >> shift) & 0xFF)
+                final int xBits = (((modelState.posY() >> shift) & 0xFF) << 8) | ((modelState.posZ() >> shift) & 0xFF)
                         | speciesBits;
                 return HashCommon.mix(xBits);
             }
 
             case NORTH:
             case SOUTH: {
-                final int zBits = (((worldState.posX() >> shift) & 0xFF) << 8) | ((worldState.posY() >> shift) & 0xFF)
+                final int zBits = (((modelState.posX() >> shift) & 0xFF) << 8) | ((modelState.posY() >> shift) & 0xFF)
                         | speciesBits;
                 return HashCommon.mix(zBits);
             }
@@ -208,7 +206,7 @@ public abstract class QuadPainter {
      * species (if applies).
      */
     protected static Rotation textureRotationForFace(Direction face, TextureSet tex, MutableModelState modelState) {
-        final int species = modelState.hasSpecies() ? modelState.worldState().species() : 0;
+        final int species = modelState.hasSpecies() ? modelState.species() : 0;
         if (tex.rotation() == TextureRotation.ROTATE_RANDOM) {
             if (tex.scale() == TextureScale.SINGLE) {
                 return Useful.offsetEnumValue(Rotation.ROTATE_NONE,
