@@ -29,7 +29,7 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 
     private final Object2ObjectOpenHashMap<String, ModelPrimitive> map = new Object2ObjectOpenHashMap<>();
     private final ObjectArrayList<ModelPrimitive> list = new ObjectArrayList<>();
-    private final Object2IntOpenHashMap<ModelPrimitive> reverseMap = new Object2IntOpenHashMap<>();
+    private final Object2IntOpenHashMap<String> reverseMap = new Object2IntOpenHashMap<>();
 
     private ModelPrimitiveRegistryImpl() {
     }
@@ -40,7 +40,7 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	if (result) {
 	    final int index = list.size();
 	    list.add(primitive);
-	    reverseMap.put(primitive, index);
+	    reverseMap.put(primitive.id().toString(), index);
 	}
 	return result;
     }
