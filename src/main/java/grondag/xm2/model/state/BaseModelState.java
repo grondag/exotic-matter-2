@@ -48,7 +48,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
-public class ModelStateImpl extends AbstractModelState implements MutableModelState {
+public class BaseModelState extends AbstractModelState implements MutableModelState {
     protected long coreBits;
     protected long shapeBits1;
     protected long shapeBits0;
@@ -60,11 +60,11 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
     /** contains indicators derived from shape and painters */
     protected int stateFlags;
 
-    public ModelStateImpl(ModelPrimitive primitive) {
+    public BaseModelState(ModelPrimitive primitive) {
         super(primitive);
     }
 
-    public ModelStateImpl(ModelStateImpl template) {
+    public BaseModelState(BaseModelState template) {
         super(template.primitive);
         this.coreBits = template.coreBits;
         this.shapeBits0 = template.shapeBits0;
@@ -73,19 +73,17 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
     }
 
     @Override
-    public ModelStateImpl mutableCopy() {
-        return new ModelStateImpl(this);
+    public BaseModelState mutableCopy() {
+        return new BaseModelState(this);
     }
 
     @Override
-    public ModelStateImpl copyFrom(ModelState templateIn) {
-        final ModelStateImpl template = (ModelStateImpl) templateIn;
-        final ModelPrimitive savePrimitive = primitive();
+    public BaseModelState copyFrom(ModelState templateIn) {
+        final BaseModelState template = (BaseModelState) templateIn;
         this.coreBits = template.coreBits;
         this.shapeBits0 = template.shapeBits0;
         this.shapeBits1 = template.shapeBits1;
         System.arraycopy(template.paints, 0, this.paints, 0, paints.length);
-        ModelStateData.SHAPE.setValue(savePrimitive.index(), this);
         return this;
     }
     
@@ -139,10 +137,10 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
      */
     @Override
     public boolean equals(Object obj) {
-        return this == obj ? true : obj instanceof ModelStateImpl && equalsInner((ModelStateImpl) obj);
+        return this == obj ? true : obj instanceof BaseModelState && equalsInner((BaseModelState) obj);
     }
 
-    protected boolean equalsInner(ModelStateImpl other) {
+    protected boolean equalsInner(BaseModelState other) {
         if(this.primitive == other.primitive
                 && this.coreBits == other.coreBits
                 && this.shapeBits0 == other.shapeBits0
@@ -163,8 +161,8 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
         if (this == obj)
             return true;
 
-        if (obj instanceof ModelStateImpl) {
-            ModelStateImpl other = (ModelStateImpl) obj;
+        if (obj instanceof BaseModelState) {
+            BaseModelState other = (BaseModelState) obj;
             return this.isStatic == other.isStatic && equalsInner(other);
         } else {
             return false;
@@ -192,7 +190,7 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
     // not be coupled
     @Deprecated
     @Override
-    public ModelStateImpl refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
+    public BaseModelState refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
 
         // Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
         // " @" + pos.toString());
@@ -529,7 +527,7 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
 
     @Override
     public final boolean doShapeAndAppearanceMatch(ModelState other) {
-        final ModelStateImpl o = (ModelStateImpl) other;
+        final BaseModelState o = (BaseModelState) other;
         return (this.coreBits & ModelStateData.SHAPE_COMPARISON_MASK_0) == (o.coreBits
                 & ModelStateData.SHAPE_COMPARISON_MASK_0)
                 && (this.shapeBits1 & ModelStateData.SHAPE_COMPARISON_MASK_1) == (o.shapeBits1
@@ -545,10 +543,10 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
 
     // PERF: bottleneck for Pyroclasm
     @Override
-    public ModelStateImpl geometricState() {
+    public BaseModelState geometricState() {
         this.populateStateFlagsIfNeeded();
         final AbstractModelPrimitive primitive = (AbstractModelPrimitive) primitive();
-        ModelStateImpl result = mutableCopy();
+        BaseModelState result = mutableCopy();
 
         switch (primitive.stateFormat) {
             case BLOCK:
@@ -583,12 +581,12 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
         return PolyTransform.rotateFace(this, face);
     }
 
-    public static ModelStateImpl deserializeFromNBTIfPresent(CompoundTag tag) {
+    public static BaseModelState deserializeFromNBTIfPresent(CompoundTag tag) {
         ModelPrimitive shape = ModelPrimitiveRegistry.INSTANCE.get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
         if(shape == null) {
             return null;
         }
-        ModelStateImpl result = new ModelStateImpl(shape);
+        BaseModelState result = new BaseModelState(shape);
     
         if (tag.containsKey(ModelStateTagHelper.NBT_MODEL_BITS)) {
             int[] stateBits = tag.getIntArray(ModelStateTagHelper.NBT_MODEL_BITS);

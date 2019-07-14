@@ -38,9 +38,9 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
-public class ImmutableModelStateImpl extends ModelStateImpl implements ImmutableModelState {
+public class ImmutableModelStateImpl extends BaseModelState implements ImmutableModelState {
 
-    public ImmutableModelStateImpl(ModelStateImpl template) {
+    public ImmutableModelStateImpl(BaseModelState template) {
         super(template);
     }
 
