@@ -21,6 +21,7 @@ import grondag.fermion.varia.Useful;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.model.state.ModelStateImpl;
+import grondag.xm2.model.state.ModelStateTagHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +59,7 @@ public class XmStackHelper {
     public static void setStackModelState(ItemStack stack, MutableModelState modelState) {
         CompoundTag tag = stack.getOrCreateTag();
         if (modelState == null) {
-            ModelStateImpl.clearNBTValues(tag);
+            ModelStateTagHelper.clearNBTValues(tag);
             return;
         }
         modelState.serializeNBT(tag);

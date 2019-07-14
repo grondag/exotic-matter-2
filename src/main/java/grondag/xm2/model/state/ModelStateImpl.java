@@ -26,7 +26,6 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
 import static grondag.xm2.model.state.ModelStateData.TEST_GETTER_STATIC;
 
-import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm2.Xm;
 import grondag.xm2.XmConfig;
@@ -42,7 +41,6 @@ import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.connect.CornerJoinStateSelector;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.model.ModelPrimitiveRegistryImpl;
 import grondag.xm2.model.primitive.AbstractModelPrimitive;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
@@ -52,68 +50,28 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
-public class ModelStateImpl implements MutableModelState {
-    private static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
-    private static final String NBT_SHAPE = NBTDictionary.claim("shape");
-    /**
-     * Stores string containing registry names of textures, vertex processors
-     */
-    private static final String NBT_LAYERS = NBTDictionary.claim("layers");
-
-    /**
-     * Removes model state from the tag if present.
-     */
-    public static final void clearNBTValues(CompoundTag tag) {
-        if (tag == null)
-            return;
-        tag.remove(NBT_MODEL_BITS);
-        tag.remove(NBT_SHAPE);
-        tag.remove(NBT_LAYERS);
-    }
-
-    private boolean isStatic = false;
+public class ModelStateImpl extends AbstractModelState implements MutableModelState {
     protected long coreBits;
     protected long shapeBits1;
     protected long shapeBits0;
 
     // default to white, full alpha
-    protected long layerBitsBase = 0xFFFFFFFFL;
-    protected long layerBitsLamp = 0xFFFFFFFFL;
-    protected long layerBitsMiddle = 0xFFFFFFFFL;
-    protected long layerBitsOuter = 0xFFFFFFFFL;
-    protected long layerBitsCut = 0xFFFFFFFFL;
-
-    // TODO: replace mockup implementation
-    protected int[] paints = new int[6];
 
     private int hashCode = -1;
 
     /** contains indicators derived from shape and painters */
     protected int stateFlags;
 
-    public ModelStateImpl(ModelPrimitive shape) {
-        ModelStateData.SHAPE.setValue(shape.index(), this);
-    }
-
-    public ModelStateImpl(int[] bits) {
-        this.deserializeFromInts(bits);
+    public ModelStateImpl(ModelPrimitive primitive) {
+        super(primitive);
     }
 
     public ModelStateImpl(ModelStateImpl template) {
+        super(template.primitive);
         this.coreBits = template.coreBits;
         this.shapeBits0 = template.shapeBits0;
         this.shapeBits1 = template.shapeBits1;
-        this.layerBitsBase = template.layerBitsBase;
-        this.layerBitsCut = template.layerBitsCut;
-        this.layerBitsLamp = template.layerBitsLamp;
-        this.layerBitsMiddle = template.layerBitsMiddle;
-        this.layerBitsOuter = template.layerBitsOuter;
-        this.paints[0] = template.paints[0];
-        this.paints[1] = template.paints[1];
-        this.paints[2] = template.paints[2];
-        this.paints[3] = template.paints[3];
-        this.paints[4] = template.paints[4];
-        this.paints[5] = template.paints[5];
+        System.arraycopy(template.paints, 0, this.paints, 0, paints.length);
     }
 
     @Override
@@ -128,17 +86,7 @@ public class ModelStateImpl implements MutableModelState {
         this.coreBits = template.coreBits;
         this.shapeBits0 = template.shapeBits0;
         this.shapeBits1 = template.shapeBits1;
-        this.layerBitsBase = template.layerBitsBase;
-        this.layerBitsCut = template.layerBitsCut;
-        this.layerBitsLamp = template.layerBitsLamp;
-        this.layerBitsMiddle = template.layerBitsMiddle;
-        this.layerBitsOuter = template.layerBitsOuter;
-        this.paints[0] = template.paints[0];
-        this.paints[1] = template.paints[1];
-        this.paints[2] = template.paints[2];
-        this.paints[3] = template.paints[3];
-        this.paints[4] = template.paints[4];
-        this.paints[5] = template.paints[5];
+        System.arraycopy(template.paints, 0, this.paints, 0, paints.length);
         ModelStateData.SHAPE.setValue(savePrimitive.index(), this);
         return this;
     }
@@ -154,28 +102,8 @@ public class ModelStateImpl implements MutableModelState {
         result[4] = (int) (shapeBits0 >> 32);
         result[5] = (int) (shapeBits0);
 
-        result[6] = (int) (layerBitsBase >> 32);
-        result[7] = (int) (layerBitsBase);
-
-        result[8] = (int) (layerBitsCut >> 32);
-        result[9] = (int) (layerBitsCut);
-
-        result[10] = (int) (layerBitsLamp >> 32);
-        result[11] = (int) (layerBitsLamp);
-
-        result[12] = (int) (layerBitsMiddle >> 32);
-        result[13] = (int) (layerBitsMiddle);
-
-        result[14] = (int) (layerBitsOuter >> 32);
-        result[15] = (int) (layerBitsOuter);
-
-        result[16] = paints[0];
-        result[17] = paints[1];
-        result[18] = paints[2];
-        result[19] = paints[3];
-        result[20] = paints[4];
-        result[21] = paints[5];
-
+        System.arraycopy(paints, 0, result, 6, paints.length);
+        
         return result;
     }
 
@@ -190,18 +118,7 @@ public class ModelStateImpl implements MutableModelState {
         this.shapeBits1 = ((long) bits[2]) << 32 | (bits[3] & 0xffffffffL);
         this.shapeBits0 = ((long) bits[4]) << 32 | (bits[5] & 0xffffffffL);
 
-        this.layerBitsBase = ((long) bits[6]) << 32 | (bits[7] & 0xffffffffL);
-        this.layerBitsCut = ((long) bits[8]) << 32 | (bits[9] & 0xffffffffL);
-        this.layerBitsLamp = ((long) bits[10]) << 32 | (bits[11] & 0xffffffffL);
-        this.layerBitsMiddle = ((long) bits[12]) << 32 | (bits[13] & 0xffffffffL);
-        this.layerBitsOuter = ((long) bits[14]) << 32 | (bits[15] & 0xffffffffL);
-
-        paints[0] = bits[16];
-        paints[1] = bits[17];
-        paints[2] = bits[18];
-        paints[3] = bits[19];
-        paints[4] = bits[20];
-        paints[5] = bits[21];
+        System.arraycopy(bits, 6, paints, 0, paints.length);
     }
 
     private void populateStateFlagsIfNeeded() {
@@ -216,16 +133,6 @@ public class ModelStateImpl implements MutableModelState {
         }
     }
 
-    @Override
-    public boolean isStatic() {
-        return this.isStatic;
-    }
-
-    @Override
-    public void setStatic(boolean isStatic) {
-        this.isStatic = isStatic;
-    }
-
     /**
      * Does NOT consider isStatic in comparison. <br>
      * <br>
@@ -234,30 +141,25 @@ public class ModelStateImpl implements MutableModelState {
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-
-        if (obj instanceof ModelStateImpl) {
-            ModelStateImpl other = (ModelStateImpl) obj;
-            return this.coreBits == other.coreBits
-                    && this.shapeBits0 == other.shapeBits0
-                    && this.shapeBits1 == other.shapeBits1
-                    && this.layerBitsBase == other.layerBitsBase
-                    && this.layerBitsCut == other.layerBitsCut
-                    && this.layerBitsLamp == other.layerBitsLamp
-                    && this.layerBitsMiddle == other.layerBitsMiddle
-                    && this.layerBitsOuter == other.layerBitsOuter
-                    && this.paints[0] == other.paints[0]
-                    && this.paints[1] == other.paints[1]
-                    && this.paints[2] == other.paints[2]
-                    && this.paints[3] == other.paints[3]
-                    && this.paints[4] == other.paints[4]
-                    && this.paints[5] == other.paints[5];
-        }
-
-        return false;
+        return this == obj ? true : obj instanceof ModelStateImpl && equalsInner((ModelStateImpl) obj);
     }
 
+    protected boolean equalsInner(ModelStateImpl other) {
+        if(this.primitive == other.primitive
+                && this.coreBits == other.coreBits
+                && this.shapeBits0 == other.shapeBits0
+                && this.shapeBits1 == other.shapeBits1) {
+            final int limit = paints.length;
+            for(int i = 0; i < limit; i++) {
+                if(paints[i] != other.paints[i]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    
     @Override
     public boolean equalsIncludeStatic(Object obj) {
         if (this == obj)
@@ -265,23 +167,10 @@ public class ModelStateImpl implements MutableModelState {
 
         if (obj instanceof ModelStateImpl) {
             ModelStateImpl other = (ModelStateImpl) obj;
-            return this.isStatic == other.isStatic
-                    && this.coreBits == other.coreBits
-                    && this.shapeBits0 == other.shapeBits0
-                    && this.shapeBits1 == other.shapeBits1
-                    && this.layerBitsBase == other.layerBitsBase
-                    && this.layerBitsCut == other.layerBitsCut
-                    && this.layerBitsLamp == other.layerBitsLamp
-                    && this.layerBitsMiddle == other.layerBitsMiddle
-                    && this.layerBitsOuter == other.layerBitsOuter
-                    && this.paints[0] == other.paints[0]
-                    && this.paints[1] == other.paints[1]
-                    && this.paints[2] == other.paints[2]
-                    && this.paints[3] == other.paints[3]
-                    && this.paints[4] == other.paints[4]
-                    && this.paints[5] == other.paints[5];
+            return this.isStatic == other.isStatic && equalsInner(other);
+        } else {
+            return false;
         }
-        return false;
     }
 
     private void invalidateHashCode() {
@@ -292,9 +181,11 @@ public class ModelStateImpl implements MutableModelState {
     @Override
     public int hashCode() {
         if (hashCode == -1) {
-            hashCode = (int) Useful.longHash(this.coreBits ^ this.shapeBits0 ^ this.shapeBits1 ^ this.layerBitsBase
-                    ^ this.layerBitsCut ^ this.layerBitsLamp ^ this.layerBitsMiddle ^ this.layerBitsOuter ^ paints[0]
-                    ^ paints[1] ^ paints[2] ^ paints[3] ^ paints[4] ^ paints[5]);
+            hashCode = (int) Useful.longHash(this.coreBits ^ this.shapeBits0 ^ this.shapeBits1);
+            final int limit = paints.length;
+            for(int i = 0; i < limit; i++) {
+                hashCode ^= paints[i];
+            }
         }
         return hashCode;
     }
@@ -383,11 +274,6 @@ public class ModelStateImpl implements MutableModelState {
     ////////////////////////////////////////////////////
     // PACKER 0 ATTRIBUTES (NOT SHAPE-DEPENDENT)
     ////////////////////////////////////////////////////
-
-    @Override
-    public ModelPrimitive primitive() {
-        return ModelPrimitiveRegistryImpl.INSTANCE.get(ModelStateData.SHAPE.getValue(this));
-    }
 
     @Override
     public Direction.Axis getAxis() {
@@ -694,21 +580,13 @@ public class ModelStateImpl implements MutableModelState {
                 & ModelStateData.SHAPE_COMPARISON_MASK_0)
                 && (this.shapeBits1 & ModelStateData.SHAPE_COMPARISON_MASK_1) == (o.shapeBits1
                         & ModelStateData.SHAPE_COMPARISON_MASK_1)
-                && this.layerBitsBase == o.layerBitsBase
-                && this.layerBitsCut == o.layerBitsCut
-                && this.layerBitsLamp == o.layerBitsLamp
-                && this.layerBitsMiddle == o.layerBitsMiddle
-                && this.layerBitsOuter == o.layerBitsOuter;
+                && doesAppearanceMatch(other);
     }
 
     @Override
     public boolean doesAppearanceMatch(ModelState other) {
-        final ModelStateImpl o = (ModelStateImpl) other;
-        return this.layerBitsBase == o.layerBitsBase
-                && this.layerBitsCut == o.layerBitsCut
-                && this.layerBitsLamp == o.layerBitsLamp
-                && this.layerBitsMiddle == o.layerBitsMiddle
-                && this.layerBitsOuter == o.layerBitsOuter;
+        //TODO: compare paints
+        return true;
     }
 
     // PERF: bottleneck for Pyroclasm
@@ -756,14 +634,14 @@ public class ModelStateImpl implements MutableModelState {
     }
 
     public static ModelStateImpl deserializeFromNBTIfPresent(CompoundTag tag) {
-        ModelPrimitive shape = ModelPrimitiveRegistry.INSTANCE.get(tag.getString(NBT_SHAPE));
+        ModelPrimitive shape = ModelPrimitiveRegistry.INSTANCE.get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
         if(shape == null) {
             return null;
         }
         ModelStateImpl result = new ModelStateImpl(shape);
     
-        if (tag.containsKey(NBT_MODEL_BITS)) {
-            int[] stateBits = tag.getIntArray(NBT_MODEL_BITS);
+        if (tag.containsKey(ModelStateTagHelper.NBT_MODEL_BITS)) {
+            int[] stateBits = tag.getIntArray(ModelStateTagHelper.NBT_MODEL_BITS);
             if (stateBits.length != 22) {
                 Xm.LOG.warn("Bad or missing data encounter during ModelState NBT deserialization.");
             } else {
@@ -802,11 +680,11 @@ public class ModelStateImpl implements MutableModelState {
 
     @Override
     public void serializeNBT(CompoundTag tag) {
-        tag.putIntArray(NBT_MODEL_BITS, this.serializeToInts());
+        tag.putIntArray(ModelStateTagHelper.NBT_MODEL_BITS, this.serializeToInts());
 
         // shape is serialized by name because registered shapes can change if
         // mods/config change
-        tag.putString(NBT_SHAPE, this.primitive().id().toString());
+        tag.putString(ModelStateTagHelper.NBT_SHAPE, this.primitive().id().toString());
 
         // TODO: serialization for paint/surface map
         // textures and vertex processors serialized by name because registered can
@@ -822,17 +700,10 @@ public class ModelStateImpl implements MutableModelState {
         this.coreBits = pBuff.readLong();
         this.shapeBits0 = pBuff.readLong();
         this.shapeBits1 = pBuff.readVarLong();
-        this.layerBitsBase = pBuff.readVarLong();
-        this.layerBitsCut = pBuff.readVarLong();
-        this.layerBitsLamp = pBuff.readVarLong();
-        this.layerBitsMiddle = pBuff.readVarLong();
-        this.layerBitsOuter = pBuff.readVarLong();
-        this.paints[0] = pBuff.readVarInt();
-        this.paints[1] = pBuff.readVarInt();
-        this.paints[2] = pBuff.readVarInt();
-        this.paints[3] = pBuff.readVarInt();
-        this.paints[4] = pBuff.readVarInt();
-        this.paints[5] = pBuff.readVarInt();
+        final int limit = paints.length;
+        for(int i = 0; i < limit; i++) {
+            this.paints[i] = pBuff.readVarInt();
+        }
     }
 
     @Override
@@ -840,17 +711,10 @@ public class ModelStateImpl implements MutableModelState {
         pBuff.writeLong(this.coreBits);
         pBuff.writeLong(this.shapeBits0);
         pBuff.writeVarLong(this.shapeBits1);
-        pBuff.writeVarLong(this.layerBitsBase);
-        pBuff.writeVarLong(this.layerBitsCut);
-        pBuff.writeVarLong(this.layerBitsLamp);
-        pBuff.writeVarLong(this.layerBitsMiddle);
-        pBuff.writeVarLong(this.layerBitsOuter);
-        pBuff.writeVarInt(paints[0]);
-        pBuff.writeVarInt(paints[1]);
-        pBuff.writeVarInt(paints[2]);
-        pBuff.writeVarInt(paints[3]);
-        pBuff.writeVarInt(paints[4]);
-        pBuff.writeVarInt(paints[5]);
+        final int limit = paints.length;
+        for(int i = 0; i < limit; i++) {
+            pBuff.writeVarInt(paints[i]);
+        }
     }
 
     @Override
