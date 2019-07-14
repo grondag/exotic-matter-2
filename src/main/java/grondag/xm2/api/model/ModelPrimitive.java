@@ -66,16 +66,12 @@ public interface ModelPrimitive {
      */
     void produceQuads(ModelState modelState, Consumer<IPolygon> target);
 
-    // UGLY: really needed?
-    /**
-     * When ModelState primitive is set, the primitive-specific elements will be set
-     * by applying this consumer to a mutable model state instance. Only need to
-     * change if shape needs some preset state.
-     */
-    default void applyDefaultState(MutableModelState modelState) {
-        // NOOP
+    ImmutableModelState defaultState();
+    
+    default MutableModelState newState() {
+        return defaultState().mutableCopy();
     }
-
+    
     /**
      * If true, shape can be placed on itself to become bigger.
      */

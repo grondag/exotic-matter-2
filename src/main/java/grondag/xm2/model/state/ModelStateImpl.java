@@ -91,7 +91,8 @@ public class ModelStateImpl implements MutableModelState {
     /** contains indicators derived from shape and painters */
     protected int stateFlags;
 
-    public ModelStateImpl() {
+    public ModelStateImpl(ModelPrimitive shape) {
+        ModelStateData.SHAPE.setValue(shape.index(), this);
     }
 
     public ModelStateImpl(int[] bits) {
@@ -121,6 +122,27 @@ public class ModelStateImpl implements MutableModelState {
     }
 
     @Override
+    public ModelStateImpl copyFrom(ModelState templateIn) {
+        final ModelStateImpl template = (ModelStateImpl) templateIn;
+        final ModelPrimitive savePrimitive = primitive();
+        this.coreBits = template.coreBits;
+        this.shapeBits0 = template.shapeBits0;
+        this.shapeBits1 = template.shapeBits1;
+        this.layerBitsBase = template.layerBitsBase;
+        this.layerBitsCut = template.layerBitsCut;
+        this.layerBitsLamp = template.layerBitsLamp;
+        this.layerBitsMiddle = template.layerBitsMiddle;
+        this.layerBitsOuter = template.layerBitsOuter;
+        this.paints[0] = template.paints[0];
+        this.paints[1] = template.paints[1];
+        this.paints[2] = template.paints[2];
+        this.paints[3] = template.paints[3];
+        this.paints[4] = template.paints[4];
+        this.paints[5] = template.paints[5];
+        ModelStateData.SHAPE.setValue(savePrimitive.index(), this);
+        return this;
+    }
+    
     public final int[] serializeToInts() {
         int[] result = new int[16 + 6];
         result[0] = (int) (this.isStatic ? (coreBits >> 32) | Useful.INT_SIGN_BIT : (coreBits >> 32));
@@ -365,16 +387,6 @@ public class ModelStateImpl implements MutableModelState {
     @Override
     public ModelPrimitive primitive() {
         return ModelPrimitiveRegistryImpl.INSTANCE.get(ModelStateData.SHAPE.getValue(this));
-    }
-
-    @Override
-    public void primitive(ModelPrimitive shape) {
-        if (shape.index() != ModelStateData.SHAPE.getValue(this)) {
-            ModelStateData.SHAPE.setValue(shape.index(), this);
-            shape.applyDefaultState(this);
-            invalidateHashCode();
-            clearStateFlags();
-        }
     }
 
     @Override
@@ -703,10 +715,10 @@ public class ModelStateImpl implements MutableModelState {
     @Override
     public ModelStateImpl geometricState() {
         this.populateStateFlagsIfNeeded();
-        ModelStateImpl result = new ModelStateImpl();
-        result.primitive(this.primitive());
+        final AbstractModelPrimitive primitive = (AbstractModelPrimitive) primitive();
+        ModelStateImpl result = mutableCopy();
 
-        switch (((AbstractModelPrimitive) primitive()).stateFormat) {
+        switch (primitive.stateFormat) {
             case BLOCK:
                 result.setStaticShapeBits(this.getStaticShapeBits());
                 if (this.hasAxis())
@@ -715,7 +727,7 @@ public class ModelStateImpl implements MutableModelState {
                     result.setAxisInverted(this.isAxisInverted());
                 if (this.hasAxisRotation())
                     result.setAxisRotation(this.getAxisRotation());
-                if ((this.primitive().stateFlags(this) & STATE_FLAG_NEEDS_CORNER_JOIN) == STATE_FLAG_NEEDS_CORNER_JOIN) {
+                if ((primitive.stateFlags(this) & STATE_FLAG_NEEDS_CORNER_JOIN) == STATE_FLAG_NEEDS_CORNER_JOIN) {
                     result.cornerJoin(this.cornerJoin());
                 } else if ((this.primitive().stateFlags(this)
                         & STATE_FLAG_NEEDS_SIMPLE_JOIN) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
@@ -737,39 +749,28 @@ public class ModelStateImpl implements MutableModelState {
         }
         return result;
     }
-
-    public static ModelStateImpl deserializeFromNBTIfPresent(CompoundTag tag) {
-        if (tag.containsKey(NBT_MODEL_BITS)) {
-            ModelStateImpl result = new ModelStateImpl();
-            result.deserializeNBT(tag);
-            return result;
-        }
-        return null;
-    }
-
+    
     @Override
     public Direction rotateFace(Direction face) {
         return PolyTransform.rotateFace(this, face);
     }
 
-    @Override
-    public void deserializeNBT(CompoundTag tag) {
-        if (tag == null)
-            return;
-
-        int[] stateBits = tag.getIntArray(NBT_MODEL_BITS);
-        if (stateBits.length != 22) {
-            Xm.LOG.warn("Bad or missing data encounter during ModelState NBT deserialization.");
-            return;
-        }
-        this.deserializeFromInts(stateBits);
-
-        // shape is serialized by name because registered shapes can change if
-        // mods/config change
+    public static ModelStateImpl deserializeFromNBTIfPresent(CompoundTag tag) {
         ModelPrimitive shape = ModelPrimitiveRegistry.INSTANCE.get(tag.getString(NBT_SHAPE));
-        if (shape != null)
-            ModelStateData.SHAPE.setValue(shape.index(), this);
-
+        if(shape == null) {
+            return null;
+        }
+        ModelStateImpl result = new ModelStateImpl(shape);
+    
+        if (tag.containsKey(NBT_MODEL_BITS)) {
+            int[] stateBits = tag.getIntArray(NBT_MODEL_BITS);
+            if (stateBits.length != 22) {
+                Xm.LOG.warn("Bad or missing data encounter during ModelState NBT deserialization.");
+            } else {
+                result.deserializeFromInts(stateBits);
+            }
+        }
+        
         // textures and vertex processors serialized by name because registered can
         // change if mods/config change
 //        String layers = tag.getString(NBT_LAYERS);
@@ -794,7 +795,9 @@ public class ModelStateImpl implements MutableModelState {
 //                }
 //            }
 //        }
-        this.clearStateFlags();
+        
+        result.clearStateFlags();
+        return result;
     }
 
     @Override

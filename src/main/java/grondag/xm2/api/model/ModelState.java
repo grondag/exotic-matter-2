@@ -1,12 +1,9 @@
 package grondag.xm2.api.model;
 
-import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintRegistry;
 import grondag.xm2.api.surface.XmSurface;
-import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.Direction;
 
 public interface ModelState extends ModelWorldState, ModelPrimitiveState {
     boolean isImmutable();
@@ -30,34 +27,6 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState {
     default XmPaint paint(XmSurface surface) {
         return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
     }
-
-    Direction.Axis getAxis();
-
-    boolean isAxisInverted();
-
-    /**
-     * Usage is determined by shape. Limited to 44 bits and does not update from
-     * world.
-     */
-    long getStaticShapeBits();
-
-    /**
-     * For machines and other blocks with a privileged horizontal face, North is
-     * considered the zero rotation.
-     */
-    ClockwiseRotation getAxisRotation();
-
-    /**
-     * Multiblock shapes also get a full 64 bits of information - does not update
-     * from world
-     */
-    long getMultiBlockBits();
-
-    TerrainState getTerrainState();
-
-    long getTerrainStateKey();
-
-    int getTerrainHotness();
 
     /**
      * True if base paint layer is translucent or lamp paint layer is present and
@@ -86,12 +55,6 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState {
      * in matching.
      */
     boolean doesAppearanceMatch(ModelState other);
-
-    /**
-     * Returns a copy of this model state with only the bits that matter for
-     * geometry. Used as lookup key for block damage models.
-     */
-    ModelState geometricState();
 
     void serializeNBT(CompoundTag tag);
 }

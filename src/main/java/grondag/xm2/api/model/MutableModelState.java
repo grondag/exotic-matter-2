@@ -16,22 +16,22 @@
 
 package grondag.xm2.api.model;
 
-import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.serialization.PacketSerializable;
-import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.surface.XmSurfaceList;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.terrain.TerrainState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-public interface MutableModelState extends ModelState, MutableModelPrimitiveState, MutableModelWorldState, IReadWriteNBT, PacketSerializable {
-    int[] serializeToInts();
-
+public interface MutableModelState extends ModelState, MutableModelPrimitiveState, MutableModelWorldState, PacketSerializable {
+    /**
+     * Copies what it can, excluding the primitive, and returns self.
+     */
+    MutableModelState copyFrom(ModelState template);
+    
     void setStatic(boolean isStatic);
 
     boolean equalsIncludeStatic(Object obj);
@@ -60,29 +60,6 @@ public interface MutableModelState extends ModelState, MutableModelPrimitiveStat
             paint(i, paintIndex);
         }
     }
-    
-    void setAxis(Direction.Axis axis);
-
-    void setAxisInverted(boolean isInverted);
-
-    /** usage is determined by shape */
-    void setStaticShapeBits(long bits);
-
-    /**
-     * For machines and other blocks with a privileged horizontal face, North is
-     * considered the zero rotation.
-     */
-    void setAxisRotation(ClockwiseRotation rotation);
-
-    /**
-     * Multiblock shapes also get a full 64 bits of information - does not update
-     * from world
-     */
-    void setMultiBlockBits(long bits);
-
-    void setTerrainState(TerrainState flowState);
-
-    void setTerrainStateKey(long terrainStateKey);
 
     /**
      * See {@link PolyTransform#rotateFace(MutableModelState, Direction)}

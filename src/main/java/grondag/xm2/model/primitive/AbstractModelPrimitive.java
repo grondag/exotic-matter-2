@@ -16,13 +16,17 @@
 
 package grondag.xm2.model.primitive;
 
+import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveState;
+import grondag.xm2.model.state.ModelStateImpl;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.Identifier;
 
 public abstract class AbstractModelPrimitive implements ModelPrimitive {
+    private final ImmutableModelState defaultState;
+    
     private final XmSurfaceListImpl surfaces;
 
     /**
@@ -41,15 +45,23 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
 
     protected AbstractModelPrimitive(Identifier id, XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
         this.surfaces = surfaces;
-        this.stateFormat = stateFormat;
         this.stateFlags = stateFlags;
         this.id = id;
+        this.stateFormat = stateFormat;
+        ModelStateImpl state = new ModelStateImpl(this);
+        updateDefaultState(state);
+        this.defaultState = state.toImmutable();
     }
 
     protected AbstractModelPrimitive(String idString, XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
         this(new Identifier(idString), surfaces, stateFormat, stateFlags);
     }
 
+    @Override
+    public ImmutableModelState defaultState() {
+        return defaultState;
+    }
+    
     @Override
     public int stateFlags(ModelPrimitiveState modelState) {
         return stateFlags;
@@ -63,5 +75,12 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     @Override
     public XmSurfaceListImpl surfaces() {
         return surfaces;
+    }
+
+    /** 
+     * Override if default state should be something other than the, erm... default.
+     */
+    protected void updateDefaultState(ModelStateImpl modelState) {
+        
     }
 }

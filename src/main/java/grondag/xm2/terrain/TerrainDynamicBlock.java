@@ -31,9 +31,10 @@ public class TerrainDynamicBlock extends TerrainBlock {
         super(blockSettings, adjustShape(defaultModelState, isFiller));
     }
 
+    // PERF: sucks
     private static MutableModelState adjustShape(ModelState stateIn, boolean isFiller) {
-        MutableModelState result = stateIn.mutableCopy();
-        result.primitive(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
+        MutableModelState result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
+        result.copyFrom(stateIn);
         result.setStatic(false);
         return result;
     }

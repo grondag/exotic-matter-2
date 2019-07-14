@@ -25,7 +25,6 @@ import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
 import grondag.xm2.api.model.ImmutableModelState;
-import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.painting.QuadPaintHandler;
 import grondag.xm2.terrain.TerrainState;
 import net.fabricmc.api.EnvType;
@@ -35,7 +34,6 @@ import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -48,11 +46,6 @@ public class ImmutableModelStateImpl extends ModelStateImpl implements Immutable
 
     @Override
     public void setStatic(boolean isStatic) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public void primitive(ModelPrimitive shape) {
         throw new IllegalStateException();
     }
 
@@ -123,11 +116,6 @@ public class ImmutableModelStateImpl extends ModelStateImpl implements Immutable
 
     @Override
     public void setTerrainState(TerrainState flowState) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag tag) {
         throw new IllegalStateException();
     }
 

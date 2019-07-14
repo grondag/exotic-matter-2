@@ -37,6 +37,7 @@ import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.model.state.ModelStateData;
+import grondag.xm2.model.state.ModelStateImpl;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
@@ -91,9 +92,9 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public void applyDefaultState(MutableModelState modelState) {
-        // FIX: re-implement after model state refactor
-        // STATE_CUT_COUNT.setValue(3, STATE_ARE_CUTS_ON_EDGE.setValue(true, 0)
+    protected void updateDefaultState(ModelStateImpl modelState) {
+        setCutCount(3, modelState);
+        setCutsOnEdge(true, modelState);
     }
 
     public SquareColumnPrimitive(String idString) {

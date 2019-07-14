@@ -36,9 +36,10 @@ public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
         super(blockSettings, adjustShape(defaultModelState, isFiller), blockEntityType);
     }
 
+    // PERF: sucks
     private static MutableModelState adjustShape(ModelState stateIn, boolean isFiller) {
-        MutableModelState result = stateIn.mutableCopy();
-        result.primitive(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
+        MutableModelState result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
+        result.copyFrom(stateIn);
         result.setStatic(true);
         return result;
     }
