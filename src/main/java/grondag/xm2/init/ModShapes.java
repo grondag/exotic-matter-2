@@ -30,11 +30,11 @@ public class ModShapes {
     public static final ModelShape<?> CUBE = ModelShapes.create("cube", CubeMeshFactory.class);
     public static final ModelShape<?> COLUMN_SQUARE = ModelShapes.create("column_square", SquareColumnMeshFactory.class);
     public static final ModelShape<?> STACKED_PLATES = ModelShapes.create("stacked_plates", StackedPlatesMeshFactory.class);
-    public static final ModelShape<?> WEDGE = ModelShapes.create("wedge", WedgeMeshFactory.class, true);
-    public static final ModelShape<?> STAIR = ModelShapes.create("stair", StairMeshFactory.class, true);
-    public static final ModelShape<?> SPHERE = ModelShapes.create("sphere", SphereMeshFactory.class, true);
-    public static final ModelShape<?> CSGTEST = ModelShapes.create("csgtest", CSGTestMeshFactory.class, true);
+    public static final ModelShape<?> WEDGE = ModelShapes.create("wedge", WedgeMeshFactory.class);
+    public static final ModelShape<?> STAIR = ModelShapes.create("stair", StairMeshFactory.class);
+    public static final ModelShape<?> SPHERE = ModelShapes.create("sphere", SphereMeshFactory.class);
+    public static final ModelShape<?> CSGTEST = ModelShapes.create("csgtest", CSGTestMeshFactory.class);
     
-    public static final ModelShape<?> TERRAIN_HEIGHT = null; //ModelShapes.create("terrain_height", TerrainMeshFactory.class, SHAPE, true);
-    public static final ModelShape<?> TERRAIN_FILLER = null; //ModelShapes.create("terrain_filler", TerrainMeshFactory.class, SHAPE, false);
+    public static final ModelShape<?> TERRAIN_HEIGHT = null; //ModelShapes.create("terrain_height", TerrainMeshFactory.class, SHAPE);
+    public static final ModelShape<?> TERRAIN_FILLER = null; //ModelShapes.create("terrain_filler", TerrainMeshFactory.class, SHAPE);
 }

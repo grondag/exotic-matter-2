@@ -23,27 +23,21 @@ public class ModelShape<T extends MeshFactory> {
     private static int nextOrdinal = 0;
 
     private final Class<T> meshFactoryClass;
-    private final boolean isAvailableInGui;
     private final String systemName;
     private final int ordinal;
     private boolean factoryNeedLoad = true;
     private T factory = null;
 
-    ModelShape(String systemName, Class<T> meshFactoryClass, boolean isAvailableInGui) {
+    ModelShape(String systemName, Class<T> meshFactoryClass) {
         this.meshFactoryClass = meshFactoryClass;
         this.ordinal = nextOrdinal++;
         this.systemName = systemName;
-        this.isAvailableInGui = isAvailableInGui;
         ModelShapes.allByName.put(systemName, this);
         if (this.ordinal < ModelShapes.MAX_SHAPES)
             ModelShapes.allByOrdinal.add(this);
         else
             Xm.LOG.warn(String.format("Model shape limit of %d exceeded.  Shape %s added but will not be rendered.",
                     ModelShapes.MAX_SHAPES, systemName));
-    }
-
-    ModelShape(String systemName, Class<T> meshFactoryClass) {
-        this(systemName, meshFactoryClass, true);
     }
 
     public T meshFactory() {
@@ -61,10 +55,6 @@ public class ModelShape<T extends MeshFactory> {
 
     public String localizedName() {
         return I18n.translate("shape." + this.systemName.toLowerCase());
-    }
-
-    public boolean isAvailableInGui() {
-        return this.isAvailableInGui;
     }
 
     public int ordinal() {
