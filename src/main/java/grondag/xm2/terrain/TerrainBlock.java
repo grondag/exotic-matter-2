@@ -26,7 +26,7 @@ public class TerrainBlock extends XmSimpleBlock implements IHotBlock {
     public static final EnumProperty<TerrainType> TERRAIN_TYPE = EnumProperty.of("xm2_terrain", TerrainType.class);
 
     public TerrainBlock(Settings blockSettings, MutableModelState defaultModelState) {
-	super(blockSettings, defaultModelState);
+        super(blockSettings, defaultModelState);
     }
 
 }

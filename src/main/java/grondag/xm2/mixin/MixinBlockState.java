@@ -28,11 +28,11 @@ public abstract class MixinBlockState implements XmBlockStateAccess {
 
     @Override
     public void xm2_blockState(XmBlockStateImpl state) {
-	xmBlockState = state;
+        xmBlockState = state;
     }
 
     @Override
     public XmBlockStateImpl xm2_blockState() {
-	return xmBlockState;
+        return xmBlockState;
     }
 }

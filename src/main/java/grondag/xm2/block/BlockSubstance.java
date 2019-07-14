@@ -57,48 +57,47 @@ public class BlockSubstance implements ILocalized {
     private static int nextOrdinal = 0;
 
     public static final BlockSubstance DEFAULT = create("default",
-	    new SubstanceConfig(1, BlockHarvestTool.ANY, 0, 10, 1.0), Material.EARTH, BlockSoundGroup.WOOL,
-	    BlockColorMapProvider.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.MEDIUM_LIGHT).ordinal);
+            new SubstanceConfig(1, BlockHarvestTool.ANY, 0, 10, 1.0), Material.EARTH, BlockSoundGroup.WOOL,
+            BlockColorMapProvider.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.MEDIUM_LIGHT).ordinal);
 
     public static BlockSubstance deserializeNBT(CompoundTag tag) {
-	return NullHandler.defaultIfNull(allByName.get(tag.getString(NBT_SUBSTANCE)), BlockSubstance.DEFAULT);
+        return NullHandler.defaultIfNull(allByName.get(tag.getString(NBT_SUBSTANCE)), BlockSubstance.DEFAULT);
     }
 
     public static BlockSubstance fromBytes(PacketByteBuf pBuff) {
-	int ordinal = pBuff.readByte();
-	return ordinal >= 0 && ordinal < allByOrdinal.size() ? allByOrdinal.get(ordinal) : null;
+        int ordinal = pBuff.readByte();
+        return ordinal >= 0
+                && ordinal < allByOrdinal.size() ? allByOrdinal.get(ordinal) : null;
     }
 
     public static BlockSubstance get(String systemName) {
-	return allByName.get(systemName);
+        return allByName.get(systemName);
     }
 
     public static BlockSubstance get(int ordinal) {
-	return ordinal < 0 || ordinal >= allByOrdinal.size() ? null : allByOrdinal.get(ordinal);
+        return ordinal < 0
+                || ordinal >= allByOrdinal.size() ? null : allByOrdinal.get(ordinal);
     }
 
-    public static BlockSubstance create(String systemName, SubstanceConfig config, Material material,
-	    BlockSoundGroup sound, int defaultColorMapID, boolean isHyperMaterial) {
-	BlockSubstance existing = get(systemName);
-	if (existing != null) {
-	    assert false : "Duplicate substance name";
-	    Xm.LOG.warn(String.format(
-		    "Block substance with duplicate name %s not created.  Existing substance with that name be used instead.",
-		    systemName));
-	    return existing;
-	}
+    public static BlockSubstance create(String systemName, SubstanceConfig config, Material material, BlockSoundGroup sound, int defaultColorMapID, boolean isHyperMaterial) {
+        BlockSubstance existing = get(systemName);
+        if (existing != null) {
+            assert false : "Duplicate substance name";
+            Xm.LOG.warn(String.format(
+                    "Block substance with duplicate name %s not created.  Existing substance with that name be used instead.",
+                    systemName));
+            return existing;
+        }
 
-	return new BlockSubstance(systemName, config, material, sound, defaultColorMapID, isHyperMaterial);
+        return new BlockSubstance(systemName, config, material, sound, defaultColorMapID, isHyperMaterial);
     }
 
-    public static BlockSubstance create(String systemName, SubstanceConfig config, Material material,
-	    BlockSoundGroup sound, int defaultColorMapID) {
-	return create(systemName, config, material, sound, defaultColorMapID, false);
+    public static BlockSubstance create(String systemName, SubstanceConfig config, Material material, BlockSoundGroup sound, int defaultColorMapID) {
+        return create(systemName, config, material, sound, defaultColorMapID, false);
     }
 
-    public static BlockSubstance createHypermatter(String systemName, SubstanceConfig config, Material material,
-	    BlockSoundGroup sound, int defaultColorMapID) {
-	return create(systemName, config, material, sound, defaultColorMapID, true);
+    public static BlockSubstance createHypermatter(String systemName, SubstanceConfig config, Material material, BlockSoundGroup sound, int defaultColorMapID) {
+        return create(systemName, config, material, sound, defaultColorMapID, true);
     }
 
     public final Material material;
@@ -118,49 +117,48 @@ public class BlockSubstance implements ILocalized {
     public final boolean isBurning;
     public final PathNodeType pathNodeType;
 
-    private BlockSubstance(String systemName, SubstanceConfig substance, Material material, BlockSoundGroup sound,
-	    int defaultColorMapID, boolean isHyperMaterial) {
-	this.systemName = systemName;
-	this.ordinal = nextOrdinal++;
-	this.material = material;
-	this.isHyperMaterial = isHyperMaterial;
-	soundType = sound;
-	this.defaultColorMapID = defaultColorMapID;
-	this.isTranslucent = this.material == Material.GLASS;
+    private BlockSubstance(String systemName, SubstanceConfig substance, Material material, BlockSoundGroup sound, int defaultColorMapID, boolean isHyperMaterial) {
+        this.systemName = systemName;
+        this.ordinal = nextOrdinal++;
+        this.material = material;
+        this.isHyperMaterial = isHyperMaterial;
+        soundType = sound;
+        this.defaultColorMapID = defaultColorMapID;
+        this.isTranslucent = this.material == Material.GLASS;
 
-	this.hardness = substance.hardness;
-	this.resistance = substance.resistance;
-	this.harvestTool = substance.harvestTool;
-	this.harvestLevel = substance.harvestLevel;
-	this.walkSpeedFactor = substance.walkSpeedFactor;
-	this.flammability = substance.flammability;
-	this.isBurning = substance.isBurning;
-	this.pathNodeType = substance.pathNodeType;
+        this.hardness = substance.hardness;
+        this.resistance = substance.resistance;
+        this.harvestTool = substance.harvestTool;
+        this.harvestLevel = substance.harvestLevel;
+        this.walkSpeedFactor = substance.walkSpeedFactor;
+        this.flammability = substance.flammability;
+        this.isBurning = substance.isBurning;
+        this.pathNodeType = substance.pathNodeType;
 
-	if (this.ordinal < MAX_SUBSTANCES) {
-	    allByName.put(systemName, this);
-	    allByOrdinal.add(this);
-	} else {
-	    Xm.LOG.warn(String.format("Block substance limit of %d exceeded.  Substance %s will not be usable.",
-		    MAX_SUBSTANCES, systemName));
-	}
+        if (this.ordinal < MAX_SUBSTANCES) {
+            allByName.put(systemName, this);
+            allByOrdinal.add(this);
+        } else {
+            Xm.LOG.warn(String.format("Block substance limit of %d exceeded.  Substance %s will not be usable.",
+                    MAX_SUBSTANCES, systemName));
+        }
 
     }
 
     @Override
     public String localizedName() {
-	return I18n.translate("material." + this.systemName.toLowerCase());
+        return I18n.translate("material." + this.systemName.toLowerCase());
     }
 
     public void serializeNBT(CompoundTag tag) {
-	tag.putString(NBT_SUBSTANCE, this.systemName);
+        tag.putString(NBT_SUBSTANCE, this.systemName);
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-	pBuff.writeByte(this.ordinal);
+        pBuff.writeByte(this.ordinal);
     }
 
     public static List<BlockSubstance> all() {
-	return allReadOnly;
+        return allReadOnly;
     }
 }

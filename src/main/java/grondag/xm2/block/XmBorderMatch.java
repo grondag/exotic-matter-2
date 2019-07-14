@@ -29,15 +29,18 @@ public class XmBorderMatch implements BlockTest {
 
     @Override
     public boolean apply(BlockTestContext context) {
-	final MutableModelState fromState = (MutableModelState) context.fromModelState();
-	final MutableModelState toState = (MutableModelState) context.toModelState();
-	final BlockState toBlockState = context.toBlockState();
-	final BlockState fromBlockState = context.fromBlockState();
+        final MutableModelState fromState = (MutableModelState) context.fromModelState();
+        final MutableModelState toState = (MutableModelState) context.toModelState();
+        final BlockState toBlockState = context.toBlockState();
+        final BlockState fromBlockState = context.fromBlockState();
 
-	if (fromBlockState.getBlock() != toBlockState.getBlock() || fromState == null || toState == null) {
-	    return false;
-	}
+        if (fromBlockState.getBlock() != toBlockState.getBlock()
+                || fromState == null
+                || toState == null) {
+            return false;
+        }
 
-	return fromState.doShapeAndAppearanceMatch(toState) && fromState.worldState().species() == toState.worldState().species();
+        return fromState.doShapeAndAppearanceMatch(toState)
+                && fromState.worldState().species() == toState.worldState().species();
     }
 }

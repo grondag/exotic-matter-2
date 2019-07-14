@@ -49,46 +49,46 @@ public enum FaceEdge implements StringIdentifiable {
     public final String name;
 
     private FaceEdge(Direction... relativeLookup) {
-	this.name = this.name().toLowerCase();
-	this.relativeLookup = relativeLookup;
-	this.ordinalBit = 1 << this.ordinal();
+        this.name = this.name().toLowerCase();
+        this.relativeLookup = relativeLookup;
+        this.ordinalBit = 1 << this.ordinal();
     }
 
     public FaceEdge clockwise() {
-	switch (this) {
-	case BOTTOM_EDGE:
-	    return LEFT_EDGE;
-	case LEFT_EDGE:
-	    return TOP_EDGE;
-	case RIGHT_EDGE:
-	    return BOTTOM_EDGE;
-	case TOP_EDGE:
-	    return RIGHT_EDGE;
-	default:
-	    return null;
-	}
+        switch (this) {
+            case BOTTOM_EDGE:
+                return LEFT_EDGE;
+            case LEFT_EDGE:
+                return TOP_EDGE;
+            case RIGHT_EDGE:
+                return BOTTOM_EDGE;
+            case TOP_EDGE:
+                return RIGHT_EDGE;
+            default:
+                return null;
+        }
     }
 
     public FaceEdge counterClockwise() {
-	switch (this) {
-	case BOTTOM_EDGE:
-	    return RIGHT_EDGE;
-	case LEFT_EDGE:
-	    return BOTTOM_EDGE;
-	case RIGHT_EDGE:
-	    return TOP_EDGE;
-	case TOP_EDGE:
-	    return LEFT_EDGE;
-	default:
-	    return null;
-	}
+        switch (this) {
+            case BOTTOM_EDGE:
+                return RIGHT_EDGE;
+            case LEFT_EDGE:
+                return BOTTOM_EDGE;
+            case RIGHT_EDGE:
+                return TOP_EDGE;
+            case TOP_EDGE:
+                return LEFT_EDGE;
+            default:
+                return null;
+        }
     }
 
     /**
      * Returns the block face next to this FaceSide on the given block face.
      */
     public Direction toWorld(Direction face) {
-	return relativeLookup[face.ordinal()];
+        return relativeLookup[face.ordinal()];
     }
 
     /**
@@ -97,21 +97,21 @@ public enum FaceEdge implements StringIdentifiable {
      */
     @Nullable
     public static FaceEdge fromWorld(Direction edgeFace, Direction onFace) {
-	return FaceEdgeHelper.fromWorld(edgeFace, onFace);
+        return FaceEdgeHelper.fromWorld(edgeFace, onFace);
     }
 
     public static final int COUNT = FaceEdgeHelper.COUNT;
 
     public static final FaceEdge fromOrdinal(int ordinal) {
-	return FaceEdgeHelper.fromOrdinal(ordinal);
+        return FaceEdgeHelper.fromOrdinal(ordinal);
     }
 
     public static void forEach(Consumer<FaceEdge> consumer) {
-	FaceEdgeHelper.forEach(consumer);
+        FaceEdgeHelper.forEach(consumer);
     }
 
     @Override
     public String asString() {
-	return name;
+        return name;
     }
 }

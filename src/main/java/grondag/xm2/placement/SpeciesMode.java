@@ -29,39 +29,39 @@ public enum SpeciesMode implements ILocalized {
     private static final String TAG_NAME = NBTDictionary.claim("speciesMode");
 
     public SpeciesMode deserializeNBT(CompoundTag tag) {
-	return Useful.safeEnumFromTag(tag, TAG_NAME, this);
+        return Useful.safeEnumFromTag(tag, TAG_NAME, this);
     }
 
     public void serializeNBT(CompoundTag tag) {
-	Useful.saveEnumToTag(tag, TAG_NAME, this);
+        Useful.saveEnumToTag(tag, TAG_NAME, this);
     }
 
     public SpeciesMode fromBytes(PacketByteBuf pBuff) {
-	return pBuff.readEnumConstant(SpeciesMode.class);
+        return pBuff.readEnumConstant(SpeciesMode.class);
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-	pBuff.writeEnumConstant(this);
+        pBuff.writeEnumConstant(this);
     }
 
     @Override
     public String localizedName() {
-	return I18n.translate("placement.species_mode." + this.name().toLowerCase());
+        return I18n.translate("placement.species_mode." + this.name().toLowerCase());
     }
 
     /** mode to use if player holding alt key */
     public SpeciesMode alternate() {
-	switch (this) {
-	case COUNTER_MOST:
-	default:
-	    return MATCH_CLICKED;
+        switch (this) {
+            case COUNTER_MOST:
+            default:
+                return MATCH_CLICKED;
 
-	case MATCH_CLICKED:
-	    return COUNTER_MOST;
+            case MATCH_CLICKED:
+                return COUNTER_MOST;
 
-	case MATCH_MOST:
-	    return COUNTER_MOST;
+            case MATCH_MOST:
+                return COUNTER_MOST;
 
-	}
+        }
     }
 }

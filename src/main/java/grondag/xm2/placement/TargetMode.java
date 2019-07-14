@@ -64,27 +64,27 @@ public enum TargetMode implements ILocalized {
     public final boolean usesSelectionRegion;
 
     private TargetMode(boolean usesSelectionRegion) {
-	this.usesSelectionRegion = usesSelectionRegion;
+        this.usesSelectionRegion = usesSelectionRegion;
     }
 
     public TargetMode deserializeNBT(CompoundTag tag) {
-	return Useful.safeEnumFromTag(tag, TAG_NAME, this);
+        return Useful.safeEnumFromTag(tag, TAG_NAME, this);
     }
 
     public void serializeNBT(CompoundTag tag) {
-	Useful.saveEnumToTag(tag, TAG_NAME, this);
+        Useful.saveEnumToTag(tag, TAG_NAME, this);
     }
 
     public TargetMode fromBytes(PacketByteBuf pBuff) {
-	return pBuff.readEnumConstant(TargetMode.class);
+        return pBuff.readEnumConstant(TargetMode.class);
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-	pBuff.writeEnumConstant(this);
+        pBuff.writeEnumConstant(this);
     }
 
     @Override
     public String localizedName() {
-	return I18n.translate("placement.target_mode." + this.name().toLowerCase());
+        return I18n.translate("placement.target_mode." + this.name().toLowerCase());
     }
 }

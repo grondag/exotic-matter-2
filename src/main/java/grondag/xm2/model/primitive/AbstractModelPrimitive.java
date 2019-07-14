@@ -39,31 +39,29 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
      */
     private final int stateFlags;
 
-    protected AbstractModelPrimitive(Identifier id, XmSurfaceListImpl surfaces, StateFormat stateFormat,
-	    int stateFlags) {
-	this.surfaces = surfaces;
-	this.stateFormat = stateFormat;
-	this.stateFlags = stateFlags;
-	this.id = id;
+    protected AbstractModelPrimitive(Identifier id, XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
+        this.surfaces = surfaces;
+        this.stateFormat = stateFormat;
+        this.stateFlags = stateFlags;
+        this.id = id;
     }
 
-    protected AbstractModelPrimitive(String idString, XmSurfaceListImpl surfaces, StateFormat stateFormat,
-	    int stateFlags) {
-	this(new Identifier(idString), surfaces, stateFormat, stateFlags);
+    protected AbstractModelPrimitive(String idString, XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
+        this(new Identifier(idString), surfaces, stateFormat, stateFlags);
     }
 
     @Override
     public int stateFlags(ModelState modelState) {
-	return stateFlags;
+        return stateFlags;
     }
 
     @Override
     public Identifier id() {
-	return id;
+        return id;
     }
 
     @Override
     public XmSurfaceListImpl surfaces() {
-	return surfaces;
+        return surfaces;
     }
 }

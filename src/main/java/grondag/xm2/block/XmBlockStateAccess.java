@@ -32,15 +32,15 @@ public interface XmBlockStateAccess {
     XmBlockStateImpl xm2_blockState();
 
     static @Nullable XmBlockStateImpl get(BlockState fromState) {
-	return ((XmBlockStateAccess) fromState).xm2_blockState();
+        return ((XmBlockStateAccess) fromState).xm2_blockState();
     }
 
     static @Nullable XmBlockStateImpl get(Block fromBlock) {
-	return get(fromBlock.getDefaultState());
+        return get(fromBlock.getDefaultState());
     }
 
     static @Nullable ModelState modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
-	final XmBlockStateImpl xmState = get(fromState);
-	return xmState == null ? null : xmState.getModelState(blockView, pos, refresh);
+        final XmBlockStateImpl xmState = get(fromState);
+        return xmState == null ? null : xmState.getModelState(blockView, pos, refresh);
     }
 }

@@ -38,7 +38,7 @@ public interface ModelPrimitive {
      * override this and cache value to avoid map lookups.
      */
     default int index() {
-	return ModelPrimitiveRegistry.INSTANCE.indexOf(this);
+        return ModelPrimitiveRegistry.INSTANCE.indexOf(this);
     }
 
     /**
@@ -46,7 +46,7 @@ public interface ModelPrimitive {
      * one.
      */
     default String translationKey() {
-	return "xm2_primitive_name." + id().getNamespace() + "." + id().getPath();
+        return "xm2_primitive_name." + id().getNamespace() + "." + id().getPath();
     }
 
     XmSurfaceList surfaces();
@@ -55,7 +55,7 @@ public interface ModelPrimitive {
      * Override if shape has an orientation to be selected during placement.
      */
     default BlockOrientationType orientationType(ModelState modelState) {
-	return BlockOrientationType.NONE;
+        return BlockOrientationType.NONE;
     }
 
     int stateFlags(ModelState modelState);
@@ -73,14 +73,14 @@ public interface ModelPrimitive {
      * change if shape needs some preset state.
      */
     default void applyDefaultState(MutableModelState modelState) {
-	// NOOP
+        // NOOP
     }
 
     /**
      * If true, shape can be placed on itself to become bigger.
      */
     default boolean isAdditive() {
-	return false;
+        return false;
     }
 
     /**
@@ -88,18 +88,18 @@ public interface ModelPrimitive {
      * will know they need to be placed in a corner instead of a face.
      */
     default boolean isAxisOrthogonalToPlacementFace() {
-	return false;
+        return false;
     }
 
     default boolean hasAxis(ModelState modelState) {
-	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS) == STATE_FLAG_HAS_AXIS;
+        return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS) == STATE_FLAG_HAS_AXIS;
     }
 
     default boolean hasAxisOrientation(ModelState modelState) {
-	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
+        return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
     }
 
     default boolean hasAxisRotation(ModelState modelState) {
-	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
+        return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
     }
 }

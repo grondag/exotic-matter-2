@@ -22,7 +22,7 @@ import net.minecraft.util.Identifier;
 
 public interface TextureSetRegistry {
     public static TextureSetRegistry instance() {
-	return TextureSetRegistryImpl.INSTANCE;
+        return TextureSetRegistryImpl.INSTANCE;
     }
 
     /**

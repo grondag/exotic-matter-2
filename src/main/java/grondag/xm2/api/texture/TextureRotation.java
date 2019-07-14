@@ -28,6 +28,6 @@ public enum TextureRotation {
     public final Rotation rotation;
 
     private TextureRotation(Rotation rotation) {
-	this.rotation = rotation;
+        this.rotation = rotation;
     }
 }

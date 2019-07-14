@@ -24,14 +24,14 @@ public enum TextureGroup {
     public final int bitFlag;
 
     private TextureGroup() {
-	this.bitFlag = (1 << this.ordinal());
+        this.bitFlag = (1 << this.ordinal());
     }
 
     public static int makeTextureGroupFlags(TextureGroup... groups) {
-	int flags = 0;
-	for (TextureGroup group : groups) {
-	    flags |= group.bitFlag;
-	}
-	return flags;
+        int flags = 0;
+        for (TextureGroup group : groups) {
+            flags |= group.bitFlag;
+        }
+        return flags;
     }
 }

@@ -55,40 +55,39 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand) {
-	final XmBlockStateImpl xmState = XmBlockStateAccess.get(state);
-	return xmState == null ? Collections.emptyList()
-		: XmDispatcher.INSTANCE.get(xmState.defaultModelState).getBakedQuads(state, face, rand);
+        final XmBlockStateImpl xmState = XmBlockStateAccess.get(state);
+        return xmState == null ? Collections.emptyList()
+                : XmDispatcher.INSTANCE.get(xmState.defaultModelState).getBakedQuads(state, face, rand);
     }
 
     @Override
-    public void emitBlockQuads(ExtendedBlockView blockView, BlockState state, BlockPos pos,
-	    Supplier<Random> randomSupplier, RenderContext context) {
-	final ModelState modelState = XmBlockStateAccess.modelState(state, blockView, pos, true);
-	if (modelState != null) {
-	    XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
-	}
+    public void emitBlockQuads(ExtendedBlockView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+        final ModelState modelState = XmBlockStateAccess.modelState(state, blockView, pos, true);
+        if (modelState != null) {
+            XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
+        }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-	final MutableModelState modelState = XmStackHelper.getStackModelState(stack);
-	if (modelState != null) {
-	    XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
-	}
+        final MutableModelState modelState = XmStackHelper.getStackModelState(stack);
+        if (modelState != null) {
+            XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
+        }
     }
 
     @Override
     public Collection<Identifier> getModelDependencies() {
-	return Collections.emptyList();
+        return Collections.emptyList();
     }
 
     @Override
     public Collection<Identifier> getTextureDependencies(Function<Identifier, UnbakedModel> var1, Set<String> var2) {
-	return Collections.emptyList();
+        return Collections.emptyList();
     }
 
     @Override
     public BakedModel bake(ModelLoader var1, Function<Identifier, Sprite> var2, ModelBakeSettings var3) {
-	return this;
+        return this;
     }
 }

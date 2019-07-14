@@ -30,15 +30,15 @@ public enum TerrainType implements StringIdentifiable {
     public final int fillOffset;
 
     private TerrainType(int height, boolean filler) {
-	this.name = this.name().toLowerCase();
-	this.height = filler ? 0 : height;
-	this.fillOffset = filler ? height : 0;
-	this.isFiller = filler;
-	this.isHeight = !filler;
+        this.name = this.name().toLowerCase();
+        this.height = filler ? 0 : height;
+        this.fillOffset = filler ? height : 0;
+        this.isFiller = filler;
+        this.isHeight = !filler;
     }
 
     @Override
     public String asString() {
-	return name;
+        return name;
     }
 }

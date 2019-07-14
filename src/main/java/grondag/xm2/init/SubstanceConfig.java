@@ -56,27 +56,26 @@ public class SubstanceConfig {
 //    @Comment("Determeins AI handling for this block. Normal value is BLOCKED.")
     public PathNodeType pathNodeType = PathNodeType.BLOCKED;
 
-    public SubstanceConfig(int hardness, BlockHarvestTool harvestTool, int harvestLevel, int resistance,
-	    double walkSpeedFactor) {
-	this.hardness = hardness;
-	this.harvestTool = harvestTool;
-	this.harvestLevel = harvestLevel;
-	this.resistance = resistance;
-	this.walkSpeedFactor = walkSpeedFactor;
+    public SubstanceConfig(int hardness, BlockHarvestTool harvestTool, int harvestLevel, int resistance, double walkSpeedFactor) {
+        this.hardness = hardness;
+        this.harvestTool = harvestTool;
+        this.harvestLevel = harvestLevel;
+        this.resistance = resistance;
+        this.walkSpeedFactor = walkSpeedFactor;
     }
 
     public SubstanceConfig withFlammability(int flammability) {
-	this.flammability = flammability;
-	return this;
+        this.flammability = flammability;
+        return this;
     }
 
     public SubstanceConfig setBurning() {
-	this.isBurning = true;
-	return this;
+        this.isBurning = true;
+        return this;
     }
 
     public SubstanceConfig withPathNodeType(PathNodeType pathNodeType) {
-	this.pathNodeType = pathNodeType;
-	return this;
+        this.pathNodeType = pathNodeType;
+        return this;
     }
 }

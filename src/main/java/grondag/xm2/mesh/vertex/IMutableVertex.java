@@ -60,44 +60,45 @@ public interface IMutableVertex extends IVec3f {
      * Does not retain a reference to the output or either input.<br>
      */
     public default void interpolate(IMutableVertex other, float otherWeight, IMutableVertex output) {
-	final int layerCount = getLayerCount();
-	assert layerCount == other.getLayerCount();
-	output.setLayerCount(layerCount);
+        final int layerCount = getLayerCount();
+        assert layerCount == other.getLayerCount();
+        output.setLayerCount(layerCount);
 
-	final float newX = this.x() + (other.x() - this.x()) * otherWeight;
-	final float newY = this.y() + (other.y() - this.y()) * otherWeight;
-	final float newZ = this.z() + (other.z() - this.z()) * otherWeight;
-	output.setPos(newX, newY, newZ);
+        final float newX = this.x() + (other.x() - this.x()) * otherWeight;
+        final float newY = this.y() + (other.y() - this.y()) * otherWeight;
+        final float newZ = this.z() + (other.z() - this.z()) * otherWeight;
+        output.setPos(newX, newY, newZ);
 
-	output.setGlow((int) (getGlow() + (other.getGlow() - getGlow()) * otherWeight));
+        output.setGlow((int) (getGlow() + (other.getGlow() - getGlow()) * otherWeight));
 
-	if (this.hasNormal() && other.hasNormal()) {
-	    final float normX = normalX() + (other.normalX() - normalX()) * otherWeight;
-	    final float normY = normalY() + (other.normalY() - normalY()) * otherWeight;
-	    final float normZ = normalZ() + (other.normalZ() - normalZ()) * otherWeight;
-	    final float normScale = 1f / (float) Math.sqrt(normX * normX + normY * normY + normZ * normZ);
-	    output.setNormal(normX * normScale, normY * normScale, normZ * normScale);
-	} else
-	    output.setNormal(null);
+        if (this.hasNormal()
+                && other.hasNormal()) {
+            final float normX = normalX() + (other.normalX() - normalX()) * otherWeight;
+            final float normY = normalY() + (other.normalY() - normalY()) * otherWeight;
+            final float normZ = normalZ() + (other.normalZ() - normalZ()) * otherWeight;
+            final float normScale = 1f / (float) Math.sqrt(normX * normX + normY * normY + normZ * normZ);
+            output.setNormal(normX * normScale, normY * normScale, normZ * normScale);
+        } else
+            output.setNormal(null);
 
-	output.setColor(0, ColorHelper.interpolate(getColor(0), other.getColor(0), otherWeight));
+        output.setColor(0, ColorHelper.interpolate(getColor(0), other.getColor(0), otherWeight));
 
-	output.setUV(0, getU(0) + (other.getU(0) - getU(0)) * otherWeight,
-		getV(0) + (other.getV(0) - getV(0)) * otherWeight);
+        output.setUV(0, getU(0) + (other.getU(0) - getU(0)) * otherWeight,
+                getV(0) + (other.getV(0) - getV(0)) * otherWeight);
 
-	if (layerCount > 1) {
-	    output.setColor(1, ColorHelper.interpolate(getColor(1), other.getColor(1), otherWeight));
+        if (layerCount > 1) {
+            output.setColor(1, ColorHelper.interpolate(getColor(1), other.getColor(1), otherWeight));
 
-	    output.setUV(1, getU(1) + (other.getU(1) - getU(1)) * otherWeight,
-		    getV(1) + (other.getV(1) - getV(1)) * otherWeight);
+            output.setUV(1, getU(1) + (other.getU(1) - getU(1)) * otherWeight,
+                    getV(1) + (other.getV(1) - getV(1)) * otherWeight);
 
-	    if (layerCount == 3) {
-		output.setColor(2, ColorHelper.interpolate(getColor(2), other.getColor(2), otherWeight));
+            if (layerCount == 3) {
+                output.setColor(2, ColorHelper.interpolate(getColor(2), other.getColor(2), otherWeight));
 
-		output.setUV(2, getU(2) + (other.getU(2) - getU(2)) * otherWeight,
-			getV(2) + (other.getV(2) - getV(2)) * otherWeight);
-	    }
-	}
+                output.setUV(2, getU(2) + (other.getU(2) - getU(2)) * otherWeight,
+                        getV(2) + (other.getV(2) - getV(2)) * otherWeight);
+            }
+        }
     }
 
     public int getColor(int layerIndex);
@@ -123,29 +124,29 @@ public interface IMutableVertex extends IVec3f {
     public void setLayerCount(int layerCount);
 
     public default void copyFrom(IMutableVertex source) {
-	if (source.hasNormal())
-	    setNormal(source.normalX(), source.normalY(), source.normalZ());
-	else
-	    setNormal(null);
+        if (source.hasNormal())
+            setNormal(source.normalX(), source.normalY(), source.normalZ());
+        else
+            setNormal(null);
 
-	setPos(source.x(), source.y(), source.z());
+        setPos(source.x(), source.y(), source.z());
 
-	setGlow(source.getGlow());
+        setGlow(source.getGlow());
 
-	final int layerCount = source.getLayerCount();
-	setLayerCount(layerCount);
+        final int layerCount = source.getLayerCount();
+        setLayerCount(layerCount);
 
-	setColor(0, source.getColor(0));
-	setUV(0, source.getU(0), source.getV(0));
+        setColor(0, source.getColor(0));
+        setUV(0, source.getU(0), source.getV(0));
 
-	if (layerCount > 1) {
-	    setColor(1, source.getColor(1));
-	    setUV(1, source.getU(1), source.getV(1));
+        if (layerCount > 1) {
+            setColor(1, source.getColor(1));
+            setUV(1, source.getU(1), source.getV(1));
 
-	    if (layerCount == 3) {
-		setColor(2, source.getColor(2));
-		setUV(2, source.getU(2), source.getV(2));
-	    }
-	}
+            if (layerCount == 3) {
+                setColor(2, source.getColor(2));
+                setUV(2, source.getU(2), source.getV(2));
+            }
+        }
     }
 }

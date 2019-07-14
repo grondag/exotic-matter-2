@@ -43,107 +43,107 @@ import net.minecraft.util.math.Direction.Axis;
 public class ImmutableModelStateImpl extends ModelStateImpl implements ImmutableModelState {
 
     public ImmutableModelStateImpl(ModelStateImpl template) {
-	super(template);
+        super(template);
     }
 
     @Override
     public void setStatic(boolean isStatic) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void setShape(ModelPrimitive shape) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void setAxis(Axis axis) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void setAxisInverted(boolean isInverted) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void posX(int index) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void posY(int index) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void posZ(int index) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void setStaticShapeBits(long bits) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void species(int species) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void cornerJoin(CornerJoinState join) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void simpleJoin(SimpleJoinState join) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void masonryJoin(SimpleJoinState join) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void setAxisRotation(ClockwiseRotation rotation) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void setMultiBlockBits(long bits) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void setTerrainStateKey(long terrainStateKey) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void setTerrainState(TerrainState flowState) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public void fromBytes(PacketByteBuf pBuff) {
-	throw new IllegalStateException();
+        throw new IllegalStateException();
     }
 
     @Override
     public boolean isImmutable() {
-	return true;
+        return true;
     }
 
     @Override
     public ImmutableModelState toImmutable() {
-	return this;
+        return this;
     }
 
     @Environment(EnvType.CLIENT)
@@ -154,29 +154,29 @@ public class ImmutableModelStateImpl extends ModelStateImpl implements Immutable
 
     @Environment(EnvType.CLIENT)
     private Mesh mesh() {
-	Mesh result = mesh;
-	if (result == null) {
-	    result = QuadPaintHandler.paint(this);
-	    mesh = result;
-	}
-	return result;
+        Mesh result = mesh;
+        if (result == null) {
+            result = QuadPaintHandler.paint(this);
+            mesh = result;
+        }
+        return result;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand) {
-	List<BakedQuad>[] lists = quadLists;
-	if (lists == null) {
-	    lists = ModelHelper.toQuadLists(mesh());
-	    quadLists = lists;
-	}
-	List<BakedQuad> result = lists[face == null ? 6 : face.getId()];
-	return result == null ? ImmutableList.of() : result;
+        List<BakedQuad>[] lists = quadLists;
+        if (lists == null) {
+            lists = ModelHelper.toQuadLists(mesh());
+            quadLists = lists;
+        }
+        List<BakedQuad> result = lists[face == null ? 6 : face.getId()];
+        return result == null ? ImmutableList.of() : result;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public void emitQuads(RenderContext context) {
-	context.meshConsumer().accept(mesh());
+        context.meshConsumer().accept(mesh());
     }
 }

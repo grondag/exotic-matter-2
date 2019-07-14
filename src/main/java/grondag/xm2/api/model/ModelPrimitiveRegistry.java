@@ -29,7 +29,7 @@ public interface ModelPrimitiveRegistry {
     ModelPrimitive get(int primitiveIndex);
 
     default ModelPrimitive get(Identifier primitiveId) {
-	return get(primitiveId.toString());
+        return get(primitiveId.toString());
     }
 
     ModelPrimitive get(String idString);
@@ -41,10 +41,10 @@ public interface ModelPrimitiveRegistry {
     int indexOf(String idString);
 
     default int indexOf(Identifier primitiveId) {
-	return indexOf(primitiveId.toString());
+        return indexOf(primitiveId.toString());
     }
 
     default int indexOf(ModelPrimitive primitive) {
-	return indexOf(primitive.id());
+        return indexOf(primitive.id());
     }
 }

@@ -31,16 +31,16 @@ public class XmPaintRegistryImpl implements XmPaintRegistry {
 
     @Override
     public boolean register(Identifier id, XmPaint paint) {
-	return paints.putIfAbsent(id, (XmPaintImpl.Value) paint) == null;
+        return paints.putIfAbsent(id, (XmPaintImpl.Value) paint) == null;
     }
 
     @Override
     public XmPaintImpl.Value get(int paintIndex) {
-	return XmPaintImpl.byIndex(paintIndex);
+        return XmPaintImpl.byIndex(paintIndex);
     }
 
     @Override
     public XmPaintImpl.Value get(Identifier paintId) {
-	return paints.get(paintId);
+        return paints.get(paintId);
     }
 }

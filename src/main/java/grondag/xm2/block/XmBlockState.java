@@ -28,7 +28,7 @@ import net.minecraft.world.BlockView;
 public interface XmBlockState {
 
     static @Nullable XmBlockState get(BlockState fromState) {
-	return XmBlockStateAccess.get(fromState);
+        return XmBlockStateAccess.get(fromState);
     }
 
     /**

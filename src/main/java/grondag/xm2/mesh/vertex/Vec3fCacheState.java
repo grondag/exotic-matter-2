@@ -23,6 +23,6 @@ class Vec3fCacheState {
     protected final Vec3f[] values;
 
     public Vec3fCacheState(int capacityIn) {
-	this.values = new Vec3f[capacityIn];
+        this.values = new Vec3f[capacityIn];
     }
 }

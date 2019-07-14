@@ -26,7 +26,7 @@ import net.minecraft.util.Identifier;
 
 public interface XmPaint {
     static XmPaintFinder finder() {
-	return XmPaintImpl.finder();
+        return XmPaintImpl.finder();
     }
 
     int MAX_TEXTURE_DEPTH = 3;

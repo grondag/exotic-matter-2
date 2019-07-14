@@ -11,59 +11,59 @@ import net.minecraft.util.math.Direction;
 
 public interface ModelState {
     boolean isImmutable();
-   
+
     ImmutableModelState toImmutable();
-    
+
     MutableModelState mutableCopy();
-    
+
     MutableModelWorldState worldState();
-    
+
     /**
      * Persisted but not part of hash nor included in equals comparison. If true,
      * refreshFromWorldState does nothing.
      */
     boolean isStatic();
-    
+
     ModelPrimitive getShape();
-    
+
     int paintIndex(int surfaceIndex);
 
     default XmPaint paint(int surfaceIndex) {
-	return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
+        return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
     }
 
     default XmPaint paint(XmSurface surface) {
-	return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
+        return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
     }
 
     Direction.Axis getAxis();
-    
+
     boolean isAxisInverted();
-    
+
     /**
      * Usage is determined by shape. Limited to 44 bits and does not update from
      * world.
      */
     long getStaticShapeBits();
-    
+
     /**
      * For machines and other blocks with a privileged horizontal face, North is
      * considered the zero rotation.
      */
     ClockwiseRotation getAxisRotation();
-    
+
     /**
      * Multiblock shapes also get a full 64 bits of information - does not update
      * from world
      */
     long getMultiBlockBits();
-    
+
     TerrainState getTerrainState();
 
     long getTerrainStateKey();
 
     int getTerrainHotness();
-    
+
     /**
      * True if base paint layer is translucent or lamp paint layer is present and
      * translucent.
@@ -73,13 +73,13 @@ public interface ModelState {
     boolean hasMasonryJoin();
 
     boolean hasTextureRotation();
-    
+
     /**
      * Means that one or more elements (like a texture) uses species. Does not mean
      * that the shape or block actually capture or generate species other than 0.
      */
     boolean hasSpecies();
-    
+
     /**
      * Returns true if visual elements and geometry match. Does not consider species
      * in matching.
@@ -91,7 +91,7 @@ public interface ModelState {
      * in matching.
      */
     boolean doesAppearanceMatch(ModelState other);
-    
+
     /**
      * Returns a copy of this model state with only the bits that matter for
      * geometry. Used as lookup key for block damage models.
@@ -99,20 +99,20 @@ public interface ModelState {
     MutableModelState geometricState();
 
     default boolean hasAxisOrientation() {
-	return getShape().hasAxisOrientation(this);
+        return getShape().hasAxisOrientation(this);
     }
 
     default boolean hasAxisRotation() {
-	return getShape().hasAxisRotation(this);
+        return getShape().hasAxisRotation(this);
     }
 
     default BlockOrientationType orientationType() {
-	return getShape().orientationType(this);
+        return getShape().orientationType(this);
     }
 
     default boolean isAxisOrthogonalToPlacementFace() {
-	return getShape().isAxisOrthogonalToPlacementFace();
+        return getShape().isAxisOrthogonalToPlacementFace();
     }
-    
+
     void serializeNBT(CompoundTag tag);
 }

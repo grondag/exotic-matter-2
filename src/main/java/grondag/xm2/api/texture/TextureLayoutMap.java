@@ -20,7 +20,7 @@ import grondag.xm2.texture.TextureLayoutMapImpl;
 
 public interface TextureLayoutMap {
     static TextureLayoutMap create(TextureLayout layout, TextureNameFunction nameFunc) {
-	return TextureLayoutMapImpl.create(layout, nameFunc);
+        return TextureLayoutMapImpl.create(layout, nameFunc);
     }
 
     public static TextureLayoutMap SINGLE = create(TextureLayout.SIMPLE, TextureNameFunction.SINGLE);
@@ -38,10 +38,10 @@ public interface TextureLayoutMap {
     public static TextureLayoutMap BIGTEX_ANIMATED = create(TextureLayout.BIGTEX_ANIMATED, TextureNameFunction.SINGLE);
 
     public static TextureLayoutMap QUADRANT_CONNECTED_SINGLE = create(TextureLayout.QUADRANT_CONNECTED,
-	    TextureNameFunction.SINGLE);
+            TextureNameFunction.SINGLE);
 
     public static TextureLayoutMap QUADRANT_CONNECTED_VERSIONED = create(TextureLayout.QUADRANT_CONNECTED,
-	    TextureNameFunction.SINGLE);
+            TextureNameFunction.SINGLE);
 
     TextureLayout layout();
 }

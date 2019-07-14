@@ -123,133 +123,132 @@ public class MeshHelper {
      * http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
      */
     public static void makeIcosahedron(Vec3d center, double radius, IWritablePolyStream stream, boolean smoothNormals) {
-	/** vertex scale */
-	final double s = radius / (2 * Math.sin(2 * Math.PI / 5));
+        /** vertex scale */
+        final double s = radius / (2 * Math.sin(2 * Math.PI / 5));
 
-	Vec3d[] vertexes = new Vec3d[12];
+        Vec3d[] vertexes = new Vec3d[12];
 
-	// create 12 vertices of a icosahedron
-	final double t = s * (1.0 + Math.sqrt(5.0)) / 2.0;
-	int vi = 0;
+        // create 12 vertices of a icosahedron
+        final double t = s * (1.0 + Math.sqrt(5.0)) / 2.0;
+        int vi = 0;
 
-	vertexes[vi++] = new Vec3d(-s, t, 0).add(center);
-	vertexes[vi++] = new Vec3d(s, t, 0).add(center);
-	vertexes[vi++] = new Vec3d(-s, -t, 0).add(center);
-	vertexes[vi++] = new Vec3d(s, -t, 0).add(center);
+        vertexes[vi++] = new Vec3d(-s, t, 0).add(center);
+        vertexes[vi++] = new Vec3d(s, t, 0).add(center);
+        vertexes[vi++] = new Vec3d(-s, -t, 0).add(center);
+        vertexes[vi++] = new Vec3d(s, -t, 0).add(center);
 
-	vertexes[vi++] = new Vec3d(0, -s, t).add(center);
-	vertexes[vi++] = new Vec3d(0, s, t).add(center);
-	vertexes[vi++] = new Vec3d(0, -s, -t).add(center);
-	vertexes[vi++] = new Vec3d(0, s, -t).add(center);
+        vertexes[vi++] = new Vec3d(0, -s, t).add(center);
+        vertexes[vi++] = new Vec3d(0, s, t).add(center);
+        vertexes[vi++] = new Vec3d(0, -s, -t).add(center);
+        vertexes[vi++] = new Vec3d(0, s, -t).add(center);
 
-	vertexes[vi++] = new Vec3d(t, 0, -s).add(center);
-	vertexes[vi++] = new Vec3d(t, 0, s).add(center);
-	vertexes[vi++] = new Vec3d(-t, 0, -s).add(center);
-	vertexes[vi++] = new Vec3d(-t, 0, s).add(center);
+        vertexes[vi++] = new Vec3d(t, 0, -s).add(center);
+        vertexes[vi++] = new Vec3d(t, 0, s).add(center);
+        vertexes[vi++] = new Vec3d(-t, 0, -s).add(center);
+        vertexes[vi++] = new Vec3d(-t, 0, s).add(center);
 
-	Vec3d[] normals = null;
-	if (smoothNormals) {
-	    normals = new Vec3d[12];
-	    for (int i = 0; i < 12; i++) {
-		normals[i] = vertexes[i].subtract(center).normalize();
-	    }
-	}
+        Vec3d[] normals = null;
+        if (smoothNormals) {
+            normals = new Vec3d[12];
+            for (int i = 0; i < 12; i++) {
+                normals[i] = vertexes[i].subtract(center).normalize();
+            }
+        }
 
-	// create 20 triangles of the icosahedron
+        // create 20 triangles of the icosahedron
 
-	stream.setVertexCount(3);
-	IMutablePolygon writer = stream.writer();
+        stream.setVertexCount(3);
+        IMutablePolygon writer = stream.writer();
 
-	XmSurface surface = writer.surface();
-	if (surface.topology() == SurfaceTopology.TILED) {
-	    final float uvMax = (float) (2 * s);
-	    writer.setMaxU(0, uvMax);
-	    writer.setMaxV(0, uvMax);
-	    writer.uvWrapDistance(uvMax);
-	}
+        XmSurface surface = writer.surface();
+        if (surface.topology() == SurfaceTopology.TILED) {
+            final float uvMax = (float) (2 * s);
+            writer.setMaxU(0, uvMax);
+            writer.setMaxV(0, uvMax);
+            writer.uvWrapDistance(uvMax);
+        }
 
-	// enable texture randomization
-	int salt = 0;
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
+        // enable texture randomization
+        int salt = 0;
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
 
-	makeIcosahedronFace(true, 0, 11, 5, vertexes, normals, stream);
-	makeIcosahedronFace(false, 4, 5, 11, vertexes, normals, stream);
+        makeIcosahedronFace(true, 0, 11, 5, vertexes, normals, stream);
+        makeIcosahedronFace(false, 4, 5, 11, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 0, 5, 1, vertexes, normals, stream);
-	makeIcosahedronFace(false, 9, 1, 5, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 0, 5, 1, vertexes, normals, stream);
+        makeIcosahedronFace(false, 9, 1, 5, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 0, 1, 7, vertexes, normals, stream);
-	makeIcosahedronFace(false, 8, 7, 1, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 0, 1, 7, vertexes, normals, stream);
+        makeIcosahedronFace(false, 8, 7, 1, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 0, 7, 10, vertexes, normals, stream);
-	makeIcosahedronFace(false, 6, 10, 7, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 0, 7, 10, vertexes, normals, stream);
+        makeIcosahedronFace(false, 6, 10, 7, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 0, 10, 11, vertexes, normals, stream);
-	makeIcosahedronFace(false, 2, 11, 10, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 0, 10, 11, vertexes, normals, stream);
+        makeIcosahedronFace(false, 2, 11, 10, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 5, 4, 9, vertexes, normals, stream);
-	makeIcosahedronFace(false, 3, 9, 4, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 5, 4, 9, vertexes, normals, stream);
+        makeIcosahedronFace(false, 3, 9, 4, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 11, 2, 4, vertexes, normals, stream);
-	makeIcosahedronFace(false, 3, 4, 2, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 11, 2, 4, vertexes, normals, stream);
+        makeIcosahedronFace(false, 3, 4, 2, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 10, 6, 2, vertexes, normals, stream);
-	makeIcosahedronFace(false, 3, 2, 6, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 10, 6, 2, vertexes, normals, stream);
+        makeIcosahedronFace(false, 3, 2, 6, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 7, 8, 6, vertexes, normals, stream);
-	makeIcosahedronFace(false, 3, 6, 8, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 7, 8, 6, vertexes, normals, stream);
+        makeIcosahedronFace(false, 3, 6, 8, vertexes, normals, stream);
 
-	writer.setTextureSalt(salt++);
-	stream.saveDefaults();
-	makeIcosahedronFace(true, 1, 9, 8, vertexes, normals, stream);
-	makeIcosahedronFace(false, 3, 8, 9, vertexes, normals, stream);
+        writer.setTextureSalt(salt++);
+        stream.saveDefaults();
+        makeIcosahedronFace(true, 1, 9, 8, vertexes, normals, stream);
+        makeIcosahedronFace(false, 3, 8, 9, vertexes, normals, stream);
 
     }
 
-    private static void makeIcosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3d[] points, Vec3d[] normals,
-	    IWritablePolyStream stream) {
-	IMutablePolygon writer = stream.writer();
-	if (normals == null) {
-	    if (topHalf) {
-		writer.setVertex(0, points[p1], 1, 1, 0xFFFFFFFF, null);
-		writer.setVertex(1, points[p2], 0, 1, 0xFFFFFFFF, null);
-		writer.setVertex(2, points[p3], 1, 0, 0xFFFFFFFF, null);
-	    } else {
-		writer.setVertex(0, points[p1], 0, 0, 0xFFFFFFFF, null);
-		writer.setVertex(1, points[p2], 1, 0, 0xFFFFFFFF, null);
-		writer.setVertex(2, points[p3], 0, 1, 0xFFFFFFFF, null);
-	    }
-	} else {
-	    if (topHalf) {
-		writer.setVertex(0, points[p1], 1, 1, 0xFFFFFFFF, normals[p1]);
-		writer.setVertex(1, points[p2], 0, 1, 0xFFFFFFFF, normals[p2]);
-		writer.setVertex(2, points[p3], 1, 0, 0xFFFFFFFF, normals[p3]);
-	    } else {
-		writer.setVertex(0, points[p1], 0, 0, 0xFFFFFFFF, normals[p1]);
-		writer.setVertex(1, points[p2], 1, 0, 0xFFFFFFFF, normals[p2]);
-		writer.setVertex(2, points[p3], 0, 1, 0xFFFFFFFF, normals[p3]);
-	    }
-	}
-	// clear face normal if has been set somehow
-	writer.clearFaceNormal();
-	stream.append();
+    private static void makeIcosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3d[] points, Vec3d[] normals, IWritablePolyStream stream) {
+        IMutablePolygon writer = stream.writer();
+        if (normals == null) {
+            if (topHalf) {
+                writer.setVertex(0, points[p1], 1, 1, 0xFFFFFFFF, null);
+                writer.setVertex(1, points[p2], 0, 1, 0xFFFFFFFF, null);
+                writer.setVertex(2, points[p3], 1, 0, 0xFFFFFFFF, null);
+            } else {
+                writer.setVertex(0, points[p1], 0, 0, 0xFFFFFFFF, null);
+                writer.setVertex(1, points[p2], 1, 0, 0xFFFFFFFF, null);
+                writer.setVertex(2, points[p3], 0, 1, 0xFFFFFFFF, null);
+            }
+        } else {
+            if (topHalf) {
+                writer.setVertex(0, points[p1], 1, 1, 0xFFFFFFFF, normals[p1]);
+                writer.setVertex(1, points[p2], 0, 1, 0xFFFFFFFF, normals[p2]);
+                writer.setVertex(2, points[p3], 1, 0, 0xFFFFFFFF, normals[p3]);
+            } else {
+                writer.setVertex(0, points[p1], 0, 0, 0xFFFFFFFF, normals[p1]);
+                writer.setVertex(1, points[p2], 1, 0, 0xFFFFFFFF, normals[p2]);
+                writer.setVertex(2, points[p3], 0, 1, 0xFFFFFFFF, normals[p3]);
+            }
+        }
+        // clear face normal if has been set somehow
+        writer.clearFaceNormal();
+        stream.append();
     }
 
     // TODO: Fix or remove
@@ -302,34 +301,34 @@ public class MeshHelper {
      * Adds box to stream using current stream defaults.
      */
     public static void makePaintableBox(Box box, IWritablePolyStream stream) {
-	IMutablePolygon quad = stream.writer();
-	stream.setVertexCount(4);
-	quad.setupFaceQuad(Direction.UP, 1 - box.maxX, box.minZ, 1 - box.minX, box.maxZ, 1 - box.maxY, Direction.SOUTH);
-	stream.append();
+        IMutablePolygon quad = stream.writer();
+        stream.setVertexCount(4);
+        quad.setupFaceQuad(Direction.UP, 1 - box.maxX, box.minZ, 1 - box.minX, box.maxZ, 1 - box.maxY, Direction.SOUTH);
+        stream.append();
 
-	stream.setVertexCount(4);
-	quad.setupFaceQuad(Direction.DOWN, box.minX, box.minZ, box.maxX, box.maxZ, box.minY, Direction.SOUTH);
-	stream.append();
+        stream.setVertexCount(4);
+        quad.setupFaceQuad(Direction.DOWN, box.minX, box.minZ, box.maxX, box.maxZ, box.minY, Direction.SOUTH);
+        stream.append();
 
-	// -X
-	stream.setVertexCount(4);
-	quad.setupFaceQuad(Direction.WEST, box.minZ, box.minY, box.maxZ, box.maxY, box.minX, Direction.UP);
-	stream.append();
+        // -X
+        stream.setVertexCount(4);
+        quad.setupFaceQuad(Direction.WEST, box.minZ, box.minY, box.maxZ, box.maxY, box.minX, Direction.UP);
+        stream.append();
 
-	// +X
-	stream.setVertexCount(4);
-	quad.setupFaceQuad(Direction.EAST, 1 - box.maxZ, box.minY, 1 - box.minZ, box.maxY, 1 - box.maxX, Direction.UP);
-	stream.append();
+        // +X
+        stream.setVertexCount(4);
+        quad.setupFaceQuad(Direction.EAST, 1 - box.maxZ, box.minY, 1 - box.minZ, box.maxY, 1 - box.maxX, Direction.UP);
+        stream.append();
 
-	// -Z
-	stream.setVertexCount(4);
-	quad.setupFaceQuad(Direction.NORTH, 1 - box.maxX, box.minY, 1 - box.minX, box.maxY, box.minZ, Direction.UP);
-	stream.append();
+        // -Z
+        stream.setVertexCount(4);
+        quad.setupFaceQuad(Direction.NORTH, 1 - box.maxX, box.minY, 1 - box.minX, box.maxY, box.minZ, Direction.UP);
+        stream.append();
 
-	// +Z
-	stream.setVertexCount(4);
-	quad.setupFaceQuad(Direction.SOUTH, box.minX, box.minY, box.maxX, box.maxY, 1 - box.maxZ, Direction.UP);
-	stream.append();
+        // +Z
+        stream.setVertexCount(4);
+        quad.setupFaceQuad(Direction.SOUTH, box.minX, box.minY, box.maxX, box.maxY, 1 - box.maxZ, Direction.UP);
+        stream.append();
     }
 
 //    /**

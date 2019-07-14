@@ -35,27 +35,27 @@ public abstract class BlockCornerHelper {
     private static final BlockCorner[][][] FAR_CORNER_LOOKUP = new BlockCorner[6][6][6];
 
     static {
-	for (BlockCorner corner : VALUES) {
-	    FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()][corner.face3.ordinal()] = corner;
-	    FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face3.ordinal()][corner.face2.ordinal()] = corner;
-	    FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()][corner.face3.ordinal()] = corner;
-	    FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face3.ordinal()][corner.face1.ordinal()] = corner;
-	    FAR_CORNER_LOOKUP[corner.face3.ordinal()][corner.face2.ordinal()][corner.face1.ordinal()] = corner;
-	    FAR_CORNER_LOOKUP[corner.face3.ordinal()][corner.face1.ordinal()][corner.face2.ordinal()] = corner;
-	}
+        for (BlockCorner corner : VALUES) {
+            FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()][corner.face3.ordinal()] = corner;
+            FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face3.ordinal()][corner.face2.ordinal()] = corner;
+            FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()][corner.face3.ordinal()] = corner;
+            FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face3.ordinal()][corner.face1.ordinal()] = corner;
+            FAR_CORNER_LOOKUP[corner.face3.ordinal()][corner.face2.ordinal()][corner.face1.ordinal()] = corner;
+            FAR_CORNER_LOOKUP[corner.face3.ordinal()][corner.face1.ordinal()][corner.face2.ordinal()] = corner;
+        }
     }
 
     public static BlockCorner find(Direction face1, Direction face2, Direction face3) {
-	return FAR_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()][face3.ordinal()];
+        return FAR_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()][face3.ordinal()];
     }
 
     public static final BlockCorner fromOrdinal(int ordinal) {
-	return VALUES[ordinal];
+        return VALUES[ordinal];
     }
 
     public static void forEach(Consumer<BlockCorner> consumer) {
-	for (BlockCorner val : VALUES) {
-	    consumer.accept(val);
-	}
+        for (BlockCorner val : VALUES) {
+            consumer.accept(val);
+        }
     }
 }

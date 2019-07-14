@@ -45,11 +45,11 @@ public enum HorizontalEdge implements StringIdentifiable {
     public final String name;
 
     private HorizontalEdge(HorizontalFace face1, HorizontalFace face2) {
-	this.name = this.name().toLowerCase();
-	this.face1 = face1;
-	this.face2 = face2;
-	this.vector = new Vec3i(face1.face.getVector().getX() + face2.face.getVector().getX(), 0,
-		face1.face.getVector().getZ() + face2.face.getVector().getZ());
+        this.name = this.name().toLowerCase();
+        this.face1 = face1;
+        this.face2 = face2;
+        this.vector = new Vec3i(face1.face.getVector().getX() + face2.face.getVector().getX(), 0,
+                face1.face.getVector().getZ() + face2.face.getVector().getZ());
     }
 
     public static final int COUNT = HorizontalCornerHelper.COUNT;
@@ -59,19 +59,19 @@ public enum HorizontalEdge implements StringIdentifiable {
      */
     @Nullable
     public static HorizontalEdge find(HorizontalFace face1, HorizontalFace face2) {
-	return HorizontalCornerHelper.find(face1, face2);
+        return HorizontalCornerHelper.find(face1, face2);
     }
 
     public static HorizontalEdge fromOrdinal(int ordinal) {
-	return HorizontalCornerHelper.fromOrdinal(ordinal);
+        return HorizontalCornerHelper.fromOrdinal(ordinal);
     }
 
     public static void forEach(Consumer<HorizontalEdge> consumer) {
-	HorizontalCornerHelper.forEach(consumer);
+        HorizontalCornerHelper.forEach(consumer);
     }
 
     @Override
     public String asString() {
-	return name;
+        return name;
     }
 }

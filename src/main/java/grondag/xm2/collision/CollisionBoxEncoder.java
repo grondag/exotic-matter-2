@@ -52,27 +52,27 @@ public class CollisionBoxEncoder {
      * must be 0-8. Values do not need to be sorted but cannot be equal.
      */
     static int boxKey(int x0, int y0, int z0, int x1, int y1, int z1) {
-	int swap;
+        int swap;
 
-	if (x1 < x0) {
-	    swap = x0;
-	    x0 = x1;
-	    x1 = swap;
-	}
+        if (x1 < x0) {
+            swap = x0;
+            x0 = x1;
+            x1 = swap;
+        }
 
-	if (y1 < y0) {
-	    swap = y0;
-	    y0 = y1;
-	    y1 = swap;
-	}
+        if (y1 < y0) {
+            swap = y0;
+            y0 = y1;
+            y1 = swap;
+        }
 
-	if (z1 < z0) {
-	    swap = z0;
-	    z0 = z1;
-	    z1 = swap;
-	}
+        if (z1 < z0) {
+            swap = z0;
+            z0 = z1;
+            z1 = swap;
+        }
 
-	return boxKeySorted(x0, y0, z0, x1, y1, z1);
+        return boxKeySorted(x0, y0, z0, x1, y1, z1);
     }
 
     /**
@@ -82,8 +82,8 @@ public class CollisionBoxEncoder {
      * {@link #boxKey(int, int, int, int, int, int)}.
      */
     static int boxKeySorted(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-	return minX | (minY << MIN_Y_SHIFT) | (minZ << MIN_Z_SHIFT) | (maxX << MAX_X_SHIFT) | (maxY << MAX_Y_SHIFT)
-		| (maxZ << MAX_Z_SHIFT);
+        return minX | (minY << MIN_Y_SHIFT) | (minZ << MIN_Z_SHIFT) | (maxX << MAX_X_SHIFT) | (maxY << MAX_Y_SHIFT)
+                | (maxZ << MAX_Z_SHIFT);
     }
 
 //    static int minX(int boxKey)
@@ -117,33 +117,37 @@ public class CollisionBoxEncoder {
 //    }
 
     static int boxVolume(int boxKey) {
-	return forBounds(boxKey, (minX, minY, minZ, maxX, maxY, maxZ) -> {
-	    return (maxX - minX) * (maxY - minY) * (maxZ - minZ);
-	});
+        return forBounds(boxKey, (minX, minY, minZ, maxX, maxY, maxZ) -> {
+            return (maxX - minX) * (maxY - minY) * (maxZ - minZ);
+        });
     }
 
     /**
      * Returns box key representing combined AABB of both keys.
      */
     static int combineBoxes(int boxKey0, int boxKey1) {
-	return forBounds(boxKey0, (minX0, minY0, minZ0, maxX0, maxY0, maxZ0) -> {
-	    return forBounds(boxKey1, (minX1, minY1, minZ1, maxX1, maxY1, maxZ1) -> {
-		return boxKeySorted(Math.min(minX0, minX1), Math.min(minY0, minY1), Math.min(minZ0, minZ1),
-			Math.max(maxX0, maxX1), Math.max(maxY0, maxY1), Math.max(maxZ0, maxZ1));
-	    });
-	});
+        return forBounds(boxKey0, (minX0, minY0, minZ0, maxX0, maxY0, maxZ0) -> {
+            return forBounds(boxKey1, (minX1, minY1, minZ1, maxX1, maxY1, maxZ1) -> {
+                return boxKeySorted(Math.min(minX0, minX1), Math.min(minY0, minY1), Math.min(minZ0, minZ1),
+                        Math.max(maxX0, maxX1), Math.max(maxY0, maxY1), Math.max(maxZ0, maxZ1));
+            });
+        });
     }
 
     /**
      * Returns true if boxes share one or more voxels.
      */
     static boolean areIntersecting(int boxKey0, int boxKey1) {
-	return forBounds(boxKey0, (minX0, minY0, minZ0, maxX0, maxY0, maxZ0) -> {
-	    return forBounds(boxKey1, (minX1, minY1, minZ1, maxX1, maxY1, maxZ1) -> {
-		return minX0 < maxX1 && maxX0 > minX1 && minY0 < maxY1 && maxY0 > minY1 && minZ0 < maxZ1
-			&& maxZ0 > minZ1 ? 1 : 0;
-	    });
-	}) == 1;
+        return forBounds(boxKey0, (minX0, minY0, minZ0, maxX0, maxY0, maxZ0) -> {
+            return forBounds(boxKey1, (minX1, minY1, minZ1, maxX1, maxY1, maxZ1) -> {
+                return minX0 < maxX1
+                        && maxX0 > minX1
+                        && minY0 < maxY1
+                        && maxY0 > minY1
+                        && minZ0 < maxZ1
+                        && maxZ0 > minZ1 ? 1 : 0;
+            });
+        }) == 1;
     }
 
     /**
@@ -155,29 +159,29 @@ public class CollisionBoxEncoder {
      * equal.
      */
     static int faceKey(int axisOrdinal, int depth, int minA, int minB, int maxA, int maxB) {
-	return axisOrdinal | (depth << DEPTH_SHIFT) | (minA << MIN_A_SHIFT) | (minB << MIN_B_SHIFT)
-		| (maxA << MAX_A_SHIFT) | (maxB << MAX_B_SHIFT);
+        return axisOrdinal | (depth << DEPTH_SHIFT) | (minA << MIN_A_SHIFT) | (minB << MIN_B_SHIFT)
+                | (maxA << MAX_A_SHIFT) | (maxB << MAX_B_SHIFT);
     }
 
     static void forEachFaceKey(int boxKey, IntConsumer faceKeyConsumer) {
-	forBounds(boxKey, (minX, minY, minZ, maxX, maxY, maxZ) -> {
-	    faceKeyConsumer.accept(faceKey(Y_AXIS, maxY, minX, minZ, maxX, maxZ));
-	    faceKeyConsumer.accept(faceKey(Y_AXIS, minY, minX, minZ, maxX, maxZ));
-	    faceKeyConsumer.accept(faceKey(X_AXIS, maxX, minY, minZ, maxY, maxZ));
-	    faceKeyConsumer.accept(faceKey(X_AXIS, minX, minY, minZ, maxY, maxZ));
-	    faceKeyConsumer.accept(faceKey(Z_AXIS, maxZ, minX, minY, maxX, maxY));
-	    faceKeyConsumer.accept(faceKey(Z_AXIS, minZ, minX, minY, maxX, maxY));
-	    return 0;
-	});
+        forBounds(boxKey, (minX, minY, minZ, maxX, maxY, maxZ) -> {
+            faceKeyConsumer.accept(faceKey(Y_AXIS, maxY, minX, minZ, maxX, maxZ));
+            faceKeyConsumer.accept(faceKey(Y_AXIS, minY, minX, minZ, maxX, maxZ));
+            faceKeyConsumer.accept(faceKey(X_AXIS, maxX, minY, minZ, maxY, maxZ));
+            faceKeyConsumer.accept(faceKey(X_AXIS, minX, minY, minZ, maxY, maxZ));
+            faceKeyConsumer.accept(faceKey(Z_AXIS, maxZ, minX, minY, maxX, maxY));
+            faceKeyConsumer.accept(faceKey(Z_AXIS, minZ, minX, minY, maxX, maxY));
+            return 0;
+        });
     }
 
     static int forBounds(int boxKey, IBoxBoundsIntFunction consumer) {
-	return consumer.accept(boxKey & 0xF, (boxKey >> MIN_Y_SHIFT) & 0xF, (boxKey >> MIN_Z_SHIFT) & 0xF,
-		(boxKey >> MAX_X_SHIFT) & 0xF, (boxKey >> MAX_Y_SHIFT) & 0xF, (boxKey >> MAX_Z_SHIFT) & 0xF);
+        return consumer.accept(boxKey & 0xF, (boxKey >> MIN_Y_SHIFT) & 0xF, (boxKey >> MIN_Z_SHIFT) & 0xF,
+                (boxKey >> MAX_X_SHIFT) & 0xF, (boxKey >> MAX_Y_SHIFT) & 0xF, (boxKey >> MAX_Z_SHIFT) & 0xF);
     }
 
     static <V> V forBoundsObject(int boxKey, IBoxBoundsObjectFunction<V> consumer) {
-	return consumer.accept(boxKey & 0xF, (boxKey >> MIN_Y_SHIFT) & 0xF, (boxKey >> MIN_Z_SHIFT) & 0xF,
-		(boxKey >> MAX_X_SHIFT) & 0xF, (boxKey >> MAX_Y_SHIFT) & 0xF, (boxKey >> MAX_Z_SHIFT) & 0xF);
+        return consumer.accept(boxKey & 0xF, (boxKey >> MIN_Y_SHIFT) & 0xF, (boxKey >> MIN_Z_SHIFT) & 0xF,
+                (boxKey >> MAX_X_SHIFT) & 0xF, (boxKey >> MAX_Y_SHIFT) & 0xF, (boxKey >> MAX_Z_SHIFT) & 0xF);
     }
 }

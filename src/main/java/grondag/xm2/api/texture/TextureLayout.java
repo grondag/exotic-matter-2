@@ -72,12 +72,12 @@ public enum TextureLayout {
     QUADRANT_CONNECTED(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES);
 
     private TextureLayout(int stateFlags) {
-	this(stateFlags, 1);
+        this(stateFlags, 1);
     }
 
     private TextureLayout(int stateFlags, int textureCount) {
-	this.modelStateFlag = stateFlags;
-	this.textureCount = textureCount;
+        this.modelStateFlag = stateFlags;
+        this.textureCount = textureCount;
     }
 
     /**

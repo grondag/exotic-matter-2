@@ -39,74 +39,75 @@ public enum SimpleJoinFaceState {
     TOP_RIGHT(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit),
     BOTTOM_LEFT(FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit),
     BOTTOM_RIGHT(FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit), ALL(FaceEdge.TOP_EDGE.ordinalBit
-	    | FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit);
+            | FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit);
 
     private static final SimpleJoinFaceState[] LOOKUP = new SimpleJoinFaceState[16];
 
     private final int bitFlags;
 
     static {
-	for (SimpleJoinFaceState state : SimpleJoinFaceState.values()) {
-	    LOOKUP[state.bitFlags] = state;
-	}
+        for (SimpleJoinFaceState state : SimpleJoinFaceState.values()) {
+            LOOKUP[state.bitFlags] = state;
+        }
     }
 
     private SimpleJoinFaceState(int faceBits) {
-	this.bitFlags = faceBits;
+        this.bitFlags = faceBits;
 
     }
 
     private static SimpleJoinFaceState find(int faceBits) {
-	return LOOKUP[(faceBits & 15)];
+        return LOOKUP[(faceBits & 15)];
     }
 
     private static final FaceEdge[] EDGES = FaceEdge.values();
 
     public static SimpleJoinFaceState find(Direction face, SimpleJoinState join) {
-	int faceFlags = 0;
+        int faceFlags = 0;
 
-	SimpleJoinFaceState fjs;
+        SimpleJoinFaceState fjs;
 
-	if (join.isJoined(face)) {
-	    fjs = SimpleJoinFaceState.NO_FACE;
-	} else {
-	    for (FaceEdge fside : EDGES) {
-		if (join.isJoined(fside.toWorld(face))) {
-		    faceFlags |= fside.ordinalBit;
-		}
-	    }
+        if (join.isJoined(face)) {
+            fjs = SimpleJoinFaceState.NO_FACE;
+        } else {
+            for (FaceEdge fside : EDGES) {
+                if (join.isJoined(fside.toWorld(face))) {
+                    faceFlags |= fside.ordinalBit;
+                }
+            }
 
-	    fjs = SimpleJoinFaceState.find(faceFlags);
-	}
-	return fjs;
+            fjs = SimpleJoinFaceState.find(faceFlags);
+        }
+        return fjs;
     }
 
     public static SimpleJoinFaceState find(Direction face, BlockNeighbors tests) {
-	int faceFlags = 0;
+        int faceFlags = 0;
 
-	SimpleJoinFaceState fjs;
+        SimpleJoinFaceState fjs;
 
-	if (tests.result(face)) {
-	    fjs = SimpleJoinFaceState.NO_FACE;
-	} else {
-	    for (FaceEdge fside : EDGES) {
-		Direction joinFace = fside.toWorld(face);
-		if (tests.result(joinFace) && !tests.result(BlockEdge.find(face, joinFace))) {
-		    faceFlags |= fside.ordinalBit;
-		}
-	    }
+        if (tests.result(face)) {
+            fjs = SimpleJoinFaceState.NO_FACE;
+        } else {
+            for (FaceEdge fside : EDGES) {
+                Direction joinFace = fside.toWorld(face);
+                if (tests.result(joinFace)
+                        && !tests.result(BlockEdge.find(face, joinFace))) {
+                    faceFlags |= fside.ordinalBit;
+                }
+            }
 
-	    fjs = SimpleJoinFaceState.find(faceFlags);
-	}
-	return fjs;
+            fjs = SimpleJoinFaceState.find(faceFlags);
+        }
+        return fjs;
     }
 
     public boolean isJoined(FaceEdge side) {
-	return (this.bitFlags & side.ordinalBit) == side.ordinalBit;
+        return (this.bitFlags & side.ordinalBit) == side.ordinalBit;
     }
 
     public boolean isJoined(Direction toFace, Direction onFace) {
-	FaceEdge side = FaceEdge.fromWorld(toFace, onFace);
-	return side == null ? false : this.isJoined(side);
+        FaceEdge side = FaceEdge.fromWorld(toFace, onFace);
+        return side == null ? false : this.isJoined(side);
     }
 }

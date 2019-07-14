@@ -35,49 +35,50 @@ public class XmStackHelper {
     public static String NBT_SUPERMODEL_LIGHT_VALUE = NBTDictionary.claim("smLight");
 
     public static void setStackLightValue(ItemStack stack, int lightValue) {
-	// important that the tag used here matches that used in tile entity
-	Useful.getOrCreateTagCompound(stack).putByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE, (byte) lightValue);
+        // important that the tag used here matches that used in tile entity
+        Useful.getOrCreateTagCompound(stack).putByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE, (byte) lightValue);
     }
 
     public static byte getStackLightValue(ItemStack stack) {
-	CompoundTag tag = stack.getOrCreateTag();
-	// important that the tag used here matches that used in tile entity
-	return tag == null ? 0 : tag.getByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
+        CompoundTag tag = stack.getOrCreateTag();
+        // important that the tag used here matches that used in tile entity
+        return tag == null ? 0 : tag.getByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
     }
 
     public static void setStackSubstance(ItemStack stack, BlockSubstance substance) {
-	if (substance != null)
-	    substance.serializeNBT(Useful.getOrCreateTagCompound(stack));
+        if (substance != null)
+            substance.serializeNBT(Useful.getOrCreateTagCompound(stack));
     }
 
     public static BlockSubstance getStackSubstance(ItemStack stack) {
-	CompoundTag tag = stack.getOrCreateTag();
-	return tag == null ? BlockSubstance.DEFAULT : BlockSubstance.deserializeNBT(tag);
+        CompoundTag tag = stack.getOrCreateTag();
+        return tag == null ? BlockSubstance.DEFAULT : BlockSubstance.deserializeNBT(tag);
     }
 
     public static void setStackModelState(ItemStack stack, MutableModelState modelState) {
-	CompoundTag tag = stack.getOrCreateTag();
-	if (modelState == null) {
-	    ModelStateImpl.clearNBTValues(tag);
-	    return;
-	}
-	modelState.serializeNBT(tag);
+        CompoundTag tag = stack.getOrCreateTag();
+        if (modelState == null) {
+            ModelStateImpl.clearNBTValues(tag);
+            return;
+        }
+        modelState.serializeNBT(tag);
     }
 
     public static MutableModelState getStackModelState(ItemStack stack) {
-	MutableModelState stackState = stack.hasTag() ? ModelStateImpl.deserializeFromNBTIfPresent(stack.getTag()) : null;
+        MutableModelState stackState = stack.hasTag() ? ModelStateImpl.deserializeFromNBTIfPresent(stack.getTag())
+                : null;
 
-	// WAILA or other mods might create a stack with no NBT
-	if (stackState != null)
-	    return stackState;
+        // WAILA or other mods might create a stack with no NBT
+        if (stackState != null)
+            return stackState;
 
-	if (stack.getItem() instanceof BlockItem) {
-	    BlockItem item = (BlockItem) stack.getItem();
-	    XmBlockStateImpl xmState = XmBlockStateAccess.get(item.getBlock().getDefaultState());
-	    if (xmState != null) {
-		return xmState.defaultModelState.mutableCopy();
-	    }
-	}
-	return null;
+        if (stack.getItem() instanceof BlockItem) {
+            BlockItem item = (BlockItem) stack.getItem();
+            XmBlockStateImpl xmState = XmBlockStateAccess.get(item.getBlock().getDefaultState());
+            if (xmState != null) {
+                return xmState.defaultModelState.mutableCopy();
+            }
+        }
+        return null;
     }
 }

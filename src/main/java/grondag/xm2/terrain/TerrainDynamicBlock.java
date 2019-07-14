@@ -28,14 +28,14 @@ import net.minecraft.world.World;
 
 public class TerrainDynamicBlock extends TerrainBlock {
     public TerrainDynamicBlock(Settings blockSettings, ModelState defaultModelState, boolean isFiller) {
-	super(blockSettings, adjustShape(defaultModelState, isFiller));
+        super(blockSettings, adjustShape(defaultModelState, isFiller));
     }
 
     private static MutableModelState adjustShape(ModelState stateIn, boolean isFiller) {
-	MutableModelState result = stateIn.mutableCopy();
-	result.setShape(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
-	result.setStatic(false);
-	return result;
+        MutableModelState result = stateIn.mutableCopy();
+        result.setShape(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
+        result.setStatic(false);
+        return result;
     }
 
     /**
@@ -43,17 +43,18 @@ public class TerrainDynamicBlock extends TerrainBlock {
      * given.
      */
     public void makeStatic(BlockState state, World world, BlockPos pos) {
-	TerrainStaticBlock staticVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getStaticBlock(this);
-	if (staticVersion == null || state.getBlock() != this)
-	    return;
+        TerrainStaticBlock staticVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getStaticBlock(this);
+        if (staticVersion == null
+                || state.getBlock() != this)
+            return;
 
-	MutableModelState myModelState = XmBlockStateAccess.modelState(state, world, pos, true).mutableCopy();
-	myModelState.setStatic(true);
-	// TODO: transfer heat block state?
-	world.setBlockState(pos,
-		staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)),
-		7);
-	staticVersion.setModelState(world, pos, myModelState);
+        MutableModelState myModelState = XmBlockStateAccess.modelState(state, world, pos, true).mutableCopy();
+        myModelState.setStatic(true);
+        // TODO: transfer heat block state?
+        world.setBlockState(pos,
+                staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)),
+                7);
+        staticVersion.setModelState(world, pos, myModelState);
     }
 
     // TODO: restore or remove
@@ -82,8 +83,8 @@ public class TerrainDynamicBlock extends TerrainBlock {
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-	TerrainDynamicBlock.freezeNeighbors(world, pos, state);
-	super.onBreak(world, pos, state, player);
+        TerrainDynamicBlock.freezeNeighbors(world, pos, state);
+        super.onBreak(world, pos, state, player);
     }
 
     /**
@@ -91,27 +92,27 @@ public class TerrainDynamicBlock extends TerrainBlock {
      * state and converts them to static blocks if possible.
      */
     public static void freezeNeighbors(World worldIn, BlockPos pos, BlockState state) {
-	// only height blocks affect neighbors
-	if (!TerrainBlockHelper.isFlowHeight(state))
-	    return;
+        // only height blocks affect neighbors
+        if (!TerrainBlockHelper.isFlowHeight(state))
+            return;
 
-	BlockState targetState;
-	Block targetBlock;
+        BlockState targetState;
+        Block targetBlock;
 
-	for (int x = -2; x <= 2; x++) {
-	    for (int z = -2; z <= 2; z++) {
-		for (int y = -4; y <= 4; y++) {
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 2; z++) {
+                for (int y = -4; y <= 4; y++) {
 //                    if(!(x == 0 && y == 0 && z == 0))
-		    {
-			BlockPos targetPos = pos.add(x, y, z);
-			targetState = worldIn.getBlockState(targetPos);
-			targetBlock = targetState.getBlock();
-			if (targetBlock instanceof TerrainDynamicBlock) {
-			    ((TerrainDynamicBlock) targetBlock).makeStatic(targetState, worldIn, targetPos);
-			}
-		    }
-		}
-	    }
-	}
+                    {
+                        BlockPos targetPos = pos.add(x, y, z);
+                        targetState = worldIn.getBlockState(targetPos);
+                        targetBlock = targetState.getBlock();
+                        if (targetBlock instanceof TerrainDynamicBlock) {
+                            ((TerrainDynamicBlock) targetBlock).makeStatic(targetState, worldIn, targetPos);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

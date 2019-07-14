@@ -38,14 +38,14 @@ public interface SimpleJoinState {
     int ordinal();
 
     public static SimpleJoinState fromOrdinal(int ordinal) {
-	return SimpleJoinStateImpl.fromOrdinal(ordinal);
+        return SimpleJoinStateImpl.fromOrdinal(ordinal);
     }
 
     public static SimpleJoinState fromWorld(BlockNeighbors neighbors) {
-	return SimpleJoinStateImpl.fromWorld(neighbors);
+        return SimpleJoinStateImpl.fromWorld(neighbors);
     }
 
     public static int ordinalFromWorld(BlockNeighbors neighbors) {
-	return SimpleJoinStateImpl.ordinalFromWorld(neighbors);
+        return SimpleJoinStateImpl.ordinalFromWorld(neighbors);
     }
 }

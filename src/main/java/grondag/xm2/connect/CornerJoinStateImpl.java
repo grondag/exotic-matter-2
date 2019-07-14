@@ -33,23 +33,23 @@ class CornerJoinStateImpl implements CornerJoinState {
     private final byte[] faceJoinIndex;
 
     CornerJoinStateImpl(int index, SimpleJoinStateImpl simpleJoin, byte[] faceJoinIndex) {
-	this.index = index;
-	this.simpleJoin = simpleJoin;
-	this.faceJoinIndex = faceJoinIndex;
+        this.index = index;
+        this.simpleJoin = simpleJoin;
+        this.faceJoinIndex = faceJoinIndex;
     }
 
     @Override
     public SimpleJoinStateImpl simpleJoin() {
-	return simpleJoin;
+        return simpleJoin;
     }
 
     @Override
     public int ordinal() {
-	return index;
+        return index;
     }
 
     @Override
     public CornerJoinFaceStateImpl faceState(Direction face) {
-	return CornerJoinFaceStateImpl.fromOrdinal(faceJoinIndex[face.ordinal()]);
+        return CornerJoinFaceStateImpl.fromOrdinal(faceJoinIndex[face.ordinal()]);
     }
 }

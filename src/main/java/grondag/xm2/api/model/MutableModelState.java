@@ -31,7 +31,7 @@ import net.minecraft.world.BlockView;
 
 public interface MutableModelState extends ModelState, IReadWriteNBT, PacketSerializable {
     int[] serializeToInts();
-    
+
     void setStatic(boolean isStatic);
 
     boolean equalsIncludeStatic(Object obj);
@@ -46,25 +46,25 @@ public interface MutableModelState extends ModelState, IReadWriteNBT, PacketSeri
     void setShape(ModelPrimitive shape);
 
     default void paint(XmSurface surface, XmPaint paint) {
-	paint(surface.ordinal(), paint.index());
+        paint(surface.ordinal(), paint.index());
     }
 
     default void paint(XmSurface surface, int paintIndex) {
-	paint(surface.ordinal(), paintIndex);
+        paint(surface.ordinal(), paintIndex);
     }
 
     void paint(int surfaceIndex, int paintIndex);
 
     default void paintAll(XmPaint paint) {
-	paintAll(paint.index());
+        paintAll(paint.index());
     }
 
     default void paintAll(int paintIndex) {
-	XmSurfaceList slist = getShape().surfaces();
-	final int limit = slist.size();
-	for (int i = 0; i < limit; i++) {
-	    paint(i, paintIndex);
-	}
+        XmSurfaceList slist = getShape().surfaces();
+        final int limit = slist.size();
+        for (int i = 0; i < limit; i++) {
+            paint(i, paintIndex);
+        }
     }
 
     void setAxis(Direction.Axis axis);
@@ -96,6 +96,6 @@ public interface MutableModelState extends ModelState, IReadWriteNBT, PacketSeri
     Direction rotateFace(Direction face);
 
     default boolean hasAxis() {
-	return getShape().hasAxis(this);
+        return getShape().hasAxis(this);
     }
 }

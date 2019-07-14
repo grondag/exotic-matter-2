@@ -50,38 +50,38 @@ public enum ClockwiseRotation implements StringIdentifiable {
     private static ClockwiseRotation[] FROM_HORIZONTAL_FACING = new ClockwiseRotation[6];
 
     static {
-	FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
-	FROM_HORIZONTAL_FACING[Direction.EAST.ordinal()] = ROTATE_90;
-	FROM_HORIZONTAL_FACING[Direction.SOUTH.ordinal()] = ROTATE_180;
-	FROM_HORIZONTAL_FACING[Direction.WEST.ordinal()] = ROTATE_270;
-	FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
-	FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
+        FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
+        FROM_HORIZONTAL_FACING[Direction.EAST.ordinal()] = ROTATE_90;
+        FROM_HORIZONTAL_FACING[Direction.SOUTH.ordinal()] = ROTATE_180;
+        FROM_HORIZONTAL_FACING[Direction.WEST.ordinal()] = ROTATE_270;
+        FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
+        FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
     }
 
     private ClockwiseRotation(int degrees, Direction horizontalFace) {
-	this.name = this.name().toLowerCase();
-	this.degrees = degrees;
-	this.degreesInverse = (360 - degrees) % 360;
-	this.horizontalFace = horizontalFace;
+        this.name = this.name().toLowerCase();
+        this.degrees = degrees;
+        this.degreesInverse = (360 - degrees) % 360;
+        this.horizontalFace = horizontalFace;
     }
 
     @Override
     public String asString() {
-	return name;
+        return name;
     }
 
     public ClockwiseRotation clockwise() {
-	switch (this) {
-	case ROTATE_180:
-	    return ROTATE_270;
-	case ROTATE_270:
-	    return ROTATE_NONE;
-	case ROTATE_90:
-	    return ROTATE_180;
-	case ROTATE_NONE:
-	default:
-	    return ROTATE_90;
-	}
+        switch (this) {
+            case ROTATE_180:
+                return ROTATE_270;
+            case ROTATE_270:
+                return ROTATE_NONE;
+            case ROTATE_90:
+                return ROTATE_180;
+            case ROTATE_NONE:
+            default:
+                return ROTATE_90;
+        }
     }
 
     /**
@@ -89,6 +89,6 @@ public enum ClockwiseRotation implements StringIdentifiable {
      * and down will return ROTATE_NONE
      */
     public static ClockwiseRotation fromHorizontalFacing(Direction face) {
-	return FROM_HORIZONTAL_FACING[face.ordinal()];
+        return FROM_HORIZONTAL_FACING[face.ordinal()];
     }
 }

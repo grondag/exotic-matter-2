@@ -20,7 +20,7 @@ import grondag.xm2.surface.XmSurfaceImpl;
 
 public interface XmSurfaceList {
     static XmSurfaceListBuilder builder() {
-	return XmSurfaceImpl.builder();
+        return XmSurfaceImpl.builder();
     }
 
     int size();

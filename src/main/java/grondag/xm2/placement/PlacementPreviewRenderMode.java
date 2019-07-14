@@ -24,8 +24,8 @@ public enum PlacementPreviewRenderMode {
     public final float blue;
 
     private PlacementPreviewRenderMode(int rgbColor) {
-	this.red = ((rgbColor >> 16) & 0xFF) / 255f;
-	this.green = ((rgbColor >> 8) & 0xFF) / 255f;
-	this.blue = (rgbColor & 0xFF) / 255f;
+        this.red = ((rgbColor >> 16) & 0xFF) / 255f;
+        this.green = ((rgbColor >> 8) & 0xFF) / 255f;
+        this.blue = (rgbColor & 0xFF) / 255f;
     }
 }

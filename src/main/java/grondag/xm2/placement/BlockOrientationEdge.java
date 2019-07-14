@@ -36,31 +36,32 @@ public enum BlockOrientationEdge implements ILocalized {
     private static final String TAG_NAME = NBTDictionary.claim("blockOrientEdge");
 
     private BlockOrientationEdge(BlockEdge edge) {
-	this.edge = edge;
+        this.edge = edge;
     }
 
     public BlockOrientationEdge deserializeNBT(CompoundTag tag) {
-	return Useful.safeEnumFromTag(tag, TAG_NAME, this);
+        return Useful.safeEnumFromTag(tag, TAG_NAME, this);
     }
 
     public void serializeNBT(CompoundTag tag) {
-	Useful.saveEnumToTag(tag, TAG_NAME, this);
+        Useful.saveEnumToTag(tag, TAG_NAME, this);
     }
 
     public BlockOrientationEdge fromBytes(PacketByteBuf pBuff) {
-	return pBuff.readEnumConstant(BlockOrientationEdge.class);
+        return pBuff.readEnumConstant(BlockOrientationEdge.class);
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-	pBuff.writeEnumConstant(this);
+        pBuff.writeEnumConstant(this);
     }
 
     @Override
     public String localizedName() {
-	return I18n.translate("placement.orientation.edge." + this.name().toLowerCase());
+        return I18n.translate("placement.orientation.edge." + this.name().toLowerCase());
     }
 
     public boolean isFixed() {
-	return !(this == DYNAMIC || this == MATCH_CLOSEST);
+        return !(this == DYNAMIC
+                || this == MATCH_CLOSEST);
     }
 }

@@ -33,31 +33,32 @@ public enum BlockOrientationAxis implements ILocalized {
     public final Direction.Axis axis;
 
     private BlockOrientationAxis(Direction.Axis axis) {
-	this.axis = axis;
+        this.axis = axis;
     }
 
     public BlockOrientationAxis deserializeNBT(CompoundTag tag) {
-	return Useful.safeEnumFromTag(tag, TAG_ORIENTATION, this);
+        return Useful.safeEnumFromTag(tag, TAG_ORIENTATION, this);
     }
 
     public void serializeNBT(CompoundTag tag) {
-	Useful.saveEnumToTag(tag, TAG_ORIENTATION, this);
+        Useful.saveEnumToTag(tag, TAG_ORIENTATION, this);
     }
 
     public BlockOrientationAxis fromBytes(PacketByteBuf pBuff) {
-	return pBuff.readEnumConstant(BlockOrientationAxis.class);
+        return pBuff.readEnumConstant(BlockOrientationAxis.class);
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-	pBuff.writeEnumConstant(this);
+        pBuff.writeEnumConstant(this);
     }
 
     @Override
     public String localizedName() {
-	return I18n.translate("placement.orientation.axis." + this.name().toLowerCase());
+        return I18n.translate("placement.orientation.axis." + this.name().toLowerCase());
     }
 
     public boolean isFixed() {
-	return !(this == DYNAMIC || this == MATCH_CLOSEST);
+        return !(this == DYNAMIC
+                || this == MATCH_CLOSEST);
     }
 }

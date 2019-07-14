@@ -28,32 +28,31 @@ import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterTiles extends QuadPainter {
-    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint,
-	    int textureIndex) {
-	IMutablePolygon editor = stream.editor();
-	do {
-	    editor.setLockUV(textureIndex, true);
-	    editor.assignLockedUVCoordinates(textureIndex);
+    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+        IMutablePolygon editor = stream.editor();
+        do {
+            editor.setLockUV(textureIndex, true);
+            editor.assignLockedUVCoordinates(textureIndex);
 
-	    final Direction nominalFace = editor.nominalFace();
-	    final TextureSet tex = paint.texture(textureIndex);
+            final Direction nominalFace = editor.nominalFace();
+            final TextureSet tex = paint.texture(textureIndex);
 
-	    Rotation rotation = textureRotationForFace(nominalFace, tex, modelState);
-	    int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
+            Rotation rotation = textureRotationForFace(nominalFace, tex, modelState);
+            int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
 
-	    final int salt = editor.getTextureSalt();
-	    if (salt != 0) {
-		int saltHash = HashCommon.mix(salt);
-		rotation = Useful.offsetEnumValue(rotation, saltHash & 3);
-		textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();
-	    }
+            final int salt = editor.getTextureSalt();
+            if (salt != 0) {
+                int saltHash = HashCommon.mix(salt);
+                rotation = Useful.offsetEnumValue(rotation, saltHash & 3);
+                textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();
+            }
 
-	    editor.setRotation(textureIndex, rotation);
-	    editor.setTextureName(textureIndex, tex.textureName(textureVersion));
-	    editor.setShouldContractUVs(textureIndex, true);
+            editor.setRotation(textureIndex, rotation);
+            editor.setTextureName(textureIndex, tex.textureName(textureVersion));
+            editor.setShouldContractUVs(textureIndex, true);
 
-	    commonPostPaint(editor, textureIndex, modelState, surface, paint);
+            commonPostPaint(editor, textureIndex, modelState, surface, paint);
 
-	} while (stream.editorNext());
+        } while (stream.editorNext());
     }
 }

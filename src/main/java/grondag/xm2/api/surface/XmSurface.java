@@ -53,7 +53,7 @@ public interface XmSurface {
 
     @Environment(EnvType.CLIENT)
     default String name() {
-	return I18n.translate(nameKey());
+        return I18n.translate(nameKey());
     }
 
     SurfaceTopology topology();
@@ -61,14 +61,14 @@ public interface XmSurface {
     int flags();
 
     default boolean ignoreDepthForRandomization() {
-	return (flags() & FLAG_IGNORE_DEPTH_FOR_RADOMIZATION) == FLAG_IGNORE_DEPTH_FOR_RADOMIZATION;
+        return (flags() & FLAG_IGNORE_DEPTH_FOR_RADOMIZATION) == FLAG_IGNORE_DEPTH_FOR_RADOMIZATION;
     }
 
     default boolean allowBorders() {
-	return (flags() & FLAG_ALLOW_BORDERS) == FLAG_ALLOW_BORDERS;
+        return (flags() & FLAG_ALLOW_BORDERS) == FLAG_ALLOW_BORDERS;
     }
 
     default boolean isLampGradient() {
-	return (flags() & FLAG_LAMP_GRADIENT) == FLAG_LAMP_GRADIENT;
+        return (flags() & FLAG_LAMP_GRADIENT) == FLAG_LAMP_GRADIENT;
     }
 }

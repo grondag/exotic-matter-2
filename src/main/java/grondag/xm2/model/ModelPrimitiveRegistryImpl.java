@@ -36,37 +36,37 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 
     @Override
     public synchronized boolean register(ModelPrimitive primitive) {
-	boolean result = map.putIfAbsent(primitive.id().toString(), primitive) == null;
-	if (result) {
-	    final int index = list.size();
-	    list.add(primitive);
-	    reverseMap.put(primitive.id().toString(), index);
-	}
-	return result;
+        boolean result = map.putIfAbsent(primitive.id().toString(), primitive) == null;
+        if (result) {
+            final int index = list.size();
+            list.add(primitive);
+            reverseMap.put(primitive.id().toString(), index);
+        }
+        return result;
     }
 
     @Override
     public ModelPrimitive get(int primitiveIndex) {
-	return list.get(primitiveIndex);
+        return list.get(primitiveIndex);
     }
 
     @Override
     public ModelPrimitive get(String idString) {
-	return map.get(idString);
+        return map.get(idString);
     }
 
     @Override
     public void forEach(Consumer<ModelPrimitive> consumer) {
-	list.forEach(consumer);
+        list.forEach(consumer);
     }
 
     @Override
     public int count() {
-	return list.size();
+        return list.size();
     }
 
     @Override
     public int indexOf(String idString) {
-	return reverseMap.getInt(idString);
+        return reverseMap.getInt(idString);
     }
 }

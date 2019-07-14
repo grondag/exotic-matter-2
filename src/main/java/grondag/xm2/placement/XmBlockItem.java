@@ -33,15 +33,15 @@ import net.minecraft.world.World;
 public class XmBlockItem extends BlockItem implements PlacementItem {
 
     public static final int FEATURE_FLAGS = PlacementItem.BENUMSET_FEATURES
-	    .getFlagsForIncludedValues(PlacementItemFeature.BLOCK_ORIENTATION, PlacementItemFeature.SPECIES_MODE);
+            .getFlagsForIncludedValues(PlacementItemFeature.BLOCK_ORIENTATION, PlacementItemFeature.SPECIES_MODE);
 
     public XmBlockItem(Block block, Item.Settings settings) {
-	super(block, settings);
+        super(block, settings);
     }
 
     @Override
     public int featureFlags(ItemStack stack) {
-	return FEATURE_FLAGS;
+        return FEATURE_FLAGS;
     }
 
 //    public List<String> getWailaBody(ItemStack itemStack, List<String> current tip, IWailaDataAccessor accessor, IWailaConfigHandler config)
@@ -68,17 +68,17 @@ public class XmBlockItem extends BlockItem implements PlacementItem {
 
     @Override
     public boolean isVirtual(ItemStack stack) {
-	return false;
+        return false;
     }
 
     @Override
     public boolean isExcavator(ItemStack placedStack) {
-	return false;
+        return false;
     }
 
     @Override
     public boolean place(ItemPlacementContext context, BlockState newState) {
-	return super.place(context, newState);
+        return super.place(context, newState);
 
 //        // world.setBlockState returns false if the state was already the requested
 //        // state
@@ -99,13 +99,13 @@ public class XmBlockItem extends BlockItem implements PlacementItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-	return super.use(world, player, hand);
+        return super.use(world, player, hand);
 //        return new TypedActionResult<ItemStack>(ActionResult.PASS, player.getStackInHand(hand));
     }
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-	return super.useOnBlock(context);
+        return super.useOnBlock(context);
 //        ItemStack stackIn = context.getStack();
 //        World worldIn = context.getWorld();
 //        BlockPos pos = context.getBlockPos();

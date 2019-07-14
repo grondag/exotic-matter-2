@@ -37,14 +37,14 @@ public class XmPrimitives {
     public static final ModelPrimitive CSGTEST = register(new CSGTestPrimitive("xm2:csgtest"));
 
     public static final ModelPrimitive TERRAIN_HEIGHT = null; // ModelShapes.create("terrain_height",
-							      // TerrainMeshFactory.class, SHAPE);
+    // TerrainMeshFactory.class, SHAPE);
     public static final ModelPrimitive TERRAIN_FILLER = null; // ModelShapes.create("terrain_filler",
-							      // TerrainMeshFactory.class, SHAPE);
-    
+    // TerrainMeshFactory.class, SHAPE);
+
     private static ModelPrimitive register(ModelPrimitive target) {
-	if(!ModelPrimitiveRegistry.INSTANCE.register(target)) {
-	    Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + target.id().toString());
-	}
-	return target;
+        if (!ModelPrimitiveRegistry.INSTANCE.register(target)) {
+            Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + target.id().toString());
+        }
+        return target;
     }
 }

@@ -48,7 +48,8 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     /** Returns server-side tag if one is present, creating it if not. */
     public static CompoundTag getServerTag(CompoundTag fromTag) {
         Tag result = fromTag.getTag(NBT_SERVER_SIDE_TAG);
-        if (result == null || result.getType() != 10) {
+        if (result == null
+                || result.getType() != 10) {
             result = new CompoundTag();
             fromTag.put(NBT_SERVER_SIDE_TAG, result);
         }
@@ -61,7 +62,8 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
      * null if a null tag is passed in.
      */
     public static CompoundTag withoutServerTag(CompoundTag inputTag) {
-        if (inputTag != null && inputTag.containsKey(NBT_SERVER_SIDE_TAG)) {
+        if (inputTag != null
+                && inputTag.containsKey(NBT_SERVER_SIDE_TAG)) {
             inputTag = (CompoundTag) inputTag.copy();
             inputTag.remove(NBT_SERVER_SIDE_TAG);
         }
@@ -148,7 +150,8 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 
     private void invalidateClientCache(BlockPos updatePos) {
         BlockEntity target = this.world.getBlockEntity(updatePos);
-        if (target != null && target instanceof XmTileEntity) {
+        if (target != null
+                && target instanceof XmTileEntity) {
             ((XmTileEntity) target).isModelStateCacheDirty = true;
         }
     }
@@ -175,7 +178,8 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
             isModelStateCacheDirty = true;
         }
 
-        if (isModelStateCacheDirty && refreshFromWorldIfNeeded) {
+        if (isModelStateCacheDirty
+                && refreshFromWorldIfNeeded) {
             MutableModelState result = myState.mutableCopy();
             result.worldState().species(state.defaultModelState.worldState().species());
             result.refreshFromWorld(state, world, pos);
@@ -198,7 +202,8 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
      * Use this version when you don't have world state handy
      */
     public ModelState getModelState() {
-        if (!(this.modelState == null || this.isModelStateCacheDirty)) {
+        if (!(this.modelState == null
+                || this.isModelStateCacheDirty)) {
             return this.modelState;
         } else {
             return getModelState(XmBlockStateAccess.get(world.getBlockState(pos)), world, pos, true);
@@ -219,8 +224,11 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 
     public void setModelState(ModelState modelState) {
         // if making existing appearance static, don't need to refresh on client side
-        boolean needsClientRefresh = this.world != null && this.world.isClient
-                && !(this.modelState != null && this.modelState.equals(modelState) && modelState.isStatic()
+        boolean needsClientRefresh = this.world != null
+                && this.world.isClient
+                && !(this.modelState != null
+                        && this.modelState.equals(modelState)
+                        && modelState.isStatic()
                         && this.modelState.isStatic() != modelState.isStatic());
         this.modelState = modelState.toImmutable();
         this.onModelStateChange(needsClientRefresh);

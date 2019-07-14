@@ -33,58 +33,57 @@ import net.minecraft.util.math.Direction;
  */
 public abstract class CubicQuadPainterQuadrants extends QuadPainter {
     private static final TextureQuadrant[][] TEXTURE_MAP = new TextureQuadrant[FaceCorner
-	    .values().length][CornerJoinFaceStates.COUNT];
+            .values().length][CornerJoinFaceStates.COUNT];
 
     private static TextureQuadrant textureMap(FaceCorner corner, CornerJoinFaceState faceState) {
-	if (faceState.isJoined(corner.leftSide)) {
-	    if (faceState.isJoined(corner.rightSide))
-		return faceState.needsCorner(corner) ? TextureQuadrant.CORNER : TextureQuadrant.FULL;
-	    else
-		return TextureQuadrant.SIDE_RIGHT;
-	} else if (faceState.isJoined(corner.rightSide))
-	    return TextureQuadrant.SIDE_LEFT;
-	else
-	    return TextureQuadrant.ROUND;
+        if (faceState.isJoined(corner.leftSide)) {
+            if (faceState.isJoined(corner.rightSide))
+                return faceState.needsCorner(corner) ? TextureQuadrant.CORNER : TextureQuadrant.FULL;
+            else
+                return TextureQuadrant.SIDE_RIGHT;
+        } else if (faceState.isJoined(corner.rightSide))
+            return TextureQuadrant.SIDE_LEFT;
+        else
+            return TextureQuadrant.ROUND;
     }
 
     static {
-	for (FaceCorner corner : FaceCorner.values()) {
-	    CornerJoinFaceStates.forEach(faceState -> {
-		TEXTURE_MAP[corner.ordinal()][faceState.ordinal()] = textureMap(corner, faceState);
-	    });
-	}
+        for (FaceCorner corner : FaceCorner.values()) {
+            CornerJoinFaceStates.forEach(faceState -> {
+                TEXTURE_MAP[corner.ordinal()][faceState.ordinal()] = textureMap(corner, faceState);
+            });
+        }
     }
 
-    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint,
-	    int textureIndex) {
-	IMutablePolygon editor = stream.editor();
+    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+        IMutablePolygon editor = stream.editor();
 
-	do {
-	    editor.setLockUV(textureIndex, true);
-	    editor.assignLockedUVCoordinates(textureIndex);
+        do {
+            editor.setLockUV(textureIndex, true);
+            editor.assignLockedUVCoordinates(textureIndex);
 
-	    final FaceCorner quadrant = QuadrantSplitter.uvQuadrant(editor, textureIndex);
-	    if (quadrant == null) {
-		QuadrantSplitter.split(stream, textureIndex);
-		// skip the (now-deleted) original and paint split outputs later in loop
-		assert editor.isDeleted();
-		continue;
-	    }
+            final FaceCorner quadrant = QuadrantSplitter.uvQuadrant(editor, textureIndex);
+            if (quadrant == null) {
+                QuadrantSplitter.split(stream, textureIndex);
+                // skip the (now-deleted) original and paint split outputs later in loop
+                assert editor.isDeleted();
+                continue;
+            }
 
-	    final Direction nominalFace = editor.nominalFace();
-	    TextureSet tex = paint.texture(textureIndex);
-	    final int textureVersion = tex.versionMask()
-		    & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
+            final Direction nominalFace = editor.nominalFace();
+            TextureSet tex = paint.texture(textureIndex);
+            final int textureVersion = tex.versionMask()
+                    & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
 
-	    editor.setTextureName(textureIndex, tex.textureName(textureVersion));
-	    editor.setShouldContractUVs(textureIndex, true);
+            editor.setTextureName(textureIndex, tex.textureName(textureVersion));
+            editor.setShouldContractUVs(textureIndex, true);
 
-	    final CornerJoinFaceState faceState = modelState.worldState().cornerJoin().faceState(nominalFace);
+            final CornerJoinFaceState faceState = modelState.worldState().cornerJoin().faceState(nominalFace);
 
-	    TEXTURE_MAP[quadrant.ordinal()][faceState.ordinal()].applyForQuadrant(editor, textureIndex, quadrant);
+            TEXTURE_MAP[quadrant.ordinal()][faceState.ordinal()].applyForQuadrant(editor, textureIndex, quadrant);
 
-	    commonPostPaint(editor, textureIndex, modelState, surface, paint);
+            commonPostPaint(editor, textureIndex, modelState, surface, paint);
 
-	} while (stream.editorNext());
+        } while (stream.editorNext());
     }
 }

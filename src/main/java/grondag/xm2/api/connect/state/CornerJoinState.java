@@ -47,14 +47,14 @@ public interface CornerJoinState {
     SimpleJoinState simpleJoin();
 
     static int ordinalFromWorld(BlockNeighbors tests) {
-	return CornerJoinStateSelector.ordinalFromWorld(tests);
+        return CornerJoinStateSelector.ordinalFromWorld(tests);
     }
 
     static CornerJoinState fromWorld(BlockNeighbors tests) {
-	return CornerJoinStateSelector.fromWorld(tests);
+        return CornerJoinStateSelector.fromWorld(tests);
     }
 
     static CornerJoinState fromOrdinal(int ordinal) {
-	return CornerJoinStateSelector.fromOrdinal(ordinal);
+        return CornerJoinStateSelector.fromOrdinal(ordinal);
     }
 }

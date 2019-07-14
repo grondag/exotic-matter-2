@@ -61,20 +61,20 @@ public enum BlockCorner implements StringIdentifiable {
     public final int superOrdinalBit;
 
     private BlockCorner(Direction face1, Direction face2, Direction face3) {
-	this.name = this.name().toLowerCase();
-	this.face1 = face1;
-	this.face2 = face2;
-	this.face3 = face3;
+        this.name = this.name().toLowerCase();
+        this.face1 = face1;
+        this.face2 = face2;
+        this.face3 = face3;
 
-	// 6 is number of possible faces
-	this.superOrdinal = 6 + this.ordinal() + BlockEdge.values().length;
-	this.superOrdinalBit = 1 << superOrdinal;
+        // 6 is number of possible faces
+        this.superOrdinal = 6 + this.ordinal() + BlockEdge.values().length;
+        this.superOrdinalBit = 1 << superOrdinal;
 
-	Vec3i v1 = face1.getVector();
-	Vec3i v2 = face2.getVector();
-	Vec3i v3 = face3.getVector();
-	this.vector = new Vec3i(v1.getX() + v2.getX() + v3.getX(), v1.getY() + v2.getY() + v3.getY(),
-		v1.getZ() + v2.getZ() + v3.getZ());
+        Vec3i v1 = face1.getVector();
+        Vec3i v2 = face2.getVector();
+        Vec3i v3 = face3.getVector();
+        this.vector = new Vec3i(v1.getX() + v2.getX() + v3.getX(), v1.getY() + v2.getY() + v3.getY(),
+                v1.getZ() + v2.getZ() + v3.getZ());
 
     }
 
@@ -85,19 +85,19 @@ public enum BlockCorner implements StringIdentifiable {
      */
     @Nullable
     public static BlockCorner find(Direction face1, Direction face2, Direction face3) {
-	return BlockCornerHelper.find(face1, face2, face3);
+        return BlockCornerHelper.find(face1, face2, face3);
     }
 
     public static final BlockCorner fromOrdinal(int ordinal) {
-	return BlockCornerHelper.fromOrdinal(ordinal);
+        return BlockCornerHelper.fromOrdinal(ordinal);
     }
 
     public static void forEach(Consumer<BlockCorner> consumer) {
-	BlockCornerHelper.forEach(consumer);
+        BlockCornerHelper.forEach(consumer);
     }
 
     @Override
     public String asString() {
-	return name;
+        return name;
     }
 }

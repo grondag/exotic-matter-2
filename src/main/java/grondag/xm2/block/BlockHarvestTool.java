@@ -27,6 +27,6 @@ public enum BlockHarvestTool {
     public final String toolString;
 
     private BlockHarvestTool(String toolString) {
-	this.toolString = toolString;
+        this.toolString = toolString;
     }
 }

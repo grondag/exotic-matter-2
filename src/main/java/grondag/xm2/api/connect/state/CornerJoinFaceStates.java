@@ -98,10 +98,10 @@ public abstract class CornerJoinFaceStates {
     public static final int COUNT = CornerJoinFaceStateImpl.COUNT;
 
     public static final CornerJoinFaceState fromOrdinal(int ordinal) {
-	return CornerJoinFaceStateImpl.fromOrdinal(ordinal);
+        return CornerJoinFaceStateImpl.fromOrdinal(ordinal);
     }
 
     public static void forEach(Consumer<CornerJoinFaceState> consumer) {
-	CornerJoinFaceStateImpl.forEach(consumer);
+        CornerJoinFaceStateImpl.forEach(consumer);
     }
 }

@@ -32,12 +32,12 @@ public class CraftingItem extends Item {
 
     // TODO: pretty sure this doesn't work after big refactor - is even stil needed?
     public CraftingItem(Settings settings, MutableModelState modelState) {
-	super(settings);
-	this.modelState = modelState;
-	final int colorIndex = this.hashCode() % BlockColorMapProvider.INSTANCE.getColorMapCount();
-	XmPaint paint = XmPaint.finder().texture(0, XmTextures.WHITE)
-		.textureColor(0, BlockColorMapProvider.INSTANCE.getColorMap(colorIndex).getColor(EnumColorMap.BASE))
-		.find();
-	this.modelState.paintAll(paint);
+        super(settings);
+        this.modelState = modelState;
+        final int colorIndex = this.hashCode() % BlockColorMapProvider.INSTANCE.getColorMapCount();
+        XmPaint paint = XmPaint.finder().texture(0, XmTextures.WHITE)
+                .textureColor(0, BlockColorMapProvider.INSTANCE.getColorMap(colorIndex).getColor(EnumColorMap.BASE))
+                .find();
+        this.modelState.paintAll(paint);
     }
 }

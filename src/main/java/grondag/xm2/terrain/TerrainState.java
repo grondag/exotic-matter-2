@@ -31,9 +31,9 @@ import net.minecraft.world.BlockView;
 public class TerrainState {
 
     public final static long FULL_BLOCK_STATE_KEY = TerrainState.computeStateKey(12, new int[] { 12, 12, 12, 12 },
-	    new int[] { 12, 12, 12, 12 }, 0);
+            new int[] { 12, 12, 12, 12 }, 0);
     public final static long EMPTY_BLOCK_STATE_KEY = TerrainState.computeStateKey(1, new int[] { 1, 1, 1, 1 },
-	    new int[] { 1, 1, 1, 1 }, 1);
+            new int[] { 1, 1, 1, 1 }, 1);
 
     public final static TerrainState EMPTY_STATE = new TerrainState(EMPTY_BLOCK_STATE_KEY, 0);
 
@@ -58,10 +58,10 @@ public class TerrainState {
      */
     private static ThreadLocal<BlockPos.Mutable> mutablePos = new ThreadLocal<BlockPos.Mutable>() {
 
-	@Override
-	protected BlockPos.Mutable initialValue() {
-	    return new BlockPos.Mutable();
-	}
+        @Override
+        protected BlockPos.Mutable initialValue() {
+            return new BlockPos.Mutable();
+        }
     };
 
     // Use these insted of magic number for filler block meta values
@@ -90,7 +90,7 @@ public class TerrainState {
      * Returns values -2 through +2 from a triad (3 bits).
      */
     public static int getYOffsetFromTriad(int triad) {
-	return Math.min(4, triad & 7) - 2;
+        return Math.min(4, triad & 7) - 2;
     }
 
     /**
@@ -98,7 +98,7 @@ public class TerrainState {
      * same as +1.
      */
     public static int getTriadWithYOffset(int offset) {
-	return Math.min(4, (offset + 2) & 7);
+        return Math.min(4, (offset + 2) & 7);
     }
 
     private final byte centerHeight;
@@ -112,10 +112,10 @@ public class TerrainState {
     private static final byte SIMPLE_FLAG_TOP = 16;
     private static final byte SIMPLE_FLAG_MOST_SIDES = 32;
     static {
-	SIMPLE_FLAG[HorizontalFace.EAST.ordinal()] = 1;
-	SIMPLE_FLAG[HorizontalFace.WEST.ordinal()] = 2;
-	SIMPLE_FLAG[HorizontalFace.NORTH.ordinal()] = 4;
-	SIMPLE_FLAG[HorizontalFace.SOUTH.ordinal()] = 8;
+        SIMPLE_FLAG[HorizontalFace.EAST.ordinal()] = 1;
+        SIMPLE_FLAG[HorizontalFace.WEST.ordinal()] = 2;
+        SIMPLE_FLAG[HorizontalFace.NORTH.ordinal()] = 4;
+        SIMPLE_FLAG[HorizontalFace.SOUTH.ordinal()] = 8;
     }
 
     /** true if model vertex height calculations current */
@@ -136,61 +136,62 @@ public class TerrainState {
     private byte simpleFlags = 0;
 
     public final long getStateKey() {
-	return stateKey;
+        return stateKey;
     }
 
     public final int getHotness() {
-	return this.hotness;
+        return this.hotness;
     }
 
     @Override
     public final int hashCode() {
-	return (int) Useful.longHash(this.stateKey ^ this.hotness);
+        return (int) Useful.longHash(this.stateKey ^ this.hotness);
     }
 
     @Override
     public final boolean equals(Object obj) {
-	if (this == obj)
-	    return true;
-	if (obj == null)
-	    return false;
-	if (obj instanceof TerrainState) {
-	    final TerrainState other = (TerrainState) obj;
-	    return other.stateKey == this.stateKey && other.hotness == this.hotness;
-	}
-	return false;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (obj instanceof TerrainState) {
+            final TerrainState other = (TerrainState) obj;
+            return other.stateKey == this.stateKey
+                    && other.hotness == this.hotness;
+        }
+        return false;
     }
 
     public static long computeStateKey(int centerHeightIn, int[] sideHeightIn, int[] cornerHeightIn, int yOffsetIn) {
-	long stateKey = (centerHeightIn - 1) | getTriadWithYOffset(yOffsetIn) << 4;
+        long stateKey = (centerHeightIn - 1) | getTriadWithYOffset(yOffsetIn) << 4;
 
-	int shift = 7;
-	for (int i = 0; i < 4; i++) {
-	    stateKey |= ((long) ((sideHeightIn[i] - NO_BLOCK)) << shift);
-	    shift += 6;
-	    stateKey |= ((long) ((cornerHeightIn[i] - NO_BLOCK)) << shift);
-	    shift += 6;
-	}
-	return stateKey;
+        int shift = 7;
+        for (int i = 0; i < 4; i++) {
+            stateKey |= ((long) ((sideHeightIn[i] - NO_BLOCK)) << shift);
+            shift += 6;
+            stateKey |= ((long) ((cornerHeightIn[i] - NO_BLOCK)) << shift);
+            shift += 6;
+        }
+        return stateKey;
     }
 
     public TerrainState(int centerHeightIn, int[] sideHeightIn, int[] cornerHeightIn, int yOffsetIn) {
-	this(computeStateKey(centerHeightIn, sideHeightIn, cornerHeightIn, yOffsetIn), 0);
+        this(computeStateKey(centerHeightIn, sideHeightIn, cornerHeightIn, yOffsetIn), 0);
     }
 
     public TerrainState(long stateKey, int hotness) {
-	this.stateKey = stateKey;
-	this.hotness = hotness;
-	centerHeight = (byte) ((stateKey & 0xF) + 1);
-	yOffset = (byte) getYOffsetFromTriad((int) ((stateKey >> 4) & 0x7));
+        this.stateKey = stateKey;
+        this.hotness = hotness;
+        centerHeight = (byte) ((stateKey & 0xF) + 1);
+        yOffset = (byte) getYOffsetFromTriad((int) ((stateKey >> 4) & 0x7));
 
-	int shift = 7;
-	for (int i = 0; i < 4; i++) {
-	    sideHeight[i] = (byte) (((stateKey >> shift) & 63) + NO_BLOCK);
-	    shift += 6;
-	    cornerHeight[i] = (byte) (((stateKey >> shift) & 63) + NO_BLOCK);
-	    shift += 6;
-	}
+        int shift = 7;
+        for (int i = 0; i < 4; i++) {
+            sideHeight[i] = (byte) (((stateKey >> shift) & 63) + NO_BLOCK);
+            shift += 6;
+            cornerHeight[i] = (byte) (((stateKey >> shift) & 63) + NO_BLOCK);
+            shift += 6;
+        }
     }
 
     /**
@@ -198,73 +199,73 @@ public class TerrainState {
      * key as values 0-11.
      */
     public final int centerHeight() {
-	return this.centerHeight;
+        return this.centerHeight;
     }
 
     // Rendering height of corner and side neighbors ranges
     // from -24 to 36.
     public final int height(HorizontalFace side) {
-	return this.sideHeight[side.ordinal()];
+        return this.sideHeight[side.ordinal()];
     }
 
     public final int height(HorizontalEdge corner) {
-	return this.cornerHeight[corner.ordinal()];
+        return this.cornerHeight[corner.ordinal()];
     }
 
     public final int height(final int x, final int z) {
-	switch (x + 1) {
-	case 0:
-	    // west
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.height(HorizontalEdge.NORTH_WEST);
-	    case 1:
-		// center (n-s)
-		return this.height(HorizontalFace.WEST);
-	    case 2:
-		// south
-		return this.height(HorizontalEdge.SOUTH_WEST);
-	    default:
-		return 0;
-	    }
-	case 1:
-	    // center (e-w)
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.height(HorizontalFace.NORTH);
-	    case 1:
-		// center (n-s)
-		return centerHeight();
-	    case 2:
-		// south
-		return this.height(HorizontalFace.SOUTH);
-	    default:
-		return 0;
-	    }
-	case 2:
-	    // east
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.height(HorizontalEdge.NORTH_EAST);
-	    case 1:
-		// center (n-s)
-		return this.height(HorizontalFace.EAST);
-	    case 2:
-		// south
-		return this.height(HorizontalEdge.SOUTH_EAST);
-	    default:
-		return 0;
-	    }
-	default:
-	    return 0;
-	}
+        switch (x + 1) {
+            case 0:
+                // west
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.height(HorizontalEdge.NORTH_WEST);
+                    case 1:
+                        // center (n-s)
+                        return this.height(HorizontalFace.WEST);
+                    case 2:
+                        // south
+                        return this.height(HorizontalEdge.SOUTH_WEST);
+                    default:
+                        return 0;
+                }
+            case 1:
+                // center (e-w)
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.height(HorizontalFace.NORTH);
+                    case 1:
+                        // center (n-s)
+                        return centerHeight();
+                    case 2:
+                        // south
+                        return this.height(HorizontalFace.SOUTH);
+                    default:
+                        return 0;
+                }
+            case 2:
+                // east
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.height(HorizontalEdge.NORTH_EAST);
+                    case 1:
+                        // center (n-s)
+                        return this.height(HorizontalFace.EAST);
+                    case 2:
+                        // south
+                        return this.height(HorizontalEdge.SOUTH_EAST);
+                    default:
+                        return 0;
+                }
+            default:
+                return 0;
+        }
     }
 
     public final int getCenterHotness() {
-	return CENTER_HOTNESS.getValue(this.hotness);
+        return CENTER_HOTNESS.getValue(this.hotness);
     }
 
     /**
@@ -272,59 +273,59 @@ public class TerrainState {
      * Values outside the range -1, 1 return 0;
      */
     public final int neighborHotness(final int x, final int z) {
-	switch (x + 1) {
-	case 0:
-	    // west
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.neighborHotness(HorizontalEdge.NORTH_WEST);
-	    case 1:
-		// center (n-s)
-		return this.neighborHotness(HorizontalFace.WEST);
-	    case 2:
-		// south
-		return this.neighborHotness(HorizontalEdge.SOUTH_WEST);
-	    default:
-		return 0;
-	    }
-	case 1:
-	    // center (e-w)
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.neighborHotness(HorizontalFace.NORTH);
-	    case 1:
-		// center (n-s)
-		return getCenterHotness();
-	    case 2:
-		// south
-		return this.neighborHotness(HorizontalFace.SOUTH);
-	    default:
-		return 0;
-	    }
-	case 2:
-	    // east
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.neighborHotness(HorizontalEdge.NORTH_EAST);
-	    case 1:
-		// center (n-s)
-		return this.neighborHotness(HorizontalFace.EAST);
-	    case 2:
-		// south
-		return this.neighborHotness(HorizontalEdge.SOUTH_EAST);
-	    default:
-		return 0;
-	    }
-	default:
-	    return 0;
-	}
+        switch (x + 1) {
+            case 0:
+                // west
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.neighborHotness(HorizontalEdge.NORTH_WEST);
+                    case 1:
+                        // center (n-s)
+                        return this.neighborHotness(HorizontalFace.WEST);
+                    case 2:
+                        // south
+                        return this.neighborHotness(HorizontalEdge.SOUTH_WEST);
+                    default:
+                        return 0;
+                }
+            case 1:
+                // center (e-w)
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.neighborHotness(HorizontalFace.NORTH);
+                    case 1:
+                        // center (n-s)
+                        return getCenterHotness();
+                    case 2:
+                        // south
+                        return this.neighborHotness(HorizontalFace.SOUTH);
+                    default:
+                        return 0;
+                }
+            case 2:
+                // east
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.neighborHotness(HorizontalEdge.NORTH_EAST);
+                    case 1:
+                        // center (n-s)
+                        return this.neighborHotness(HorizontalFace.EAST);
+                    case 2:
+                        // south
+                        return this.neighborHotness(HorizontalEdge.SOUTH_EAST);
+                    default:
+                        return 0;
+                }
+            default:
+                return 0;
+        }
     }
 
     public int getYOffset() {
-	return this.yOffset;
+        return this.yOffset;
     }
 
     /**
@@ -332,37 +333,37 @@ public class TerrainState {
      * Possible return values are 0, 1 and 2.
      */
     public int topFillerNeeded() {
-	// filler only applies to level blocks
-	if (yOffset != 0)
-	    return 0;
-	refreshVertexCalculationsIfNeeded();
+        // filler only applies to level blocks
+        if (yOffset != 0)
+            return 0;
+        refreshVertexCalculationsIfNeeded();
 
-	double max = 0;
+        double max = 0;
 
-	// center vertex does not matter if top is simplified to a single quad
-	if (!isTopSimple()) {
-	    max = Math.max(max, getCenterVertexHeight());
-	}
+        // center vertex does not matter if top is simplified to a single quad
+        if (!isTopSimple()) {
+            max = Math.max(max, getCenterVertexHeight());
+        }
 
-	for (int i = 0; i < 4; i++) {
-	    // side does not matter if side geometry is simplified
-	    if (!isSideSimple(i)) {
-		max = Math.max(max, this.midSideHeight[i]);
-	    }
-	    max = Math.max(max, this.midCornerHeight[i]);
-	}
+        for (int i = 0; i < 4; i++) {
+            // side does not matter if side geometry is simplified
+            if (!isSideSimple(i)) {
+                max = Math.max(max, this.midSideHeight[i]);
+            }
+            max = Math.max(max, this.midCornerHeight[i]);
+        }
 
-	return max > 2.01 ? 2 : max > 1.01 ? 1 : 0;
+        return max > 2.01 ? 2 : max > 1.01 ? 1 : 0;
     }
 
     public boolean isSideSimple(HorizontalFace face) {
-	return this.isSideSimple(face.ordinal());
+        return this.isSideSimple(face.ordinal());
     }
 
     private boolean isSideSimple(int ordinal) {
-	refreshVertexCalculationsIfNeeded();
-	byte flag = SIMPLE_FLAG[ordinal];
-	return (this.simpleFlags & flag) == flag;
+        refreshVertexCalculationsIfNeeded();
+        byte flag = SIMPLE_FLAG[ordinal];
+        return (this.simpleFlags & flag) == flag;
     }
 
     /**
@@ -371,8 +372,8 @@ public class TerrainState {
      * hot, because that would defeat per-vertex lighting.
      */
     public boolean isTopSimple() {
-	refreshVertexCalculationsIfNeeded();
-	return (this.simpleFlags & SIMPLE_FLAG_TOP) == SIMPLE_FLAG_TOP;
+        refreshVertexCalculationsIfNeeded();
+        return (this.simpleFlags & SIMPLE_FLAG_TOP) == SIMPLE_FLAG_TOP;
     }
 
     /**
@@ -380,8 +381,8 @@ public class TerrainState {
      * simple if this block is hot, because that would defeat per-vertex lighting.
      */
     public boolean areMostSidesSimple() {
-	refreshVertexCalculationsIfNeeded();
-	return (this.simpleFlags & SIMPLE_FLAG_MOST_SIDES) == SIMPLE_FLAG_MOST_SIDES;
+        refreshVertexCalculationsIfNeeded();
+        return (this.simpleFlags & SIMPLE_FLAG_MOST_SIDES) == SIMPLE_FLAG_MOST_SIDES;
     }
 
     /**
@@ -390,213 +391,213 @@ public class TerrainState {
      * block.
      */
     public boolean isFullCube() {
-	refreshVertexCalculationsIfNeeded();
-	double top = 1.0 + yOffset + QuadHelper.EPSILON;
+        refreshVertexCalculationsIfNeeded();
+        double top = 1.0 + yOffset + QuadHelper.EPSILON;
 
-	// center vertex does not matter if top is simplified to a single quad
-	if (!isTopSimple()) {
-	    if (getCenterVertexHeight() < top)
-		return false;
-	}
+        // center vertex does not matter if top is simplified to a single quad
+        if (!isTopSimple()) {
+            if (getCenterVertexHeight() < top)
+                return false;
+        }
 
-	for (int i = 0; i < 4; i++) {
-	    // side does not matter if side geometry is simplified
-	    if (!isSideSimple(i)) {
-		if (this.midSideHeight[i] < top)
-		    return false;
-	    }
+        for (int i = 0; i < 4; i++) {
+            // side does not matter if side geometry is simplified
+            if (!isSideSimple(i)) {
+                if (this.midSideHeight[i] < top)
+                    return false;
+            }
 
-	    if (this.midCornerHeight[i] < top)
-		return false;
-	}
-	return true;
+            if (this.midCornerHeight[i] < top)
+                return false;
+        }
+        return true;
     }
 
     /**
      * Returns true if geometry of flow block has nothing in it.
      */
     public boolean isEmpty() {
-	refreshVertexCalculationsIfNeeded();
-	double bottom = 0.0 + yOffset;
+        refreshVertexCalculationsIfNeeded();
+        double bottom = 0.0 + yOffset;
 
-	// center vertex does not matter if top is simplified to a single quad
-	if (!isTopSimple()) {
-	    if (getCenterVertexHeight() > bottom)
-		return false;
-	}
+        // center vertex does not matter if top is simplified to a single quad
+        if (!isTopSimple()) {
+            if (getCenterVertexHeight() > bottom)
+                return false;
+        }
 
-	for (int i = 0; i < 4; i++) {
-	    // side does not matter if side geometry is simplified
-	    if (!isSideSimple(i)) {
-		if (this.midSideHeight[i] > bottom)
-		    return false;
-	    }
+        for (int i = 0; i < 4; i++) {
+            // side does not matter if side geometry is simplified
+            if (!isSideSimple(i)) {
+                if (this.midSideHeight[i] > bottom)
+                    return false;
+            }
 
-	    if (this.midCornerHeight[i] > bottom)
-		return false;
-	}
-	return true;
+            if (this.midCornerHeight[i] > bottom)
+                return false;
+        }
+        return true;
     }
 
     /**
      * how much sky light is blocked by this shape. 0 = none, 14 = most, 255 = all
      */
     public int verticalOcclusion() {
-	refreshVertexCalculationsIfNeeded();
-	double bottom = 0.0 + yOffset;
+        refreshVertexCalculationsIfNeeded();
+        double bottom = 0.0 + yOffset;
 
-	int aboveCount = 0;
+        int aboveCount = 0;
 
-	for (int i = 0; i < 4; i++) {
-	    if (this.midSideHeight[i] > bottom)
-		aboveCount++;
-	    if (this.midCornerHeight[i] > bottom)
-		aboveCount++;
-	}
+        for (int i = 0; i < 4; i++) {
+            if (this.midSideHeight[i] > bottom)
+                aboveCount++;
+            if (this.midCornerHeight[i] > bottom)
+                aboveCount++;
+        }
 
-	if (getCenterVertexHeight() > bottom)
-	    aboveCount *= 2;
+        if (getCenterVertexHeight() > bottom)
+            aboveCount *= 2;
 
-	return aboveCount >= 16 ? 255 : aboveCount;
+        return aboveCount >= 16 ? 255 : aboveCount;
     }
 
     public float getCenterVertexHeight() {
-	return (float) centerHeight() / BLOCK_LEVELS_FLOAT;
+        return (float) centerHeight() / BLOCK_LEVELS_FLOAT;
     }
 
     public float getFarCornerVertexHeight(HorizontalEdge corner) {
-	refreshVertexCalculationsIfNeeded();
-	return farCornerHeight[corner.ordinal()];
+        refreshVertexCalculationsIfNeeded();
+        return farCornerHeight[corner.ordinal()];
     }
 
     public float getMidCornerVertexHeight(HorizontalEdge corner) {
-	refreshVertexCalculationsIfNeeded();
-	return midCornerHeight[corner.ordinal()];
+        refreshVertexCalculationsIfNeeded();
+        return midCornerHeight[corner.ordinal()];
     }
 
     public float getFarSideVertexHeight(HorizontalFace face) {
-	refreshVertexCalculationsIfNeeded();
-	return farSideHeight[face.ordinal()];
+        refreshVertexCalculationsIfNeeded();
+        return farSideHeight[face.ordinal()];
     }
 
     public float getMidSideVertexHeight(HorizontalFace face) {
-	refreshVertexCalculationsIfNeeded();
-	return midSideHeight[face.ordinal()];
+        refreshVertexCalculationsIfNeeded();
+        return midSideHeight[face.ordinal()];
     }
 
     private void refreshVertexCalculationsIfNeeded() {
-	if (vertexCalcsDone)
-	    return;
+        if (vertexCalcsDone)
+            return;
 
-	final float centerHeight = this.getCenterVertexHeight();
+        final float centerHeight = this.getCenterVertexHeight();
 
-	float max = Float.MIN_VALUE;
-	float min = Float.MAX_VALUE;
-	float total = centerHeight;
+        float max = Float.MIN_VALUE;
+        float min = Float.MAX_VALUE;
+        float total = centerHeight;
 
-	for (HorizontalFace side : HorizontalFace.values()) {
-	    final float h = calcMidSideVertexHeight(side);
-	    total += h;
-	    if (h > max)
-		max = h;
-	    if (h < min)
-		min = h;
+        for (HorizontalFace side : HorizontalFace.values()) {
+            final float h = calcMidSideVertexHeight(side);
+            total += h;
+            if (h > max)
+                max = h;
+            if (h < min)
+                min = h;
 
-	    midSideHeight[side.ordinal()] = h;
-	    farSideHeight[side.ordinal()] = calcFarSideVertexHeight(side);
+            midSideHeight[side.ordinal()] = h;
+            farSideHeight[side.ordinal()] = calcFarSideVertexHeight(side);
 
-	}
+        }
 
-	for (HorizontalEdge corner : HorizontalEdge.values()) {
-	    final float h = calcMidCornerVertexHeight(corner);
+        for (HorizontalEdge corner : HorizontalEdge.values()) {
+            final float h = calcMidCornerVertexHeight(corner);
 
-	    total += h;
-	    if (h > max)
-		max = h;
-	    if (h < min)
-		min = h;
+            total += h;
+            if (h > max)
+                max = h;
+            if (h < min)
+                min = h;
 
-	    midCornerHeight[corner.ordinal()] = h;
-	    farCornerHeight[corner.ordinal()] = calcFarCornerVertexHeight(corner);
-	}
+            midCornerHeight[corner.ordinal()] = h;
+            farCornerHeight[corner.ordinal()] = calcFarCornerVertexHeight(corner);
+        }
 
-	this.maxVertexHeightExcludingCenter = max;
-	this.minVertexHeightExcludingCenter = min;
-	this.averageVertexHeightIncludingCenter = total / 9;
+        this.maxVertexHeightExcludingCenter = max;
+        this.minVertexHeightExcludingCenter = min;
+        this.averageVertexHeightIncludingCenter = total / 9;
 
-	// determine if sides and top geometry can be simplified
-	// simplification not possible if block is hot - to preserve per-vertex lighting
-	if (this.getCenterHotness() == 0) {
-	    boolean topIsSimple = true;
-	    int simpleSideCount = 0;
+        // determine if sides and top geometry can be simplified
+        // simplification not possible if block is hot - to preserve per-vertex lighting
+        if (this.getCenterHotness() == 0) {
+            boolean topIsSimple = true;
+            int simpleSideCount = 0;
 
-	    for (HorizontalFace side : HorizontalFace.values()) {
-		float avg = midCornerHeight[HorizontalEdge.find(side, side.left()).ordinal()];
-		avg += midCornerHeight[HorizontalEdge.find(side, side.right()).ordinal()];
-		avg /= 2;
-		boolean sideIsSimple = Math.abs(avg - midSideHeight[side.ordinal()]) < QuadHelper.EPSILON;
-		if (sideIsSimple) {
-		    this.simpleFlags |= SIMPLE_FLAG[side.ordinal()];
-		    simpleSideCount++;
-		} else {
-		    topIsSimple = false;
-		}
-	    }
+            for (HorizontalFace side : HorizontalFace.values()) {
+                float avg = midCornerHeight[HorizontalEdge.find(side, side.left()).ordinal()];
+                avg += midCornerHeight[HorizontalEdge.find(side, side.right()).ordinal()];
+                avg /= 2;
+                boolean sideIsSimple = Math.abs(avg - midSideHeight[side.ordinal()]) < QuadHelper.EPSILON;
+                if (sideIsSimple) {
+                    this.simpleFlags |= SIMPLE_FLAG[side.ordinal()];
+                    simpleSideCount++;
+                } else {
+                    topIsSimple = false;
+                }
+            }
 
-	    if (simpleSideCount > 1)
-		this.simpleFlags |= SIMPLE_FLAG_MOST_SIDES;
+            if (simpleSideCount > 1)
+                this.simpleFlags |= SIMPLE_FLAG_MOST_SIDES;
 
-	    if (topIsSimple) {
-		float cross1 = (midCornerHeight[HorizontalEdge.NORTH_EAST.ordinal()]
-			+ midCornerHeight[HorizontalEdge.SOUTH_WEST.ordinal()]) / 2.0f;
-		float cross2 = (midCornerHeight[HorizontalEdge.NORTH_WEST.ordinal()]
-			+ midCornerHeight[HorizontalEdge.SOUTH_EAST.ordinal()]) / 2.0f;
-		if (Math.abs(cross1 - cross2) < 1.0f)
-		    this.simpleFlags |= SIMPLE_FLAG_TOP;
-	    }
-	}
-	vertexCalcsDone = true;
+            if (topIsSimple) {
+                float cross1 = (midCornerHeight[HorizontalEdge.NORTH_EAST.ordinal()]
+                        + midCornerHeight[HorizontalEdge.SOUTH_WEST.ordinal()]) / 2.0f;
+                float cross2 = (midCornerHeight[HorizontalEdge.NORTH_WEST.ordinal()]
+                        + midCornerHeight[HorizontalEdge.SOUTH_EAST.ordinal()]) / 2.0f;
+                if (Math.abs(cross1 - cross2) < 1.0f)
+                    this.simpleFlags |= SIMPLE_FLAG_TOP;
+            }
+        }
+        vertexCalcsDone = true;
 
     }
 
     private float calcFarCornerVertexHeight(HorizontalEdge corner) {
-	int heightCorner = height(corner);
+        int heightCorner = height(corner);
 
-	if (heightCorner == TerrainState.NO_BLOCK) {
-	    int max = Math.max(Math.max(height(corner.face1), height(corner.face2)), centerHeight());
-	    heightCorner = max - BLOCK_LEVELS_INT;
-	}
+        if (heightCorner == TerrainState.NO_BLOCK) {
+            int max = Math.max(Math.max(height(corner.face1), height(corner.face2)), centerHeight());
+            heightCorner = max - BLOCK_LEVELS_INT;
+        }
 
-	return ((float) heightCorner) / BLOCK_LEVELS_FLOAT;
+        return ((float) heightCorner) / BLOCK_LEVELS_FLOAT;
     }
 
     private float calcMidCornerVertexHeight(HorizontalEdge corner) {
-	int heightSide1 = height(corner.face1);
-	int heightSide2 = height(corner.face2);
-	int heightCorner = height(corner);
+        int heightSide1 = height(corner.face1);
+        int heightSide2 = height(corner.face2);
+        int heightCorner = height(corner);
 
-	int max = Math.max(Math.max(heightSide1, heightSide2), Math.max(heightCorner, centerHeight()))
-		- BLOCK_LEVELS_INT;
+        int max = Math.max(Math.max(heightSide1, heightSide2), Math.max(heightCorner, centerHeight()))
+                - BLOCK_LEVELS_INT;
 
-	if (heightSide1 == TerrainState.NO_BLOCK)
-	    heightSide1 = max;
-	if (heightSide2 == TerrainState.NO_BLOCK)
-	    heightSide2 = max;
-	if (heightCorner == TerrainState.NO_BLOCK)
-	    heightCorner = max;
+        if (heightSide1 == TerrainState.NO_BLOCK)
+            heightSide1 = max;
+        if (heightSide2 == TerrainState.NO_BLOCK)
+            heightSide2 = max;
+        if (heightCorner == TerrainState.NO_BLOCK)
+            heightCorner = max;
 
-	float numerator = centerHeight() + heightSide1 + heightSide2 + heightCorner;
+        float numerator = centerHeight() + heightSide1 + heightSide2 + heightCorner;
 
-	return numerator / (BLOCK_LEVELS_FLOAT * 4F);
+        return numerator / (BLOCK_LEVELS_FLOAT * 4F);
 
     }
 
     public final int neighborHotness(HorizontalEdge corner) {
-	return CORNER_HOTNESS[corner.ordinal()].getValue(this.hotness);
+        return CORNER_HOTNESS[corner.ordinal()].getValue(this.hotness);
     }
 
     public final int neighborHotness(HorizontalFace face) {
-	return SIDE_HOTNESS[face.ordinal()].getValue(this.hotness);
+        return SIDE_HOTNESS[face.ordinal()].getValue(this.hotness);
     }
 
     /**
@@ -604,55 +605,55 @@ public class TerrainState {
      * block. 0,0 represents center. Values outside the range -1, 1 return 0;
      */
     public final float midHotness(final int x, final int z) {
-	switch (x + 1) {
-	case 0:
-	    // west
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.midHotness(HorizontalEdge.NORTH_WEST);
-	    case 1:
-		// center (n-s)
-		return this.midHotness(HorizontalFace.WEST);
-	    case 2:
-		// south
-		return this.midHotness(HorizontalEdge.SOUTH_WEST);
-	    default:
-		return 0;
-	    }
-	case 1:
-	    // center (e-w)
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.midHotness(HorizontalFace.NORTH);
-	    case 1:
-		// center (n-s)
-		return getCenterHotness();
-	    case 2:
-		// south
-		return this.midHotness(HorizontalFace.SOUTH);
-	    default:
-		return 0;
-	    }
-	case 2:
-	    // east
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.midHotness(HorizontalEdge.NORTH_EAST);
-	    case 1:
-		// center (n-s)
-		return this.midHotness(HorizontalFace.EAST);
-	    case 2:
-		// south
-		return this.midHotness(HorizontalEdge.SOUTH_EAST);
-	    default:
-		return 0;
-	    }
-	default:
-	    return 0;
-	}
+        switch (x + 1) {
+            case 0:
+                // west
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.midHotness(HorizontalEdge.NORTH_WEST);
+                    case 1:
+                        // center (n-s)
+                        return this.midHotness(HorizontalFace.WEST);
+                    case 2:
+                        // south
+                        return this.midHotness(HorizontalEdge.SOUTH_WEST);
+                    default:
+                        return 0;
+                }
+            case 1:
+                // center (e-w)
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.midHotness(HorizontalFace.NORTH);
+                    case 1:
+                        // center (n-s)
+                        return getCenterHotness();
+                    case 2:
+                        // south
+                        return this.midHotness(HorizontalFace.SOUTH);
+                    default:
+                        return 0;
+                }
+            case 2:
+                // east
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.midHotness(HorizontalEdge.NORTH_EAST);
+                    case 1:
+                        // center (n-s)
+                        return this.midHotness(HorizontalFace.EAST);
+                    case 2:
+                        // south
+                        return this.midHotness(HorizontalEdge.SOUTH_EAST);
+                    default:
+                        return 0;
+                }
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -660,27 +661,27 @@ public class TerrainState {
      * if 2 or fewer. This block must be hot to be non-zero.
      */
     public final float midHotness(HorizontalEdge corner) {
-	final int centerHeat = this.getCenterHotness();
-	if (centerHeat == 0)
-	    return 0;
+        final int centerHeat = this.getCenterHotness();
+        if (centerHeat == 0)
+            return 0;
 
-	final int heatSide1 = SIDE_HOTNESS[corner.face1.ordinal()].getValue(this.hotness);
-	final int heatSide2 = SIDE_HOTNESS[corner.face2.ordinal()].getValue(this.hotness);
-	final int heatCorner = CORNER_HOTNESS[corner.ordinal()].getValue(this.hotness);
+        final int heatSide1 = SIDE_HOTNESS[corner.face1.ordinal()].getValue(this.hotness);
+        final int heatSide2 = SIDE_HOTNESS[corner.face2.ordinal()].getValue(this.hotness);
+        final int heatCorner = CORNER_HOTNESS[corner.ordinal()].getValue(this.hotness);
 
-	if (heatSide1 == 0) {
-	    if (heatSide2 == 0)
-		return 0;
-	    else
-		return heatCorner == 0 ? 0 : (float) (centerHeat + heatSide2 + heatCorner) / 3f;
-	} else if (heatSide2 == 0) {
-	    // heatside1 is known to be hot at this point
-	    return heatCorner == 0 ? 0 : (float) (centerHeat + heatSide1 + heatCorner) / 3f;
-	} else {
-	    // both sides are hot
-	    return heatCorner == 0 ? (centerHeat + heatSide1 + heatSide2) / 3f
-		    : (centerHeat + heatSide1 + heatSide2 + heatCorner) / 4f;
-	}
+        if (heatSide1 == 0) {
+            if (heatSide2 == 0)
+                return 0;
+            else
+                return heatCorner == 0 ? 0 : (float) (centerHeat + heatSide2 + heatCorner) / 3f;
+        } else if (heatSide2 == 0) {
+            // heatside1 is known to be hot at this point
+            return heatCorner == 0 ? 0 : (float) (centerHeat + heatSide1 + heatCorner) / 3f;
+        } else {
+            // both sides are hot
+            return heatCorner == 0 ? (centerHeat + heatSide1 + heatSide2) / 3f
+                    : (centerHeat + heatSide1 + heatSide2 + heatCorner) / 4f;
+        }
     }
 
     /**
@@ -688,203 +689,211 @@ public class TerrainState {
      * otherwise.
      */
     public final float midHotness(HorizontalFace face) {
-	final int centerHeat = this.getCenterHotness();
-	if (centerHeat == 0)
-	    return 0;
+        final int centerHeat = this.getCenterHotness();
+        if (centerHeat == 0)
+            return 0;
 
-	final int heatSide = SIDE_HOTNESS[face.ordinal()].getValue(this.hotness);
+        final int heatSide = SIDE_HOTNESS[face.ordinal()].getValue(this.hotness);
 
-	return heatSide == 0 ? 0.2f : (float) (heatSide + centerHeat) / 2f;
+        return heatSide == 0 ? 0.2f : (float) (heatSide + centerHeat) / 2f;
 
     }
 
     public float lavaAlpha(int x, int z) {
-	switch (x + 1) {
-	case 0:
-	    // west
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.lavaAlpha(HorizontalEdge.NORTH_WEST);
-	    case 1:
-		// center (n-s)
-		return this.lavaAlpha(HorizontalFace.WEST);
-	    case 2:
-		// south
-		return this.lavaAlpha(HorizontalEdge.SOUTH_WEST);
-	    default:
-		return 0;
-	    }
-	case 1:
-	    // center (e-w)
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.lavaAlpha(HorizontalFace.NORTH);
-	    case 1:
-		// center (n-s)
-		return getCenterHotness() == 0 ? 0 : 1;
-	    case 2:
-		// south
-		return this.lavaAlpha(HorizontalFace.SOUTH);
-	    default:
-		return 0;
-	    }
-	case 2:
-	    // east
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.lavaAlpha(HorizontalEdge.NORTH_EAST);
-	    case 1:
-		// center (n-s)
-		return this.lavaAlpha(HorizontalFace.EAST);
-	    case 2:
-		// south
-		return this.lavaAlpha(HorizontalEdge.SOUTH_EAST);
-	    default:
-		return 0;
-	    }
-	default:
-	    return 0;
-	}
+        switch (x + 1) {
+            case 0:
+                // west
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.lavaAlpha(HorizontalEdge.NORTH_WEST);
+                    case 1:
+                        // center (n-s)
+                        return this.lavaAlpha(HorizontalFace.WEST);
+                    case 2:
+                        // south
+                        return this.lavaAlpha(HorizontalEdge.SOUTH_WEST);
+                    default:
+                        return 0;
+                }
+            case 1:
+                // center (e-w)
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.lavaAlpha(HorizontalFace.NORTH);
+                    case 1:
+                        // center (n-s)
+                        return getCenterHotness() == 0 ? 0 : 1;
+                    case 2:
+                        // south
+                        return this.lavaAlpha(HorizontalFace.SOUTH);
+                    default:
+                        return 0;
+                }
+            case 2:
+                // east
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.lavaAlpha(HorizontalEdge.NORTH_EAST);
+                    case 1:
+                        // center (n-s)
+                        return this.lavaAlpha(HorizontalFace.EAST);
+                    case 2:
+                        // south
+                        return this.lavaAlpha(HorizontalEdge.SOUTH_EAST);
+                    default:
+                        return 0;
+                }
+            default:
+                return 0;
+        }
     }
 
     private final float lavaAlpha(HorizontalEdge corner) {
-	if (this.getCenterHotness() == 0)
-	    return 0;
-	if (this.neighborHotness(corner) == 0 && this.height(corner) != NO_BLOCK)
-	    return 0;
-	if (this.neighborHotness(corner.face1) == 0 && this.height(corner.face1) != NO_BLOCK)
-	    return 0;
-	if (this.neighborHotness(corner.face2) == 0 && this.height(corner.face2) != NO_BLOCK)
-	    return 0;
+        if (this.getCenterHotness() == 0)
+            return 0;
+        if (this.neighborHotness(corner) == 0
+                && this.height(corner) != NO_BLOCK)
+            return 0;
+        if (this.neighborHotness(corner.face1) == 0
+                && this.height(corner.face1) != NO_BLOCK)
+            return 0;
+        if (this.neighborHotness(corner.face2) == 0
+                && this.height(corner.face2) != NO_BLOCK)
+            return 0;
 
-	return 1;
+        return 1;
     }
 
     private final float lavaAlpha(HorizontalFace face) {
-	if (this.getCenterHotness() == 0)
-	    return 0;
-	if (this.neighborHotness(face) == 0 && this.height(face) != NO_BLOCK)
-	    return 0;
+        if (this.getCenterHotness() == 0)
+            return 0;
+        if (this.neighborHotness(face) == 0
+                && this.height(face) != NO_BLOCK)
+            return 0;
 
-	return 1;
+        return 1;
     }
 
     public float crustAlpha(int x, int z) {
-	switch (x + 1) {
-	case 0:
-	    // west
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.crustAlpha(HorizontalEdge.NORTH_WEST);
-	    case 1:
-		// center (n-s)
-		return this.crustAlpha(HorizontalFace.WEST);
-	    case 2:
-		// south
-		return this.crustAlpha(HorizontalEdge.SOUTH_WEST);
-	    default:
-		return 0;
-	    }
-	case 1:
-	    // center (e-w)
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.crustAlpha(HorizontalFace.NORTH);
-	    case 1:
-		// center (n-s)
-		return crustAlphaCenter();
-	    case 2:
-		// south
-		return this.crustAlpha(HorizontalFace.SOUTH);
-	    default:
-		return 0;
-	    }
-	case 2:
-	    // east
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.crustAlpha(HorizontalEdge.NORTH_EAST);
-	    case 1:
-		// center (n-s)
-		return this.crustAlpha(HorizontalFace.EAST);
-	    case 2:
-		// south
-		return this.crustAlpha(HorizontalEdge.SOUTH_EAST);
-	    default:
-		return 0;
-	    }
-	default:
-	    return 0;
-	}
+        switch (x + 1) {
+            case 0:
+                // west
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.crustAlpha(HorizontalEdge.NORTH_WEST);
+                    case 1:
+                        // center (n-s)
+                        return this.crustAlpha(HorizontalFace.WEST);
+                    case 2:
+                        // south
+                        return this.crustAlpha(HorizontalEdge.SOUTH_WEST);
+                    default:
+                        return 0;
+                }
+            case 1:
+                // center (e-w)
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.crustAlpha(HorizontalFace.NORTH);
+                    case 1:
+                        // center (n-s)
+                        return crustAlphaCenter();
+                    case 2:
+                        // south
+                        return this.crustAlpha(HorizontalFace.SOUTH);
+                    default:
+                        return 0;
+                }
+            case 2:
+                // east
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.crustAlpha(HorizontalEdge.NORTH_EAST);
+                    case 1:
+                        // center (n-s)
+                        return this.crustAlpha(HorizontalFace.EAST);
+                    case 2:
+                        // south
+                        return this.crustAlpha(HorizontalEdge.SOUTH_EAST);
+                    default:
+                        return 0;
+                }
+            default:
+                return 0;
+        }
     }
 
     private final float crustAlphaCenter() {
-	if (this.getCenterHotness() == IHotBlock.MAX_HEAT) {
-	    // this is a lava block
-	    if (this.neighborHotness(HorizontalFace.EAST) < IHotBlock.MAX_HEAT
-		    && this.height(HorizontalFace.EAST) != NO_BLOCK)
-		return 0.5f;
-	    if (this.neighborHotness(HorizontalFace.WEST) < IHotBlock.MAX_HEAT
-		    && this.height(HorizontalFace.WEST) != NO_BLOCK)
-		return 0.5f;
-	    if (this.neighborHotness(HorizontalFace.NORTH) < IHotBlock.MAX_HEAT
-		    && this.height(HorizontalFace.NORTH) != NO_BLOCK)
-		return 0.5f;
-	    if (this.neighborHotness(HorizontalFace.SOUTH) < IHotBlock.MAX_HEAT
-		    && this.height(HorizontalFace.SOUTH) != NO_BLOCK)
-		return 0.5f;
-	    return 0;
-	}
+        if (this.getCenterHotness() == IHotBlock.MAX_HEAT) {
+            // this is a lava block
+            if (this.neighborHotness(HorizontalFace.EAST) < IHotBlock.MAX_HEAT
+                    && this.height(HorizontalFace.EAST) != NO_BLOCK)
+                return 0.5f;
+            if (this.neighborHotness(HorizontalFace.WEST) < IHotBlock.MAX_HEAT
+                    && this.height(HorizontalFace.WEST) != NO_BLOCK)
+                return 0.5f;
+            if (this.neighborHotness(HorizontalFace.NORTH) < IHotBlock.MAX_HEAT
+                    && this.height(HorizontalFace.NORTH) != NO_BLOCK)
+                return 0.5f;
+            if (this.neighborHotness(HorizontalFace.SOUTH) < IHotBlock.MAX_HEAT
+                    && this.height(HorizontalFace.SOUTH) != NO_BLOCK)
+                return 0.5f;
+            return 0;
+        }
 
-	return 1;
+        return 1;
     }
 
     private final float crustAlpha(HorizontalEdge corner) {
-	final int ch = this.getCenterHotness();
-	if (ch == 0)
-	    return 1;
-	if (ch == IHotBlock.MAX_HEAT) {
-	    // this is a lava block
-	    if (this.neighborHotness(corner) < IHotBlock.MAX_HEAT && this.height(corner) != NO_BLOCK)
-		return 0.5f;
-	    if (this.neighborHotness(corner.face1) < IHotBlock.MAX_HEAT && this.height(corner.face1) != NO_BLOCK)
-		return 0.5f;
-	    if (this.neighborHotness(corner.face2) < IHotBlock.MAX_HEAT && this.height(corner.face2) != NO_BLOCK)
-		return 0.5f;
-	    return 0;
-	} else // hot basalt
-	{
-	    if (this.neighborHotness(corner) == IHotBlock.MAX_HEAT)
-		return 0.5f;
-	    if (this.neighborHotness(corner.face1) == IHotBlock.MAX_HEAT)
-		return 0.5f;
-	    if (this.neighborHotness(corner.face2) == IHotBlock.MAX_HEAT)
-		return 0.5f;
-	    return 1;
-	}
+        final int ch = this.getCenterHotness();
+        if (ch == 0)
+            return 1;
+        if (ch == IHotBlock.MAX_HEAT) {
+            // this is a lava block
+            if (this.neighborHotness(corner) < IHotBlock.MAX_HEAT
+                    && this.height(corner) != NO_BLOCK)
+                return 0.5f;
+            if (this.neighborHotness(corner.face1) < IHotBlock.MAX_HEAT
+                    && this.height(corner.face1) != NO_BLOCK)
+                return 0.5f;
+            if (this.neighborHotness(corner.face2) < IHotBlock.MAX_HEAT
+                    && this.height(corner.face2) != NO_BLOCK)
+                return 0.5f;
+            return 0;
+        } else // hot basalt
+        {
+            if (this.neighborHotness(corner) == IHotBlock.MAX_HEAT)
+                return 0.5f;
+            if (this.neighborHotness(corner.face1) == IHotBlock.MAX_HEAT)
+                return 0.5f;
+            if (this.neighborHotness(corner.face2) == IHotBlock.MAX_HEAT)
+                return 0.5f;
+            return 1;
+        }
     }
 
     private final float crustAlpha(HorizontalFace face) {
-	final int ch = this.getCenterHotness();
-	if (ch == 0)
-	    return 1;
-	if (ch == IHotBlock.MAX_HEAT) {
-	    // this is a lava block
-	    if (this.neighborHotness(face) < IHotBlock.MAX_HEAT && this.height(face) != NO_BLOCK)
-		return 0.5f;
-	    return 0;
-	} else // hot basalt
-	{
-	    if (this.neighborHotness(face) == IHotBlock.MAX_HEAT)
-		return 0.5f;
-	    return 1;
-	}
+        final int ch = this.getCenterHotness();
+        if (ch == 0)
+            return 1;
+        if (ch == IHotBlock.MAX_HEAT) {
+            // this is a lava block
+            if (this.neighborHotness(face) < IHotBlock.MAX_HEAT
+                    && this.height(face) != NO_BLOCK)
+                return 0.5f;
+            return 0;
+        } else // hot basalt
+        {
+            if (this.neighborHotness(face) == IHotBlock.MAX_HEAT)
+                return 0.5f;
+            return 1;
+        }
     }
 
     /**
@@ -894,155 +903,158 @@ public class TerrainState {
      * Will be 0 for corners and sides that border a non-flow block or a hot block.
      */
     public float edgeAlpha(int x, int z) {
-	switch (x + 1) {
-	case 0:
-	    // west
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.edgeAlpha(HorizontalEdge.NORTH_WEST);
-	    case 1:
-		// center (n-s)
-		return this.edgeAlpha(HorizontalFace.WEST);
-	    case 2:
-		// south
-		return this.edgeAlpha(HorizontalEdge.SOUTH_WEST);
-	    default:
-		return 0;
-	    }
-	case 1:
-	    // center (e-w)
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.edgeAlpha(HorizontalFace.NORTH);
-	    case 1:
-		// center (n-s)
-		return 0;
-	    case 2:
-		// south
-		return this.edgeAlpha(HorizontalFace.SOUTH);
-	    default:
-		return 0;
-	    }
-	case 2:
-	    // east
-	    switch (z + 1) {
-	    case 0:
-		// north
-		return this.edgeAlpha(HorizontalEdge.NORTH_EAST);
-	    case 1:
-		// center (n-s)
-		return this.edgeAlpha(HorizontalFace.EAST);
-	    case 2:
-		// south
-		return this.edgeAlpha(HorizontalEdge.SOUTH_EAST);
-	    default:
-		return 0;
-	    }
-	default:
-	    return 0;
-	}
+        switch (x + 1) {
+            case 0:
+                // west
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.edgeAlpha(HorizontalEdge.NORTH_WEST);
+                    case 1:
+                        // center (n-s)
+                        return this.edgeAlpha(HorizontalFace.WEST);
+                    case 2:
+                        // south
+                        return this.edgeAlpha(HorizontalEdge.SOUTH_WEST);
+                    default:
+                        return 0;
+                }
+            case 1:
+                // center (e-w)
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.edgeAlpha(HorizontalFace.NORTH);
+                    case 1:
+                        // center (n-s)
+                        return 0;
+                    case 2:
+                        // south
+                        return this.edgeAlpha(HorizontalFace.SOUTH);
+                    default:
+                        return 0;
+                }
+            case 2:
+                // east
+                switch (z + 1) {
+                    case 0:
+                        // north
+                        return this.edgeAlpha(HorizontalEdge.NORTH_EAST);
+                    case 1:
+                        // center (n-s)
+                        return this.edgeAlpha(HorizontalFace.EAST);
+                    case 2:
+                        // south
+                        return this.edgeAlpha(HorizontalEdge.SOUTH_EAST);
+                    default:
+                        return 0;
+                }
+            default:
+                return 0;
+        }
     }
 
     private final float edgeAlpha(HorizontalEdge corner) {
-	if (this.height(corner) != NO_BLOCK && this.neighborHotness(corner) == 0)
-	    return 1;
-	if (this.height(corner.face1) != NO_BLOCK && this.neighborHotness(corner.face1) == 0)
-	    return 1;
-	if (this.height(corner.face2) != NO_BLOCK && this.neighborHotness(corner.face2) == 0)
-	    return 1;
-	return 0;
+        if (this.height(corner) != NO_BLOCK
+                && this.neighborHotness(corner) == 0)
+            return 1;
+        if (this.height(corner.face1) != NO_BLOCK
+                && this.neighborHotness(corner.face1) == 0)
+            return 1;
+        if (this.height(corner.face2) != NO_BLOCK
+                && this.neighborHotness(corner.face2) == 0)
+            return 1;
+        return 0;
     }
 
     private final float edgeAlpha(HorizontalFace face) {
-	if (this.height(face) != NO_BLOCK && this.neighborHotness(face) == 0)
-	    return 1;
-	else
-	    return 0;
+        if (this.height(face) != NO_BLOCK
+                && this.neighborHotness(face) == 0)
+            return 1;
+        else
+            return 0;
     }
 
     private float calcFarSideVertexHeight(HorizontalFace face) {
-	return (height(face) == TerrainState.NO_BLOCK ? centerHeight() - BLOCK_LEVELS_INT
-		: ((float) height(face)) / BLOCK_LEVELS_FLOAT);
+        return (height(face) == TerrainState.NO_BLOCK ? centerHeight() - BLOCK_LEVELS_INT
+                : ((float) height(face)) / BLOCK_LEVELS_FLOAT);
     }
 
     private float calcMidSideVertexHeight(HorizontalFace face) {
-	float sideHeight = height(face) == TerrainState.NO_BLOCK ? centerHeight() - BLOCK_LEVELS_INT
-		: (float) height(face);
-	return (sideHeight + (float) centerHeight()) / (BLOCK_LEVELS_FLOAT * 2F);
+        float sideHeight = height(face) == TerrainState.NO_BLOCK ? centerHeight() - BLOCK_LEVELS_INT
+                : (float) height(face);
+        return (sideHeight + (float) centerHeight()) / (BLOCK_LEVELS_FLOAT * 2F);
     }
 
     @Override
     public String toString() {
-	String retval = "CENTER=" + this.centerHeight();
-	for (HorizontalFace side : HorizontalFace.values()) {
-	    retval += " " + side.name() + "=" + this.height(side);
-	}
-	for (HorizontalEdge corner : HorizontalEdge.values()) {
-	    retval += " " + corner.name() + "=" + this.height(corner);
-	}
-	retval += " Y-OFFSET=" + yOffset;
-	return retval;
+        String retval = "CENTER=" + this.centerHeight();
+        for (HorizontalFace side : HorizontalFace.values()) {
+            retval += " " + side.name() + "=" + this.height(side);
+        }
+        for (HorizontalEdge corner : HorizontalEdge.values()) {
+            retval += " " + corner.name() + "=" + this.height(corner);
+        }
+        retval += " Y-OFFSET=" + yOffset;
+        return retval;
     }
 
     public int concavity() {
-	int count = 0;
+        int count = 0;
 
-	final int center = this.centerHeight();
-	for (HorizontalFace side : HorizontalFace.values()) {
-	    count += Math.max(0, this.height(side) - center) / 12;
-	}
-	for (HorizontalEdge corner : HorizontalEdge.values()) {
-	    count += Math.max(0, this.height(corner) - center) / 12;
-	}
-	return count;
+        final int center = this.centerHeight();
+        for (HorizontalFace side : HorizontalFace.values()) {
+            count += Math.max(0, this.height(side) - center) / 12;
+        }
+        for (HorizontalEdge corner : HorizontalEdge.values()) {
+            count += Math.max(0, this.height(corner) - center) / 12;
+        }
+        return count;
     }
 
     public int spread() {
 
-	final int center = this.centerHeight();
-	int min = center;
-	int max = center;
-	for (HorizontalFace side : HorizontalFace.values()) {
-	    int h = this.height(side);
-	    if (h > max)
-		max = h;
-	    else if (h < min)
-		min = h;
-	}
-	for (HorizontalEdge corner : HorizontalEdge.values()) {
-	    int h = this.height(corner);
-	    if (h > max)
-		max = h;
-	    else if (h < min)
-		min = h;
-	}
-	return max - min;
+        final int center = this.centerHeight();
+        int min = center;
+        int max = center;
+        for (HorizontalFace side : HorizontalFace.values()) {
+            int h = this.height(side);
+            if (h > max)
+                max = h;
+            else if (h < min)
+                min = h;
+        }
+        for (HorizontalEdge corner : HorizontalEdge.values()) {
+            int h = this.height(corner);
+            if (h > max)
+                max = h;
+            else if (h < min)
+                min = h;
+        }
+        return max - min;
     }
 
     public int divergence() {
 
-	final int center = this.centerHeight();
-	int div = 0;
-	for (HorizontalFace side : HorizontalFace.values()) {
-	    div += Math.abs(this.height(side) - center);
-	}
-	for (HorizontalEdge corner : HorizontalEdge.values()) {
-	    div += Math.abs(this.height(corner) - center);
-	}
-	return div;
+        final int center = this.centerHeight();
+        int div = 0;
+        for (HorizontalFace side : HorizontalFace.values()) {
+            div += Math.abs(this.height(side) - center);
+        }
+        for (HorizontalEdge corner : HorizontalEdge.values()) {
+            div += Math.abs(this.height(corner) - center);
+        }
+        return div;
     }
 
-    public static <T> T produceBitsFromWorldStatically(BlockState state, BlockView world, BlockPos pos,
-	    ITerrainBitConsumer<T> consumer) {
-	return produceBitsFromWorldStatically(TerrainBlockHelper.isFlowFiller(state), state, world, pos, consumer);
+    public static <T> T produceBitsFromWorldStatically(BlockState state, BlockView world, BlockPos pos, ITerrainBitConsumer<T> consumer) {
+        return produceBitsFromWorldStatically(TerrainBlockHelper.isFlowFiller(state), state, world, pos, consumer);
     }
 
     public static TerrainState terrainState(BlockView world, BlockState state, BlockPos pos) {
-	if (!TerrainBlockHelper.isFlowBlock(state))
-	    return TerrainState.EMPTY_STATE;
-	return produceBitsFromWorldStatically(state, world, pos, TerrainState.FACTORY);
+        if (!TerrainBlockHelper.isFlowBlock(state))
+            return TerrainState.EMPTY_STATE;
+        return produceBitsFromWorldStatically(state, world, pos, TerrainState.FACTORY);
     }
 
     public static final BitPacker64<Void> HOTNESS_PACKER = new BitPacker64<Void>(null, null);
@@ -1054,125 +1066,127 @@ public class TerrainState {
 
     public static final int ALL_HOT;
     static {
-	SIDE_HOTNESS[HorizontalFace.NORTH.ordinal()] = HOTNESS_PACKER.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
-	SIDE_HOTNESS[HorizontalFace.EAST.ordinal()] = HOTNESS_PACKER.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
-	SIDE_HOTNESS[HorizontalFace.SOUTH.ordinal()] = HOTNESS_PACKER.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
-	SIDE_HOTNESS[HorizontalFace.WEST.ordinal()] = HOTNESS_PACKER.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
+        SIDE_HOTNESS[HorizontalFace.NORTH.ordinal()] = HOTNESS_PACKER.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
+        SIDE_HOTNESS[HorizontalFace.EAST.ordinal()] = HOTNESS_PACKER.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
+        SIDE_HOTNESS[HorizontalFace.SOUTH.ordinal()] = HOTNESS_PACKER.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
+        SIDE_HOTNESS[HorizontalFace.WEST.ordinal()] = HOTNESS_PACKER.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
 
-	CORNER_HOTNESS[HorizontalEdge.NORTH_EAST.ordinal()] = HOTNESS_PACKER
-		.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
-	CORNER_HOTNESS[HorizontalEdge.NORTH_WEST.ordinal()] = HOTNESS_PACKER
-		.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
-	CORNER_HOTNESS[HorizontalEdge.SOUTH_EAST.ordinal()] = HOTNESS_PACKER
-		.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
-	CORNER_HOTNESS[HorizontalEdge.SOUTH_WEST.ordinal()] = HOTNESS_PACKER
-		.createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
-	ALL_HOT = (int) HOTNESS_PACKER.bitMask();
+        CORNER_HOTNESS[HorizontalEdge.NORTH_EAST.ordinal()] = HOTNESS_PACKER
+                .createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
+        CORNER_HOTNESS[HorizontalEdge.NORTH_WEST.ordinal()] = HOTNESS_PACKER
+                .createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
+        CORNER_HOTNESS[HorizontalEdge.SOUTH_EAST.ordinal()] = HOTNESS_PACKER
+                .createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
+        CORNER_HOTNESS[HorizontalEdge.SOUTH_WEST.ordinal()] = HOTNESS_PACKER
+                .createIntElement(IHotBlock.HEAT_LEVEL_COUNT);
+        ALL_HOT = (int) HOTNESS_PACKER.bitMask();
 
     }
 
-    private static <T> T produceBitsFromWorldStatically(boolean isFlowFiller, BlockState state, BlockView world,
-	    final BlockPos pos, ITerrainBitConsumer<T> consumer) {
-	int sideHeight[] = new int[4];
-	int cornerHeight[] = new int[4];
-	int yOffset = 0;
+    private static <T> T produceBitsFromWorldStatically(boolean isFlowFiller, BlockState state, BlockView world, final BlockPos pos, ITerrainBitConsumer<T> consumer) {
+        int sideHeight[] = new int[4];
+        int cornerHeight[] = new int[4];
+        int yOffset = 0;
 
-	long hotness = 0;
+        long hotness = 0;
 
-	BlockPos.Mutable mPos = mutablePos.get();
+        BlockPos.Mutable mPos = mutablePos.get();
 
-	// HardScience.log.info("flowstate getBitsFromWorld @" + pos.toString());
+        // HardScience.log.info("flowstate getBitsFromWorld @" + pos.toString());
 
-	int yOrigin = pos.getY();
-	BlockState originState = state;
-	if (isFlowFiller) {
-	    int offset = TerrainBlockHelper.getYOffsetFromState(state);
-	    yOrigin -= offset;
-	    yOffset = offset;
+        int yOrigin = pos.getY();
+        BlockState originState = state;
+        if (isFlowFiller) {
+            int offset = TerrainBlockHelper.getYOffsetFromState(state);
+            yOrigin -= offset;
+            yOffset = offset;
 
-	    mPos.set(pos.getX(), pos.getY() - offset, pos.getZ());
-	    originState = world.getBlockState(mPos);
-	    if (!TerrainBlockHelper.isFlowHeight(originState)) {
-		return consumer.apply(EMPTY_BLOCK_STATE_KEY, 0);
-	    }
-	} else {
-	    // If under another flow height block, handle similar to filler block.
-	    // Not a perfect fix if they are stacked, but shouldn't normally be.
-	    // HardScience.log.info("flowstate is height block");
+            mPos.set(pos.getX(), pos.getY() - offset, pos.getZ());
+            originState = world.getBlockState(mPos);
+            if (!TerrainBlockHelper.isFlowHeight(originState)) {
+                return consumer.apply(EMPTY_BLOCK_STATE_KEY, 0);
+            }
+        } else {
+            // If under another flow height block, handle similar to filler block.
+            // Not a perfect fix if they are stacked, but shouldn't normally be.
+            // HardScience.log.info("flowstate is height block");
 
-	    // try to use block above as height origin
-	    mPos.set(pos.getX(), pos.getY() + 2, pos.getZ());
-	    originState = world.getBlockState(mPos);
-	    if (TerrainBlockHelper.isFlowHeight(originState)) {
-		yOrigin += 2;
-		yOffset = -2;
-		// HardScience.log.info("origin 2 up");
-	    } else {
-		mPos.set(pos.getX(), pos.getY() + 1, pos.getZ());
-		originState = world.getBlockState(mPos);
-		if (TerrainBlockHelper.isFlowHeight(originState)) {
-		    yOrigin += 1;
-		    yOffset = -1;
-		    // HardScience.log.info("origin 1 up");
-		} else {
-		    // didn't work, handle as normal height block
-		    originState = state;
-		    // HardScience.log.info("origin self");
-		}
-	    }
-	}
+            // try to use block above as height origin
+            mPos.set(pos.getX(), pos.getY() + 2, pos.getZ());
+            originState = world.getBlockState(mPos);
+            if (TerrainBlockHelper.isFlowHeight(originState)) {
+                yOrigin += 2;
+                yOffset = -2;
+                // HardScience.log.info("origin 2 up");
+            } else {
+                mPos.set(pos.getX(), pos.getY() + 1, pos.getZ());
+                originState = world.getBlockState(mPos);
+                if (TerrainBlockHelper.isFlowHeight(originState)) {
+                    yOrigin += 1;
+                    yOffset = -1;
+                    // HardScience.log.info("origin 1 up");
+                } else {
+                    // didn't work, handle as normal height block
+                    originState = state;
+                    // HardScience.log.info("origin self");
+                }
+            }
+        }
 
-	// PERF: use packed block pos instead of mutable here
-	int[][] neighborHeight = new int[3][3];
-	neighborHeight[1][1] = TerrainBlockHelper.getFlowHeightFromState(originState);
-	final int centerHeight = neighborHeight[1][1];
+        // PERF: use packed block pos instead of mutable here
+        int[][] neighborHeight = new int[3][3];
+        neighborHeight[1][1] = TerrainBlockHelper.getFlowHeightFromState(originState);
+        final int centerHeight = neighborHeight[1][1];
 
-	if (centerHeight > 0) {
-	    hotness = CENTER_HOTNESS.setValue(TerrainBlockHelper.getHotness(originState), hotness);
-	}
-	final boolean hasHotness = hotness != 0;
+        if (centerHeight > 0) {
+            hotness = CENTER_HOTNESS.setValue(TerrainBlockHelper.getHotness(originState), hotness);
+        }
+        final boolean hasHotness = hotness != 0;
 
-	for (int x = 0; x < 3; x++) {
-	    for (int z = 0; z < 3; z++) {
-		if (x == 1 && z == 1)
-		    continue;
-		mPos.set(pos.getX() - 1 + x, yOrigin, pos.getZ() - 1 + z);
+        for (int x = 0; x < 3; x++) {
+            for (int z = 0; z < 3; z++) {
+                if (x == 1
+                        && z == 1)
+                    continue;
+                mPos.set(pos.getX() - 1 + x, yOrigin, pos.getZ() - 1 + z);
 
-		// use cache if available
-		neighborHeight[x][z] = TerrainBlockHelper.getFlowHeightFromState(world.getBlockState(mPos));
-	    }
-	}
+                // use cache if available
+                neighborHeight[x][z] = TerrainBlockHelper.getFlowHeightFromState(world.getBlockState(mPos));
+            }
+        }
 
-	for (HorizontalFace side : HorizontalFace.values()) {
-	    final int x = side.vector.getX();
-	    final int z = side.vector.getZ();
-	    final int h = neighborHeight[x + 1][z + 1];
-	    sideHeight[side.ordinal()] = h;
-	    if (h != TerrainState.NO_BLOCK && hasHotness) {
-		final int y = yOrigin - 2 + (h - TerrainState.MIN_HEIGHT) / TerrainState.BLOCK_LEVELS_INT;
-		mPos.set(pos.getX() + x, y, pos.getZ() + z);
-		final int heat = TerrainBlockHelper.getHotness(world.getBlockState(mPos));
-		if (heat != 0)
-		    hotness = SIDE_HOTNESS[side.ordinal()].setValue(heat, hotness);
-	    }
-	}
+        for (HorizontalFace side : HorizontalFace.values()) {
+            final int x = side.vector.getX();
+            final int z = side.vector.getZ();
+            final int h = neighborHeight[x + 1][z + 1];
+            sideHeight[side.ordinal()] = h;
+            if (h != TerrainState.NO_BLOCK
+                    && hasHotness) {
+                final int y = yOrigin - 2 + (h - TerrainState.MIN_HEIGHT) / TerrainState.BLOCK_LEVELS_INT;
+                mPos.set(pos.getX() + x, y, pos.getZ() + z);
+                final int heat = TerrainBlockHelper.getHotness(world.getBlockState(mPos));
+                if (heat != 0)
+                    hotness = SIDE_HOTNESS[side.ordinal()].setValue(heat, hotness);
+            }
+        }
 
-	for (HorizontalEdge corner : HorizontalEdge.values()) {
-	    final int x = corner.vector.getX();
-	    final int z = corner.vector.getZ();
-	    final int h = neighborHeight[x + 1][z + 1];
-	    cornerHeight[corner.ordinal()] = h;
+        for (HorizontalEdge corner : HorizontalEdge.values()) {
+            final int x = corner.vector.getX();
+            final int z = corner.vector.getZ();
+            final int h = neighborHeight[x + 1][z + 1];
+            cornerHeight[corner.ordinal()] = h;
 
-	    if (h != TerrainState.NO_BLOCK && hasHotness) {
-		final int y = yOrigin - 2 + (h - TerrainState.MIN_HEIGHT) / TerrainState.BLOCK_LEVELS_INT;
-		mPos.set(pos.getX() + x, y, pos.getZ() + z);
-		final int heat = TerrainBlockHelper.getHotness(world.getBlockState(mPos));
-		if (heat != 0)
-		    hotness = CORNER_HOTNESS[corner.ordinal()].setValue(heat, hotness);
-	    }
-	}
+            if (h != TerrainState.NO_BLOCK
+                    && hasHotness) {
+                final int y = yOrigin - 2 + (h - TerrainState.MIN_HEIGHT) / TerrainState.BLOCK_LEVELS_INT;
+                mPos.set(pos.getX() + x, y, pos.getZ() + z);
+                final int heat = TerrainBlockHelper.getHotness(world.getBlockState(mPos));
+                if (heat != 0)
+                    hotness = CORNER_HOTNESS[corner.ordinal()].setValue(heat, hotness);
+            }
+        }
 
-	return consumer.apply(computeStateKey(centerHeight, sideHeight, cornerHeight, yOffset), (int) hotness);
+        return consumer.apply(computeStateKey(centerHeight, sideHeight, cornerHeight, yOffset), (int) hotness);
 
     }
 
@@ -1182,33 +1196,33 @@ public class TerrainState {
      * frequently, thus the use of mutable pos.
      */
     public static int getFlowHeight(BlockView world, long packedBlockPos) {
-	Mutable mPos = mutablePos.get();
-	BlockState state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.up(packedBlockPos, 2), mPos));
-	int h = TerrainBlockHelper.getFlowHeightFromState(state);
-	if (h > 0)
-	    return 2 * BLOCK_LEVELS_INT + h;
+        Mutable mPos = mutablePos.get();
+        BlockState state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.up(packedBlockPos, 2), mPos));
+        int h = TerrainBlockHelper.getFlowHeightFromState(state);
+        if (h > 0)
+            return 2 * BLOCK_LEVELS_INT + h;
 
-	state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.up(packedBlockPos), mPos));
-	h = TerrainBlockHelper.getFlowHeightFromState(state);
-	if (h > 0)
-	    return BLOCK_LEVELS_INT + h;
+        state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.up(packedBlockPos), mPos));
+        h = TerrainBlockHelper.getFlowHeightFromState(state);
+        if (h > 0)
+            return BLOCK_LEVELS_INT + h;
 
-	state = world.getBlockState(PackedBlockPos.unpackTo(packedBlockPos, mPos));
-	h = TerrainBlockHelper.getFlowHeightFromState(state);
-	if (h > 0)
-	    return h;
+        state = world.getBlockState(PackedBlockPos.unpackTo(packedBlockPos, mPos));
+        h = TerrainBlockHelper.getFlowHeightFromState(state);
+        if (h > 0)
+            return h;
 
-	state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.down(packedBlockPos), mPos));
-	h = TerrainBlockHelper.getFlowHeightFromState(state);
-	if (h > 0)
-	    return -BLOCK_LEVELS_INT + h;
+        state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.down(packedBlockPos), mPos));
+        h = TerrainBlockHelper.getFlowHeightFromState(state);
+        if (h > 0)
+            return -BLOCK_LEVELS_INT + h;
 
-	state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.down(packedBlockPos, 2), mPos));
-	h = TerrainBlockHelper.getFlowHeightFromState(state);
-	if (h > 0)
-	    return -2 * BLOCK_LEVELS_INT + h;
+        state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.down(packedBlockPos, 2), mPos));
+        h = TerrainBlockHelper.getFlowHeightFromState(state);
+        if (h > 0)
+            return -2 * BLOCK_LEVELS_INT + h;
 
-	return NO_BLOCK;
+        return NO_BLOCK;
     }
 
     /**
@@ -1224,40 +1238,40 @@ public class TerrainState {
      * Return values are clamped to the range from 1 level to 18 levels (1.5 blocks)
      */
     public int retentionLevels() {
-	refreshVertexCalculationsIfNeeded();
+        refreshVertexCalculationsIfNeeded();
 
-	final float center = this.getCenterVertexHeight();
+        final float center = this.getCenterVertexHeight();
 
-	final float max = this.maxVertexHeightExcludingCenter;
-	final float min = this.minVertexHeightExcludingCenter;
-	final float avg = this.averageVertexHeightIncludingCenter;
+        final float max = this.maxVertexHeightExcludingCenter;
+        final float min = this.minVertexHeightExcludingCenter;
+        final float avg = this.averageVertexHeightIncludingCenter;
 
-	final float drop = max - min;
+        final float drop = max - min;
 
-	// no drop gives one half block of retention
-	if (drop == 0)
-	    return BLOCK_LEVELS_INT_HALF;
+        // no drop gives one half block of retention
+        if (drop == 0)
+            return BLOCK_LEVELS_INT_HALF;
 
-	/** essentially the distance from a box filter result */
-	final float diffFromAvgLevels = (avg - center) * BLOCK_LEVELS_INT;
+        /** essentially the distance from a box filter result */
+        final float diffFromAvgLevels = (avg - center) * BLOCK_LEVELS_INT;
 
-	int result;
+        int result;
 
-	if (center <= min) {
-	    // center is (or shares) lowest point
-	    result = Math.round(diffFromAvgLevels) + BLOCK_LEVELS_INT_HALF;
-	} else {
-	    // center is part of a slope
-	    result = drop < 1 ? Math.round(diffFromAvgLevels + (1 - drop) * BLOCK_LEVELS_INT_HALF)
-		    : Math.round(diffFromAvgLevels);
-	}
+        if (center <= min) {
+            // center is (or shares) lowest point
+            result = Math.round(diffFromAvgLevels) + BLOCK_LEVELS_INT_HALF;
+        } else {
+            // center is part of a slope
+            result = drop < 1 ? Math.round(diffFromAvgLevels + (1 - drop) * BLOCK_LEVELS_INT_HALF)
+                    : Math.round(diffFromAvgLevels);
+        }
 
-	return MathHelper.clamp(result, 1, BLOCK_LEVELS_INT + BLOCK_LEVELS_INT_HALF);
+        return MathHelper.clamp(result, 1, BLOCK_LEVELS_INT + BLOCK_LEVELS_INT_HALF);
     }
 
     @FunctionalInterface
     public static interface INeighborConsumer {
-	public void accept(long packedBlockPos, boolean isSurfaceBlock);
+        public void accept(long packedBlockPos, boolean isSurfaceBlock);
     }
 
     /**
@@ -1267,31 +1281,31 @@ public class TerrainState {
      * not include the block at the given position.
      */
     public void produceNeighbors(long myPackedPosition, INeighborConsumer consumer) {
-	// does't apply to filler blocks
-	if (yOffset != 0)
-	    return;
+        // does't apply to filler blocks
+        if (yOffset != 0)
+            return;
 
-	myPackedPosition = PackedBlockPos.down(myPackedPosition, 2);
-	produceNeighborsInner(PackedBlockPos.east(myPackedPosition), height(HorizontalFace.EAST), consumer);
-	produceNeighborsInner(PackedBlockPos.west(myPackedPosition), height(HorizontalFace.WEST), consumer);
-	produceNeighborsInner(PackedBlockPos.north(myPackedPosition), height(HorizontalFace.NORTH), consumer);
-	produceNeighborsInner(PackedBlockPos.south(myPackedPosition), height(HorizontalFace.SOUTH), consumer);
+        myPackedPosition = PackedBlockPos.down(myPackedPosition, 2);
+        produceNeighborsInner(PackedBlockPos.east(myPackedPosition), height(HorizontalFace.EAST), consumer);
+        produceNeighborsInner(PackedBlockPos.west(myPackedPosition), height(HorizontalFace.WEST), consumer);
+        produceNeighborsInner(PackedBlockPos.north(myPackedPosition), height(HorizontalFace.NORTH), consumer);
+        produceNeighborsInner(PackedBlockPos.south(myPackedPosition), height(HorizontalFace.SOUTH), consumer);
 
-	produceNeighborsInner(PackedBlockPos.northEast(myPackedPosition), height(HorizontalEdge.NORTH_EAST), consumer);
-	produceNeighborsInner(PackedBlockPos.northWest(myPackedPosition), height(HorizontalEdge.NORTH_WEST), consumer);
-	produceNeighborsInner(PackedBlockPos.southEast(myPackedPosition), height(HorizontalEdge.SOUTH_EAST), consumer);
-	produceNeighborsInner(PackedBlockPos.southWest(myPackedPosition), height(HorizontalEdge.SOUTH_WEST), consumer);
+        produceNeighborsInner(PackedBlockPos.northEast(myPackedPosition), height(HorizontalEdge.NORTH_EAST), consumer);
+        produceNeighborsInner(PackedBlockPos.northWest(myPackedPosition), height(HorizontalEdge.NORTH_WEST), consumer);
+        produceNeighborsInner(PackedBlockPos.southEast(myPackedPosition), height(HorizontalEdge.SOUTH_EAST), consumer);
+        produceNeighborsInner(PackedBlockPos.southWest(myPackedPosition), height(HorizontalEdge.SOUTH_WEST), consumer);
     }
 
     private void produceNeighborsInner(long basePosition, int height, INeighborConsumer consumer) {
-	if (height == NO_BLOCK)
-	    return;
+        if (height == NO_BLOCK)
+            return;
 
-	// -1 because full block is a single block, don't want to count it as block
-	// above
-	final int to = (height - NO_BLOCK - 1) / BLOCK_LEVELS_INT;
+        // -1 because full block is a single block, don't want to count it as block
+        // above
+        final int to = (height - NO_BLOCK - 1) / BLOCK_LEVELS_INT;
 
-	for (int i = 0; i <= to; i++)
-	    consumer.accept(PackedBlockPos.up(basePosition, i), i == to);
+        for (int i = 0; i <= to; i++)
+            consumer.accept(PackedBlockPos.up(basePosition, i), i == to);
     }
 }

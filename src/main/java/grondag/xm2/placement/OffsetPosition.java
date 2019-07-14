@@ -33,8 +33,8 @@ public enum OffsetPosition {
     public static final OffsetPosition[] ALTERNATES = { FLIP_WIDTH, FLIP_DEPTH, FLIP_BOTH, FLIP_HEIGHT };
 
     private OffsetPosition(int widthFactor, int depthFactor, int heightFactor) {
-	this.widthFactor = widthFactor;
-	this.depthFactor = depthFactor;
-	this.heightFactor = heightFactor;
+        this.widthFactor = widthFactor;
+        this.depthFactor = depthFactor;
+        this.heightFactor = heightFactor;
     }
 }

@@ -33,31 +33,32 @@ public enum BlockOrientationFace implements ILocalized {
     public final Direction face;
 
     private BlockOrientationFace(Direction face) {
-	this.face = face;
+        this.face = face;
     }
 
     public BlockOrientationFace deserializeNBT(CompoundTag tag) {
-	return Useful.safeEnumFromTag(tag, TAG_NAME, this);
+        return Useful.safeEnumFromTag(tag, TAG_NAME, this);
     }
 
     public void serializeNBT(CompoundTag tag) {
-	Useful.saveEnumToTag(tag, TAG_NAME, this);
+        Useful.saveEnumToTag(tag, TAG_NAME, this);
     }
 
     public BlockOrientationFace fromBytes(PacketByteBuf pBuff) {
-	return pBuff.readEnumConstant(BlockOrientationFace.class);
+        return pBuff.readEnumConstant(BlockOrientationFace.class);
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-	pBuff.writeEnumConstant(this);
+        pBuff.writeEnumConstant(this);
     }
 
     @Override
     public String localizedName() {
-	return I18n.translate("placement.orientation.face." + this.name().toLowerCase());
+        return I18n.translate("placement.orientation.face." + this.name().toLowerCase());
     }
 
     public boolean isFixed() {
-	return !(this == DYNAMIC || this == MATCH_CLOSEST);
+        return !(this == DYNAMIC
+                || this == MATCH_CLOSEST);
     }
 }

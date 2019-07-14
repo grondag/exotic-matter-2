@@ -36,22 +36,22 @@ public abstract class HorizontalFaceHelper {
     private static final HorizontalFace HORIZONTAL_FACE_LOOKUP[] = new HorizontalFace[6];
 
     static {
-	for (HorizontalFace hFace : HorizontalFace.values()) {
-	    HORIZONTAL_FACE_LOOKUP[hFace.face.ordinal()] = hFace;
-	}
+        for (HorizontalFace hFace : HorizontalFace.values()) {
+            HORIZONTAL_FACE_LOOKUP[hFace.face.ordinal()] = hFace;
+        }
     }
 
     public static HorizontalFace find(Direction face) {
-	return HORIZONTAL_FACE_LOOKUP[face.ordinal()];
+        return HORIZONTAL_FACE_LOOKUP[face.ordinal()];
     }
 
     public static final HorizontalFace fromOrdinal(int ordinal) {
-	return VALUES[ordinal];
+        return VALUES[ordinal];
     }
 
     public static void forEach(Consumer<HorizontalFace> consumer) {
-	for (HorizontalFace val : VALUES) {
-	    consumer.accept(val);
-	}
+        for (HorizontalFace val : VALUES) {
+            consumer.accept(val);
+        }
     }
 }

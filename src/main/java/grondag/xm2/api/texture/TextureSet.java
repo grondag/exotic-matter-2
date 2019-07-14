@@ -24,11 +24,11 @@ import net.minecraft.util.Identifier;
 
 public interface TextureSet {
     public static TextureSetBuilder builder() {
-	return TextureSetImpl.builder();
+        return TextureSetImpl.builder();
     }
 
     public static TextureSetBuilder builder(TextureSet template) {
-	return TextureSetImpl.builder(template);
+        return TextureSetImpl.builder(template);
     }
 
     /** Registration ID */

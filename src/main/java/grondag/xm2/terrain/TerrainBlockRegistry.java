@@ -30,34 +30,34 @@ public class TerrainBlockRegistry {
     public static final TerrainBlockRegistry TERRAIN_STATE_REGISTRY = new TerrainBlockRegistry();
 
     public void registerStateTransition(Block dynamicBlock, Block staticBlock) {
-	stateMap.put(dynamicBlock, staticBlock);
+        stateMap.put(dynamicBlock, staticBlock);
     }
 
     public TerrainStaticBlock getStaticBlock(Block dynamicBlock) {
-	return (TerrainStaticBlock) this.stateMap.get(dynamicBlock);
+        return (TerrainStaticBlock) this.stateMap.get(dynamicBlock);
     }
 
     public Block getDynamicBlock(Block staticBlock) {
-	return this.stateMap.inverse().get(staticBlock);
+        return this.stateMap.inverse().get(staticBlock);
     }
 
     public void registerFiller(Block heightBlock, Block fillerBlock) {
-	fillerMap.put(heightBlock, fillerBlock);
+        fillerMap.put(heightBlock, fillerBlock);
     }
 
     public Block getFillerBlock(Block hieghtBlock) {
-	return this.fillerMap.get(hieghtBlock);
+        return this.fillerMap.get(hieghtBlock);
     }
 
     public Block getHeightBlock(Block fillerBlock) {
-	return this.fillerMap.inverse().get(fillerBlock);
+        return this.fillerMap.inverse().get(fillerBlock);
     }
 
     public void registerCubic(Block flowBlock, Block cubicBlock) {
-	this.cubicMap.put(flowBlock, cubicBlock);
+        this.cubicMap.put(flowBlock, cubicBlock);
     }
 
     public Block getCubicBlock(Block flowBlock) {
-	return this.cubicMap.get(flowBlock);
+        return this.cubicMap.get(flowBlock);
     }
 }

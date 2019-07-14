@@ -84,19 +84,19 @@ public interface BlockNeighbors {
     BlockState blockState(BlockCorner corner);
 
     default BlockState blockState(HorizontalFace face) {
-	return blockState(face.face);
+        return blockState(face.face);
     }
 
     default BlockState blockState(Direction face1, Direction face2) {
-	return blockState(BlockEdge.find(face1, face2));
+        return blockState(BlockEdge.find(face1, face2));
     }
 
     default BlockState blockState(HorizontalEdge corner) {
-	return blockState(corner.face1.face, corner.face2.face);
+        return blockState(corner.face1.face, corner.face2.face);
     }
 
     default BlockState blockState(Direction face1, Direction face2, Direction face3) {
-	return blockState(BlockCorner.find(face1, face2, face3));
+        return blockState(BlockCorner.find(face1, face2, face3));
     }
 
     Object modelState();
@@ -108,19 +108,19 @@ public interface BlockNeighbors {
     Object modelState(BlockCorner corner);
 
     default Object modelState(Direction face1, Direction face2, Direction face3) {
-	return modelState(BlockCorner.find(face1, face2, face3));
+        return modelState(BlockCorner.find(face1, face2, face3));
     }
 
     default Object modelState(HorizontalFace face) {
-	return modelState(face.face);
+        return modelState(face.face);
     }
 
     default Object modelState(Direction face1, Direction face2) {
-	return modelState(BlockEdge.find(face1, face2));
+        return modelState(BlockEdge.find(face1, face2));
     }
 
     default Object modelState(HorizontalEdge corner) {
-	return modelState(corner.face1.face, corner.face2.face);
+        return modelState(corner.face1.face, corner.face2.face);
     }
 
     /** use this to override world results */
@@ -133,85 +133,82 @@ public interface BlockNeighbors {
     boolean result(BlockCorner corner);
 
     public default boolean result(Direction face1, Direction face2) {
-	return result(BlockEdge.find(face1, face2));
+        return result(BlockEdge.find(face1, face2));
     }
 
     public default boolean result(HorizontalFace face) {
-	return result(face.face);
+        return result(face.face);
     }
 
     public default boolean result(HorizontalEdge corner) {
-	return result(corner.face1.face, corner.face2.face);
+        return result(corner.face1.face, corner.face2.face);
     }
 
     public default boolean result(Direction face1, Direction face2, Direction face3) {
-	return result(BlockCorner.find(face1, face2, face3));
+        return result(BlockCorner.find(face1, face2, face3));
     }
 
-    public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc,
-	    BlockTest test) {
-	return BlocksNeighborsImpl.threadLocal(world, x, y, z, stateFunc, test);
+    public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest test) {
+        return BlocksNeighborsImpl.threadLocal(world, x, y, z, stateFunc, test);
     }
 
     public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc) {
-	return threadLocal(world, x, y, z, stateFunc, null);
+        return threadLocal(world, x, y, z, stateFunc, null);
     }
 
     public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, BlockTest test) {
-	return threadLocal(world, x, y, z, null, test);
+        return threadLocal(world, x, y, z, null, test);
     }
 
     public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z) {
-	return threadLocal(world, x, y, z, null, null);
+        return threadLocal(world, x, y, z, null, null);
     }
 
-    public static BlockNeighbors threadLocal(BlockView world, BlockPos pos, ModelStateFunction stateFunc,
-	    BlockTest test) {
-	return threadLocal(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
+    public static BlockNeighbors threadLocal(BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest test) {
+        return threadLocal(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
     }
 
     public static BlockNeighbors threadLocal(BlockView world, BlockPos pos, ModelStateFunction stateFunc) {
-	return threadLocal(world, pos, stateFunc, null);
+        return threadLocal(world, pos, stateFunc, null);
     }
 
     public static BlockNeighbors threadLocal(BlockView world, BlockPos pos, BlockTest test) {
-	return threadLocal(world, pos, null, test);
+        return threadLocal(world, pos, null, test);
     }
 
     public static BlockNeighbors threadLocal(BlockView world, BlockPos pos) {
-	return threadLocal(world, pos, null, null);
+        return threadLocal(world, pos, null, null);
     }
 
-    public static BlockNeighbors claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc,
-	    BlockTest test) {
-	return BlocksNeighborsImpl.claim(world, x, y, z, stateFunc, test);
+    public static BlockNeighbors claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest test) {
+        return BlocksNeighborsImpl.claim(world, x, y, z, stateFunc, test);
     }
 
     public static BlockNeighbors claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc) {
-	return claim(world, x, y, z, stateFunc, null);
+        return claim(world, x, y, z, stateFunc, null);
     }
 
     public static BlockNeighbors claim(BlockView world, int x, int y, int z, BlockTest test) {
-	return claim(world, x, y, z, null, test);
+        return claim(world, x, y, z, null, test);
     }
 
     public static BlockNeighbors claim(BlockView world, int x, int y, int z) {
-	return claim(world, x, y, z, null, null);
+        return claim(world, x, y, z, null, null);
     }
 
     public static BlockNeighbors claim(BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest test) {
-	return claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
+        return claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
     }
 
     public static BlockNeighbors claim(BlockView world, BlockPos pos, ModelStateFunction stateFunc) {
-	return claim(world, pos, stateFunc, null);
+        return claim(world, pos, stateFunc, null);
     }
 
     public static BlockNeighbors claim(BlockView world, BlockPos pos, BlockTest test) {
-	return claim(world, pos, null, test);
+        return claim(world, pos, null, test);
     }
 
     public static BlockNeighbors claim(BlockView world, BlockPos pos) {
-	return claim(world, pos, null, null);
+        return claim(world, pos, null, null);
     }
 }

@@ -47,28 +47,28 @@ public enum FaceCorner implements StringIdentifiable {
     public final int ordinalBit;
 
     private FaceCorner(FaceEdge leftSide, FaceEdge rightSide) {
-	this.name = this.name().toLowerCase();
-	this.leftSide = leftSide;
-	this.rightSide = rightSide;
-	this.ordinalBit = 1 << this.ordinal();
+        this.name = this.name().toLowerCase();
+        this.leftSide = leftSide;
+        this.rightSide = rightSide;
+        this.ordinalBit = 1 << this.ordinal();
     }
 
     public static final int COUNT = FaceCornerHelper.COUNT;
 
     public static FaceCorner find(FaceEdge side1, FaceEdge side2) {
-	return FaceCornerHelper.find(side1, side2);
+        return FaceCornerHelper.find(side1, side2);
     }
 
     public static final FaceCorner fromOrdinal(int ordinal) {
-	return FaceCornerHelper.fromOrdinal(ordinal);
+        return FaceCornerHelper.fromOrdinal(ordinal);
     }
 
     public static void forEach(Consumer<FaceCorner> consumer) {
-	FaceCornerHelper.forEach(consumer);
+        FaceCornerHelper.forEach(consumer);
     }
 
     @Override
     public String asString() {
-	return name;
+        return name;
     }
 }

@@ -26,33 +26,33 @@ public interface IStreamPolygon {
      * Will throw exception if not a stream-back poly.
      */
     public default int streamAddress() {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     // TODO: remove
     @Deprecated
     default boolean isMarked() {
-	return false;
+        return false;
     }
 
     // TODO: remove
     @Deprecated
     default void flipMark() {
-	this.setMark(!this.isMarked());
+        this.setMark(!this.isMarked());
     }
 
     // TODO: remove
     @Deprecated
     default void setMark(boolean isMarked) {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     default boolean isDeleted() {
-	return false;
+        return false;
     }
 
     default void setDeleted() {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -61,10 +61,10 @@ public interface IStreamPolygon {
     public static final int NO_LINK_OR_TAG = Integer.MIN_VALUE;
 
     default int getLink() {
-	return NO_LINK_OR_TAG;
+        return NO_LINK_OR_TAG;
     }
 
     default void setLink(int link) {
-	throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 }

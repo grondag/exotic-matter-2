@@ -37,39 +37,39 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
     private final BlockEntityType<?> blockEntityType;
 
     public XmStatefulBlock(Settings blockSettings, MutableModelState defaultModelState, BlockEntityType<?> blockEntityType) {
-	super(blockSettings, defaultModelState);
-	this.blockEntityType = blockEntityType;
+        super(blockSettings, defaultModelState);
+        this.blockEntityType = blockEntityType;
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockView worldIn) {
-	return new XmTileEntity(blockEntityType);
+        return new XmTileEntity(blockEntityType);
     }
 
     public BlockEntity getTileEntityReliably(World world, BlockPos pos) {
-	BlockEntity result = world.getBlockEntity(pos);
-	if (result == null) {
-	    synchronized (BLOCK_ENTITY_AD_HOCK_CREATION_LOCK) {
-		result = world.getBlockEntity(pos);
-		if (result == null) {
-		    result = createBlockEntity(world);
-		    world.setBlockEntity(pos, result);
-		}
-	    }
-	}
-	return result;
+        BlockEntity result = world.getBlockEntity(pos);
+        if (result == null) {
+            synchronized (BLOCK_ENTITY_AD_HOCK_CREATION_LOCK) {
+                result = world.getBlockEntity(pos);
+                if (result == null) {
+                    result = createBlockEntity(world);
+                    world.setBlockEntity(pos, result);
+                }
+            }
+        }
+        return result;
     }
 
-    public static ModelState computeModelState(XmBlockState xmStateIn, BlockView world, BlockPos pos,
-	    boolean refreshFromWorldIfNeeded) {
-	final BlockEntity myTE = world.getBlockEntity(pos);
-	final XmBlockStateImpl xmState = (XmBlockStateImpl) xmStateIn;
+    public static ModelState computeModelState(XmBlockState xmStateIn, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+        final BlockEntity myTE = world.getBlockEntity(pos);
+        final XmBlockStateImpl xmState = (XmBlockStateImpl) xmStateIn;
 
-	if (myTE != null && myTE instanceof XmTileEntity) {
-	    return ((XmTileEntity) myTE).getModelState(xmState, world, pos, refreshFromWorldIfNeeded);
-	} else {
-	    return XmSimpleBlock.computeModelState(xmState, world, pos, refreshFromWorldIfNeeded);
-	}
+        if (myTE != null
+                && myTE instanceof XmTileEntity) {
+            return ((XmTileEntity) myTE).getModelState(xmState, world, pos, refreshFromWorldIfNeeded);
+        } else {
+            return XmSimpleBlock.computeModelState(xmState, world, pos, refreshFromWorldIfNeeded);
+        }
     }
 
     /**
@@ -79,9 +79,10 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
      * state packet.
      */
     public void setModelState(World world, BlockPos pos, ModelState modelState) {
-	BlockEntity blockTE = world.getBlockEntity(pos);
-	if (blockTE != null && blockTE instanceof XmTileEntity) {
-	    ((XmTileEntity) blockTE).setModelState(modelState);
-	}
+        BlockEntity blockTE = world.getBlockEntity(pos);
+        if (blockTE != null
+                && blockTE instanceof XmTileEntity) {
+            ((XmTileEntity) blockTE).setModelState(modelState);
+        }
     }
 }

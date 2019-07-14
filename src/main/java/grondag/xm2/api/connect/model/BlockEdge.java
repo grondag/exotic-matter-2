@@ -80,21 +80,22 @@ public enum BlockEdge implements StringIdentifiable {
     public final HorizontalEdge horizontalEdge;
 
     private BlockEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
-	this.name = this.name().toLowerCase();
-	this.face1 = face1;
-	this.face2 = face2;
-	this.rotation = rotation;
-	superOrdinal = 6 + this.ordinal();
-	superOrdinalBit = 1 << superOrdinal;
+        this.name = this.name().toLowerCase();
+        this.face1 = face1;
+        this.face2 = face2;
+        this.rotation = rotation;
+        superOrdinal = 6 + this.ordinal();
+        superOrdinalBit = 1 << superOrdinal;
 
-	Vec3i v1 = face1.getVector();
-	Vec3i v2 = face2.getVector();
-	vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
+        Vec3i v1 = face1.getVector();
+        Vec3i v2 = face2.getVector();
+        vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
 
-	if (face1.getAxis() == Axis.Y || face2.getAxis() == Axis.Y)
-	    horizontalEdge = null;
-	else
-	    horizontalEdge = HorizontalEdge.find(HorizontalFace.find(face1), HorizontalFace.find(face2));
+        if (face1.getAxis() == Axis.Y
+                || face2.getAxis() == Axis.Y)
+            horizontalEdge = null;
+        else
+            horizontalEdge = HorizontalEdge.find(HorizontalFace.find(face1), HorizontalFace.find(face2));
     }
 
     public static final int COUNT = BlockEdgeHelper.COUNT;
@@ -104,19 +105,19 @@ public enum BlockEdge implements StringIdentifiable {
      */
     @Nullable
     public static BlockEdge find(Direction face1, Direction face2) {
-	return BlockEdgeHelper.find(face1, face2);
+        return BlockEdgeHelper.find(face1, face2);
     }
 
     public static final BlockEdge fromOrdinal(int ordinal) {
-	return BlockEdgeHelper.fromOrdinal(ordinal);
+        return BlockEdgeHelper.fromOrdinal(ordinal);
     }
 
     public static void forEach(Consumer<BlockEdge> consumer) {
-	BlockEdgeHelper.forEach(consumer);
+        BlockEdgeHelper.forEach(consumer);
     }
 
     @Override
     public String asString() {
-	return name;
+        return name;
     }
 }

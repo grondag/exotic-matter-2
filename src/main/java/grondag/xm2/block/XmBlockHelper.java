@@ -31,23 +31,23 @@ public class XmBlockHelper {
      * Returns -1 if no XM block at position or if join not possible.
      */
     // TODO: remove if not used
-    public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState,
-	    ModelState withModelState) {
-	if (withBlockState == null || withModelState == null)
-	    return -1;
+    public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState, ModelState withModelState) {
+        if (withBlockState == null
+                || withModelState == null)
+            return -1;
 
-	if (!withModelState.hasSpecies())
-	    return -1;
+        if (!withModelState.hasSpecies())
+            return -1;
 
-	BlockState state = world.getBlockState(pos);
-	if (state.getBlock() == withBlockState.getBlock()) {
-	    ModelState mState = XmBlockStateAccess.modelState(state, world, pos, false);
-	    if (mState == null)
-		return -1;
+        BlockState state = world.getBlockState(pos);
+        if (state.getBlock() == withBlockState.getBlock()) {
+            ModelState mState = XmBlockStateAccess.modelState(state, world, pos, false);
+            if (mState == null)
+                return -1;
 
-	    if (mState.doShapeAndAppearanceMatch(withModelState))
-		return mState.worldState().species();
-	}
-	return -1;
+            if (mState.doShapeAndAppearanceMatch(withModelState))
+                return mState.worldState().species();
+        }
+        return -1;
     }
 }

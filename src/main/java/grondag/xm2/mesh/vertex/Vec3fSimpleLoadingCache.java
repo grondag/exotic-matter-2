@@ -37,100 +37,109 @@ class Vec3fSimpleLoadingCache {
     private final Object writeLock = new Object();
 
     private Vec3fSimpleLoadingCache(int maxSize) {
-	this.capacity = 1 << (Integer.SIZE
-		- Integer.numberOfLeadingZeros((int) (maxSize / ISimpleLoadingCache.LOAD_FACTOR)));
-	this.maxFill = (int) (capacity * ISimpleLoadingCache.LOAD_FACTOR);
-	this.positionMask = capacity - 1;
-	this.activeState = new Vec3fCacheState(this.capacity);
-	this.clear();
+        this.capacity = 1 << (Integer.SIZE
+                - Integer.numberOfLeadingZeros((int) (maxSize / ISimpleLoadingCache.LOAD_FACTOR)));
+        this.maxFill = (int) (capacity * ISimpleLoadingCache.LOAD_FACTOR);
+        this.positionMask = capacity - 1;
+        this.activeState = new Vec3fCacheState(this.capacity);
+        this.clear();
     }
 
     public int size() {
-	return activeState.size.get();
+        return activeState.size.get();
     }
 
     public void clear() {
-	this.activeState = new Vec3fCacheState(this.capacity);
+        this.activeState = new Vec3fCacheState(this.capacity);
     }
 
     public Vec3f get(final float x, final float y, final float z) {
-	Vec3fCacheState localState = activeState;
+        Vec3fCacheState localState = activeState;
 
-	// Zero value normally indicates an unused spot in key array
-	// so requires privileged handling to prevent search weirdness.
-	if (x == 0f && y == 0f && z == 0f)
-	    return Vec3f.ZERO;
+        // Zero value normally indicates an unused spot in key array
+        // so requires privileged handling to prevent search weirdness.
+        if (x == 0f
+                && y == 0f
+                && z == 0f)
+            return Vec3f.ZERO;
 
-	final long hash = ((long) Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16)
-		^ (((long) Float.floatToIntBits(z)) << 32);
+        final long hash = ((long) Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16)
+                ^ (((long) Float.floatToIntBits(z)) << 32);
 
-	int position = (int) (Useful.longHash(hash) & positionMask);
+        int position = (int) (Useful.longHash(hash) & positionMask);
 
-	do {
-	    Vec3f check = localState.values[position];
+        do {
+            Vec3f check = localState.values[position];
 
-	    if (check == null)
-		return load(localState, x, y, z, position);
+            if (check == null)
+                return load(localState, x, y, z, position);
 
-	    else if (check.x() == x && check.y() == y && check.z() == z)
-		return check;
+            else if (check.x() == x
+                    && check.y() == y
+                    && check.z() == z)
+                return check;
 
-	    position = (position + 1) & positionMask;
+            position = (position + 1) & positionMask;
 
-	} while (true);
+        } while (true);
     }
 
     protected Vec3f loadFromBackup(Vec3fCacheState backup, final float x, final float y, final float z, int position) {
-	do {
-	    Vec3f v = backup.values[position];
-	    if (v != null && v.x() == x && v.y() == y && v.z() == z)
-		return v;
+        do {
+            Vec3f v = backup.values[position];
+            if (v != null
+                    && v.x() == x
+                    && v.y() == y
+                    && v.z() == z)
+                return v;
 
-	    if (v == null) {
-		if ((backupMissCount.incrementAndGet() & 0xFF) == 0xFF) {
-		    if (backupMissCount.get() > activeState.size.get() / 2) {
-			backupState.compareAndSet(backup, null);
-		    }
-		}
-		return new Vec3f(x, y, z);
-	    }
-	    position = (position + 1) & positionMask;
-	} while (true);
+            if (v == null) {
+                if ((backupMissCount.incrementAndGet() & 0xFF) == 0xFF) {
+                    if (backupMissCount.get() > activeState.size.get() / 2) {
+                        backupState.compareAndSet(backup, null);
+                    }
+                }
+                return new Vec3f(x, y, z);
+            }
+            position = (position + 1) & positionMask;
+        } while (true);
     }
 
     protected Vec3f load(Vec3fCacheState localState, final float x, final float y, final float z, int position) {
-	// no need to handle zero key here - is handled as privileged case in get();
+        // no need to handle zero key here - is handled as privileged case in get();
 
-	Vec3fCacheState backupState = this.backupState.get();
+        Vec3fCacheState backupState = this.backupState.get();
 
-	final Vec3f result = backupState == null ? new Vec3f(x, y, z) : loadFromBackup(backupState, x, y, z, position);
-	do {
-	    Vec3f currentKey;
-	    synchronized (writeLock) {
-		currentKey = localState.values[position];
-		if (currentKey == null) {
-		    // write value start in case another thread tries to read it before we can write
-		    // it
-		    localState.values[position] = result;
-		    break;
-		}
-	    }
+        final Vec3f result = backupState == null ? new Vec3f(x, y, z) : loadFromBackup(backupState, x, y, z, position);
+        do {
+            Vec3f currentKey;
+            synchronized (writeLock) {
+                currentKey = localState.values[position];
+                if (currentKey == null) {
+                    // write value start in case another thread tries to read it before we can write
+                    // it
+                    localState.values[position] = result;
+                    break;
+                }
+            }
 
-	    // small chance another thread added our value before we got our lock
-	    if (currentKey.x() == result.x() && currentKey.y() == result.y() && currentKey.z() == result.z())
-		return currentKey;
+            // small chance another thread added our value before we got our lock
+            if (currentKey.x() == result.x()
+                    && currentKey.y() == result.y()
+                    && currentKey.z() == result.z())
+                return currentKey;
 
-	    position = (position + 1) & positionMask;
+            position = (position + 1) & positionMask;
 
-	} while (true);
+        } while (true);
 
-	if (localState.size.incrementAndGet() == this.maxFill) {
-	    Vec3fCacheState newState = new Vec3fCacheState(this.capacity);
-	    this.backupState.set(this.activeState);
-	    this.activeState = newState;
-	    this.backupMissCount.set(0);
-	}
+        if (localState.size.incrementAndGet() == this.maxFill) {
+            Vec3fCacheState newState = new Vec3fCacheState(this.capacity);
+            this.backupState.set(this.activeState);
+            this.activeState = newState;
+            this.backupMissCount.set(0);
+        }
 
-	return result;
+        return result;
     }
 }
