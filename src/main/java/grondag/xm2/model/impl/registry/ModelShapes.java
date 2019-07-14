@@ -14,10 +14,12 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.impl.primitive;
+package grondag.xm2.model.impl.registry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import grondag.xm2.model.impl.primitive.AbstractModelPrimitive;
 
 public class ModelShapes {
 

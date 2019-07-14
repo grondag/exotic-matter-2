@@ -130,9 +130,4 @@ public class StairPrimitive extends AbstractWedgePrimitive {
         }
         stream.release();
     }
-
-    @Override
-    public boolean hasLampSurface(ModelState modelState) {
-        return false;
-    }
 }

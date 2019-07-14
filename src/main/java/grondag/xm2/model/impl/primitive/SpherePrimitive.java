@@ -80,9 +80,4 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     public int geometricSkyOcclusion(ModelState modelState) {
         return 0;
     }
-
-    @Override
-    public boolean hasLampSurface(ModelState modelState) {
-        return false;
-    }
 }

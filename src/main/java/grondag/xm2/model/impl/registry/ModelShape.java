@@ -14,9 +14,10 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.impl.primitive;
+package grondag.xm2.model.impl.registry;
 
 import grondag.xm2.Xm;
+import grondag.xm2.model.impl.primitive.AbstractModelPrimitive;
 import net.minecraft.client.resource.language.I18n;
 
 public class ModelShape<T extends AbstractModelPrimitive> {

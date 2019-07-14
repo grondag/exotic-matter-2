@@ -554,10 +554,4 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     public static void setCutCount(int cutCount, ModelState modelState) {
         modelState.setStaticShapeBits(STATE_CUT_COUNT.setValue(cutCount, modelState.getStaticShapeBits()));
     }
-
-    @Override
-    public boolean hasLampSurface(ModelState modelState) {
-        return true;
-    }
-
 }

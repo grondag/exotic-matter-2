@@ -19,12 +19,12 @@ package grondag.xm2.model.impl.primitive;
 import java.util.function.Consumer;
 
 import grondag.xm2.mesh.polygon.IPolygon;
+import grondag.xm2.model.api.primitive.ModelPrimitive;
 import grondag.xm2.model.impl.state.ModelState;
 import grondag.xm2.model.impl.state.StateFormat;
-import grondag.xm2.model.impl.varia.BlockOrientationType;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 
-public abstract class AbstractModelPrimitive {
+public abstract class AbstractModelPrimitive implements ModelPrimitive {
 	public final XmSurfaceListImpl surfaces;
 	
     /**
@@ -57,14 +57,6 @@ public abstract class AbstractModelPrimitive {
     }
 
     /**
-     * Override if shape has any kind of orientation to it that can be selected
-     * during placement.
-     */
-    public BlockOrientationType orientationType(ModelState modelState) {
-        return BlockOrientationType.NONE;
-    }
-
-    /**
      * How much of the sky is occluded by the shape of this block? Based on geometry
      * alone, not transparency. Returns 0 if no occlusion (unlikely result). 1-15 if
      * some occlusion. 255 if fully occludes sky.
@@ -83,36 +75,11 @@ public abstract class AbstractModelPrimitive {
     public abstract boolean isCube(ModelState modelState);
 
     /**
-     * If this shape uses metadata to affect geometry, retrieves the block/item
-     * metadata value that should correspond to this modelstate
-     */
-    public int getMetaData(ModelState modelState) {
-        return 0;
-    }
-
-    /**
-     * If this shape uses metadata to affect geometry, will be called during block
-     * placement and during refreshFromWorld. Can be ignored if the shaped has
-     * another mechanism for synchronizing with block meta. (TerrainBlocks get it
-     * via TerrainState, for example)
-     */
-    public void setMetaData(ModelState modelState, int meta) {
-        // Default is to do nothing
-    }
-
-    /**
      * If true, shape can be placed on itself to become bigger.
      */
     public boolean isAdditive() {
         return false;
     }
-
-    /**
-     * True if shape mesh generator will output lamp surface quads with the given
-     * model state. Used by model state to detect if model has translucent geometry
-     * and possibly other qualitative attributes without generating a mesh.
-     */
-    public abstract boolean hasLampSurface(ModelState modelState);
 
     /**
      * Override to true for blocks like stairs and wedges. CubicPlacementHandler

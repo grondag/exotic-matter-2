@@ -123,20 +123,4 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
     public BlockOrientationType orientationType(ModelState modelState) {
         return BlockOrientationType.FACE;
     }
-
-    @Override
-    public int getMetaData(ModelState modelState) {
-        return (int) (modelState.getStaticShapeBits() & 0xF);
-    }
-
-    @Override
-    public void setMetaData(ModelState modelState, int meta) {
-        modelState.setStaticShapeBits(meta);
-    }
-
-    @Override
-    public boolean hasLampSurface(ModelState modelState) {
-        return false;
-    }
-
 }

@@ -23,7 +23,7 @@ import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_HAS_TRANSLU
 import static grondag.xm2.model.impl.state.ModelStateData.STATE_FLAG_IS_POPULATED;
 
 import grondag.xm2.model.impl.primitive.AbstractModelPrimitive;
-import grondag.xm2.model.impl.primitive.ModelShape;
+import grondag.xm2.model.impl.registry.ModelShape;
 import grondag.xm2.paint.api.XmPaint;
 import net.minecraft.block.BlockRenderLayer;
 

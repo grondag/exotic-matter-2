@@ -40,8 +40,8 @@ import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.connect.api.world.BlockNeighbors;
 import grondag.xm2.connect.impl.CornerJoinStateSelector;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.model.impl.primitive.ModelShape;
-import grondag.xm2.model.impl.primitive.ModelShapes;
+import grondag.xm2.model.impl.registry.ModelShape;
+import grondag.xm2.model.impl.registry.ModelShapes;
 import grondag.xm2.model.impl.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
@@ -650,11 +650,6 @@ public class ModelStateImpl implements ModelState {
     public boolean hasAxisOrientation() {
         this.populateStateFlagsIfNeeded();
         return (this.stateFlags & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
-    }
-
-    @Override
-    public boolean hasLampSurface() {
-        return this.getShape().meshFactory().hasLampSurface(this);
     }
 
     @Override

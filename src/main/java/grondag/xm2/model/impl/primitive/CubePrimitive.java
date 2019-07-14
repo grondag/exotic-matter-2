@@ -97,9 +97,4 @@ public class CubePrimitive extends AbstractModelPrimitive {
     public int geometricSkyOcclusion(ModelState modelState) {
         return 255;
     }
-
-    @Override
-    public boolean hasLampSurface(ModelState modelState) {
-        return true;
-    }
 }

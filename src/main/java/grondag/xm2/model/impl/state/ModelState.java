@@ -23,7 +23,7 @@ import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.model.impl.primitive.ModelShape;
+import grondag.xm2.model.impl.registry.ModelShape;
 import grondag.xm2.model.impl.varia.BlockOrientationType;
 import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.paint.api.XmPaintRegistry;
@@ -191,11 +191,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     boolean hasAxis();
 
     boolean hasAxisOrientation();
-
-    /**
-     * True if shape mesh generator can output lamp surface quads.
-     */
-    boolean hasLampSurface();
 
     /**
      * True if base paint layer is translucent or lamp paint layer is present and
