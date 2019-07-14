@@ -19,11 +19,11 @@ package grondag.xm2.block;
 import java.util.List;
 import java.util.function.Function;
 
+import grondag.xm2.api.model.ImmutablePrimitiveModelState;
+import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.PrimitiveModelState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
-import grondag.xm2.api.model.ImmutableModelState;
-import grondag.xm2.api.model.ModelState;
-import grondag.xm2.api.model.MutableModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -51,25 +51,25 @@ public class XmSimpleBlock extends Block {
      * Hacky hack to let us inspect default model state during constructor before it
      * is saved
      */
-    protected static final ThreadLocal<MutableModelState> INIT_STATE = new ThreadLocal<>();
+    protected static final ThreadLocal<MutablePrimitiveModelState> INIT_STATE = new ThreadLocal<>();
 
-    protected static Settings prepareInit(Settings blockSettings, MutableModelState defaultModelState) {
+    protected static Settings prepareInit(Settings blockSettings, MutablePrimitiveModelState defaultModelState) {
         INIT_STATE.set(defaultModelState);
         return blockSettings;
     }
 
-    public static ModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
+    public static PrimitiveModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
         if (refreshFromWorld) {
-            MutableModelState result = xmState.defaultModelState().mutableCopy();
+            MutablePrimitiveModelState result = xmState.defaultModelState().mutableCopy();
             return result.refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
         } else {
             return xmState.defaultModelState();
         }
     }
 
-    public XmSimpleBlock(Settings blockSettings, MutableModelState defaultModelState) {
+    public XmSimpleBlock(Settings blockSettings, MutablePrimitiveModelState defaultModelState) {
         super(prepareInit(blockSettings, defaultModelState));
-        defaultModelState.getShape().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(),
+        defaultModelState.primitive().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(),
                 defaultModelState);
         XmBlockRegistryImpl.register(this, defaultModelStateFunc(defaultModelState), XmSimpleBlock::computeModelState,
                 XmBorderMatch.INSTANCE);
@@ -78,12 +78,12 @@ public class XmSimpleBlock extends Block {
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        final MutableModelState defaultState = INIT_STATE.get();
+        final MutablePrimitiveModelState defaultState = INIT_STATE.get();
         if (defaultState != null) {
             if (defaultState.hasSpecies()) {
                 builder.add(XmSimpleBlock.SPECIES);
             }
-            final EnumProperty<?> orientationProp = defaultState.getShape().orientationType(defaultState).property;
+            final EnumProperty<?> orientationProp = defaultState.primitive().orientationType(defaultState).property;
             if (orientationProp != null) {
                 builder.add(orientationProp);
             }
@@ -92,7 +92,7 @@ public class XmSimpleBlock extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, EntityContext entityContext) {
-        final ModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
+        final PrimitiveModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
         return CollisionBoxDispatcher.getOutlineShape(modelState);
     }
 
@@ -209,10 +209,10 @@ public class XmSimpleBlock extends Block {
         super.buildTooltip(stack, world, tooltip, context);
         tooltip.add(new TranslatableText("label.meta", stack.getDamage()));
 
-        MutableModelState modelState = XmStackHelper.getStackModelState(stack);
+        MutablePrimitiveModelState modelState = XmStackHelper.getStackModelState(stack);
 
         if (modelState != null) {
-            tooltip.add(new TranslatableText("label.shape", modelState.getShape().translationKey()));
+            tooltip.add(new TranslatableText("label.shape", modelState.primitive().translationKey()));
             // TODO: restore some info about color/texture?
 //            tooltip.add(new TranslatableText("label.base_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.BASE))));
 //            tooltip.add(new TranslatableText("label.base_texture", modelState.getTexture(PaintLayer.BASE).displayName()));
@@ -365,19 +365,19 @@ public class XmSimpleBlock extends Block {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         // TODO: add species handling
-        final MutableModelState modelState = XmBlockStateAccess.get(this).defaultModelState.mutableCopy();
-        return modelState.getShape().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
+        final MutablePrimitiveModelState modelState = XmBlockStateAccess.get(this).defaultModelState.mutableCopy();
+        return modelState.primitive().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
     }
 
-    public static Function<BlockState, ImmutableModelState> defaultModelStateFunc(MutableModelState baseModelState) {
+    public static Function<BlockState, ImmutablePrimitiveModelState> defaultModelStateFunc(MutablePrimitiveModelState baseModelState) {
         return (state) -> {
-            MutableModelState result = baseModelState.mutableCopy();
+            MutablePrimitiveModelState result = baseModelState.mutableCopy();
 
             if (state.contains(SPECIES)) {
                 result.worldState().species(state.get(SPECIES));
             }
 
-            result.getShape().orientationType(result).stateFunc.accept(state, result);
+            result.primitive().orientationType(result).stateFunc.accept(state, result);
 
             return result.toImmutable();
         };

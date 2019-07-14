@@ -17,10 +17,11 @@
 package grondag.xm2.block;
 
 import grondag.fermion.serialization.NBTDictionary;
-import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.api.model.ImmutableModelState;
+import grondag.xm2.api.model.ImmutablePrimitiveModelState;
 import grondag.xm2.api.model.ModelState;
-import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.PrimitiveModelState;
+import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.model.state.ModelStateImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
@@ -79,7 +80,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     // INSTANCE MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    protected ImmutableModelState modelState = null;
+    protected ImmutablePrimitiveModelState modelState = null;
 
     // public IExtendedBlockState exBlockState;
     private boolean isModelStateCacheDirty = true;
@@ -170,8 +171,8 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
         return compound;
     }
 
-    public ModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        ModelState myState = this.modelState;
+    public PrimitiveModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+        PrimitiveModelState myState = this.modelState;
 
         if (myState == null) {
             myState = state.defaultModelState;
@@ -180,7 +181,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 
         if (isModelStateCacheDirty
                 && refreshFromWorldIfNeeded) {
-            MutableModelState result = myState.mutableCopy();
+            MutablePrimitiveModelState result = myState.mutableCopy();
             result.worldState().species(state.defaultModelState.worldState().species());
             result.refreshFromWorld(state, world, pos);
             this.isModelStateCacheDirty = false;
@@ -189,7 +190,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
             // honor passed in species if different
             if (myState.hasSpecies()
                     && myState.worldState().species() != state.defaultModelState.worldState().species()) {
-                MutableModelState result = myState.mutableCopy();
+                MutablePrimitiveModelState result = myState.mutableCopy();
                 result.worldState().species(state.defaultModelState.worldState().species());
                 return result;
             } else {
@@ -222,7 +223,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     // : this.modelState;
     // }
 
-    public void setModelState(ModelState modelState) {
+    public void setModelState(PrimitiveModelState modelState) {
         // if making existing appearance static, don't need to refresh on client side
         boolean needsClientRefresh = this.world != null
                 && this.world.isClient

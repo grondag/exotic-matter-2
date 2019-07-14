@@ -4,7 +4,6 @@ import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintRegistry;
 import grondag.xm2.api.surface.XmSurface;
-import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.Direction;
@@ -16,15 +15,13 @@ public interface ModelState {
 
     MutableModelState mutableCopy();
 
-    MutableModelWorldState worldState();
+    ModelWorldState worldState();
 
     /**
      * Persisted but not part of hash nor included in equals comparison. If true,
      * refreshFromWorldState does nothing.
      */
     boolean isStatic();
-
-    ModelPrimitive getShape();
 
     int paintIndex(int surfaceIndex);
 
@@ -96,23 +93,7 @@ public interface ModelState {
      * Returns a copy of this model state with only the bits that matter for
      * geometry. Used as lookup key for block damage models.
      */
-    MutableModelState geometricState();
-
-    default boolean hasAxisOrientation() {
-        return getShape().hasAxisOrientation(this);
-    }
-
-    default boolean hasAxisRotation() {
-        return getShape().hasAxisRotation(this);
-    }
-
-    default BlockOrientationType orientationType() {
-        return getShape().orientationType(this);
-    }
-
-    default boolean isAxisOrthogonalToPlacementFace() {
-        return getShape().isAxisOrthogonalToPlacementFace();
-    }
+    ModelState geometricState();
 
     void serializeNBT(CompoundTag tag);
 }

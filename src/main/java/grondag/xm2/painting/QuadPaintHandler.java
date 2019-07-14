@@ -58,7 +58,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
     private Mesh handlePaint(ImmutableModelStateImpl modelState) {
         this.modelState = modelState;
-        modelState.getShape().produceQuads(modelState, this);
+        modelState.primitive().produceQuads(modelState, this);
         return builder.build();
     }
 

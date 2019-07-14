@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableList;
 
 import grondag.fermion.cache.ObjectSimpleCacheLoader;
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.PrimitiveModelState;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 
@@ -57,7 +57,7 @@ public class CollisionBoxDispatcher {
     };
 
     // FIX: need to intern immutable keys
-    private static final ObjectSimpleLoadingCache<ModelState, OptimizingBoxList> modelBounds = new ObjectSimpleLoadingCache<ModelState, OptimizingBoxList>(
+    private static final ObjectSimpleLoadingCache<PrimitiveModelState, OptimizingBoxList> modelBounds = new ObjectSimpleLoadingCache<PrimitiveModelState, OptimizingBoxList>(
             new CollisionBoxLoader(), 0xFFF);
 
     private static ThreadLocal<FastBoxGenerator> fastBoxGen = new ThreadLocal<FastBoxGenerator>() {
@@ -67,11 +67,11 @@ public class CollisionBoxDispatcher {
         }
     };
 
-    public static ImmutableList<Box> getCollisionBoxes(ModelState modelState) {
+    public static ImmutableList<Box> getCollisionBoxes(PrimitiveModelState modelState) {
         return modelBounds.get(modelState.geometricState()).getList();
     }
 
-    public static VoxelShape getOutlineShape(ModelState modelState) {
+    public static VoxelShape getOutlineShape(PrimitiveModelState modelState) {
         return modelBounds.get(modelState.geometricState()).getShape();
     }
 
@@ -83,16 +83,16 @@ public class CollisionBoxDispatcher {
         QUEUE.clear();
     }
 
-    private static class CollisionBoxLoader implements ObjectSimpleCacheLoader<ModelState, OptimizingBoxList> {
+    private static class CollisionBoxLoader implements ObjectSimpleCacheLoader<PrimitiveModelState, OptimizingBoxList> {
 //        static AtomicInteger runCounter = new AtomicInteger();
 //        static AtomicLong totalNanos = new AtomicLong();
 
         @Override
-        public OptimizingBoxList load(ModelState key) {
+        public OptimizingBoxList load(PrimitiveModelState key) {
 //            final long start = System.nanoTime();
 
             final FastBoxGenerator generator = fastBoxGen.get();
-            key.getShape().produceQuads(key, generator);
+            key.primitive().produceQuads(key, generator);
 
             // note that build clears for next use
             OptimizingBoxList result = new OptimizingBoxList(generator, key);

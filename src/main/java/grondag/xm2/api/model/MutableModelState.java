@@ -21,7 +21,6 @@ import grondag.fermion.serialization.PacketSerializable;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
-import grondag.xm2.api.surface.XmSurfaceList;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.mesh.helper.PolyTransform;
 import grondag.xm2.terrain.TerrainState;
@@ -39,12 +38,6 @@ public interface MutableModelState extends ModelState, IReadWriteNBT, PacketSeri
     /** returns self as convenience method */
     MutableModelState refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
 
-    /**
-     * Also resets shape-specific bits to default for the given shape. Does nothing
-     * if shape is the same as existing.
-     */
-    void setShape(ModelPrimitive shape);
-
     default void paint(XmSurface surface, XmPaint paint) {
         paint(surface.ordinal(), paint.index());
     }
@@ -59,14 +52,11 @@ public interface MutableModelState extends ModelState, IReadWriteNBT, PacketSeri
         paintAll(paint.index());
     }
 
-    default void paintAll(int paintIndex) {
-        XmSurfaceList slist = getShape().surfaces();
-        final int limit = slist.size();
-        for (int i = 0; i < limit; i++) {
-            paint(i, paintIndex);
-        }
-    }
+    void paintAll(int paintIndex);
 
+    @Override
+    MutableModelWorldState worldState();
+    
     void setAxis(Direction.Axis axis);
 
     void setAxisInverted(boolean isInverted);
@@ -94,8 +84,4 @@ public interface MutableModelState extends ModelState, IReadWriteNBT, PacketSeri
      * See {@link PolyTransform#rotateFace(MutableModelState, Direction)}
      */
     Direction rotateFace(Direction face);
-
-    default boolean hasAxis() {
-        return getShape().hasAxis(this);
-    }
 }

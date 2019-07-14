@@ -16,10 +16,10 @@
 
 package grondag.xm2.terrain;
 
+import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.PrimitiveModelState;
 import grondag.xm2.block.XmStatefulBlock;
 import grondag.xm2.init.XmPrimitives;
-import grondag.xm2.api.model.ModelState;
-import grondag.xm2.api.model.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -32,13 +32,13 @@ import net.minecraft.world.World;
 
 public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
 
-    public TerrainStaticBlock(Settings blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
+    public TerrainStaticBlock(Settings blockSettings, PrimitiveModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
         super(blockSettings, adjustShape(defaultModelState, isFiller), blockEntityType);
     }
 
-    private static MutableModelState adjustShape(ModelState stateIn, boolean isFiller) {
-        MutableModelState result = stateIn.mutableCopy();
-        result.setShape(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
+    private static MutablePrimitiveModelState adjustShape(PrimitiveModelState stateIn, boolean isFiller) {
+        MutablePrimitiveModelState result = stateIn.mutableCopy();
+        result.primitive(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
         result.setStatic(true);
         return result;
     }

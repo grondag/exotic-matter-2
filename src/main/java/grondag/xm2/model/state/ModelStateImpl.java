@@ -34,12 +34,11 @@ import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
 import grondag.xm2.api.connect.world.BlockNeighbors;
-import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.api.model.ModelState;
-import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.model.MutableModelWorldState;
+import grondag.xm2.api.model.MutablePrimitiveModelState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.connect.CornerJoinStateSelector;
@@ -54,7 +53,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
-public class ModelStateImpl implements MutableModelState, MutableModelWorldState {
+public class ModelStateImpl implements MutablePrimitiveModelState, MutableModelWorldState {
     private static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
     private static final String NBT_SHAPE = NBTDictionary.claim("shape");
     /**
@@ -283,7 +282,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     // not be coupled
     @Deprecated
     @Override
-    public MutableModelState refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
+    public ModelStateImpl refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
 
         // Output.getLog().info("ModelState.refreshFromWorld static=" + this.isStatic +
         // " @" + pos.toString());
@@ -292,7 +291,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
 
         populateStateFlagsIfNeeded();
 
-        switch (((AbstractModelPrimitive) getShape()).stateFormat) {
+        switch (((AbstractModelPrimitive) primitive()).stateFormat) {
             case BLOCK:
 
                 if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS)
@@ -365,12 +364,12 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     ////////////////////////////////////////////////////
 
     @Override
-    public ModelPrimitive getShape() {
+    public ModelPrimitive primitive() {
         return ModelPrimitiveRegistryImpl.INSTANCE.get(ModelStateData.SHAPE.getValue(this));
     }
 
     @Override
-    public void setShape(ModelPrimitive shape) {
+    public void primitive(ModelPrimitive shape) {
         if (shape.index() != ModelStateData.SHAPE.getValue(this)) {
             ModelStateData.SHAPE.setValue(shape.index(), this);
             shape.applyDefaultState(this);
@@ -483,7 +482,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
         if (XmConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
-                    || ((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK)
+                    || ((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.BLOCK)
                 Xm.LOG.warn("getCornerJoin on model state does not apply for shape");
         }
 
@@ -496,7 +495,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
         if (XmConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
             if ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0
-                    || ((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK)
+                    || ((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.BLOCK)
                 Xm.LOG.warn("setCornerJoin on model state does not apply for shape");
         }
 
@@ -507,7 +506,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     @Override
     public SimpleJoinState simpleJoin() {
         if (XmConfig.BLOCKS.debugModelState
-                && ((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK)
+                && ((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.BLOCK)
             Xm.LOG.warn("getSimpleJoin on model state does not apply for shape");
 
         // If this state is using corner join, join index is for a corner join
@@ -521,7 +520,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     @Override
     public void simpleJoin(SimpleJoinState join) {
         if (XmConfig.BLOCKS.debugModelState) {
-            if (((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK) {
+            if (((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.BLOCK) {
                 Xm.LOG.warn("Ignored setSimpleJoin on model state that does not apply for shape");
                 return;
             }
@@ -540,7 +539,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     @Override
     public SimpleJoinState masonryJoin() {
         if (XmConfig.BLOCKS.debugModelState
-                && (((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK
+                && (((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.BLOCK
                         || (stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
                 || ((stateFlags & STATE_FLAG_NEEDS_MASONRY_JOIN) == 0))
             Xm.LOG.warn("getMasonryJoin on model state does not apply for shape");
@@ -553,7 +552,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     public void masonryJoin(SimpleJoinState join) {
         if (XmConfig.BLOCKS.debugModelState) {
             populateStateFlagsIfNeeded();
-            if (((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK) {
+            if (((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.BLOCK) {
                 Xm.LOG.warn("Ignored setMasonryJoin on model state that does not apply for shape");
                 return;
             }
@@ -577,7 +576,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     @Override
     public void setAxisRotation(ClockwiseRotation rotation) {
         populateStateFlagsIfNeeded();
-        if (((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.BLOCK) {
+        if (((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.BLOCK) {
             if (XmConfig.BLOCKS.debugModelState)
                 Xm.LOG.warn("Ignored setAxisRotation on model state that does not apply for shape");
             return;
@@ -600,7 +599,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     @Override
     public long getMultiBlockBits() {
         if (XmConfig.BLOCKS.debugModelState
-                && ((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.MULTIBLOCK)
+                && ((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.MULTIBLOCK)
             Xm.LOG.warn("getMultiBlockBits on model state does not apply for shape");
 
         return shapeBits0;
@@ -609,7 +608,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     @Override
     public void setMultiBlockBits(long bits) {
         if (XmConfig.BLOCKS.debugModelState
-                && ((AbstractModelPrimitive) getShape()).stateFormat != StateFormat.MULTIBLOCK)
+                && ((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.MULTIBLOCK)
             Xm.LOG.warn("setMultiBlockBits on model state does not apply for shape");
 
         shapeBits0 = bits;
@@ -622,32 +621,32 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
 
     @Override
     public long getTerrainStateKey() {
-        assert ((AbstractModelPrimitive) getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive) primitive()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         return ModelStateData.FLOW_JOIN.getValue(this);
     }
 
     @Override
     public int getTerrainHotness() {
-        assert ((AbstractModelPrimitive) getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive) primitive()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         return (int) ModelStateData.EXTRA_SHAPE_BITS.getValue(this);
     }
 
     @Override
     public void setTerrainStateKey(long terrainStateKey) {
-        assert ((AbstractModelPrimitive) getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive) primitive()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         ModelStateData.FLOW_JOIN.setValue(terrainStateKey, this);
     }
 
     @Override
     public TerrainState getTerrainState() {
-        assert ((AbstractModelPrimitive) getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive) primitive()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         return new TerrainState(ModelStateData.FLOW_JOIN.getValue(this),
                 (int) ModelStateData.EXTRA_SHAPE_BITS.getValue(this));
     }
 
     @Override
     public void setTerrainState(TerrainState flowState) {
-        assert ((AbstractModelPrimitive) getShape()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
+        assert ((AbstractModelPrimitive) primitive()).stateFormat == StateFormat.FLOW : "getTerrainState on model state does not apply for shape";
         ModelStateData.FLOW_JOIN.setValue(flowState.getStateKey(), this);
         ModelStateData.EXTRA_SHAPE_BITS.setValue(flowState.getHotness(), this);
         invalidateHashCode();
@@ -703,12 +702,12 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
 
     // PERF: bottleneck for Pyroclasm
     @Override
-    public MutableModelState geometricState() {
+    public ModelStateImpl geometricState() {
         this.populateStateFlagsIfNeeded();
         ModelStateImpl result = new ModelStateImpl();
-        result.setShape(this.getShape());
+        result.primitive(this.primitive());
 
-        switch (((AbstractModelPrimitive) getShape()).stateFormat) {
+        switch (((AbstractModelPrimitive) primitive()).stateFormat) {
             case BLOCK:
                 result.setStaticShapeBits(this.getStaticShapeBits());
                 if (this.hasAxis())
@@ -717,9 +716,9 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
                     result.setAxisInverted(this.isAxisInverted());
                 if (this.hasAxisRotation())
                     result.setAxisRotation(this.getAxisRotation());
-                if ((this.getShape().stateFlags(this) & STATE_FLAG_NEEDS_CORNER_JOIN) == STATE_FLAG_NEEDS_CORNER_JOIN) {
+                if ((this.primitive().stateFlags(this) & STATE_FLAG_NEEDS_CORNER_JOIN) == STATE_FLAG_NEEDS_CORNER_JOIN) {
                     result.cornerJoin(this.cornerJoin());
-                } else if ((this.getShape().stateFlags(this)
+                } else if ((this.primitive().stateFlags(this)
                         & STATE_FLAG_NEEDS_SIMPLE_JOIN) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
                     result.simpleJoin(this.simpleJoin());
                 }
@@ -805,7 +804,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
 
         // shape is serialized by name because registered shapes can change if
         // mods/config change
-        tag.putString(NBT_SHAPE, this.getShape().id().toString());
+        tag.putString(NBT_SHAPE, this.primitive().id().toString());
 
         // TODO: serialization for paint/surface map
         // textures and vertex processors serialized by name because registered can
@@ -858,7 +857,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     }
 
     @Override
-    public ImmutableModelState toImmutable() {
+    public ImmutableModelStateImpl toImmutable() {
         return new ImmutableModelStateImpl(this);
     }
 

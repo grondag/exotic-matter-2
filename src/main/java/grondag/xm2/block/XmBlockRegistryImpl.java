@@ -20,8 +20,8 @@ import java.util.function.Function;
 
 import grondag.xm2.Xm;
 import grondag.xm2.api.connect.world.BlockTest;
-import grondag.xm2.api.model.ImmutableModelState;
-import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.ImmutablePrimitiveModelState;
+import grondag.xm2.api.model.PrimitiveModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +31,7 @@ public class XmBlockRegistryImpl {
     private XmBlockRegistryImpl() {
     }
 
-    public static void register(Block block, Function<BlockState, ImmutableModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest) {
+    public static void register(Block block, Function<BlockState, ImmutablePrimitiveModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest) {
 
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
@@ -49,10 +49,10 @@ public class XmBlockRegistryImpl {
     public static class XmBlockStateImpl implements XmBlockState {
         public final WorldToModelStateFunction worldStateFunc;
         public final BlockTest blockJoinTest;
-        public final ImmutableModelState defaultModelState;
+        public final ImmutablePrimitiveModelState defaultModelState;
         public final BlockState blockState;
 
-        private XmBlockStateImpl(ImmutableModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest, BlockState blockState) {
+        private XmBlockStateImpl(ImmutablePrimitiveModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest, BlockState blockState) {
 
             this.defaultModelState = defaultModelState;
             this.worldStateFunc = worldStateFunc;
@@ -66,12 +66,12 @@ public class XmBlockRegistryImpl {
         }
 
         @Override
-        public ImmutableModelState defaultModelState() {
+        public ImmutablePrimitiveModelState defaultModelState() {
             return defaultModelState;
         }
 
         @Override
-        public ModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        public PrimitiveModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
             return worldStateFunc.apply(this, world, pos, refreshFromWorld);
         }
 
