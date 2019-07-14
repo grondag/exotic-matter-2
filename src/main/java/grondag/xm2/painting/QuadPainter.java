@@ -26,6 +26,7 @@ import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
 import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.ModelWorldState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -172,25 +173,26 @@ public abstract class QuadPainter {
 	final int species = modelState.hasSpecies() ? modelState.getSpecies() : 0;
 	final int speciesBits = species << 16;
 	final int shift = tex.scale().power;
-
+	final ModelWorldState worldState = modelState.worldState();
+	
 	switch (face) {
 	case DOWN:
 	case UP: {
-	    final int yBits = (((modelState.getPosX() >> shift) & 0xFF) << 8) | ((modelState.getPosZ() >> shift) & 0xFF)
+	    final int yBits = (((worldState.posX() >> shift) & 0xFF) << 8) | ((worldState.posZ() >> shift) & 0xFF)
 		    | speciesBits;
 	    return HashCommon.mix(yBits);
 	}
 
 	case EAST:
 	case WEST: {
-	    final int xBits = (((modelState.getPosY() >> shift) & 0xFF) << 8) | ((modelState.getPosZ() >> shift) & 0xFF)
+	    final int xBits = (((worldState.posY() >> shift) & 0xFF) << 8) | ((worldState.posZ() >> shift) & 0xFF)
 		    | speciesBits;
 	    return HashCommon.mix(xBits);
 	}
 
 	case NORTH:
 	case SOUTH: {
-	    final int zBits = (((modelState.getPosX() >> shift) & 0xFF) << 8) | ((modelState.getPosY() >> shift) & 0xFF)
+	    final int zBits = (((worldState.posX() >> shift) & 0xFF) << 8) | ((worldState.posY() >> shift) & 0xFF)
 		    | speciesBits;
 	    return HashCommon.mix(zBits);
 	}

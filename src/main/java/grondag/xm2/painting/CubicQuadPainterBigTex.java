@@ -25,6 +25,7 @@ import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
 import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.ModelWorldState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -62,7 +63,8 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 	    final boolean allowTexRotation = tex.rotation() != TextureRotation.ROTATE_NONE;
 	    final TextureScale scale = tex.scale();
 
-	    Vec3i surfaceVec = getSurfaceVector(modelState.getPosX(), modelState.getPosY(), modelState.getPosZ(),
+	    final ModelWorldState worldState = modelState.worldState();
+	    Vec3i surfaceVec = getSurfaceVector(worldState.posX(), worldState.posY(), worldState.posZ(),
 		    nominalFace, scale);
 
 	    if (tex.versionCount() == 1) {

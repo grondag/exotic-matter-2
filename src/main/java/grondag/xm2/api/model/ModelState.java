@@ -27,7 +27,6 @@ import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.surface.XmSurfaceList;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.mesh.helper.PolyTransform;
-import grondag.xm2.model.state.ImmutableModelState;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.util.math.BlockPos;
@@ -41,6 +40,8 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
 
     int[] serializeToInts();
 
+    MutableModelWorldState worldState();
+    
     /**
      * Persisted but not part of hash nor included in equals comparison. If true,
      * refreshFromWorldState does nothing.
@@ -104,18 +105,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     boolean isAxisInverted();
 
     void setAxisInverted(boolean isInverted);
-
-    int getPosX();
-
-    void setPosX(int index);
-
-    int getPosY();
-
-    void setPosY(int index);
-
-    int getPosZ();
-
-    void setPosZ(int index);
 
     /**
      * Usage is determined by shape. Limited to 44 bits and does not update from

@@ -14,12 +14,11 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.model.state;
+package grondag.xm2.api.model;
 
 import java.util.List;
 import java.util.Random;
 
-import grondag.xm2.api.model.ModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;

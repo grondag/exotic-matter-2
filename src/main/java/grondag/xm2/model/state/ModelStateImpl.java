@@ -34,9 +34,11 @@ import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
 import grondag.xm2.api.connect.world.BlockNeighbors;
+import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelWorldState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.connect.CornerJoinStateSelector;
@@ -51,7 +53,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
-public class ModelStateImpl implements ModelState {
+public class ModelStateImpl implements ModelState, MutableModelWorldState {
     private static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
     private static final String NBT_SHAPE = NBTDictionary.claim("shape");
     /**
@@ -389,34 +391,34 @@ public class ModelStateImpl implements ModelState {
     ////////////////////////////////////////////////////
 
     @Override
-    public int getPosX() {
+    public int posX() {
 	return ModelStateData.POS_X.getValue(this);
     }
 
     @Override
-    public void setPosX(int index) {
+    public void posX(int index) {
 	ModelStateData.POS_X.setValue(index, this);
 	invalidateHashCode();
     }
 
     @Override
-    public int getPosY() {
+    public int posY() {
 	return ModelStateData.POS_Y.getValue(this);
     }
 
     @Override
-    public void setPosY(int index) {
+    public void posY(int index) {
 	ModelStateData.POS_Y.setValue(index, this);
 	invalidateHashCode();
     }
 
     @Override
-    public int getPosZ() {
+    public int posZ() {
 	return ModelStateData.POS_Z.getValue(this);
     }
 
     @Override
-    public void setPosZ(int index) {
+    public void posZ(int index) {
 	ModelStateData.POS_Z.setValue(index, this);
 	invalidateHashCode();
     }
@@ -846,5 +848,10 @@ public class ModelStateImpl implements ModelState {
     @Override
     public int paintIndex(int surfaceIndex) {
 	return paints[surfaceIndex];
+    }
+
+    @Override
+    public MutableModelWorldState worldState() {
+	return this;
     }
 }

@@ -17,7 +17,7 @@
 package grondag.xm2.dispatch;
 
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
-import grondag.xm2.model.state.ImmutableModelState;
+import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelState;
 
 // PERF: consider having keys cache their own output: set vs map

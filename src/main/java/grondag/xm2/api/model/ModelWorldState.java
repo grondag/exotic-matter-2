@@ -6,6 +6,10 @@ package grondag.xm2.api.model;
  * For static model state, may be serialized vs. derived from world.
  *
  */
-public interface ModelBlockState {
+public interface ModelWorldState {
+    int posX();
 
+    int posY();
+
+    int posZ();
 }
