@@ -29,16 +29,6 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState {
     }
 
     /**
-     * True if base paint layer is translucent or lamp paint layer is present and
-     * translucent.
-     */
-    boolean hasTranslucentGeometry();
-
-    boolean hasMasonryJoin();
-
-    boolean hasTextureRotation();
-
-    /**
      * Means that one or more elements (like a texture) uses species. Does not mean
      * that the shape or block actually capture or generate species other than 0.
      */

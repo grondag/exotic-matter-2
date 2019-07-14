@@ -17,13 +17,11 @@
 package grondag.xm2.model.state;
 
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_POS;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SIMPLE_JOIN;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION;
 import static grondag.xm2.model.state.ModelStateData.TEST_GETTER_STATIC;
 
 import grondag.fermion.varia.Useful;
@@ -246,9 +244,6 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
                     return null;
                 });
 
-                break;
-
-            case MULTIBLOCK:
                 break;
 
             default:
@@ -490,29 +485,6 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
     }
 
     ////////////////////////////////////////////////////
-    // PACKER 3 ATTRIBUTES (MULTI-BLOCK FORMAT)
-    ////////////////////////////////////////////////////
-
-    @Override
-    public long getMultiBlockBits() {
-        if (XmConfig.BLOCKS.debugModelState
-                && ((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.MULTIBLOCK)
-            Xm.LOG.warn("getMultiBlockBits on model state does not apply for shape");
-
-        return shapeBits0;
-    }
-
-    @Override
-    public void setMultiBlockBits(long bits) {
-        if (XmConfig.BLOCKS.debugModelState
-                && ((AbstractModelPrimitive) primitive()).stateFormat != StateFormat.MULTIBLOCK)
-            Xm.LOG.warn("setMultiBlockBits on model state does not apply for shape");
-
-        shapeBits0 = bits;
-        invalidateHashCode();
-    }
-
-    ////////////////////////////////////////////////////
     // PACKER 3 ATTRIBUTES (FLOWING TERRAIN FORMAT)
     ////////////////////////////////////////////////////
 
@@ -547,24 +519,6 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
         ModelStateData.FLOW_JOIN.setValue(flowState.getStateKey(), this);
         ModelStateData.EXTRA_SHAPE_BITS.setValue(flowState.getHotness(), this);
         invalidateHashCode();
-    }
-
-    @Override
-    public boolean hasTranslucentGeometry() {
-        this.populateStateFlagsIfNeeded();
-        return (this.stateFlags & STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY) == STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-    }
-
-    @Override
-    public boolean hasMasonryJoin() {
-        this.populateStateFlagsIfNeeded();
-        return (this.stateFlags & STATE_FLAG_NEEDS_MASONRY_JOIN) == STATE_FLAG_NEEDS_MASONRY_JOIN;
-    }
-
-    @Override
-    public boolean hasTextureRotation() {
-        this.populateStateFlagsIfNeeded();
-        return (this.stateFlags & STATE_FLAG_NEEDS_TEXTURE_ROTATION) == STATE_FLAG_NEEDS_TEXTURE_ROTATION;
     }
 
     @Override
@@ -615,10 +569,6 @@ public class ModelStateImpl extends AbstractModelState implements MutableModelSt
 
             case FLOW:
                 ModelStateData.FLOW_JOIN.setValue(ModelStateData.FLOW_JOIN.getValue(this), result);
-                break;
-
-            case MULTIBLOCK:
-                result.shapeBits0 = this.shapeBits0;
                 break;
 
             default:

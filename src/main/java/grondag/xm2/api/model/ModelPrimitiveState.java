@@ -50,12 +50,6 @@ public interface ModelPrimitiveState {
      */
     ClockwiseRotation getAxisRotation();
 
-    /**
-     * Multiblock shapes also get a full 64 bits of information - does not update
-     * from world
-     */
-    long getMultiBlockBits();
-
     TerrainState getTerrainState();
 
     long getTerrainStateKey();

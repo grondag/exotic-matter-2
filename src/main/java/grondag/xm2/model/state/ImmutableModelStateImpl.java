@@ -105,11 +105,6 @@ public class ImmutableModelStateImpl extends ModelStateImpl implements Immutable
     }
 
     @Override
-    public void setMultiBlockBits(long bits) {
-        throw new IllegalStateException();
-    }
-
-    @Override
     public void setTerrainStateKey(long terrainStateKey) {
         throw new IllegalStateException();
     }

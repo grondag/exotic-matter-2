@@ -55,9 +55,6 @@ public class ModelStateData {
     public static final BitPacker64<ModelStateImpl>.LongElement FLOW_JOIN = PACKER_SHAPE_FLOW
             .createLongElement(TerrainState.STATE_BIT_MASK + 1);
 
-    public static final BitPacker64<ModelStateImpl> PACKER_SHAPE_MULTIBLOCK = new BitPacker64<ModelStateImpl>(
-            m -> m.shapeBits0, (m, b) -> m.shapeBits0 = b);
-
     public static final BitPacker64<ModelStateImpl> PACKER_SHAPE_EXTRA = new BitPacker64<ModelStateImpl>(
             m -> m.shapeBits1, (m, b) -> m.shapeBits1 = b);
     /**

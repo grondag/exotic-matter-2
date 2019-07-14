@@ -18,12 +18,6 @@ public interface MutableModelPrimitiveState extends ModelPrimitiveState {
      */
     void setAxisRotation(ClockwiseRotation rotation);
 
-    /**
-     * Multiblock shapes also get a full 64 bits of information - does not update
-     * from world
-     */
-    void setMultiBlockBits(long bits);
-
     void setTerrainState(TerrainState flowState);
 
     void setTerrainStateKey(long terrainStateKey);
