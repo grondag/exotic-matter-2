@@ -97,12 +97,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     	return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
     }
     
-    /**
-     * Used by placement logic to know if shape has any kind of orientation to it
-     * that can be selected during placement.
-     */
-    BlockOrientationType orientationType();
-
     Direction.Axis getAxis();
 
     void setAxis(Direction.Axis axis);
@@ -188,17 +182,11 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
 
     void setTerrainStateKey(long terrainStateKey);
 
-    boolean hasAxis();
-
-    boolean hasAxisOrientation();
-
     /**
      * True if base paint layer is translucent or lamp paint layer is present and
      * translucent.
      */
     boolean hasTranslucentGeometry();
-
-    boolean hasAxisRotation();
 
     boolean hasMasonryJoin();
 
@@ -209,12 +197,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
      * that the shape or block actually capture or generate species other than 0.
      */
     boolean hasSpecies();
-
-    /** Convenience method. Same as shape attribute. */
-    boolean isAxisOrthogonalToPlacementFace();
-
-    /** True if shape can be placed on itself to grow */
-    boolean isAdditive();
 
     /**
      * Returns true if visual elements and geometry match. Does not consider species
@@ -240,4 +222,24 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     Direction rotateFace(Direction face);
 
     ModelState clone();
+    
+    default boolean hasAxis() {
+    	return getShape().hasAxis(this);
+    }
+    
+    default boolean hasAxisOrientation() {
+    	return getShape().hasAxisOrientation(this);
+    }
+    
+    default boolean hasAxisRotation() {
+    	return getShape().hasAxisRotation(this);
+    }
+    
+    default BlockOrientationType orientationType() {
+        return getShape().orientationType(this);
+    }
+    
+    default boolean isAxisOrthogonalToPlacementFace() {
+	return getShape().isAxisOrthogonalToPlacementFace();
+    }
 }

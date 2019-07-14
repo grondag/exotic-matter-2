@@ -16,8 +16,6 @@
 
 package grondag.xm2.model.state;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
@@ -39,12 +37,11 @@ import grondag.xm2.api.connect.world.BlockNeighbors;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.connect.CornerJoinStateSelector;
 import grondag.xm2.block.XmMasonryMatch;
+import grondag.xm2.connect.CornerJoinStateSelector;
 import grondag.xm2.mesh.helper.PolyTransform;
 import grondag.xm2.model.ModelPrimitiveRegistryImpl;
 import grondag.xm2.model.primitive.AbstractModelPrimitive;
-import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
@@ -364,11 +361,6 @@ public class ModelStateImpl implements ModelState {
     }
 
     @Override
-    public BlockOrientationType orientationType() {
-        return getShape().orientationType(this);
-    }
-
-    @Override
     public Direction.Axis getAxis() {
         return ModelStateData.AXIS.getValue(this);
     }
@@ -638,27 +630,9 @@ public class ModelStateImpl implements ModelState {
     }
 
     @Override
-    public boolean hasAxis() {
-        this.populateStateFlagsIfNeeded();
-        return (this.stateFlags & STATE_FLAG_HAS_AXIS) == STATE_FLAG_HAS_AXIS;
-    }
-
-    @Override
-    public boolean hasAxisOrientation() {
-        this.populateStateFlagsIfNeeded();
-        return (this.stateFlags & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
-    }
-
-    @Override
     public boolean hasTranslucentGeometry() {
         this.populateStateFlagsIfNeeded();
         return (this.stateFlags & STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY) == STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
-    }
-
-    @Override
-    public boolean hasAxisRotation() {
-        this.populateStateFlagsIfNeeded();
-        return (this.stateFlags & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
     }
 
     @Override
@@ -677,16 +651,6 @@ public class ModelStateImpl implements ModelState {
     public boolean hasSpecies() {
         this.populateStateFlagsIfNeeded();
         return ((this.stateFlags & STATE_FLAG_NEEDS_SPECIES) == STATE_FLAG_NEEDS_SPECIES);
-    }
-
-    @Override
-    public boolean isAxisOrthogonalToPlacementFace() {
-        return this.getShape().isAxisOrthogonalToPlacementFace();
-    }
-
-    @Override
-    public boolean isAdditive() {
-        return this.getShape().isAdditive();
     }
 
     @Override
