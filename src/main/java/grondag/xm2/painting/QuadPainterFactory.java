@@ -16,24 +16,18 @@
 
 package grondag.xm2.painting;
 
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.painting.QuadPainter.IPaintMethod;
-import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureScale;
 import grondag.xm2.texture.api.TextureSet;
 
 public class QuadPainterFactory {
-    private static IPaintMethod DO_NOTHING = new IPaintMethod() {
-        @Override
-        public void paintQuads(IMutablePolyStream stream, ModelState modelState, PaintLayer paintLayer) {
-            // Live up to our name...
-        }
-    };
 
-    public static IPaintMethod getPainter(ModelState modelState, XmSurface surface, int textureDepth) {
+    public static IPaintMethod getPainter(ModelState modelState, XmSurface surface, XmPaint paint, int textureDepth) {
 
-        TextureSet texture = modelState.getTexture(paintLayer);
+        TextureSet texture = paint.texture(textureDepth);
 
         switch (surface.topology()) {
 

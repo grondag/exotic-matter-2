@@ -19,9 +19,11 @@ package grondag.xm2.painting;
 import grondag.xm2.connect.api.model.FaceCorner;
 import grondag.xm2.connect.api.state.CornerJoinFaceState;
 import grondag.xm2.connect.api.state.CornerJoinFaceStates;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureSet;
 import net.minecraft.util.math.Direction;
 
@@ -53,35 +55,34 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
         }
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, PaintLayer paintLayer) {
+    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
 
         do {
-            int layerIndex = firstAvailableTextureLayer(editor);
-            editor.setLockUV(layerIndex, true);
-            editor.assignLockedUVCoordinates(layerIndex);
+            editor.setLockUV(textureIndex, true);
+            editor.assignLockedUVCoordinates(textureIndex);
 
-            final FaceCorner quadrant = QuadrantSplitter.uvQuadrant(editor, layerIndex);
+            final FaceCorner quadrant = QuadrantSplitter.uvQuadrant(editor, textureIndex);
             if (quadrant == null) {
-                QuadrantSplitter.split(stream, layerIndex);
+                QuadrantSplitter.split(stream, textureIndex);
                 // skip the (now-deleted) original and paint split outputs later in loop
                 assert editor.isDeleted();
                 continue;
             }
 
             final Direction nominalFace = editor.nominalFace();
-            TextureSet tex = getTexture(modelState, paintLayer);
+            TextureSet tex = paint.texture(textureIndex);
             final int textureVersion = tex.versionMask()
                     & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
 
-            editor.setTextureName(layerIndex, tex.textureName(textureVersion));
-            editor.setShouldContractUVs(layerIndex, true);
+            editor.setTextureName(textureIndex, tex.textureName(textureVersion));
+            editor.setShouldContractUVs(textureIndex, true);
 
             final CornerJoinFaceState faceState = modelState.getCornerJoin().faceState(nominalFace);
 
-            TEXTURE_MAP[quadrant.ordinal()][faceState.ordinal()].applyForQuadrant(editor, layerIndex, quadrant);
+            TEXTURE_MAP[quadrant.ordinal()][faceState.ordinal()].applyForQuadrant(editor, textureIndex, quadrant);
 
-            commonPostPaint(editor, layerIndex, modelState, paintLayer);
+            commonPostPaint(editor, textureIndex, modelState, surface, paint);
 
         } while (stream.editorNext());
     }

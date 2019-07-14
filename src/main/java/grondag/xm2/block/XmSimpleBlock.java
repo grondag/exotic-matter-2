@@ -19,11 +19,8 @@ package grondag.xm2.block;
 import java.util.List;
 import java.util.function.Function;
 
-import grondag.xm2.block.XmBlockState;
-import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
-import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.state.ModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -210,19 +207,20 @@ public class XmSimpleBlock extends Block {
 
         if (modelState != null) {
             tooltip.add(new TranslatableText("label.shape", modelState.getShape().localizedName()));
-            tooltip.add(new TranslatableText("label.base_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.BASE))));
-            tooltip.add(new TranslatableText("label.base_texture", modelState.getTexture(PaintLayer.BASE).displayName()));
-            if (modelState.isLayerEnabled(PaintLayer.OUTER)) {
-                tooltip.add(new TranslatableText("label.outer_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.OUTER))));
-                tooltip.add(new TranslatableText("label.outer_texture", modelState.getTexture(PaintLayer.OUTER).displayName()));
-            }
-            if (modelState.isLayerEnabled(PaintLayer.MIDDLE)) {
-                tooltip.add(new TranslatableText("label.middle_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.MIDDLE))));
-                tooltip.add(new TranslatableText("label.middle_texture", modelState.getTexture(PaintLayer.MIDDLE).displayName()));
-            }
-            if (modelState.hasSpecies()) {
-                tooltip.add(new TranslatableText("label.species", modelState.getSpecies()));
-            }
+            //TODO: restore some info about color/texture?
+//            tooltip.add(new TranslatableText("label.base_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.BASE))));
+//            tooltip.add(new TranslatableText("label.base_texture", modelState.getTexture(PaintLayer.BASE).displayName()));
+//            if (modelState.isLayerEnabled(PaintLayer.OUTER)) {
+//                tooltip.add(new TranslatableText("label.outer_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.OUTER))));
+//                tooltip.add(new TranslatableText("label.outer_texture", modelState.getTexture(PaintLayer.OUTER).displayName()));
+//            }
+//            if (modelState.isLayerEnabled(PaintLayer.MIDDLE)) {
+//                tooltip.add(new TranslatableText("label.middle_color", Integer.toHexString(modelState.getColorARGB(PaintLayer.MIDDLE))));
+//                tooltip.add(new TranslatableText("label.middle_texture", modelState.getTexture(PaintLayer.MIDDLE).displayName()));
+//            }
+//            if (modelState.hasSpecies()) {
+//                tooltip.add(new TranslatableText("label.species", modelState.getSpecies()));
+//            }
         }
         tooltip.add(new TranslatableText("label.material", XmStackHelper.getStackSubstance(stack).localizedName()));
     }

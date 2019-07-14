@@ -18,23 +18,24 @@ package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterTiles extends QuadPainter {
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, PaintLayer paintLayer) {
+    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
         do {
-            final int layerIndex = firstAvailableTextureLayer(editor);
-            editor.setLockUV(layerIndex, true);
-            editor.assignLockedUVCoordinates(layerIndex);
+            editor.setLockUV(textureIndex, true);
+            editor.assignLockedUVCoordinates(textureIndex);
 
             final Direction nominalFace = editor.nominalFace();
-            final TextureSet tex = getTexture(modelState, paintLayer);
+            final TextureSet tex = paint.texture(textureIndex);
 
             Rotation rotation = textureRotationForFace(nominalFace, tex, modelState);
             int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
@@ -46,11 +47,11 @@ public abstract class CubicQuadPainterTiles extends QuadPainter {
                 textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();
             }
 
-            editor.setRotation(layerIndex, rotation);
-            editor.setTextureName(layerIndex, tex.textureName(textureVersion));
-            editor.setShouldContractUVs(layerIndex, true);
+            editor.setRotation(textureIndex, rotation);
+            editor.setTextureName(textureIndex, tex.textureName(textureVersion));
+            editor.setShouldContractUVs(textureIndex, true);
 
-            commonPostPaint(editor, layerIndex, modelState, paintLayer);
+            commonPostPaint(editor, textureIndex, modelState, surface, paint);
 
         } while (stream.editorNext());
     }

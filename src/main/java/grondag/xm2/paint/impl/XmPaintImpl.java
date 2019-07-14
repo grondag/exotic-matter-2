@@ -23,8 +23,11 @@ import javax.annotation.Nullable;
 import grondag.fermion.varia.BitPacker64;
 import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.paint.api.XmPaintFinder;
+import grondag.xm2.painting.VertexProcessor;
+import grondag.xm2.painting.VertexProcessorDefault;
 import grondag.xm2.texture.api.TextureSet;
 import grondag.xm2.texture.api.TextureSetRegistry;
+import grondag.xm2.texture.impl.TextureSetRegistryImpl;
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -33,6 +36,10 @@ import net.minecraft.util.Identifier;
 
 public class XmPaintImpl {
     private static final BitPacker64<XmPaintImpl> PAINT_BITS = new BitPacker64<XmPaintImpl>(p -> p.paintBits, (p, b) -> p.paintBits = b);
+    
+	public static Finder finder() {
+		return new Finder();
+	}
     
     // offset additively by sprite index.
     private static final int EMISSIVE_INDEX_START = 0;
@@ -99,6 +106,9 @@ public class XmPaintImpl {
     protected int color2 = 0xFFFFFFFF;
     protected Identifier shader = null;
     protected Identifier condition = null;
+    protected VertexProcessor vertexProcessor0 = VertexProcessorDefault.INSTANCE;
+    protected VertexProcessor vertexProcessor1 = VertexProcessorDefault.INSTANCE;
+    protected VertexProcessor vertexProcessor2 = VertexProcessorDefault.INSTANCE;
     
     @Override
 	public boolean equals(Object obj) {
@@ -107,7 +117,10 @@ public class XmPaintImpl {
 			return paintBits == other.paintBits
 					&& color0 == other.color0
 					&& color1 == other.color1
-					&& color2 == other.color2;
+					&& color2 == other.color2
+					&& vertexProcessor0 == other.vertexProcessor0
+					&& vertexProcessor1 == other.vertexProcessor1
+					&& vertexProcessor2 == other.vertexProcessor2;
 		} else {
 			return false;
 		}
@@ -117,11 +130,14 @@ public class XmPaintImpl {
 	public int hashCode() {
     	int result = (int)HashCommon.mix(paintBits);
     	result ^= HashCommon.mix(color0);
+    	result ^= vertexProcessor0.hashCode();
     	final int depth = textureDepth();
     	if(depth > 1) {
     		result ^= HashCommon.mix(color1);
+    		result ^= vertexProcessor1.hashCode();
     		if(depth == 3) {
     			result ^= HashCommon.mix(color2);
+    			result ^= vertexProcessor2.hashCode();
     		}
     	}
     	if(shader != null) {
@@ -159,6 +175,13 @@ public class XmPaintImpl {
         return TEXTURE_DEPTH.getValue(this);
     }
 
+	public TextureSet texture(int textureIndex) {
+		if (textureIndex < 1 || textureIndex > MAX_TEXTURE_DEPTH) {
+            throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+        }
+        return TextureSetRegistryImpl.INSTANCE.getByIndex(TEXTURES[textureIndex].getValue(this));
+	}
+    
     public boolean emissive(int textureIndex) {
         return FLAGS[EMISSIVE_INDEX_START + textureIndex].getValue(this);
     }
@@ -177,6 +200,19 @@ public class XmPaintImpl {
 
     public @Nullable Identifier condition() {
     	return shader;
+    }
+    
+    public VertexProcessor vertexProcessor(int textureIndex) {
+		switch(textureIndex) {
+		case 0:
+			return vertexProcessor0;
+		case 1:
+			return vertexProcessor1;
+		case 2:
+			return vertexProcessor2;
+		default:
+			throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+		}
     }
     
 	public static class Value extends XmPaintImpl implements XmPaint {
@@ -305,6 +341,24 @@ public class XmPaintImpl {
 		@Override
 		public XmPaintFinder condition(Identifier condition) {
 			this.condition = condition;
+			return this;
+		}
+		
+		@Override
+		public XmPaintFinder vertexProcessor(int textureIndex, VertexProcessor vertexProcessor) {
+			switch(textureIndex) {
+			case 0:
+				vertexProcessor0 = vertexProcessor;
+				break;
+			case 1:
+				vertexProcessor1 = vertexProcessor;
+				break;
+			case 2:
+				vertexProcessor2 = vertexProcessor;
+				break;
+			default:
+				throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+			}
 			return this;
 		}
 	}

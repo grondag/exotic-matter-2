@@ -34,10 +34,12 @@ import static grondag.xm2.texture.api.TextureNameFunction.BORDER_SIDE_TOP;
 import grondag.fermion.world.Rotation;
 import grondag.xm2.connect.api.state.CornerJoinFaceStates;
 import grondag.xm2.connect.api.state.CornerJoinState;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.FaceQuadInputs;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureSet;
 import net.minecraft.util.math.Direction;
 
@@ -174,7 +176,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
         }
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, PaintLayer paintLayer) {
+    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
         do {
 
@@ -186,26 +188,25 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             if (inputs == null)
                 continue;
 
-            final TextureSet tex = getTexture(modelState, paintLayer);
+            final TextureSet tex = paint.texture(textureIndex);
 
             // don't render the "no border" texture unless this is a tile of some kind
             if (inputs == NO_BORDER && !tex.renderNoBorderAsTile())
                 continue;
 
-            int layerIndex = firstAvailableTextureLayer(editor);
-            editor.setLockUV(layerIndex, true);
-            editor.assignLockedUVCoordinates(layerIndex);
+            editor.setLockUV(textureIndex, true);
+            editor.assignLockedUVCoordinates(textureIndex);
 
-            editor.setRotation(layerIndex, inputs.rotation);
+            editor.setRotation(textureIndex, inputs.rotation);
 //            cubeInputs.rotateBottom = false;
-            editor.setMinU(layerIndex, inputs.flipU ? 1 : 0);
-            editor.setMinV(layerIndex, inputs.flipV ? 1 : 0);
-            editor.setMaxU(layerIndex, inputs.flipU ? 0 : 1);
-            editor.setMaxV(layerIndex, inputs.flipV ? 0 : 1);
-            editor.setTextureName(layerIndex,
+            editor.setMinU(textureIndex, inputs.flipU ? 1 : 0);
+            editor.setMinV(textureIndex, inputs.flipV ? 1 : 0);
+            editor.setMaxU(textureIndex, inputs.flipU ? 0 : 1);
+            editor.setMaxV(textureIndex, inputs.flipV ? 0 : 1);
+            editor.setTextureName(textureIndex,
                     tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
-            commonPostPaint(editor, layerIndex, modelState, paintLayer);
+            commonPostPaint(editor, textureIndex, modelState, surface, paint);
 
         } while (stream.editorNext());
     }

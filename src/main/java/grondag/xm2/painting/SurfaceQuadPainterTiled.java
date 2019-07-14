@@ -20,12 +20,14 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 import grondag.fermion.varia.Useful;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.QuadHelper;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.polygon.IStreamPolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureRotation;
 import grondag.xm2.texture.api.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
@@ -377,7 +379,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
         return remainderAddress;
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, PaintLayer paintLayer) {
+    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         /**
          * We add new polys, none of which need to be repainted by this routine. So,
          * when we get to this address we know we are done.
@@ -393,9 +395,8 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
             if (editorAddress >= limitAddress)
                 break;
 
-            final int layerIndex = firstAvailableTextureLayer(editor);
             final Direction face = editor.nominalFace();
-            final TextureSet tex = getTexture(modelState, paintLayer);
+            final TextureSet tex = paint.texture(textureIndex);
 
             /**
              * The smallest UV distance that can be tiled with single texture. Equivalently,
@@ -415,19 +416,19 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
              * <p>
              */
 
-            final boolean uFlipped = editor.getMaxU(layerIndex) < editor.getMinU(layerIndex);
-            final int uMinIndex = uFlipped ? MathHelper.ceil(editor.getMinU(layerIndex) / tilingDistance)
-                    : MathHelper.floor(editor.getMinU(layerIndex) / tilingDistance);
+            final boolean uFlipped = editor.getMaxU(textureIndex) < editor.getMinU(textureIndex);
+            final int uMinIndex = uFlipped ? MathHelper.ceil(editor.getMinU(textureIndex) / tilingDistance)
+                    : MathHelper.floor(editor.getMinU(textureIndex) / tilingDistance);
 
-            final int uMaxIndex = uFlipped ? MathHelper.floor(editor.getMaxU(layerIndex) / tilingDistance)
-                    : MathHelper.ceil(editor.getMaxU(layerIndex) / tilingDistance);
+            final int uMaxIndex = uFlipped ? MathHelper.floor(editor.getMaxU(textureIndex) / tilingDistance)
+                    : MathHelper.ceil(editor.getMaxU(textureIndex) / tilingDistance);
 
-            final boolean vFlipped = editor.getMaxV(layerIndex) < editor.getMinV(layerIndex);
-            final int vMinIndex = vFlipped ? MathHelper.ceil(editor.getMinV(layerIndex) / tilingDistance)
-                    : MathHelper.floor(editor.getMinV(layerIndex) / tilingDistance);
+            final boolean vFlipped = editor.getMaxV(textureIndex) < editor.getMinV(textureIndex);
+            final int vMinIndex = vFlipped ? MathHelper.ceil(editor.getMinV(textureIndex) / tilingDistance)
+                    : MathHelper.floor(editor.getMinV(textureIndex) / tilingDistance);
 
-            final int vMaxIndex = vFlipped ? MathHelper.floor(editor.getMaxV(layerIndex) / tilingDistance)
-                    : MathHelper.ceil(editor.getMaxV(layerIndex) / tilingDistance);
+            final int vMaxIndex = vFlipped ? MathHelper.floor(editor.getMaxV(textureIndex) / tilingDistance)
+                    : MathHelper.ceil(editor.getMaxV(textureIndex) / tilingDistance);
 
             final int uStep = uFlipped ? -1 : 1;
             final int vStep = vFlipped ? -1 : 1;
@@ -444,13 +445,13 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                 final int uIndexFinal = uIndex;
                 final float uSplitLow = uIndexFinal * tilingDistance;
 
-                uRemainder = splitU(stream, uRemainder, layerIndex, uSplitLow, uSpan, vTargetAddress -> {
+                uRemainder = splitU(stream, uRemainder, textureIndex, uSplitLow, uSpan, vTargetAddress -> {
                     int vRemainder = vTargetAddress;
                     for (int vIndex = vMinIndex; vIndex != vMaxIndex; vIndex += vStep) {
                         final int vIndexFinal = vIndex;
                         final float vSplitLow = vIndexFinal * tilingDistance;
 
-                        vRemainder = splitV(stream, vRemainder, layerIndex, vSplitLow, vSpan, outputAddress -> {
+                        vRemainder = splitV(stream, vRemainder, textureIndex, vSplitLow, vSpan, outputAddress -> {
                             // final painting and output
 
                             // If we get to this point, quad is within tile boundaries (if needed) and all
@@ -470,15 +471,15 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
 
                             final int salt = HashCommon.mix(baseSalt | (uIndexFinal << 16) | (vIndexFinal << 22));
                             int textureVersion = tex.versionMask() & (salt >> 4);
-                            editor.setTextureName(layerIndex, tex.textureName(textureVersion));
+                            editor.setTextureName(textureIndex, tex.textureName(textureVersion));
 
-                            editor.setRotation(layerIndex,
+                            editor.setRotation(textureIndex,
                                     tex.rotation() == TextureRotation.ROTATE_RANDOM
                                             ? Useful.offsetEnumValue(tex.rotation().rotation, (salt >> 16) & 3)
                                             : tex.rotation().rotation);
 
-                            editor.setLockUV(layerIndex, false);
-                            commonPostPaint(editor, layerIndex, modelState, paintLayer);
+                            editor.setLockUV(textureIndex, false);
+                            commonPostPaint(editor, textureIndex, modelState, surface, paint);
 
                             // earlier UV splits may have left us with something other than a convex quad or
                             // tri

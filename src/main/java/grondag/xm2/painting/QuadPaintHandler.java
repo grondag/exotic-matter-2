@@ -19,6 +19,7 @@ package grondag.xm2.painting;
 import java.util.function.Consumer;
 
 import grondag.frex.Frex;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
@@ -69,45 +70,49 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         IMutablePolygon editor = stream.editor();
         
         XmSurface surface = poly.surface();
+        XmPaint paint = modelState.paint(surface);
 
         stream.appendCopy(poly);
         stream.editorOrigin();
         
-        // assign three layers for painting and then correct after paint occurs
-        editor.setLayerCount(3);
+        final int depth = paint.textureDepth();
+        editor.setLayerCount(depth);
         
         // Copy generator UVs (quad and vertex)
         // from layer 0 to upper layers.
-        float f = editor.getMinU(0);
-        editor.setMinU(1, f);
-        editor.setMinU(2, f);
-        f = editor.getMaxU(0);
-        editor.setMaxU(1, f);
-        editor.setMaxU(2, f);
-        f = editor.getMinV(0);
-        editor.setMinV(1, f);
-        editor.setMinV(2, f);
-        f = editor.getMaxV(0);
-        editor.setMaxV(1, f);
-        editor.setMaxV(2, f);
-        
-        final int vertexCount = editor.vertexCount();
-        for (int i = 0; i < vertexCount; i++) {
-            final int c = editor.spriteColor(i, 0);
-            editor.spriteColor(i, 1, c);
-            editor.spriteColor(i, 2, c);
-
-            final float u = editor.spriteU(i, 0);
-            final float v = editor.spriteV(i, 0);
-            editor.sprite(i, 1, u, v);
-            editor.sprite(i, 2, u, v);
+        if(depth > 1) {
+	        final float minU = editor.getMinU(0);
+	        final float maxU = editor.getMaxU(0);
+	        final float minV = editor.getMinV(0);
+	        final float maxV = editor.getMaxV(0);
+	        editor.setMinU(1, minU);
+	        editor.setMaxU(1, maxU);
+	        editor.setMinV(1, minV);
+	        editor.setMaxV(1, maxV);
+	        if(depth == 3) {
+		        editor.setMinU(2, minU);
+		        editor.setMaxU(2, maxU);
+		        editor.setMinV(2, minV);
+		        editor.setMaxV(2, maxV);
+	        }
+	        
+	        final int vertexCount = editor.vertexCount();
+	        for (int i = 0; i < vertexCount; i++) {
+	        	final int c = editor.spriteColor(i, 0);
+	        	final float u = editor.spriteU(i, 0);
+	        	final float v = editor.spriteV(i, 0);
+	        	editor.spriteColor(i, 1, c);
+	        	editor.sprite(i, 1, u, v);
+	        	if(depth == 3) {
+		        	editor.spriteColor(i, 2, c);
+		        	editor.sprite(i, 2, u, v);
+	        	}
+	        }
         }
         
-        for (PaintLayer paintLayer : PaintLayer.VALUES) {
-            if (modelState.isLayerEnabled(paintLayer) && !surface.isLayerDisabled(paintLayer)
-                    && stream.editorOrigin())
-                QuadPainterFactory.getPainter(modelState, surface, paintLayer)
-                    .paintQuads(stream, modelState, paintLayer);
+        for (int i = 0; i < depth; i++) {
+            if (stream.editorOrigin())
+                QuadPainterFactory.getPainter(modelState, surface, paint, i).paintQuads(stream, modelState, surface, paint, i);
         }
         
         if (stream.editorOrigin()) {

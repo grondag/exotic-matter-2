@@ -32,8 +32,8 @@ import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm2.Xm;
 import grondag.xm2.XmConfig;
-import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
@@ -42,16 +42,9 @@ import grondag.xm2.connect.impl.CornerJoinStateSelector;
 import grondag.xm2.mesh.BlockOrientationType;
 import grondag.xm2.mesh.ModelShape;
 import grondag.xm2.mesh.ModelShapes;
-import grondag.xm2.painting.PaintLayer;
-import grondag.xm2.painting.VertexProcessor;
-import grondag.xm2.painting.VertexProcessors;
 import grondag.xm2.primitives.PolyTransform;
 import grondag.xm2.terrain.TerrainState;
-import grondag.xm2.texture.api.TextureSet;
-import grondag.xm2.texture.impl.TextureSetRegistryImpl;
-import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -89,6 +82,9 @@ public class ModelStateImpl implements ModelState {
     protected long layerBitsOuter = 0xFFFFFFFFL;
     protected long layerBitsCut = 0xFFFFFFFFL;
 
+    // TODO: replace mockup implementation
+    protected int[] paints = new int[6];
+    
     private int hashCode = -1;
 
     /** contains indicators derived from shape and painters */
@@ -121,7 +117,7 @@ public class ModelStateImpl implements ModelState {
 
     @Override
     public final int[] serializeToInts() {
-        int[] result = new int[16];
+        int[] result = new int[16 + 6];
         result[0] = (int) (this.isStatic ? (coreBits >> 32) | Useful.INT_SIGN_BIT : (coreBits >> 32));
         result[1] = (int) (coreBits);
 
@@ -146,6 +142,13 @@ public class ModelStateImpl implements ModelState {
         result[14] = (int) (layerBitsOuter >> 32);
         result[15] = (int) (layerBitsOuter);
 
+        result[16] = paints[0];
+        result[17] = paints[1];
+        result[18] = paints[2];
+        result[19] = paints[3];
+        result[20] = paints[4];
+        result[21] = paints[5];
+        
         return result;
     }
 
@@ -165,6 +168,13 @@ public class ModelStateImpl implements ModelState {
         this.layerBitsLamp = ((long) bits[10]) << 32 | (bits[11] & 0xffffffffL);
         this.layerBitsMiddle = ((long) bits[12]) << 32 | (bits[13] & 0xffffffffL);
         this.layerBitsOuter = ((long) bits[14]) << 32 | (bits[15] & 0xffffffffL);
+        
+        paints[0] = bits[16];
+        paints[1] = bits[17];
+        paints[2] = bits[18];
+        paints[3] = bits[19];
+        paints[4] = bits[20];
+        paints[5] = bits[21];
     }
 
     private void populateStateFlagsIfNeeded() {
@@ -205,7 +215,10 @@ public class ModelStateImpl implements ModelState {
             return this.coreBits == other.coreBits && this.shapeBits0 == other.shapeBits0
                     && this.shapeBits1 == other.shapeBits1 && this.layerBitsBase == other.layerBitsBase
                     && this.layerBitsCut == other.layerBitsCut && this.layerBitsLamp == other.layerBitsLamp
-                    && this.layerBitsMiddle == other.layerBitsMiddle && this.layerBitsOuter == other.layerBitsOuter;
+                    && this.layerBitsMiddle == other.layerBitsMiddle && this.layerBitsOuter == other.layerBitsOuter
+                    && this.paints[0] == other.paints[0] && this.paints[1] == other.paints[1]
+            		&& this.paints[2] == other.paints[2] && this.paints[3] == other.paints[3]
+    				&& this.paints[4] == other.paints[4] && this.paints[5] == other.paints[5];
         }
 
         return false;
@@ -222,7 +235,10 @@ public class ModelStateImpl implements ModelState {
                     && this.shapeBits0 == other.shapeBits0 && this.shapeBits1 == other.shapeBits1
                     && this.layerBitsBase == other.layerBitsBase && this.layerBitsCut == other.layerBitsCut
                     && this.layerBitsLamp == other.layerBitsLamp && this.layerBitsMiddle == other.layerBitsMiddle
-                    && this.layerBitsOuter == other.layerBitsOuter;
+                    && this.layerBitsOuter == other.layerBitsOuter
+                    && this.paints[0] == other.paints[0] && this.paints[1] == other.paints[1]
+            		&& this.paints[2] == other.paints[2] && this.paints[3] == other.paints[3]
+    				&& this.paints[4] == other.paints[4] && this.paints[5] == other.paints[5];
         }
         return false;
     }
@@ -236,7 +252,8 @@ public class ModelStateImpl implements ModelState {
     public int hashCode() {
         if (hashCode == -1) {
             hashCode = (int) Useful.longHash(this.coreBits ^ this.shapeBits0 ^ this.shapeBits1 ^ this.layerBitsBase
-                    ^ this.layerBitsCut ^ this.layerBitsLamp ^ this.layerBitsMiddle ^ this.layerBitsOuter);
+                    ^ this.layerBitsCut ^ this.layerBitsLamp ^ this.layerBitsMiddle ^ this.layerBitsOuter
+                    ^ paints[0] ^ paints[1] ^ paints[2] ^ paints[3] ^ paints[4] ^ paints[5]);
         }
         return hashCode;
     }
@@ -341,29 +358,6 @@ public class ModelStateImpl implements ModelState {
     }
 
     @Override
-    public final int getColorARGB(PaintLayer layer) {
-        final int alpha = this.isTranslucent(layer) ? ModelStateData.PAINT_ALPHA[layer.ordinal()].getValue(this) : 0xFF;
-        return (alpha << 24) | ModelStateData.PAINT_COLOR[layer.ordinal()].getValue(this);
-    }
-
-    @Override
-    public final void setColorRGB(PaintLayer layer, int rgb) {
-        ModelStateData.PAINT_COLOR[layer.ordinal()].setValue(rgb & 0xFFFFFF, this);
-        invalidateHashCode();
-    }
-
-    @Override
-    public final int getAlpha(PaintLayer layer) {
-        return ModelStateData.PAINT_ALPHA[layer.ordinal()].getValue(this);
-    }
-
-    @Override
-    public final void setAlpha(PaintLayer layer, int translucency) {
-        ModelStateData.PAINT_ALPHA[layer.ordinal()].setValue(translucency & 0xFF, this);
-        invalidateHashCode();
-    }
-
-    @Override
     public BlockOrientationType orientationType() {
         return getShape().meshFactory().orientationType(this);
     }
@@ -387,67 +381,6 @@ public class ModelStateImpl implements ModelState {
     @Override
     public void setAxisInverted(boolean isInverted) {
         ModelStateData.AXIS_INVERTED.setValue(isInverted, this);
-        invalidateHashCode();
-    }
-
-    @Override
-    public boolean isLayerEnabled(PaintLayer layer) {
-        return this.getTexture(layer).id() != TextureSetRegistryImpl.NONE_ID;
-    }
-
-    @Override
-    public void disableLayer(PaintLayer layer) {
-        this.setTexture(layer, TextureSetRegistryImpl.noTexture());
-    }
-
-    @Override
-    public boolean isTranslucent(PaintLayer layer) {
-        return ModelStateData.PAINT_IS_TRANSLUCENT[layer.ordinal()].getValue(this);
-    }
-
-    @Override
-    public void setTranslucent(PaintLayer layer, boolean isTranslucent) {
-        ModelStateData.PAINT_IS_TRANSLUCENT[layer.ordinal()].setValue(isTranslucent, this);
-        clearStateFlags();
-        invalidateHashCode();
-    }
-
-    ////////////////////////////////////////////////////
-    // PACKER 1 ATTRIBUTES (NOT SHAPE-DEPENDENT)
-    ////////////////////////////////////////////////////
-
-    @Override
-    public TextureSet getTexture(PaintLayer layer) {
-        return TextureSetRegistryImpl.INSTANCE.getByIndex(ModelStateData.PAINT_TEXTURE[layer.ordinal()].getValue(this));
-    }
-
-    @Override
-    public void setTexture(PaintLayer layer, TextureSet tex) {
-        ModelStateData.PAINT_TEXTURE[layer.ordinal()].setValue(tex.index(), this);
-        invalidateHashCode();
-        clearStateFlags();
-    }
-
-    @Override
-    public void setVertexProcessor(PaintLayer layer, VertexProcessor vp) {
-        ModelStateData.PAINT_VERTEX_PROCESSOR[layer.ordinal()].setValue(vp.ordinal, this);
-        invalidateHashCode();
-    }
-
-    @Override
-    public VertexProcessor getVertexProcessor(PaintLayer layer) {
-        return VertexProcessors.get(ModelStateData.PAINT_VERTEX_PROCESSOR[layer.ordinal()].getValue(this));
-    }
-
-    @Override
-    public boolean isEmissive(PaintLayer layer) {
-        return ModelStateData.PAINT_EMISSIVE[layer.ordinal()].getValue(this);
-    }
-
-    @Override
-    public void setEmissive(PaintLayer layer, boolean isEmissive) {
-        ModelStateData.PAINT_EMISSIVE[layer.ordinal()].setValue(isEmissive, this);
-        clearStateFlags();
         invalidateHashCode();
     }
 
@@ -703,25 +636,6 @@ public class ModelStateImpl implements ModelState {
         invalidateHashCode();
     }
 
-    ////////////////////////////////////////////////////
-    // SHAPE/STATE-DEPENDENT CONVENIENCE METHODS
-    ////////////////////////////////////////////////////
-
-    @Override
-    public BlockRenderLayer getRenderPass(PaintLayer layer) {
-        switch (layer) {
-        case BASE:
-        case CUT:
-        case LAMP:
-        default:
-            return this.isTranslucent(layer) ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
-
-        case MIDDLE:
-        case OUTER:
-            return BlockRenderLayer.TRANSLUCENT;
-        }
-    }
-
     @Override
     public boolean hasAxis() {
         this.populateStateFlagsIfNeeded();
@@ -909,7 +823,7 @@ public class ModelStateImpl implements ModelState {
             return;
 
         int[] stateBits = tag.getIntArray(NBT_MODEL_BITS);
-        if (stateBits.length != 16) {
+        if (stateBits.length != 22) {
             Xm.LOG.warn("Bad or missing data encounter during ModelState NBT deserialization.");
             return;
         }
@@ -923,28 +837,28 @@ public class ModelStateImpl implements ModelState {
 
         // textures and vertex processors serialized by name because registered can
         // change if mods/config change
-        String layers = tag.getString(NBT_LAYERS);
-        if (layers.isEmpty()) {
-            String[] names = layers.split(",");
-            if (names.length != 0) {
-                int i = 0;
-                for (PaintLayer l : PaintLayer.VALUES) {
-                    if (ModelStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
-                        TextureSet tex = TextureSetRegistryImpl.INSTANCE.getById(new Identifier(names[i++]));
-                        ModelStateData.PAINT_TEXTURE[l.ordinal()].setValue(tex.index(), this);
-                        if (i == names.length)
-                            break;
-                    }
-
-                    if (ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
-                        VertexProcessor vp = VertexProcessors.get(names[i++]);
-                        ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].setValue(vp.ordinal, this);
-                        if (i == names.length)
-                            break;
-                    }
-                }
-            }
-        }
+//        String layers = tag.getString(NBT_LAYERS);
+//        if (layers.isEmpty()) {
+//            String[] names = layers.split(",");
+//            if (names.length != 0) {
+//                int i = 0;
+//                for (PaintLayer l : PaintLayer.VALUES) {
+//                    if (ModelStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
+//                        TextureSet tex = TextureSetRegistryImpl.INSTANCE.getById(new Identifier(names[i++]));
+//                        ModelStateData.PAINT_TEXTURE[l.ordinal()].setValue(tex.index(), this);
+//                        if (i == names.length)
+//                            break;
+//                    }
+//
+//                    if (ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
+//                        VertexProcessor vp = VertexProcessors.get(names[i++]);
+//                        ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].setValue(vp.ordinal, this);
+//                        if (i == names.length)
+//                            break;
+//                    }
+//                }
+//            }
+//        }
         this.clearStateFlags();
     }
 
@@ -956,24 +870,13 @@ public class ModelStateImpl implements ModelState {
         // mods/config change
         tag.putString(NBT_SHAPE, this.getShape().systemName());
 
+        // TODO: serialization for paint/surface map
         // textures and vertex processors serialized by name because registered can
         // change if mods/config change
-        StringBuilder layers = new StringBuilder();
-        for (PaintLayer l : PaintLayer.VALUES) {
-            if (ModelStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
-                if (layers.length() != 0)
-                    layers.append(",");
-                layers.append(this.getTexture(l).id().toString());
-            }
-
-            if (ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
-                if (layers.length() != 0)
-                    layers.append(",");
-                layers.append(this.getVertexProcessor(l).registryName);
-            }
-        }
-        if (layers.length() != 0)
-            tag.putString(NBT_LAYERS, layers.toString());
+//        StringBuilder layers = new StringBuilder();
+//       
+//        if (layers.length() != 0)
+//            tag.putString(NBT_LAYERS, layers.toString());
     }
 
     @Override
@@ -986,6 +889,12 @@ public class ModelStateImpl implements ModelState {
         this.layerBitsLamp = pBuff.readVarLong();
         this.layerBitsMiddle = pBuff.readVarLong();
         this.layerBitsOuter = pBuff.readVarLong();
+        this.paints[0] = pBuff.readVarInt();
+        this.paints[1] = pBuff.readVarInt();
+        this.paints[2] = pBuff.readVarInt();
+        this.paints[3] = pBuff.readVarInt();
+        this.paints[4] = pBuff.readVarInt();
+        this.paints[5] = pBuff.readVarInt();
     }
 
     @Override
@@ -998,6 +907,12 @@ public class ModelStateImpl implements ModelState {
         pBuff.writeVarLong(this.layerBitsLamp);
         pBuff.writeVarLong(this.layerBitsMiddle);
         pBuff.writeVarLong(this.layerBitsOuter);
+        pBuff.writeVarInt(paints[0]);
+        pBuff.writeVarInt(paints[1]);
+        pBuff.writeVarInt(paints[2]);
+        pBuff.writeVarInt(paints[3]);
+        pBuff.writeVarInt(paints[4]);
+        pBuff.writeVarInt(paints[5]);
     }
 
     @Override
@@ -1010,4 +925,14 @@ public class ModelStateImpl implements ModelState {
         return new ImmutableModelStateImpl(coreBits, shapeBits0, shapeBits1, layerBitsBase, layerBitsCut, layerBitsLamp,
                 layerBitsMiddle, layerBitsOuter);
     }
+
+	@Override
+	public void paint(int surfaceIndex, int paintIndex) {
+		paints[surfaceIndex] = paintIndex;
+	}
+
+	@Override
+	public int paintIndex(int surfaceIndex) {
+		return paints[surfaceIndex];
+	}
 }

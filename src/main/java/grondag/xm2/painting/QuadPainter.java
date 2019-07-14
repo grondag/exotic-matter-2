@@ -18,14 +18,14 @@ package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
-import grondag.xm2.primitives.polygon.IPolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureRotation;
 import grondag.xm2.texture.api.TextureScale;
 import grondag.xm2.texture.api.TextureSet;
-import grondag.xm2.texture.api.TextureSetRegistry;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -54,46 +54,20 @@ public abstract class QuadPainter {
          * <p>
          * 
          */
-        void paintQuads(IMutablePolyStream stream, ModelState modelState, PaintLayer paintLayer);
-    }
-
-    public static int firstAvailableTextureLayer(IPolygon poly) {
-        return poly.getTextureName(0) == null ? 0 : poly.getTextureName(1) == null ? 1 : 2;
-    }
-
-    protected static TextureSet getTexture(ModelState modelState, PaintLayer paintLayer) {
-        TextureSet tex = modelState.getTexture(paintLayer);
-        return tex.id().equals(TextureSetRegistry.NONE_ID) ? modelState.getTexture(PaintLayer.BASE) : tex;
-    }
-
-    /**
-     * True if painter will render a solid surface. When Acuity API is enabled this
-     * signals that overlay textures can be packed into single quad.
-     */
-    public static boolean isSolid(ModelState modelState, PaintLayer paintLayer) {
-        switch (paintLayer) {
-        case BASE:
-        case CUT:
-        case LAMP:
-            return !modelState.isTranslucent(paintLayer);
-
-        case MIDDLE:
-        case OUTER:
-        default:
-            return false;
-        }
+        void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
     }
 
     /**
      * Call from paint quad in sub classes to return results. Handles item scaling,
      * then adds to the output list.
      */
-    protected static void commonPostPaint(IMutablePolygon editor, int layerIndex, ModelState modelState,
-            PaintLayer paintLayer) {
-        editor.setRenderLayer(layerIndex, modelState.getRenderPass(paintLayer));
-        editor.setEmissive(layerIndex, modelState.isEmissive(paintLayer));
+    // UGLY: change arg order to match others
+    protected static void commonPostPaint(IMutablePolygon editor, int textureIndex, ModelState modelState,
+    		XmSurface surface, XmPaint paint) {
+        editor.setRenderLayer(textureIndex, paint.blendMode(textureIndex));
+        editor.setEmissive(textureIndex, paint.emissive(textureIndex));
 
-        modelState.getVertexProcessor(paintLayer).process(editor, layerIndex, modelState, paintLayer);
+        paint.vertexProcessor(textureIndex).process(editor, textureIndex, modelState, surface, paint);
 
         // FIXME: not going to work with new primitives w/ shared geometry
         // move this to baking if still needed

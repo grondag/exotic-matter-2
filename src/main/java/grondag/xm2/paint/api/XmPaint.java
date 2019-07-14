@@ -18,10 +18,17 @@ package grondag.xm2.paint.api;
 
 import javax.annotation.Nullable;
 
+import grondag.xm2.paint.impl.XmPaintImpl;
+import grondag.xm2.painting.VertexProcessor;
+import grondag.xm2.texture.api.TextureSet;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.Identifier;
 
 public interface XmPaint {
+	static XmPaintFinder finder() {
+		return XmPaintImpl.finder();
+	}
+	
 	int MAX_TEXTURE_DEPTH = 3;
 	
 	int index();
@@ -30,6 +37,8 @@ public interface XmPaint {
 
     boolean disableColorIndex(int textureIndex);
 
+    TextureSet texture(int textureIndex);
+    
 	int textureColor(int textureIndex);
 	
     int textureDepth();
@@ -43,4 +52,6 @@ public interface XmPaint {
     @Nullable Identifier shader();
 
     @Nullable Identifier condition();
+    
+    VertexProcessor vertexProcessor(int textureIndex);
 }

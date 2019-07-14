@@ -18,7 +18,8 @@ package grondag.xm2.dispatch;
 
 import grondag.fermion.color.BlockColorMapProvider;
 import grondag.fermion.color.ColorMap.EnumColorMap;
-import grondag.xm2.painting.PaintLayer;
+import grondag.xm2.init.XmTextures;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.state.ModelState;
 import net.minecraft.item.Item;
 
@@ -29,11 +30,12 @@ import net.minecraft.item.Item;
 public class CraftingItem extends Item {
     public final ModelState modelState;
 
+    //TODO: pretty sure this doesn't work after big refactor - is even stil needed?
     public CraftingItem(Settings settings, ModelState modelState) {
         super(settings);
         this.modelState = modelState;
-        int colorIndex = this.hashCode() % BlockColorMapProvider.INSTANCE.getColorMapCount();
-        this.modelState.setColorRGB(PaintLayer.BASE,
-                BlockColorMapProvider.INSTANCE.getColorMap(colorIndex).getColor(EnumColorMap.BASE));
+        final int colorIndex = this.hashCode() % BlockColorMapProvider.INSTANCE.getColorMapCount();
+        XmPaint paint = XmPaint.finder().texture(0, XmTextures.WHITE).textureColor(0, BlockColorMapProvider.INSTANCE.getColorMap(colorIndex).getColor(EnumColorMap.BASE)).find();
+        this.modelState.paintAll(paint);
     }
 }

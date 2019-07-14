@@ -16,6 +16,7 @@
 
 package grondag.xm2.paint.api;
 
+import grondag.xm2.painting.VertexProcessor;
 import grondag.xm2.texture.api.TextureSet;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.Identifier;
@@ -44,4 +45,6 @@ public interface XmPaintFinder {
 	XmPaintFinder shader(Identifier shader);
 
 	XmPaintFinder condition(Identifier condition);
+	
+	XmPaintFinder vertexProcessor(int textureIndex, VertexProcessor vp);
 }

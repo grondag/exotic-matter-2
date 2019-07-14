@@ -17,7 +17,6 @@
 package grondag.xm2.paint.impl;
 
 import grondag.xm2.paint.api.XmPaint;
-import grondag.xm2.paint.api.XmPaintFinder;
 import grondag.xm2.paint.api.XmPaintRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.util.Identifier;
@@ -28,11 +27,6 @@ public class XmPaintRegistryImpl implements XmPaintRegistry {
 	private XmPaintRegistryImpl() {};
 	
 	private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
-
-	@Override
-	public XmPaintFinder finder() {
-		return new XmPaintImpl.Finder();
-	}
 
 	@Override
 	public boolean register(Identifier id, XmPaint paint) {

@@ -18,12 +18,14 @@ package grondag.xm2.init;
 
 import grondag.xm2.Xm;
 import grondag.xm2.block.XmSimpleBlock;
-import grondag.xm2.painting.PaintLayer;
+import grondag.xm2.paint.api.XmPaint;
+import grondag.xm2.paint.api.XmPaintFinder;
 import grondag.xm2.placement.XmBlockItem;
 import grondag.xm2.state.ModelState;
 import grondag.xm2.state.ModelStateImpl;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -34,27 +36,24 @@ public class XmBlocks {
     public static final void init() {
         Xm.LOG.debug("Registering Exotic Matter Test Blocks");
         
+        final XmPaintFinder paintFinder = XmPaint.finder();
+        XmPaint paint = paintFinder.texture(0, XmTextures.WHITE).textureColor(0, 0xFFFFFFFF).find();
         ModelState workingModel = new ModelStateImpl();
         workingModel.setShape(ModShapes.WEDGE);
-        workingModel.setTexture(PaintLayer.BASE, XmTextures.WHITE);
-        workingModel.setColorRGB(PaintLayer.BASE, 0xFFFFFFFF);
+        workingModel.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_wedge");
         
         workingModel = new ModelStateImpl();
         workingModel.setShape(ModShapes.CUBE);
-        workingModel.setTexture(PaintLayer.BASE, XmTextures.WHITE);
-        workingModel.setColorRGB(PaintLayer.BASE, 0xFFFFFFFF);
+        workingModel.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_cube");
         
         workingModel = new ModelStateImpl();
         workingModel.setShape(ModShapes.CUBE);
-        workingModel.setTexture(PaintLayer.BASE, XmTextures.SANDSTONE_ZOOM);
-        workingModel.setColorRGB(PaintLayer.BASE, 0xFF808590);
-	    workingModel.setTexture(PaintLayer.OUTER, XmTextures.BORDER_CAUTION);
-	    workingModel.setColorRGB(PaintLayer.OUTER, 0xD7FFFF);
-	    workingModel.setColorRGB(PaintLayer.OUTER, 0xFFFFD300);
-	    workingModel.setTranslucent(PaintLayer.OUTER, true);
-	    workingModel.setEmissive(PaintLayer.OUTER, true);
+        paint = paintFinder.textureDepth(2).texture(0, XmTextures.SANDSTONE_ZOOM).textureColor(0, 0xFF808590)
+        		.blendMode(1, BlockRenderLayer.TRANSLUCENT).emissive(1, true)
+        		.texture(1, XmTextures.BORDER_CAUTION).textureColor(1, 0xFFFFD300).find();
+        workingModel.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel), "test_borders");
     }
     

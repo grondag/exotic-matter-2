@@ -16,8 +16,10 @@
 
 package grondag.xm2.painting;
 
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 
 /**
  * Logic to apply color, brightness, glow and other attributes that depend on
@@ -48,6 +50,7 @@ public abstract class VertexProcessor {
         this.registryName = registryName;
     }
 
-    public abstract void process(IMutablePolygon result, int layerIndex, ModelState modelState,
-            PaintLayer paintLayer);
+    // UGLY: fix parameter order to make consistent with related methods
+    public abstract void process(IMutablePolygon result, int textureIndex, ModelState modelState,
+    		XmSurface surface, XmPaint paint);
 }

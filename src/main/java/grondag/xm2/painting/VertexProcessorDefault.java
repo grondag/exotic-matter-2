@@ -17,8 +17,10 @@
 package grondag.xm2.painting;
 
 import grondag.fermion.color.ColorHelper;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 
 public class VertexProcessorDefault extends VertexProcessor {
     public final static VertexProcessor INSTANCE = new VertexProcessorDefault();
@@ -32,9 +34,8 @@ public class VertexProcessorDefault extends VertexProcessor {
     }
 
     @Override
-    public final void process(IMutablePolygon poly, int layerIndex, ModelState modelState,
-            PaintLayer paintLayer) {
-        int color = modelState.getColorARGB(paintLayer);
+    public final void process(IMutablePolygon poly, int textureIndex, ModelState modelState, XmSurface surface, XmPaint paint) {
+        int color = paint.textureColor(textureIndex);
 
         // TODO: remove? Was causing problems when acuity is enabled because renderpass
         // will be solid
@@ -45,27 +46,28 @@ public class VertexProcessorDefault extends VertexProcessor {
         // to blend the lamp color/brighness with the nominal color/brightness.
         // This does not apply with the lamp paint layer itself (makes no sense).
         // (Generally gradient surfaces should not be painted by lamp color)
-        if (paintLayer != PaintLayer.LAMP && poly.surface().isLampGradient()) {
-            int lampColor = modelState.getColorARGB(PaintLayer.LAMP);
-            int lampBrightness = modelState.isEmissive(PaintLayer.LAMP) ? 255 : 0;
-
-            // keep target surface alpha
-            int alpha = color & 0xFF000000;
-
-            for (int i = 0; i < poly.vertexCount(); i++) {
-                final float w = poly.getVertexGlow(i) / 255f;
-                int b = Math.round(lampBrightness * w);
-                int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
-                poly.spriteColor(i, layerIndex, c | alpha);
-                poly.setVertexGlow(i, b);
-            }
-        } else {
+        //TODO: put back lamp gradient processing
+//        if (surface.isLampGradient()) {
+//            int lampColor = .getColorARGB(PaintLayer.LAMP);
+//            int lampBrightness = modelState.isEmissive(PaintLayer.LAMP) ? 255 : 0;
+//
+//            // keep target surface alpha
+//            int alpha = color & 0xFF000000;
+//
+//            for (int i = 0; i < poly.vertexCount(); i++) {
+//                final float w = poly.getVertexGlow(i) / 255f;
+//                int b = Math.round(lampBrightness * w);
+//                int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
+//                poly.spriteColor(i, layerIndex, c | alpha);
+//                poly.setVertexGlow(i, b);
+//            }
+//        } else {
             // normal shaded surface - tint existing colors, usually WHITE to start with
             for (int i = 0; i < poly.vertexCount(); i++) {
-                final int c = ColorHelper.multiplyColor(color, poly.spriteColor(i, layerIndex));
-                poly.spriteColor(i, layerIndex, c);
+                final int c = ColorHelper.multiplyColor(color, poly.spriteColor(i, textureIndex));
+                poly.spriteColor(i, textureIndex, c);
             }
-        }
+//        }
     }
 
 }

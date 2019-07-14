@@ -25,11 +25,8 @@ import grondag.xm2.connect.api.model.ClockwiseRotation;
 import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.mesh.ModelShape;
-import grondag.xm2.painting.PaintLayer;
 import grondag.xm2.painting.QuadPaintHandler;
-import grondag.xm2.painting.VertexProcessor;
 import grondag.xm2.terrain.TerrainState;
-import grondag.xm2.texture.api.TextureSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -67,31 +64,6 @@ public class ImmutableModelStateImpl extends ModelStateImpl implements Immutable
 
     @Override
     public void setAxisInverted(boolean isInverted) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public void disableLayer(PaintLayer layer) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public void setTranslucent(PaintLayer layer, boolean isTranslucent) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public void setTexture(PaintLayer layer, TextureSet tex) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public void setVertexProcessor(PaintLayer layer, VertexProcessor vp) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public void setEmissive(PaintLayer layer, boolean isEmissive) {
         throw new IllegalStateException();
     }
 

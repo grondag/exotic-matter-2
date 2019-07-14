@@ -17,9 +17,11 @@
 package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
+import grondag.xm2.paint.api.XmPaint;
 import grondag.xm2.primitives.polygon.IMutablePolygon;
 import grondag.xm2.primitives.stream.IMutablePolyStream;
 import grondag.xm2.state.ModelState;
+import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.texture.api.TextureRotation;
 import grondag.xm2.texture.api.TextureScale;
 import grondag.xm2.texture.api.TextureSet;
@@ -48,15 +50,14 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
     // layers.
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, PaintLayer paintLayer) {
+    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
         do {
-            int layerIndex = firstAvailableTextureLayer(editor);
-            editor.setLockUV(layerIndex, true);
-            editor.assignLockedUVCoordinates(layerIndex);
+            editor.setLockUV(textureIndex, true);
+            editor.assignLockedUVCoordinates(textureIndex);
 
             final Direction nominalFace = editor.nominalFace();
-            final TextureSet tex = getTexture(modelState, paintLayer);
+            final TextureSet tex = paint.texture(textureIndex);
             final boolean allowTexRotation = tex.rotation() != TextureRotation.ROTATE_NONE;
             final TextureScale scale = tex.scale();
 
@@ -75,13 +76,13 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                                 | (editor.getTextureSalt() << 12));
 
                 // rotation
-                editor.setRotation(layerIndex,
+                editor.setRotation(textureIndex,
                         allowTexRotation ? Useful.offsetEnumValue(tex.rotation().rotation, depthAndSpeciesHash & 3)
                                 : tex.rotation().rotation);
 
-                surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(layerIndex), scale);
+                surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
 
-                editor.setTextureName(layerIndex, tex.textureName(0));
+                editor.setTextureName(textureIndex, tex.textureName(0));
 
                 final int xOffset = (depthAndSpeciesHash >> 2) & scale.sliceCountMask;
                 final int yOffset = (depthAndSpeciesHash >> 8) & scale.sliceCountMask;
@@ -98,11 +99,11 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                 final int x = flipU ? scale.sliceCount - surfaceVec.getX() : surfaceVec.getX();
                 final int y = flipV ? scale.sliceCount - surfaceVec.getY() : surfaceVec.getY();
 
-                editor.setMinU(layerIndex, x * sliceIncrement);
-                editor.setMaxU(layerIndex, editor.getMinU(layerIndex) + (flipU ? -sliceIncrement : sliceIncrement));
+                editor.setMinU(textureIndex, x * sliceIncrement);
+                editor.setMaxU(textureIndex, editor.getMinU(textureIndex) + (flipU ? -sliceIncrement : sliceIncrement));
 
-                editor.setMinV(layerIndex, y * sliceIncrement);
-                editor.setMaxV(layerIndex, editor.getMinV(layerIndex) + (flipV ? -sliceIncrement : sliceIncrement));
+                editor.setMinV(textureIndex, y * sliceIncrement);
+                editor.setMaxV(textureIndex, editor.getMinV(textureIndex) + (flipV ? -sliceIncrement : sliceIncrement));
 
             } else {
                 // multiple texture versions, so do rotation and alternation normally, except
@@ -114,25 +115,25 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                         ? 0
                         : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (editor.getTextureSalt() << 8));
 
-                editor.setTextureName(layerIndex, tex.textureName(
+                editor.setTextureName(textureIndex, tex.textureName(
                         (textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.versionMask()));
 
-                editor.setRotation(layerIndex,
+                editor.setRotation(textureIndex,
                         allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState),
                                 (depthHash >> 16) & 3) : textureRotationForFace(nominalFace, tex, modelState));
 
-                surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(layerIndex), scale);
+                surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
 
                 final float sliceIncrement = scale.sliceIncrement;
 
-                editor.setMinU(layerIndex, surfaceVec.getX() * sliceIncrement);
-                editor.setMaxU(layerIndex, editor.getMinU(layerIndex) + sliceIncrement);
+                editor.setMinU(textureIndex, surfaceVec.getX() * sliceIncrement);
+                editor.setMaxU(textureIndex, editor.getMinU(textureIndex) + sliceIncrement);
 
-                editor.setMinV(layerIndex, surfaceVec.getY() * sliceIncrement);
-                editor.setMaxV(layerIndex, editor.getMinV(layerIndex) + sliceIncrement);
+                editor.setMinV(textureIndex, surfaceVec.getY() * sliceIncrement);
+                editor.setMaxV(textureIndex, editor.getMinV(textureIndex) + sliceIncrement);
             }
 
-            commonPostPaint(editor, layerIndex, modelState, paintLayer);
+            commonPostPaint(editor, textureIndex, modelState, surface, paint);
 
         } while (stream.editorNext());
     }

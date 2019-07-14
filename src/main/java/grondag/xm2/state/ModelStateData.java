@@ -25,10 +25,7 @@ import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.connect.api.world.ModelStateFunction;
 import grondag.xm2.mesh.ModelShapes;
-import grondag.xm2.painting.PaintLayer;
-import grondag.xm2.painting.VertexProcessors;
 import grondag.xm2.terrain.TerrainState;
-import grondag.xm2.texture.impl.TextureSetRegistryImpl;
 import net.minecraft.util.math.Direction;
 
 public class ModelStateData {
@@ -47,33 +44,6 @@ public class ModelStateData {
     public static final BitPacker64<ModelStateImpl>.BooleanElement AXIS_INVERTED = PACKER_CORE.createBooleanElement();
     public static final BitPacker64<ModelStateImpl>.EnumElement<ClockwiseRotation> AXIS_ROTATION = PACKER_CORE
             .createEnumElement(ClockwiseRotation.class);
-
-    public static final BitPacker64<ModelStateImpl> PACKER_LAYER_BASE = new BitPacker64<ModelStateImpl>(m -> m.layerBitsBase,
-            (m, b) -> m.layerBitsBase = b);
-    public static final BitPacker64<ModelStateImpl> PACKER_LAYER_LAMP = new BitPacker64<ModelStateImpl>(m -> m.layerBitsLamp,
-            (m, b) -> m.layerBitsLamp = b);
-    public static final BitPacker64<ModelStateImpl> PACKER_LAYER_MIDDLE = new BitPacker64<ModelStateImpl>(
-            m -> m.layerBitsMiddle, (m, b) -> m.layerBitsMiddle = b);
-    public static final BitPacker64<ModelStateImpl> PACKER_LAYER_OUTER = new BitPacker64<ModelStateImpl>(m -> m.layerBitsOuter,
-            (m, b) -> m.layerBitsOuter = b);
-    public static final BitPacker64<ModelStateImpl> PACKER_LAYER_CUT = new BitPacker64<ModelStateImpl>(m -> m.layerBitsCut,
-            (m, b) -> m.layerBitsCut = b);
-
-    @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelStateImpl>[] PACKER_LAYERS = (BitPacker64<ModelStateImpl>[]) new BitPacker64<?>[PaintLayer.SIZE];
-
-    @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelStateImpl>.IntElement[] PAINT_COLOR = (BitPacker64<ModelStateImpl>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
-    @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelStateImpl>.BooleanElement[] PAINT_IS_TRANSLUCENT = (BitPacker64<ModelStateImpl>.BooleanElement[]) new BitPacker64<?>.BooleanElement[PaintLayer.SIZE];
-    @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelStateImpl>.IntElement[] PAINT_ALPHA = (BitPacker64<ModelStateImpl>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
-    @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelStateImpl>.IntElement[] PAINT_TEXTURE = (BitPacker64<ModelStateImpl>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
-    @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelStateImpl>.BooleanElement[] PAINT_EMISSIVE = (BitPacker64<ModelStateImpl>.BooleanElement[]) new BitPacker64<?>.BooleanElement[PaintLayer.SIZE];
-    @SuppressWarnings("unchecked")
-    public static final BitPacker64<ModelStateImpl>.IntElement[] PAINT_VERTEX_PROCESSOR = (BitPacker64<ModelStateImpl>.IntElement[]) new BitPacker64<?>.IntElement[PaintLayer.SIZE];
 
     public static final BitPacker64<ModelStateImpl> PACKER_SHAPE_BLOCK = new BitPacker64<ModelStateImpl>(m -> m.shapeBits0,
             (m, b) -> m.shapeBits0 = b);
@@ -105,23 +75,6 @@ public class ModelStateData {
     public static final long SHAPE_COMPARISON_MASK_1;
 
     static {
-        PACKER_LAYERS[PaintLayer.BASE.ordinal()] = PACKER_LAYER_BASE;
-        PACKER_LAYERS[PaintLayer.LAMP.ordinal()] = PACKER_LAYER_LAMP;
-        PACKER_LAYERS[PaintLayer.CUT.ordinal()] = PACKER_LAYER_CUT;
-        PACKER_LAYERS[PaintLayer.MIDDLE.ordinal()] = PACKER_LAYER_MIDDLE;
-        PACKER_LAYERS[PaintLayer.OUTER.ordinal()] = PACKER_LAYER_OUTER;
-
-        for (PaintLayer l : PaintLayer.values()) {
-            final int i = l.ordinal();
-            // important these two come first to allow for easy default values
-            PAINT_COLOR[i] = PACKER_LAYERS[i].createIntElement(0x1000000);
-            PAINT_ALPHA[i] = PACKER_LAYERS[i].createIntElement(0x100);
-            PAINT_TEXTURE[i] = PACKER_LAYERS[i].createIntElement(TextureSetRegistryImpl.MAX_TEXTURE_SETS);
-            PAINT_IS_TRANSLUCENT[i] = PACKER_LAYERS[i].createBooleanElement();
-            PAINT_EMISSIVE[i] = PACKER_LAYERS[i].createBooleanElement();
-            PAINT_VERTEX_PROCESSOR[i] = PACKER_LAYERS[i].createIntElement(VertexProcessors.MAX_PROCESSORS);
-        }
-
         SHAPE_COMPARISON_MASK_0 = SHAPE.comparisonMask() | AXIS.comparisonMask() | AXIS_INVERTED.comparisonMask();
 
         SHAPE_COMPARISON_MASK_1 = EXTRA_SHAPE_BITS.comparisonMask();

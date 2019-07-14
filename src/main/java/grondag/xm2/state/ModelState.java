@@ -16,8 +16,6 @@
 
 package grondag.xm2.state;
 
-import grondag.fermion.color.ColorMap;
-import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.fermion.serialization.IReadWriteNBT;
 import grondag.fermion.serialization.PacketSerializable;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
@@ -26,12 +24,12 @@ import grondag.xm2.connect.api.state.CornerJoinState;
 import grondag.xm2.connect.api.state.SimpleJoinState;
 import grondag.xm2.mesh.BlockOrientationType;
 import grondag.xm2.mesh.ModelShape;
-import grondag.xm2.painting.PaintLayer;
-import grondag.xm2.painting.VertexProcessor;
+import grondag.xm2.paint.api.XmPaint;
+import grondag.xm2.paint.api.XmPaintRegistry;
 import grondag.xm2.primitives.PolyTransform;
+import grondag.xm2.surface.api.XmSurface;
+import grondag.xm2.surface.api.XmSurfaceList;
 import grondag.xm2.terrain.TerrainState;
-import grondag.xm2.texture.api.TextureSet;
-import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -67,22 +65,38 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
      */
     void setShape(ModelShape<?> shape);
 
-    int getColorARGB(PaintLayer layer);
+    default void paint(XmSurface surface, XmPaint paint) {
+    	paint(surface.ordinal(), paint.index());
+    }
+    
+    default void paint(XmSurface surface, int paintIndex) {
+    	paint(surface.ordinal(), paintIndex);
+    }
 
-    void setColorRGB(PaintLayer layer, int rgb);
-
-    /**
-     * See {@link #setAlpha(PaintLayer, int)}
-     */
-    int getAlpha(PaintLayer layer);
-
-    /**
-     * 255 (default) = fully opaque, 0 = invisible. Determines alpha component of
-     * {@link #getColorARGB(PaintLayer)} Only applies if
-     * {@link #isTranslucent(PaintLayer)} is true.
-     */
-    void setAlpha(PaintLayer layer, int translucency);
-
+    void paint(int surfaceIndex, int paintIndex);
+    
+    default void paintAll(XmPaint paint) {
+    	paintAll(paint.index());
+    }
+    
+    default void paintAll(int paintIndex) {
+    	XmSurfaceList slist = getShape().meshFactory().surfaces;
+    	final int limit = slist.size();
+    	for(int i = 0; i < limit; i++) {
+    		paint(i, paintIndex);
+    	}
+    }
+    
+    int paintIndex(int surfaceIndex);
+    
+    default XmPaint paint(int surfaceIndex) {
+    	return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
+    }
+    
+    default XmPaint paint(XmSurface surface) {
+    	return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
+    }
+    
     /**
      * Used by placement logic to know if shape has any kind of orientation to it
      * that can be selected during placement.
@@ -96,37 +110,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     boolean isAxisInverted();
 
     void setAxisInverted(boolean isInverted);
-
-    /**
-     * For base/lamp paint layers, true means should be rendered in translucent
-     * render layer. (Overlay textures always render in translucent layer.) For all
-     * paint layers, true also means {@link #getAlpha(PaintLayer)} applies.
-     */
-    boolean isTranslucent(PaintLayer layer);
-
-    /**
-     * See {@link #isTranslucent(PaintLayer)}
-     */
-    void setTranslucent(PaintLayer layer, boolean isTranslucent);
-
-    /**
-     * Will be true if layer is assigned a texture.
-     */
-    boolean isLayerEnabled(PaintLayer l);
-
-    /**
-     * Equivalent to setting the texture for the layer to
-     * {@link TexturePaletteRegistry#NONE_ID}
-     */
-    void disableLayer(PaintLayer l);
-
-    TextureSet getTexture(PaintLayer layer);
-
-    void setTexture(PaintLayer layer, TextureSet tex);
-
-    boolean isEmissive(PaintLayer layer);
-
-    void setEmissive(PaintLayer layer, boolean isEmissive);
 
     int getPosX();
 
@@ -205,12 +188,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
 
     void setTerrainStateKey(long terrainStateKey);
 
-    /**
-     * Determines what rendering path should apply for the given paint layer based
-     * on user choices and the constraints imposed by MC rendering.
-     */
-    BlockRenderLayer getRenderPass(PaintLayer layer);
-
     boolean hasAxis();
 
     boolean hasAxisOrientation();
@@ -288,16 +265,4 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     Direction rotateFace(Direction face);
 
     ModelState clone();
-
-    /**
-     * For backwards compatibility with color maps
-     */
-    @Deprecated
-    public default void setColorMap(PaintLayer layer, ColorMap colorMap) {
-        this.setColorRGB(layer, colorMap.getColor(EnumColorMap.BASE));
-    }
-
-    public void setVertexProcessor(PaintLayer layer, VertexProcessor vp);
-
-    public VertexProcessor getVertexProcessor(PaintLayer layer);
 }
