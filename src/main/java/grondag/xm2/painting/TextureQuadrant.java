@@ -19,7 +19,7 @@ package grondag.xm2.painting;
 import grondag.fermion.world.Rotation;
 import grondag.xm2.connect.api.model.FaceCorner;
 import grondag.xm2.connect.api.model.FaceEdge;
-import grondag.xm2.primitives.polygon.IMutablePolygon;
+import grondag.xm2.mesh.polygon.IMutablePolygon;
 
 /**
  * Identifies content of each quadrant within texture file, starting at top

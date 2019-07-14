@@ -25,9 +25,9 @@ import com.google.common.collect.ImmutableList;
 import grondag.xm2.XmConfig;
 import grondag.xm2.collision.octree.OctreeCoordinates;
 import grondag.xm2.collision.octree.VoxelVolume16;
-import grondag.xm2.primitives.TriangleBoxTest;
-import grondag.xm2.primitives.polygon.IPolygon;
-import grondag.xm2.primitives.vertex.IVec3f;
+import grondag.xm2.mesh.helper.TriangleBoxTest;
+import grondag.xm2.mesh.polygon.IPolygon;
+import grondag.xm2.mesh.vertex.IVec3f;
 import net.minecraft.util.math.Box;
 
 public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<IPolygon> {

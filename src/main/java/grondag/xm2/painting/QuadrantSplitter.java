@@ -19,10 +19,10 @@ package grondag.xm2.painting;
 
 
 import grondag.xm2.connect.api.model.FaceCorner;
-import grondag.xm2.primitives.QuadHelper;
-import grondag.xm2.primitives.polygon.IMutablePolygon;
-import grondag.xm2.primitives.polygon.IPolygon;
-import grondag.xm2.primitives.stream.IMutablePolyStream;
+import grondag.xm2.mesh.helper.QuadHelper;
+import grondag.xm2.mesh.polygon.IMutablePolygon;
+import grondag.xm2.mesh.polygon.IPolygon;
+import grondag.xm2.mesh.stream.IMutablePolyStream;
 
 /**
  * Helper class to splits UV-locked quads into four quadrants at the u,v = 0.5,

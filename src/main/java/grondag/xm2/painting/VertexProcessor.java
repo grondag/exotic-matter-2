@@ -16,9 +16,9 @@
 
 package grondag.xm2.painting;
 
+import grondag.xm2.mesh.polygon.IMutablePolygon;
+import grondag.xm2.model.state.ModelState;
 import grondag.xm2.paint.api.XmPaint;
-import grondag.xm2.primitives.polygon.IMutablePolygon;
-import grondag.xm2.state.ModelState;
 import grondag.xm2.surface.api.XmSurface;
 
 /**

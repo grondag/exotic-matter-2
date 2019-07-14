@@ -19,8 +19,8 @@ package grondag.xm2.dispatch;
 import grondag.fermion.color.BlockColorMapProvider;
 import grondag.fermion.color.ColorMap.EnumColorMap;
 import grondag.xm2.init.XmTextures;
+import grondag.xm2.model.state.ModelState;
 import grondag.xm2.paint.api.XmPaint;
-import grondag.xm2.state.ModelState;
 import net.minecraft.item.Item;
 
 /**

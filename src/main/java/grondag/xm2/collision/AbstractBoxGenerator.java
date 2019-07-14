@@ -18,8 +18,8 @@ package grondag.xm2.collision;
 
 import java.util.function.Consumer;
 
-import grondag.xm2.primitives.polygon.IPolygon;
-import grondag.xm2.primitives.vertex.IVec3f;
+import grondag.xm2.mesh.polygon.IPolygon;
+import grondag.xm2.mesh.vertex.IVec3f;
 
 public abstract class AbstractBoxGenerator implements Consumer<IPolygon> {
     // diameters

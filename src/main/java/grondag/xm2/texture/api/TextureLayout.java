@@ -16,10 +16,10 @@
 
 package grondag.xm2.texture.api;
 
-import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.xm2.state.ModelStateData.STATE_FLAG_NONE;
+import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NONE;
 
 public enum TextureLayout {
     /**

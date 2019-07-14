@@ -22,7 +22,7 @@ import grondag.fermion.varia.Useful;
 import grondag.fermion.world.PackedBlockPos;
 import grondag.xm2.connect.api.model.HorizontalEdge;
 import grondag.xm2.connect.api.model.HorizontalFace;
-import grondag.xm2.primitives.QuadHelper;
+import grondag.xm2.mesh.helper.QuadHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.Mutable;
