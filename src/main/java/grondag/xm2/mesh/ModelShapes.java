@@ -25,7 +25,7 @@ public class ModelShapes {
     static final HashMap<String, ModelShape<?>> allByName = new HashMap<>();
     static final ArrayList<ModelShape<?>> allByOrdinal = new ArrayList<>();
 
-    public static <V extends MeshFactory> ModelShape<V> create(String systemName, Class<V> meshFactoryClass) {
+    public static <V extends AbstractModelPrimitive> ModelShape<V> create(String systemName, Class<V> meshFactoryClass) {
         return new ModelShape<V>(systemName, meshFactoryClass);
     }
 

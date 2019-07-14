@@ -29,7 +29,7 @@ import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public abstract class AbstractWedgeMeshFactory extends MeshFactory {
+public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
 			.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
 			.add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
@@ -43,7 +43,7 @@ public abstract class AbstractWedgeMeshFactory extends MeshFactory {
 	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(2);
 	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
 	
-    public AbstractWedgeMeshFactory() {
+    public AbstractWedgePrimitive() {
         super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 

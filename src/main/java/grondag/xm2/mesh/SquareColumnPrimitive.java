@@ -41,7 +41,7 @@ import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class SquareColumnMeshFactory extends MeshFactory {
+public class SquareColumnPrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
 			.add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
 			.add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
@@ -55,11 +55,11 @@ public class SquareColumnMeshFactory extends MeshFactory {
     public static final int MIN_CUTS = 1;
     public static final int MAX_CUTS = 3;
 
-    private static final BitPacker64<SquareColumnMeshFactory> STATE_PACKER = new BitPacker64<SquareColumnMeshFactory>(
+    private static final BitPacker64<SquareColumnPrimitive> STATE_PACKER = new BitPacker64<SquareColumnPrimitive>(
             null, null);
-    private static final BitPacker64<SquareColumnMeshFactory>.BooleanElement STATE_ARE_CUTS_ON_EDGE = STATE_PACKER
+    private static final BitPacker64<SquareColumnPrimitive>.BooleanElement STATE_ARE_CUTS_ON_EDGE = STATE_PACKER
             .createBooleanElement();
-    private static final BitPacker64<SquareColumnMeshFactory>.IntElement STATE_CUT_COUNT = STATE_PACKER
+    private static final BitPacker64<SquareColumnPrimitive>.IntElement STATE_CUT_COUNT = STATE_PACKER
             .createIntElement(MIN_CUTS, MAX_CUTS);
 
     private static class FaceSpec {
@@ -88,7 +88,7 @@ public class SquareColumnMeshFactory extends MeshFactory {
         }
     }
 
-    public SquareColumnMeshFactory() {
+    public SquareColumnPrimitive() {
         super(SURFACES, StateFormat.BLOCK, ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS,
                 STATE_CUT_COUNT.setValue(3, STATE_ARE_CUTS_ON_EDGE.setValue(true, 0)));
     }

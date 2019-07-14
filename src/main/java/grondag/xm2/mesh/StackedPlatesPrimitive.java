@@ -36,7 +36,7 @@ import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class StackedPlatesMeshFactory extends MeshFactory {
+public class StackedPlatesPrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
 			.add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
 			.add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
@@ -47,7 +47,7 @@ public class StackedPlatesMeshFactory extends MeshFactory {
 	public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
 	public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
 	
-    public StackedPlatesMeshFactory() {
+    public StackedPlatesPrimitive() {
         super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 

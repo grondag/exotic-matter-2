@@ -33,7 +33,7 @@ import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Box;
 
-public class CSGTestMeshFactory extends MeshFactory {
+public class CSGTestPrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
 			.add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
 			.add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
@@ -45,7 +45,7 @@ public class CSGTestMeshFactory extends MeshFactory {
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
-    public CSGTestMeshFactory() {
+    public CSGTestPrimitive() {
         super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = getTestQuads();
     }

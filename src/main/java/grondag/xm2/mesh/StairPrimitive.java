@@ -27,7 +27,7 @@ import grondag.xm2.primitives.stream.PolyStreams;
 import grondag.xm2.state.ModelState;
 import net.minecraft.util.math.Direction;
 
-public class StairMeshFactory extends AbstractWedgeMeshFactory {
+public class StairPrimitive extends AbstractWedgePrimitive {
     @Override
     public void produceShapeQuads(ModelState modelState, Consumer<IPolygon> target) {
         // Axis for this shape is along the face of the sloping surface

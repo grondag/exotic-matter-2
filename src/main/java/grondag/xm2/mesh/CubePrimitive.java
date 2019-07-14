@@ -34,7 +34,7 @@ import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class CubeMeshFactory extends MeshFactory {
+public class CubePrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
 			.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
 			.build();
@@ -44,7 +44,7 @@ public class CubeMeshFactory extends MeshFactory {
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
-    public CubeMeshFactory() {
+    public CubePrimitive() {
         super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = getCubeQuads();
     }

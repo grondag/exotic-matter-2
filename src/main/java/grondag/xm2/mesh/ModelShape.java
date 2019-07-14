@@ -19,7 +19,7 @@ package grondag.xm2.mesh;
 import grondag.xm2.Xm;
 import net.minecraft.client.resource.language.I18n;
 
-public class ModelShape<T extends MeshFactory> {
+public class ModelShape<T extends AbstractModelPrimitive> {
     private static int nextOrdinal = 0;
 
     private final Class<T> meshFactoryClass;

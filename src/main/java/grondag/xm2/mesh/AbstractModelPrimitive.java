@@ -23,7 +23,7 @@ import grondag.xm2.state.ModelState;
 import grondag.xm2.state.StateFormat;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 
-public abstract class MeshFactory {
+public abstract class AbstractModelPrimitive {
 	public final XmSurfaceListImpl surfaces;
 	
     /**
@@ -44,11 +44,11 @@ public abstract class MeshFactory {
      */
     public final long defaultShapeStateBits;
 
-    protected MeshFactory(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
+    protected AbstractModelPrimitive(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
         this(surfaces, stateFormat, stateFlags, 0L);
     }
 
-    protected MeshFactory(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags, long defaultShapeStateBits) {
+    protected AbstractModelPrimitive(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags, long defaultShapeStateBits) {
     	this.surfaces = surfaces;
         this.stateFormat = stateFormat;
         this.stateFlags = stateFlags;

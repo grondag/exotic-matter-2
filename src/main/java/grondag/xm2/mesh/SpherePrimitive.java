@@ -32,7 +32,7 @@ import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
-public class SphereMeshFactory extends MeshFactory {
+public class SpherePrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
 			.add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE)
 			.build();
@@ -42,7 +42,7 @@ public class SphereMeshFactory extends MeshFactory {
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
-    public SphereMeshFactory() {
+    public SpherePrimitive() {
         super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
         this.cachedQuads = generateQuads();
     }

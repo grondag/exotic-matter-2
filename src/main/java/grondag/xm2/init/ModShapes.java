@@ -16,24 +16,24 @@
 
 package grondag.xm2.init;
 
-import grondag.xm2.mesh.CSGTestMeshFactory;
-import grondag.xm2.mesh.CubeMeshFactory;
+import grondag.xm2.mesh.CSGTestPrimitive;
+import grondag.xm2.mesh.CubePrimitive;
 import grondag.xm2.mesh.ModelShape;
 import grondag.xm2.mesh.ModelShapes;
-import grondag.xm2.mesh.SphereMeshFactory;
-import grondag.xm2.mesh.SquareColumnMeshFactory;
-import grondag.xm2.mesh.StackedPlatesMeshFactory;
-import grondag.xm2.mesh.StairMeshFactory;
-import grondag.xm2.mesh.WedgeMeshFactory;
+import grondag.xm2.mesh.SpherePrimitive;
+import grondag.xm2.mesh.SquareColumnPrimitive;
+import grondag.xm2.mesh.StackedPlatesPrimitive;
+import grondag.xm2.mesh.StairPrimitive;
+import grondag.xm2.mesh.WedgePrimitive;
 
 public class ModShapes {
-    public static final ModelShape<?> CUBE = ModelShapes.create("cube", CubeMeshFactory.class);
-    public static final ModelShape<?> COLUMN_SQUARE = ModelShapes.create("column_square", SquareColumnMeshFactory.class);
-    public static final ModelShape<?> STACKED_PLATES = ModelShapes.create("stacked_plates", StackedPlatesMeshFactory.class);
-    public static final ModelShape<?> WEDGE = ModelShapes.create("wedge", WedgeMeshFactory.class);
-    public static final ModelShape<?> STAIR = ModelShapes.create("stair", StairMeshFactory.class);
-    public static final ModelShape<?> SPHERE = ModelShapes.create("sphere", SphereMeshFactory.class);
-    public static final ModelShape<?> CSGTEST = ModelShapes.create("csgtest", CSGTestMeshFactory.class);
+    public static final ModelShape<?> CUBE = ModelShapes.create("cube", CubePrimitive.class);
+    public static final ModelShape<?> COLUMN_SQUARE = ModelShapes.create("column_square", SquareColumnPrimitive.class);
+    public static final ModelShape<?> STACKED_PLATES = ModelShapes.create("stacked_plates", StackedPlatesPrimitive.class);
+    public static final ModelShape<?> WEDGE = ModelShapes.create("wedge", WedgePrimitive.class);
+    public static final ModelShape<?> STAIR = ModelShapes.create("stair", StairPrimitive.class);
+    public static final ModelShape<?> SPHERE = ModelShapes.create("sphere", SpherePrimitive.class);
+    public static final ModelShape<?> CSGTEST = ModelShapes.create("csgtest", CSGTestPrimitive.class);
     
     public static final ModelShape<?> TERRAIN_HEIGHT = null; //ModelShapes.create("terrain_height", TerrainMeshFactory.class, SHAPE);
     public static final ModelShape<?> TERRAIN_FILLER = null; //ModelShapes.create("terrain_filler", TerrainMeshFactory.class, SHAPE);
