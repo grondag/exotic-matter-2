@@ -17,9 +17,9 @@
 package grondag.xm2.block;
 
 import grondag.fermion.serialization.NBTDictionary;
-import grondag.xm2.api.model.ImmutablePrimitiveModelState;
+import grondag.xm2.api.model.ImmutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelState;
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.model.state.ModelStateImpl;
@@ -80,7 +80,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     // INSTANCE MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    protected ImmutablePrimitiveModelState modelState = null;
+    protected ImmutableModelPrimitiveState modelState = null;
 
     // public IExtendedBlockState exBlockState;
     private boolean isModelStateCacheDirty = true;
@@ -181,7 +181,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
 
         if (isModelStateCacheDirty
                 && refreshFromWorldIfNeeded) {
-            MutablePrimitiveModelState result = myState.mutableCopy();
+            MutableModelPrimitiveState result = myState.mutableCopy();
             result.worldState().species(state.defaultModelState.worldState().species());
             result.refreshFromWorld(state, world, pos);
             this.isModelStateCacheDirty = false;
@@ -190,7 +190,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
             // honor passed in species if different
             if (myState.hasSpecies()
                     && myState.worldState().species() != state.defaultModelState.worldState().species()) {
-                MutablePrimitiveModelState result = myState.mutableCopy();
+                MutableModelPrimitiveState result = myState.mutableCopy();
                 result.worldState().species(state.defaultModelState.worldState().species());
                 return result;
             } else {

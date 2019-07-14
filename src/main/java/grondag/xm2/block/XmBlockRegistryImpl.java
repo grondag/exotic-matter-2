@@ -20,7 +20,7 @@ import java.util.function.Function;
 
 import grondag.xm2.Xm;
 import grondag.xm2.api.connect.world.BlockTest;
-import grondag.xm2.api.model.ImmutablePrimitiveModelState;
+import grondag.xm2.api.model.ImmutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,7 +31,7 @@ public class XmBlockRegistryImpl {
     private XmBlockRegistryImpl() {
     }
 
-    public static void register(Block block, Function<BlockState, ImmutablePrimitiveModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest) {
+    public static void register(Block block, Function<BlockState, ImmutableModelPrimitiveState> defaultStateFunc, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest) {
 
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
@@ -49,10 +49,10 @@ public class XmBlockRegistryImpl {
     public static class XmBlockStateImpl implements XmBlockState {
         public final WorldToModelStateFunction worldStateFunc;
         public final BlockTest blockJoinTest;
-        public final ImmutablePrimitiveModelState defaultModelState;
+        public final ImmutableModelPrimitiveState defaultModelState;
         public final BlockState blockState;
 
-        private XmBlockStateImpl(ImmutablePrimitiveModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest, BlockState blockState) {
+        private XmBlockStateImpl(ImmutableModelPrimitiveState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest, BlockState blockState) {
 
             this.defaultModelState = defaultModelState;
             this.worldStateFunc = worldStateFunc;
@@ -66,7 +66,7 @@ public class XmBlockRegistryImpl {
         }
 
         @Override
-        public ImmutablePrimitiveModelState defaultModelState() {
+        public ImmutableModelPrimitiveState defaultModelState() {
             return defaultModelState;
         }
 

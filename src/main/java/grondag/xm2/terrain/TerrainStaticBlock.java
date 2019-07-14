@@ -16,7 +16,7 @@
 
 package grondag.xm2.terrain;
 
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmStatefulBlock;
 import grondag.xm2.init.XmPrimitives;
@@ -36,8 +36,8 @@ public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
         super(blockSettings, adjustShape(defaultModelState, isFiller), blockEntityType);
     }
 
-    private static MutablePrimitiveModelState adjustShape(ModelPrimitiveState stateIn, boolean isFiller) {
-        MutablePrimitiveModelState result = stateIn.mutableCopy();
+    private static MutableModelPrimitiveState adjustShape(ModelPrimitiveState stateIn, boolean isFiller) {
+        MutableModelPrimitiveState result = stateIn.mutableCopy();
         result.primitive(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
         result.setStatic(true);
         return result;

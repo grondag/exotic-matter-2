@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 
 import grondag.fermion.config.FermionConfig;
 import grondag.fermion.varia.Useful;
-import grondag.xm2.api.model.ImmutablePrimitiveModelState;
+import grondag.xm2.api.model.ImmutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
@@ -32,7 +32,7 @@ public class OptimizingBoxList implements Runnable {
 
     // PERF: may no longer need these?
     private ImmutableList<Box> wrapped;
-    private ImmutablePrimitiveModelState modelState;
+    private ImmutableModelPrimitiveState modelState;
     private VoxelShape shape;
 
     OptimizingBoxList(FastBoxGenerator generator, ModelPrimitiveState modelState) {

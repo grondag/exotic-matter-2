@@ -26,10 +26,10 @@ public interface ModelPrimitiveState extends ModelState {
     }
     
     @Override
-    ImmutablePrimitiveModelState toImmutable();
+    ImmutableModelPrimitiveState toImmutable();
 
     @Override
-    MutablePrimitiveModelState mutableCopy();
+    MutableModelPrimitiveState mutableCopy();
     
     /**
      * Returns a copy of this model state with only the bits that matter for

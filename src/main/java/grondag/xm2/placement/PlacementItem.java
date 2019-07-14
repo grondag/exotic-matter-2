@@ -24,10 +24,10 @@ import grondag.fermion.varia.FixedRegionBounds;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.PackedBlockPos;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.block.XmSimpleBlock;
 import grondag.xm2.block.XmStackHelper;
-import grondag.xm2.api.model.MutableModelState;
-import grondag.xm2.api.model.MutablePrimitiveModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -135,7 +135,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return Direction.Axis.Y;
 
-        MutablePrimitiveModelState modelState = XmStackHelper.getStackModelState(stack);
+        MutableModelPrimitiveState modelState = XmStackHelper.getStackModelState(stack);
         if (modelState == null)
             return Direction.Axis.Y;
 

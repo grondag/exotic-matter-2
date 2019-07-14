@@ -17,7 +17,7 @@
 package grondag.xm2.init;
 
 import grondag.xm2.Xm;
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintFinder;
 import grondag.xm2.block.XmSimpleBlock;
@@ -38,7 +38,7 @@ public class XmBlocks {
 
         final XmPaintFinder paintFinder = XmPaint.finder();
         XmPaint paint = paintFinder.texture(0, XmTextures.WHITE).textureColor(0, 0xFFFFFFFF).find();
-        MutablePrimitiveModelState workingModel = new ModelStateImpl();
+        MutableModelPrimitiveState workingModel = new ModelStateImpl();
         workingModel.primitive(XmPrimitives.WEDGE);
         workingModel.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel),

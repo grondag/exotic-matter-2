@@ -16,7 +16,7 @@
 
 package grondag.xm2.block;
 
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import net.minecraft.block.BlockEntityProvider;
@@ -36,7 +36,7 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
 
     private final BlockEntityType<?> blockEntityType;
 
-    public XmStatefulBlock(Settings blockSettings, MutablePrimitiveModelState defaultModelState, BlockEntityType<?> blockEntityType) {
+    public XmStatefulBlock(Settings blockSettings, MutableModelPrimitiveState defaultModelState, BlockEntityType<?> blockEntityType) {
         super(blockSettings, defaultModelState);
         this.blockEntityType = blockEntityType;
     }

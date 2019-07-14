@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableList;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
-import grondag.xm2.api.model.ImmutablePrimitiveModelState;
+import grondag.xm2.api.model.ImmutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.painting.QuadPaintHandler;
 import grondag.xm2.terrain.TerrainState;
@@ -40,7 +40,7 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
-public class ImmutableModelStateImpl extends ModelStateImpl implements ImmutablePrimitiveModelState {
+public class ImmutableModelStateImpl extends ModelStateImpl implements ImmutableModelPrimitiveState {
 
     public ImmutableModelStateImpl(ModelStateImpl template) {
         super(template);

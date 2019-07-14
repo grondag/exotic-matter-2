@@ -19,8 +19,8 @@ package grondag.xm2.block;
 import java.util.List;
 import java.util.function.Function;
 
-import grondag.xm2.api.model.ImmutablePrimitiveModelState;
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.ImmutableModelPrimitiveState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
@@ -51,23 +51,23 @@ public class XmSimpleBlock extends Block {
      * Hacky hack to let us inspect default model state during constructor before it
      * is saved
      */
-    protected static final ThreadLocal<MutablePrimitiveModelState> INIT_STATE = new ThreadLocal<>();
+    protected static final ThreadLocal<MutableModelPrimitiveState> INIT_STATE = new ThreadLocal<>();
 
-    protected static Settings prepareInit(Settings blockSettings, MutablePrimitiveModelState defaultModelState) {
+    protected static Settings prepareInit(Settings blockSettings, MutableModelPrimitiveState defaultModelState) {
         INIT_STATE.set(defaultModelState);
         return blockSettings;
     }
 
     public static ModelPrimitiveState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
         if (refreshFromWorld) {
-            MutablePrimitiveModelState result = xmState.defaultModelState().mutableCopy();
+            MutableModelPrimitiveState result = xmState.defaultModelState().mutableCopy();
             return result.refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
         } else {
             return xmState.defaultModelState();
         }
     }
 
-    public XmSimpleBlock(Settings blockSettings, MutablePrimitiveModelState defaultModelState) {
+    public XmSimpleBlock(Settings blockSettings, MutableModelPrimitiveState defaultModelState) {
         super(prepareInit(blockSettings, defaultModelState));
         defaultModelState.primitive().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(),
                 defaultModelState);
@@ -78,7 +78,7 @@ public class XmSimpleBlock extends Block {
     @Override
     protected void appendProperties(Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        final MutablePrimitiveModelState defaultState = INIT_STATE.get();
+        final MutableModelPrimitiveState defaultState = INIT_STATE.get();
         if (defaultState != null) {
             if (defaultState.hasSpecies()) {
                 builder.add(XmSimpleBlock.SPECIES);
@@ -209,7 +209,7 @@ public class XmSimpleBlock extends Block {
         super.buildTooltip(stack, world, tooltip, context);
         tooltip.add(new TranslatableText("label.meta", stack.getDamage()));
 
-        MutablePrimitiveModelState modelState = XmStackHelper.getStackModelState(stack);
+        MutableModelPrimitiveState modelState = XmStackHelper.getStackModelState(stack);
 
         if (modelState != null) {
             tooltip.add(new TranslatableText("label.shape", modelState.primitive().translationKey()));
@@ -365,13 +365,13 @@ public class XmSimpleBlock extends Block {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         // TODO: add species handling
-        final MutablePrimitiveModelState modelState = XmBlockStateAccess.get(this).defaultModelState.mutableCopy();
+        final MutableModelPrimitiveState modelState = XmBlockStateAccess.get(this).defaultModelState.mutableCopy();
         return modelState.primitive().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
     }
 
-    public static Function<BlockState, ImmutablePrimitiveModelState> defaultModelStateFunc(MutablePrimitiveModelState baseModelState) {
+    public static Function<BlockState, ImmutableModelPrimitiveState> defaultModelStateFunc(MutableModelPrimitiveState baseModelState) {
         return (state) -> {
-            MutablePrimitiveModelState result = baseModelState.mutableCopy();
+            MutableModelPrimitiveState result = baseModelState.mutableCopy();
 
             if (state.contains(SPECIES)) {
                 result.worldState().species(state.get(SPECIES));

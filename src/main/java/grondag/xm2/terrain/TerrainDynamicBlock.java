@@ -16,7 +16,7 @@
 
 package grondag.xm2.terrain;
 
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.init.XmPrimitives;
@@ -31,8 +31,8 @@ public class TerrainDynamicBlock extends TerrainBlock {
         super(blockSettings, adjustShape(defaultModelState, isFiller));
     }
 
-    private static MutablePrimitiveModelState adjustShape(ModelPrimitiveState stateIn, boolean isFiller) {
-        MutablePrimitiveModelState result = stateIn.mutableCopy();
+    private static MutableModelPrimitiveState adjustShape(ModelPrimitiveState stateIn, boolean isFiller) {
+        MutableModelPrimitiveState result = stateIn.mutableCopy();
         result.primitive(isFiller ? XmPrimitives.TERRAIN_FILLER : XmPrimitives.TERRAIN_HEIGHT);
         result.setStatic(false);
         return result;
@@ -48,7 +48,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
                 || state.getBlock() != this)
             return;
 
-        MutablePrimitiveModelState myModelState = XmBlockStateAccess.modelState(state, world, pos, true).mutableCopy();
+        MutableModelPrimitiveState myModelState = XmBlockStateAccess.modelState(state, world, pos, true).mutableCopy();
         myModelState.setStatic(true);
         // TODO: transfer heat block state?
         world.setBlockState(pos,

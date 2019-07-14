@@ -19,7 +19,7 @@ package grondag.xm2.block;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.model.state.ModelStateImpl;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -55,7 +55,7 @@ public class XmStackHelper {
         return tag == null ? BlockSubstance.DEFAULT : BlockSubstance.deserializeNBT(tag);
     }
 
-    public static void setStackModelState(ItemStack stack, MutablePrimitiveModelState modelState) {
+    public static void setStackModelState(ItemStack stack, MutableModelPrimitiveState modelState) {
         CompoundTag tag = stack.getOrCreateTag();
         if (modelState == null) {
             ModelStateImpl.clearNBTValues(tag);
@@ -64,8 +64,8 @@ public class XmStackHelper {
         modelState.serializeNBT(tag);
     }
 
-    public static MutablePrimitiveModelState getStackModelState(ItemStack stack) {
-        MutablePrimitiveModelState stackState = stack.hasTag() ? ModelStateImpl.deserializeFromNBTIfPresent(stack.getTag())
+    public static MutableModelPrimitiveState getStackModelState(ItemStack stack) {
+        MutableModelPrimitiveState stackState = stack.hasTag() ? ModelStateImpl.deserializeFromNBTIfPresent(stack.getTag())
                 : null;
 
         // WAILA or other mods might create a stack with no NBT

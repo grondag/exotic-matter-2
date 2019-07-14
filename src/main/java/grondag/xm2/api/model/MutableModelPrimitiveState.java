@@ -5,7 +5,7 @@ import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-public interface MutablePrimitiveModelState extends ModelPrimitiveState, MutableModelState {
+public interface MutableModelPrimitiveState extends ModelPrimitiveState, MutableModelState {
     /**
      * Also resets shape-specific bits to default for the given shape. Does nothing
      * if shape is the same as existing.
@@ -13,7 +13,7 @@ public interface MutablePrimitiveModelState extends ModelPrimitiveState, Mutable
     void primitive(ModelPrimitive shape);
     
     @Override
-    MutablePrimitiveModelState refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
+    MutableModelPrimitiveState refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
     
     @Override
     default void paintAll(int paintIndex) {

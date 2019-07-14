@@ -19,7 +19,7 @@ package grondag.xm2.block;
 import javax.annotation.Nullable;
 
 import grondag.xm2.api.connect.world.BlockTest;
-import grondag.xm2.api.model.ImmutablePrimitiveModelState;
+import grondag.xm2.api.model.ImmutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -47,7 +47,7 @@ public interface XmBlockState {
      * Returns an instance of the default model state for this block. Because model
      * states are mutable, every call returns a new instance.
      */
-    ImmutablePrimitiveModelState defaultModelState();
+    ImmutableModelPrimitiveState defaultModelState();
 
     /**
      * If last parameter is false, does not perform a refresh from world for

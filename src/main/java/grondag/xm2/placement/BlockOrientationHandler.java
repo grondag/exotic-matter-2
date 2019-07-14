@@ -21,7 +21,7 @@ import grondag.xm2.api.connect.model.BlockCorner;
 import grondag.xm2.api.connect.model.BlockEdge;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.model.MutableModelState;
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.block.XmBlockState;
 import grondag.xm2.block.XmBlockStateAccess;
@@ -71,7 +71,7 @@ public class BlockOrientationHandler {
 
         PlacementItem item = (PlacementItem) stack.getItem();
 
-        MutablePrimitiveModelState modelState = XmStackHelper.getStackModelState(stack);
+        MutableModelPrimitiveState modelState = XmStackHelper.getStackModelState(stack);
 
         if (modelState.hasAxis()) {
             modelState.setAxis(item.getBlockPlacementAxis(stack));
@@ -89,7 +89,7 @@ public class BlockOrientationHandler {
 
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // find closest instance, starting with block placed on
-        MutablePrimitiveModelState outputModelState = XmStackHelper.getStackModelState(stack);
+        MutableModelPrimitiveState outputModelState = XmStackHelper.getStackModelState(stack);
         ModelPrimitiveState closestModelState = null;
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
@@ -152,7 +152,7 @@ public class BlockOrientationHandler {
     // FIX: pretty sure this doesn't work now
     /** handle hit-sensitive placement for stairs, wedges */
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
-        MutablePrimitiveModelState outputModelState = XmStackHelper.getStackModelState(stack);
+        MutableModelPrimitiveState outputModelState = XmStackHelper.getStackModelState(stack);
 
         boolean isRotationDone = false;
 

@@ -38,7 +38,7 @@ import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelWorldState;
-import grondag.xm2.api.model.MutablePrimitiveModelState;
+import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.block.XmMasonryMatch;
 import grondag.xm2.connect.CornerJoinStateSelector;
@@ -53,7 +53,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
-public class ModelStateImpl implements MutablePrimitiveModelState, MutableModelWorldState {
+public class ModelStateImpl implements MutableModelPrimitiveState, MutableModelWorldState {
     private static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
     private static final String NBT_SHAPE = NBTDictionary.claim("shape");
     /**
