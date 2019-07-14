@@ -16,7 +16,7 @@
 
 package grondag.xm2.model.impl.primitive;
 
-import grondag.xm2.model.api.primitive.ModelPrimitive;
+import grondag.xm2.model.api.ModelPrimitive;
 import grondag.xm2.model.impl.state.ModelState;
 import grondag.xm2.model.impl.state.StateFormat;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;

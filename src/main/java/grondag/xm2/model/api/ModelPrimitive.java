@@ -1,4 +1,4 @@
-package grondag.xm2.model.api.primitive;
+package grondag.xm2.model.api;
 
 import java.util.function.Consumer;
 
@@ -14,11 +14,18 @@ public interface ModelPrimitive {
 	 */
 	Identifier id();
 	
+	/**
+	 * Used for fast, transient serialization. Recommended that
+	 * implementations override this and cache value to avoid map lookups.
+	 */
+	default int index() {
+		return ModelPrimitiveRegistry.INSTANCE.indexOf(this);
+	}
+	
 	XmSurfaceList surfaces();
 	
     /**
-     * Override if shape has any kind of orientation to it that can be selected
-     * during placement.
+     * Override if shape has an orientation to be selected during placement.
      */
     default BlockOrientationType orientationType(ModelState modelState) {
         return BlockOrientationType.NONE;
@@ -27,7 +34,7 @@ public interface ModelPrimitive {
 	int stateFlags(ModelState modelState);
 	
 	 /**
-     * Generator will output polygons and they will be quads or tris.
+     * Output polygons must be quads or tris.
      * Consumer MUST NOT hold references to any of the polys received.
      */
     void produceQuads(ModelState modelState, Consumer<IPolygon> target);
