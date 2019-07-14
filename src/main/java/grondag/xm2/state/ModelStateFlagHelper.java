@@ -21,7 +21,6 @@ import static grondag.xm2.state.ModelStateData.STATE_FLAG_HAS_SOLID_RENDER;
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_GEOMETRY;
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_HAS_TRANSLUCENT_RENDER;
 import static grondag.xm2.state.ModelStateData.STATE_FLAG_IS_POPULATED;
-import static grondag.xm2.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.xm2.mesh.MeshFactory;
 import grondag.xm2.mesh.ModelShape;
@@ -40,9 +39,6 @@ public class ModelStateFlagHelper {
         final MeshFactory mesh = shape.meshFactory();
 
         int flags = STATE_FLAG_IS_POPULATED | mesh.getStateFlags(state);
-
-        if (shape.metaUsage() == MetaUsage.SPECIES)
-            flags |= STATE_FLAG_NEEDS_SPECIES;
 
         final int surfCount = mesh.surfaces.size();
         for(int i = 0; i < surfCount; i++) {

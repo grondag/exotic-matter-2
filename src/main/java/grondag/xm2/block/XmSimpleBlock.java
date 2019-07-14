@@ -369,7 +369,7 @@ public class XmSimpleBlock extends Block {
 			ModelState result = baseModelState.clone();
 			
 	        if(state.contains(SPECIES)) {
-	            result.setMetaData(state.get(SPECIES));
+	            result.setSpecies(state.get(SPECIES));
 	        }
 	        
 	        result.getShape().meshFactory().orientationType(result).stateFunc.accept(state, result);

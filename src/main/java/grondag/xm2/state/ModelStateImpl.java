@@ -688,48 +688,8 @@ public class ModelStateImpl implements ModelState {
     }
 
     @Override
-    public MetaUsage metaUsage() {
-        return this.getShape().metaUsage();
-    }
-
-    @Override
     public boolean isAxisOrthogonalToPlacementFace() {
         return this.getShape().meshFactory().isAxisOrthogonalToPlacementFace();
-    }
-
-    @Override
-    public int getMetaData() {
-        switch (this.metaUsage()) {
-        case SHAPE:
-            return this.getShape().meshFactory().getMetaData(this);
-
-        case SPECIES:
-            return this.hasSpecies() ? this.getSpecies() : 0;
-
-        case NONE:
-        default:
-            if (XmConfig.BLOCKS.debugModelState)
-                Xm.LOG.warn("ModelState.getMetaData called for inappropriate shape");
-            return 0;
-        }
-    }
-
-    @Override
-    public void setMetaData(int meta) {
-        switch (this.metaUsage()) {
-        case SHAPE:
-            this.getShape().meshFactory().setMetaData(this, meta);
-            break;
-
-        case SPECIES:
-            if (this.hasSpecies())
-                this.setSpecies(meta);
-            break;
-
-        case NONE:
-        default:
-            // NOOP
-        }
     }
 
     @Override

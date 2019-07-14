@@ -55,7 +55,8 @@ public class StackedPlatesMeshFactory extends MeshFactory {
     
     @Override
     public void produceShapeQuads(ModelState modelState, Consumer<IPolygon> target) {
-        final int meta = modelState.getMetaData();
+    	// FIX: Add height to block/model state once model state refactor is complete
+        final int meta = 0; // modelState.getMetaData();
         final PolyTransform transform = PolyTransform.get(modelState);
         final float height = (meta + 1) / 16;
         
@@ -105,12 +106,16 @@ public class StackedPlatesMeshFactory extends MeshFactory {
 
     @Override
     public boolean isCube(ModelState modelState) {
-        return modelState.getMetaData() == 15;
+    	// FIX: Add height to block/model state once model state refactor is complete
+//        return modelState.getMetaData() == 15;
+    	return false;
     }
 
     @Override
     public int geometricSkyOcclusion(ModelState modelState) {
-        return modelState.getAxis() == Direction.Axis.Y ? 255 : modelState.getMetaData();
+    	// FIX: Add height to block/model state once model state refactor is complete
+//        return modelState.getAxis() == Direction.Axis.Y ? 255 : modelState.getMetaData();
+    	return 255;
     }
 
     @Override

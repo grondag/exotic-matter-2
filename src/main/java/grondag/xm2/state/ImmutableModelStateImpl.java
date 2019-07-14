@@ -126,11 +126,6 @@ public class ImmutableModelStateImpl extends ModelStateImpl implements Immutable
     }
 
     @Override
-    public void setMetaData(int meta) {
-        throw new IllegalStateException();
-    }
-
-    @Override
     public void deserializeNBT(CompoundTag tag) {
         throw new IllegalStateException();
     }

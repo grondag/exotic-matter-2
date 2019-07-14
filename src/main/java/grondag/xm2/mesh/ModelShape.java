@@ -16,10 +16,7 @@
 
 package grondag.xm2.mesh;
 
-
-
 import grondag.xm2.Xm;
-import grondag.xm2.state.MetaUsage;
 import net.minecraft.client.resource.language.I18n;
 
 public class ModelShape<T extends MeshFactory> {
@@ -27,17 +24,15 @@ public class ModelShape<T extends MeshFactory> {
 
     private final Class<T> meshFactoryClass;
     private final boolean isAvailableInGui;
-    private final MetaUsage metaUsage;
     private final String systemName;
     private final int ordinal;
     private boolean factoryNeedLoad = true;
     private T factory = null;
 
-    ModelShape(String systemName, Class<T> meshFactoryClass, MetaUsage metaUsage, boolean isAvailableInGui) {
+    ModelShape(String systemName, Class<T> meshFactoryClass, boolean isAvailableInGui) {
         this.meshFactoryClass = meshFactoryClass;
         this.ordinal = nextOrdinal++;
         this.systemName = systemName;
-        this.metaUsage = metaUsage;
         this.isAvailableInGui = isAvailableInGui;
         ModelShapes.allByName.put(systemName, this);
         if (this.ordinal < ModelShapes.MAX_SHAPES)
@@ -47,8 +42,8 @@ public class ModelShape<T extends MeshFactory> {
                     ModelShapes.MAX_SHAPES, systemName));
     }
 
-    ModelShape(String systemName, Class<T> meshFactoryClass, MetaUsage metaUsage) {
-        this(systemName, meshFactoryClass, metaUsage, true);
+    ModelShape(String systemName, Class<T> meshFactoryClass) {
+        this(systemName, meshFactoryClass, true);
     }
 
     public T meshFactory() {
@@ -66,10 +61,6 @@ public class ModelShape<T extends MeshFactory> {
 
     public String localizedName() {
         return I18n.translate("shape." + this.systemName.toLowerCase());
-    }
-
-    public MetaUsage metaUsage() {
-        return this.metaUsage;
     }
 
     public boolean isAvailableInGui() {

@@ -216,17 +216,7 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     boolean hasSpecies();
 
     /** Convenience method. Same as shape attribute. */
-    MetaUsage metaUsage();
-
-    /** Convenience method. Same as shape attribute. */
     boolean isAxisOrthogonalToPlacementFace();
-
-    /**
-     * Retrieves block/item metadata that should apply to this modelState.
-     */
-    int getMetaData();
-
-    void setMetaData(int meta);
 
     /** True if shape can be placed on itself to grow */
     boolean isAdditive();
