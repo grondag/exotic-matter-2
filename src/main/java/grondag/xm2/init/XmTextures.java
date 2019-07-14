@@ -59,7 +59,9 @@ public class XmTextures {
                 final int limit = texReg.size();
                 for(int i = 0; i < limit; i++) {
                     TextureSetImpl set = texReg.getByIndex(i);
-                    set.prestitch(id -> registry.register(id));
+                    if(set.used()) {
+                    	set.prestitch(id -> registry.register(id));
+                    }
                 }
             }
         });
@@ -75,64 +77,64 @@ public class XmTextures {
     public static final TextureSet BIGTEX_TEST_SINGLE = TextureSet.builder().displayNameToken("bigtex_test_single")
             .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/bigtex_single" : "xm2:blocks/noise_moderate_0_0")
             .versionCount(1).scale(SMALL).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
-            .groups(HIDDEN_TILES).build("xm2", "bigtex_test_single");
+            .groups(HIDDEN_TILES).build("xm2:bigtex_test_single");
 
     public static final TextureSet BIGTEX_TEST1 = TextureSet.builder().displayNameToken("big_tex_test1")
             .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/bigtex" : "xm2:blocks/noise_moderate_0")
             .versionCount(4).scale(TINY).layout(TextureLayoutMap.VERSIONED).rotation(ROTATE_RANDOM).renderIntent(BASE_ONLY)
-            .groups(HIDDEN_TILES).build("xm2", "big_tex_test1");
+            .groups(HIDDEN_TILES).build("xm2:big_tex_test1");
 
     public static final TextureSet BIGTEX_TEST2 = TextureSet.builder(BIGTEX_TEST1)
-            .displayNameToken("big_tex_test2").scale(SMALL).build("xm2", "big_tex_test2");
+            .displayNameToken("big_tex_test2").scale(SMALL).build("xm2:big_tex_test2");
     
     public static final TextureSet BIGTEX_TEST3 = TextureSet.builder(BIGTEX_TEST1)
-            .displayNameToken("big_tex_test3").scale(MEDIUM).build("xm2", "big_tex_test3");
+            .displayNameToken("big_tex_test3").scale(MEDIUM).build("xm2:big_tex_test3");
             
     public static final TextureSet BIGTEX_TEST4 = TextureSet.builder(BIGTEX_TEST1)
-            .displayNameToken("big_tex_test4").scale(LARGE).build("xm2", "big_tex_test4");
+            .displayNameToken("big_tex_test4").scale(LARGE).build("xm2:big_tex_test4");
     
     public static final TextureSet BIGTEX_TEST5 = TextureSet.builder(BIGTEX_TEST1)
-            .displayNameToken("big_tex_test5").scale(GIANT).build("xm2", "big_tex_test5");
+            .displayNameToken("big_tex_test5").scale(GIANT).build("xm2:big_tex_test5");
 
     public static final TextureSet TEST = TextureSet.builder().displayNameToken("test")
             .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/test" : "xm2:blocks/noise_moderate_0")
             .versionCount(2).scale(SINGLE).layout(TextureLayoutMap.VERSIONED).rotation(ROTATE_NONE)
-            .renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("xm2","test");
+            .renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("xm2:test");
     
     public static final TextureSet TEST_ZOOM = TextureSet.builder(TEST).displayNameToken("test_zoom")
-            .scale(TINY).build("xm2", "test_zoom");
+            .scale(TINY).build("xm2:test_zoom");
 
     public static final TextureSet TEST_90 = TextureSet.builder(TEST).displayNameToken("test_90")
-            .rotation(ROTATE_90).build("xm2", "test_90");
+            .rotation(ROTATE_90).build("xm2:test_90");
     
     public static final TextureSet TEST_90_ZOOM = TextureSet.builder(TEST_90).displayNameToken("test_90_zoom")
-            .scale(TINY).build("xm2", "test_90_zoom");
+            .scale(TINY).build("xm2:test_90_zoom");
 
     public static final TextureSet TEST_180 = TextureSet.builder(TEST).displayNameToken("test_180")
-            .rotation(ROTATE_90).build("xm2", "test_180");
+            .rotation(ROTATE_90).build("xm2:test_180");
     
     public static final TextureSet TEST_180_ZOOM = TextureSet.builder(TEST_180).displayNameToken("test_180_zoom")
-            .scale(TINY).build("xm2", "test_180_zoom");
+            .scale(TINY).build("xm2:test_180_zoom");
     
     public static final TextureSet TEST_270 = TextureSet.builder(TEST).displayNameToken("test_270")
-            .rotation(ROTATE_90).build("xm2", "test_270");
+            .rotation(ROTATE_90).build("xm2:test_270");
     
     public static final TextureSet TEST_270_ZOOM = TextureSet.builder(TEST_270).displayNameToken("test_270_zoom")
-            .scale(TINY).build("xm2", "test_270_zoom");
+            .scale(TINY).build("xm2:test_270_zoom");
 
     public static final TextureSet TEST_4X4 = TextureSet.builder().displayNameToken("test4x4")
             .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/test4x4" : "xm2:blocks/noise_moderate_0_0")
             .versionCount(1).scale(SMALL).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY)
-            .groups(HIDDEN_TILES).build("xm2", "test4x4");
+            .groups(HIDDEN_TILES).build("xm2:test4x4");
 
     public static final TextureSet TEST_4x4_90 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_90")
-            .rotation(ROTATE_90).build("xm2", "test4x4_90");
+            .rotation(ROTATE_90).build("xm2:test4x4_90");
     
     public static final TextureSet TEST_4x4_180 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_180")
-            .rotation(ROTATE_180).build("xm2", "test4x4_180");
+            .rotation(ROTATE_180).build("xm2:test4x4_180");
     
     public static final TextureSet TEST_4x4_270 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_270")
-            .rotation(ROTATE_270).build("xm2", "test4x4_270");
+            .rotation(ROTATE_270).build("xm2:test4x4_270");
     
     // ======================================================================
     // TILES - REGULAR
@@ -142,50 +144,50 @@ public class XmTextures {
 
     public static final TextureSet BLOCK_COBBLE = TextureSet.builder().displayNameToken("cobble")
             .baseTextureName("xm2:blocks/cobble").versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_RANDOM)
-            .renderIntent(BASE_ONLY).groups(STATIC_TILES).build("xm2", "cobble");
+            .renderIntent(BASE_ONLY).groups(STATIC_TILES).build("xm2:cobble");
 
     public static final TextureSet BLOCK_COBBLE_ZOOM = TextureSet.builder(BLOCK_COBBLE).displayNameToken("cobble_zoom")
-            .scale(TINY).build("xm2", "cobble_zoom");
+            .scale(TINY).build("xm2:cobble_zoom");
 
     public static final TextureSet BLOCK_NOISE_STRONG = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_strong")
-            .baseTextureName("xm2:blocks/noise_strong").build("xm2", "noise_strong");
+            .baseTextureName("xm2:blocks/noise_strong").build("xm2:noise_strong");
     
     public static final TextureSet BLOCK_NOISE_STRONG_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_strong_zoom")
-            .scale(TINY).build("xm2", "noise_strong_zoom");
+            .scale(TINY).build("xm2:noise_strong_zoom");
 
     public static final TextureSet BLOCK_NOISE_MODERATE = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_moderate")
-            .baseTextureName("xm2:blocks/noise_moderate").build("xm2", "noise_moderate");
+            .baseTextureName("xm2:blocks/noise_moderate").build("xm2:noise_moderate");
     
     public static final TextureSet BLOCK_NOISE_MODERATE_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_moderate_zoom")
-            .scale(TINY).build("xm2", "noise_moderate_zoom");
+            .scale(TINY).build("xm2:noise_moderate_zoom");
     
     public static final TextureSet BLOCK_NOISE_SUBTLE = TextureSet.builder(BLOCK_COBBLE).displayNameToken("noise_subtle")
-            .baseTextureName("xm2:blocks/noise_subtle").build("xm2", "noise_subtle");
+            .baseTextureName("xm2:blocks/noise_subtle").build("xm2:noise_subtle");
     
     public static final TextureSet BLOCK_NOISE_SUBTLE_ZOOM = TextureSet.builder(BLOCK_NOISE_STRONG).displayNameToken("noise_subtle_zoom")
-            .scale(TINY).build("xm2", "noise_subtle_zoom");
+            .scale(TINY).build("xm2:noise_subtle_zoom");
 
     public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white")
             .baseTextureName("xm2:blocks/white").versionCount(1).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8)
-            .rotation(ROTATE_NONE).groups(STATIC_TILES).build("xm2", "white");
+            .rotation(ROTATE_NONE).groups(STATIC_TILES).build("xm2:white");
 
     public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
             .baseTextureName("xm2:blocks/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13)
-            .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("xm2", "border_smooth_blended");
+            .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("xm2:border_smooth_blended");
     
     public static final TextureSet BORDER_CAUTION = TextureSet.builder().displayNameToken("border_caution")
             .baseTextureName("xm2:blocks/border_caution").versionCount(1).scale(SINGLE).layout(BORDER_13)
-            .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("xm2", "border_caution");
+            .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("xm2:border_caution");
     
     
     public static final TextureSet SANDSTONE = TextureSet.builder().displayNameToken("sandstone")
             .baseTextureName("xm2:blocks/sandstone")
             .versionCount(1).scale(MEDIUM).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
-            .groups(STATIC_TILES).build("xm2", "sandstone");
+            .groups(STATIC_TILES).build("xm2:sandstone");
 
     public static final TextureSet SANDSTONE_ZOOM = TextureSet.builder(SANDSTONE)
-            .displayNameToken("sandstone_zoom").scale(LARGE).build("xm2", "sandstone_zoom");
+            .displayNameToken("sandstone_zoom").scale(LARGE).build("xm2:sandstone_zoom");
     
     public static final TextureSet SANDSTONE_ZOOM2 = TextureSet.builder(SANDSTONE)
-            .displayNameToken("sandstone_zoom2").scale(GIANT).build("xm2", "sandstone_zoom2");
+            .displayNameToken("sandstone_zoom2").scale(GIANT).build("xm2:sandstone_zoom2");
 }

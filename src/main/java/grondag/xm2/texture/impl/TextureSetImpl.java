@@ -43,6 +43,7 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     public final int versionMask;
     public final int stateFlags;
     public final String baseTextureName;
+    private boolean used = false;
     
     TextureSetImpl(Identifier id, AbstractTextureSet template) {
         this.id = id;
@@ -128,4 +129,14 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     public String baseTextureName() {
         return baseTextureName;
     }
+
+	@Override
+	public void use() {
+		used = true;
+	}
+
+	@Override
+	public boolean used() {
+		return used;
+	}
 }

@@ -18,6 +18,7 @@ package grondag.xm2.texture.api;
 
 import net.minecraft.util.Identifier;
 
+// TODO: add fallback texture specification
 public interface TextureSetBuilder {
     TextureSetBuilder versionCount(int versionCount);
 
@@ -44,5 +45,9 @@ public interface TextureSetBuilder {
     
     default TextureSet build(String nameSpace, String path) {
         return build(new Identifier(nameSpace, path));
+    }
+    
+    default TextureSet build(String idString) {
+        return build(new Identifier(idString));
     }
 }

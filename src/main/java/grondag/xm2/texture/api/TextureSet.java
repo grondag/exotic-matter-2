@@ -109,4 +109,17 @@ public interface TextureSet {
     public int stateFlags();
 
     public int textureGroupFlags();
+    
+    /**
+     * Call to force textures to be loaded into memory. Will be called 
+     * automatically for textures referenced in statically-defined models
+     * but must be called explicitly for any texture sets that may be 
+     * referenced dynamically at run time.
+     */
+    public void use();
+    
+    /**
+     * True if {@link #use()} has been called. 
+     */
+    public boolean used();
 }
