@@ -16,7 +16,7 @@
 
 package grondag.xm2.block;
 
-import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.ModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -32,7 +32,7 @@ public class XmBlockHelper {
      */
     // TODO: remove if not used
     public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState,
-	    MutableModelState withModelState) {
+	    ModelState withModelState) {
 	if (withBlockState == null || withModelState == null)
 	    return -1;
 
@@ -41,7 +41,7 @@ public class XmBlockHelper {
 
 	BlockState state = world.getBlockState(pos);
 	if (state.getBlock() == withBlockState.getBlock()) {
-	    MutableModelState mState = XmBlockStateAccess.modelState(state, world, pos, false);
+	    ModelState mState = XmBlockStateAccess.modelState(state, world, pos, false);
 	    if (mState == null)
 		return -1;
 

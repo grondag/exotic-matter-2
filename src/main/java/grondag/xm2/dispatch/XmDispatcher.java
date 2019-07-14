@@ -18,7 +18,7 @@ package grondag.xm2.dispatch;
 
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
 import grondag.xm2.api.model.ImmutableModelState;
-import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.ModelState;
 
 // PERF: consider having keys cache their own output: set vs map
 // Could this mean holders of keys could trade for an immutable copy
@@ -26,11 +26,12 @@ import grondag.xm2.api.model.MutableModelState;
 
 // custom loading cache is at least 2X faster than guava LoadingCache for our
 // use case
-public class XmDispatcher extends ObjectSimpleLoadingCache<MutableModelState, ImmutableModelState> {
+public class XmDispatcher extends ObjectSimpleLoadingCache<ModelState, ImmutableModelState> {
 
     public static final XmDispatcher INSTANCE = new XmDispatcher(0xFFFF);
 
+    // FIX: need to intern immutable keys
     public XmDispatcher(int maxSize) {
-	super(k -> k.toImmutable(), maxSize);
+        super(k -> k.toImmutable(), maxSize);
     }
 }

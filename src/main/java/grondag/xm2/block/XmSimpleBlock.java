@@ -21,6 +21,8 @@ import java.util.function.Function;
 
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.collision.CollisionBoxDispatcher;
+import grondag.xm2.api.model.ImmutableModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -56,13 +58,14 @@ public class XmSimpleBlock extends Block {
 	return blockSettings;
     }
 
-    public static MutableModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos,
+    public static ModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos,
 	    boolean refreshFromWorld) {
-	MutableModelState result = xmState.defaultModelState().clone();
-	if (refreshFromWorld) {
-	    result = result.clone().refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
-	}
-	return result;
+    	if (refreshFromWorld) {
+    	    MutableModelState result = xmState.defaultModelState().mutableCopy();
+    	    return result.refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
+    	} else {
+    	    return xmState.defaultModelState();
+        }
     }
 
     public XmSimpleBlock(Settings blockSettings, MutableModelState defaultModelState) {
@@ -89,10 +92,9 @@ public class XmSimpleBlock extends Block {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos,
-	    EntityContext entityContext) {
-	final MutableModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
-	return CollisionBoxDispatcher.getOutlineShape(modelState);
+    public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, EntityContext entityContext) {
+    	final ModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
+    	return CollisionBoxDispatcher.getOutlineShape(modelState);
     }
 
     // TODO: add hook in or around BlockCrackParticle
@@ -364,13 +366,13 @@ public class XmSimpleBlock extends Block {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
 	// TODO: add species handling
-	final MutableModelState modelState = XmBlockStateAccess.get(this).defaultModelState;
+	final MutableModelState modelState = XmBlockStateAccess.get(this).defaultModelState.mutableCopy();
 	return modelState.getShape().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
     }
 
-    public static Function<BlockState, MutableModelState> defaultModelStateFunc(MutableModelState baseModelState) {
+    public static Function<BlockState, ImmutableModelState> defaultModelStateFunc(MutableModelState baseModelState) {
 	return (state) -> {
-	    MutableModelState result = baseModelState.clone();
+	    MutableModelState result = baseModelState.mutableCopy();
 
 	    if (state.contains(SPECIES)) {
 		result.worldState().species(state.get(SPECIES));

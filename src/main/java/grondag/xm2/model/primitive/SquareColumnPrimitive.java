@@ -33,6 +33,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.model.state.ModelStateData;
 import grondag.xm2.model.state.StateFormat;
@@ -100,7 +101,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public void produceQuads(MutableModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
 	FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
 	for (int i = 0; i < 6; i++) {
 	    this.makeFaceQuads(modelState, DirectionHelper.fromOrdinal(i), spec, target);
@@ -108,11 +109,11 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(MutableModelState modelState) {
+    public BlockOrientationType orientationType(ModelState modelState) {
 	return BlockOrientationType.AXIS;
     }
 
-    private void makeFaceQuads(MutableModelState state, Direction face, FaceSpec spec, Consumer<IPolygon> target) {
+    private void makeFaceQuads(ModelState state, Direction face, FaceSpec spec, Consumer<IPolygon> target) {
 	if (face == null)
 	    return;
 
@@ -524,7 +525,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * If true, cuts in shape are on the block boundary. Reads value from static
      * shape bits in model state
      */
-    public static boolean areCutsOnEdge(MutableModelState modelState) {
+    public static boolean areCutsOnEdge(ModelState modelState) {
 	return STATE_ARE_CUTS_ON_EDGE.getValue(modelState.getStaticShapeBits());
     }
 
@@ -540,7 +541,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * Number of cuts that appear on each face of model. Reads value from static
      * shape bits in model state
      */
-    public static int getCutCount(MutableModelState modelState) {
+    public static int getCutCount(ModelState modelState) {
 	return STATE_CUT_COUNT.getValue(modelState.getStaticShapeBits());
     }
 

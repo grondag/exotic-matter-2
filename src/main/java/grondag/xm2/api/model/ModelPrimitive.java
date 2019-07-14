@@ -54,17 +54,17 @@ public interface ModelPrimitive {
     /**
      * Override if shape has an orientation to be selected during placement.
      */
-    default BlockOrientationType orientationType(MutableModelState modelState) {
+    default BlockOrientationType orientationType(ModelState modelState) {
 	return BlockOrientationType.NONE;
     }
 
-    int stateFlags(MutableModelState modelState);
+    int stateFlags(ModelState modelState);
 
     /**
      * Output polygons must be quads or tris. Consumer MUST NOT hold references to
      * any of the polys received.
      */
-    void produceQuads(MutableModelState modelState, Consumer<IPolygon> target);
+    void produceQuads(ModelState modelState, Consumer<IPolygon> target);
 
     // UGLY: really needed?
     /**
@@ -91,15 +91,15 @@ public interface ModelPrimitive {
 	return false;
     }
 
-    default boolean hasAxis(MutableModelState modelState) {
+    default boolean hasAxis(ModelState modelState) {
 	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS) == STATE_FLAG_HAS_AXIS;
     }
 
-    default boolean hasAxisOrientation(MutableModelState modelState) {
+    default boolean hasAxisOrientation(ModelState modelState) {
 	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
     }
 
-    default boolean hasAxisRotation(MutableModelState modelState) {
+    default boolean hasAxisRotation(ModelState modelState) {
 	return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
     }
 }

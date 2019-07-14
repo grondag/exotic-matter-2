@@ -17,7 +17,7 @@
 package grondag.xm2.model.primitive;
 
 import grondag.xm2.api.model.ModelPrimitive;
-import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.Identifier;
@@ -53,7 +53,7 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     }
 
     @Override
-    public int stateFlags(MutableModelState modelState) {
+    public int stateFlags(ModelState modelState) {
 	return stateFlags;
     }
 

@@ -75,7 +75,7 @@ public class XmStackHelper {
 	    BlockItem item = (BlockItem) stack.getItem();
 	    XmBlockStateImpl xmState = XmBlockStateAccess.get(item.getBlock().getDefaultState());
 	    if (xmState != null) {
-		return xmState.defaultModelState;
+		return xmState.defaultModelState.mutableCopy();
 	    }
 	}
 	return null;

@@ -23,6 +23,7 @@ import org.joml.Vector4f;
 import grondag.fermion.world.Rotation;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
@@ -132,7 +133,7 @@ public class PolyTransform {
      * opposite of what I just described. See this in
      * {@link #getMatrixForAxisAndRotation(net.minecraft.util.math.Direction.Axis, boolean, Rotation)}
      */
-    public static PolyTransform get(MutableModelState modelState) {
+    public static PolyTransform get(ModelState modelState) {
 
 	// TODO: put back
 	return new PolyTransform(

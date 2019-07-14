@@ -37,6 +37,7 @@ import grondag.xm2.api.connect.world.BlockNeighbors;
 import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.model.MutableModelWorldState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
@@ -117,7 +118,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     }
 
     @Override
-    public ModelStateImpl clone() {
+    public ModelStateImpl mutableCopy() {
 	return new ModelStateImpl(this);
     }
 
@@ -660,7 +661,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     }
 
     @Override
-    public final boolean doShapeAndAppearanceMatch(MutableModelState other) {
+    public final boolean doShapeAndAppearanceMatch(ModelState other) {
 	final ModelStateImpl o = (ModelStateImpl) other;
 	return (this.coreBits & ModelStateData.SHAPE_COMPARISON_MASK_0) == (o.coreBits
 		& ModelStateData.SHAPE_COMPARISON_MASK_0)
@@ -672,7 +673,7 @@ public class ModelStateImpl implements MutableModelState, MutableModelWorldState
     }
 
     @Override
-    public boolean doesAppearanceMatch(MutableModelState other) {
+    public boolean doesAppearanceMatch(ModelState other) {
 	final ModelStateImpl o = (ModelStateImpl) other;
 	return this.layerBitsBase == o.layerBitsBase && this.layerBitsCut == o.layerBitsCut
 		&& this.layerBitsLamp == o.layerBitsLamp && this.layerBitsMiddle == o.layerBitsMiddle

@@ -29,7 +29,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
@@ -56,7 +56,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
 	    Direction.SOUTH };
 
     @Override
-    public void produceQuads(MutableModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
 	// FIX: Add height to block/model state once model state refactor is complete
 	final int meta = 0; // modelState.getMetaData();
 	final PolyTransform transform = PolyTransform.get(modelState);
@@ -108,7 +108,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(MutableModelState modelState) {
+    public BlockOrientationType orientationType(ModelState modelState) {
 	return BlockOrientationType.FACE;
     }
 }

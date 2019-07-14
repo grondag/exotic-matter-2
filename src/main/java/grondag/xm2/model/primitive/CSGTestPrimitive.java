@@ -20,13 +20,13 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.CsgPolyStream;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.CSG;
 import grondag.xm2.model.varia.MeshHelper;
@@ -52,7 +52,7 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public void produceQuads(MutableModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
 	if (cachedQuads.origin()) {
 	    IPolygon reader = cachedQuads.reader();
 

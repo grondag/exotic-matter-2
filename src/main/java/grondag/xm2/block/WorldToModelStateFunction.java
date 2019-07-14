@@ -16,7 +16,7 @@
 
 package grondag.xm2.block;
 
-import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.ModelState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
@@ -26,5 +26,5 @@ import net.minecraft.world.BlockView;
  */
 @FunctionalInterface
 public interface WorldToModelStateFunction {
-    MutableModelState apply(XmBlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded);
+    ModelState apply(XmBlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded);
 }
