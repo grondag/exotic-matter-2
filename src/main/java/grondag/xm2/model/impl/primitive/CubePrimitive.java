@@ -50,7 +50,7 @@ public class CubePrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public void produceShapeQuads(ModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         if (cachedQuads.origin()) {
             IPolygon reader = cachedQuads.reader();
 
@@ -86,15 +86,5 @@ public class CubePrimitive extends AbstractModelPrimitive {
         assert result.reader().vertexCount() == 4;
 
         return result;
-    }
-
-    @Override
-    public boolean isCube(ModelState modelState) {
-        return true;
-    }
-
-    @Override
-    public int geometricSkyOcclusion(ModelState modelState) {
-        return 255;
     }
 }

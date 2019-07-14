@@ -49,7 +49,7 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public void produceShapeQuads(ModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         if (cachedQuads.isEmpty())
             return;
 
@@ -69,15 +69,5 @@ public class SpherePrimitive extends AbstractModelPrimitive {
 
         MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
         return stream.releaseAndConvertToReader();
-    }
-
-    @Override
-    public boolean isCube(ModelState modelState) {
-        return false;
-    }
-
-    @Override
-    public int geometricSkyOcclusion(ModelState modelState) {
-        return 0;
     }
 }

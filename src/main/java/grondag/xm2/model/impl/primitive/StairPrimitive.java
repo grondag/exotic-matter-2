@@ -29,7 +29,7 @@ import net.minecraft.util.math.Direction;
 
 public class StairPrimitive extends AbstractWedgePrimitive {
     @Override
-    public void produceShapeQuads(ModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         // Axis for this shape is along the face of the sloping surface
         // Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
         // Default geometry is Y orthogonalAxis with full sides against north/east

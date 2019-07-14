@@ -355,7 +355,7 @@ public class ModelStateImpl implements ModelState {
     public void setShape(ModelShape<?> shape) {
         if (shape.ordinal() != ModelStateData.SHAPE.getValue(this)) {
             ModelStateData.SHAPE.setValue(shape.ordinal(), this);
-            ModelStateData.EXTRA_SHAPE_BITS.setValue(shape.meshFactory().defaultShapeStateBits, this);
+            shape.meshFactory().applyDefaultState(this);
             invalidateHashCode();
             clearStateFlags();
         }
@@ -693,16 +693,6 @@ public class ModelStateImpl implements ModelState {
     }
 
     @Override
-    public boolean isCube() {
-        return getShape().meshFactory().isCube(this);
-    }
-
-    @Override
-    public int geometricSkyOcclusion() {
-        return getShape().meshFactory().geometricSkyOcclusion(this);
-    }
-
-    @Override
     public final boolean doShapeAndAppearanceMatch(ModelState other) {
         final ModelStateImpl o = (ModelStateImpl) other;
         return (this.coreBits & ModelStateData.SHAPE_COMPARISON_MASK_0) == (o.coreBits
@@ -738,10 +728,10 @@ public class ModelStateImpl implements ModelState {
                 result.setAxisInverted(this.isAxisInverted());
             if (this.hasAxisRotation())
                 result.setAxisRotation(this.getAxisRotation());
-            if ((this.getShape().meshFactory().getStateFlags(this)
+            if ((this.getShape().meshFactory().stateFlags(this)
                     & STATE_FLAG_NEEDS_CORNER_JOIN) == STATE_FLAG_NEEDS_CORNER_JOIN) {
                 result.setCornerJoin(this.getCornerJoin());
-            } else if ((this.getShape().meshFactory().getStateFlags(this)
+            } else if ((this.getShape().meshFactory().stateFlags(this)
                     & STATE_FLAG_NEEDS_SIMPLE_JOIN) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
                 result.setSimpleJoin(this.getSimpleJoin());
             }

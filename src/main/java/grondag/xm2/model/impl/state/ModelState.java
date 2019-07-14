@@ -216,16 +216,6 @@ public interface ModelState extends IReadWriteNBT, PacketSerializable {
     /** True if shape can be placed on itself to grow */
     boolean isAdditive();
 
-    /** returns true if geometry is a full 1x1x1 cube. */
-    boolean isCube();
-
-    /**
-     * How much of the sky is occluded by the shape of this block? Based on geometry
-     * alone, not transparency. Returns 0 if no occlusion (unlikely result). 1-15 if
-     * some occlusion. 255 if fully occludes sky.
-     */
-    int geometricSkyOcclusion();
-
     /**
      * Returns true if visual elements and geometry match. Does not consider species
      * in matching.

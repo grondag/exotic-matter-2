@@ -16,9 +16,6 @@
 
 package grondag.xm2.model.impl.primitive;
 
-import java.util.function.Consumer;
-
-import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.model.api.primitive.ModelPrimitive;
 import grondag.xm2.model.impl.state.ModelState;
 import grondag.xm2.model.impl.state.StateFormat;
@@ -39,40 +36,11 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
      */
     private final int stateFlags;
 
-    /**
-     * When shape is changed on ModelState, the per-shape bits will be set to this
-     * value. Only need to change if shape needs some preset state.
-     */
-    public final long defaultShapeStateBits;
-
     protected AbstractModelPrimitive(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
-        this(surfaces, stateFormat, stateFlags, 0L);
-    }
-
-    protected AbstractModelPrimitive(XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags, long defaultShapeStateBits) {
     	this.surfaces = surfaces;
         this.stateFormat = stateFormat;
         this.stateFlags = stateFlags;
-        this.defaultShapeStateBits = defaultShapeStateBits;
     }
-
-    /**
-     * How much of the sky is occluded by the shape of this block? Based on geometry
-     * alone, not transparency. Returns 0 if no occlusion (unlikely result). 1-15 if
-     * some occlusion. 255 if fully occludes sky.
-     */
-    public abstract int geometricSkyOcclusion(ModelState modelState);
-
-    /**
-     * Generator will output polygons and they will be quads or tris.
-     * <p>
-     * 
-     * Consumer MUST NOT hold references to any of the polys received.
-     */
-    public abstract void produceShapeQuads(ModelState modelState, Consumer<IPolygon> target);
-
-    /** Returns true if geometry is a full 1x1x1 cube. */
-    public abstract boolean isCube(ModelState modelState);
 
     /**
      * If true, shape can be placed on itself to become bigger.
@@ -89,7 +57,8 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
         return false;
     }
 
-    public int getStateFlags(ModelState modelState) {
+    @Override
+    public int stateFlags(ModelState modelState) {
         return stateFlags;
     }
 }

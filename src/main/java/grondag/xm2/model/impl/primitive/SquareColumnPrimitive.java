@@ -88,28 +88,23 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             }
         }
     }
+    
+    @Override
+	public void applyDefaultState(ModelState modelState) {
+		// FIX: re-implement after model state refactor
+    	//STATE_CUT_COUNT.setValue(3, STATE_ARE_CUTS_ON_EDGE.setValue(true, 0)
+	}
 
-    public SquareColumnPrimitive() {
-        super(SURFACES, StateFormat.BLOCK, ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS,
-                STATE_CUT_COUNT.setValue(3, STATE_ARE_CUTS_ON_EDGE.setValue(true, 0)));
+	public SquareColumnPrimitive() {
+        super(SURFACES, StateFormat.BLOCK, ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS);
     }
 
     @Override
-    public void produceShapeQuads(ModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
         for (int i = 0; i < 6; i++) {
             this.makeFaceQuads(modelState, DirectionHelper.fromOrdinal(i), spec, target);
         }
-    }
-
-    @Override
-    public boolean isCube(ModelState modelState) {
-        return false;
-    }
-
-    @Override
-    public int geometricSkyOcclusion(ModelState modelState) {
-        return 255;
     }
 
     @Override

@@ -28,7 +28,6 @@ import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.api.XmSurface;
 import grondag.xm2.surface.impl.XmSurfaceImpl;
 import grondag.xm2.surface.impl.XmSurfaceImpl.XmSurfaceListImpl;
-import net.minecraft.util.math.Direction;
 
 public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
 	public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
@@ -46,16 +45,6 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
 	
     public AbstractWedgePrimitive() {
         super(SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
-    }
-
-    @Override
-    public boolean isCube(ModelState modelState) {
-        return false;
-    }
-
-    @Override
-    public int geometricSkyOcclusion(ModelState modelState) {
-        return modelState.getAxis() == Direction.Axis.Y ? 7 : 255;
     }
 
     @Override
