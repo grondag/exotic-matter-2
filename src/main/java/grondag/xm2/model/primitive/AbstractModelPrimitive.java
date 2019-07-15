@@ -22,7 +22,6 @@ import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.model.state.BaseModelState;
-import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.Identifier;
 
@@ -30,12 +29,6 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     private final ImmutableModelState defaultState;
     
     private final XmSurfaceListImpl surfaces;
-
-    /**
-     * used by ModelState to know why type of state representation is needed by this
-     * shape
-     */
-    public final StateFormat stateFormat;
 
     private final Identifier id;
 
@@ -45,11 +38,10 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
      */
     private final int stateFlags;
 
-    protected AbstractModelPrimitive(Identifier id, XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
+    protected AbstractModelPrimitive(Identifier id, XmSurfaceListImpl surfaces, int stateFlags) {
         this.surfaces = surfaces;
         this.stateFlags = stateFlags;
         this.id = id;
-        this.stateFormat = stateFormat;
         
         // we handle registration here because model state currently relies on it for serialization
         if (!ModelPrimitiveRegistry.INSTANCE.register(this)) {
@@ -61,8 +53,8 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
         this.defaultState = state.toImmutable();
     }
 
-    protected AbstractModelPrimitive(String idString, XmSurfaceListImpl surfaces, StateFormat stateFormat, int stateFlags) {
-        this(new Identifier(idString), surfaces, stateFormat, stateFlags);
+    protected AbstractModelPrimitive(String idString, XmSurfaceListImpl surfaces, int stateFlags) {
+        this(new Identifier(idString), surfaces, stateFlags);
     }
 
     @Override

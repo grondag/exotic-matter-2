@@ -26,7 +26,6 @@ import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.MeshHelper;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
@@ -43,7 +42,7 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     private final IPolyStream cachedQuads;
 
     public SpherePrimitive(String idString) {
-        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
+        super(idString, SURFACES, STATE_FLAG_NONE);
         this.cachedQuads = generateQuads();
     }
 
@@ -69,4 +68,14 @@ public class SpherePrimitive extends AbstractModelPrimitive {
         MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
         return stream.releaseAndConvertToReader();
     }
+    
+    @Override
+    public ModelState geometricState(ModelState fromState) {
+        return defaultState();
+    }
+    
+    @Override
+    public boolean doesShapeMatch(ModelState from, ModelState to) {
+        return from.primitive() == to.primitive();
+    } 
 }

@@ -27,7 +27,6 @@ import grondag.xm2.mesh.stream.CsgPolyStream;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.CSG;
 import grondag.xm2.model.varia.MeshHelper;
 import grondag.xm2.painting.SurfaceTopology;
@@ -47,7 +46,7 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
     private final IPolyStream cachedQuads;
 
     public CSGTestPrimitive(String idString) {
-        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
+        super(idString, SURFACES, STATE_FLAG_NONE);
         this.cachedQuads = getTestQuads();
     }
 
@@ -117,4 +116,14 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
 
 //      result.recolor();
     }
+    
+    @Override
+    public ModelState geometricState(ModelState fromState) {
+        return defaultState();
+    }
+
+    @Override
+    public boolean doesShapeMatch(ModelState from, ModelState to) {
+        return from.primitive() == to.primitive();
+    }  
 }

@@ -62,7 +62,8 @@ public class XmSimpleBlock extends Block {
     public static ModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
         if (refreshFromWorld) {
             MutableModelState result = xmState.defaultModelState().mutableCopy();
-            return result.refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
+            result.refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
+            return result;
         } else {
             return xmState.defaultModelState();
         }

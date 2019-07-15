@@ -4,17 +4,17 @@ import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
 
 public interface MutableModelWorldState extends ModelWorldState {
-    void posX(int index);
+    default void posX(int index) { }
 
-    void posY(int index);
+    default void posY(int index) { };
 
-    void posZ(int index);
+    default void posZ(int index) { };
 
-    void species(int species);
+    default void species(int species) { }
 
-    void cornerJoin(CornerJoinState join);
+    default void cornerJoin(CornerJoinState join) { }
 
-    void simpleJoin(SimpleJoinState join);
+    default void simpleJoin(SimpleJoinState join) { }
 
-    void masonryJoin(SimpleJoinState join);
+    default void masonryJoin(SimpleJoinState join) { }
 }

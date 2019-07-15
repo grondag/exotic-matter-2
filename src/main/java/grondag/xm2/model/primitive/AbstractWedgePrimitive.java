@@ -22,8 +22,9 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATIO
 import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.xm2.api.model.ModelPrimitiveState;
+import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.surface.XmSurface;
-import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
@@ -42,7 +43,7 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
     public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
 
     public AbstractWedgePrimitive(String idString) {
-        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS
+        super(idString, SURFACES, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS
                 | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
@@ -54,5 +55,22 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
     @Override
     public boolean isAxisOrthogonalToPlacementFace() {
         return true;
+    }
+    
+    @Override
+    public ModelState geometricState(ModelState fromState) {
+        MutableModelState result = this.newState();
+        result.setAxis(fromState.getAxis());
+        result.setAxisInverted(fromState.isAxisInverted());
+        result.setAxisRotation(fromState.getAxisRotation());
+        return result;
+    }
+    
+    @Override
+    public boolean doesShapeMatch(ModelState from, ModelState to) {
+        return from.primitive() == to.primitive() 
+               && from.getAxis() == to.getAxis()
+               && from.isAxisInverted() == to.isAxisInverted()
+               && from.getAxisRotation() == to.getAxisRotation();
     }
 }

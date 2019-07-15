@@ -1,5 +1,7 @@
 package grondag.xm2.api.model;
 
+import javax.annotation.Nullable;
+
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.terrain.TerrainState;
@@ -32,27 +34,35 @@ public interface ModelPrimitiveState {
      * Returns a copy of this model state with only the bits that matter for
      * geometry. Used as lookup key for block damage models.
      */
-    ModelState geometricState();
+    default ModelState geometricState() {
+        return primitive().geometricState((ModelState)this);
+    }
     
-    Direction.Axis getAxis();
+    default Direction.Axis getAxis() {
+        return Direction.Axis.Y;
+    }
 
-    boolean isAxisInverted();
-
-    /**
-     * Usage is determined by shape. Limited to 44 bits and does not update from
-     * world.
-     */
-    long getStaticShapeBits();
+    default boolean isAxisInverted() {
+        return false;
+    }
 
     /**
      * For machines and other blocks with a privileged horizontal face, North is
      * considered the zero rotation.
      */
-    ClockwiseRotation getAxisRotation();
+    default ClockwiseRotation getAxisRotation() {
+        return ClockwiseRotation.ROTATE_NONE;
+    }
 
-    TerrainState getTerrainState();
+    default @Nullable TerrainState getTerrainState() {
+        return null;
+    };
 
-    long getTerrainStateKey();
+    default long getTerrainStateKey() {
+        return 0;
+    }
 
-    int getTerrainHotness();
+    default int getTerrainHotness() {
+        return 0;
+    }
 }

@@ -75,11 +75,6 @@ public class ImmutableModelStateImpl extends BaseModelState implements Immutable
     }
 
     @Override
-    public void setStaticShapeBits(long bits) {
-        throw new IllegalStateException();
-    }
-
-    @Override
     public void species(int species) {
         throw new IllegalStateException();
     }
@@ -124,6 +119,7 @@ public class ImmutableModelStateImpl extends BaseModelState implements Immutable
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ImmutableModelStateImpl toImmutable() {
         return this;

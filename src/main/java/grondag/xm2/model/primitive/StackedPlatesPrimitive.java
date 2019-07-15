@@ -23,15 +23,16 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 import java.util.function.Consumer;
 
 import grondag.fermion.world.Rotation;
+import grondag.xm2.api.model.ModelPrimitiveState;
+import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.helper.PolyTransform;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.api.model.ModelPrimitiveState;
-import grondag.xm2.api.model.ModelState;
-import grondag.xm2.model.state.StateFormat;
+import grondag.xm2.model.state.BaseModelState;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
@@ -49,8 +50,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
     public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
 
     public StackedPlatesPrimitive(String idString) {
-        super(idString, SURFACES, StateFormat.BLOCK,
-                STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
+        super(idString, SURFACES, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
     }
 
     private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH,
@@ -111,5 +111,22 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
     @Override
     public BlockOrientationType orientationType(ModelPrimitiveState modelState) {
         return BlockOrientationType.FACE;
+    }
+    
+    @Override
+    public ModelState geometricState(ModelState fromState) {
+        MutableModelState result = this.newState();
+        result.setAxis(fromState.getAxis());
+        result.setAxisInverted(fromState.isAxisInverted());
+        ((BaseModelState)result).primitiveBits(((BaseModelState)fromState).primitiveBits());
+        return result;
+    }
+    
+    @Override
+    public boolean doesShapeMatch(ModelState from, ModelState to) {
+        return from.primitive() == to.primitive() 
+               && from.getAxis() == to.getAxis()
+               && from.isAxisInverted() == to.isAxisInverted()
+               && ((BaseModelState)from).primitiveBits() == ((BaseModelState)to).primitiveBits();
     }
 }

@@ -9,16 +9,13 @@ public interface MutableModelPrimitiveState extends ModelPrimitiveState {
 
     void setAxisInverted(boolean isInverted);
 
-    /** usage is determined by shape */
-    void setStaticShapeBits(long bits);
-
     /**
      * For machines and other blocks with a privileged horizontal face, North is
      * considered the zero rotation.
      */
     void setAxisRotation(ClockwiseRotation rotation);
 
-    void setTerrainState(TerrainState flowState);
+    default void setTerrainState(TerrainState flowState) { }
 
-    void setTerrainStateKey(long terrainStateKey);
+    default void setTerrainStateKey(long terrainStateKey) { }
 }

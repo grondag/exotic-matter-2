@@ -1,15 +1,12 @@
 package grondag.xm2.api.model;
 
+import grondag.xm2.api.allocation.Reference;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintRegistry;
 import grondag.xm2.api.surface.XmSurface;
 import net.minecraft.nbt.CompoundTag;
 
-public interface ModelState extends ModelWorldState, ModelPrimitiveState {
-    boolean isImmutable();
-
-    ImmutableModelState toImmutable();
-
+public interface ModelState extends ModelWorldState, ModelPrimitiveState, Reference {
     MutableModelState mutableCopy();
 
     /**
@@ -27,13 +24,7 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState {
     default XmPaint paint(XmSurface surface) {
         return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
     }
-
-    /**
-     * Means that one or more elements (like a texture) uses species. Does not mean
-     * that the shape or block actually capture or generate species other than 0.
-     */
-    boolean hasSpecies();
-
+  
     /**
      * Returns true if visual elements and geometry match. Does not consider species
      * in matching.

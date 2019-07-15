@@ -68,6 +68,8 @@ public interface ModelPrimitive {
 
     ImmutableModelState defaultState();
     
+    ModelState geometricState(ModelState fromState);
+    
     default MutableModelState newState() {
         return defaultState().mutableCopy();
     }
@@ -98,4 +100,6 @@ public interface ModelPrimitive {
     default boolean hasAxisRotation(ModelPrimitiveState modelState) {
         return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
     }
+
+    boolean doesShapeMatch(ModelState from, ModelState to);
 }

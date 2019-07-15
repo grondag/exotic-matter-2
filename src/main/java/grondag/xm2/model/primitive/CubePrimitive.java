@@ -28,7 +28,6 @@ import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IPolyStream;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.StateFormat;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
 import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
@@ -44,7 +43,7 @@ public class CubePrimitive extends AbstractModelPrimitive {
     private final IPolyStream cachedQuads;
 
     public CubePrimitive(String idString) {
-        super(idString, SURFACES, StateFormat.BLOCK, STATE_FLAG_NONE);
+        super(idString, SURFACES, STATE_FLAG_NONE);
         this.cachedQuads = getCubeQuads();
     }
 
@@ -86,4 +85,14 @@ public class CubePrimitive extends AbstractModelPrimitive {
 
         return result;
     }
+    
+    @Override
+    public ModelState geometricState(ModelState fromState) {
+        return defaultState();
+    }
+    
+    @Override
+    public boolean doesShapeMatch(ModelState from, ModelState to) {
+        return from.primitive() == to.primitive();
+    } 
 }

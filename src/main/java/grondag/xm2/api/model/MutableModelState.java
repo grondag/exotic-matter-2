@@ -17,6 +17,7 @@
 package grondag.xm2.api.model;
 
 import grondag.fermion.serialization.PacketSerializable;
+import grondag.xm2.api.allocation.Reference;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.surface.XmSurfaceList;
@@ -26,7 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-public interface MutableModelState extends ModelState, MutableModelPrimitiveState, MutableModelWorldState, PacketSerializable {
+public interface MutableModelState extends ModelState, MutableModelPrimitiveState, MutableModelWorldState, PacketSerializable, Reference.Mutable {
     /**
      * Copies what it can, excluding the primitive, and returns self.
      */
@@ -37,7 +38,7 @@ public interface MutableModelState extends ModelState, MutableModelPrimitiveStat
     boolean equalsIncludeStatic(Object obj);
 
     /** returns self as convenience method */
-    MutableModelState refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
+    void refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
 
     default void paint(XmSurface surface, XmPaint paint) {
         paint(surface.ordinal(), paint.index());

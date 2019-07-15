@@ -36,23 +36,24 @@ public class XmBlocks {
         Xm.LOG.debug("Registering Exotic Matter Test Blocks");
 
         final XmPaintFinder paintFinder = XmPaint.finder();
+        
         XmPaint paint = paintFinder.texture(0, XmTextures.WHITE).textureColor(0, 0xFFFFFFFF).find();
-        MutableModelState workingModel = XmPrimitives.WEDGE.newState();
-        workingModel.paintAll(paint);
-        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel),
+        MutableModelState model = XmPrimitives.WEDGE.newState();
+        model.paintAll(paint);
+        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), model),
                 "test_wedge");
 
-        workingModel = XmPrimitives.CUBE.newState();
-        workingModel.paintAll(paint);
-        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel),
+        model = XmPrimitives.CUBE.newState();
+        model.paintAll(paint);
+        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), model),
                 "test_cube");
 
-        workingModel = XmPrimitives.CUBE.newState();
+        model = XmPrimitives.CUBE.newState();
         paint = paintFinder.textureDepth(2).texture(0, XmTextures.SANDSTONE_ZOOM).textureColor(0, 0xFF808590)
                 .blendMode(1, BlockRenderLayer.TRANSLUCENT).emissive(1, true).texture(1, XmTextures.BORDER_CAUTION)
                 .textureColor(1, 0xFFFFD300).find();
-        workingModel.paintAll(paint);
-        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), workingModel),
+        model.paintAll(paint);
+        register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), model),
                 "test_borders");
     }
 
