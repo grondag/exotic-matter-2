@@ -345,16 +345,6 @@ public class PrimitiveModelState extends AbstractWorldModelState implements Muta
     public ImmutablePrimitiveModelState toImmutable() {
         return new ImmutablePrimitiveModelState(this);
     }
-
-    @Override
-    public void paint(int surfaceIndex, int paintIndex) {
-        paints[surfaceIndex] = paintIndex;
-    }
-
-    @Override
-    public int paintIndex(int surfaceIndex) {
-        return paints[surfaceIndex];
-    }
     
     public int primitiveBits() {
         return PRIMITIVE_BITS.getValue(this);

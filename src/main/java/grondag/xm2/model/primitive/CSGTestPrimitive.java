@@ -46,10 +46,15 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
     private final IPolyStream cachedQuads;
 
     public CSGTestPrimitive(String idString) {
-        super(idString, SURFACES, STATE_FLAG_NONE);
+        super(idString, STATE_FLAG_NONE);
         this.cachedQuads = getTestQuads();
     }
 
+    @Override
+    public XmSurfaceListImpl surfaces(ModelState modelState) {
+        return SURFACES;
+    }
+    
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         if (cachedQuads.origin()) {

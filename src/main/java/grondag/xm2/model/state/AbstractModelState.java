@@ -5,9 +5,13 @@ import grondag.xm2.api.model.ModelState;
 import net.minecraft.util.PacketByteBuf;
 
 public abstract class AbstractModelState implements ModelState {
+    
+    //UGLY: belongs somewhere else
+    public static final int MAX_SURFACES = 8;
+    
     protected final ModelPrimitive primitive;
     
-    protected final int[] paints;
+    private final int[] paints = new int[MAX_SURFACES];
     
     private int hashCode = -1;
 
@@ -25,11 +29,11 @@ public abstract class AbstractModelState implements ModelState {
     }
     
     protected <T extends AbstractModelState> void copyInternal(T template) {
-        System.arraycopy(template.paints, 0, this.paints, 0, paints.length);
+        System.arraycopy(((AbstractModelState)template).paints, 0, this.paints, 0, template.primitive.surfaces(this).size());
     }
     
     protected int intSize() {
-        return paints.length;
+        return primitive.surfaces(this).size();
     }
     
     /** 
@@ -37,7 +41,7 @@ public abstract class AbstractModelState implements ModelState {
      */
     protected int computeHashCode() {
         int result = 0;
-        final int limit = paints.length;
+        final int limit = primitive.surfaces(this).size();
         for(int i = 0; i < limit; i++) {
             result ^= paints[i];
         }
@@ -51,7 +55,6 @@ public abstract class AbstractModelState implements ModelState {
     
     protected AbstractModelState(ModelPrimitive primitive) {
         this.primitive = primitive;
-        paints = new int[primitive.surfaces().size()];
     }
     
     @Override
@@ -79,18 +82,18 @@ public abstract class AbstractModelState implements ModelState {
     }
     
     protected void doSerializeToInts(int[] data, int startAt) {
-        System.arraycopy(paints, 0, data, startAt, paints.length);
+        System.arraycopy(paints, 0, data, startAt, primitive.surfaces(this).size());
     }
     
     /**
      * Note does not reset state flag - do that if calling on an existing instance.
      */
     protected final void deserializeFromInts(int[] bits) {
-        doSerializeToInts(bits, 0);
+        doDeserializeFromInts(bits, 0);
     }
     
     protected void doDeserializeFromInts(int[] data, int startAt) {
-        System.arraycopy(data, startAt, paints, 0, paints.length);
+        System.arraycopy(data, startAt, paints, 0, primitive.surfaces(this).size());
     }
     
     /**
@@ -105,11 +108,10 @@ public abstract class AbstractModelState implements ModelState {
     }
     
     private boolean doPaintsMatch(AbstractModelState other) {
-        final int[] paints = this.paints;
-        final int limit = paints.length;
-        final int[] otherPaints = other.paints;
-        
-        if(limit == otherPaints.length) {
+        final int limit = primitive.surfaces(this).size();
+        if(limit == other.primitive.surfaces(other).size()) {
+            final int[] paints = this.paints;
+            final int[] otherPaints = other.paints;
             for(int i = 0; i < limit; i++) {
                 if(otherPaints[i] != paints[i]) {
                     return false;
@@ -132,16 +134,25 @@ public abstract class AbstractModelState implements ModelState {
     }
     
     public void fromBytes(PacketByteBuf pBuff) {
-        final int limit = paints.length;
+        final int limit = primitive.surfaces(this).size();
         for(int i = 0; i < limit; i++) {
             this.paints[i] = pBuff.readVarInt();
         }
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-        final int limit = paints.length;
+        final int limit = primitive.surfaces(this).size();
         for(int i = 0; i < limit; i++) {
             pBuff.writeVarInt(paints[i]);
         }
+    }
+    
+    public final void paint(int surfaceIndex, int paintIndex) {
+        paints[surfaceIndex] = paintIndex;
+    }
+
+    @Override
+    public final int paintIndex(int surfaceIndex) {
+        return paints[surfaceIndex];
     }
 }

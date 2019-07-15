@@ -43,10 +43,15 @@ public class CubePrimitive extends AbstractModelPrimitive {
     private final IPolyStream cachedQuads;
 
     public CubePrimitive(String idString) {
-        super(idString, SURFACES, STATE_FLAG_NONE);
+        super(idString, STATE_FLAG_NONE);
         this.cachedQuads = getCubeQuads();
     }
 
+    @Override
+    public XmSurfaceListImpl surfaces(ModelState modelState) {
+        return SURFACES;
+    }
+    
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         if (cachedQuads.origin()) {

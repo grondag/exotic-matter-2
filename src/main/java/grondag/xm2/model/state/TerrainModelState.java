@@ -79,12 +79,6 @@ public class TerrainModelState extends AbstractWorldModelState implements Mutabl
     }
 
     @Override
-    public int paintIndex(int surfaceIndex) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
     public boolean doShapeAndAppearanceMatch(ModelState other) {
         // TODO Auto-generated method stub
         return false;
@@ -150,12 +144,6 @@ public class TerrainModelState extends AbstractWorldModelState implements Mutabl
     public MutableModelState copyFrom(ModelState template) {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public void paint(int surfaceIndex, int paintIndex) {
-        // TODO Auto-generated method stub
-        
     }
 
     @Override

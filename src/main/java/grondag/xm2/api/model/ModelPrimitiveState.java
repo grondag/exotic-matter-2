@@ -23,7 +23,7 @@ public interface ModelPrimitiveState {
     }
     
     default BlockOrientationType orientationType() {
-        return primitive().orientationType(this);
+        return primitive().orientationType((ModelState)this);
     }
 
     default boolean isAxisOrthogonalToPlacementFace() {

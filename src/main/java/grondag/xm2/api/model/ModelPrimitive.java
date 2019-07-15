@@ -49,12 +49,12 @@ public interface ModelPrimitive {
         return "xm2_primitive_name." + id().getNamespace() + "." + id().getPath();
     }
 
-    XmSurfaceList surfaces();
+    XmSurfaceList surfaces(ModelState modelState);
 
     /**
      * Override if shape has an orientation to be selected during placement.
      */
-    default BlockOrientationType orientationType(ModelPrimitiveState modelState) {
+    default BlockOrientationType orientationType(ModelState modelState) {
         return BlockOrientationType.NONE;
     }
 

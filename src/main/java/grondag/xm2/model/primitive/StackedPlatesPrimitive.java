@@ -23,7 +23,6 @@ import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
 import java.util.function.Consumer;
 
 import grondag.fermion.world.Rotation;
-import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.surface.XmSurface;
@@ -49,12 +48,17 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
     public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
     public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
 
-    public StackedPlatesPrimitive(String idString) {
-        super(idString, SURFACES, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
-    }
-
     private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH,
             Direction.SOUTH };
+
+    public StackedPlatesPrimitive(String idString) {
+        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
+    }
+
+    @Override
+    public XmSurfaceListImpl surfaces(ModelState modelState) {
+        return SURFACES;
+    }
 
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
@@ -109,7 +113,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(ModelPrimitiveState modelState) {
+    public BlockOrientationType orientationType(ModelState modelState) {
         return BlockOrientationType.FACE;
     }
     

@@ -55,7 +55,7 @@ public interface MutableModelState extends ModelState, MutableModelPrimitiveStat
     }
 
     default void paintAll(int paintIndex) {
-        XmSurfaceList slist = primitive().surfaces();
+        XmSurfaceList slist = primitive().surfaces(this);
         final int limit = slist.size();
         for (int i = 0; i < limit; i++) {
             paint(i, paintIndex);

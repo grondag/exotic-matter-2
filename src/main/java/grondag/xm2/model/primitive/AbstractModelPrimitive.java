@@ -22,13 +22,10 @@ import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.api.model.ModelPrimitiveState;
 import grondag.xm2.model.state.PrimitiveModelState;
-import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.Identifier;
 
 public abstract class AbstractModelPrimitive implements ModelPrimitive {
     private final ImmutableModelState defaultState;
-    
-    private final XmSurfaceListImpl surfaces;
 
     private final Identifier id;
 
@@ -38,8 +35,7 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
      */
     private final int stateFlags;
 
-    protected AbstractModelPrimitive(Identifier id, XmSurfaceListImpl surfaces, int stateFlags) {
-        this.surfaces = surfaces;
+    protected AbstractModelPrimitive(Identifier id, int stateFlags) {
         this.stateFlags = stateFlags;
         this.id = id;
         
@@ -53,8 +49,8 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
         this.defaultState = state.toImmutable();
     }
 
-    protected AbstractModelPrimitive(String idString, XmSurfaceListImpl surfaces, int stateFlags) {
-        this(new Identifier(idString), surfaces, stateFlags);
+    protected AbstractModelPrimitive(String idString, int stateFlags) {
+        this(new Identifier(idString), stateFlags);
     }
 
     @Override
@@ -70,11 +66,6 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     @Override
     public Identifier id() {
         return id;
-    }
-
-    @Override
-    public XmSurfaceListImpl surfaces() {
-        return surfaces;
     }
 
     /** 
