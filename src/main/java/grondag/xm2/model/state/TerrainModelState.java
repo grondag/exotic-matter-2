@@ -14,7 +14,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.world.BlockView;
 
-public class TerrainModelState extends BlockModelState implements MutableModelState {
+public class TerrainModelState extends AbstractWorldModelState implements MutableModelState {
     protected TerrainModelState(ModelPrimitive primitive) {
         super(primitive);
     }

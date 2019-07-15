@@ -11,21 +11,21 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-public abstract class BlockModelState extends AbstractModelState {
+public abstract class AbstractWorldModelState extends AbstractModelState {
     /**
      * note that sign bit on core packer is reserved to persist static state during
      * serialization
      */
-    private static final BitPacker32<BlockModelState> PACKER_CORE = new BitPacker32<BlockModelState>(m -> m.blockBits,
+    private static final BitPacker32<AbstractWorldModelState> WORLD_BITS = new BitPacker32<AbstractWorldModelState>(m -> m.blockBits,
             (m, b) -> m.blockBits = b);
-    private static final BitPacker32<BlockModelState>.IntElement POS_X = PACKER_CORE.createIntElement(256);
-    private static final BitPacker32<BlockModelState>.IntElement POS_Y = PACKER_CORE.createIntElement(256);
-    private static final BitPacker32<BlockModelState>.IntElement POS_Z = PACKER_CORE.createIntElement(256);
-    private static final BitPacker32<BlockModelState>.IntElement SPECIES = PACKER_CORE.createIntElement(16);
+    private static final BitPacker32<AbstractWorldModelState>.IntElement POS_X = WORLD_BITS.createIntElement(256);
+    private static final BitPacker32<AbstractWorldModelState>.IntElement POS_Y = WORLD_BITS.createIntElement(256);
+    private static final BitPacker32<AbstractWorldModelState>.IntElement POS_Z = WORLD_BITS.createIntElement(256);
+    private static final BitPacker32<AbstractWorldModelState>.IntElement SPECIES = WORLD_BITS.createIntElement(16);
     
     private int blockBits;
     
-    protected BlockModelState(ModelPrimitive primitive) {
+    protected AbstractWorldModelState(ModelPrimitive primitive) {
         super(primitive);
     }
     
@@ -37,7 +37,7 @@ public abstract class BlockModelState extends AbstractModelState {
     @Override
     protected <T extends AbstractModelState> void copyInternal(T template) {
         super.copyInternal(template);
-        blockBits = ((BlockModelState)template).blockBits;
+        blockBits = ((AbstractWorldModelState)template).blockBits;
     }
     
     @Override
@@ -128,15 +128,15 @@ public abstract class BlockModelState extends AbstractModelState {
     
     @Override
     protected boolean equalsInner(Object obj) {
-        return super.equalsInner(obj) && this.blockBits == ((BlockModelState)obj).blockBits;
+        return super.equalsInner(obj) && this.blockBits == ((AbstractWorldModelState)obj).blockBits;
     }
     
     public final boolean equalsIncludeStatic(Object obj) {
         if (this == obj)
             return true;
 
-        if (obj instanceof BaseModelState) {
-            BaseModelState other = (BaseModelState) obj;
+        if (obj instanceof PrimitiveModelState) {
+            PrimitiveModelState other = (PrimitiveModelState) obj;
             return this.isStatic == other.isStatic && equalsInner(other);
         } else {
             return false;

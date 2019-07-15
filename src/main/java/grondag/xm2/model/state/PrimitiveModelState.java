@@ -44,22 +44,27 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
-public class BaseModelState extends BlockModelState implements MutableModelState {
-    private static final BitPacker32<BaseModelState> SHAPE_PACKER = new BitPacker32<BaseModelState>(
+public class PrimitiveModelState extends AbstractWorldModelState implements MutableModelState {
+    private static final BitPacker32<PrimitiveModelState> SHAPE_PACKER = new BitPacker32<PrimitiveModelState>(
             m -> m.shapeBits, (m, b) -> m.shapeBits = b);
     
-    private static final BitPacker32<BaseModelState>.EnumElement<Direction.Axis> AXIS = SHAPE_PACKER
+    private static final BitPacker32<PrimitiveModelState>.EnumElement<Direction.Axis> AXIS = SHAPE_PACKER
             .createEnumElement(Direction.Axis.class);
 
-    private static final BitPacker32<BaseModelState>.BooleanElement AXIS_INVERTED = SHAPE_PACKER.createBooleanElement();
+    private static final BitPacker32<PrimitiveModelState>.BooleanElement AXIS_INVERTED = SHAPE_PACKER.createBooleanElement();
     
-    private static final BitPacker32<BaseModelState>.EnumElement<ClockwiseRotation> AXIS_ROTATION = SHAPE_PACKER.createEnumElement(ClockwiseRotation.class);
+    private static final BitPacker32<PrimitiveModelState>.EnumElement<ClockwiseRotation> AXIS_ROTATION = SHAPE_PACKER.createEnumElement(ClockwiseRotation.class);
     
-    private static final BitPacker32<BaseModelState>.IntElement BLOCK_JOIN = SHAPE_PACKER
+    private static final BitPacker32<PrimitiveModelState>.IntElement BLOCK_JOIN = SHAPE_PACKER
             .createIntElement(CornerJoinState.STATE_COUNT);
     
-    private static final BitPacker32<BaseModelState>.IntElement MASONRY_JOIN = SHAPE_PACKER
+    private static final BitPacker32<PrimitiveModelState>.IntElement MASONRY_JOIN = SHAPE_PACKER
             .createIntElement(SimpleJoinState.STATE_COUNT);
+    
+    public static final int PRIMITIVE_BIT_COUNT = 6;
+    
+    private static final BitPacker32<PrimitiveModelState>.IntElement PRIMITIVE_BITS = SHAPE_PACKER
+            .createIntElement(1 << PRIMITIVE_BIT_COUNT);
     
     static {
         assert SHAPE_PACKER.bitLength() <= 32;
@@ -67,70 +72,64 @@ public class BaseModelState extends BlockModelState implements MutableModelState
         System.out.println(SHAPE_PACKER.bitLength());
     }
     
-    private static final int INT_LENGTH = 2;
-    
     protected int shapeBits;
-    
-    protected int primitiveBits;
 
     // default to white, full alpha
 
-    public BaseModelState(ModelPrimitive primitive) {
+    public PrimitiveModelState(ModelPrimitive primitive) {
         super(primitive);
     }
 
-    public BaseModelState(BaseModelState template) {
+    public PrimitiveModelState(PrimitiveModelState template) {
         super(template.primitive);
         copyInternal(template);
     }
     
     @Override
     protected int intSize() {
-        return super.intSize() + INT_LENGTH;
+        return super.intSize() + 1;
     }
     
     @Override
     protected <T extends AbstractModelState> void copyInternal(T template) {
         super.copyInternal(template);
-        final BaseModelState other = (BaseModelState)template;
+        final PrimitiveModelState other = (PrimitiveModelState)template;
         this.shapeBits = other.shapeBits;
     }
 
     @Override
-    public BaseModelState mutableCopy() {
-        return new BaseModelState(this);
+    public PrimitiveModelState mutableCopy() {
+        return new PrimitiveModelState(this);
     }
 
     @Override
-    public BaseModelState copyFrom(ModelState templateIn) {
-        copyInternal((BaseModelState)templateIn);
+    public PrimitiveModelState copyFrom(ModelState templateIn) {
+        copyInternal((PrimitiveModelState)templateIn);
         return this;
     }
     
     @Override
     protected void doSerializeToInts(int[] data, int startAt) {
         data[startAt] = shapeBits;
-        data[startAt + 1] = primitiveBits;
-        super.doSerializeToInts(data, startAt + INT_LENGTH);
+        super.doSerializeToInts(data, startAt + 1);
     }
 
     @Override
     protected void doDeserializeFromInts(int[] data, int startAt) {
         this.shapeBits = data[startAt];
-        this.primitiveBits = data[startAt + 1];
-        super.doDeserializeFromInts(data, startAt + INT_LENGTH);
+        super.doDeserializeFromInts(data, startAt + 1);
     }
     
     @Override
     protected boolean equalsInner(Object obj) {
-        final BaseModelState other = (BaseModelState)obj;
+        final PrimitiveModelState other = (PrimitiveModelState)obj;
         return shapeBits == other.shapeBits
                 && super.equalsInner(obj);
     }
 
     @Override
     protected int computeHashCode() {
-        return super.computeHashCode() ^ (int)HashCommon.mix(this.shapeBits | (this.primitiveBits << 32));
+        return super.computeHashCode() ^ HashCommon.mix(this.shapeBits);
     }
 
     @Override
@@ -262,12 +261,12 @@ public class BaseModelState extends BlockModelState implements MutableModelState
         return PolyTransform.rotateFace(this, face);
     }
 
-    public static BaseModelState deserializeFromNBTIfPresent(CompoundTag tag) {
+    public static PrimitiveModelState deserializeFromNBTIfPresent(CompoundTag tag) {
         ModelPrimitive shape = ModelPrimitiveRegistry.INSTANCE.get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
         if(shape == null) {
             return null;
         }
-        BaseModelState result = new BaseModelState(shape);
+        PrimitiveModelState result = new PrimitiveModelState(shape);
     
         if (tag.containsKey(ModelStateTagHelper.NBT_MODEL_BITS)) {
             int[] stateBits = tag.getIntArray(ModelStateTagHelper.NBT_MODEL_BITS);
@@ -328,14 +327,12 @@ public class BaseModelState extends BlockModelState implements MutableModelState
     public void fromBytes(PacketByteBuf pBuff) {
         super.fromBytes(pBuff);
         shapeBits = pBuff.readInt();
-        primitiveBits = pBuff.readInt();
     }
 
     @Override
     public void toBytes(PacketByteBuf pBuff) {
         super.toBytes(pBuff);
         pBuff.writeInt(shapeBits);
-        pBuff.writeInt(primitiveBits);
     }
 
     @Override
@@ -345,8 +342,8 @@ public class BaseModelState extends BlockModelState implements MutableModelState
 
     @SuppressWarnings("unchecked")
     @Override
-    public ImmutableBaseModelState toImmutable() {
-        return new ImmutableBaseModelState(this);
+    public ImmutablePrimitiveModelState toImmutable() {
+        return new ImmutablePrimitiveModelState(this);
     }
 
     @Override
@@ -360,10 +357,10 @@ public class BaseModelState extends BlockModelState implements MutableModelState
     }
     
     public int primitiveBits() {
-        return primitiveBits;
+        return PRIMITIVE_BITS.getValue(this);
     }
     
     public void primitiveBits(int bits) {
-        primitiveBits = bits;
+        PRIMITIVE_BITS.setValue(bits, this);
     }
 }

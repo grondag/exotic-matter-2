@@ -32,7 +32,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.BaseModelState;
+import grondag.xm2.model.state.PrimitiveModelState;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
@@ -118,7 +118,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
         MutableModelState result = this.newState();
         result.setAxis(fromState.getAxis());
         result.setAxisInverted(fromState.isAxisInverted());
-        ((BaseModelState)result).primitiveBits(((BaseModelState)fromState).primitiveBits());
+        ((PrimitiveModelState)result).primitiveBits(((PrimitiveModelState)fromState).primitiveBits());
         return result;
     }
     
@@ -127,6 +127,6 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
         return from.primitive() == to.primitive() 
                && from.getAxis() == to.getAxis()
                && from.isAxisInverted() == to.isAxisInverted()
-               && ((BaseModelState)from).primitiveBits() == ((BaseModelState)to).primitiveBits();
+               && ((PrimitiveModelState)from).primitiveBits() == ((PrimitiveModelState)to).primitiveBits();
     }
 }

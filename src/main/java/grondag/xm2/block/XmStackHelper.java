@@ -20,17 +20,14 @@ import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.model.state.BaseModelState;
 import grondag.xm2.model.state.ModelStateTagHelper;
+import grondag.xm2.model.state.PrimitiveModelState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
 /**
  * Item stack serialization handlers
- * 
- * @author grondag
- *
  */
 public class XmStackHelper {
     public static String NBT_SUPERMODEL_LIGHT_VALUE = NBTDictionary.claim("smLight");
@@ -66,7 +63,7 @@ public class XmStackHelper {
     }
 
     public static MutableModelState getStackModelState(ItemStack stack) {
-        MutableModelState stackState = stack.hasTag() ? BaseModelState.deserializeFromNBTIfPresent(stack.getTag())
+        MutableModelState stackState = stack.hasTag() ? PrimitiveModelState.deserializeFromNBTIfPresent(stack.getTag())
                 : null;
 
         // WAILA or other mods might create a stack with no NBT

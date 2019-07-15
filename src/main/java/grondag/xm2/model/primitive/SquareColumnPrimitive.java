@@ -36,7 +36,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.BaseModelState;
+import grondag.xm2.model.state.PrimitiveModelState;
 import grondag.xm2.model.state.ModelStateData;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
@@ -64,6 +64,10 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     private static final BitPacker32<SquareColumnPrimitive>.IntElement STATE_CUT_COUNT = STATE_PACKER
             .createIntElement(MIN_CUTS, MAX_CUTS);
 
+    static {
+        assert STATE_PACKER.bitLength() <= PrimitiveModelState.PRIMITIVE_BIT_COUNT;
+    }
+    
     private static class FaceSpec {
         private final int cutCount;
 //        private final boolean areCutsOnEdge;
@@ -91,7 +95,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    protected void updateDefaultState(BaseModelState modelState) {
+    protected void updateDefaultState(PrimitiveModelState modelState) {
         setCutCount(3, modelState);
         setCutsOnEdge(true, modelState);
     }
@@ -525,7 +529,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * shape bits in model state
      */
     public static boolean areCutsOnEdge(ModelState modelState) {
-        return STATE_ARE_CUTS_ON_EDGE.getValue(((BaseModelState)modelState).primitiveBits());
+        return STATE_ARE_CUTS_ON_EDGE.getValue(((PrimitiveModelState)modelState).primitiveBits());
     }
 
     /**
@@ -533,7 +537,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * bits in model state
      */
     public static void setCutsOnEdge(boolean areCutsOnEdge, MutableModelState modelState) {
-        ((BaseModelState)modelState).primitiveBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, ((BaseModelState)modelState).primitiveBits()));
+        ((PrimitiveModelState)modelState).primitiveBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, ((PrimitiveModelState)modelState).primitiveBits()));
     }
 
     /**
@@ -541,7 +545,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * shape bits in model state
      */
     public static int getCutCount(ModelState modelState) {
-        return STATE_CUT_COUNT.getValue(((BaseModelState)modelState).primitiveBits());
+        return STATE_CUT_COUNT.getValue(((PrimitiveModelState)modelState).primitiveBits());
     }
 
     /**
@@ -549,7 +553,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * bits in model state
      */
     public static void setCutCount(int cutCount, MutableModelState modelState) {
-        final BaseModelState state = (BaseModelState)modelState;
+        final PrimitiveModelState state = (PrimitiveModelState)modelState;
         state.primitiveBits(STATE_CUT_COUNT.setValue(cutCount, state.primitiveBits()));
     }
     
@@ -558,7 +562,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     public ModelState geometricState(ModelState fromState) {
         MutableModelState result = this.newState();
         result.setAxis(fromState.getAxis());
-        ((BaseModelState)result).primitiveBits(((BaseModelState)fromState).primitiveBits());
+        ((PrimitiveModelState)result).primitiveBits(((PrimitiveModelState)fromState).primitiveBits());
         result.cornerJoin(fromState.cornerJoin());
         return result;
     }
@@ -568,6 +572,6 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         return from.primitive() == to.primitive() 
                && from.getAxis() == to.getAxis()
                && from.cornerJoin() == to.cornerJoin()
-               && ((BaseModelState)from).primitiveBits() == ((BaseModelState)to).primitiveBits();
+               && ((PrimitiveModelState)from).primitiveBits() == ((PrimitiveModelState)to).primitiveBits();
     }
 }
