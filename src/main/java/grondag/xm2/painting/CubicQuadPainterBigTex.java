@@ -17,7 +17,7 @@
 package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
-import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.texture.TextureRotation;
@@ -50,7 +50,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
     // layers.
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
-    public static void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
         do {
             editor.setLockUV(textureIndex, true);

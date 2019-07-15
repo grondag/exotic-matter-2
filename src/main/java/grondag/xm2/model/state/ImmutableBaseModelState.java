@@ -38,9 +38,9 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
-public class ImmutableModelStateImpl extends BaseModelState implements ImmutableModelState {
+public class ImmutableBaseModelState extends BaseModelState implements ImmutableModelState {
 
-    public ImmutableModelStateImpl(BaseModelState template) {
+    public ImmutableBaseModelState(BaseModelState template) {
         super(template);
     }
 
@@ -121,7 +121,7 @@ public class ImmutableModelStateImpl extends BaseModelState implements Immutable
 
     @SuppressWarnings("unchecked")
     @Override
-    public ImmutableModelStateImpl toImmutable() {
+    public ImmutableBaseModelState toImmutable() {
         return this;
     }
 

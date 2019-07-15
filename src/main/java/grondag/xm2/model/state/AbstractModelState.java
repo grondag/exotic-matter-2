@@ -62,7 +62,7 @@ public abstract class AbstractModelState implements ModelState {
     protected final int stateFlags() {
         int result = stateFlags;
         if (result == 0) {
-            result = ModelStateFlagHelper.getFlags(this);
+            result = ModelStateData.getFlags(this);
             stateFlags = result;
         }
         return result;

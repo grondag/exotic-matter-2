@@ -345,8 +345,8 @@ public class BaseModelState extends BlockModelState implements MutableModelState
 
     @SuppressWarnings("unchecked")
     @Override
-    public ImmutableModelStateImpl toImmutable() {
-        return new ImmutableModelStateImpl(this);
+    public ImmutableBaseModelState toImmutable() {
+        return new ImmutableBaseModelState(this);
     }
 
     @Override

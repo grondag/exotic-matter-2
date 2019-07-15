@@ -18,7 +18,7 @@ package grondag.xm2.painting;
 
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.Rotation;
-import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.texture.TextureRotation;
@@ -54,7 +54,7 @@ public abstract class QuadPainter {
          * <p>
          * 
          */
-        void paintQuads(IMutablePolyStream stream, MutableModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
+        void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
     }
 
     /**
@@ -62,7 +62,7 @@ public abstract class QuadPainter {
      * then adds to the output list.
      */
     // UGLY: change arg order to match others
-    protected static void commonPostPaint(IMutablePolygon editor, int textureIndex, MutableModelState modelState, XmSurface surface, XmPaint paint) {
+    protected static void commonPostPaint(IMutablePolygon editor, int textureIndex, ModelState modelState, XmSurface surface, XmPaint paint) {
         editor.setRenderLayer(textureIndex, paint.blendMode(textureIndex));
         editor.setEmissive(textureIndex, paint.emissive(textureIndex));
 
@@ -160,13 +160,13 @@ public abstract class QuadPainter {
         }
     }
 
-    protected static int textureVersionForFace(Direction face, TextureSet tex, MutableModelState modelState) {
+    protected static int textureVersionForFace(Direction face, TextureSet tex, ModelState modelState) {
         if (tex.versionCount() == 0)
             return 0;
         return textureHashForFace(face, tex, modelState) & tex.versionMask();
     }
 
-    protected static int textureHashForFace(Direction face, TextureSet tex, MutableModelState modelState) {
+    protected static int textureHashForFace(Direction face, TextureSet tex, ModelState modelState) {
         final int species = modelState.hasSpecies() ? modelState.species() : 0;
         final int speciesBits = species << 16;
         final int shift = tex.scale().power;
@@ -205,7 +205,7 @@ public abstract class QuadPainter {
      * rotation type is RANDOM, is based on position (chunked by texture size) and
      * species (if applies).
      */
-    protected static Rotation textureRotationForFace(Direction face, TextureSet tex, MutableModelState modelState) {
+    protected static Rotation textureRotationForFace(Direction face, TextureSet tex, ModelState modelState) {
         final int species = modelState.hasSpecies() ? modelState.species() : 0;
         if (tex.rotation() == TextureRotation.ROTATE_RANDOM) {
             if (tex.scale() == TextureScale.SINGLE) {
