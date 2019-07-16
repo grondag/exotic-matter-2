@@ -21,7 +21,14 @@
     "client": [ "grondag.xm2.XmClient" ]
   },
   "mixins": [
-  	"xm2.common.json"
+	  {
+	      "config": "xm2.common.json",
+	      "environment": "*"
+	  },
+	  {
+	      "config": "xm2.client.json",
+	      "environment": "client"
+	  }
   ],
   "requires": {
     "fabricloader": ">=0.4.0",

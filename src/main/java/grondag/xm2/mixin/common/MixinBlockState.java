@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.mixin;
+package grondag.xm2.mixin.common;
 
 import org.spongepowered.asm.mixin.Mixin;
 
