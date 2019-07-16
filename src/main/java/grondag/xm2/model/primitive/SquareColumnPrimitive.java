@@ -26,6 +26,7 @@ import grondag.xm2.api.connect.state.CornerJoinFaceState;
 import grondag.xm2.api.connect.state.CornerJoinFaceStates;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.model.ModelState;
+import grondag.xm2.api.model.ModelStateFlags;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.dispatch.SimpleQuadBounds;
@@ -35,9 +36,8 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.PrimitiveModelState;
-import grondag.xm2.model.state.ModelStateData;
 import grondag.xm2.model.varia.BlockOrientationType;
+import grondag.xm2.model.state.ModelStates;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
 import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
@@ -69,7 +69,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     private static final BitPacker32<SquareColumnPrimitive>.BooleanElement STATE_LIT = STATE_PACKER.createBooleanElement();
     
     static {
-        assert STATE_PACKER.bitLength() <= PrimitiveModelState.PRIMITIVE_BIT_COUNT;
+        assert STATE_PACKER.bitLength() <= ModelStates.PRIMITIVE_BIT_COUNT;
     }
     
     private static class FaceSpec {
@@ -99,13 +99,13 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    protected void updateDefaultState(PrimitiveModelState modelState) {
+    protected void updateDefaultState(MutableModelState modelState) {
         setCutCount(3, modelState);
         setCutsOnEdge(true, modelState);
     }
 
     public SquareColumnPrimitive(String idString) {
-        super(idString,  ModelStateData.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateData.STATE_FLAG_HAS_AXIS);
+        super(idString,  ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS);
     }
     
     @Override
@@ -534,7 +534,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * shape bits in model state
      */
     public static boolean areCutsOnEdge(ModelState modelState) {
-        return STATE_ARE_CUTS_ON_EDGE.getValue(((PrimitiveModelState)modelState).primitiveBits());
+        return STATE_ARE_CUTS_ON_EDGE.getValue(modelState.primitiveBits());
     }
 
     /**
@@ -542,7 +542,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * bits in model state
      */
     public static void setCutsOnEdge(boolean areCutsOnEdge, MutableModelState modelState) {
-        ((PrimitiveModelState)modelState).primitiveBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, ((PrimitiveModelState)modelState).primitiveBits()));
+        modelState.primitiveBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, modelState.primitiveBits()));
     }
 
     /**
@@ -550,7 +550,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * shape bits in model state
      */
     public static int getCutCount(ModelState modelState) {
-        return STATE_CUT_COUNT.getValue(((PrimitiveModelState)modelState).primitiveBits());
+        return STATE_CUT_COUNT.getValue(modelState.primitiveBits());
     }
 
     /**
@@ -558,12 +558,11 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * bits in model state
      */
     public static void setCutCount(int cutCount, MutableModelState modelState) {
-        final PrimitiveModelState state = (PrimitiveModelState)modelState;
-        state.primitiveBits(STATE_CUT_COUNT.setValue(cutCount, state.primitiveBits()));
+        modelState.primitiveBits(STATE_CUT_COUNT.setValue(cutCount, modelState.primitiveBits()));
     }
     
     public static boolean isLit(ModelState modelState) {
-        return STATE_LIT.getValue(((PrimitiveModelState)modelState).primitiveBits());
+        return STATE_LIT.getValue(modelState.primitiveBits());
     }
 
     /**
@@ -571,8 +570,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
      * bits in model state
      */
     public static void setLit(boolean isLit, MutableModelState modelState) {
-        final PrimitiveModelState state = (PrimitiveModelState)modelState;
-        state.primitiveBits(STATE_LIT.setValue(isLit, state.primitiveBits()));
+        modelState.primitiveBits(STATE_LIT.setValue(isLit, modelState.primitiveBits()));
     }
     
     // PERF: consolidate states if there is more then one for glowing vs not glowing
@@ -580,7 +578,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     public ModelState geometricState(ModelState fromState) {
         MutableModelState result = this.newState();
         result.setAxis(fromState.getAxis());
-        ((PrimitiveModelState)result).primitiveBits(((PrimitiveModelState)fromState).primitiveBits());
+        result.primitiveBits(fromState.primitiveBits());
         result.cornerJoin(fromState.cornerJoin());
         return result;
     }
@@ -590,6 +588,6 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         return from.primitive() == to.primitive() 
                && from.getAxis() == to.getAxis()
                && from.cornerJoin() == to.cornerJoin()
-               && ((PrimitiveModelState)from).primitiveBits() == ((PrimitiveModelState)to).primitiveBits();
+               && from.primitiveBits() == to.primitiveBits();
     }
 }

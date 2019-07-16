@@ -16,15 +16,14 @@
 
 package grondag.xm2.model.primitive;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.surface.XmSurface;
-import grondag.xm2.model.state.PrimitiveModelState;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
@@ -68,7 +67,7 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
         result.setAxis(fromState.getAxis());
         result.setAxisInverted(fromState.isAxisInverted());
         result.setAxisRotation(fromState.getAxisRotation());
-        ((PrimitiveModelState)result).primitiveBits(((PrimitiveModelState)fromState).primitiveBits());
+        result.primitiveBits(fromState.primitiveBits());
         return result;
     }
     
@@ -78,11 +77,11 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
                && from.getAxis() == to.getAxis()
                && from.isAxisInverted() == to.isAxisInverted()
                && from.getAxisRotation() == to.getAxisRotation()
-               && ((PrimitiveModelState)from).primitiveBits() == ((PrimitiveModelState)to).primitiveBits();
+               && from.primitiveBits() == to.primitiveBits();
     }
     
     public static boolean isCorner(ModelState modelState) {
-        return ((PrimitiveModelState)modelState).primitiveBits() == 1;
+        return modelState.primitiveBits() == 1;
     }
 
     /**
@@ -90,6 +89,6 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
      * bits in model state
      */
     public static void setCorner(boolean isCorner, MutableModelState modelState) {
-        ((PrimitiveModelState)modelState).primitiveBits(isCorner ? 1 : 0);
+        modelState.primitiveBits(isCorner ? 1 : 0);
     }
 }

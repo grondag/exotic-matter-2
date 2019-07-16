@@ -65,4 +65,8 @@ public interface ModelPrimitiveState {
     default int getTerrainHotness() {
         return 0;
     }
+    
+    default int primitiveBits() {
+        return 0;
+    }
 }

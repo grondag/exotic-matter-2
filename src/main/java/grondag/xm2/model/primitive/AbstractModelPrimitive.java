@@ -21,7 +21,9 @@ import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.api.model.ModelPrimitiveState;
-import grondag.xm2.model.state.PrimitiveModelState;
+import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.OwnedModelState;
+import grondag.xm2.model.state.ModelStates;
 import net.minecraft.util.Identifier;
 
 public abstract class AbstractModelPrimitive implements ModelPrimitive {
@@ -44,9 +46,10 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
             Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + id.toString());
         }
         
-        PrimitiveModelState state = new PrimitiveModelState(this);
+        OwnedModelState state = ModelStates.claimSimple(this);
         updateDefaultState(state);
         this.defaultState = state.toImmutable();
+        state.release();
     }
 
     protected AbstractModelPrimitive(String idString, int stateFlags) {
@@ -71,5 +74,5 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     /** 
      * Override if default state should be something other than the, erm... default.
      */
-    protected void updateDefaultState(PrimitiveModelState modelState) { }
+    protected void updateDefaultState(MutableModelState modelState) { }
 }

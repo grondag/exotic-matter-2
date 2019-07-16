@@ -16,9 +16,9 @@
 
 package grondag.xm2.api.model;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
 
 import java.util.function.Consumer;
 

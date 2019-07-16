@@ -18,10 +18,10 @@ package grondag.xm2.texture;
 
 import java.util.function.Consumer;
 
+import grondag.xm2.api.model.ModelStateFlags;
 import grondag.xm2.api.texture.TextureRotation;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.api.texture.TextureSetBuilder;
-import grondag.xm2.model.state.ModelStateData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
@@ -58,11 +58,11 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
         // textures with randomization options also require position information
 
         if (template.rotation == TextureRotation.ROTATE_RANDOM) {
-            flags |= (ModelStateData.STATE_FLAG_NEEDS_TEXTURE_ROTATION | ModelStateData.STATE_FLAG_NEEDS_POS);
+            flags |= (ModelStateFlags.STATE_FLAG_NEEDS_TEXTURE_ROTATION | ModelStateFlags.STATE_FLAG_NEEDS_POS);
         }
 
         if (template.versionCount > 1) {
-            flags |= ModelStateData.STATE_FLAG_NEEDS_POS;
+            flags |= ModelStateFlags.STATE_FLAG_NEEDS_POS;
         }
 
         this.stateFlags = flags;

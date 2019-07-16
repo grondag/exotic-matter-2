@@ -16,7 +16,7 @@
 
 package grondag.xm2.model.primitive;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NONE;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 

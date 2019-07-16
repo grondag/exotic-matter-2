@@ -28,7 +28,7 @@ minecraft {
 }
 
 repositories {
-    //mavenLocal()
+    mavenLocal()
     //flatDir {
     //    dirs '../fabric/build/libs'
     //}
@@ -110,8 +110,8 @@ dependencies {
 	
 	modRuntime "grondag:canvas:0.7.5+"
 
-    modImplementation "grondag:fermion:0.7+"
-    include "grondag:fermion:0.7+"
+    modImplementation "grondag:fermion:0.8+"
+    include "grondag:fermion:0.8+"
 	
 	modImplementation "grondag:joml-mod:1.0+"
     include "grondag:joml-mod:1.0+"

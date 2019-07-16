@@ -18,4 +18,6 @@ public interface MutableModelPrimitiveState extends ModelPrimitiveState {
     default void setTerrainState(TerrainState flowState) { }
 
     default void setTerrainStateKey(long terrainStateKey) { }
+    
+    default void primitiveBits(int bits) { }
 }

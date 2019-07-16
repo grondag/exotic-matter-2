@@ -16,7 +16,7 @@
 
 package grondag.xm2.api.texture;
 
-import static grondag.xm2.model.state.ModelStateData.*;
+import static grondag.xm2.api.model.ModelStateFlags.*;
 
 public enum TextureScale {
     /** 1x1 */

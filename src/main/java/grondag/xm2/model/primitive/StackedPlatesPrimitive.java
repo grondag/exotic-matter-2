@@ -16,9 +16,9 @@
 
 package grondag.xm2.model.primitive;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
 import java.util.function.Consumer;
 
@@ -31,7 +31,6 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.state.PrimitiveModelState;
 import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
@@ -122,7 +121,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
         MutableModelState result = this.newState();
         result.setAxis(fromState.getAxis());
         result.setAxisInverted(fromState.isAxisInverted());
-        ((PrimitiveModelState)result).primitiveBits(((PrimitiveModelState)fromState).primitiveBits());
+        result.primitiveBits(fromState.primitiveBits());
         return result;
     }
     
@@ -131,6 +130,6 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
         return from.primitive() == to.primitive() 
                && from.getAxis() == to.getAxis()
                && from.isAxisInverted() == to.isAxisInverted()
-               && ((PrimitiveModelState)from).primitiveBits() == ((PrimitiveModelState)to).primitiveBits();
+               && from.primitiveBits() == to.primitiveBits();
     }
 }

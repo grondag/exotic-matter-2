@@ -67,25 +67,6 @@ public abstract class QuadPainter {
         editor.setEmissive(textureIndex, paint.emissive(textureIndex));
 
         paint.vertexProcessor(textureIndex).process(editor, textureIndex, modelState, surface, paint);
-
-        // FIXME: not going to work with new primitives w/ shared geometry
-        // move this to baking if still needed
-//        if(isItem)
-//        {
-//            switch(this.paintLayer)
-//            {
-//            case MIDDLE:
-//                inputQuad.scaleFromBlockCenter(1.01f);
-//                break;
-//
-//            case OUTER:
-//                inputQuad.scaleFromBlockCenter(1.02f);
-//                break;
-//
-//            default:
-//                break;
-//            }
-//        }
     }
 
     /**

@@ -21,7 +21,7 @@ import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.model.state.PrimitiveModelState;
+import grondag.xm2.model.state.ModelStates;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -159,7 +159,7 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     @Override
     public void fromTag(CompoundTag compound) {
         super.fromTag(compound);
-        this.modelState = PrimitiveModelState.deserializeFromNBTIfPresent(compound).toImmutable();
+        this.modelState = ModelStates.fromTag(compound).toImmutable();
         this.onModelStateChange(true);
     }
 

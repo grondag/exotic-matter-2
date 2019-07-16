@@ -29,7 +29,6 @@ import org.joml.Vector3f;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.fermion.cache.ObjectSimpleCacheLoader;
 import grondag.fermion.cache.ObjectSimpleLoadingCache;
 import grondag.xm2.api.model.ModelState;
 import net.minecraft.util.math.Box;
@@ -56,9 +55,8 @@ public class CollisionBoxDispatcher {
         }
     };
 
-    // FIX: need to intern immutable keys
     private static final ObjectSimpleLoadingCache<ModelState, OptimizingBoxList> modelBounds = new ObjectSimpleLoadingCache<ModelState, OptimizingBoxList>(
-            new CollisionBoxLoader(), 0xFFF);
+            CollisionBoxDispatcher::load, k -> k.toImmutable(), 0xFFF);
 
     private static ThreadLocal<FastBoxGenerator> fastBoxGen = new ThreadLocal<FastBoxGenerator>() {
         @Override
@@ -83,20 +81,15 @@ public class CollisionBoxDispatcher {
         QUEUE.clear();
     }
 
-    private static class CollisionBoxLoader implements ObjectSimpleCacheLoader<ModelState, OptimizingBoxList> {
-//        static AtomicInteger runCounter = new AtomicInteger();
-//        static AtomicLong totalNanos = new AtomicLong();
-
-        @Override
-        public OptimizingBoxList load(ModelState key) {
+    private static OptimizingBoxList load(ModelState key) {
 //            final long start = System.nanoTime();
 
-            final FastBoxGenerator generator = fastBoxGen.get();
-            key.primitive().produceQuads(key, generator);
+        final FastBoxGenerator generator = fastBoxGen.get();
+        key.primitive().produceQuads(key, generator);
 
-            // note that build clears for next use
-            OptimizingBoxList result = new OptimizingBoxList(generator, key);
-            EXEC.execute(result);
+        // note that build clears for next use
+        OptimizingBoxList result = new OptimizingBoxList(generator, key);
+        EXEC.execute(result);
 
 //            long total = totalNanos.addAndGet(System.nanoTime() - start);
 //            if(runCounter.incrementAndGet() == 100)
@@ -106,8 +99,7 @@ public class CollisionBoxDispatcher {
 //                totalNanos.addAndGet(-total);
 //            }
 
-            return result;
-        }
+        return result;
     }
 
     public static final Box FULL_BLOCK_BOX = new Box(0, 0, 0, 1, 1, 1);

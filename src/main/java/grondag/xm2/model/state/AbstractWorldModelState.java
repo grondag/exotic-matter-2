@@ -1,17 +1,16 @@
 package grondag.xm2.model.state;
 
-import static grondag.xm2.model.state.ModelStateData.STATE_FLAG_NEEDS_POS;
+import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_POS;
 
 import grondag.fermion.varia.BitPacker32;
 import grondag.fermion.varia.Useful;
-import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-public abstract class AbstractWorldModelState extends AbstractModelState {
+abstract class AbstractWorldModelState extends AbstractModelState {
     /**
      * note that sign bit on core packer is reserved to persist static state during
      * serialization
@@ -24,10 +23,6 @@ public abstract class AbstractWorldModelState extends AbstractModelState {
     private static final BitPacker32<AbstractWorldModelState>.IntElement SPECIES = WORLD_BITS.createIntElement(16);
     
     private int blockBits;
-    
-    protected AbstractWorldModelState(ModelPrimitive primitive) {
-        super(primitive);
-    }
     
     @Override
     protected int intSize() {

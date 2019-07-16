@@ -4,12 +4,11 @@ import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelState;
 import net.minecraft.util.PacketByteBuf;
 
-public abstract class AbstractModelState implements ModelState {
-    
+abstract class AbstractModelState implements ModelState {
     //UGLY: belongs somewhere else
     public static final int MAX_SURFACES = 8;
     
-    protected final ModelPrimitive primitive;
+    protected ModelPrimitive primitive;
     
     private final int[] paints = new int[MAX_SURFACES];
     
@@ -29,7 +28,7 @@ public abstract class AbstractModelState implements ModelState {
     }
     
     protected <T extends AbstractModelState> void copyInternal(T template) {
-        System.arraycopy(((AbstractModelState)template).paints, 0, this.paints, 0, template.primitive.surfaces(this).size());
+        System.arraycopy(((AbstractModelState)template).paints, 0, this.paints, 0, this.primitive.surfaces(this).size());
     }
     
     protected int intSize() {
@@ -53,10 +52,6 @@ public abstract class AbstractModelState implements ModelState {
             this.hashCode = -1;
     }
     
-    protected AbstractModelState(ModelPrimitive primitive) {
-        this.primitive = primitive;
-    }
-    
     @Override
     public ModelPrimitive primitive() {
         return primitive;
@@ -65,7 +60,7 @@ public abstract class AbstractModelState implements ModelState {
     protected final int stateFlags() {
         int result = stateFlags;
         if (result == 0) {
-            result = ModelStateData.getFlags(this);
+            result = ModelStateVaria.getFlags(this);
             stateFlags = result;
         }
         return result;
