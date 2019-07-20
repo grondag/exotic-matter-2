@@ -41,49 +41,47 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
 abstract class AbstractPrimitiveModelState extends AbstractWorldModelState implements MutableModelState {
-    private static final BitPacker32<AbstractPrimitiveModelState> SHAPE_PACKER = new BitPacker32<AbstractPrimitiveModelState>(
-            m -> m.shapeBits, (m, b) -> m.shapeBits = b);
-    
-    private static final BitPacker32<AbstractPrimitiveModelState>.EnumElement<Direction.Axis> AXIS = SHAPE_PACKER
-            .createEnumElement(Direction.Axis.class);
+    private static final BitPacker32<AbstractPrimitiveModelState> SHAPE_PACKER = new BitPacker32<AbstractPrimitiveModelState>(m -> m.shapeBits,
+            (m, b) -> m.shapeBits = b);
+
+    private static final BitPacker32<AbstractPrimitiveModelState>.EnumElement<Direction.Axis> AXIS = SHAPE_PACKER.createEnumElement(Direction.Axis.class);
 
     private static final BitPacker32<AbstractPrimitiveModelState>.BooleanElement AXIS_INVERTED = SHAPE_PACKER.createBooleanElement();
-    
-    private static final BitPacker32<AbstractPrimitiveModelState>.EnumElement<ClockwiseRotation> AXIS_ROTATION = SHAPE_PACKER.createEnumElement(ClockwiseRotation.class);
-    
-    private static final BitPacker32<AbstractPrimitiveModelState>.IntElement BLOCK_JOIN = SHAPE_PACKER
-            .createIntElement(CornerJoinState.STATE_COUNT);
-    
-    private static final BitPacker32<AbstractPrimitiveModelState>.IntElement MASONRY_JOIN = SHAPE_PACKER
-            .createIntElement(SimpleJoinState.STATE_COUNT);
-    
+
+    private static final BitPacker32<AbstractPrimitiveModelState>.EnumElement<ClockwiseRotation> AXIS_ROTATION = SHAPE_PACKER
+            .createEnumElement(ClockwiseRotation.class);
+
+    private static final BitPacker32<AbstractPrimitiveModelState>.IntElement BLOCK_JOIN = SHAPE_PACKER.createIntElement(CornerJoinState.STATE_COUNT);
+
+    private static final BitPacker32<AbstractPrimitiveModelState>.IntElement MASONRY_JOIN = SHAPE_PACKER.createIntElement(SimpleJoinState.STATE_COUNT);
+
     private static final BitPacker32<AbstractPrimitiveModelState>.IntElement PRIMITIVE_BITS = SHAPE_PACKER
             .createIntElement(1 << ModelStates.PRIMITIVE_BIT_COUNT);
-    
+
     static {
         assert SHAPE_PACKER.bitLength() <= 32;
     }
-    
+
     protected int shapeBits;
 
     @Override
     protected int intSize() {
         return super.intSize() + 1;
     }
-    
+
     @Override
     protected <T extends AbstractModelState> void copyInternal(T template) {
         super.copyInternal(template);
-        final AbstractPrimitiveModelState other = (AbstractPrimitiveModelState)template;
+        final AbstractPrimitiveModelState other = (AbstractPrimitiveModelState) template;
         this.shapeBits = other.shapeBits;
     }
 
     @Override
     public AbstractPrimitiveModelState copyFrom(ModelState templateIn) {
-        copyInternal((AbstractPrimitiveModelState)templateIn);
+        copyInternal((AbstractPrimitiveModelState) templateIn);
         return this;
     }
-    
+
     @Override
     protected void doSerializeToInts(int[] data, int startAt) {
         data[startAt] = shapeBits;
@@ -95,12 +93,11 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         this.shapeBits = data[startAt];
         super.doDeserializeFromInts(data, startAt + 1);
     }
-    
+
     @Override
     protected boolean equalsInner(Object obj) {
-        final AbstractPrimitiveModelState other = (AbstractPrimitiveModelState)obj;
-        return shapeBits == other.shapeBits
-                && super.equalsInner(obj);
+        final AbstractPrimitiveModelState other = (AbstractPrimitiveModelState) obj;
+        return shapeBits == other.shapeBits && super.equalsInner(obj);
     }
 
     @Override
@@ -166,15 +163,13 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         invalidateHashCode();
     }
 
-
     ////////////////////////////////////////////////////
     // PACKER 3 ATTRIBUTES (BLOCK FORMAT)
     ////////////////////////////////////////////////////
 
     @Override
     public CornerJoinState cornerJoin() {
-        return CornerJoinStateSelector.fromOrdinal(
-                MathHelper.clamp(BLOCK_JOIN.getValue(this), 0, CornerJoinState.STATE_COUNT - 1));
+        return CornerJoinStateSelector.fromOrdinal(MathHelper.clamp(BLOCK_JOIN.getValue(this), 0, CornerJoinState.STATE_COUNT - 1));
     }
 
     @Override
@@ -188,9 +183,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         // If this state is using corner join, join index is for a corner join
         // and so need to derive simple join from the corner join
         final int stateFlags = stateFlags();
-        return ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0)
-                ? SimpleJoinState.fromOrdinal(BLOCK_JOIN.getValue(this))
-                : cornerJoin().simpleJoin();
+        return ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0) ? SimpleJoinState.fromOrdinal(BLOCK_JOIN.getValue(this)) : cornerJoin().simpleJoin();
     }
 
     @Override
@@ -231,7 +224,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
     public final boolean doShapeAndAppearanceMatch(ModelState other) {
         return primitive.doesShapeMatch(this, other) && doesAppearanceMatch(other);
     }
-    
+
     @Override
     public Direction rotateFace(Direction face) {
         return PolyTransform.rotateFace(this, face);
@@ -270,12 +263,12 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
     public boolean isImmutable() {
         return false;
     }
-    
+
     @Override
     public int primitiveBits() {
         return PRIMITIVE_BITS.getValue(this);
     }
-    
+
     @Override
     public void primitiveBits(int bits) {
         PRIMITIVE_BITS.setValue(bits, this);

@@ -99,8 +99,7 @@ public abstract class GlowEncoder {
      */
     public static GlowEncoder get(int format) {
         final int glowFormat = getVertexGlowFormat(format);
-        return glowFormat == VERTEX_GLOW_PER_VERTEX
-                || isMutable(format) ? VERTEX_GLOW : glowFormat == VERTEX_GLOW_SAME ? SAME_GLOW : NO_GLOW;
+        return glowFormat == VERTEX_GLOW_PER_VERTEX || isMutable(format) ? VERTEX_GLOW : glowFormat == VERTEX_GLOW_SAME ? SAME_GLOW : NO_GLOW;
     }
 
     public abstract int glowFormat();

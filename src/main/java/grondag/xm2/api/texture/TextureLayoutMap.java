@@ -37,11 +37,9 @@ public interface TextureLayoutMap {
 
     public static TextureLayoutMap BIGTEX_ANIMATED = create(TextureLayout.BIGTEX_ANIMATED, TextureNameFunction.SINGLE);
 
-    public static TextureLayoutMap QUADRANT_CONNECTED_SINGLE = create(TextureLayout.QUADRANT_CONNECTED,
-            TextureNameFunction.SINGLE);
+    public static TextureLayoutMap QUADRANT_CONNECTED_SINGLE = create(TextureLayout.QUADRANT_CONNECTED, TextureNameFunction.SINGLE);
 
-    public static TextureLayoutMap QUADRANT_CONNECTED_VERSIONED = create(TextureLayout.QUADRANT_CONNECTED,
-            TextureNameFunction.SINGLE);
+    public static TextureLayoutMap QUADRANT_CONNECTED_VERSIONED = create(TextureLayout.QUADRANT_CONNECTED, TextureNameFunction.SINGLE);
 
     TextureLayout layout();
 }

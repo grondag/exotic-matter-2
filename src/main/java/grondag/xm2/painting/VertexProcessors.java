@@ -32,8 +32,7 @@ public class VertexProcessors {
 
     public static void register(VertexProcessor vp) {
         if (allByName.containsKey(vp.registryName)) {
-            Xm.LOG.warn(
-                    "Duplicate registration of vertex processor %s was ignored. Probable bug or configuration issue.");
+            Xm.LOG.warn("Duplicate registration of vertex processor %s was ignored. Probable bug or configuration issue.");
         } else {
             allByName.put(vp.registryName, vp);
             assert allByOrdinal[vp.ordinal] == null : "Vertex processor registered with duplicate ordinal.";

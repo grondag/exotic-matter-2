@@ -32,8 +32,7 @@ public class XmBlockHelper {
      */
     // TODO: remove if not used
     public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState, ModelState withModelState) {
-        if (withBlockState == null
-                || withModelState == null)
+        if (withBlockState == null || withModelState == null)
             return -1;
 
         if (!withModelState.hasSpecies())

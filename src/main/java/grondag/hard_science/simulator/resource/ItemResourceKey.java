@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.simulator.resource;
 
 import javax.annotation.Nullable;
@@ -6,40 +21,33 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
- * For use in hash map.
- * Distinguishes between ItemResources
- * with different NBT 
+ * For use in hash map. Distinguishes between ItemResources with different NBT
  */
-public class ItemResourceKey //implements IMessagePlus, IReadWriteNBT
+public class ItemResourceKey // implements IMessagePlus, IReadWriteNBT
 {
 //    private Item item;
 //    private NBTTagCompound tag;
 //    private NBTTagCompound caps;
 //    private int meta;
     private int hash = -1;
-    
+
     // lazy instantiate and cache
     private ItemStack stack;
-    
-    ItemResourceKey(ItemStack stack)
-    {
+
+    ItemResourceKey(ItemStack stack) {
         this.stack = stack;
 
         // needed so hashes match
-        if(this.stack != null && !this.stack.isEmpty()) this.stack.setCount(1);
+        if (this.stack != null && !this.stack.isEmpty())
+            this.stack.setCount(1);
     }
 
     @Override
-    public int hashCode()
-    {
-        if(this.hash == -1)
-        {
-            if(this.stack == null || this.stack.isEmpty())
-            {
+    public int hashCode() {
+        if (this.hash == -1) {
+            if (this.stack == null || this.stack.isEmpty()) {
                 this.hash = 0;
-            }
-            else
-            {
+            } else {
                 this.hash = this.stack.serializeNBT().hashCode();
             }
         }
@@ -47,31 +55,30 @@ public class ItemResourceKey //implements IMessagePlus, IReadWriteNBT
     }
 
     @Override
-    public boolean equals(@Nullable Object obj)
-    {
-        if(obj == null || !(obj instanceof ItemResourceKey)) return false;
-     
-        ItemResourceKey otherKey = (ItemResourceKey)obj;
-        
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || !(obj instanceof ItemResourceKey))
+            return false;
+
+        ItemResourceKey otherKey = (ItemResourceKey) obj;
+
         NBTTagCompound thisTag = this.stack.getTagCompound();
         NBTTagCompound otherTag = otherKey.stack.getTagCompound();
-        
-        if(thisTag == null)
-        {
-            if(otherTag != null) return false;
+
+        if (thisTag == null) {
+            if (otherTag != null)
+                return false;
+        } else {
+            if (!thisTag.equals(otherTag))
+                return false;
         }
-        else
-        {
-            if(!thisTag.equals(otherTag)) return false;
-        }
-        
-        if(!this.stack.areCapsCompatible(otherKey.stack)) return false;
-        
+
+        if (!this.stack.areCapsCompatible(otherKey.stack))
+            return false;
+
         // do these last because should always match for items in same map
-        return this.stack.getItem() == otherKey.stack.getItem()
-                && this.stack.getMetadata() == otherKey.stack.getMetadata();
+        return this.stack.getItem() == otherKey.stack.getItem() && this.stack.getMetadata() == otherKey.stack.getMetadata();
     }
-    
+
 //    @Override
 //    public void serializeNBT(@Nonnull NBTTagCompound nbt)
 //    {
@@ -91,7 +98,7 @@ public class ItemResourceKey //implements IMessagePlus, IReadWriteNBT
 //        this.hash = -1;
 //        this.stack = null;
 //    }
-    
+
 //    @Override
 //    public void fromBytes(PacketBuffer buf)
 //    {

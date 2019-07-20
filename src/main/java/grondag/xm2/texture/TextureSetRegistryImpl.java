@@ -41,8 +41,7 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
     private int nextIndex = 0;
 
     synchronized void add(TextureSetImpl newSet) {
-        if (array[newSet.index] == null
-                && !map.containsKey(newSet.id)) {
+        if (array[newSet.index] == null && !map.containsKey(newSet.id)) {
             array[newSet.index] = newSet;
             map.put(newSet.id, newSet);
         }
@@ -60,8 +59,7 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 
     @Override
     public TextureSetImpl getByIndex(int index) {
-        return index < 0
-                || index >= nextIndex ? DEFAULT_TEXTURE_SET : array[index];
+        return index < 0 || index >= nextIndex ? DEFAULT_TEXTURE_SET : array[index];
     }
 
     @Override
@@ -70,11 +68,9 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
     }
 
     static {
-        DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none")
-                .baseTextureName("xm2:blocks/noise_moderate").versionCount(4).scale(TextureScale.SINGLE)
-                .layout(TextureLayoutMap.VERSION_X_8).rotation(TextureRotation.ROTATE_RANDOM)
-                .renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN)
-                .build(TextureSetRegistry.NONE_ID);
+        DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("xm2:blocks/noise_moderate").versionCount(4)
+                .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(TextureRotation.ROTATE_RANDOM)
+                .renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
 
         DEFAULT_TEXTURE_SET.use();
     }

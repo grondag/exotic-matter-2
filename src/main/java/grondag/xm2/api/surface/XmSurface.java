@@ -46,9 +46,11 @@ public interface XmSurface {
      * If the surface is full-brightness, need to re-color all vertices to white.
      */
     int FLAG_LAMP_GRADIENT = 4;
-    
+
     /**
-     * If set, generator will assume surface is emissive.  Interacts with {@link #FLAG_LAMP_GRADIENT} <p>
+     * If set, generator will assume surface is emissive. Interacts with
+     * {@link #FLAG_LAMP_GRADIENT}
+     * <p>
      */
     int FLAG_LAMP = 8;
 

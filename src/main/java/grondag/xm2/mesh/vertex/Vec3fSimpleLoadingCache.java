@@ -37,8 +37,7 @@ class Vec3fSimpleLoadingCache {
     private final Object writeLock = new Object();
 
     private Vec3fSimpleLoadingCache(int maxSize) {
-        this.capacity = 1 << (Integer.SIZE
-                - Integer.numberOfLeadingZeros((int) (maxSize / ISimpleLoadingCache.LOAD_FACTOR)));
+        this.capacity = 1 << (Integer.SIZE - Integer.numberOfLeadingZeros((int) (maxSize / ISimpleLoadingCache.LOAD_FACTOR)));
         this.maxFill = (int) (capacity * ISimpleLoadingCache.LOAD_FACTOR);
         this.positionMask = capacity - 1;
         this.activeState = new Vec3fCacheState(this.capacity);
@@ -58,13 +57,10 @@ class Vec3fSimpleLoadingCache {
 
         // Zero value normally indicates an unused spot in key array
         // so requires privileged handling to prevent search weirdness.
-        if (x == 0f
-                && y == 0f
-                && z == 0f)
+        if (x == 0f && y == 0f && z == 0f)
             return Vec3f.ZERO;
 
-        final long hash = ((long) Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16)
-                ^ (((long) Float.floatToIntBits(z)) << 32);
+        final long hash = ((long) Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16) ^ (((long) Float.floatToIntBits(z)) << 32);
 
         int position = (int) (Useful.longHash(hash) & positionMask);
 
@@ -74,9 +70,7 @@ class Vec3fSimpleLoadingCache {
             if (check == null)
                 return load(localState, x, y, z, position);
 
-            else if (check.x() == x
-                    && check.y() == y
-                    && check.z() == z)
+            else if (check.x() == x && check.y() == y && check.z() == z)
                 return check;
 
             position = (position + 1) & positionMask;
@@ -87,10 +81,7 @@ class Vec3fSimpleLoadingCache {
     protected Vec3f loadFromBackup(Vec3fCacheState backup, final float x, final float y, final float z, int position) {
         do {
             Vec3f v = backup.values[position];
-            if (v != null
-                    && v.x() == x
-                    && v.y() == y
-                    && v.z() == z)
+            if (v != null && v.x() == x && v.y() == y && v.z() == z)
                 return v;
 
             if (v == null) {
@@ -124,9 +115,7 @@ class Vec3fSimpleLoadingCache {
             }
 
             // small chance another thread added our value before we got our lock
-            if (currentKey.x() == result.x()
-                    && currentKey.y() == result.y()
-                    && currentKey.z() == result.z())
+            if (currentKey.x() == result.x() && currentKey.y() == result.y() && currentKey.z() == result.z())
                 return currentKey;
 
             position = (position + 1) & positionMask;

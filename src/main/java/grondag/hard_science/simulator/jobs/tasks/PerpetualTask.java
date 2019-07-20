@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.simulator.jobs.tasks;
 
 import javax.annotation.Nonnull;
@@ -10,31 +25,26 @@ import grondag.hard_science.simulator.jobs.Job;
 import grondag.hard_science.simulator.jobs.TaskType;
 
 /**
- * Task that is never ready and never completes.
- * Used to keep system jobs alive forever without introducing special case logic.
+ * Task that is never ready and never completes. Used to keep system jobs alive
+ * forever without introducing special case logic.
  */
-public class PerpetualTask extends AbstractTask
-{
-    public PerpetualTask(boolean isNew)
-    {
+public class PerpetualTask extends AbstractTask {
+    public PerpetualTask(boolean isNew) {
         super(isNew);
     }
 
     /** Use for deserialization */
-    public PerpetualTask()
-    {
+    public PerpetualTask() {
         this(false);
     }
 
     @Override
-    public TaskType requestType()
-    {
+    public TaskType requestType() {
         return TaskType.PERPETUAL;
     }
 
     @Override
-    public synchronized boolean initialize(@Nonnull Job job)
-    {
+    public synchronized boolean initialize(@Nonnull Job job) {
         this.job = job;
         this.status = RequestStatus.WAITING;
         this.job.setDirty();
@@ -42,63 +52,52 @@ public class PerpetualTask extends AbstractTask
     }
 
     @Override
-    public void claim()
-    {
+    public void claim() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void abandon()
-    {
+    public void abandon() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public RequestStatus getStatus()
-    {
+    public RequestStatus getStatus() {
         return RequestStatus.WAITING;
     }
 
     @Override
-    public boolean isTerminated()
-    {
+    public boolean isTerminated() {
         return false;
     }
 
     @Override
-    public void cancel()
-    {
+    public void cancel() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void complete()
-    {
+    public void complete() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void removeListener(ITaskListener listener)
-    {
+    public void removeListener(ITaskListener listener) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    protected synchronized void backTrackConsequents()
-    {
+    protected synchronized void backTrackConsequents() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public synchronized void onAntecedentTerminated(ITask antecedent)
-    {
+    public synchronized void onAntecedentTerminated(ITask antecedent) {
         throw new UnsupportedOperationException();
     }
 
-    
     @Override
-    public synchronized void backTrack(ITask antecedent)
-    {
+    public synchronized void backTrack(ITask antecedent) {
         throw new UnsupportedOperationException();
     }
 }

@@ -178,11 +178,9 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     public final IMutablePolygon normal(int vertexIndex, Vec3f normal) {
         if (vertexEncoder.hasNormals()) {
             if (normal == null)
-                vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), Float.NaN,
-                        Float.NaN, Float.NaN);
+                vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), Float.NaN, Float.NaN, Float.NaN);
             else
-                vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), normal.x(),
-                        normal.y(), normal.z());
+                vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), normal.x(), normal.y(), normal.z());
         }
         return this;
     }
@@ -239,8 +237,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
 
         if (glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_PER_VERTEX)
             setVertexGlow(targetIndex, source.getVertexGlow(sourceIndex));
-        else if (targetIndex == 0
-                && glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_SAME)
+        else if (targetIndex == 0 && glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_SAME)
             setVertexGlow(0, source.getVertexGlow(sourceIndex));
 
         final int layerCount = source.layerCount();
@@ -257,8 +254,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
         }
 
         sprite(targetIndex, 0, source.spriteU(sourceIndex, 0), source.spriteV(sourceIndex, 0));
-        if (vertexEncoder.multiUV()
-                && layerCount > 1) {
+        if (vertexEncoder.multiUV() && layerCount > 1) {
             sprite(targetIndex, 1, source.spriteU(sourceIndex, 1), source.spriteV(sourceIndex, 1));
 
             if (layerCount == 3)

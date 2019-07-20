@@ -45,16 +45,13 @@ public class TerrainDynamicBlock extends TerrainBlock {
      */
     public void makeStatic(BlockState state, World world, BlockPos pos) {
         TerrainStaticBlock staticVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getStaticBlock(this);
-        if (staticVersion == null
-                || state.getBlock() != this)
+        if (staticVersion == null || state.getBlock() != this)
             return;
 
         MutableModelState myModelState = XmBlockStateAccess.modelState(state, world, pos, true).mutableCopy();
         myModelState.setStatic(true);
         // TODO: transfer heat block state?
-        world.setBlockState(pos,
-                staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)),
-                7);
+        world.setBlockState(pos, staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)), 7);
         staticVersion.setModelState(world, pos, myModelState);
     }
 

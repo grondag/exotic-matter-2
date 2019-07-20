@@ -44,17 +44,11 @@ import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class SquareColumnPrimitive extends AbstractModelPrimitive {
-    private static final XmSurfaceListImpl SURFACES_DARK = XmSurfaceImpl.builder()
-            .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-            .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-            .build();
-    
-    private static final XmSurfaceListImpl SURFACES_LIT = XmSurfaceImpl.builder()
-            .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
-            .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP)
-            .build();
+    private static final XmSurfaceListImpl SURFACES_DARK = XmSurfaceImpl.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+
+    private static final XmSurfaceListImpl SURFACES_LIT = XmSurfaceImpl.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT).add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP).build();
 
     public static final int SURFACE_MAIN = 0;
     public static final int SURFACE_CUT = 1;
@@ -63,15 +57,15 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     public static final int MIN_CUTS = 1;
     public static final int MAX_CUTS = 3;
 
-    private static final BitPacker32<SquareColumnPrimitive> STATE_PACKER = new BitPacker32<SquareColumnPrimitive>(null,null);
+    private static final BitPacker32<SquareColumnPrimitive> STATE_PACKER = new BitPacker32<SquareColumnPrimitive>(null, null);
     private static final BitPacker32<SquareColumnPrimitive>.BooleanElement STATE_ARE_CUTS_ON_EDGE = STATE_PACKER.createBooleanElement();
     private static final BitPacker32<SquareColumnPrimitive>.IntElement STATE_CUT_COUNT = STATE_PACKER.createIntElement(MIN_CUTS, MAX_CUTS);
     private static final BitPacker32<SquareColumnPrimitive>.BooleanElement STATE_LIT = STATE_PACKER.createBooleanElement();
-    
+
     static {
         assert STATE_PACKER.bitLength() <= ModelStates.PRIMITIVE_BIT_COUNT;
     }
-    
+
     private static class FaceSpec {
         private final int cutCount;
 //        private final boolean areCutsOnEdge;
@@ -105,9 +99,9 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     }
 
     public SquareColumnPrimitive(String idString) {
-        super(idString,  ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS);
+        super(idString, ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS);
     }
-    
+
     @Override
     public XmSurfaceListImpl surfaces(ModelState modelState) {
         return isLit(modelState) ? SURFACES_LIT : SURFACES_DARK;
@@ -160,7 +154,8 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         stream.release();
     }
 
-    private void makeSideFace(Direction face, IWritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis, XmSurfaceListImpl surfaces) {
+    private void makeSideFace(Direction face, IWritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
+            XmSurfaceListImpl surfaces) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
@@ -222,40 +217,36 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         // splines
         for (int i = 0; i < actualCutCount - 1; i++) {
             writer.surface(surfaces.get(SURFACE_MAIN));
-            writer.setupFaceQuad(face, leftMarginWidth + spec.cutWidth * 2 * i + spec.cutWidth, bottomCapHeight,
-                    leftMarginWidth + spec.cutWidth * 2 * (i + 1), 1 - topCapHeight, 0, topFace);
+            writer.setupFaceQuad(face, leftMarginWidth + spec.cutWidth * 2 * i + spec.cutWidth, bottomCapHeight, leftMarginWidth + spec.cutWidth * 2 * (i + 1),
+                    1 - topCapHeight, 0, topFace);
             stream.append();
         }
 
         // top left corner
         if (fjs.needsCorner(topFace, leftFace, face)) {
             writer.surface(surfaces.get(SURFACE_MAIN));
-            writer.setupFaceQuad(face, Math.max(leftMarginWidth, 0), 1 - spec.baseMarginWidth,
-                    leftMarginWidth + spec.cutWidth, 1, 0, topFace);
+            writer.setupFaceQuad(face, Math.max(leftMarginWidth, 0), 1 - spec.baseMarginWidth, leftMarginWidth + spec.cutWidth, 1, 0, topFace);
             stream.append();
         }
 
         // bottom left corner
         if (fjs.needsCorner(bottomFace, leftFace, face)) {
             writer.surface(surfaces.get(SURFACE_MAIN));
-            writer.setupFaceQuad(face, Math.max(leftMarginWidth, 0), 0, leftMarginWidth + spec.cutWidth,
-                    spec.baseMarginWidth, 0, topFace);
+            writer.setupFaceQuad(face, Math.max(leftMarginWidth, 0), 0, leftMarginWidth + spec.cutWidth, spec.baseMarginWidth, 0, topFace);
             stream.append();
         }
 
         // top right corner
         if (fjs.needsCorner(topFace, rightFace, face)) {
             writer.surface(surfaces.get(SURFACE_MAIN));
-            writer.setupFaceQuad(face, 1 - rightMarginWidth - spec.cutWidth, 1 - spec.baseMarginWidth,
-                    Math.min(1 - rightMarginWidth, 1), 1, 0, topFace);
+            writer.setupFaceQuad(face, 1 - rightMarginWidth - spec.cutWidth, 1 - spec.baseMarginWidth, Math.min(1 - rightMarginWidth, 1), 1, 0, topFace);
             stream.append();
         }
 
         // bottom right corner
         if (fjs.needsCorner(bottomFace, rightFace, face)) {
             writer.surface(surfaces.get(SURFACE_MAIN));
-            writer.setupFaceQuad(face, 1 - rightMarginWidth - spec.cutWidth, 0, Math.min(1 - rightMarginWidth, 1),
-                    spec.baseMarginWidth, 0, topFace);
+            writer.setupFaceQuad(face, 1 - rightMarginWidth - spec.cutWidth, 0, Math.min(1 - rightMarginWidth, 1), spec.baseMarginWidth, 0, topFace);
             stream.append();
         }
 
@@ -267,8 +258,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             if (sx0 > 0.0001f) {
                 writer.surface(surfaces.get(SURFACE_CUT));
                 writer.setTextureSalt(salt++);
-                setupCutSideQuad(writer, new SimpleQuadBounds(rightFace, bottomCapHeight, 1 - spec.cutDepth,
-                        1 - topCapHeight, 1, 1 - sx0, face));
+                setupCutSideQuad(writer, new SimpleQuadBounds(rightFace, bottomCapHeight, 1 - spec.cutDepth, 1 - topCapHeight, 1, 1 - sx0, face));
                 stream.append();
             }
 
@@ -276,8 +266,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             if (sx1 < 0.9999) {
                 writer.surface(surfaces.get(SURFACE_CUT));
                 writer.setTextureSalt(salt++);
-                setupCutSideQuad(writer, new SimpleQuadBounds(leftFace, topCapHeight, 1 - spec.cutDepth,
-                        1 - bottomCapHeight, 1, sx1, face));
+                setupCutSideQuad(writer, new SimpleQuadBounds(leftFace, topCapHeight, 1 - spec.cutDepth, 1 - bottomCapHeight, 1, sx1, face));
                 stream.append();
             }
 
@@ -285,8 +274,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             if (topCapHeight > 0) {
                 writer.surface(surfaces.get(SURFACE_CUT));
                 writer.setTextureSalt(salt++);
-                setupCutSideQuad(writer,
-                        new SimpleQuadBounds(bottomFace, sx0, 1 - spec.cutDepth, sx1, 1, 1 - topCapHeight, face));
+                setupCutSideQuad(writer, new SimpleQuadBounds(bottomFace, sx0, 1 - spec.cutDepth, sx1, 1, 1 - topCapHeight, face));
                 stream.append();
             }
 
@@ -294,8 +282,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             if (bottomCapHeight > 0) {
                 writer.surface(surfaces.get(SURFACE_CUT));
                 writer.setTextureSalt(salt++);
-                setupCutSideQuad(writer, new SimpleQuadBounds(topFace, 1 - sx1, 1 - spec.cutDepth, 1 - sx0, 1,
-                        1 - bottomCapHeight, face));
+                setupCutSideQuad(writer, new SimpleQuadBounds(topFace, 1 - sx1, 1 - spec.cutDepth, 1 - sx0, 1, 1 - bottomCapHeight, face));
                 stream.append();
             }
 
@@ -303,8 +290,8 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             if (fjs.needsCorner(topFace, leftFace, face)) {
                 writer.surface(surfaces.get(SURFACE_CUT));
                 writer.setTextureSalt(salt++);
-                setupCutSideQuad(writer, new SimpleQuadBounds(bottomFace, Math.max(leftMarginWidth, 0),
-                        1 - spec.cutDepth, leftMarginWidth + spec.cutWidth, 1, 1 - spec.baseMarginWidth, face));
+                setupCutSideQuad(writer, new SimpleQuadBounds(bottomFace, Math.max(leftMarginWidth, 0), 1 - spec.cutDepth, leftMarginWidth + spec.cutWidth, 1,
+                        1 - spec.baseMarginWidth, face));
                 stream.append();
             }
 
@@ -312,8 +299,8 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             if (fjs.needsCorner(bottomFace, leftFace, face)) {
                 writer.surface(surfaces.get(SURFACE_CUT));
                 writer.setTextureSalt(salt++);
-                setupCutSideQuad(writer, new SimpleQuadBounds(topFace, 1 - leftMarginWidth - spec.cutWidth,
-                        1 - spec.cutDepth, Math.min(1 - leftMarginWidth, 1), 1, 1 - spec.baseMarginWidth, face));
+                setupCutSideQuad(writer, new SimpleQuadBounds(topFace, 1 - leftMarginWidth - spec.cutWidth, 1 - spec.cutDepth, Math.min(1 - leftMarginWidth, 1),
+                        1, 1 - spec.baseMarginWidth, face));
                 stream.append();
 
             }
@@ -322,8 +309,8 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             if (fjs.needsCorner(topFace, rightFace, face)) {
                 writer.surface(surfaces.get(SURFACE_CUT));
                 writer.setTextureSalt(salt++);
-                setupCutSideQuad(writer, new SimpleQuadBounds(bottomFace, 1 - rightMarginWidth - spec.cutWidth,
-                        1 - spec.cutDepth, Math.min(1 - rightMarginWidth, 1), 1, 1 - spec.baseMarginWidth, face));
+                setupCutSideQuad(writer, new SimpleQuadBounds(bottomFace, 1 - rightMarginWidth - spec.cutWidth, 1 - spec.cutDepth,
+                        Math.min(1 - rightMarginWidth, 1), 1, 1 - spec.baseMarginWidth, face));
                 stream.append();
             }
 
@@ -331,8 +318,8 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
             if (fjs.needsCorner(bottomFace, rightFace, face)) {
                 writer.surface(surfaces.get(SURFACE_CUT));
                 writer.setTextureSalt(salt++);
-                setupCutSideQuad(writer, new SimpleQuadBounds(topFace, Math.max(rightMarginWidth, 0), 1 - spec.cutDepth,
-                        rightMarginWidth + spec.cutWidth, 1, 1 - spec.baseMarginWidth, face));
+                setupCutSideQuad(writer, new SimpleQuadBounds(topFace, Math.max(rightMarginWidth, 0), 1 - spec.cutDepth, rightMarginWidth + spec.cutWidth, 1,
+                        1 - spec.baseMarginWidth, face));
                 stream.append();
             }
         }
@@ -340,13 +327,14 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         // inner lamp surface can be a single poly
         {
             writer.surface(surfaces.get(SURFACE_LAMP));
-            writer.setupFaceQuad(face, Math.max(0, leftMarginWidth), bottomCapHeight, Math.min(1, 1 - rightMarginWidth),
-                    1 - topCapHeight, spec.cutDepth, topFace);
+            writer.setupFaceQuad(face, Math.max(0, leftMarginWidth), bottomCapHeight, Math.min(1, 1 - rightMarginWidth), 1 - topCapHeight, spec.cutDepth,
+                    topFace);
             stream.append();
         }
     }
 
-    private void makeCapFace(Direction face, IWritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis, XmSurfaceListImpl surfaces) {
+    private void makeCapFace(Direction face, IWritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
+            XmSurfaceListImpl surfaces) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
@@ -359,10 +347,8 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         {
             writer.surface(surfaces.get(SURFACE_LAMP));
             writer.setupFaceQuad(face, fjs.isJoined(FaceEdge.LEFT_EDGE) ? 0 : spec.baseMarginWidth,
-                    fjs.isJoined(FaceEdge.BOTTOM_EDGE) ? 0 : spec.baseMarginWidth,
-                    fjs.isJoined(FaceEdge.RIGHT_EDGE) ? 1 : 1 - spec.baseMarginWidth,
-                    fjs.isJoined(FaceEdge.TOP_EDGE) ? 1 : 1 - spec.baseMarginWidth, spec.cutDepth,
-                    FaceEdge.TOP_EDGE.toWorld(face));
+                    fjs.isJoined(FaceEdge.BOTTOM_EDGE) ? 0 : spec.baseMarginWidth, fjs.isJoined(FaceEdge.RIGHT_EDGE) ? 1 : 1 - spec.baseMarginWidth,
+                    fjs.isJoined(FaceEdge.TOP_EDGE) ? 1 : 1 - spec.baseMarginWidth, spec.cutDepth, FaceEdge.TOP_EDGE.toWorld(face));
             stream.append();
         }
 
@@ -380,16 +366,15 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
                 {
                     stream.setVertexCount(3);
                     writer.surface(surfaces.get(SURFACE_MAIN));
-                    writer.setupFaceQuad(face, new FaceVertex(spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0),
-                            new FaceVertex(spec.baseMarginWidth, 1, 0), new FaceVertex(0, 1, 0), side);
+                    writer.setupFaceQuad(face, new FaceVertex(spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0), new FaceVertex(spec.baseMarginWidth, 1, 0),
+                            new FaceVertex(0, 1, 0), side);
                     stream.append();
                 }
                 {
                     stream.setVertexCount(3);
                     writer.surface(surfaces.get(SURFACE_MAIN));
                     writer.setupFaceQuad(face, new FaceVertex(1 - spec.baseMarginWidth, 1, 0),
-                            new FaceVertex(1 - spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0),
-                            new FaceVertex(1, 1, 0), side);
+                            new FaceVertex(1 - spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0), new FaceVertex(1, 1, 0), side);
                     stream.append();
                 }
 
@@ -397,15 +382,15 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
                 {
                     writer.surface(surfaces.get(SURFACE_CUT));
                     writer.setTextureSalt(salt++);
-                    setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side),
-                            1 - spec.baseMarginWidth, 1 - spec.cutDepth, 1, 1, 1 - spec.baseMarginWidth, face));
+                    setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - spec.baseMarginWidth, 1 - spec.cutDepth, 1, 1,
+                            1 - spec.baseMarginWidth, face));
                     stream.append();
                 }
                 {
                     writer.surface(surfaces.get(SURFACE_CUT));
                     writer.setTextureSalt(salt++);
-                    setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0, 1 - spec.cutDepth,
-                            spec.baseMarginWidth, 1, 1 - spec.baseMarginWidth, face));
+                    setupCutSideQuad(writer,
+                            new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0, 1 - spec.cutDepth, spec.baseMarginWidth, 1, 1 - spec.baseMarginWidth, face));
                     stream.append();
                 }
 
@@ -416,17 +401,15 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
 
                     {
                         writer.surface(surfaces.get(SURFACE_MAIN));
-                        writer.setupFaceQuad(face, new FaceVertex(xLeft, 1 - xLeft, 0),
-                                new FaceVertex(xRight, 1 - xRight, 0), new FaceVertex(xRight, 1, 0),
+                        writer.setupFaceQuad(face, new FaceVertex(xLeft, 1 - xLeft, 0), new FaceVertex(xRight, 1 - xRight, 0), new FaceVertex(xRight, 1, 0),
                                 new FaceVertex(xLeft, 1, 0), side);
                         stream.append();
                     }
                     {
                         // mirror on right side, reverse winding order
                         writer.surface(surfaces.get(SURFACE_MAIN));
-                        writer.setupFaceQuad(face, new FaceVertex(1 - xRight, 1 - xRight, 0),
-                                new FaceVertex(1 - xLeft, 1 - xLeft, 0), new FaceVertex(1 - xLeft, 1, 0),
-                                new FaceVertex(1 - xRight, 1, 0), side);
+                        writer.setupFaceQuad(face, new FaceVertex(1 - xRight, 1 - xRight, 0), new FaceVertex(1 - xLeft, 1 - xLeft, 0),
+                                new FaceVertex(1 - xLeft, 1, 0), new FaceVertex(1 - xRight, 1, 0), side);
                         stream.append();
                     }
 
@@ -437,15 +420,13 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
                         {
                             writer.surface(surfaces.get(SURFACE_CUT));
                             writer.setTextureSalt(salt++);
-                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0,
-                                    1 - spec.cutDepth, xLeft, 1, xLeft, face));
+                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0, 1 - spec.cutDepth, xLeft, 1, xLeft, face));
                             stream.append();
                         }
                         {
                             writer.surface(surfaces.get(SURFACE_CUT));
                             writer.setTextureSalt(salt++);
-                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - xLeft,
-                                    1 - spec.cutDepth, 1, 1, xLeft, face));
+                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - xLeft, 1 - spec.cutDepth, 1, 1, xLeft, face));
                             stream.append();
                         }
                     }
@@ -453,15 +434,14 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
                         {
                             writer.surface(surfaces.get(SURFACE_CUT));
                             writer.setTextureSalt(salt++);
-                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - xRight,
-                                    1 - spec.cutDepth, 1, 1, 1 - xRight, face));
+                            setupCutSideQuad(writer,
+                                    new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - xRight, 1 - spec.cutDepth, 1, 1, 1 - xRight, face));
                             stream.append();
                         }
                         {
                             writer.surface(surfaces.get(SURFACE_CUT));
                             writer.setTextureSalt(salt++);
-                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0,
-                                    1 - spec.cutDepth, xRight, 1, 1 - xRight, face));
+                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0, 1 - spec.cutDepth, xRight, 1, 1 - xRight, face));
                             stream.append();
                         }
                     }
@@ -473,8 +453,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
                     // outer face
                     writer.surface(surfaces.get(SURFACE_MAIN));
                     writer.setupFaceQuad(face, new FaceVertex(spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0),
-                            new FaceVertex(1 - spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0),
-                            new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0), side);
+                            new FaceVertex(1 - spec.baseMarginWidth, 1 - spec.baseMarginWidth, 0), new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0), side);
                     stream.append();
                 }
 
@@ -485,8 +464,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
 
                         writer.surface(surfaces.get(SURFACE_CUT));
                         writer.setTextureSalt(salt++);
-                        setupCutSideQuad(writer, new SimpleQuadBounds(side.getOpposite(), offset, 1 - spec.cutDepth,
-                                1 - offset, 1, 1 - offset, face));
+                        setupCutSideQuad(writer, new SimpleQuadBounds(side.getOpposite(), offset, 1 - spec.cutDepth, 1 - offset, 1, 1 - offset, face));
                         stream.append();
 
                     }
@@ -499,18 +477,15 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
                         // inner cut sides
                         writer.surface(surfaces.get(SURFACE_CUT));
                         writer.setTextureSalt(salt++);
-                        setupCutSideQuad(writer,
-                                new SimpleQuadBounds(side, offset, 1 - spec.cutDepth, 1 - offset, 1, offset, face));
+                        setupCutSideQuad(writer, new SimpleQuadBounds(side, offset, 1 - spec.cutDepth, 1 - offset, 1, offset, face));
                         stream.append();
                     }
 
                     {
                         // spline / center
                         writer.surface(surfaces.get(SURFACE_MAIN));
-                        writer.setupFaceQuad(face,
-                                new FaceVertex(Math.min(0.5f, offset + spec.cutWidth), 1 - offset - spec.cutWidth, 0),
-                                new FaceVertex(Math.max(0.5f, 1 - offset - spec.cutWidth), 1 - offset - spec.cutWidth,
-                                        0),
+                        writer.setupFaceQuad(face, new FaceVertex(Math.min(0.5f, offset + spec.cutWidth), 1 - offset - spec.cutWidth, 0),
+                                new FaceVertex(Math.max(0.5f, 1 - offset - spec.cutWidth), 1 - offset - spec.cutWidth, 0),
                                 new FaceVertex(1 - offset, 1 - offset, 0), new FaceVertex(offset, 1 - offset, 0), side);
                         stream.append();
                     }
@@ -524,8 +499,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         final int glow = qi.surface().isLampGradient() ? 128 : 0;
 
         qi.setupFaceQuad(qb.face, new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, Color.WHITE, glow),
-                new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, Color.WHITE, glow),
-                new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, 0),
+                new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, Color.WHITE, glow), new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, 0),
                 new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, Color.WHITE, 0), qb.topFace);
     }
 
@@ -560,7 +534,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     public static void setCutCount(int cutCount, MutableModelState modelState) {
         modelState.primitiveBits(STATE_CUT_COUNT.setValue(cutCount, modelState.primitiveBits()));
     }
-    
+
     public static boolean isLit(ModelState modelState) {
         return STATE_LIT.getValue(modelState.primitiveBits());
     }
@@ -572,7 +546,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     public static void setLit(boolean isLit, MutableModelState modelState) {
         modelState.primitiveBits(STATE_LIT.setValue(isLit, modelState.primitiveBits()));
     }
-    
+
     // PERF: consolidate states if there is more then one for glowing vs not glowing
     @Override
     public ModelState geometricState(ModelState fromState) {
@@ -582,12 +556,10 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
         result.cornerJoin(fromState.cornerJoin());
         return result;
     }
-    
+
     @Override
     public boolean doesShapeMatch(ModelState from, ModelState to) {
-        return from.primitive() == to.primitive() 
-               && from.getAxis() == to.getAxis()
-               && from.cornerJoin() == to.cornerJoin()
-               && from.primitiveBits() == to.primitiveBits();
+        return from.primitive() == to.primitive() && from.getAxis() == to.getAxis() && from.cornerJoin() == to.cornerJoin()
+                && from.primitiveBits() == to.primitiveBits();
     }
 }

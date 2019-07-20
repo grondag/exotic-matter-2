@@ -54,8 +54,7 @@ public interface PlacementItem {
     public final static String NBT_FIXED_REGION_ENABLED = NBTDictionary.claim("fixedRegionOn");
     public final static String NBT_FIXED_REGION_SELECT_POS = NBTDictionary.claim("fixedRegionPos");
 
-    public static BinaryEnumSet<PlacementItemFeature> BENUMSET_FEATURES = new BinaryEnumSet<PlacementItemFeature>(
-            PlacementItemFeature.class);
+    public static BinaryEnumSet<PlacementItemFeature> BENUMSET_FEATURES = new BinaryEnumSet<PlacementItemFeature>(PlacementItemFeature.class);
 
     /**
      * Returns PlacementItem held by player in either hand, or null if player isn't
@@ -140,20 +139,20 @@ public interface PlacementItem {
             return Direction.Axis.Y;
 
         switch (modelState.orientationType()) {
-            case AXIS:
-                return this.getBlockOrientationAxis(stack).axis;
+        case AXIS:
+            return this.getBlockOrientationAxis(stack).axis;
 
-            case FACE:
-                return this.getBlockOrientationFace(stack).face.getAxis();
+        case FACE:
+            return this.getBlockOrientationFace(stack).face.getAxis();
 
-            case EDGE:
-                // TODO
-            case CORNER:
-                // TODO
+        case EDGE:
+            // TODO
+        case CORNER:
+            // TODO
 
-            case NONE:
-            default:
-                return Direction.Axis.Y;
+        case NONE:
+        default:
+            return Direction.Axis.Y;
         }
     }
 
@@ -166,23 +165,22 @@ public interface PlacementItem {
             return false;
 
         switch (XmStackHelper.getStackModelState(stack).orientationType()) {
-            case AXIS:
-                return false;
+        case AXIS:
+            return false;
 
-            case FACE:
-                return this.getBlockOrientationFace(stack).face.getDirection() == Direction.AxisDirection.NEGATIVE;
+        case FACE:
+            return this.getBlockOrientationFace(stack).face.getDirection() == Direction.AxisDirection.NEGATIVE;
 
-            case EDGE:
-                // FIXME: is this right?
-                return this.getBlockOrientationEdge(stack).edge.face1
-                        .getDirection() == Direction.AxisDirection.POSITIVE;
+        case EDGE:
+            // FIXME: is this right?
+            return this.getBlockOrientationEdge(stack).edge.face1.getDirection() == Direction.AxisDirection.POSITIVE;
 
-            case CORNER:
-                // TODO
+        case CORNER:
+            // TODO
 
-            case NONE:
-            default:
-                return false;
+        case NONE:
+        default:
+            return false;
         }
     }
 
@@ -191,17 +189,17 @@ public interface PlacementItem {
             return ClockwiseRotation.ROTATE_NONE;
 
         switch (XmStackHelper.getStackModelState(stack).orientationType()) {
-            case EDGE:
-                return this.getBlockOrientationEdge(stack).edge.rotation;
+        case EDGE:
+            return this.getBlockOrientationEdge(stack).edge.rotation;
 
-            case CORNER:
-                // TODO
+        case CORNER:
+            // TODO
 
-            case NONE:
-            case FACE:
-            case AXIS:
-            default:
-                return ClockwiseRotation.ROTATE_NONE;
+        case NONE:
+        case FACE:
+        case AXIS:
+        default:
+            return ClockwiseRotation.ROTATE_NONE;
         }
     }
 
@@ -213,21 +211,21 @@ public interface PlacementItem {
             return false;
 
         switch (XmStackHelper.getStackModelState(stack).orientationType()) {
-            case AXIS:
-                return getBlockOrientationAxis(stack) == BlockOrientationAxis.DYNAMIC;
+        case AXIS:
+            return getBlockOrientationAxis(stack) == BlockOrientationAxis.DYNAMIC;
 
-            case CORNER:
-                return getBlockOrientationCorner(stack) == BlockOrientationCorner.DYNAMIC;
+        case CORNER:
+            return getBlockOrientationCorner(stack) == BlockOrientationCorner.DYNAMIC;
 
-            case EDGE:
-                return getBlockOrientationEdge(stack) == BlockOrientationEdge.DYNAMIC;
+        case EDGE:
+            return getBlockOrientationEdge(stack) == BlockOrientationEdge.DYNAMIC;
 
-            case FACE:
-                return getBlockOrientationFace(stack) == BlockOrientationFace.DYNAMIC;
+        case FACE:
+            return getBlockOrientationFace(stack) == BlockOrientationFace.DYNAMIC;
 
-            case NONE:
-            default:
-                return false;
+        case NONE:
+        default:
+            return false;
         }
     }
 
@@ -239,21 +237,21 @@ public interface PlacementItem {
             return false;
 
         switch (XmStackHelper.getStackModelState(stack).orientationType()) {
-            case AXIS:
-                return getBlockOrientationAxis(stack).isFixed();
+        case AXIS:
+            return getBlockOrientationAxis(stack).isFixed();
 
-            case CORNER:
-                return getBlockOrientationCorner(stack).isFixed();
+        case CORNER:
+            return getBlockOrientationCorner(stack).isFixed();
 
-            case EDGE:
-                return getBlockOrientationEdge(stack).isFixed();
+        case EDGE:
+            return getBlockOrientationEdge(stack).isFixed();
 
-            case FACE:
-                return getBlockOrientationFace(stack).isFixed();
+        case FACE:
+            return getBlockOrientationFace(stack).isFixed();
 
-            case NONE:
-            default:
-                return false;
+        case NONE:
+        default:
+            return false;
         }
     }
 
@@ -265,21 +263,21 @@ public interface PlacementItem {
             return false;
 
         switch (XmStackHelper.getStackModelState(stack).orientationType()) {
-            case AXIS:
-                return getBlockOrientationAxis(stack) == BlockOrientationAxis.MATCH_CLOSEST;
+        case AXIS:
+            return getBlockOrientationAxis(stack) == BlockOrientationAxis.MATCH_CLOSEST;
 
-            case CORNER:
-                return getBlockOrientationCorner(stack) == BlockOrientationCorner.MATCH_CLOSEST;
+        case CORNER:
+            return getBlockOrientationCorner(stack) == BlockOrientationCorner.MATCH_CLOSEST;
 
-            case EDGE:
-                return getBlockOrientationEdge(stack) == BlockOrientationEdge.MATCH_CLOSEST;
+        case EDGE:
+            return getBlockOrientationEdge(stack) == BlockOrientationEdge.MATCH_CLOSEST;
 
-            case FACE:
-                return getBlockOrientationFace(stack) == BlockOrientationFace.MATCH_CLOSEST;
+        case FACE:
+            return getBlockOrientationFace(stack) == BlockOrientationFace.MATCH_CLOSEST;
 
-            case NONE:
-            default:
-                return false;
+        case NONE:
+        default:
+            return false;
         }
     }
 
@@ -294,8 +292,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        setBlockOrientationAxis(stack, reverse ? Useful.prevEnumValue(getBlockOrientationAxis(stack))
-                : Useful.nextEnumValue(getBlockOrientationAxis(stack)));
+        setBlockOrientationAxis(stack, reverse ? Useful.prevEnumValue(getBlockOrientationAxis(stack)) : Useful.nextEnumValue(getBlockOrientationAxis(stack)));
         return true;
     }
 
@@ -316,8 +313,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        setBlockOrientationFace(stack, reverse ? Useful.prevEnumValue(getBlockOrientationFace(stack))
-                : Useful.nextEnumValue(getBlockOrientationFace(stack)));
+        setBlockOrientationFace(stack, reverse ? Useful.prevEnumValue(getBlockOrientationFace(stack)) : Useful.nextEnumValue(getBlockOrientationFace(stack)));
         return true;
     }
 
@@ -339,8 +335,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        setBlockOrientationEdge(stack, reverse ? Useful.prevEnumValue(getBlockOrientationEdge(stack))
-                : Useful.nextEnumValue(getBlockOrientationEdge(stack)));
+        setBlockOrientationEdge(stack, reverse ? Useful.prevEnumValue(getBlockOrientationEdge(stack)) : Useful.nextEnumValue(getBlockOrientationEdge(stack)));
         return true;
     }
 
@@ -362,8 +357,8 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        setBlockOrientationCorner(stack, reverse ? Useful.prevEnumValue(getBlockOrientationCorner(stack))
-                : Useful.nextEnumValue(getBlockOrientationCorner(stack)));
+        setBlockOrientationCorner(stack,
+                reverse ? Useful.prevEnumValue(getBlockOrientationCorner(stack)) : Useful.nextEnumValue(getBlockOrientationCorner(stack)));
         return true;
     }
 
@@ -376,25 +371,25 @@ public interface PlacementItem {
             return false;
 
         switch (XmStackHelper.getStackModelState(stack).orientationType()) {
-            case AXIS:
-                cycleBlockOrientationAxis(stack, reverse);
-                break;
+        case AXIS:
+            cycleBlockOrientationAxis(stack, reverse);
+            break;
 
-            case CORNER:
-                cycleBlockOrientationCorner(stack, reverse);
-                break;
+        case CORNER:
+            cycleBlockOrientationCorner(stack, reverse);
+            break;
 
-            case EDGE:
-                cycleBlockOrientationEdge(stack, reverse);
-                break;
+        case EDGE:
+            cycleBlockOrientationEdge(stack, reverse);
+            break;
 
-            case FACE:
-                cycleBlockOrientationFace(stack, reverse);
-                break;
+        case FACE:
+            cycleBlockOrientationFace(stack, reverse);
+            break;
 
-            case NONE:
-            default:
-                break;
+        case NONE:
+        default:
+            break;
         }
         return true;
     }
@@ -407,21 +402,21 @@ public interface PlacementItem {
             return "NOT SUPPORTED";
 
         switch (XmStackHelper.getStackModelState(stack).orientationType()) {
-            case AXIS:
-                return getBlockOrientationAxis(stack).localizedName();
+        case AXIS:
+            return getBlockOrientationAxis(stack).localizedName();
 
-            case CORNER:
-                return getBlockOrientationCorner(stack).localizedName();
+        case CORNER:
+            return getBlockOrientationCorner(stack).localizedName();
 
-            case EDGE:
-                return getBlockOrientationEdge(stack).localizedName();
+        case EDGE:
+            return getBlockOrientationEdge(stack).localizedName();
 
-            case FACE:
-                return getBlockOrientationFace(stack).localizedName();
+        case FACE:
+            return getBlockOrientationFace(stack).localizedName();
 
-            case NONE:
-            default:
-                return I18n.translate("placement.orientation.none");
+        case NONE:
+        default:
+            return I18n.translate("placement.orientation.none");
         }
     }
 
@@ -441,8 +436,7 @@ public interface PlacementItem {
      * what user is doing otherwise.
      */
     public default RegionOrientation getRegionOrientation(ItemStack stack) {
-        return isFixedRegionSelectionInProgress(stack) ? RegionOrientation.XYZ
-                : RegionOrientation.XYZ.deserializeNBT(stack.getTag());
+        return isFixedRegionSelectionInProgress(stack) ? RegionOrientation.XYZ : RegionOrientation.XYZ.deserializeNBT(stack.getTag());
     }
 
     /**
@@ -452,8 +446,7 @@ public interface PlacementItem {
         if (!isRegionOrientationSupported(stack))
             return false;
 
-        setRegionOrientation(stack, reverse ? Useful.prevEnumValue(getRegionOrientation(stack))
-                : Useful.nextEnumValue(getRegionOrientation(stack)));
+        setRegionOrientation(stack, reverse ? Useful.prevEnumValue(getRegionOrientation(stack)) : Useful.nextEnumValue(getRegionOrientation(stack)));
         return true;
     }
 
@@ -479,8 +472,7 @@ public interface PlacementItem {
         if (!this.isTargetModeSupported(stack))
             return false;
 
-        setTargetMode(stack,
-                reverse ? Useful.prevEnumValue(getTargetMode(stack)) : Useful.nextEnumValue(getTargetMode(stack)));
+        setTargetMode(stack, reverse ? Useful.prevEnumValue(getTargetMode(stack)) : Useful.nextEnumValue(getTargetMode(stack)));
         return true;
     }
 
@@ -506,8 +498,7 @@ public interface PlacementItem {
         if (!this.isFilterModeSupported(stack))
             return false;
 
-        setFilterMode(stack,
-                reverse ? Useful.prevEnumValue(getFilterMode(stack)) : Useful.nextEnumValue(getFilterMode(stack)));
+        setFilterMode(stack, reverse ? Useful.prevEnumValue(getFilterMode(stack)) : Useful.nextEnumValue(getFilterMode(stack)));
         return true;
     }
 
@@ -533,8 +524,7 @@ public interface PlacementItem {
         if (!this.isSpeciesModeSupported(stack))
             return false;
 
-        setSpeciesMode(stack,
-                reverse ? Useful.prevEnumValue(getSpeciesMode(stack)) : Useful.nextEnumValue(getSpeciesMode(stack)));
+        setSpeciesMode(stack, reverse ? Useful.prevEnumValue(getSpeciesMode(stack)) : Useful.nextEnumValue(getSpeciesMode(stack)));
         return true;
     }
 
@@ -614,8 +604,7 @@ public interface PlacementItem {
 
         boolean current = this.isFixedRegionEnabled(stack);
 
-        if (current
-                && this.isFixedRegionSelectionInProgress(stack))
+        if (current && this.isFixedRegionSelectionInProgress(stack))
             this.fixedRegionCancel(stack);
 
         setFixedRegionEnabled(stack, !current);
@@ -680,8 +669,7 @@ public interface PlacementItem {
     }
 
     public default boolean isFixedRegionSelectionInProgress(ItemStack stack) {
-        if (!this.isFixedRegionSupported(stack)
-                || !this.isFixedRegionEnabled(stack))
+        if (!this.isFixedRegionSupported(stack) || !this.isFixedRegionEnabled(stack))
             return false;
 
         return Useful.getOrCreateTagCompound(stack).containsKey(NBT_FIXED_REGION_SELECT_POS);
@@ -773,8 +761,7 @@ public interface PlacementItem {
      */
     public default BlockPos getRegionSize(ItemStack stack, boolean applyRegionRotation) {
         CompoundTag tag = stack.getTag();
-        if (tag == null
-                || !tag.containsKey(NBT_REGION_SIZE))
+        if (tag == null || !tag.containsKey(NBT_REGION_SIZE))
             return new BlockPos(1, 1, 1);
 
         BlockPos result = BlockPos.fromLong(tag.getLong(NBT_REGION_SIZE));
@@ -804,23 +791,18 @@ public interface PlacementItem {
         CompoundTag tag = Useful.getOrCreateTagCompound(stack);
         BlockPos oldPos = BlockPos.fromLong(tag.getLong(NBT_REGION_SIZE));
 
-        BlockPos newPos = new BlockPos(MathHelper.clamp(oldPos.getX() + dx, 1, 9),
-                MathHelper.clamp(oldPos.getY() + dy, 1, 9),
+        BlockPos newPos = new BlockPos(MathHelper.clamp(oldPos.getX() + dx, 1, 9), MathHelper.clamp(oldPos.getY() + dy, 1, 9),
                 MathHelper.clamp(oldPos.getZ() + dz, 1, this.isExcavator(stack) ? 64 : 9));
         tag.putLong(NBT_REGION_SIZE, newPos.asLong());
 
-        if (newPos.getX() == 1
-                && newPos.getY() == 1
-                && newPos.getZ() == 1) {
+        if (newPos.getX() == 1 && newPos.getY() == 1 && newPos.getZ() == 1) {
             // change to single-block mode if region size is single block
-            if (this.getTargetMode(stack).usesSelectionRegion
-                    && this.isTargetModeSupported(stack)) {
+            if (this.getTargetMode(stack).usesSelectionRegion && this.isTargetModeSupported(stack)) {
                 this.setTargetMode(stack, TargetMode.ON_CLICKED_FACE);
             }
         } else {
             // change to multiblock mode if region size is single block
-            if (!this.getTargetMode(stack).usesSelectionRegion
-                    && this.isTargetModeSupported(stack)) {
+            if (!this.getTargetMode(stack).usesSelectionRegion && this.isTargetModeSupported(stack)) {
                 this.setTargetMode(stack, TargetMode.FILL_REGION);
             }
         }
@@ -846,18 +828,18 @@ public interface PlacementItem {
 
     public default String selectedRegionLocalizedName(ItemStack stack) {
         switch (getTargetMode(stack)) {
-            case FILL_REGION:
-                if (!this.isRegionSizeSupported(stack))
-                    return "";
-                BlockPos pos = getRegionSize(stack, false);
-                return I18n.translate("placement.message.region_box", pos.getX(), pos.getY(), pos.getZ());
+        case FILL_REGION:
+            if (!this.isRegionSizeSupported(stack))
+                return "";
+            BlockPos pos = getRegionSize(stack, false);
+            return I18n.translate("placement.message.region_box", pos.getX(), pos.getY(), pos.getZ());
 
-            case ON_CLICKED_SURFACE:
-                return I18n.translate("placement.message.region_additive");
+        case ON_CLICKED_SURFACE:
+            return I18n.translate("placement.message.region_additive");
 
-            case ON_CLICKED_FACE:
-            default:
-                return I18n.translate("placement.message.region_single");
+        case ON_CLICKED_FACE:
+        default:
+            return I18n.translate("placement.message.region_single");
 
         }
     }

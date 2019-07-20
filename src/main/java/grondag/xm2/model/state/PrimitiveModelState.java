@@ -49,21 +49,20 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
     private static ArrayBlockingQueue<PrimitiveModelState> POOL = new ArrayBlockingQueue<>(4096);
 
     private static final PrimitiveModelState TEMPLATE = new PrimitiveModelState();
-    
+
     static {
         TEMPLATE.primitive = XmPrimitives.CUBE;
     }
-    
+
     static OwnedModelState claim(ModelPrimitive primitive) {
         return claimInner(TEMPLATE, primitive);
     }
-    
+
     private static PrimitiveModelState claimInner(PrimitiveModelState template, ModelPrimitive primitive) {
         PrimitiveModelState result = POOL.poll();
         if (result == null) {
             result = new PrimitiveModelState();
-        }
-        else {
+        } else {
             result.isImmutable = false;
         }
         result.primitive = primitive;
@@ -75,90 +74,104 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
         state.isImmutable = true;
         POOL.offer(state);
     }
-    
+
     private boolean isImmutable = false;
 
     @Override
     public void setStatic(boolean isStatic) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.setStatic(isStatic);
     }
 
     @Override
     public void setAxis(Axis axis) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.setAxis(axis);
     }
 
     @Override
     public void setAxisInverted(boolean isInverted) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.setAxisInverted(isInverted);
     }
 
     @Override
     public void posX(int index) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.posX(index);
     }
 
     @Override
     public void posY(int index) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.posY(index);
     }
 
     @Override
     public void posZ(int index) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.posZ(index);
     }
 
     @Override
     public void species(int species) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.species(species);
     }
 
     @Override
     public void cornerJoin(CornerJoinState join) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.cornerJoin(join);
     }
 
     @Override
     public void simpleJoin(SimpleJoinState join) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.simpleJoin(join);
     }
 
     @Override
     public void masonryJoin(SimpleJoinState join) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.masonryJoin(join);
     }
 
     @Override
     public void setAxisRotation(ClockwiseRotation rotation) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.setAxisRotation(rotation);
     }
 
     @Override
     public void setTerrainStateKey(long terrainStateKey) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.setTerrainStateKey(terrainStateKey);
     }
 
     @Override
     public void setTerrainState(TerrainState flowState) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.setTerrainState(flowState);
     }
 
     @Override
     public void fromBytes(PacketByteBuf pBuff) {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         super.fromBytes(pBuff);
     }
 
@@ -170,7 +183,7 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
     @SuppressWarnings("unchecked")
     @Override
     public ImmutableModelState toImmutable() {
-        if(isImmutable) {
+        if (isImmutable) {
             return this;
         } else {
             PrimitiveModelState result = claimInner(this, this.primitive);
@@ -212,14 +225,14 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
     public void emitQuads(RenderContext context) {
         context.meshConsumer().accept(mesh());
     }
-    
+
     static OwnedModelState fromTag(CompoundTag tag) {
         ModelPrimitive shape = ModelPrimitiveRegistry.INSTANCE.get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
-        if(shape == null) {
+        if (shape == null) {
             return null;
         }
         PrimitiveModelState result = claimInner(TEMPLATE, shape);
-    
+
         if (tag.containsKey(ModelStateTagHelper.NBT_MODEL_BITS)) {
             int[] stateBits = tag.getIntArray(ModelStateTagHelper.NBT_MODEL_BITS);
             if (stateBits.length != 22) {
@@ -228,7 +241,7 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
                 result.deserializeFromInts(stateBits);
             }
         }
-        
+
         // textures and vertex processors serialized by name because registered can
         // change if mods/config change
 //        String layers = tag.getString(NBT_LAYERS);
@@ -253,7 +266,7 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
 //                }
 //            }
 //        }
-        
+
         result.clearStateFlags();
         return result;
     }
@@ -265,7 +278,8 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
 
     @Override
     public void release() {
-        if(isImmutable) throw new IllegalStateException();
+        if (isImmutable)
+            throw new IllegalStateException();
         release(this);
     }
 }

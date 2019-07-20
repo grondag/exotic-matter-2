@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.machines.support;
 
 import java.util.Collections;
@@ -17,89 +32,78 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Maintains a view of an IStorage on client for currently open container.
  */
 @SideOnly(Side.CLIENT)
-public class OpenContainerStorageProxy
-{    
+public class OpenContainerStorageProxy {
     public static OpenContainerStorageProxy ITEM_PROXY = new OpenContainerStorageProxy();
-    
-    private OpenContainerStorageProxy() {};
+
+    private OpenContainerStorageProxy() {
+    };
 
     private Int2ObjectOpenHashMap<ItemResourceDelegate> MAP = new Int2ObjectOpenHashMap<ItemResourceDelegate>();
-    
+
     public final ConcurrentForwardingList<ItemResourceDelegate> LIST = new ConcurrentForwardingList<ItemResourceDelegate>(Collections.emptyList());
-    
+
     private boolean isDirty = false;
-    
+
     private int sortIndex = 0;
-    
+
     private long capacity;
     private long usedCapacity;
-    
+
     /**
-     * Incorporates changes and updates sort order.
-     * Returns true if a refresh was performed.
+     * Incorporates changes and updates sort order. Returns true if a refresh was
+     * performed.
      */
 
-    public boolean refreshListIfNeeded()
-    {
-        if(!this.isDirty) return false;
-        
+    public boolean refreshListIfNeeded() {
+        if (!this.isDirty)
+            return false;
+
         @SuppressWarnings("unchecked")
         Comparator<ItemResourceDelegate> sort = ItemResourceDelegate.SORT[this.sortIndex];
-        
+
         LIST.setDelegate(ImmutableList.copyOf(MAP.values().stream().sorted(sort).collect(Collectors.toList())));
-        
+
         this.isDirty = false;
-        
+
         return true;
     }
-    
-    public void handleStorageRefresh(List<ItemResourceDelegate> update, long capacity, boolean isFullRefresh)
-    {
+
+    public void handleStorageRefresh(List<ItemResourceDelegate> update, long capacity, boolean isFullRefresh) {
         this.capacity = capacity;
-        if(isFullRefresh)
-        {
+        if (isFullRefresh) {
             this.handleFullRefresh(update);
-        }
-        else if(!update.isEmpty())
-        {
-            for(ItemResourceDelegate d : update)
-            {
+        } else if (!update.isEmpty()) {
+            for (ItemResourceDelegate d : update) {
                 this.handleDelegateUpdate(d);
             }
         }
         this.isDirty = true;
-        
+
     }
 
-    private void handleFullRefresh(List<ItemResourceDelegate> update)
-    {
+    private void handleFullRefresh(List<ItemResourceDelegate> update) {
         this.MAP.clear();
         this.usedCapacity = 0;
-        for(ItemResourceDelegate item : update )
-        {
+        for (ItemResourceDelegate item : update) {
             this.MAP.put(item.handle(), item);
             this.usedCapacity += item.getQuantity();
         }
     }
-    
-    private void handleDelegateUpdate(ItemResourceDelegate update)
-    {
-        ItemResourceDelegate prior = this.MAP.get(update.handle());
-        if(prior != null) this.usedCapacity -= prior.getQuantity();
 
-        if(update.getQuantity() == 0)
-        {
+    private void handleDelegateUpdate(ItemResourceDelegate update) {
+        ItemResourceDelegate prior = this.MAP.get(update.handle());
+        if (prior != null)
+            this.usedCapacity -= prior.getQuantity();
+
+        if (update.getQuantity() == 0) {
             this.MAP.remove(update.handle());
-        }
-        else
-        {
+        } else {
             this.MAP.put(update.handle(), update);
             this.usedCapacity += update.getQuantity();
         }
     }
 
-    public void handleStorageDisconnect()
-    {
+    public void handleStorageDisconnect() {
         this.MAP.clear();
         this.LIST.setDelegate(Collections.emptyList());
         this.isDirty = false;
@@ -110,29 +114,24 @@ public class OpenContainerStorageProxy
 //        return false;
 //    }
 
-    public int getSortIndex()
-    {
+    public int getSortIndex() {
         return this.sortIndex;
     }
 
-    public void setSortIndex(int sortIndex)
-    {
+    public void setSortIndex(int sortIndex) {
         this.sortIndex = sortIndex;
         this.isDirty = true;
     }
 
-    public long capacity()
-    {
+    public long capacity() {
         return capacity;
     }
 
-    public long usedCapacity()
-    {
+    public long usedCapacity() {
         return usedCapacity;
     }
-    
-    public int fillPercentage()
-    {
+
+    public int fillPercentage() {
         return this.capacity == 0 ? 0 : (int) (this.usedCapacity * 100 / this.capacity);
     }
 }

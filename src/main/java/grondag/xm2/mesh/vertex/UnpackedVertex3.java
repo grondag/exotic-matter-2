@@ -137,9 +137,7 @@ public class UnpackedVertex3 extends AbstractVertex<UnpackedVertex3> implements 
 
     @Override
     public boolean hasNormal() {
-        return !(normX == 0
-                && normY == 0
-                && normZ == 0);
+        return !(normX == 0 && normY == 0 && normZ == 0);
     }
 
     @Override

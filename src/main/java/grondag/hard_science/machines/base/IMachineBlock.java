@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.machines.base;
 
 import javax.annotation.Nullable;
@@ -35,192 +50,172 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public interface IMachineBlock
-{
+public interface IMachineBlock {
     /**
      * Returns machine instance associated with block at this position, if any.
      */
     @Nullable
-    public default AbstractMachine machine(World world, BlockPos pos)
-    {
+    public default AbstractMachine machine(World world, BlockPos pos) {
         assert !world.isRemote : "Attempt to access Machine on client.";
-    
-        if(world.isRemote) return null;
-        
-        if(world.getBlockState(pos).getBlock() != this)
-        {
+
+        if (world.isRemote)
+            return null;
+
+        if (world.getBlockState(pos).getBlock() != this) {
             assert false : "Block mismatch on device lookup request.";
             return null;
         }
-        
-        return (AbstractMachine)DeviceManager.getDevice(world, pos);
+
+        return (AbstractMachine) DeviceManager.getDevice(world, pos);
     }
-    
+
     /**
      * Used to create new machine instances appropriate for this block.
      */
     public AbstractMachine createNewMachine();
-    
-    /**
-     * Handler for block placement - call this from Block#OnBlockPlacedBy
-     * BEFORE calling super.
-     */
-    public default void handleOnBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-        if(worldIn.isRemote) return;
-        
-        if(Configurator.logDeviceChanges)
-            HardScience.INSTANCE.info("MachineBlock.onBlockPlacedBy: @ %d.%d.%d in dim %d", 
-                    pos.getX(), pos.getY(), pos.getZ(), worldIn.provider.getDimension());
 
-        assert this.machine(worldIn, pos) == null
-                : "Found existing machine on block placement.";
-        
+    /**
+     * Handler for block placement - call this from Block#OnBlockPlacedBy BEFORE
+     * calling super.
+     */
+    public default void handleOnBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        if (worldIn.isRemote)
+            return;
+
+        if (Configurator.logDeviceChanges)
+            HardScience.INSTANCE.info("MachineBlock.onBlockPlacedBy: @ %d.%d.%d in dim %d", pos.getX(), pos.getY(), pos.getZ(),
+                    worldIn.provider.getDimension());
+
+        assert this.machine(worldIn, pos) == null : "Found existing machine on block placement.";
+
         // restore placed machines or initialize them with simulation
         AbstractMachine machine = this.createNewMachine();
         this.handleMachinePlacement(machine, worldIn, pos, state);
-        
-        if(stack.hasTagCompound())
-        {
+
+        if (stack.hasTagCompound()) {
             NBTTagCompound serverTag = SuperTileEntity.getServerTag(stack.getTagCompound());
-            if(serverTag.hasKey(MachineTileEntity.NBT_DEVICE_STATE))
-            {
+            if (serverTag.hasKey(MachineTileEntity.NBT_DEVICE_STATE)) {
                 machine.deserializeNBT(serverTag.getCompoundTag(MachineTileEntity.NBT_DEVICE_STATE));
             }
         }
-        
+
         machine.setLocation(pos, worldIn);
-        
+
         // new machines will default to public domain
         // change to player's active domain on placement
         // machines that are restored from stack may have
         // a specific existing domain, which should not be replaced.
-        if(machine.getDomain() == null || machine.getDomain() == DomainManager.instance().defaultDomain())
-        {
+        if (machine.getDomain() == null || machine.getDomain() == DomainManager.instance().defaultDomain()) {
             IDomain domain = DomainManager.instance().getActiveDomain((EntityPlayerMP) placer);
-            if(domain == null || !domain.hasPrivilege((EntityPlayer) placer, Privilege.ADD_NODE))
-            {
+            if (domain == null || !domain.hasPrivilege((EntityPlayer) placer, Privilege.ADD_NODE)) {
                 domain = DomainManager.instance().defaultDomain();
             }
             machine.setDomain(domain);
         }
-        
+
         // machine fully ready to be connected to domain now
         DeviceManager.addDevice(machine);
         machine.onConnect();
-        
+
         TileEntity blockTE = worldIn.getTileEntity(pos);
-        if (blockTE != null && blockTE instanceof MachineTileEntity) 
-        {
-            ((MachineTileEntity)blockTE).onMachinePlaced(machine);
+        if (blockTE != null && blockTE instanceof MachineTileEntity) {
+            ((MachineTileEntity) blockTE).onMachinePlaced(machine);
         }
 
     }
 
     /**
-     * Retrieves ports available on faces of this device.
-     * Port faces are transformed to match block orientation
-     * if the port layout has an orientation.<p>
+     * Retrieves ports available on faces of this device. Port faces are transformed
+     * to match block orientation if the port layout has an orientation.
+     * <p>
      * 
-     * If this machine has item and power ports that use 
-     * species for carrier segregation, ports will have channel set 
-     * to block species of the given block state.<p>
+     * If this machine has item and power ports that use species for carrier
+     * segregation, ports will have channel set to block species of the given block
+     * state.
+     * <p>
      * 
-     * Used server-side to initialize machines.  Used client-side
-     * to render connectivity of cables.
+     * Used server-side to initialize machines. Used client-side to render
+     * connectivity of cables.
      */
-    public default IPortLayout portLayout(IBlockAccess worldIn, BlockPos pos, IBlockState state)
-    {
-        return this.nominalPortLayout().localize(SuperBlockWorldAccess.access(worldIn).getModelState((ISuperBlock)state.getBlock(), pos, true));
+    public default IPortLayout portLayout(IBlockAccess worldIn, BlockPos pos, IBlockState state) {
+        return this.nominalPortLayout().localize(SuperBlockWorldAccess.access(worldIn).getModelState((ISuperBlock) state.getBlock(), pos, true));
     }
-    
+
     /**
-     * The port layout for this machine before any 
-     * configuration or orientation. Typically will
-     * be implemented as a static constant value.
+     * The port layout for this machine before any configuration or orientation.
+     * Typically will be implemented as a static constant value.
+     * 
      * @return
      */
     public PortLayout nominalPortLayout();
-    
+
     /**
-     * Called immediately after a new machine is created during
-     * block placement to allow machine-specific configuration
-     * that is based on world state. Typically this is where the
-     * machine would capture things like species and orientation
-     * that depend on block/tile entity state and which may not
-     * be available later on when the chunk is unloaded.  Machine
-     * should serialize this information if needed for operation.
+     * Called immediately after a new machine is created during block placement to
+     * allow machine-specific configuration that is based on world state. Typically
+     * this is where the machine would capture things like species and orientation
+     * that depend on block/tile entity state and which may not be available later
+     * on when the chunk is unloaded. Machine should serialize this information if
+     * needed for operation.
      */
-    public default void handleMachinePlacement(AbstractMachine machine, World worldIn, BlockPos pos, IBlockState state)
-    {
-        if(machine.hasChannel() && state.getPropertyKeys().contains(ISuperBlock.META))
-        {
+    public default void handleMachinePlacement(AbstractMachine machine, World worldIn, BlockPos pos, IBlockState state) {
+        if (machine.hasChannel() && state.getPropertyKeys().contains(ISuperBlock.META)) {
             machine.setChannel(state.getValue(ISuperBlock.META));
         }
     }
-    
 
     /**
-     * Handler for block break - call this from Block#breakBlock
-     * BEFORE calling super.
+     * Handler for block break - call this from Block#breakBlock BEFORE calling
+     * super.
      */
-    public default void handleBreakBlock(World worldIn, BlockPos pos, IBlockState state)
-    {
-        if(!(worldIn == null || worldIn.isRemote))
-        {
-            if(Configurator.logDeviceChanges)
-                HardScience.INSTANCE.info("MachineBlock.breakBlock: @ %d.%d.%d in dim %d", 
-                        pos.getX(), pos.getY(), pos.getZ(), worldIn.provider.getDimension());
-            
+    public default void handleBreakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        if (!(worldIn == null || worldIn.isRemote)) {
+            if (Configurator.logDeviceChanges)
+                HardScience.INSTANCE.info("MachineBlock.breakBlock: @ %d.%d.%d in dim %d", pos.getX(), pos.getY(), pos.getZ(), worldIn.provider.getDimension());
+
             IDevice device = DeviceManager.getDevice(worldIn, pos);
-            
+
 //            assert device != null : "Null device on machine break block.";
-            
-            if(device != null) DeviceManager.removeDevice(device);
+
+            if (device != null)
+                DeviceManager.removeDevice(device);
         }
     }
-    
+
     /**
      * Call from addProbeInfo
      */
-    public default void addMachineProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data)
-    { 
-        if(world.isRemote) return;
-        
+    public default void addMachineProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState,
+            IProbeHitData data) {
+        if (world.isRemote)
+            return;
+
         AbstractMachine machine = this.machine(world, data.getPos());
-        
-        if(machine == null) return;
+
+        if (machine == null)
+            return;
 
         probeInfo.text(machine.machineName().toUpperCase());
-        probeInfo.text(I18n.translateToLocalFormatted("probe.machine.domain", 
+        probeInfo.text(I18n.translateToLocalFormatted("probe.machine.domain",
                 machine.getDomain() == null ? I18n.translateToLocal("misc.unassigned") : machine.getDomain().getName()));
-        
-        
-        if(machine.hasTransportManager(StorageType.ITEM))
-        {
+
+        if (machine.hasTransportManager(StorageType.ITEM)) {
 //            if(machine.blockManager().itemCircuit() != null)
 //            {
 //                probeInfo.text(I18n.translateToLocalFormatted("Item circuit: %d  version: %d", 
 //                        machine.blockManager().itemCircuit().carrierAddress(),
 //                        machine.blockManager().itemCircuit().bridgeVersion()));
 //            }
-            probeInfo.text("Item Legs: " + machine.itemTransport().legs(null).toString()); 
+            probeInfo.text("Item Legs: " + machine.itemTransport().legs(null).toString());
         }
-        
-        if(!machine.energyManager().isEmpty())
-        {
-            probeInfo.progress(machine.energyManager().storedEnergyJoules(), 
-                    machine.energyManager().maxStoredEnergyJoules());
-            probeInfo.text("Stored Energy: " + MachinePower.formatEnergy(
-                    machine.energyManager().storedEnergyJoules(), false));
+
+        if (!machine.energyManager().isEmpty()) {
+            probeInfo.progress(machine.energyManager().storedEnergyJoules(), machine.energyManager().maxStoredEnergyJoules());
+            probeInfo.text("Stored Energy: " + MachinePower.formatEnergy(machine.energyManager().storedEnergyJoules(), false));
             float netCharge = machine.energyManager().netStorageWatts();
-            
-            probeInfo.text((netCharge >= 0 ? "Charge Rate: " : "Discharge Rate: ")
-                    + MachinePower.formatPower(
-                            (long) netCharge, true));
+
+            probeInfo.text((netCharge >= 0 ? "Charge Rate: " : "Discharge Rate: ") + MachinePower.formatPower((long) netCharge, true));
         }
-        if(machine.hasTransportManager(StorageType.POWER))
-        {
+        if (machine.hasTransportManager(StorageType.POWER)) {
 //            if(machine.blockManager().powerCircuit() != null)
 //            {
 //                probeInfo.text(I18n.translateToLocalFormatted("Power circuit: %d  version: %d", 
@@ -230,13 +225,12 @@ public interface IMachineBlock
             probeInfo.text("Power Legs: " + machine.tranportManager(StorageType.POWER).legs(null).toString());
         }
     }
-    
+
     /**
      * Controls icon rendered on machine face / sides
      */
     @SideOnly(Side.CLIENT)
-    public default TextureAtlasSprite getSymbolSprite()
-    {
+    public default TextureAtlasSprite getSymbolSprite() {
         return ArtBoxTextures.DECAL_LARGE_SQUARE.getSampleSprite();
     }
 }

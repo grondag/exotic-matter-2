@@ -334,12 +334,7 @@ public abstract class CSG {
             }
 
             // For CSG operations we consider a point on the edge to be intersecting.
-            if (bMinX <= pMaxX
-                    && bMaxX >= pMinX
-                    && bMinY <= pMaxY
-                    && bMaxY >= pMinY
-                    && bMinZ <= pMaxZ
-                    && bMaxZ >= pMinZ)
+            if (bMinX <= pMaxX && bMaxX >= pMinX && bMinY <= pMaxY && bMaxY >= pMinY && bMinZ <= pMaxZ && bMaxZ >= pMinZ)
                 // potentially intersecting
                 aIsEmpty = false;
             else {

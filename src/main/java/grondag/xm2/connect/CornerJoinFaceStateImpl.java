@@ -41,43 +41,31 @@ import net.minecraft.util.math.Direction;
 public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
     NO_FACE(0, 0), NONE(0, 0), // must be after NO_FACE, overwrites NO_FACE in lookup table, should never be
     // checked by lookup
-    TOP(TOP_EDGE.ordinalBit, 0), BOTTOM(BOTTOM_EDGE.ordinalBit, 0), LEFT(LEFT_EDGE.ordinalBit, 0),
-    RIGHT(RIGHT_EDGE.ordinalBit, 0),
+    TOP(TOP_EDGE.ordinalBit, 0), BOTTOM(BOTTOM_EDGE.ordinalBit, 0), LEFT(LEFT_EDGE.ordinalBit, 0), RIGHT(RIGHT_EDGE.ordinalBit, 0),
 
-    TOP_BOTTOM(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit, 0),
-    LEFT_RIGHT(LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0),
+    TOP_BOTTOM(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit, 0), LEFT_RIGHT(LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0),
 
-    TOP_BOTTOM_RIGHT_NO_CORNERS(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, TOP_RIGHT,
-            BOTTOM_RIGHT),
+    TOP_BOTTOM_RIGHT_NO_CORNERS(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, TOP_RIGHT, BOTTOM_RIGHT),
     TOP_BOTTOM_RIGHT_TR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_RIGHT.ordinalBit),
     TOP_BOTTOM_RIGHT_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_RIGHT.ordinalBit),
-    TOP_BOTTOM_RIGHT_TR_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            TOP_RIGHT.ordinalBit | BOTTOM_RIGHT.ordinalBit),
+    TOP_BOTTOM_RIGHT_TR_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_RIGHT.ordinalBit | BOTTOM_RIGHT.ordinalBit),
 
-    TOP_BOTTOM_LEFT_NO_CORNERS(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, 0, TOP_LEFT,
-            BOTTOM_LEFT),
+    TOP_BOTTOM_LEFT_NO_CORNERS(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, 0, TOP_LEFT, BOTTOM_LEFT),
     TOP_BOTTOM_LEFT_TL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, TOP_LEFT.ordinalBit),
     TOP_BOTTOM_LEFT_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, BOTTOM_LEFT.ordinalBit),
-    TOP_BOTTOM_LEFT_TL_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit,
-            TOP_LEFT.ordinalBit | BOTTOM_LEFT.ordinalBit),
+    TOP_BOTTOM_LEFT_TL_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, TOP_LEFT.ordinalBit | BOTTOM_LEFT.ordinalBit),
 
-    TOP_LEFT_RIGHT_NO_CORNERS(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, TOP_LEFT,
-            TOP_RIGHT),
+    TOP_LEFT_RIGHT_NO_CORNERS(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, TOP_LEFT, TOP_RIGHT),
     TOP_LEFT_RIGHT_TL(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_LEFT.ordinalBit),
     TOP_LEFT_RIGHT_TR(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_RIGHT.ordinalBit),
-    TOP_LEFT_RIGHT_TL_TR(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            TOP_LEFT.ordinalBit | TOP_RIGHT.ordinalBit),
+    TOP_LEFT_RIGHT_TL_TR(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_LEFT.ordinalBit | TOP_RIGHT.ordinalBit),
 
-    BOTTOM_LEFT_RIGHT_NO_CORNERS(BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, BOTTOM_LEFT,
-            BOTTOM_RIGHT),
+    BOTTOM_LEFT_RIGHT_NO_CORNERS(BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, BOTTOM_LEFT, BOTTOM_RIGHT),
     BOTTOM_LEFT_RIGHT_BL(BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_LEFT.ordinalBit),
-    BOTTOM_LEFT_RIGHT_BR(BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_RIGHT.ordinalBit),
-    BOTTOM_LEFT_RIGHT_BL_BR(BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_LEFT.ordinalBit | BOTTOM_RIGHT.ordinalBit),
+    BOTTOM_LEFT_RIGHT_BR(BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_RIGHT.ordinalBit),
+    BOTTOM_LEFT_RIGHT_BL_BR(BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_LEFT.ordinalBit | BOTTOM_RIGHT.ordinalBit),
 
-    TOP_LEFT_NO_CORNER(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, 0, TOP_LEFT),
-    TOP_LEFT_TL(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, TOP_LEFT.ordinalBit),
+    TOP_LEFT_NO_CORNER(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, 0, TOP_LEFT), TOP_LEFT_TL(TOP_EDGE.ordinalBit | LEFT_EDGE.ordinalBit, TOP_LEFT.ordinalBit),
 
     TOP_RIGHT_NO_CORNER(TOP_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, TOP_RIGHT),
     TOP_RIGHT_TR(TOP_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_RIGHT.ordinalBit),
@@ -88,32 +76,22 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
     BOTTOM_RIGHT_NO_CORNER(BOTTOM_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, BOTTOM_RIGHT),
     BOTTOM_RIGHT_BR(BOTTOM_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_RIGHT.ordinalBit),
 
-    ALL_NO_CORNERS(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0,
-            TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT),
-    ALL_TL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            TOP_LEFT.ordinalBit),
-    ALL_TR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            TOP_RIGHT.ordinalBit),
-    ALL_TL_TR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            TOP_RIGHT.ordinalBit | TOP_LEFT.ordinalBit),
-    ALL_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_LEFT.ordinalBit),
-    ALL_TL_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_LEFT.ordinalBit | TOP_LEFT.ordinalBit),
-    ALL_TR_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_LEFT.ordinalBit | TOP_RIGHT.ordinalBit),
+    ALL_NO_CORNERS(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, 0, TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT,
+            BOTTOM_RIGHT),
+    ALL_TL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_LEFT.ordinalBit),
+    ALL_TR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_RIGHT.ordinalBit),
+    ALL_TL_TR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, TOP_RIGHT.ordinalBit | TOP_LEFT.ordinalBit),
+    ALL_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_LEFT.ordinalBit),
+    ALL_TL_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_LEFT.ordinalBit | TOP_LEFT.ordinalBit),
+    ALL_TR_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_LEFT.ordinalBit | TOP_RIGHT.ordinalBit),
     ALL_TL_TR_BL(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
             BOTTOM_LEFT.ordinalBit | TOP_RIGHT.ordinalBit | TOP_LEFT.ordinalBit),
-    ALL_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_RIGHT.ordinalBit),
-    ALL_TL_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_RIGHT.ordinalBit | TOP_LEFT.ordinalBit),
-    ALL_TR_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_RIGHT.ordinalBit | TOP_RIGHT.ordinalBit),
+    ALL_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_RIGHT.ordinalBit),
+    ALL_TL_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_RIGHT.ordinalBit | TOP_LEFT.ordinalBit),
+    ALL_TR_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_RIGHT.ordinalBit | TOP_RIGHT.ordinalBit),
     ALL_TL_TR_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
             BOTTOM_RIGHT.ordinalBit | TOP_RIGHT.ordinalBit | TOP_LEFT.ordinalBit),
-    ALL_BL_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
-            BOTTOM_RIGHT.ordinalBit | BOTTOM_LEFT.ordinalBit),
+    ALL_BL_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit, BOTTOM_RIGHT.ordinalBit | BOTTOM_LEFT.ordinalBit),
     ALL_TL_BL_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
             BOTTOM_RIGHT.ordinalBit | BOTTOM_LEFT.ordinalBit | TOP_LEFT.ordinalBit),
     ALL_TR_BL_BR(TOP_EDGE.ordinalBit | BOTTOM_EDGE.ordinalBit | LEFT_EDGE.ordinalBit | RIGHT_EDGE.ordinalBit,
@@ -131,8 +109,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
     }
 
     private boolean hasCornerTests() {
-        return (cornerTests != null
-                && cornerTests.length > 0);
+        return (cornerTests != null && cornerTests.length > 0);
     }
 
     private FaceCorner[] cornerTests() {
@@ -167,8 +144,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
     public boolean needsCorner(Direction face1, Direction face2, Direction onFace) {
         FaceEdge side1 = FaceEdge.fromWorld(face1, onFace);
         FaceEdge side2 = FaceEdge.fromWorld(face2, onFace);
-        return side1 == null
-                || side2 == null ? false : this.needsCorner(FaceCorner.find(side1, side2));
+        return side1 == null || side2 == null ? false : this.needsCorner(FaceCorner.find(side1, side2));
     }
 
     private static final CornerJoinFaceStateImpl[] VALUES = CornerJoinFaceStateImpl.values();
@@ -190,8 +166,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
                 subStateList.add(NO_FACE);
             } else {
                 for (CornerJoinFaceStateImpl subState : CornerJoinFaceStateImpl.values()) {
-                    if (subState != NO_FACE
-                            && (subState.bitFlags & state.bitFlags & 15) == (subState.bitFlags & 15)) {
+                    if (subState != NO_FACE && (subState.bitFlags & state.bitFlags & 15) == (subState.bitFlags & 15)) {
                         subStateList.add(subState);
                     }
                 }
@@ -236,8 +211,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
             for (int i = 0; i < FaceEdgeHelper.COUNT; i++) {
                 final FaceEdge fside = FaceEdgeHelper.fromOrdinal(i);
                 final Direction joinFace = fside.toWorld(face);
-                if (tests.result(joinFace)
-                        && !tests.result(BlockEdge.find(face, joinFace))) {
+                if (tests.result(joinFace) && !tests.result(BlockEdge.find(face, joinFace))) {
                     faceFlags |= fside.ordinalBit;
                 }
             }

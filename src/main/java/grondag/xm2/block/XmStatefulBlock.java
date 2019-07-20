@@ -64,8 +64,7 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
         final BlockEntity myTE = world.getBlockEntity(pos);
         final XmBlockStateImpl xmState = (XmBlockStateImpl) xmStateIn;
 
-        if (myTE != null
-                && myTE instanceof XmBlockEntity) {
+        if (myTE != null && myTE instanceof XmBlockEntity) {
             return ((XmBlockEntity) myTE).getModelState(xmState, world, pos, refreshFromWorldIfNeeded);
         } else {
             return XmSimpleBlock.computeModelState(xmState, world, pos, refreshFromWorldIfNeeded);
@@ -80,8 +79,7 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
      */
     public void setModelState(World world, BlockPos pos, ModelState modelState) {
         BlockEntity blockTE = world.getBlockEntity(pos);
-        if (blockTE != null
-                && blockTE instanceof XmBlockEntity) {
+        if (blockTE != null && blockTE instanceof XmBlockEntity) {
             ((XmBlockEntity) blockTE).setModelState(modelState);
         }
     }

@@ -63,8 +63,7 @@ public interface VirtualBlock {
      */
     public static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, PlayerEntity player) {
         Block block = state.getBlock();
-        return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player)
-                : !block.getMaterial(state).isReplaceable();
+        return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player) : !block.getMaterial(state).isReplaceable();
     }
 
     static BlockState findAppropriateVirtualBlock(OwnedModelState modelState) {

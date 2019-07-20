@@ -70,8 +70,7 @@ public class CsgPolyStream extends MutablePolyStream {
     }
 
     private static final int vertexType(IPolygon poly, int vertexIndex, float normalX, float normalY, float normalZ, float dist) {
-        return vertexType(poly.x(vertexIndex), poly.y(vertexIndex), poly.z(vertexIndex), normalX, normalY, normalZ,
-                dist);
+        return vertexType(poly.x(vertexIndex), poly.y(vertexIndex), poly.z(vertexIndex), normalX, normalY, normalZ, dist);
     }
 
     private static final int vertexType(float x, float y, float z, float normalX, float normalY, float normalZ, float dist) {
@@ -134,23 +133,19 @@ public class CsgPolyStream extends MutablePolyStream {
     }
 
     public final float normalX(int nodeAddress) {
-        return isInverted ? -nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_X)
-                : nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_X);
+        return isInverted ? -nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_X) : nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_X);
     }
 
     public final float normalY(int nodeAddress) {
-        return isInverted ? -nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_Y)
-                : nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_Y);
+        return isInverted ? -nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_Y) : nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_Y);
     }
 
     public final float normalZ(int nodeAddress) {
-        return isInverted ? -nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_Z)
-                : nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_Z);
+        return isInverted ? -nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_Z) : nodeStream.getFloat(nodeAddress + NODE_PLANE_NORMAL_Z);
     }
 
     public final float dist(int nodeAddress) {
-        return isInverted ? -nodeStream.getFloat(nodeAddress + NODE_PLANE_DIST)
-                : nodeStream.getFloat(nodeAddress + NODE_PLANE_DIST);
+        return isInverted ? -nodeStream.getFloat(nodeAddress + NODE_PLANE_DIST) : nodeStream.getFloat(nodeAddress + NODE_PLANE_DIST);
     }
 
     /**
@@ -301,74 +296,74 @@ public class CsgPolyStream extends MutablePolyStream {
                         final int jType = vertexType(polyB, j, normalX, normalY, normalZ, dist);
 
                         switch (iType * 3 + jType) {
-                            case 0: // I COPLANAR - J COPLANAR
-                            case 1: // I COPLANAR - J FRONT
-                            case 2: // I COPLANAR - J BACK
-                                editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                                editor(backAddress).copyVertexFrom(iBack++, polyB, i);
-                                break;
+                        case 0: // I COPLANAR - J COPLANAR
+                        case 1: // I COPLANAR - J FRONT
+                        case 2: // I COPLANAR - J BACK
+                            editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+                            editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                            break;
 
-                            case 3: // I FRONT - J COPLANAR
-                            case 4: // I FRONT - J FRONT
-                                editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                                break;
+                        case 3: // I FRONT - J COPLANAR
+                        case 4: // I FRONT - J FRONT
+                            editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+                            break;
 
-                            case 6: // I BACK- J COPLANAR
-                            case 8: // I BACK - J BACK
-                                editor(backAddress).copyVertexFrom(iBack++, polyB, i);
-                                break;
+                        case 6: // I BACK- J COPLANAR
+                        case 8: // I BACK - J BACK
+                            editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                            break;
 
-                            case 5: {
-                                // I FRONT - J BACK
-                                editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+                        case 5: {
+                            // I FRONT - J BACK
+                            editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
 
-                                // Line for interpolated vertex depends on what the next vertex is for this side
-                                // (front/back).
-                                // If the next vertex will be included in this side, we are starting the line
-                                // connecting
-                                // next vertex with previous vertex and should use line from prev. vertex
-                                // If the next vertex will NOT be included in this side, we are starting the
-                                // split line.
+                            // Line for interpolated vertex depends on what the next vertex is for this side
+                            // (front/back).
+                            // If the next vertex will be included in this side, we are starting the line
+                            // connecting
+                            // next vertex with previous vertex and should use line from prev. vertex
+                            // If the next vertex will NOT be included in this side, we are starting the
+                            // split line.
 
-                                final float ix = polyB.x(i);
-                                final float iy = polyB.y(i);
-                                final float iz = polyB.z(i);
+                            final float ix = polyB.x(i);
+                            final float iy = polyB.y(i);
+                            final float iz = polyB.z(i);
 
-                                final float tx = polyB.x(j) - ix;
-                                final float ty = polyB.y(j) - iy;
-                                final float tz = polyB.z(j) - iz;
+                            final float tx = polyB.x(j) - ix;
+                            final float ty = polyB.y(j) - iy;
+                            final float tz = polyB.z(j) - iz;
 
-                                final float iDot = ix * normalX + iy * normalY + iz * normalZ;
-                                final float tDot = tx * normalX + ty * normalY + tz * normalZ;
-                                float t = (dist - iDot) / tDot;
+                            final float iDot = ix * normalX + iy * normalY + iz * normalZ;
+                            final float tDot = tx * normalX + ty * normalY + tz * normalZ;
+                            float t = (dist - iDot) / tDot;
 
-                                editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
-                                editor(backAddress).copyVertexFrom(iBack++, polyA(frontAddress), iFront++);
+                            editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
+                            editor(backAddress).copyVertexFrom(iBack++, polyA(frontAddress), iFront++);
 
-                                break;
-                            }
+                            break;
+                        }
 
-                            case 7: {
-                                // I BACK - J FRONT
-                                editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                        case 7: {
+                            // I BACK - J FRONT
+                            editor(backAddress).copyVertexFrom(iBack++, polyB, i);
 
-                                // see notes for 5
-                                final float ix = polyB.x(i);
-                                final float iy = polyB.y(i);
-                                final float iz = polyB.z(i);
+                            // see notes for 5
+                            final float ix = polyB.x(i);
+                            final float iy = polyB.y(i);
+                            final float iz = polyB.z(i);
 
-                                final float tx = polyB.x(j) - ix;
-                                final float ty = polyB.y(j) - iy;
-                                final float tz = polyB.z(j) - iz;
+                            final float tx = polyB.x(j) - ix;
+                            final float ty = polyB.y(j) - iy;
+                            final float tz = polyB.z(j) - iz;
 
-                                final float iDot = ix * normalX + iy * normalY + iz * normalZ;
-                                final float tDot = tx * normalX + ty * normalY + tz * normalZ;
-                                float t = (dist - iDot) / tDot;
+                            final float iDot = ix * normalX + iy * normalY + iz * normalZ;
+                            final float tDot = tx * normalX + ty * normalY + tz * normalZ;
+                            float t = (dist - iDot) / tDot;
 
-                                editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
-                                editor(backAddress).copyVertexFrom(iBack++, polyA(frontAddress), iFront++);
-                                break;
-                            }
+                            editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
+                            editor(backAddress).copyVertexFrom(iBack++, polyA(frontAddress), iFront++);
+                            break;
+                        }
                         }
 
                         i = j;
@@ -453,8 +448,7 @@ public class CsgPolyStream extends MutablePolyStream {
         if (targetStream.origin())
             do
                 clipPoly(targetStream, clippingStream, reader.baseAddress);
-            while (targetStream.next()
-                    && reader.baseAddress < limitAddress);
+            while (targetStream.next() && reader.baseAddress < limitAddress);
 
         reader.moveTo(saveReadAddress);
 
@@ -483,7 +477,8 @@ public class CsgPolyStream extends MutablePolyStream {
 
     }
 
-    private static void clipPolyInner(IntArrayList stack, CsgPolyStream targetStream, final CsgPolyStream clippingStream, final int polyAddress, int nodeAddress) {
+    private static void clipPolyInner(IntArrayList stack, CsgPolyStream targetStream, final CsgPolyStream clippingStream, final int polyAddress,
+            int nodeAddress) {
         final StreamBackedPolygon polyB = targetStream.polyB;
         polyB.moveTo(polyAddress);
 
@@ -566,85 +561,81 @@ public class CsgPolyStream extends MutablePolyStream {
                         final int jType = vertexType(polyB, j, normalX, normalY, normalZ, dist);
 
                         switch (iType * 3 + jType) {
-                            case 0: // I COPLANAR - J COPLANAR
-                            case 1: // I COPLANAR - J FRONT
-                            case 2: // I COPLANAR - J BACK
-                                targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                                if (backAddress != IPolygon.NO_LINK_OR_TAG)
-                                    targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
-                                break;
+                        case 0: // I COPLANAR - J COPLANAR
+                        case 1: // I COPLANAR - J FRONT
+                        case 2: // I COPLANAR - J BACK
+                            targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                                targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                            break;
 
-                            case 3: // I FRONT - J COPLANAR
-                            case 4: // I FRONT - J FRONT
-                                targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                                break;
+                        case 3: // I FRONT - J COPLANAR
+                        case 4: // I FRONT - J FRONT
+                            targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+                            break;
 
-                            case 6: // I BACK- J COPLANAR
-                            case 8: // I BACK - J BACK
-                                if (backAddress != IPolygon.NO_LINK_OR_TAG)
-                                    targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
-                                break;
+                        case 6: // I BACK- J COPLANAR
+                        case 8: // I BACK - J BACK
+                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                                targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                            break;
 
-                            case 5: {
-                                // I FRONT - J BACK
-                                targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+                        case 5: {
+                            // I FRONT - J BACK
+                            targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
 
-                                // Line for interpolated vertex depends on what the next vertex is for this side
-                                // (front/back).
-                                // If the next vertex will be included in this side, we are starting the line
-                                // connecting
-                                // next vertex with previous vertex and should use line from prev. vertex
-                                // If the next vertex will NOT be included in this side, we are starting the
-                                // split line.
+                            // Line for interpolated vertex depends on what the next vertex is for this side
+                            // (front/back).
+                            // If the next vertex will be included in this side, we are starting the line
+                            // connecting
+                            // next vertex with previous vertex and should use line from prev. vertex
+                            // If the next vertex will NOT be included in this side, we are starting the
+                            // split line.
 
-                                final float ix = polyB.x(i);
-                                final float iy = polyB.y(i);
-                                final float iz = polyB.z(i);
+                            final float ix = polyB.x(i);
+                            final float iy = polyB.y(i);
+                            final float iz = polyB.z(i);
 
-                                final float tx = polyB.x(j) - ix;
-                                final float ty = polyB.y(j) - iy;
-                                final float tz = polyB.z(j) - iz;
+                            final float tx = polyB.x(j) - ix;
+                            final float ty = polyB.y(j) - iy;
+                            final float tz = polyB.z(j) - iz;
 
-                                final float iDot = ix * normalX + iy * normalY + iz * normalZ;
-                                final float tDot = tx * normalX + ty * normalY + tz * normalZ;
-                                float t = (dist - iDot) / tDot;
+                            final float iDot = ix * normalX + iy * normalY + iz * normalZ;
+                            final float tDot = tx * normalX + ty * normalY + tz * normalZ;
+                            float t = (dist - iDot) / tDot;
 
-                                targetStream.editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j,
-                                        t);
-                                if (backAddress != IPolygon.NO_LINK_OR_TAG)
-                                    targetStream.editor(backAddress).copyVertexFrom(iBack++,
-                                            targetStream.polyA(frontAddress), iFront);
-                                iFront++;
+                            targetStream.editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
+                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                                targetStream.editor(backAddress).copyVertexFrom(iBack++, targetStream.polyA(frontAddress), iFront);
+                            iFront++;
 
-                                break;
-                            }
+                            break;
+                        }
 
-                            case 7: {
-                                // I BACK - J FRONT
-                                if (backAddress != IPolygon.NO_LINK_OR_TAG)
-                                    targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                        case 7: {
+                            // I BACK - J FRONT
+                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                                targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
 
-                                // see notes for 5
-                                final float ix = polyB.x(i);
-                                final float iy = polyB.y(i);
-                                final float iz = polyB.z(i);
+                            // see notes for 5
+                            final float ix = polyB.x(i);
+                            final float iy = polyB.y(i);
+                            final float iz = polyB.z(i);
 
-                                final float tx = polyB.x(j) - ix;
-                                final float ty = polyB.y(j) - iy;
-                                final float tz = polyB.z(j) - iz;
+                            final float tx = polyB.x(j) - ix;
+                            final float ty = polyB.y(j) - iy;
+                            final float tz = polyB.z(j) - iz;
 
-                                final float iDot = ix * normalX + iy * normalY + iz * normalZ;
-                                final float tDot = tx * normalX + ty * normalY + tz * normalZ;
-                                float t = (dist - iDot) / tDot;
+                            final float iDot = ix * normalX + iy * normalY + iz * normalZ;
+                            final float tDot = tx * normalX + ty * normalY + tz * normalZ;
+                            float t = (dist - iDot) / tDot;
 
-                                targetStream.editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j,
-                                        t);
-                                if (backAddress != IPolygon.NO_LINK_OR_TAG)
-                                    targetStream.editor(backAddress).copyVertexFrom(iBack++,
-                                            targetStream.polyA(frontAddress), iFront);
-                                iFront++;
-                                break;
-                            }
+                            targetStream.editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
+                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                                targetStream.editor(backAddress).copyVertexFrom(iBack++, targetStream.polyA(frontAddress), iFront);
+                            iFront++;
+                            break;
+                        }
                         }
 
                         i = j;
@@ -695,8 +686,7 @@ public class CsgPolyStream extends MutablePolyStream {
     }
 
     private int getBackNode(int nodeAddress) {
-        return isInverted ? nodeStream.get(nodeAddress + NODE_FRONT_NODE_ADDRESS)
-                : nodeStream.get(nodeAddress + NODE_BACK_NODE_ADDRESS);
+        return isInverted ? nodeStream.get(nodeAddress + NODE_FRONT_NODE_ADDRESS) : nodeStream.get(nodeAddress + NODE_BACK_NODE_ADDRESS);
     }
 
     private void setBackNode(int targetNodeAddress, int backNodeAddress) {
@@ -705,8 +695,7 @@ public class CsgPolyStream extends MutablePolyStream {
     }
 
     private int getFrontNode(int nodeAddress) {
-        return isInverted ? nodeStream.get(nodeAddress + NODE_BACK_NODE_ADDRESS)
-                : nodeStream.get(nodeAddress + NODE_FRONT_NODE_ADDRESS);
+        return isInverted ? nodeStream.get(nodeAddress + NODE_BACK_NODE_ADDRESS) : nodeStream.get(nodeAddress + NODE_FRONT_NODE_ADDRESS);
     }
 
     private void setFrontNode(int targetNodeAddress, int frontNodeAddress) {

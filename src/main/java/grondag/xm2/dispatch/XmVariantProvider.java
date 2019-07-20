@@ -39,8 +39,7 @@ public class XmVariantProvider implements ModelVariantProvider {
     }
 
     @Override
-    public UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context)
-            throws ModelProviderException {
+    public UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) throws ModelProviderException {
         return targets.contains(modelId.getNamespace() + ":" + modelId.getPath()) ? XmModelProxy.INSTANCE : null;
     }
 }

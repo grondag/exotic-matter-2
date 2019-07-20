@@ -29,7 +29,8 @@ public class RenderUtil {
      * Draws block-aligned grid on sides of AABB if entity can see it from outside
      */
 
-    public static void drawGrid(BufferBuilder buffer, Box aabb, Vec3d viewFrom, double offsetX, double offsetY, double offsetZ, float red, float green, float blue, float alpha) {
+    public static void drawGrid(BufferBuilder buffer, Box aabb, Vec3d viewFrom, double offsetX, double offsetY, double offsetZ, float red, float green,
+            float blue, float alpha) {
         double minX = aabb.minX - offsetX;
         double minY = aabb.minY - offsetY;
         double minZ = aabb.minZ - offsetZ;
@@ -40,8 +41,7 @@ public class RenderUtil {
         int ySpan = (int) (aabb.maxY + 0.0001 - aabb.minY);
         int zSpan = (int) (aabb.maxZ + 0.0001 - aabb.minZ);
 
-        if (xSpan > 1
-                && zSpan > 1) {
+        if (xSpan > 1 && zSpan > 1) {
             double dy = viewFrom.y > aabb.maxY ? maxY : viewFrom.y < aabb.minY ? minY : Double.MAX_VALUE;
             if (dy != Double.MAX_VALUE) {
                 for (int x = 1; x <= xSpan; x++) {

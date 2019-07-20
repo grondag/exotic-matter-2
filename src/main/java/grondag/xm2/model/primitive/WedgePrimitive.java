@@ -64,8 +64,7 @@ public class WedgePrimitive extends AbstractWedgePrimitive {
         stream.setVertexCount(3);
         writer.surface(SURFACE_SIDES);
         writer.setNominalFace(Direction.EAST);
-        writer.setupFaceQuad(Direction.EAST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0),
-                Direction.UP);
+        writer.setupFaceQuad(Direction.EAST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0), Direction.UP);
         writer.assignLockedUVCoordinates(0);
         transform.apply(writer);
         stream.append();
@@ -73,8 +72,7 @@ public class WedgePrimitive extends AbstractWedgePrimitive {
         stream.setVertexCount(3);
         writer.surface(SURFACE_SIDES);
         writer.setNominalFace(Direction.WEST);
-        writer.setupFaceQuad(Direction.WEST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(0, 1, 0),
-                Direction.UP);
+        writer.setupFaceQuad(Direction.WEST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(0, 1, 0), Direction.UP);
         writer.assignLockedUVCoordinates(0);
         transform.apply(writer);
         stream.append();
@@ -82,8 +80,7 @@ public class WedgePrimitive extends AbstractWedgePrimitive {
         stream.setVertexCount(4);
         writer.surface(SURFACE_TOP);
         writer.setNominalFace(Direction.UP);
-        writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 1), new FaceVertex(1, 1, 0),
-                new FaceVertex(0, 1, 0), Direction.NORTH);
+        writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 1), new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0), Direction.NORTH);
         transform.apply(writer);
         stream.append();
 

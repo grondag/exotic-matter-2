@@ -60,10 +60,7 @@ public class PlacementPosition {
     public PlacementPosition(PlayerEntity player, BlockPos onPos, Direction onFace, Vec3d hitVec, int floatingSelectionRange, boolean isExcavation) {
 
         this.isFloating = floatingSelectionRange > 0;
-        if (this.isFloating
-                || onPos == null
-                || onFace == null
-                || hitVec == null) {
+        if (this.isFloating || onPos == null || onFace == null || hitVec == null) {
 
             Vec3d start = player.getCameraPosVec(1);
             Vec3d end = start.add(player.getRotationVector().multiply(floatingSelectionRange));

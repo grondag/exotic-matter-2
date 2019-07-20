@@ -43,8 +43,7 @@ public class XmMasonryMatch implements BlockTest {
         final BlockPos toPos = context.toPos();
 
         // if not a sibling, mortar if against full opaque
-        if (fromBlockState.getBlock() != toBlockState.getBlock()
-                || toState == null) {
+        if (fromBlockState.getBlock() != toBlockState.getBlock() || toState == null) {
             return toBlockState.isFullOpaque(context.world(), toPos);
         }
 
@@ -58,8 +57,6 @@ public class XmMasonryMatch implements BlockTest {
 
         // between siblings, only mortar on three sides of cube
         // (other sibling will do the mortar on other sides)
-        return (toPos.getX() == fromPos.getX() + 1
-                || toPos.getY() == fromPos.getY() - 1
-                || toPos.getZ() == fromPos.getZ() + 1);
+        return (toPos.getX() == fromPos.getX() + 1 || toPos.getY() == fromPos.getY() - 1 || toPos.getZ() == fromPos.getZ() + 1);
     }
 }

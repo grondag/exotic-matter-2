@@ -38,8 +38,7 @@ public class VoxelVolume16 {
         }
     }
 
-    private static final long[] INTERIOR_MASK_XY = { 0x7FFE7FFE7FFE0000L, 0x7FFE7FFE7FFE7FFEL, 0x7FFE7FFE7FFE7FFEL,
-            0x00007FFE7FFE7FFEL };
+    private static final long[] INTERIOR_MASK_XY = { 0x7FFE7FFE7FFE0000L, 0x7FFE7FFE7FFE7FFEL, 0x7FFE7FFE7FFE7FFEL, 0x00007FFE7FFE7FFEL };
 
     /**
      * Puts result of ~ operator on input into result. Operates on 256-bit word
@@ -100,10 +99,7 @@ public class VoxelVolume16 {
 
     private static boolean isZero(final long[] input, int inputIndex) {
         inputIndex *= 4;
-        return input[inputIndex] == 0
-                && input[inputIndex + 1] == 0
-                && input[inputIndex + 2] == 0
-                && input[inputIndex + 3] == 0;
+        return input[inputIndex] == 0 && input[inputIndex + 1] == 0 && input[inputIndex + 2] == 0 && input[inputIndex + 3] == 0;
     }
 
     private static final ThreadLocal<long[]> utilityWord = new ThreadLocal<long[]>() {

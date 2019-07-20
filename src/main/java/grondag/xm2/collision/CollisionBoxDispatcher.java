@@ -36,18 +36,17 @@ import net.minecraft.util.shape.VoxelShape;
 
 public class CollisionBoxDispatcher {
     static final BlockingQueue<Runnable> QUEUE = new LinkedBlockingQueue<Runnable>();
-    private static final ExecutorService EXEC = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, QUEUE,
-            new ThreadFactory() {
-                private AtomicInteger count = new AtomicInteger(1);
+    private static final ExecutorService EXEC = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, QUEUE, new ThreadFactory() {
+        private AtomicInteger count = new AtomicInteger(1);
 
-                @Override
-                public Thread newThread(Runnable r) {
-                    Thread thread = new Thread(r, "Exotic Matter Collision Box Optimizer - " + count.getAndIncrement());
-                    thread.setDaemon(true);
-                    thread.setPriority(Thread.NORM_PRIORITY - 2);
-                    return thread;
-                }
-            }) {
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread thread = new Thread(r, "Exotic Matter Collision Box Optimizer - " + count.getAndIncrement());
+            thread.setDaemon(true);
+            thread.setPriority(Thread.NORM_PRIORITY - 2);
+            return thread;
+        }
+    }) {
         @Override
         protected void finalize() {
             super.finalize();
@@ -116,7 +115,7 @@ public class CollisionBoxDispatcher {
     }
 
     public static Box makeRotatedAABB(Box fromAABB, Matrix4f rotation) {
-        return makeRotatedAABB((float) fromAABB.minX, (float) fromAABB.minY, (float) fromAABB.minZ,
-                (float) fromAABB.maxX, (float) fromAABB.maxY, (float) fromAABB.maxZ, rotation);
+        return makeRotatedAABB((float) fromAABB.minX, (float) fromAABB.minY, (float) fromAABB.minZ, (float) fromAABB.maxX, (float) fromAABB.maxY,
+                (float) fromAABB.maxZ, rotation);
     }
 }

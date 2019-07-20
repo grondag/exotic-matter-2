@@ -39,9 +39,8 @@ public class TerrainBlockHelper {
         return terrainType(state) != null;
     }
 
-    private static TerrainType[] HEIGHTS = { TerrainType.HEIGHT_1, TerrainType.HEIGHT_2, TerrainType.HEIGHT_3,
-            TerrainType.HEIGHT_4, TerrainType.HEIGHT_5, TerrainType.HEIGHT_6, TerrainType.HEIGHT_7,
-            TerrainType.HEIGHT_8, TerrainType.HEIGHT_9, TerrainType.HEIGHT_10, TerrainType.HEIGHT_11,
+    private static TerrainType[] HEIGHTS = { TerrainType.HEIGHT_1, TerrainType.HEIGHT_2, TerrainType.HEIGHT_3, TerrainType.HEIGHT_4, TerrainType.HEIGHT_5,
+            TerrainType.HEIGHT_6, TerrainType.HEIGHT_7, TerrainType.HEIGHT_8, TerrainType.HEIGHT_9, TerrainType.HEIGHT_10, TerrainType.HEIGHT_11,
             TerrainType.HEIGHT_12 };
 
     @Nullable
@@ -55,8 +54,7 @@ public class TerrainBlockHelper {
      */
     public static boolean isFlowFiller(BlockState state) {
         TerrainType val = terrainType(state);
-        return val != null
-                && val.isFiller;
+        return val != null && val.isFiller;
     }
 
     /**
@@ -64,8 +62,7 @@ public class TerrainBlockHelper {
      */
     public static boolean isFlowHeight(BlockState state) {
         TerrainType val = terrainType(state);
-        return val != null
-                && val.isHeight;
+        return val != null && val.isHeight;
     }
 
     public static int getHotness(BlockState state) {
@@ -119,8 +116,7 @@ public class TerrainBlockHelper {
             return null;
 
         // Checks for non-displaceable block
-        if (filter != null
-                && !filter.test(baseState))
+        if (filter != null && !filter.test(baseState))
             return null;
 
         final int SHOULD_BE_AIR = -1;
@@ -142,8 +138,7 @@ public class TerrainBlockHelper {
         final long posBelow = PackedBlockPos.down(packedBasePos, 1);
         final BlockState stateBelow = worldObj.getBlockState(posBelow);
 
-        if (isFlowHeight(stateBelow)
-                && worldObj.terrainState(stateBelow, posBelow).topFillerNeeded() > 0) {
+        if (isFlowHeight(stateBelow) && worldObj.terrainState(stateBelow, posBelow).topFillerNeeded() > 0) {
             targetFill = 1;
 
             fillBlock = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getFillerBlock(stateBelow.getBlock());
@@ -151,8 +146,7 @@ public class TerrainBlockHelper {
             final long posTwoBelow = PackedBlockPos.down(packedBasePos, 2);
             final BlockState stateTwoBelow = worldObj.getBlockState(posTwoBelow);
 
-            if ((isFlowHeight(stateTwoBelow)
-                    && worldObj.terrainState(stateTwoBelow, posTwoBelow).topFillerNeeded() == 2)) {
+            if ((isFlowHeight(stateTwoBelow) && worldObj.terrainState(stateTwoBelow, posTwoBelow).topFillerNeeded() == 2)) {
                 targetFill = 2;
                 fillBlock = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getFillerBlock(stateTwoBelow.getBlock());
             }
@@ -162,15 +156,12 @@ public class TerrainBlockHelper {
             if (targetFill == SHOULD_BE_AIR) {
                 update = Blocks.AIR.getDefaultState();
                 worldObj.setBlockState(packedBasePos, update);
-            } else if (fillBlock != null
-                    && (getYOffsetFromState(baseState) != targetFill
-                            || baseBlock != fillBlock)) {
+            } else if (fillBlock != null && (getYOffsetFromState(baseState) != targetFill || baseBlock != fillBlock)) {
                 update = stateWithYOffset(((Block) fillBlock).getDefaultState(), targetFill);
                 worldObj.setBlockState(packedBasePos, update);
             }
             // confirm filler needed and adjustIfEnabled/remove if needed
-        } else if (targetFill != SHOULD_BE_AIR
-                && fillBlock != null) {
+        } else if (targetFill != SHOULD_BE_AIR && fillBlock != null) {
             update = stateWithYOffset(((Block) fillBlock).getDefaultState(), targetFill);
             worldObj.setBlockState(packedBasePos, update);
         }
@@ -205,12 +196,12 @@ public class TerrainBlockHelper {
      */
     public static BlockState stateWithYOffset(BlockState state, int value) {
         switch (value) {
-            case 1:
-                return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_ONE);
-            case 2:
-                return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_TWO);
-            default:
-                return state;
+        case 1:
+            return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_ONE);
+        case 2:
+            return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_TWO);
+        default:
+            return state;
         }
     }
 }

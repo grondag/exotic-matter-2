@@ -40,12 +40,13 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     protected AbstractModelPrimitive(Identifier id, int stateFlags) {
         this.stateFlags = stateFlags;
         this.id = id;
-        
-        // we handle registration here because model state currently relies on it for serialization
+
+        // we handle registration here because model state currently relies on it for
+        // serialization
         if (!ModelPrimitiveRegistry.INSTANCE.register(this)) {
             Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + id.toString());
         }
-        
+
         OwnedModelState state = ModelStates.claimSimple(this);
         updateDefaultState(state);
         this.defaultState = state.toImmutable();
@@ -60,7 +61,7 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     public ImmutableModelState defaultState() {
         return defaultState;
     }
-    
+
     @Override
     public int stateFlags(ModelPrimitiveState modelState) {
         return stateFlags;
@@ -71,8 +72,9 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
         return id;
     }
 
-    /** 
+    /**
      * Override if default state should be something other than the, erm... default.
      */
-    protected void updateDefaultState(MutableModelState modelState) { }
+    protected void updateDefaultState(MutableModelState modelState) {
+    }
 }

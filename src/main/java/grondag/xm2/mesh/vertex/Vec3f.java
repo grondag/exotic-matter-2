@@ -194,9 +194,7 @@ public class Vec3f implements IVec3f {
 
         if (obj instanceof Vec3f) {
             Vec3f v = (Vec3f) obj;
-            return v.x == x
-                    && v.y == y
-                    && v.z == z;
+            return v.x == x && v.y == y && v.z == z;
         } else
             return false;
     }

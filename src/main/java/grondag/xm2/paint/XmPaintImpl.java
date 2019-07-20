@@ -35,8 +35,7 @@ import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.Identifier;
 
 public class XmPaintImpl {
-    private static final BitPacker64<XmPaintImpl> PAINT_BITS = new BitPacker64<XmPaintImpl>(p -> p.paintBits,
-            (p, b) -> p.paintBits = b);
+    private static final BitPacker64<XmPaintImpl> PAINT_BITS = new BitPacker64<XmPaintImpl>(p -> p.paintBits, (p, b) -> p.paintBits = b);
 
     public static Finder finder() {
         return new Finder();
@@ -49,8 +48,7 @@ public class XmPaintImpl {
     private static final int COLOR_DISABLE_INDEX_START = AO_INDEX_START + MAX_TEXTURE_DEPTH;
 
     @SuppressWarnings("unchecked")
-    private static final BitPacker64<XmPaintImpl>.BooleanElement[] FLAGS = new BitPacker64.BooleanElement[COLOR_DISABLE_INDEX_START
-            + MAX_TEXTURE_DEPTH];
+    private static final BitPacker64<XmPaintImpl>.BooleanElement[] FLAGS = new BitPacker64.BooleanElement[COLOR_DISABLE_INDEX_START + MAX_TEXTURE_DEPTH];
 
     @SuppressWarnings("unchecked")
     private static final BitPacker64<XmPaintImpl>.IntElement[] TEXTURES = new BitPacker64.IntElement[MAX_TEXTURE_DEPTH];
@@ -114,16 +112,10 @@ public class XmPaintImpl {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj != null
-                && obj instanceof XmPaintImpl) {
+        if (obj != null && obj instanceof XmPaintImpl) {
             final XmPaintImpl other = (XmPaintImpl) obj;
-            return paintBits == other.paintBits
-                    && color0 == other.color0
-                    && color1 == other.color1
-                    && color2 == other.color2
-                    && vertexProcessor0 == other.vertexProcessor0
-                    && vertexProcessor1 == other.vertexProcessor1
-                    && vertexProcessor2 == other.vertexProcessor2;
+            return paintBits == other.paintBits && color0 == other.color0 && color1 == other.color1 && color2 == other.color2
+                    && vertexProcessor0 == other.vertexProcessor0 && vertexProcessor1 == other.vertexProcessor1 && vertexProcessor2 == other.vertexProcessor2;
         } else {
             return false;
         }
@@ -162,14 +154,14 @@ public class XmPaintImpl {
 
     public int textureColor(int textureIndex) {
         switch (textureIndex) {
-            case 0:
-                return color0;
-            case 1:
-                return color1;
-            case 2:
-                return color2;
-            default:
-                throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+        case 0:
+            return color0;
+        case 1:
+            return color1;
+        case 2:
+            return color2;
+        default:
+            throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
         }
     }
 
@@ -178,8 +170,7 @@ public class XmPaintImpl {
     }
 
     public TextureSet texture(int textureIndex) {
-        if (textureIndex < 0
-                || textureIndex >= MAX_TEXTURE_DEPTH) {
+        if (textureIndex < 0 || textureIndex >= MAX_TEXTURE_DEPTH) {
             throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
         }
         return TextureSetRegistryImpl.INSTANCE.getByIndex(TEXTURES[textureIndex].getValue(this));
@@ -207,14 +198,14 @@ public class XmPaintImpl {
 
     public VertexProcessor vertexProcessor(int textureIndex) {
         switch (textureIndex) {
-            case 0:
-                return vertexProcessor0;
-            case 1:
-                return vertexProcessor1;
-            case 2:
-                return vertexProcessor2;
-            default:
-                throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+        case 0:
+            return vertexProcessor0;
+        case 1:
+            return vertexProcessor1;
+        case 2:
+            return vertexProcessor2;
+        default:
+            throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
         }
     }
 
@@ -271,8 +262,7 @@ public class XmPaintImpl {
 
         @Override
         public XmPaintFinder textureDepth(int depth) {
-            if (depth < 1
-                    || depth > MAX_TEXTURE_DEPTH) {
+            if (depth < 1 || depth > MAX_TEXTURE_DEPTH) {
                 throw new IndexOutOfBoundsException("Invalid texture depth: " + depth);
             }
             TEXTURE_DEPTH.setValue(depth, this);
@@ -282,25 +272,24 @@ public class XmPaintImpl {
         @Override
         public XmPaintFinder textureColor(int textureIndex, int colorARBG) {
             switch (textureIndex) {
-                case 0:
-                    color0 = colorARBG;
-                    break;
-                case 1:
-                    color1 = colorARBG;
-                    break;
-                case 2:
-                    color2 = colorARBG;
-                    break;
-                default:
-                    throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+            case 0:
+                color0 = colorARBG;
+                break;
+            case 1:
+                color1 = colorARBG;
+                break;
+            case 2:
+                color2 = colorARBG;
+                break;
+            default:
+                throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
             }
             return this;
         }
 
         @Override
         public XmPaintFinder texture(int textureIndex, TextureSet texture) {
-            if (textureIndex < 0
-                    || textureIndex >= MAX_TEXTURE_DEPTH) {
+            if (textureIndex < 0 || textureIndex >= MAX_TEXTURE_DEPTH) {
                 throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
             }
             TEXTURES[textureIndex].setValue(texture.index(), this);
@@ -353,17 +342,17 @@ public class XmPaintImpl {
         @Override
         public XmPaintFinder vertexProcessor(int textureIndex, VertexProcessor vertexProcessor) {
             switch (textureIndex) {
-                case 0:
-                    vertexProcessor0 = vertexProcessor;
-                    break;
-                case 1:
-                    vertexProcessor1 = vertexProcessor;
-                    break;
-                case 2:
-                    vertexProcessor2 = vertexProcessor;
-                    break;
-                default:
-                    throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+            case 0:
+                vertexProcessor0 = vertexProcessor;
+                break;
+            case 1:
+                vertexProcessor1 = vertexProcessor;
+                break;
+            case 2:
+                vertexProcessor2 = vertexProcessor;
+                break;
+            default:
+                throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
             }
             return this;
         }

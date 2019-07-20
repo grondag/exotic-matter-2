@@ -32,7 +32,7 @@ public interface MutableModelState extends ModelState, MutableModelPrimitiveStat
      * Copies what it can, excluding the primitive, and returns self.
      */
     MutableModelState copyFrom(ModelState template);
-    
+
     void setStatic(boolean isStatic);
 
     boolean equalsIncludeStatic(Object obj);

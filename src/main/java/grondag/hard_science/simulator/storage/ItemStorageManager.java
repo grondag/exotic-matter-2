@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.simulator.storage;
 
 import java.util.List;
@@ -20,62 +35,49 @@ import net.minecraft.item.crafting.Ingredient;
 /**
  * Main purpose is to hold type-specific event handlers.
  */
-public class ItemStorageManager extends StorageManager<StorageTypeStack> 
-{
-    public ItemStorageManager(Domain domain)
-    {
+public class ItemStorageManager extends StorageManager<StorageTypeStack> {
+    public ItemStorageManager(Domain domain) {
         super(StorageType.ITEM);
     }
-    
+
     @Subscribe
-    public void afterStorageConnect(AfterItemStorageConnect event)
-    {
+    public void afterStorageConnect(AfterItemStorageConnect event) {
         this.addStore(event.storage);
     }
-    
+
     @Subscribe
-    public void beforeItemStorageDisconnect(BeforeItemStorageDisconnect event)
-    {
+    public void beforeItemStorageDisconnect(BeforeItemStorageDisconnect event) {
         this.removeStore(event.storage);
     }
-    
+
     @Subscribe
-    public void onItemUpdate(ItemStoredUpdate event)
-    {
-        if(event.delta > 0)
-        {
+    public void onItemUpdate(ItemStoredUpdate event) {
+        if (event.delta > 0) {
             this.notifyAdded(event.storage, event.resource, event.delta, event.request);
-        }
-        else
-        {
+        } else {
             this.notifyTaken(event.storage, event.resource, -event.delta, event.request);
         }
     }
-    
+
     @Subscribe
-    public void onCapacityChange(ItemCapacityChange event)
-    {
+    public void onCapacityChange(ItemCapacityChange event) {
         this.notifyCapacityChanged(event.delta);
     }
-    
+
     /**
-     * Like {@link #findEstimatedAvailable(Predicate)} but accepts item
-     * ingredient as the predicate.  Can be called from any thread.  
-     * Result may not be fully consistent and should not be used 
-     * for transport planning.
+     * Like {@link #findEstimatedAvailable(Predicate)} but accepts item ingredient
+     * as the predicate. Can be called from any thread. Result may not be fully
+     * consistent and should not be used for transport planning.
      */
-    public List<AbstractResourceWithQuantity<StorageTypeStack>> findEstimatedAvailable(Ingredient ingredient)
-    {
+    public List<AbstractResourceWithQuantity<StorageTypeStack>> findEstimatedAvailable(Ingredient ingredient) {
         ImmutableList.Builder<AbstractResourceWithQuantity<StorageTypeStack>> builder = ImmutableList.builder();
-        
-        for(StorageResourceManager<StorageTypeStack> entry : this.slots)
-        {
-            if(ingredient.test(((ItemResource)entry.resource).sampleItemStack()) && entry.quantityAvailable() > 0)
-            {
+
+        for (StorageResourceManager<StorageTypeStack> entry : this.slots) {
+            if (ingredient.test(((ItemResource) entry.resource).sampleItemStack()) && entry.quantityAvailable() > 0) {
                 builder.add(entry.resource.withQuantity(entry.quantityAvailable()));
             }
         }
-        
+
         return builder.build();
     }
 }

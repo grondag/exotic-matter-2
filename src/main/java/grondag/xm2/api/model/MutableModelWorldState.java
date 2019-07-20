@@ -1,20 +1,42 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.xm2.api.model;
 
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
 
 public interface MutableModelWorldState extends ModelWorldState {
-    default void posX(int index) { }
+    default void posX(int index) {
+    }
 
-    default void posY(int index) { };
+    default void posY(int index) {
+    };
 
-    default void posZ(int index) { };
+    default void posZ(int index) {
+    };
 
-    default void species(int species) { }
+    default void species(int species) {
+    }
 
-    default void cornerJoin(CornerJoinState join) { }
+    default void cornerJoin(CornerJoinState join) {
+    }
 
-    default void simpleJoin(SimpleJoinState join) { }
+    default void simpleJoin(SimpleJoinState join) {
+    }
 
-    default void masonryJoin(SimpleJoinState join) { }
+    default void masonryJoin(SimpleJoinState join) {
+    }
 }

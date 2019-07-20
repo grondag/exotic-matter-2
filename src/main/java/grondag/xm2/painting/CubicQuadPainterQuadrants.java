@@ -32,8 +32,7 @@ import net.minecraft.util.math.Direction;
  * split quads that span quadrants.
  */
 public abstract class CubicQuadPainterQuadrants extends QuadPainter {
-    private static final TextureQuadrant[][] TEXTURE_MAP = new TextureQuadrant[FaceCorner
-            .values().length][CornerJoinFaceStates.COUNT];
+    private static final TextureQuadrant[][] TEXTURE_MAP = new TextureQuadrant[FaceCorner.values().length][CornerJoinFaceStates.COUNT];
 
     private static TextureQuadrant textureMap(FaceCorner corner, CornerJoinFaceState faceState) {
         if (faceState.isJoined(corner.leftSide)) {
@@ -72,8 +71,7 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
 
             final Direction nominalFace = editor.nominalFace();
             TextureSet tex = paint.texture(textureIndex);
-            final int textureVersion = tex.versionMask()
-                    & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
+            final int textureVersion = tex.versionMask() & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
 
             editor.setTextureName(textureIndex, tex.textureName(textureVersion));
             editor.setShouldContractUVs(textureIndex, true);

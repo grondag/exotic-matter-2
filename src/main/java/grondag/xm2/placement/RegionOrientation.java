@@ -52,25 +52,25 @@ public enum RegionOrientation implements ILocalized {
 
     public BlockPos rotatedRegionPos(BlockPos fromPos) {
         switch (this) {
-            case XYZ:
-            case AUTOMATIC:
-            default:
-                return fromPos;
+        case XYZ:
+        case AUTOMATIC:
+        default:
+            return fromPos;
 
-            case XZY:
-                return new BlockPos(fromPos.getX(), fromPos.getZ(), fromPos.getY());
+        case XZY:
+            return new BlockPos(fromPos.getX(), fromPos.getZ(), fromPos.getY());
 
-            case YXZ:
-                return new BlockPos(fromPos.getY(), fromPos.getX(), fromPos.getZ());
+        case YXZ:
+            return new BlockPos(fromPos.getY(), fromPos.getX(), fromPos.getZ());
 
-            case YZX:
-                return new BlockPos(fromPos.getY(), fromPos.getZ(), fromPos.getX());
+        case YZX:
+            return new BlockPos(fromPos.getY(), fromPos.getZ(), fromPos.getX());
 
-            case ZXY:
-                return new BlockPos(fromPos.getZ(), fromPos.getX(), fromPos.getY());
+        case ZXY:
+            return new BlockPos(fromPos.getZ(), fromPos.getX(), fromPos.getY());
 
-            case ZYX:
-                return new BlockPos(fromPos.getZ(), fromPos.getY(), fromPos.getX());
+        case ZYX:
+            return new BlockPos(fromPos.getZ(), fromPos.getY(), fromPos.getX());
 
         }
     }

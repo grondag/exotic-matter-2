@@ -48,20 +48,17 @@ public class OctreeCoordinates {
             final int y = (xyz >> 4) & 15;
             final int z = (xyz >> 8) & 15;
 
-            if (x == 0
-                    || x == 15) {
+            if (x == 0 || x == 15) {
                 EXTERIOR_INDEX_4[exteriorIndex++] = xyzToIndex4(xyz);
                 continue;
             }
 
-            if (y == 0
-                    || y == 15) {
+            if (y == 0 || y == 15) {
                 EXTERIOR_INDEX_4[exteriorIndex++] = xyzToIndex4(xyz);
                 continue;
             }
 
-            if (z == 0
-                    || z == 15) {
+            if (z == 0 || z == 15) {
                 EXTERIOR_INDEX_4[exteriorIndex++] = xyzToIndex4(xyz);
                 continue;
             }
@@ -76,20 +73,17 @@ public class OctreeCoordinates {
             final int y = (xyz >> 3) & 7;
             final int z = (xyz >> 6) & 7;
 
-            if (x == 0
-                    || x == 7) {
+            if (x == 0 || x == 7) {
                 EXTERIOR_INDEX_3[exteriorBottomIndex++] = xyzToIndex3(xyz);
                 continue;
             }
 
-            if (y == 0
-                    || y == 7) {
+            if (y == 0 || y == 7) {
                 EXTERIOR_INDEX_3[exteriorBottomIndex++] = xyzToIndex3(xyz);
                 continue;
             }
 
-            if (z == 0
-                    || z == 7) {
+            if (z == 0 || z == 7) {
                 EXTERIOR_INDEX_3[exteriorBottomIndex++] = xyzToIndex3(xyz);
                 continue;
             }
@@ -100,40 +94,40 @@ public class OctreeCoordinates {
 
     static int xyzToIndex(final int xyz, final int divisionLevel) {
         switch (divisionLevel) {
-            case 0:
-                return 0;
+        case 0:
+            return 0;
 
-            case 1:
-                return xyz;
+        case 1:
+            return xyz;
 
-            case 2:
-                return xyzToIndex2(xyz);
+        case 2:
+            return xyzToIndex2(xyz);
 
-            case 3:
-                return xyzToIndex3(xyz);
+        case 3:
+            return xyzToIndex3(xyz);
 
-            case 4:
-                return xyzToIndex4(xyz);
+        case 4:
+            return xyzToIndex4(xyz);
         }
         return 0;
     }
 
     static int indexToXYZ(final int index, final int divisionLevel) {
         switch (divisionLevel) {
-            case 0:
-                return 0;
+        case 0:
+            return 0;
 
-            case 1:
-                return index;
+        case 1:
+            return index;
 
-            case 2:
-                return indexToXYZ2(index);
+        case 2:
+            return indexToXYZ2(index);
 
-            case 3:
-                return indexToXYZ3(index);
+        case 3:
+            return indexToXYZ3(index);
 
-            case 4:
-                return indexToXYZ4(index);
+        case 4:
+            return indexToXYZ4(index);
         }
         return 0;
     }
@@ -182,8 +176,7 @@ public class OctreeCoordinates {
         final int y = xyz3 >> 2;
         final int z = xyz3 >> 4;
 
-        return (xyz3 & 1) | (y & 2) | (z & 4) | (((xyz3 & 2) | (y & 4) | (z & 8)) << 2)
-                | (((xyz3 & 4) | (y & 8) | (z & 16)) << 4);
+        return (xyz3 & 1) | (y & 2) | (z & 4) | (((xyz3 & 2) | (y & 4) | (z & 8)) << 2) | (((xyz3 & 4) | (y & 8) | (z & 16)) << 4);
     }
 
     /**
@@ -196,15 +189,13 @@ public class OctreeCoordinates {
 
         final int j = i3 >> 2;
         final int k = i3 >> 4;
-        return ((i3 & 1) | (j & 2) | (k & 4)) | (((i3 & 2) | (j & 4) | (k & 8)) << 2)
-                | (((i3 & 4) | (j & 8) | (k & 16)) << 4);
+        return ((i3 & 1) | (j & 2) | (k & 4)) | (((i3 & 2) | (j & 4) | (k & 8)) << 2) | (((i3 & 4) | (j & 8) | (k & 16)) << 4);
     }
 
     public static void forXYZ3(final int i3, Int3Consumer consumer) {
         final int j = i3 >> 2;
         final int k = i3 >> 4;
-        consumer.accept((i3 & 1) | (j & 2) | (k & 4), ((i3 & 2) | (j & 4) | (k & 8)) >> 1,
-                ((i3 & 4) | (j & 8) | (k & 16)) >> 2);
+        consumer.accept((i3 & 1) | (j & 2) | (k & 4), ((i3 & 2) | (j & 4) | (k & 8)) >> 1, ((i3 & 4) | (j & 8) | (k & 16)) >> 2);
     }
 
     /**
@@ -235,8 +226,8 @@ public class OctreeCoordinates {
         final int y = xyz4 >> 3;
         final int z = xyz4 >> 6;
 
-        return (xyz4 & 1) | (y & 2) | (z & 4) | (((xyz4 & 2) | (y & 4) | (z & 8)) << 2)
-                | (((xyz4 & 4) | (y & 8) | (z & 16)) << 4) | (((xyz4 & 8) | (y & 16) | (z & 32)) << 6);
+        return (xyz4 & 1) | (y & 2) | (z & 4) | (((xyz4 & 2) | (y & 4) | (z & 8)) << 2) | (((xyz4 & 4) | (y & 8) | (z & 16)) << 4)
+                | (((xyz4 & 8) | (y & 16) | (z & 32)) << 6);
     }
 
     static int xyzToIndex4(int x, int y, int z) {
@@ -256,8 +247,7 @@ public class OctreeCoordinates {
         final int k = i4 >> 4;
         final int l = i4 >> 6;
 
-        return ((i4 & 1) | (j & 2) | (k & 4) | (l & 8)) | (((i4 & 2) | (j & 4) | (k & 8) | (l & 16)) << 3)
-                | (((i4 & 4) | (j & 8) | (k & 16) | (l & 32)) << 6);
+        return ((i4 & 1) | (j & 2) | (k & 4) | (l & 8)) | (((i4 & 2) | (j & 4) | (k & 8) | (l & 16)) << 3) | (((i4 & 4) | (j & 8) | (k & 16) | (l & 32)) << 6);
     }
 
     /**
@@ -279,16 +269,14 @@ public class OctreeCoordinates {
         final int xyz = indexToXYZ(index, divisionLevel);
         final float d = OctreeCoordinates.voxelSize(divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
-        consumer.accept(((xyz & mask) + 0.5f) * d, (((xyz >> divisionLevel) & mask) + 0.5f) * d,
-                (((xyz >> (divisionLevel * 2)) & mask) + 0.5f) * d);
+        consumer.accept(((xyz & mask) + 0.5f) * d, (((xyz >> divisionLevel) & mask) + 0.5f) * d, (((xyz >> (divisionLevel * 2)) & mask) + 0.5f) * d);
     }
 
     public static boolean testCenter(final int index, final int divisionLevel, Float3Test test) {
         final int xyz = indexToXYZ(index, divisionLevel);
         final float d = OctreeCoordinates.voxelSize(divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
-        return test.apply(((xyz & mask) + 0.5f) * d, (((xyz >> divisionLevel) & mask) + 0.5f) * d,
-                (((xyz >> (divisionLevel * 2)) & mask) + 0.5f) * d);
+        return test.apply(((xyz & mask) + 0.5f) * d, (((xyz >> divisionLevel) & mask) + 0.5f) * d, (((xyz >> (divisionLevel * 2)) & mask) + 0.5f) * d);
     }
 
     public static void withXYZ(final int index, final int divisionLevel, Int3Consumer consumer) {

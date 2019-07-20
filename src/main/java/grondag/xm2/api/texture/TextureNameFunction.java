@@ -53,14 +53,12 @@ public interface TextureNameFunction {
     // Order used by existing XM GIMP-layout border textures
     int[] GIMP_BORDER_SEQUENCE = { 4, 0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 
-    TextureNameFunction BORDER_X_8 = (baseName, version, index) -> gimpNameX8(baseName,
-            version * GIMP_BORDER_SPOTS_PER_VARIANT + GIMP_BORDER_SEQUENCE[index]);
+    TextureNameFunction BORDER_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version * GIMP_BORDER_SPOTS_PER_VARIANT + GIMP_BORDER_SEQUENCE[index]);
 
     /** 8 because one GIMP output rows per border, w/ 8 textures each */
     int GIMP_MASONRY_SPOTS_PER_VARIANT = 8;
 
-    TextureNameFunction MASONRY_X_8 = (baseName, version, index) -> gimpNameX8(baseName,
-            version * GIMP_MASONRY_SPOTS_PER_VARIANT + index);
+    TextureNameFunction MASONRY_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version * GIMP_MASONRY_SPOTS_PER_VARIANT + index);
 
     static String gimpNameX8(String baseName, int offset) {
         return baseName + "_" + (offset >> 3) + "_" + (offset & 7);

@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.gui;
 
 import javax.annotation.Nullable;
@@ -14,29 +29,17 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ModGuiHandler implements IGuiHandler
-{
-    public static enum ModGui
-    {
-        SUPERMODEL_ITEM,
-        SMART_CHEST,
-        BLOCK_FABRICATOR,
-        SOLAR_AGGREGATOR, 
-        MODULAR_TANK, 
-        GLASS_BATTERY,
-        MICRONIZER, 
-        DIGESTER;
+public class ModGuiHandler implements IGuiHandler {
+    public static enum ModGui {
+        SUPERMODEL_ITEM, SMART_CHEST, BLOCK_FABRICATOR, SOLAR_AGGREGATOR, MODULAR_TANK, GLASS_BATTERY, MICRONIZER, DIGESTER;
     }
-    
+
     @Override
-    public @Nullable Object getServerGuiElement(int id, @Nullable EntityPlayer player, @Nullable World world, int x, int y, int z) 
-    {
-        if(id == ModGui.SMART_CHEST.ordinal())
-        {
+    public @Nullable Object getServerGuiElement(int id, @Nullable EntityPlayer player, @Nullable World world, int x, int y, int z) {
+        if (id == ModGui.SMART_CHEST.ordinal()) {
             BlockPos pos = new BlockPos(x, y, z);
             TileEntity te = world.getTileEntity(pos);
-            if (te instanceof MachineTileEntity) 
-            {
+            if (te instanceof MachineTileEntity) {
                 return new MachineStorageContainer(player.inventory, (MachineTileEntity) te, GuiSmartChest.LAYOUT);
             }
         }
@@ -53,40 +56,33 @@ public class ModGuiHandler implements IGuiHandler
     }
 
     @Override
-    public @Nullable Object getClientGuiElement(int id, @Nullable EntityPlayer player, @Nullable World world, int x, int y, int z) 
-    {
-        if(id < ModGui.values().length)
-        {
-            switch(ModGui.values()[id])
-            {
-                case  SUPERMODEL_ITEM:
-                    return new SuperGuiScreen();
-                
-                case SMART_CHEST:
-                {
-                    BlockPos pos = new BlockPos(x, y, z);
-                    TileEntity te = world.getTileEntity(pos);
-                    if (te instanceof MachineTileEntity) 
-                    {
-                        MachineTileEntity containerTileEntity = (MachineTileEntity) te;
-                        return new GuiSmartChest(containerTileEntity, new MachineStorageContainer(player.inventory, containerTileEntity, GuiSmartChest.LAYOUT));
-                    }
-                    return null;
+    public @Nullable Object getClientGuiElement(int id, @Nullable EntityPlayer player, @Nullable World world, int x, int y, int z) {
+        if (id < ModGui.values().length) {
+            switch (ModGui.values()[id]) {
+            case SUPERMODEL_ITEM:
+                return new SuperGuiScreen();
+
+            case SMART_CHEST: {
+                BlockPos pos = new BlockPos(x, y, z);
+                TileEntity te = world.getTileEntity(pos);
+                if (te instanceof MachineTileEntity) {
+                    MachineTileEntity containerTileEntity = (MachineTileEntity) te;
+                    return new GuiSmartChest(containerTileEntity, new MachineStorageContainer(player.inventory, containerTileEntity, GuiSmartChest.LAYOUT));
                 }
-                
-                case BLOCK_FABRICATOR:
-                {
-                    BlockPos pos = new BlockPos(x, y, z);
-                    TileEntity te = world.getTileEntity(pos);
-                    if (te instanceof BlockFabricatorTileEntity) 
-                    {
-                        BlockFabricatorTileEntity containerTileEntity = (BlockFabricatorTileEntity) te;
-                        return new GuiBasicBuilder(containerTileEntity);
-                    }
-                    return null;
+                return null;
+            }
+
+            case BLOCK_FABRICATOR: {
+                BlockPos pos = new BlockPos(x, y, z);
+                TileEntity te = world.getTileEntity(pos);
+                if (te instanceof BlockFabricatorTileEntity) {
+                    BlockFabricatorTileEntity containerTileEntity = (BlockFabricatorTileEntity) te;
+                    return new GuiBasicBuilder(containerTileEntity);
                 }
-                
-                default:
+                return null;
+            }
+
+            default:
             }
         }
         return null;

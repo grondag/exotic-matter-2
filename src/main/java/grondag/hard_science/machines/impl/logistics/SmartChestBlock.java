@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.machines.impl.logistics;
 
 import java.util.List;
@@ -33,93 +48,81 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SmartChestBlock extends MachineContainerBlock
-{
+public class SmartChestBlock extends MachineContainerBlock {
     private final boolean dedicated;
-    
-    public SmartChestBlock(String name, boolean dedicated)
-    {
-        super(name, ModGui.SMART_CHEST.ordinal(), MachineBlock.creatBasicMachineModelState(ArtBoxTextures.DECAL_SKINNY_DIAGNAL_CROSS_BARS, ArtBoxTextures.BORDER_SINGLE_BOLD_LINE));
+
+    public SmartChestBlock(String name, boolean dedicated) {
+        super(name, ModGui.SMART_CHEST.ordinal(),
+                MachineBlock.creatBasicMachineModelState(ArtBoxTextures.DECAL_SKINNY_DIAGNAL_CROSS_BARS, ArtBoxTextures.BORDER_SINGLE_BOLD_LINE));
         this.dedicated = dedicated;
     }
 
     @Override
-    public @Nullable TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) 
-    {
+    public @Nullable TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new MachineTileEntityTickable();
     }
-    
+
     @SideOnly(Side.CLIENT)
     @Override
-    public TextureAtlasSprite getSymbolSprite()
-    {
+    public TextureAtlasSprite getSymbolSprite() {
         return ArtBoxTextures.DECAL_CHEST.getSampleSprite();
     }
 
     @Override
-    public PortLayout nominalPortLayout()
-    {
+    public PortLayout nominalPortLayout() {
         return ModPortLayouts.utb_low_carrier_all;
     }
-    
+
     @Override
-    public AbstractMachine createNewMachine()
-    {
-        return dedicated 
-                ? new SmartChestMachine.Dedicated()
-                : new SmartChestMachine.Flexible();
+    public AbstractMachine createNewMachine() {
+        return dedicated ? new SmartChestMachine.Dedicated() : new SmartChestMachine.Flexible();
     }
-    
+
     @Override
-    public ItemStack getStackFromBlock(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public ItemStack getStackFromBlock(IBlockState state, IBlockAccess world, BlockPos pos) {
         ItemStack result = super.getStackFromBlock(state, world, pos);
-        
+
         // add lore for stacks generated on server
-        if(result != null)
-        {
+        if (result != null) {
             TileEntity blockTE = world.getTileEntity(pos);
-            if (blockTE != null && blockTE instanceof MachineTileEntity) 
-            {
-                MachineTileEntity mste = (MachineTileEntity)blockTE;
-                
+            if (blockTE != null && blockTE instanceof MachineTileEntity) {
+                MachineTileEntity mste = (MachineTileEntity) blockTE;
+
                 // client won't have the storage instance needed to do this
-                if(mste.getWorld().isRemote) return result;
-                
+                if (mste.getWorld().isRemote)
+                    return result;
+
                 // if device is somehow missing nothing to do, and would cause NPE to continue
-                if(mste.machine() == null) return result;
-                
+                if (mste.machine() == null)
+                    return result;
+
                 IResourceContainer<StorageTypeStack> store = mste.machine().itemStorage();
-                
-                if(store.usedCapacity() == 0) return result;
-                
+
+                if (store.usedCapacity() == 0)
+                    return result;
+
                 // save client-side display info
                 NBTTagCompound displayTag = result.getOrCreateSubCompound("display");
-                    
-                NBTTagList loreTag = new NBTTagList(); 
 
-                List<AbstractResourceWithQuantity<StorageTypeStack>> items 
-                        = store.find(store.storageType().MATCH_ANY)
-                        .stream()
+                NBTTagList loreTag = new NBTTagList();
+
+                List<AbstractResourceWithQuantity<StorageTypeStack>> items = store.find(store.storageType().MATCH_ANY).stream()
                         .sorted(ItemResourceWithQuantity.SORT_BY_QTY_DESC).collect(Collectors.toList());
 
-                if(!items.isEmpty())
-                {
+                if (!items.isEmpty()) {
                     long printedQty = 0;
                     int printedCount = 0;
-                    for(AbstractResourceWithQuantity<StorageTypeStack> item : items)
-                    {
+                    for (AbstractResourceWithQuantity<StorageTypeStack> item : items) {
                         loreTag.appendTag(new NBTTagString(item.toString()));
                         printedQty += item.getQuantity();
-                        if(++printedCount == 10)
-                        {
-                            //FIXME: localize
-                            loreTag.appendTag(new NBTTagString(String.format("...plus %,d of %d other items", 
-                                    store.usedCapacity() - printedQty, items.size() - printedCount)));
+                        if (++printedCount == 10) {
+                            // FIXME: localize
+                            loreTag.appendTag(new NBTTagString(
+                                    String.format("...plus %,d of %d other items", store.usedCapacity() - printedQty, items.size() - printedCount)));
                             break;
                         }
                     }
-                    
+
                     result.setItemDamage(Math.max(1, (int) (MachineItemBlock.MAX_DAMAGE * store.availableCapacity() / store.getCapacity())));
                 }
                 displayTag.setTag("Lore", loreTag);

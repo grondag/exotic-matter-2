@@ -70,8 +70,7 @@ public class MutablePolyStream extends WritablePolyStream implements IMutablePol
 
     @Override
     public boolean editorHasValue() {
-        return isValidAddress(editor.baseAddress)
-                && !editor.isDeleted();
+        return isValidAddress(editor.baseAddress) && !editor.isDeleted();
     }
 
     @Override

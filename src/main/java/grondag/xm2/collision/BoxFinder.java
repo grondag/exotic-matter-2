@@ -66,14 +66,7 @@ public class BoxFinder {
     }
 
     public boolean isEmpty() {
-        return voxels[0] == 0
-                && voxels[1] == 0
-                && voxels[2] == 0
-                && voxels[3] == 0
-                && voxels[4] == 0
-                && voxels[5] == 0
-                && voxels[6] == 0
-                && voxels[7] == 0;
+        return voxels[0] == 0 && voxels[1] == 0 && voxels[2] == 0 && voxels[3] == 0 && voxels[4] == 0 && voxels[5] == 0 && voxels[6] == 0 && voxels[7] == 0;
     }
 
     /**
@@ -134,8 +127,7 @@ public class BoxFinder {
             assert false : "Bad simplification input";
             return false;
         }
-        while (simplifyOnce()
-                && --iterations > 0) {
+        while (simplifyOnce() && --iterations > 0) {
         }
         ;
         return iterations == 0;
@@ -190,9 +182,8 @@ public class BoxFinder {
      * How many voxels currently populated
      */
     int filledVoxelCount() {
-        return Long.bitCount(this.voxels[0]) + Long.bitCount(this.voxels[1]) + Long.bitCount(this.voxels[2])
-                + Long.bitCount(this.voxels[3]) + Long.bitCount(this.voxels[4]) + Long.bitCount(this.voxels[5])
-                + Long.bitCount(this.voxels[6]) + Long.bitCount(this.voxels[7]);
+        return Long.bitCount(this.voxels[0]) + Long.bitCount(this.voxels[1]) + Long.bitCount(this.voxels[2]) + Long.bitCount(this.voxels[3])
+                + Long.bitCount(this.voxels[4]) + Long.bitCount(this.voxels[5]) + Long.bitCount(this.voxels[6]) + Long.bitCount(this.voxels[7]);
     }
 
     int simplificationScore(int volumeKey) {
@@ -322,9 +313,7 @@ public class BoxFinder {
                 boolean didRecurse = false;
                 // not using lambda here to avoid mem alloc
                 for (int i = 0; i < this.volumeCount; i++) {
-                    if (i != volIndex
-                            && ((candidates & (1L << i)) != 0)
-                            && tryDisjoint(i, members, combinedIntersects))
+                    if (i != volIndex && ((candidates & (1L << i)) != 0) && tryDisjoint(i, members, combinedIntersects))
                         didRecurse = true;
                 }
                 if (didRecurse)
@@ -367,8 +356,7 @@ public class BoxFinder {
     }
 
     void explainDisjointSet(long disjointSet) {
-        Xm.LOG.info(String.format("Disjoint Set Info: Box Count = %d, Score = %d", Long.bitCount(disjointSet),
-                scoreOfDisjointSet(disjointSet)));
+        Xm.LOG.info(String.format("Disjoint Set Info: Box Count = %d, Score = %d", Long.bitCount(disjointSet), scoreOfDisjointSet(disjointSet)));
         BitHelper.forEachBit(disjointSet, i -> {
             explainVolume(i);
         });
@@ -393,10 +381,8 @@ public class BoxFinder {
         });
         final Slice slice = BoxFinderUtils.sliceFromKey(volKey);
         BoxFinderUtils.testAreaBounds(BoxFinderUtils.patternIndexFromKey(volKey), (minX, minY, maxX, maxY) -> {
-            Xm.LOG.info(String.format(
-                    "Box w/ %d volume @ %d, %d,%d to %d, %d, %d  score = %d  intersects = %s  volKey = %d",
-                    BoxFinderUtils.volumeFromKey(volKey), minX, minY, slice.min, maxX, maxY, slice.max,
-                    volumeScores[volIndex], b.toString(), volKey));
+            Xm.LOG.info(String.format("Box w/ %d volume @ %d, %d,%d to %d, %d, %d  score = %d  intersects = %s  volKey = %d",
+                    BoxFinderUtils.volumeFromKey(volKey), minX, minY, slice.min, maxX, maxY, slice.max, volumeScores[volIndex], b.toString(), volKey));
             return 0;
         });
     }
@@ -487,8 +473,7 @@ public class BoxFinder {
     private final AddBoxConsumer addBoxConsumer = new AddBoxConsumer();
 
     void addBox(int volumeKey, ICollisionBoxListBuilder builder) {
-        BoxFinderUtils.testAreaBounds(BoxFinderUtils.patternIndexFromKey(volumeKey),
-                addBoxConsumer.prepare(volumeKey, builder));
+        BoxFinderUtils.testAreaBounds(BoxFinderUtils.patternIndexFromKey(volumeKey), addBoxConsumer.prepare(volumeKey, builder));
     }
 
     void calcCombined() {
@@ -549,28 +534,22 @@ public class BoxFinder {
 
         @Override
         public int apply(int minX, int minY, int maxX, int maxY) {
-            if (slice.min > 0
-                    && isVolumePresent(pattern, BoxFinderUtils.sliceByMinMax(slice.min - 1, slice.max)))
+            if (slice.min > 0 && isVolumePresent(pattern, BoxFinderUtils.sliceByMinMax(slice.min - 1, slice.max)))
                 return 1;
 
-            if (slice.max < 7
-                    && isVolumePresent(pattern, BoxFinderUtils.sliceByMinMax(slice.min, slice.max + 1)))
+            if (slice.max < 7 && isVolumePresent(pattern, BoxFinderUtils.sliceByMinMax(slice.min, slice.max + 1)))
                 return 1;
 
-            if (minX > 0
-                    && isVolumePresent((pattern >>> 1) | pattern, slice))
+            if (minX > 0 && isVolumePresent((pattern >>> 1) | pattern, slice))
                 return 1;
 
-            if (maxX < 7
-                    && isVolumePresent((pattern << 1) | pattern, slice))
+            if (maxX < 7 && isVolumePresent((pattern << 1) | pattern, slice))
                 return 1;
 
-            if (minY > 0
-                    && isVolumePresent((pattern >>> 8) | pattern, slice))
+            if (minY > 0 && isVolumePresent((pattern >>> 8) | pattern, slice))
                 return 1;
 
-            if (maxY < 7
-                    && isVolumePresent((pattern << 8) | pattern, slice))
+            if (maxY < 7 && isVolumePresent((pattern << 8) | pattern, slice))
                 return 1;
 
             return 0;
@@ -583,8 +562,7 @@ public class BoxFinder {
      * True if volume cannot be expanded along any axis.
      */
     boolean isVolumeMaximal(int volKey) {
-        return BoxFinderUtils.testAreaBounds(BoxFinderUtils.patternIndexFromKey(volKey),
-                volumeMaximalConsumer.prepare(volKey)) == 0;
+        return BoxFinderUtils.testAreaBounds(BoxFinderUtils.patternIndexFromKey(volKey), volumeMaximalConsumer.prepare(volKey)) == 0;
     }
 
     @FunctionalInterface
@@ -603,8 +581,7 @@ public class BoxFinder {
         for (int i = 0; i < BoxFinderUtils.VOLUME_COUNT; i++) {
             final int v = BoxFinderUtils.VOLUME_KEYS[i];
 
-            if (isVolumePresent(v)
-                    && isVolumeMaximal(v)) {
+            if (isVolumePresent(v) && isVolumeMaximal(v)) {
                 final int c = this.volumeCount++;
                 volumes[c] = v;
                 if (c == 63)

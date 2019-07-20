@@ -25,8 +25,7 @@ public class WritablePolyStream extends AbstractPolyStream implements IWritableP
     private static final int MAX_STRIDE;
 
     static {
-        final int maxFormat = PolyStreamFormat.MUTABLE_FLAG | PolyStreamFormat.HAS_LINK_FLAG
-                | PolyStreamFormat.HAS_TAG_FLAG;
+        final int maxFormat = PolyStreamFormat.MUTABLE_FLAG | PolyStreamFormat.HAS_LINK_FLAG | PolyStreamFormat.HAS_TAG_FLAG;
 
         MAX_STRIDE = 1 + StaticEncoder.INTEGER_WIDTH + PolyEncoder.get(maxFormat).stride();
     }
@@ -168,9 +167,7 @@ public class WritablePolyStream extends AbstractPolyStream implements IWritableP
     public int splitIfNeeded(int targetAddress) {
         internal.moveTo(targetAddress);
         final int inCount = internal.vertexCount();
-        if (inCount == 3
-                || (inCount == 4
-                        && internal.isConvex()))
+        if (inCount == 3 || (inCount == 4 && internal.isConvex()))
             return IPolygon.NO_LINK_OR_TAG;
 
         int firstSplitAddress = this.writerAddress();

@@ -96,24 +96,24 @@ public abstract class QuadPainter {
         int z = blockZ & sliceCountMask;
 
         switch (face) {
-            case EAST:
-                return new Vec3i(sliceCountMask - z, sliceCountMask - y, -blockX);
+        case EAST:
+            return new Vec3i(sliceCountMask - z, sliceCountMask - y, -blockX);
 
-            case WEST:
-                return new Vec3i(z, sliceCountMask - y, blockX);
+        case WEST:
+            return new Vec3i(z, sliceCountMask - y, blockX);
 
-            case NORTH:
-                return new Vec3i(sliceCountMask - x, sliceCountMask - y, blockZ);
+        case NORTH:
+            return new Vec3i(sliceCountMask - x, sliceCountMask - y, blockZ);
 
-            case SOUTH:
-                return new Vec3i(x, sliceCountMask - y, -blockZ);
+        case SOUTH:
+            return new Vec3i(x, sliceCountMask - y, -blockZ);
 
-            case DOWN:
-                return new Vec3i(x, sliceCountMask - z, blockY);
+        case DOWN:
+            return new Vec3i(x, sliceCountMask - z, blockY);
 
-            case UP:
-            default:
-                return new Vec3i(x, z, -blockY);
+        case UP:
+        default:
+            return new Vec3i(x, z, -blockY);
         }
     }
 
@@ -125,18 +125,18 @@ public abstract class QuadPainter {
     protected static Vec3i rotateFacePerspective(Vec3i vec, Rotation rotation, TextureScale scale) {
         // PERF - reuse instances?
         switch (rotation) {
-            case ROTATE_90:
-                return new Vec3i(vec.getY(), scale.sliceCountMask - vec.getX(), vec.getZ());
+        case ROTATE_90:
+            return new Vec3i(vec.getY(), scale.sliceCountMask - vec.getX(), vec.getZ());
 
-            case ROTATE_180:
-                return new Vec3i(scale.sliceCountMask - vec.getX(), scale.sliceCountMask - vec.getY(), vec.getZ());
+        case ROTATE_180:
+            return new Vec3i(scale.sliceCountMask - vec.getX(), scale.sliceCountMask - vec.getY(), vec.getZ());
 
-            case ROTATE_270:
-                return new Vec3i(scale.sliceCountMask - vec.getY(), vec.getX(), vec.getZ());
+        case ROTATE_270:
+            return new Vec3i(scale.sliceCountMask - vec.getY(), vec.getX(), vec.getZ());
 
-            case ROTATE_NONE:
-            default:
-                return vec;
+        case ROTATE_NONE:
+        default:
+            return vec;
 
         }
     }
@@ -153,29 +153,26 @@ public abstract class QuadPainter {
         final int shift = tex.scale().power;
 
         switch (face) {
-            case DOWN:
-            case UP: {
-                final int yBits = (((modelState.posX() >> shift) & 0xFF) << 8) | ((modelState.posZ() >> shift) & 0xFF)
-                        | speciesBits;
-                return HashCommon.mix(yBits);
-            }
+        case DOWN:
+        case UP: {
+            final int yBits = (((modelState.posX() >> shift) & 0xFF) << 8) | ((modelState.posZ() >> shift) & 0xFF) | speciesBits;
+            return HashCommon.mix(yBits);
+        }
 
-            case EAST:
-            case WEST: {
-                final int xBits = (((modelState.posY() >> shift) & 0xFF) << 8) | ((modelState.posZ() >> shift) & 0xFF)
-                        | speciesBits;
-                return HashCommon.mix(xBits);
-            }
+        case EAST:
+        case WEST: {
+            final int xBits = (((modelState.posY() >> shift) & 0xFF) << 8) | ((modelState.posZ() >> shift) & 0xFF) | speciesBits;
+            return HashCommon.mix(xBits);
+        }
 
-            case NORTH:
-            case SOUTH: {
-                final int zBits = (((modelState.posX() >> shift) & 0xFF) << 8) | ((modelState.posY() >> shift) & 0xFF)
-                        | speciesBits;
-                return HashCommon.mix(zBits);
-            }
+        case NORTH:
+        case SOUTH: {
+            final int zBits = (((modelState.posX() >> shift) & 0xFF) << 8) | ((modelState.posY() >> shift) & 0xFF) | speciesBits;
+            return HashCommon.mix(zBits);
+        }
 
-            default:
-                return 0;
+        default:
+            return 0;
         }
     }
 
@@ -190,11 +187,9 @@ public abstract class QuadPainter {
         final int species = modelState.hasSpecies() ? modelState.species() : 0;
         if (tex.rotation() == TextureRotation.ROTATE_RANDOM) {
             if (tex.scale() == TextureScale.SINGLE) {
-                return Useful.offsetEnumValue(Rotation.ROTATE_NONE,
-                        (textureHashForFace(face, tex, modelState) >> 8) & 3);
+                return Useful.offsetEnumValue(Rotation.ROTATE_NONE, (textureHashForFace(face, tex, modelState) >> 8) & 3);
             } else {
-                return species == 0 ? Rotation.ROTATE_NONE
-                        : Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
+                return species == 0 ? Rotation.ROTATE_NONE : Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
             }
         } else {
             return tex.rotation().rotation;

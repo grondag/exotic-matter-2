@@ -35,8 +35,7 @@ import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Box;
 
 public class CSGTestPrimitive extends AbstractModelPrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-            .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
             .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
     public static final XmSurfaceImpl SURFACE_A = SURFACES.get(0);
@@ -54,7 +53,7 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
     public XmSurfaceListImpl surfaces(ModelState modelState) {
         return SURFACES;
     }
-    
+
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         if (cachedQuads.origin()) {
@@ -121,7 +120,7 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
 
 //      result.recolor();
     }
-    
+
     @Override
     public ModelState geometricState(ModelState fromState) {
         return defaultState();
@@ -130,5 +129,5 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
     @Override
     public boolean doesShapeMatch(ModelState from, ModelState to) {
         return from.primitive() == to.primitive();
-    }  
+    }
 }

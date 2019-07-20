@@ -148,8 +148,7 @@ public class QuadrantSplitter {
                     stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
                     if (nextType == LOW) {
                         final float dist = (0.5f - uThis) / (uNext - uThis);
-                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext,
-                                dist);
+                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
                         stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
                         iLowVertex++;
                         iHighVertex++;
@@ -158,8 +157,7 @@ public class QuadrantSplitter {
                     stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
                     if (nextType == HIGH) {
                         final float dist = (0.5f - uThis) / (uNext - uThis);
-                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext,
-                                dist);
+                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
                         stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
                         iLowVertex++;
                         iHighVertex++;
@@ -233,8 +231,7 @@ public class QuadrantSplitter {
                     stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
                     if (nextType == LOW) {
                         final float dist = (0.5f - vThis) / (vNext - vThis);
-                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext,
-                                dist);
+                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
                         stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
                         iLowVertex++;
                         iHighVertex++;
@@ -243,8 +240,7 @@ public class QuadrantSplitter {
                     stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
                     if (nextType == HIGH) {
                         final float dist = (0.5f - vThis) / (vNext - vThis);
-                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext,
-                                dist);
+                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
                         stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
                         iLowVertex++;
                         iHighVertex++;

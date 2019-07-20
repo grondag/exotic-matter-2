@@ -37,8 +37,8 @@ import net.minecraft.util.math.Direction;
 
 @API(status = STABLE)
 public enum FaceEdge implements StringIdentifiable {
-    TOP_EDGE(SOUTH, SOUTH, UP, UP, UP, UP), BOTTOM_EDGE(NORTH, NORTH, DOWN, DOWN, DOWN, DOWN),
-    LEFT_EDGE(WEST, EAST, EAST, WEST, NORTH, SOUTH), RIGHT_EDGE(EAST, WEST, WEST, EAST, SOUTH, NORTH);
+    TOP_EDGE(SOUTH, SOUTH, UP, UP, UP, UP), BOTTOM_EDGE(NORTH, NORTH, DOWN, DOWN, DOWN, DOWN), LEFT_EDGE(WEST, EAST, EAST, WEST, NORTH, SOUTH),
+    RIGHT_EDGE(EAST, WEST, WEST, EAST, SOUTH, NORTH);
 
     // for a given face, which face is at the position identified by this enum?
     private final Direction relativeLookup[];
@@ -56,31 +56,31 @@ public enum FaceEdge implements StringIdentifiable {
 
     public FaceEdge clockwise() {
         switch (this) {
-            case BOTTOM_EDGE:
-                return LEFT_EDGE;
-            case LEFT_EDGE:
-                return TOP_EDGE;
-            case RIGHT_EDGE:
-                return BOTTOM_EDGE;
-            case TOP_EDGE:
-                return RIGHT_EDGE;
-            default:
-                return null;
+        case BOTTOM_EDGE:
+            return LEFT_EDGE;
+        case LEFT_EDGE:
+            return TOP_EDGE;
+        case RIGHT_EDGE:
+            return BOTTOM_EDGE;
+        case TOP_EDGE:
+            return RIGHT_EDGE;
+        default:
+            return null;
         }
     }
 
     public FaceEdge counterClockwise() {
         switch (this) {
-            case BOTTOM_EDGE:
-                return RIGHT_EDGE;
-            case LEFT_EDGE:
-                return BOTTOM_EDGE;
-            case RIGHT_EDGE:
-                return TOP_EDGE;
-            case TOP_EDGE:
-                return LEFT_EDGE;
-            default:
-                return null;
+        case BOTTOM_EDGE:
+            return RIGHT_EDGE;
+        case LEFT_EDGE:
+            return BOTTOM_EDGE;
+        case RIGHT_EDGE:
+            return TOP_EDGE;
+        case TOP_EDGE:
+            return LEFT_EDGE;
+        default:
+            return null;
         }
     }
 

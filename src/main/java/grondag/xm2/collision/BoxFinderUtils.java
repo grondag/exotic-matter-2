@@ -60,10 +60,9 @@ public class BoxFinderUtils {
      * matter, tho, with LOR.
      */
     static enum Slice {
-        D1_0(1, 0), D1_1(1, 1), D1_2(1, 2), D1_3(1, 3), D1_4(1, 4), D1_5(1, 5), D1_6(1, 6), D1_7(1, 7), D2_0(2, 0),
-        D2_1(2, 1), D2_2(2, 2), D2_3(2, 3), D2_4(2, 4), D2_5(2, 5), D2_6(2, 6), D3_0(3, 0), D3_1(3, 1), D3_2(3, 2),
-        D3_3(3, 3), D3_4(3, 4), D3_5(3, 5), D4_0(4, 0), D4_1(4, 1), D4_2(4, 2), D4_3(4, 3), D4_4(4, 4), D5_0(5, 0),
-        D5_1(5, 1), D5_2(5, 2), D5_3(5, 3), D6_0(6, 0), D6_1(6, 1), D6_2(6, 2), D7_0(7, 0), D7_1(7, 1), D8_0(8, 0);
+        D1_0(1, 0), D1_1(1, 1), D1_2(1, 2), D1_3(1, 3), D1_4(1, 4), D1_5(1, 5), D1_6(1, 6), D1_7(1, 7), D2_0(2, 0), D2_1(2, 1), D2_2(2, 2), D2_3(2, 3),
+        D2_4(2, 4), D2_5(2, 5), D2_6(2, 6), D3_0(3, 0), D3_1(3, 1), D3_2(3, 2), D3_3(3, 3), D3_4(3, 4), D3_5(3, 5), D4_0(4, 0), D4_1(4, 1), D4_2(4, 2),
+        D4_3(4, 3), D4_4(4, 4), D5_0(5, 0), D5_1(5, 1), D5_2(5, 2), D5_3(5, 3), D6_0(6, 0), D6_1(6, 1), D6_2(6, 2), D7_0(7, 0), D7_1(7, 1), D8_0(8, 0);
 
         public final int depth;
         public final int min;
@@ -239,8 +238,7 @@ public class BoxFinderUtils {
         int thirdIndex = -1;
         bestCount = -1;
         for (int i = 0; i < 512; i++) {
-            if (i == firstIndex
-                    || i == secondIndex)
+            if (i == firstIndex || i == secondIndex)
                 continue;
 
             if (COUNTS_BY_BIT[i] > bestCount) {
@@ -265,8 +263,7 @@ public class BoxFinderUtils {
         int fourthIndex = -1;
         bestCount = -1;
         for (int i = 0; i < 512; i++) {
-            if (i == firstIndex
-                    || i == secondIndex)
+            if (i == firstIndex || i == secondIndex)
                 continue;
 
             if (COUNTS_BY_BIT[i] > bestCount) {
@@ -323,38 +320,30 @@ public class BoxFinderUtils {
         // Must be >= or <= on one side of comparison because indexes are voxels and
         // actual face depends on usage (min/max)
 
-        if (actorSlice.min > targetSlice.min
-                && actorSlice.min <= targetSlice.max)
+        if (actorSlice.min > targetSlice.min && actorSlice.min <= targetSlice.max)
             result++;
 
-        if (actorSlice.max >= targetSlice.min
-                && actorSlice.max < targetSlice.max)
+        if (actorSlice.max >= targetSlice.min && actorSlice.max < targetSlice.max)
             result++;
 
-        result += testAreaBounds(patternIndexFromKey(targetVolIndex),
-                (targetMinX, targetMinY, targetMaxX, targetMaxY) -> {
-                    return testAreaBounds(patternIndexFromKey(actorVolIndex),
-                            (actorMinX, actorMinY, actorMaxX, actorMaxY) -> {
-                                int n = 0;
-                                if (actorMinX > targetMinX
-                                        && actorMinX <= targetMaxX)
-                                    n++;
+        result += testAreaBounds(patternIndexFromKey(targetVolIndex), (targetMinX, targetMinY, targetMaxX, targetMaxY) -> {
+            return testAreaBounds(patternIndexFromKey(actorVolIndex), (actorMinX, actorMinY, actorMaxX, actorMaxY) -> {
+                int n = 0;
+                if (actorMinX > targetMinX && actorMinX <= targetMaxX)
+                    n++;
 
-                                if (actorMaxX >= targetMinX
-                                        && actorMaxX < targetMaxX)
-                                    n++;
+                if (actorMaxX >= targetMinX && actorMaxX < targetMaxX)
+                    n++;
 
-                                if (actorMinY > targetMinY
-                                        && actorMinY <= targetMaxY)
-                                    n++;
+                if (actorMinY > targetMinY && actorMinY <= targetMaxY)
+                    n++;
 
-                                if (actorMaxY >= targetMinY
-                                        && actorMaxY < targetMaxY)
-                                    n++;
+                if (actorMaxY >= targetMinY && actorMaxY < targetMaxY)
+                    n++;
 
-                                return n;
-                            });
-                });
+                return n;
+            });
+        });
 
         return result == 0 ? 0 : result - 1;
     }
@@ -431,10 +420,7 @@ public class BoxFinderUtils {
      */
     static boolean doAreaBoundsMatch(int areaIndex, int minX, int minY, int maxX, int maxY) {
         return testAreaBounds(areaIndex, (x0, y0, x1, y1) -> {
-            return (x0 == minX
-                    && y0 == minY
-                    && x1 == maxX
-                    && y1 == maxY) ? 1 : 0;
+            return (x0 == minX && y0 == minY && x1 == maxX && y1 == maxY) ? 1 : 0;
         }) == 1;
     }
 
@@ -535,8 +521,7 @@ public class BoxFinderUtils {
     }
 
     static boolean doesVolumeIncludeBit(int volumeKey, int x, int y, int z) {
-        return (sliceFromKey(volumeKey).layerBits & (1 << z)) != 0
-                && (patternFromKey(volumeKey) & (1L << areaBitIndex(x, y))) != 0L;
+        return (sliceFromKey(volumeKey).layerBits & (1 << z)) != 0 && (patternFromKey(volumeKey) & (1L << areaBitIndex(x, y))) != 0L;
     }
 
     /**
@@ -544,8 +529,7 @@ public class BoxFinderUtils {
      * Second point coordinates are inclusive.
      */
     static boolean areVolumesSame(int volumeKey, int x0, int y0, int z0, int x1, int y1, int z1) {
-        return sliceFromKey(volumeKey).min == z0 & sliceFromKey(volumeKey).max == z1
-                && doAreaBoundsMatch(patternIndexFromKey(volumeKey), x0, y0, x1, y1);
+        return sliceFromKey(volumeKey).min == z0 & sliceFromKey(volumeKey).max == z1 && doAreaBoundsMatch(patternIndexFromKey(volumeKey), x0, y0, x1, y1);
     }
 
     /**

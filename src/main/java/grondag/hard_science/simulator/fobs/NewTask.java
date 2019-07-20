@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.simulator.fobs;
 
 import javax.annotation.Nullable;
@@ -15,49 +30,44 @@ import net.minecraft.nbt.NBTTagCompound;
 
 //TODO: need to consolidate this with old task implementation or clean up
 
-public abstract class NewTask implements IReadWriteNBT, IDomainMember //, IIdentified//, 
+public abstract class NewTask implements IReadWriteNBT, IDomainMember // , IIdentified//,
 {
     private SimpleUnorderedArrayList<INewTaskListener> listeners;
 //    private int id = IIdentified.UNASSIGNED_ID;
     private final ITaskContainer container;
     protected RequestStatus status = RequestStatus.NEW;
-    
-    protected NewTask(ITaskContainer container)
-    {
+
+    protected NewTask(ITaskContainer container) {
         this.container = container;
     }
-    
-    public final synchronized void addListener(INewTaskListener listener)
-    {
-        if(this.listeners == null) this.listeners = new SimpleUnorderedArrayList<>();
+
+    public final synchronized void addListener(INewTaskListener listener) {
+        if (this.listeners == null)
+            this.listeners = new SimpleUnorderedArrayList<>();
         this.listeners.addIfNotPresent(listener);
     }
-    
-    public final synchronized void removeListener(INewTaskListener listener)
-    {
-        if(this.listeners != null) this.listeners.removeIfPresent(listener);
+
+    public final synchronized void removeListener(INewTaskListener listener) {
+        if (this.listeners != null)
+            this.listeners.removeIfPresent(listener);
     }
 
-    protected Iterable<INewTaskListener>listeners()
-    {
+    protected Iterable<INewTaskListener> listeners() {
         return this.listeners == null ? ImmutableList.of() : this.listeners;
     }
-    
-    protected void notifyStatusChange(RequestStatus oldStatus)
-    {
+
+    protected void notifyStatusChange(RequestStatus oldStatus) {
         this.listeners().forEach(l -> l.notifyStatusChange(this, oldStatus));
     }
-    
-    public TaskPriority priority()
-    {
+
+    public TaskPriority priority() {
         return this.container.priority();
     }
-    
-    public RequestStatus status()
-    {
+
+    public RequestStatus status() {
         return this.status;
     }
-    
+
 //    @Override
 //    public int getIdRaw()
 //    {
@@ -81,27 +91,23 @@ public abstract class NewTask implements IReadWriteNBT, IDomainMember //, IIdent
 //    {
 //        return AssignedNumber.TASK;
 //    }
-    
+
     private final static String NBT_TASK_STATUS = NBTDictionary.claim("taskStatus");
-    
+
     @Override
-    public void deserializeNBT(@Nullable NBTTagCompound tag)
-    {
+    public void deserializeNBT(@Nullable NBTTagCompound tag) {
 //        this.deserializeID(tag);
         this.status = Useful.safeEnumFromTag(tag, NBT_TASK_STATUS, RequestStatus.NEW);
     }
 
     @Override
-    public synchronized void serializeNBT(NBTTagCompound tag)
-    {
+    public synchronized void serializeNBT(NBTTagCompound tag) {
 //        this.serializeID(tag);
         Useful.saveEnumToTag(tag, NBT_TASK_STATUS, this.status);
     }
-    
-    public void cancel()
-    {
-        assert !this.status.isTerminated 
-        : "AbstractTask.cancel called on task with terminal status";
+
+    public void cancel() {
+        assert !this.status.isTerminated : "AbstractTask.cancel called on task with terminal status";
 
         RequestStatus oldStatus = this.status;
         this.status = RequestStatus.CANCELLED;
@@ -109,10 +115,8 @@ public abstract class NewTask implements IReadWriteNBT, IDomainMember //, IIdent
     }
 
     @Override
-    public @Nullable IDomain getDomain()
-    {
+    public @Nullable IDomain getDomain() {
         return this.container.getDomain();
     }
-    
-    
+
 }

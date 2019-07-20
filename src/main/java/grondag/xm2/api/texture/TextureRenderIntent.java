@@ -67,21 +67,20 @@ public enum TextureRenderIntent {
 
     public boolean isCompatibleWith(BlockRenderLayer renderLayer) {
         switch (renderLayer) {
-            case CUTOUT:
-                return false;
+        case CUTOUT:
+            return false;
 
-            case CUTOUT_MIPPED:
-                return this == BASE_ONLY
-                        || this == BASE_OR_OVERLAY_CUTOUT_OKAY;
+        case CUTOUT_MIPPED:
+            return this == BASE_ONLY || this == BASE_OR_OVERLAY_CUTOUT_OKAY;
 
-            case SOLID:
-                return this != OVERLAY_ONLY;
+        case SOLID:
+            return this != OVERLAY_ONLY;
 
-            case TRANSLUCENT:
-                return true;
+        case TRANSLUCENT:
+            return true;
 
-            default:
-                return false;
+        default:
+            return false;
 
         }
     }

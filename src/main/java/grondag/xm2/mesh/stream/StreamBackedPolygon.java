@@ -193,8 +193,7 @@ public class StreamBackedPolygon implements IPolygon {
         final int normalFormat = PolyStreamFormat.getFaceNormalFormat(format());
         if (normalFormat == PolyStreamFormat.FACE_NORMAL_FORMAT_NOMINAL)
             return true;
-        else if (normalFormat == PolyStreamFormat.FACE_NORMAL_FORMAT_COMPUTED
-                && Float.isNaN(polyEncoder.getFaceNormalX(stream, baseAddress))) {
+        else if (normalFormat == PolyStreamFormat.FACE_NORMAL_FORMAT_COMPUTED && Float.isNaN(polyEncoder.getFaceNormalX(stream, baseAddress))) {
             Vec3f normal = this.computeFaceNormal();
             polyEncoder.setFaceNormal(stream, baseAddress, normal);
         }
@@ -327,8 +326,7 @@ public class StreamBackedPolygon implements IPolygon {
 
     @Override
     public final int spriteColor(int vertexIndex, int layerIndex) {
-        return vertexEncoder.hasColor()
-                ? vertexEncoder.getVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex))
+        return vertexEncoder.hasColor() ? vertexEncoder.getVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex))
                 : polyEncoder.getVertexColor(stream, baseAddress, layerIndex);
     }
 

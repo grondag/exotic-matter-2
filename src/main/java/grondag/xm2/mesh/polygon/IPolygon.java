@@ -186,43 +186,43 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
         // compute area of the 2D projection
         switch (coord) {
-            case 1:
-                for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
-                    area += (getPosModulo(i)).y() * (getPosModulo(j).z() - getPosModulo(k).z());
-                break;
-            case 2:
-                for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
-                    area += (getPosModulo(i).z() * (getPosModulo(j).x() - getPosModulo(k).x()));
-                break;
-            case 3:
-                for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
-                    area += (getPosModulo(i).x() * (getPosModulo(j).y() - getPosModulo(k).y()));
-                break;
+        case 1:
+            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
+                area += (getPosModulo(i)).y() * (getPosModulo(j).z() - getPosModulo(k).z());
+            break;
+        case 2:
+            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
+                area += (getPosModulo(i).z() * (getPosModulo(j).x() - getPosModulo(k).x()));
+            break;
+        case 3:
+            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
+                area += (getPosModulo(i).x() * (getPosModulo(j).y() - getPosModulo(k).y()));
+            break;
         }
 
         switch (coord) { // wrap-around term
-            case 1:
-                area += (getPosModulo(n).y() * (getPosModulo(1).z() - getPosModulo(n - 1).z()));
-                break;
-            case 2:
-                area += (getPosModulo(n).z() * (getPosModulo(1).x() - getPosModulo(n - 1).x()));
-                break;
-            case 3:
-                area += (getPosModulo(n).x() * (getPosModulo(1).y() - getPosModulo(n - 1).y()));
-                break;
+        case 1:
+            area += (getPosModulo(n).y() * (getPosModulo(1).z() - getPosModulo(n - 1).z()));
+            break;
+        case 2:
+            area += (getPosModulo(n).z() * (getPosModulo(1).x() - getPosModulo(n - 1).x()));
+            break;
+        case 3:
+            area += (getPosModulo(n).x() * (getPosModulo(1).y() - getPosModulo(n - 1).y()));
+            break;
         }
 
         // scale to get area before projection
         an = MathHelper.sqrt(ax * ax + ay * ay + az * az); // length of normal vector
         switch (coord) {
-            case 1:
-                area *= (an / (2 * N.x()));
-                break;
-            case 2:
-                area *= (an / (2 * N.y()));
-                break;
-            case 3:
-                area *= (an / (2 * N.z()));
+        case 1:
+            area *= (an / (2 * N.x()));
+            break;
+        case 2:
+            area *= (an / (2 * N.y()));
+            break;
+        case 3:
+            area *= (an / (2 * N.z()));
         }
         return area;
     }
@@ -256,8 +256,7 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
         for (int i = 0; i < 6; i++) {
             final Direction f = ModelHelper.faceFromIndex(i);
-            if (f != nominalFace
-                    && this.isOnFace(f, QuadHelper.EPSILON))
+            if (f != nominalFace && this.isOnFace(f, QuadHelper.EPSILON))
                 return f;
         }
         return null;
@@ -323,10 +322,7 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
             return true;
 
         final int count = this.layerCount();
-        return (count > 1
-                && getRenderLayer(1) == layer)
-                || (count == 3
-                        && getRenderLayer(2) == layer);
+        return (count > 1 && getRenderLayer(1) == layer) || (count == 3 && getRenderLayer(2) == layer);
     }
 
     BlockRenderLayer getRenderLayer(int layerIndex);

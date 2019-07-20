@@ -36,14 +36,10 @@ import net.minecraft.util.math.Vec3i;
  */
 @API(status = STABLE)
 public enum BlockCorner implements StringIdentifiable {
-    UP_NORTH_EAST(Direction.UP, Direction.EAST, Direction.NORTH),
-    UP_NORTH_WEST(Direction.UP, Direction.WEST, Direction.NORTH),
-    UP_SOUTH_EAST(Direction.UP, Direction.EAST, Direction.SOUTH),
-    UP_SOUTH_WEST(Direction.UP, Direction.WEST, Direction.SOUTH),
-    DOWN_NORTH_EAST(Direction.DOWN, Direction.EAST, Direction.NORTH),
-    DOWN_NORTH_WEST(Direction.DOWN, Direction.WEST, Direction.NORTH),
-    DOWN_SOUTH_EAST(Direction.DOWN, Direction.EAST, Direction.SOUTH),
-    DOWN_SOUTH_WEST(Direction.DOWN, Direction.WEST, Direction.SOUTH);
+    UP_NORTH_EAST(Direction.UP, Direction.EAST, Direction.NORTH), UP_NORTH_WEST(Direction.UP, Direction.WEST, Direction.NORTH),
+    UP_SOUTH_EAST(Direction.UP, Direction.EAST, Direction.SOUTH), UP_SOUTH_WEST(Direction.UP, Direction.WEST, Direction.SOUTH),
+    DOWN_NORTH_EAST(Direction.DOWN, Direction.EAST, Direction.NORTH), DOWN_NORTH_WEST(Direction.DOWN, Direction.WEST, Direction.NORTH),
+    DOWN_SOUTH_EAST(Direction.DOWN, Direction.EAST, Direction.SOUTH), DOWN_SOUTH_WEST(Direction.DOWN, Direction.WEST, Direction.SOUTH);
 
     public final Direction face1;
     public final Direction face2;
@@ -73,8 +69,7 @@ public enum BlockCorner implements StringIdentifiable {
         Vec3i v1 = face1.getVector();
         Vec3i v2 = face2.getVector();
         Vec3i v3 = face3.getVector();
-        this.vector = new Vec3i(v1.getX() + v2.getX() + v3.getX(), v1.getY() + v2.getY() + v3.getY(),
-                v1.getZ() + v2.getZ() + v3.getZ());
+        this.vector = new Vec3i(v1.getX() + v2.getX() + v3.getX(), v1.getY() + v2.getY() + v3.getY(), v1.getZ() + v2.getZ() + v3.getZ());
 
     }
 

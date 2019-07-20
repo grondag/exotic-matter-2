@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.machines.impl.logistics;
 
 import grondag.exotic_matter.block.ISuperBlock;
@@ -21,25 +36,22 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-public class BottomBusBlock extends MachineSimpleBlock
-{
-    public BottomBusBlock(String blockName)
-    {
+public class BottomBusBlock extends MachineSimpleBlock {
+    public BottomBusBlock(String blockName) {
         super(blockName, createDefaulModelState());
     }
 
-    private static ISuperModelState createDefaulModelState()
-    {
+    private static ISuperModelState createDefaulModelState() {
         ISuperModelState result = new ModelState();
         result.setShape(grondag.hard_science.init.ModShapes.MACHINE);
         MachineMeshFactory.setMachineShape(MachineShape.BOTTOM_BUS, result);
-        
+
         result.setTexture(PaintLayer.BASE, grondag.exotic_matter.init.ModTextures.BLOCK_NOISE_SUBTLE);
         result.setColorRGB(PaintLayer.BASE, BlockColorMapProvider.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.DARK).getColor(EnumColorMap.BASE));
-        
+
 //        result.setTexture(PaintLayer.OUTER, Textures.BORDER_GRITTY_INSET_PINSTRIPE);
 //        result.setColorMap(PaintLayer.OUTER, BlockColorMapProvider.INSTANCE.getColorMap(Hue.VIOLET, Chroma.NEUTRAL, Luminance.DARK));
-        
+
 //        result.setTexture(PaintLayer.LAMP, Textures.TILE_DOTS_INVERSE);
 //        result.setColorMap(PaintLayer.LAMP, BlockColorMapProvider.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.DARK));
 
@@ -48,20 +60,17 @@ public class BottomBusBlock extends MachineSimpleBlock
     }
 
     @Override
-    public AbstractMachine createNewMachine()
-    {
+    public AbstractMachine createNewMachine() {
         return new BottomBusMachine();
     }
 
     @Override
-    public IBlockTest blockJoinTest(IBlockAccess worldIn, IBlockState state, BlockPos pos, ISuperModelState modelState)
-    {
+    public IBlockTest blockJoinTest(IBlockAccess worldIn, IBlockState state, BlockPos pos, ISuperModelState modelState) {
         return new SuperBlockCableMatch(this.portLayout(worldIn, pos, state), state.getValue(ISuperBlock.META));
     }
 
     @Override
-    public PortLayout nominalPortLayout()
-    {
+    public PortLayout nominalPortLayout() {
         return ModPortLayouts.utb_low_carrier_all;
     }
 }

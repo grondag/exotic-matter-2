@@ -40,40 +40,36 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
         for (Direction face : Direction.values()) {
             FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.NO_FACE.ordinal()] = null;
 
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_LEFT_RIGHT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM_LEFT_RIGHT.ordinal(), Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM_LEFT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM_LEFT_RIGHT.ordinal(), Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_LEFT_RIGHT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM_LEFT_RIGHT.ordinal(), Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM_RIGHT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM_LEFT_RIGHT.ordinal(), Rotation.ROTATE_270, false, false);
-
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_LEFT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_LEFT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_RIGHT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_RIGHT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_270, false, false);
-
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.LEFT_RIGHT.ordinal()] = new FaceQuadInputs(
-                    Textures.LEFT_RIGHT.ordinal(), Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM.ordinal()] = new FaceQuadInputs(
-                    Textures.LEFT_RIGHT.ordinal(), Rotation.ROTATE_90, false, false);
-
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM.ordinal(), Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.LEFT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM.ordinal(), Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM.ordinal(), Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.RIGHT.ordinal()] = new FaceQuadInputs(
-                    Textures.BOTTOM.ordinal(), Rotation.ROTATE_270, false, false);
-
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.ALL.ordinal()] = new FaceQuadInputs(Textures.ALL.ordinal(),
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_LEFT_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT_RIGHT.ordinal(),
                     Rotation.ROTATE_NONE, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM_LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT_RIGHT.ordinal(),
+                    Rotation.ROTATE_90, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_LEFT_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT_RIGHT.ordinal(),
+                    Rotation.ROTATE_180, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT_RIGHT.ordinal(),
+                    Rotation.ROTATE_270, false, false);
+
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_NONE,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_90, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_180,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_270,
+                    false, false);
+
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.LEFT_RIGHT.ordinal()] = new FaceQuadInputs(Textures.LEFT_RIGHT.ordinal(), Rotation.ROTATE_NONE,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM.ordinal()] = new FaceQuadInputs(Textures.LEFT_RIGHT.ordinal(), Rotation.ROTATE_90, false,
+                    false);
+
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), Rotation.ROTATE_NONE, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), Rotation.ROTATE_90, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), Rotation.ROTATE_180, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), Rotation.ROTATE_270, false, false);
+
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.ALL.ordinal()] = new FaceQuadInputs(Textures.ALL.ordinal(), Rotation.ROTATE_NONE, false, false);
         }
     }
 
@@ -99,8 +95,7 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
             editor.setMaxV(textureIndex, inputs.flipV ? 0 : 1);
 
             final TextureSet tex = paint.texture(textureIndex);
-            editor.setTextureName(textureIndex,
-                    tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
+            editor.setTextureName(textureIndex, tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
             commonPostPaint(editor, textureIndex, modelState, surface, paint);
 

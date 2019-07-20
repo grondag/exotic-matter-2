@@ -65,8 +65,7 @@ public abstract class EncoderFunctions {
     public static final ByteGetter GET_BYTE_FAIL = (stream, address, byteIndex) -> {
         throw new UnsupportedOperationException();
     };
-    public static final ByteGetter GET_BYTE = (stream, address, byteIndex) -> (stream.get(address) >>> byteIndex * 8)
-            & 0xFF;
+    public static final ByteGetter GET_BYTE = (stream, address, byteIndex) -> (stream.get(address) >>> byteIndex * 8) & 0xFF;
 
     public static final ByteSetter SET_BYTE = (stream, address, byteIndex, value) -> {
         final int shift = 8 * byteIndex;
@@ -97,10 +96,8 @@ public abstract class EncoderFunctions {
     };
     public static final IntSetter SET_INT = (stream, address, value) -> stream.set(address, value);
 
-    public static final IntSetter SET_HALF_INT_LOW = (stream, address, value) -> stream.set(address,
-            (stream.get(address) & 0xFFFF0000) | (value & 0xFFFF));
-    public static final IntSetter SET_HALF_INT_HIGH = (stream, address, value) -> stream.set(address,
-            (stream.get(address) & 0x0000FFFF) | (value << 16));
+    public static final IntSetter SET_HALF_INT_LOW = (stream, address, value) -> stream.set(address, (stream.get(address) & 0xFFFF0000) | (value & 0xFFFF));
+    public static final IntSetter SET_HALF_INT_HIGH = (stream, address, value) -> stream.set(address, (stream.get(address) & 0x0000FFFF) | (value << 16));
 
     public static final FloatGetter GET_FLOAT_FAIL = (stream, address) -> {
         throw new UnsupportedOperationException();
@@ -110,8 +107,7 @@ public abstract class EncoderFunctions {
     public static final FloatSetter SET_FLOAT_FAIL = (stream, address, value) -> {
         throw new UnsupportedOperationException();
     };
-    public static final FloatSetter SET_FLOAT = (stream, address, value) -> stream.set(address,
-            Float.floatToRawIntBits(value));
+    public static final FloatSetter SET_FLOAT = (stream, address, value) -> stream.set(address, Float.floatToRawIntBits(value));
 
     public static final FloatSetter2 SET_FLOAT2_FAIL = (stream, address, u, v) -> {
         throw new UnsupportedOperationException();
@@ -130,12 +126,8 @@ public abstract class EncoderFunctions {
         stream.set(address + 2, Float.floatToRawIntBits(z));
     };
 
-    public static final FloatGetter GET_NORMAL_X_QUANTIZED = (stream, address) -> NormalQuantizer
-            .unpackX(stream.get(address));
-    public static final FloatGetter GET_NORMAL_Y_QUANTIZED = (stream, address) -> NormalQuantizer
-            .unpackY(stream.get(address));
-    public static final FloatGetter GET_NORMAL_Z_QUANTIZED = (stream, address) -> NormalQuantizer
-            .unpackZ(stream.get(address));
-    public static final FloatSetter3 SET_NORMAL_XYZ_QUANTIZED = (stream, address, x, y, z) -> stream.set(address,
-            NormalQuantizer.pack(x, y, z));
+    public static final FloatGetter GET_NORMAL_X_QUANTIZED = (stream, address) -> NormalQuantizer.unpackX(stream.get(address));
+    public static final FloatGetter GET_NORMAL_Y_QUANTIZED = (stream, address) -> NormalQuantizer.unpackY(stream.get(address));
+    public static final FloatGetter GET_NORMAL_Z_QUANTIZED = (stream, address) -> NormalQuantizer.unpackZ(stream.get(address));
+    public static final FloatSetter3 SET_NORMAL_XYZ_QUANTIZED = (stream, address, x, y, z) -> stream.set(address, NormalQuantizer.pack(x, y, z));
 }

@@ -34,8 +34,7 @@ public interface IVec3f {
      * Returns a new vector with the result of this vector x the specified vector.
      */
     public default IVec3f crossProduct(IVec3f vec) {
-        return Vec3f.create(this.y() * vec.z() - this.z() * vec.y(), this.z() * vec.x() - this.x() * vec.z(),
-                this.x() * vec.y() - this.y() * vec.x());
+        return Vec3f.create(this.y() * vec.z() - this.z() * vec.y(), this.z() * vec.x() - this.x() * vec.z(), this.x() * vec.y() - this.y() * vec.x());
     }
 
     public default float length() {
@@ -62,27 +61,27 @@ public interface IVec3f {
     public default float distanceToFacePlane(Direction face) {
         // could use dot product, but exploiting special case for less math
         switch (face) {
-            case UP:
-                return this.y() - 1;
+        case UP:
+            return this.y() - 1;
 
-            case DOWN:
-                return -this.y();
+        case DOWN:
+            return -this.y();
 
-            case EAST:
-                return this.x() - 1;
+        case EAST:
+            return this.x() - 1;
 
-            case WEST:
-                return -this.x();
+        case WEST:
+            return -this.x();
 
-            case NORTH:
-                return -this.z();
+        case NORTH:
+            return -this.z();
 
-            case SOUTH:
-                return this.z() - 1;
+        case SOUTH:
+            return this.z() - 1;
 
-            default:
-                // make compiler shut up about unhandled case
-                return 0;
+        default:
+            // make compiler shut up about unhandled case
+            return 0;
         }
     }
 
@@ -94,8 +93,7 @@ public interface IVec3f {
      * True if both vertices are at the same point.
      */
     public default boolean isCsgEqual(IVec3f vertexIn) {
-        return Math.abs(vertexIn.x() - this.x()) < QuadHelper.EPSILON
-                && Math.abs(vertexIn.y() - this.y()) < QuadHelper.EPSILON
+        return Math.abs(vertexIn.x() - this.x()) < QuadHelper.EPSILON && Math.abs(vertexIn.y() - this.y()) < QuadHelper.EPSILON
                 && Math.abs(vertexIn.z() - this.z()) < QuadHelper.EPSILON;
     }
 

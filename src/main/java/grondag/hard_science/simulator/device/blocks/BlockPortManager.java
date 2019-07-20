@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.simulator.device.blocks;
 
 import java.util.Comparator;
@@ -12,108 +27,88 @@ import grondag.hard_science.simulator.transport.endpoint.Port;
 import net.minecraft.util.EnumFacing;
 
 /**
- * Container for ports within a device block.
- * Port arrangement is immutable after construction.
- * If port arrangement changes, all ports will need
- * to be disconnected and port manager rebuilt.<p>
+ * Container for ports within a device block. Port arrangement is immutable
+ * after construction. If port arrangement changes, all ports will need to be
+ * disconnected and port manager rebuilt.
+ * <p>
  * 
- * Note that all face values are expected to 
- * be <em>actual</em> face.  The device block 
- * should transform nominal faces to actual faces
- * before initializing the port manager.<p>
+ * Note that all face values are expected to be <em>actual</em> face. The device
+ * block should transform nominal faces to actual faces before initializing the
+ * port manager.
+ * <p>
  */
-public class BlockPortManager<T extends StorageType<T>>
-{
+public class BlockPortManager<T extends StorageType<T>> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private static final BlockPortManager<?> EMPTY_MANAGER = new BlockPortManager(ImmutableList.of());
-    
+
     private final ImmutableList<Port<T>> allPorts;
-    
+
     @SuppressWarnings("unchecked")
     private final ImmutableList<Port<T>>[] facePorts = new ImmutableList[6];
-    
+
     @SuppressWarnings("unchecked")
-    public static <V extends StorageType<V>> BlockPortManager<V> create(ImmutableList<Port<V>> ports)
-    {
-        return ports.isEmpty()
-                ? (BlockPortManager<V>) EMPTY_MANAGER
-                : new BlockPortManager<V>(ports);
+    public static <V extends StorageType<V>> BlockPortManager<V> create(ImmutableList<Port<V>> ports) {
+        return ports.isEmpty() ? (BlockPortManager<V>) EMPTY_MANAGER : new BlockPortManager<V>(ports);
     }
-    
-    private BlockPortManager(ImmutableList<Port<T>> ports)
-    {
-        if(!ports.isEmpty())
-        {
-            allPorts = ImmutableList.sortedCopyOf(
-                    new Comparator<Port<T>>(){
-                    @Override
-                    public int compare(@Nullable Port<T> o1, @Nullable Port<T> o2)
-                    {
-                        return Integer.compare(o1.getFace().ordinal(), o2.getFace().ordinal());
-                    }}, 
-                    ports);
-            
+
+    private BlockPortManager(ImmutableList<Port<T>> ports) {
+        if (!ports.isEmpty()) {
+            allPorts = ImmutableList.sortedCopyOf(new Comparator<Port<T>>() {
+                @Override
+                public int compare(@Nullable Port<T> o1, @Nullable Port<T> o2) {
+                    return Integer.compare(o1.getFace().ordinal(), o2.getFace().ordinal());
+                }
+            }, ports);
+
             EnumFacing lastFace = allPorts.get(0).getFace();
             int lastStart = 0;
-            
-            for(int i = 0; i < allPorts.size(); i++)
-            {
+
+            for (int i = 0; i < allPorts.size(); i++) {
                 Port<T> port = allPorts.get(i);
-                if(lastFace != port.getFace())
-                {
+                if (lastFace != port.getFace()) {
                     facePorts[lastFace.ordinal()] = allPorts.subList(lastStart, i);
                     lastFace = port.getFace();
                     lastStart = i;
                 }
             }
             facePorts[lastFace.ordinal()] = allPorts.subList(lastStart, allPorts.size());
-        }
-        else
-        {
+        } else {
             allPorts = ImmutableList.of();
         }
-        
-        for(EnumFacing face : EnumFacing.VALUES)
-        {
-            if(facePorts[face.ordinal()] == null)
+
+        for (EnumFacing face : EnumFacing.VALUES) {
+            if (facePorts[face.ordinal()] == null)
                 facePorts[face.ordinal()] = ImmutableList.of();
         }
     }
-    
-    public ImmutableList<Port<T>> getAttachedPorts()
-    {
-        return allPorts
-                .stream()
-                .filter(p -> p.isAttached())
-                .collect(ImmutableList.toImmutableList());
+
+    public ImmutableList<Port<T>> getAttachedPorts() {
+        return allPorts.stream().filter(p -> p.isAttached()).collect(ImmutableList.toImmutableList());
     }
-    
+
     /**
-     * Retrieves all ports on the given face.
-     * Used in conjunction with {@link #getConnectablePorts(int, CarrierLevel, EnumFacing)}
-     * to form connections between adjacent faces of a device block.<p>
+     * Retrieves all ports on the given face. Used in conjunction with
+     * {@link #getConnectablePorts(int, CarrierLevel, EnumFacing)} to form
+     * connections between adjacent faces of a device block.
+     * <p>
      */
-    public ImmutableList<Port<T>> getPorts(EnumFacing face)
-    {
+    public ImmutableList<Port<T>> getPorts(EnumFacing face) {
         return this.facePorts[face.ordinal()];
     }
-    
+
     /**
      * Type-specific implementation for
-     * {@link IDeviceBlock#getConnectablePorts(Port, EnumFacing)}<p>
+     * {@link IDeviceBlock#getConnectablePorts(Port, EnumFacing)}
+     * <p>
      */
-    public ImmutableList<Port<T>> getConnectablePorts(Port<T> fromPort, EnumFacing face)
-    {
-        return this.getPorts(face).stream()
-                .filter(p -> p.couldAttach(fromPort))
-                .collect(ImmutableList.toImmutableList());
+    public ImmutableList<Port<T>> getConnectablePorts(Port<T> fromPort, EnumFacing face) {
+        return this.getPorts(face).stream().filter(p -> p.couldAttach(fromPort)).collect(ImmutableList.toImmutableList());
     }
-    
+
     /**
      * True if no ports
      */
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return this.allPorts.isEmpty();
     }
 }

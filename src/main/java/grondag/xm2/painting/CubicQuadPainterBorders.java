@@ -56,120 +56,110 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             // First one will only be used if we are rendering in solid layer.
             FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_NO_CORNERS.ordinal()] = NO_BORDER;
             FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.NO_FACE.ordinal()] = null; // NULL FACE
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.NONE.ordinal()] = new FaceQuadInputs(BORDER_SIDES_ALL,
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.NONE.ordinal()] = new FaceQuadInputs(BORDER_SIDES_ALL, Rotation.ROTATE_NONE, false, false);
+
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_LEFT_RIGHT, Rotation.ROTATE_NONE, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.LEFT.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_LEFT_RIGHT, Rotation.ROTATE_90, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_LEFT_RIGHT, Rotation.ROTATE_180, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.RIGHT.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_LEFT_RIGHT, Rotation.ROTATE_270, false,
+                    false);
+
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_NO_CORNER.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_RIGHT, Rotation.ROTATE_NONE,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_NO_CORNER.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_RIGHT, Rotation.ROTATE_90,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_RIGHT_NO_CORNER.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_RIGHT, Rotation.ROTATE_180,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_RIGHT_NO_CORNER.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_RIGHT, Rotation.ROTATE_270,
+                    false, false);
+
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_RIGHT_NO_CORNERS.ordinal()] = new FaceQuadInputs(BORDER_SIDE_TOP, Rotation.ROTATE_NONE,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_LEFT_NO_CORNERS.ordinal()] = new FaceQuadInputs(BORDER_SIDE_TOP, Rotation.ROTATE_90,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_RIGHT_NO_CORNERS.ordinal()] = new FaceQuadInputs(BORDER_SIDE_TOP, Rotation.ROTATE_180,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_RIGHT_NO_CORNERS.ordinal()] = new FaceQuadInputs(BORDER_SIDE_TOP, Rotation.ROTATE_270,
+                    false, false);
+
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.LEFT_RIGHT.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_BOTTOM, Rotation.ROTATE_NONE, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM.ordinal()] = new FaceQuadInputs(BORDER_SIDES_TOP_BOTTOM, Rotation.ROTATE_90, false,
+                    false);
+
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_RIGHT_BR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BR, Rotation.ROTATE_NONE,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_RIGHT_BL.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BR, Rotation.ROTATE_NONE,
+                    true, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_LEFT_BL.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BR, Rotation.ROTATE_90, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_LEFT_TL.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BR, Rotation.ROTATE_90, true,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_RIGHT_TL.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BR, Rotation.ROTATE_180, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_RIGHT_TR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BR, Rotation.ROTATE_180, true,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_RIGHT_TR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BR, Rotation.ROTATE_270,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_RIGHT_BR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BR, Rotation.ROTATE_270, true,
+                    false);
+
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_RIGHT_BL_BR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BL_BR,
                     Rotation.ROTATE_NONE, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_LEFT_TL_BL.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BL_BR, Rotation.ROTATE_90,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_RIGHT_TL_TR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BL_BR, Rotation.ROTATE_180,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_RIGHT_TR_BR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_BL_BR, Rotation.ROTATE_270,
+                    false, false);
 
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_LEFT_RIGHT, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.LEFT.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_LEFT_RIGHT, Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_LEFT_RIGHT, Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.RIGHT.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_LEFT_RIGHT, Rotation.ROTATE_270, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_BL.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_RIGHT_BL, Rotation.ROTATE_NONE,
+                    false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_TL.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_RIGHT_BL, Rotation.ROTATE_90, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_RIGHT_TR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_RIGHT_BL, Rotation.ROTATE_180, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_RIGHT_BR.ordinal()] = new FaceQuadInputs(BORDER_MIXED_TOP_RIGHT_BL, Rotation.ROTATE_270,
+                    false, false);
 
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_NO_CORNER.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_RIGHT, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_NO_CORNER.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_RIGHT, Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_RIGHT_NO_CORNER.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_RIGHT, Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_RIGHT_NO_CORNER.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_RIGHT, Rotation.ROTATE_270, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TR.ordinal()] = new FaceQuadInputs(BORDER_CORNER_TR, Rotation.ROTATE_NONE, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNER_TR, Rotation.ROTATE_90, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_BL.ordinal()] = new FaceQuadInputs(BORDER_CORNER_TR, Rotation.ROTATE_180, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL.ordinal()] = new FaceQuadInputs(BORDER_CORNER_TR, Rotation.ROTATE_270, false, false);
 
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_RIGHT_NO_CORNERS
-                    .ordinal()] = new FaceQuadInputs(BORDER_SIDE_TOP, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_LEFT_NO_CORNERS.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDE_TOP, Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_RIGHT_NO_CORNERS.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDE_TOP, Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_RIGHT_NO_CORNERS
-                    .ordinal()] = new FaceQuadInputs(BORDER_SIDE_TOP, Rotation.ROTATE_270, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_TL_TR, Rotation.ROTATE_NONE, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TR_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_TL_TR, Rotation.ROTATE_90, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_BL_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_TL_TR, Rotation.ROTATE_180, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_BL.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_TL_TR, Rotation.ROTATE_270, false, false);
 
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.LEFT_RIGHT.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_BOTTOM, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM.ordinal()] = new FaceQuadInputs(
-                    BORDER_SIDES_TOP_BOTTOM, Rotation.ROTATE_90, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TR_BL.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_BL_TR, Rotation.ROTATE_NONE, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_BL_TR, Rotation.ROTATE_90, false, false);
 
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_RIGHT_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BR, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_RIGHT_BL.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BR, Rotation.ROTATE_NONE, true, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_LEFT_BL.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BR, Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_LEFT_TL.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BR, Rotation.ROTATE_90, true, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_RIGHT_TL.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BR, Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_RIGHT_TR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BR, Rotation.ROTATE_180, true, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_RIGHT_TR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BR, Rotation.ROTATE_270, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_RIGHT_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BR, Rotation.ROTATE_270, true, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TR_BL_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_BL_TR_BR, Rotation.ROTATE_NONE, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_BL_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_BL_TR_BR, Rotation.ROTATE_90, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR_BL.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_BL_TR_BR, Rotation.ROTATE_180, false,
+                    false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_BL_TR_BR, Rotation.ROTATE_270, false,
+                    false);
 
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_RIGHT_BL_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BL_BR, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_LEFT_TL_BL.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BL_BR, Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_RIGHT_TL_TR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BL_BR, Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_BOTTOM_RIGHT_TR_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_BL_BR, Rotation.ROTATE_270, false, false);
-
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_LEFT_BL.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_RIGHT_BL, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_LEFT_TL.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_RIGHT_BL, Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.TOP_RIGHT_TR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_RIGHT_BL, Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.BOTTOM_RIGHT_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_MIXED_TOP_RIGHT_BL, Rotation.ROTATE_270, false, false);
-
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TR.ordinal()] = new FaceQuadInputs(BORDER_CORNER_TR,
-                    Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNER_TR,
-                    Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_BL.ordinal()] = new FaceQuadInputs(BORDER_CORNER_TR,
-                    Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL.ordinal()] = new FaceQuadInputs(BORDER_CORNER_TR,
-                    Rotation.ROTATE_270, false, false);
-
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_TL_TR, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TR_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_TL_TR, Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_BL_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_TL_TR, Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_BL.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_TL_TR, Rotation.ROTATE_270, false, false);
-
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TR_BL.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_BL_TR, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_BL_TR, Rotation.ROTATE_90, false, false);
-
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TR_BL_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_BL_TR_BR, Rotation.ROTATE_NONE, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_BL_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_BL_TR_BR, Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR_BL.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_BL_TR_BR, Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_BL_TR_BR, Rotation.ROTATE_270, false, false);
-
-            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR_BL_BR.ordinal()] = new FaceQuadInputs(
-                    BORDER_CORNERS_ALL, Rotation.ROTATE_NONE, false, false);
+            FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR_BL_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_ALL, Rotation.ROTATE_NONE, false,
+                    false);
 
             // rotate top face 180 so that it works - top face orientation is
             // different from others
             if (face == Direction.UP) {
                 for (int i = 0; i < FACE_INPUTS[Direction.UP.ordinal()].length; i++) {
                     FaceQuadInputs fqi = FACE_INPUTS[Direction.UP.ordinal()][i];
-                    if (fqi != null
-                            && fqi != NO_BORDER) {
-                        FACE_INPUTS[Direction.UP.ordinal()][i] = new FaceQuadInputs(fqi.textureOffset,
-                                fqi.rotation.clockwise().clockwise(), fqi.flipU, fqi.flipV);
+                    if (fqi != null && fqi != NO_BORDER) {
+                        FACE_INPUTS[Direction.UP.ordinal()][i] = new FaceQuadInputs(fqi.textureOffset, fqi.rotation.clockwise().clockwise(), fqi.flipU,
+                                fqi.flipV);
                     }
                 }
             }
@@ -191,8 +181,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             final TextureSet tex = paint.texture(textureIndex);
 
             // don't render the "no border" texture unless this is a tile of some kind
-            if (inputs == NO_BORDER
-                    && !tex.renderNoBorderAsTile())
+            if (inputs == NO_BORDER && !tex.renderNoBorderAsTile())
                 continue;
 
             editor.setLockUV(textureIndex, true);
@@ -204,8 +193,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             editor.setMinV(textureIndex, inputs.flipV ? 1 : 0);
             editor.setMaxU(textureIndex, inputs.flipU ? 0 : 1);
             editor.setMaxV(textureIndex, inputs.flipV ? 0 : 1);
-            editor.setTextureName(textureIndex,
-                    tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
+            editor.setTextureName(textureIndex, tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
             commonPostPaint(editor, textureIndex, modelState, surface, paint);
 

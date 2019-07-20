@@ -67,13 +67,13 @@ public interface ModelPrimitive {
     void produceQuads(ModelState modelState, Consumer<IPolygon> target);
 
     ImmutableModelState defaultState();
-    
+
     ModelState geometricState(ModelState fromState);
-    
+
     default MutableModelState newState() {
         return defaultState().mutableCopy();
     }
-    
+
     /**
      * If true, shape can be placed on itself to become bigger.
      */

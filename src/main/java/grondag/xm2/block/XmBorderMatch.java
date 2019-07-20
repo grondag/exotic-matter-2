@@ -34,13 +34,10 @@ public class XmBorderMatch implements BlockTest {
         final BlockState toBlockState = context.toBlockState();
         final BlockState fromBlockState = context.fromBlockState();
 
-        if (fromBlockState.getBlock() != toBlockState.getBlock()
-                || fromState == null
-                || toState == null) {
+        if (fromBlockState.getBlock() != toBlockState.getBlock() || fromState == null || toState == null) {
             return false;
         }
 
-        return fromState.doShapeAndAppearanceMatch(toState)
-                && fromState.species() == toState.species();
+        return fromState.doShapeAndAppearanceMatch(toState) && fromState.species() == toState.species();
     }
 }

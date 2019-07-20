@@ -105,7 +105,6 @@ public enum TextureQuadrant {
      * <p>
      */
     public void applyForQuadrant(IMutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
-        polygon.setRotation(layerIndex,
-                Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - this.rotation) & 3]);
+        polygon.setRotation(layerIndex, Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - this.rotation) & 3]);
     }
 }

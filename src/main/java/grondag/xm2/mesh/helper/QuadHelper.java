@@ -75,8 +75,7 @@ public class QuadHelper {
             Vec3i faceNormal = f.getVector();
             float diff = Vec3Function.dotProduct(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ(), x, y, z);
 
-            if (diff >= 0.0
-                    && diff > minDiff) {
+            if (diff >= 0.0 && diff > minDiff) {
                 minDiff = diff;
                 result = f;
             }
@@ -100,12 +99,12 @@ public class QuadHelper {
     /** returns the face that is normally the "top" of the given face */
     public static Direction defaultTopOf(Direction faceIn) {
         switch (faceIn) {
-            case UP:
-                return Direction.NORTH;
-            case DOWN:
-                return Direction.SOUTH;
-            default:
-                return Direction.UP;
+        case UP:
+            return Direction.NORTH;
+        case DOWN:
+            return Direction.SOUTH;
+        default:
+            return Direction.UP;
         }
     }
 
@@ -115,12 +114,12 @@ public class QuadHelper {
 
     public static Direction getAxisTop(Direction.Axis axis) {
         switch (axis) {
-            case Y:
-                return Direction.UP;
-            case X:
-                return Direction.EAST;
-            default:
-                return Direction.NORTH;
+        case Y:
+            return Direction.UP;
+        case X:
+            return Direction.EAST;
+        default:
+            return Direction.NORTH;
         }
     }
 
@@ -130,79 +129,79 @@ public class QuadHelper {
 
     public static Direction rightOf(Direction faceIn, Direction topFace) {
         switch (faceIn) {
-            case NORTH:
-                switch (topFace) {
-                    case UP:
-                        return Direction.WEST;
-                    case EAST:
-                        return Direction.UP;
-                    case DOWN:
-                        return Direction.EAST;
-                    case WEST:
-                    default:
-                        return Direction.DOWN;
-                }
-            case SOUTH:
-                switch (topFace) {
-                    case UP:
-                        return Direction.EAST;
-                    case EAST:
-                        return Direction.DOWN;
-                    case DOWN:
-                        return Direction.WEST;
-                    case WEST:
-                    default:
-                        return Direction.UP;
-                }
-            case EAST:
-                switch (topFace) {
-                    case UP:
-                        return Direction.NORTH;
-                    case NORTH:
-                        return Direction.DOWN;
-                    case DOWN:
-                        return Direction.SOUTH;
-                    case SOUTH:
-                    default:
-                        return Direction.UP;
-                }
-            case WEST:
-                switch (topFace) {
-                    case UP:
-                        return Direction.SOUTH;
-                    case NORTH:
-                        return Direction.UP;
-                    case DOWN:
-                        return Direction.NORTH;
-                    case SOUTH:
-                    default:
-                        return Direction.DOWN;
-                }
+        case NORTH:
+            switch (topFace) {
             case UP:
-                switch (topFace) {
-                    case NORTH:
-                        return Direction.EAST;
-                    case EAST:
-                        return Direction.SOUTH;
-                    case SOUTH:
-                        return Direction.WEST;
-                    case WEST:
-                    default:
-                        return Direction.NORTH;
-                }
+                return Direction.WEST;
+            case EAST:
+                return Direction.UP;
             case DOWN:
+                return Direction.EAST;
+            case WEST:
             default:
-                switch (topFace) {
-                    case NORTH:
-                        return Direction.WEST;
-                    case EAST:
-                        return Direction.NORTH;
-                    case SOUTH:
-                        return Direction.EAST;
-                    case WEST:
-                    default:
-                        return Direction.SOUTH;
-                }
+                return Direction.DOWN;
+            }
+        case SOUTH:
+            switch (topFace) {
+            case UP:
+                return Direction.EAST;
+            case EAST:
+                return Direction.DOWN;
+            case DOWN:
+                return Direction.WEST;
+            case WEST:
+            default:
+                return Direction.UP;
+            }
+        case EAST:
+            switch (topFace) {
+            case UP:
+                return Direction.NORTH;
+            case NORTH:
+                return Direction.DOWN;
+            case DOWN:
+                return Direction.SOUTH;
+            case SOUTH:
+            default:
+                return Direction.UP;
+            }
+        case WEST:
+            switch (topFace) {
+            case UP:
+                return Direction.SOUTH;
+            case NORTH:
+                return Direction.UP;
+            case DOWN:
+                return Direction.NORTH;
+            case SOUTH:
+            default:
+                return Direction.DOWN;
+            }
+        case UP:
+            switch (topFace) {
+            case NORTH:
+                return Direction.EAST;
+            case EAST:
+                return Direction.SOUTH;
+            case SOUTH:
+                return Direction.WEST;
+            case WEST:
+            default:
+                return Direction.NORTH;
+            }
+        case DOWN:
+        default:
+            switch (topFace) {
+            case NORTH:
+                return Direction.WEST;
+            case EAST:
+                return Direction.NORTH;
+            case SOUTH:
+                return Direction.EAST;
+            case WEST:
+            default:
+                return Direction.SOUTH;
+            }
         }
     }
 
@@ -212,16 +211,16 @@ public class QuadHelper {
     public static Quaternionf rotationForAxis(Direction.Axis axis, double degrees) {
         Quaternionf retVal = new Quaternionf();
         switch (axis) {
-            case X:
+        case X:
 
-                retVal.set(new AxisAngle4d(1, 0, 0, Math.toRadians(degrees)));
-                break;
-            case Y:
-                retVal.set(new AxisAngle4d(0, 1, 0, Math.toRadians(degrees)));
-                break;
-            case Z:
-                retVal.set(new AxisAngle4d(0, 0, 1, Math.toRadians(degrees)));
-                break;
+            retVal.set(new AxisAngle4d(1, 0, 0, Math.toRadians(degrees)));
+            break;
+        case Y:
+            retVal.set(new AxisAngle4d(0, 1, 0, Math.toRadians(degrees)));
+            break;
+        case Z:
+            retVal.set(new AxisAngle4d(0, 0, 1, Math.toRadians(degrees)));
+            break;
         }
         return retVal;
     }

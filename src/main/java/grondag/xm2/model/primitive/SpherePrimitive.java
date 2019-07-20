@@ -33,8 +33,7 @@ import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
 public class SpherePrimitive extends AbstractModelPrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-            .add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 
@@ -50,7 +49,7 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     public XmSurfaceListImpl surfaces(ModelState modelState) {
         return SURFACES;
     }
-    
+
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         if (cachedQuads.isEmpty())
@@ -73,14 +72,14 @@ public class SpherePrimitive extends AbstractModelPrimitive {
         MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
         return stream.releaseAndConvertToReader();
     }
-    
+
     @Override
     public ModelState geometricState(ModelState fromState) {
         return defaultState();
     }
-    
+
     @Override
     public boolean doesShapeMatch(ModelState from, ModelState to) {
         return from.primitive() == to.primitive();
-    } 
+    }
 }

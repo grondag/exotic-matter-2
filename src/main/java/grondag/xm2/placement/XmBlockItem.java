@@ -32,8 +32,8 @@ import net.minecraft.world.World;
 //TODO: still needed?
 public class XmBlockItem extends BlockItem implements PlacementItem {
 
-    public static final int FEATURE_FLAGS = PlacementItem.BENUMSET_FEATURES
-            .getFlagsForIncludedValues(PlacementItemFeature.BLOCK_ORIENTATION, PlacementItemFeature.SPECIES_MODE);
+    public static final int FEATURE_FLAGS = PlacementItem.BENUMSET_FEATURES.getFlagsForIncludedValues(PlacementItemFeature.BLOCK_ORIENTATION,
+            PlacementItemFeature.SPECIES_MODE);
 
     public XmBlockItem(Block block, Item.Settings settings) {
         super(block, settings);

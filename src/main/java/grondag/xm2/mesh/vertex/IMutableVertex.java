@@ -71,8 +71,7 @@ public interface IMutableVertex extends IVec3f {
 
         output.setGlow((int) (getGlow() + (other.getGlow() - getGlow()) * otherWeight));
 
-        if (this.hasNormal()
-                && other.hasNormal()) {
+        if (this.hasNormal() && other.hasNormal()) {
             final float normX = normalX() + (other.normalX() - normalX()) * otherWeight;
             final float normY = normalY() + (other.normalY() - normalY()) * otherWeight;
             final float normZ = normalZ() + (other.normalZ() - normalZ()) * otherWeight;
@@ -83,20 +82,17 @@ public interface IMutableVertex extends IVec3f {
 
         output.setColor(0, ColorHelper.interpolate(getColor(0), other.getColor(0), otherWeight));
 
-        output.setUV(0, getU(0) + (other.getU(0) - getU(0)) * otherWeight,
-                getV(0) + (other.getV(0) - getV(0)) * otherWeight);
+        output.setUV(0, getU(0) + (other.getU(0) - getU(0)) * otherWeight, getV(0) + (other.getV(0) - getV(0)) * otherWeight);
 
         if (layerCount > 1) {
             output.setColor(1, ColorHelper.interpolate(getColor(1), other.getColor(1), otherWeight));
 
-            output.setUV(1, getU(1) + (other.getU(1) - getU(1)) * otherWeight,
-                    getV(1) + (other.getV(1) - getV(1)) * otherWeight);
+            output.setUV(1, getU(1) + (other.getU(1) - getU(1)) * otherWeight, getV(1) + (other.getV(1) - getV(1)) * otherWeight);
 
             if (layerCount == 3) {
                 output.setColor(2, ColorHelper.interpolate(getColor(2), other.getColor(2), otherWeight));
 
-                output.setUV(2, getU(2) + (other.getU(2) - getU(2)) * otherWeight,
-                        getV(2) + (other.getV(2) - getV(2)) * otherWeight);
+                output.setUV(2, getU(2) + (other.getU(2) - getU(2)) * otherWeight, getV(2) + (other.getV(2) - getV(2)) * otherWeight);
             }
         }
     }

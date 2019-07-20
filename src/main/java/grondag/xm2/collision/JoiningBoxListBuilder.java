@@ -54,8 +54,7 @@ public class JoiningBoxListBuilder implements ICollisionBoxListBuilder {
      * is the last. (Again, not counting exterior faces.)
      */
     static int faceKey(int axisOrdinal, int depth, int minA, int minB, int maxA, int maxB) {
-        return minA | (minB << MIN_B_SHIFT) | ((maxA - 1) << MAX_A_SHIFT) | ((maxB - 1) << MAX_B_SHIFT)
-                | ((axisOrdinal * 3 + depth) << AXIS_DEPTH_SHIFT);
+        return minA | (minB << MIN_B_SHIFT) | ((maxA - 1) << MAX_A_SHIFT) | ((maxB - 1) << MAX_B_SHIFT) | ((axisOrdinal * 3 + depth) << AXIS_DEPTH_SHIFT);
     }
 
     static void forEachFaceKey(int boxKey, IntConsumer faceKeyConsumer) {
@@ -153,28 +152,22 @@ public class JoiningBoxListBuilder implements ICollisionBoxListBuilder {
         final int y1 = (boxKey >> (MAX_Y_SHIFT + 1)) & 0x7;
         final int z1 = (boxKey >> (MAX_Z_SHIFT + 1)) & 0x7;
 
-        if (y1 != 4
-                && tryCombine(boxKey, faceKey(Y_AXIS, y1 - 1, x0, z0, x1, z1)))
+        if (y1 != 4 && tryCombine(boxKey, faceKey(Y_AXIS, y1 - 1, x0, z0, x1, z1)))
             return;
 
-        if (y0 != 0
-                && tryCombine(boxKey, faceKey(Y_AXIS, y0 - 1, x0, z0, x1, z1)))
+        if (y0 != 0 && tryCombine(boxKey, faceKey(Y_AXIS, y0 - 1, x0, z0, x1, z1)))
             return;
 
-        if (x1 != 4
-                && tryCombine(boxKey, faceKey(X_AXIS, x1 - 1, y0, z0, y1, z1)))
+        if (x1 != 4 && tryCombine(boxKey, faceKey(X_AXIS, x1 - 1, y0, z0, y1, z1)))
             return;
 
-        if (x0 != 0
-                && tryCombine(boxKey, faceKey(X_AXIS, x0 - 1, y0, z0, y1, z1)))
+        if (x0 != 0 && tryCombine(boxKey, faceKey(X_AXIS, x0 - 1, y0, z0, y1, z1)))
             return;
 
-        if (z1 != 4
-                && tryCombine(boxKey, faceKey(Z_AXIS, z1 - 1, x0, y0, x1, y1)))
+        if (z1 != 4 && tryCombine(boxKey, faceKey(Z_AXIS, z1 - 1, x0, y0, x1, y1)))
             return;
 
-        if (z0 != 0
-                && tryCombine(boxKey, faceKey(Z_AXIS, z0 - 1, x0, y0, x1, y1)))
+        if (z0 != 0 && tryCombine(boxKey, faceKey(Z_AXIS, z0 - 1, x0, y0, x1, y1)))
             return;
 
         addBox(boxKey);

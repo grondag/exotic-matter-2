@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.simulator.jobs;
 
 import java.util.LinkedList;
@@ -25,67 +40,60 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-public class JobManager implements IDomainCapability
-{
+public class JobManager implements IDomainCapability {
     private static final int PROCESS_JOB_ID = IIdentified.FIRST_SYSTEM_ID;
     private static final String NBT_SELF = NBTDictionary.claim("jobMgr");
     private static final String NBT_CHILDREN = NBTDictionary.claim("jobChildren");
-    
+
     /**
-     * Lazily created / retrieved.  Task holder for automated resource processing.
+     * Lazily created / retrieved. Task holder for automated resource processing.
      */
     private Job processJob;
-    
+
     /**
-     * Should be used for job/task accounting - not for any actual work done by tasks.
+     * Should be used for job/task accounting - not for any actual work done by
+     * tasks.
      */
-    public static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(
-        new ThreadFactory()
-        {
-            private AtomicInteger count = new AtomicInteger(1);
-            @Override
-            public Thread newThread(@Nullable Runnable r)
-            {
-                Thread thread = new Thread(r, "Hard Science Job Manager Thread -" + count.getAndIncrement());
-                thread.setDaemon(true);
-                return thread;
-            }
-        });
-    
-    
+    public static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
+        private AtomicInteger count = new AtomicInteger(1);
+
+        @Override
+        public Thread newThread(@Nullable Runnable r) {
+            Thread thread = new Thread(r, "Hard Science Job Manager Thread -" + count.getAndIncrement());
+            thread.setDaemon(true);
+            return thread;
+        }
+    });
+
     protected IDomain domain;
-    
+
     /**
      * Job are containers that hold all of our tasks. <br>
-     * Jobs manage task serialization and hold shared state like userName and priority. <br>
+     * Jobs manage task serialization and hold shared state like userName and
+     * priority. <br>
      * Jobs do not execute directly.
      */
     private final SimpleUnorderedArrayList<Job> jobs = new SimpleUnorderedArrayList<Job>();
-    
+
     /**
-     * Contains jobs with tasks that are ready for execution - will typically have a WAITING status.
-     * Tasks are posted to the backlog by their parent job when the task becomes ready to execute.
-     * Tasks are pulled from the front of the backlog by machines or processes that consume tasks.
+     * Contains jobs with tasks that are ready for execution - will typically have a
+     * WAITING status. Tasks are posted to the backlog by their parent job when the
+     * task becomes ready to execute. Tasks are pulled from the front of the backlog
+     * by machines or processes that consume tasks.
      */
     @SuppressWarnings("unchecked")
     private final LinkedList<Job>[] backlogJobs = new LinkedList[RequestPriority.values().length];
-    
-    
+
     /**
-     * Retrieves task holder for automated resource processing.
-     * Creates job if does not already exist.
+     * Retrieves task holder for automated resource processing. Creates job if does
+     * not already exist.
      */
-    public Job processSystemJob()
-    {
-        if(this.processJob == null)
-        {
-            synchronized(this)
-            {
-                if(this.processJob == null)
-                {
+    public Job processSystemJob() {
+        if (this.processJob == null) {
+            synchronized (this) {
+                if (this.processJob == null) {
                     this.processJob = Job.jobFromId(PROCESS_JOB_ID);
-                    if(this.processJob == null)
-                    {
+                    if (this.processJob == null) {
                         this.processJob = Job.createSystemJob(RequestPriority.MEDIUM, PROCESS_JOB_ID);
                         this.processJob.addTask(new PerpetualTask(true));
                         this.processJob.onJobAdded(this);
@@ -99,103 +107,79 @@ public class JobManager implements IDomainCapability
     /**
      * Removes job from backlog, if it is checked there.
      */
-    private void removeJobFromBacklogSynchronously(Job job)
-    {
-        if(job.effectivePriority() != null)
-        {
+    private void removeJobFromBacklogSynchronously(Job job) {
+        if (job.effectivePriority() != null) {
             LinkedList<Job> list = backlogJobs[job.effectivePriority().ordinal()];
-            if(list != null && !list.isEmpty())
-            {
+            if (list != null && !list.isEmpty()) {
                 list.remove(job);
             }
-        }                
+        }
     }
-    
+
     /**
-     * Removes job from backlog, if it is checked there,
-     * and then adds it to the end of the backlog for the
-     * job's current priority.
+     * Removes job from backlog, if it is checked there, and then adds it to the end
+     * of the backlog for the job's current priority.
      * 
-     * If job was already in backlog for its current priority
-     * its position within the backlog remains unchanged.
+     * If job was already in backlog for its current priority its position within
+     * the backlog remains unchanged.
      */
-    private void addOrReplaceJobInBacklogSynchronously(Job job)
-    {
+    private void addOrReplaceJobInBacklogSynchronously(Job job) {
         boolean didRemove = false;
-        if(job.effectivePriority() != job.getPriority())
-        {
+        if (job.effectivePriority() != job.getPriority()) {
             removeJobFromBacklogSynchronously(job);
             job.updateEffectivePriority();
             didRemove = true;
         }
-        
+
         LinkedList<Job> list = backlogJobs[job.effectivePriority().ordinal()];
-        if(list == null)
-        {
+        if (list == null) {
             list = new LinkedList<Job>();
             list.add(job);
             backlogJobs[job.effectivePriority().ordinal()] = list;
-        }
-        else if(didRemove || !list.contains(job))
-        {
+        } else if (didRemove || !list.contains(job)) {
             list.addLast(job);
         }
     }
-    
+
     /** Asynchronously adds job to backlog */
-    public void addJob(Job job)
-    {
+    public void addJob(Job job) {
         assert !job.isSystemJob() : "Invalid use of system job";
-        
-        EXECUTOR.execute(new Runnable()
-        {
+
+        EXECUTOR.execute(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 job.onJobAdded(JobManager.this);
                 jobs.addIfNotPresent(job);
-                if(job.hasReadyWork()) addOrReplaceJobInBacklogSynchronously(job);
+                if (job.hasReadyWork())
+                    addOrReplaceJobInBacklogSynchronously(job);
             }
         });
     }
-    
-    private static final Predicate<AbstractTask> MATCH_ANY_TASK = new Predicate<AbstractTask>()
-    {
+
+    private static final Predicate<AbstractTask> MATCH_ANY_TASK = new Predicate<AbstractTask>() {
         @Override
-        public boolean test(@Nullable AbstractTask t)
-        {
+        public boolean test(@Nullable AbstractTask t) {
             return true;
         }
     };
-    
+
     /**
-     * Searches for the fist ready task of the given type that meets the given predicate.
-     * The status of the task is immediately changed to ACTIVE when it is claimed.
-     * Future will contain null if no ready task could be checked.
+     * Searches for the fist ready task of the given type that meets the given
+     * predicate. The status of the task is immediately changed to ACTIVE when it is
+     * claimed. Future will contain null if no ready task could be checked.
      */
-    public Future<AbstractTask> claimReadyWork(TaskType taskType, @Nullable Predicate<AbstractTask> predicate)
-    {
-        return EXECUTOR.submit(new Callable<AbstractTask>()
-        {
+    public Future<AbstractTask> claimReadyWork(TaskType taskType, @Nullable Predicate<AbstractTask> predicate) {
+        return EXECUTOR.submit(new Callable<AbstractTask>() {
             @Override
-            public AbstractTask call() throws Exception
-            {
+            public AbstractTask call() throws Exception {
                 Predicate<AbstractTask> effectivePredicate = predicate == null ? MATCH_ANY_TASK : predicate;
-                
-                for(LinkedList<Job> list : backlogJobs)
-                {
-                    if(list != null && !list.isEmpty())
-                    {
-                        for(Job j : list)
-                        {
-                            if(j.hasReadyWork())
-                            {
-                                for(AbstractTask t : j)
-                                {
-                                    if(t.requestType() == taskType
-                                            && t.getStatus() == RequestStatus.READY
-                                            && effectivePredicate.test(t))
-                                    {
+
+                for (LinkedList<Job> list : backlogJobs) {
+                    if (list != null && !list.isEmpty()) {
+                        for (Job j : list) {
+                            if (j.hasReadyWork()) {
+                                for (AbstractTask t : j) {
+                                    if (t.requestType() == taskType && t.getStatus() == RequestStatus.READY && effectivePredicate.test(t)) {
                                         t.claim();
                                         return t;
                                     }
@@ -208,183 +192,151 @@ public class JobManager implements IDomainCapability
             }
         });
     }
-    
+
     /**
-     * Called by a job if it becomes ready or unready to execute.
-     * Job manager will assume hasReadyWork is opposite of prior value.
-     * (Do not call unless value changes.)
-     * Call executes asynchronously.
+     * Called by a job if it becomes ready or unready to execute. Job manager will
+     * assume hasReadyWork is opposite of prior value. (Do not call unless value
+     * changes.) Call executes asynchronously.
      */
-    public void notifyReadyStatus(Job job)
-    {
+    public void notifyReadyStatus(Job job) {
         assert !job.isSystemJob() : "Invalid use of system job";
-        
-        EXECUTOR.execute(new Runnable()
-        {
+
+        EXECUTOR.execute(new Runnable() {
             @Override
-            public void run()
-            {
-                if(job.hasReadyWork())
+            public void run() {
+                if (job.hasReadyWork())
                     addOrReplaceJobInBacklogSynchronously(job);
                 else
                     removeJobFromBacklogSynchronously(job);
             }
         });
     }
-    
+
     /**
-     * Called by a job when it terminates.
-     * Call executes asynchronously.
+     * Called by a job when it terminates. Call executes asynchronously.
      */
-    public void notifyTerminated(Job job)
-    {
+    public void notifyTerminated(Job job) {
         assert !job.isSystemJob() : "Invalid use of system job";
-        
-        EXECUTOR.execute(new Runnable()
-        {
+
+        EXECUTOR.execute(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 removeJobFromBacklogSynchronously(job);
                 jobs.removeIfPresent(job);
-                
+
                 // clean up id registry
-                for(AbstractTask task : job)
-                {
+                for (AbstractTask task : job) {
                     Simulator.instance().assignedNumbersAuthority().unregister(task);
                 }
                 Simulator.instance().assignedNumbersAuthority().unregister(job);
             }
         });
     }
-    
+
     /**
      * Called by a job if it has a change in priority.
      */
-    public void notifyPriorityChange(Job job)
-    {
+    public void notifyPriorityChange(Job job) {
         assert !job.isSystemJob() : "Invalid use of system job";
-        
-        if(!job.isHeld() && job.hasReadyWork()) EXECUTOR.execute(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                addOrReplaceJobInBacklogSynchronously(job);
-            }
-        });
+
+        if (!job.isHeld() && job.hasReadyWork())
+            EXECUTOR.execute(new Runnable() {
+                @Override
+                public void run() {
+                    addOrReplaceJobInBacklogSynchronously(job);
+                }
+            });
     }
-    
+
     /**
      * Called by job when it is held or released.
      */
-    public void notifyHoldChange(Job job)
-    {
+    public void notifyHoldChange(Job job) {
         assert !job.isSystemJob() : "Invalid use of system job";
-        
-        if(job.isHeld())
-        {
-            EXECUTOR.execute(new Runnable()
-            {
+
+        if (job.isHeld()) {
+            EXECUTOR.execute(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     removeJobFromBacklogSynchronously(job);
                 }
             });
-        }
-        else if(job.hasReadyWork())
-        {
-            EXECUTOR.execute(new Runnable()
-            {
+        } else if (job.hasReadyWork()) {
+            EXECUTOR.execute(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     addOrReplaceJobInBacklogSynchronously(job);
                 }
             });
         }
-        
+
     }
 
     @Override
-    public void deserializeNBT(@Nullable NBTTagCompound tag)
-    {
+    public void deserializeNBT(@Nullable NBTTagCompound tag) {
         NBTTagList nbtJobs = tag.getTagList(NBT_CHILDREN, 10);
-        if( nbtJobs != null && !nbtJobs.hasNoTags())
-        {
-            for(NBTBase subTag : nbtJobs)
-            {
-                if(subTag != null)
-                {
+        if (nbtJobs != null && !nbtJobs.hasNoTags()) {
+            for (NBTBase subTag : nbtJobs) {
+                if (subTag != null) {
                     Job j = new Job(this, (NBTTagCompound) subTag);
-                    if(!j.getStatus().isTerminated) this.jobs.add(j);
+                    if (!j.getStatus().isTerminated)
+                        this.jobs.add(j);
                 }
-            }   
-        }        
+            }
+        }
     }
 
     /**
-     * Called after all domain deserialization is complete.  
-     * Hook for tasks to handle actions that may require other objects to be deserialized start.
+     * Called after all domain deserialization is complete. Hook for tasks to handle
+     * actions that may require other objects to be deserialized start.
      */
     @Override
-    public void afterDeserialization()
-    {
-        if(!this.jobs.isEmpty())
-        {
-            for(Job j : this.jobs)
-            {
+    public void afterDeserialization() {
+        if (!this.jobs.isEmpty()) {
+            for (Job j : this.jobs) {
                 j.afterDeserialization();
             }
-        }    
+        }
     };
-    
+
     @Override
-    public void serializeNBT(NBTTagCompound tag)
-    {
-        if(!this.jobs.isEmpty())
-        {
+    public void serializeNBT(NBTTagCompound tag) {
+        if (!this.jobs.isEmpty()) {
             NBTTagList nbtJobs = new NBTTagList();
-            
-            for(Job j : this.jobs)
-            {
+
+            for (Job j : this.jobs) {
                 nbtJobs.appendTag(j.serializeNBT());
             }
             tag.setTag(NBT_CHILDREN, nbtJobs);
-        }        
+        }
     }
-    
+
     @Override
-    public @Nullable IDomain getDomain()
-    {
+    public @Nullable IDomain getDomain() {
         return this.domain;
     }
-    
+
     @Override
-    public void setDirty()
-    {
-        if(this.domain != null) this.domain.setDirty();
+    public void setDirty() {
+        if (this.domain != null)
+            this.domain.setDirty();
     }
 
     /**
      * Returns estimated count of tasks of given type in the queue.
      */
-    public int getQueueDepth(TaskType blockFabrication)
-    {
+    public int getQueueDepth(TaskType blockFabrication) {
         // TODO Not a real implementation
-        return  Simulator.instance().assignedNumbersAuthority().getIndex(AssignedNumber.TASK).size();
+        return Simulator.instance().assignedNumbersAuthority().getIndex(AssignedNumber.TASK).size();
     }
 
     @Override
-    public String tagName()
-    {
+    public String tagName() {
         return NBT_SELF;
     }
 
     @Override
-    public void setDomain(IDomain domain)
-    {
+    public void setDomain(IDomain domain) {
         this.domain = domain;
     }
 }

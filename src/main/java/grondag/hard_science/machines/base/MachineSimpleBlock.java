@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.machines.base;
 
 import java.util.List;
@@ -23,90 +38,79 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
-public abstract class MachineSimpleBlock extends SuperSimpleBlock implements IMachineBlock
-{
-    protected MachineSimpleBlock(String blockName, ISuperModelState defaultModelState)
-    {
+public abstract class MachineSimpleBlock extends SuperSimpleBlock implements IMachineBlock {
+    protected MachineSimpleBlock(String blockName, ISuperModelState defaultModelState) {
         super(blockName, ModSubstances.MACHINE, defaultModelState);
         this.metaCount = 1;
         this.setHarvestLevel(null, 0);
         this.setHardness(1);
     }
 
-    //allow mined blocks to stack
+    // allow mined blocks to stack
     @Override
-    public int damageDropped(@Nonnull IBlockState state)
-    {
+    public int damageDropped(@Nonnull IBlockState state) {
         return 0;
     }
 
-    //allow mined blocks to stack
+    // allow mined blocks to stack
     @Override
-    public ItemStack getStackFromBlock(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public ItemStack getStackFromBlock(IBlockState state, IBlockAccess world, BlockPos pos) {
         return this.getSubItems().get(0);
     }
-    
+
     @Override
-    public boolean addDestroyEffects(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull ParticleManager manager)
-    {
+    public boolean addDestroyEffects(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull ParticleManager manager) {
         return true;
     }
 
     @Override
-    public boolean addHitEffects(@Nonnull IBlockState blockState, @Nonnull World world, @Nonnull RayTraceResult target, @Nonnull ParticleManager manager)
-    {
+    public boolean addHitEffects(@Nonnull IBlockState blockState, @Nonnull World world, @Nonnull RayTraceResult target, @Nonnull ParticleManager manager) {
         return true;
     }
 
     @Override
-    public boolean addLandingEffects(@Nonnull IBlockState state, @Nonnull WorldServer worldObj, @Nonnull BlockPos blockPosition, @Nonnull IBlockState iblockstate, @Nonnull EntityLivingBase entity,
-            int numberOfParticles)
-    {
+    public boolean addLandingEffects(@Nonnull IBlockState state, @Nonnull WorldServer worldObj, @Nonnull BlockPos blockPosition,
+            @Nonnull IBlockState iblockstate, @Nonnull EntityLivingBase entity, int numberOfParticles) {
         return true;
     }
-    
+
     @Override
-    public boolean isHypermatter()
-    {
+    public boolean isHypermatter() {
         return false;
     }
-    
+
     @Override
-    public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag advanced)
-    {
-        //NOOP for now on machines - don't want all the stuff we get for normal superblocks
+    public void addInformation(@Nonnull ItemStack stack, @Nullable World world, @Nonnull List<String> tooltip, @Nonnull ITooltipFlag advanced) {
+        // NOOP for now on machines - don't want all the stuff we get for normal
+        // superblocks
     }
 
     @Override
-    public void addProbeInfo(@Nullable ProbeMode mode, @Nullable IProbeInfo probeInfo, @Nullable EntityPlayer player, @Nullable World world, @Nullable IBlockState blockState, @Nullable IProbeHitData data)
-    { 
+    public void addProbeInfo(@Nullable ProbeMode mode, @Nullable IProbeInfo probeInfo, @Nullable EntityPlayer player, @Nullable World world,
+            @Nullable IBlockState blockState, @Nullable IProbeHitData data) {
         this.addMachineProbeInfo(mode, probeInfo, player, world, blockState, data);
     }
-    
+
     @Override
-    public void onBlockPlacedBy(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityLivingBase placer, @Nonnull ItemStack stack)
-    {
+    public void onBlockPlacedBy(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityLivingBase placer,
+            @Nonnull ItemStack stack) {
         this.handleOnBlockPlacedBy(worldIn, pos, state, placer, stack);
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     }
-    
+
     @Override
-    public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state)
-    {
+    public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         this.handleBreakBlock(worldIn, pos, state);
         super.breakBlock(worldIn, pos, state);
     }
 
     @Override
-    public void handleMachinePlacement(AbstractMachine machine, World worldIn, BlockPos pos, IBlockState state)
-    {
+    public void handleMachinePlacement(AbstractMachine machine, World worldIn, BlockPos pos, IBlockState state) {
         // captures device channel
         IMachineBlock.super.handleMachinePlacement(machine, worldIn, pos, state);
 
-        if(machine instanceof AbstractSimpleMachine)
-        {
-            ((AbstractSimpleMachine)machine).setPortLayout(this.portLayout(worldIn, pos, state));
+        if (machine instanceof AbstractSimpleMachine) {
+            ((AbstractSimpleMachine) machine).setPortLayout(this.portLayout(worldIn, pos, state));
         }
     }
 }

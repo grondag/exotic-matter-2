@@ -157,10 +157,8 @@ public interface IMutablePolygon extends IPolygon {
      */
     @Deprecated
     default IMutablePolygon setVertex(int vertexIndex, Vec3d pos, double u, double v, int color, Vec3d normal) {
-        IMutablePolygon result = setVertex(vertexIndex, (float) pos.x, (float) pos.y, (float) pos.z, (float) u,
-                (float) v, color, 0);
-        return normal == null ? result
-                : result.normal(vertexIndex, (float) normal.x, (float) normal.y, (float) normal.z);
+        IMutablePolygon result = setVertex(vertexIndex, (float) pos.x, (float) pos.y, (float) pos.z, (float) u, (float) v, color, 0);
+        return normal == null ? result : result.normal(vertexIndex, (float) normal.x, (float) normal.y, (float) normal.z);
     }
 
     IMutablePolygon pos(int vertexIndex, float x, float y, float z);
@@ -268,53 +266,53 @@ public interface IMutablePolygon extends IPolygon {
         }
 
         switch (this.nominalFace()) {
-            case UP:
-                setVertex(0, rv0.x, 1 - rv0.depth, 1 - rv0.y, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-                setVertex(1, rv1.x, 1 - rv1.depth, 1 - rv1.y, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-                setVertex(2, rv2.x, 1 - rv2.depth, 1 - rv2.y, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-                if (vertexCount() == 4)
-                    setVertex(3, rv3.x, 1 - rv3.depth, 1 - rv3.y, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-                break;
+        case UP:
+            setVertex(0, rv0.x, 1 - rv0.depth, 1 - rv0.y, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+            setVertex(1, rv1.x, 1 - rv1.depth, 1 - rv1.y, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+            setVertex(2, rv2.x, 1 - rv2.depth, 1 - rv2.y, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+            if (vertexCount() == 4)
+                setVertex(3, rv3.x, 1 - rv3.depth, 1 - rv3.y, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+            break;
 
-            case DOWN:
-                setVertex(0, rv0.x, rv0.depth, rv0.y, 1 - rv0.u(), 1 - rv0.v(), rv0.color(), rv0.glow());
-                setVertex(1, rv1.x, rv1.depth, rv1.y, 1 - rv1.u(), 1 - rv1.v(), rv1.color(), rv1.glow());
-                setVertex(2, rv2.x, rv2.depth, rv2.y, 1 - rv2.u(), 1 - rv2.v(), rv2.color(), rv2.glow());
-                if (vertexCount() == 4)
-                    setVertex(3, rv3.x, rv3.depth, rv3.y, 1 - rv3.u(), 1 - rv3.v(), rv3.color(), rv3.glow());
-                break;
+        case DOWN:
+            setVertex(0, rv0.x, rv0.depth, rv0.y, 1 - rv0.u(), 1 - rv0.v(), rv0.color(), rv0.glow());
+            setVertex(1, rv1.x, rv1.depth, rv1.y, 1 - rv1.u(), 1 - rv1.v(), rv1.color(), rv1.glow());
+            setVertex(2, rv2.x, rv2.depth, rv2.y, 1 - rv2.u(), 1 - rv2.v(), rv2.color(), rv2.glow());
+            if (vertexCount() == 4)
+                setVertex(3, rv3.x, rv3.depth, rv3.y, 1 - rv3.u(), 1 - rv3.v(), rv3.color(), rv3.glow());
+            break;
 
-            case EAST:
-                setVertex(0, 1 - rv0.depth, rv0.y, 1 - rv0.x, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-                setVertex(1, 1 - rv1.depth, rv1.y, 1 - rv1.x, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-                setVertex(2, 1 - rv2.depth, rv2.y, 1 - rv2.x, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-                if (vertexCount() == 4)
-                    setVertex(3, 1 - rv3.depth, rv3.y, 1 - rv3.x, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-                break;
+        case EAST:
+            setVertex(0, 1 - rv0.depth, rv0.y, 1 - rv0.x, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+            setVertex(1, 1 - rv1.depth, rv1.y, 1 - rv1.x, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+            setVertex(2, 1 - rv2.depth, rv2.y, 1 - rv2.x, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+            if (vertexCount() == 4)
+                setVertex(3, 1 - rv3.depth, rv3.y, 1 - rv3.x, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+            break;
 
-            case WEST:
-                setVertex(0, rv0.depth, rv0.y, rv0.x, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-                setVertex(1, rv1.depth, rv1.y, rv1.x, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-                setVertex(2, rv2.depth, rv2.y, rv2.x, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-                if (vertexCount() == 4)
-                    setVertex(3, rv3.depth, rv3.y, rv3.x, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-                break;
+        case WEST:
+            setVertex(0, rv0.depth, rv0.y, rv0.x, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+            setVertex(1, rv1.depth, rv1.y, rv1.x, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+            setVertex(2, rv2.depth, rv2.y, rv2.x, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+            if (vertexCount() == 4)
+                setVertex(3, rv3.depth, rv3.y, rv3.x, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+            break;
 
-            case NORTH:
-                setVertex(0, 1 - rv0.x, rv0.y, rv0.depth, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-                setVertex(1, 1 - rv1.x, rv1.y, rv1.depth, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-                setVertex(2, 1 - rv2.x, rv2.y, rv2.depth, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-                if (vertexCount() == 4)
-                    setVertex(3, 1 - rv3.x, rv3.y, rv3.depth, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-                break;
+        case NORTH:
+            setVertex(0, 1 - rv0.x, rv0.y, rv0.depth, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+            setVertex(1, 1 - rv1.x, rv1.y, rv1.depth, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+            setVertex(2, 1 - rv2.x, rv2.y, rv2.depth, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+            if (vertexCount() == 4)
+                setVertex(3, 1 - rv3.x, rv3.y, rv3.depth, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+            break;
 
-            case SOUTH:
-                setVertex(0, rv0.x, rv0.y, 1 - rv0.depth, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-                setVertex(1, rv1.x, rv1.y, 1 - rv1.depth, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-                setVertex(2, rv2.x, rv2.y, 1 - rv2.depth, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-                if (vertexCount() == 4)
-                    setVertex(3, rv3.x, rv3.y, 1 - rv3.depth, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-                break;
+        case SOUTH:
+            setVertex(0, rv0.x, rv0.y, 1 - rv0.depth, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+            setVertex(1, rv1.x, rv1.y, 1 - rv1.depth, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+            setVertex(2, rv2.x, rv2.y, 1 - rv2.depth, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+            if (vertexCount() == 4)
+                setVertex(3, rv3.x, rv3.y, 1 - rv3.depth, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+            break;
         }
 
         return this;
@@ -335,8 +333,8 @@ public interface IMutablePolygon extends IPolygon {
      */
     default IMutablePolygon setupFaceQuad(float x0, float y0, float x1, float y1, float depth, Direction topFace) {
         // PERF: garbage factory
-        return setupFaceQuad(new FaceVertex(x0, y0, depth), new FaceVertex(x1, y0, depth),
-                new FaceVertex(x1, y1, depth), new FaceVertex(x0, y1, depth), topFace);
+        return setupFaceQuad(new FaceVertex(x0, y0, depth), new FaceVertex(x1, y0, depth), new FaceVertex(x1, y1, depth), new FaceVertex(x0, y1, depth),
+                topFace);
     }
 
     /**

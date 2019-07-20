@@ -161,39 +161,39 @@ public class VertexEncoder {
         setPosXYZ = SET_FLOAT3;
 
         switch (getVertexNormalFormat(format)) {
-            case VERTEX_NORMAL_QUANTIZED:
-                hasNormals = true;
-                getNormalX = GET_NORMAL_X_QUANTIZED;
-                getNormalY = GET_NORMAL_Y_QUANTIZED;
-                getNormalZ = GET_NORMAL_Z_QUANTIZED;
-                setNormalXYZ = SET_FLOAT3_FAIL;
-                offsetNormalX = offset++;
-                offsetNormalY = offsetNormalX;
-                offsetNormalZ = offsetNormalX;
-                break;
+        case VERTEX_NORMAL_QUANTIZED:
+            hasNormals = true;
+            getNormalX = GET_NORMAL_X_QUANTIZED;
+            getNormalY = GET_NORMAL_Y_QUANTIZED;
+            getNormalZ = GET_NORMAL_Z_QUANTIZED;
+            setNormalXYZ = SET_FLOAT3_FAIL;
+            offsetNormalX = offset++;
+            offsetNormalY = offsetNormalX;
+            offsetNormalZ = offsetNormalX;
+            break;
 
-            case VERTEX_NORMAL_REGULAR:
-                hasNormals = true;
-                getNormalX = GET_FLOAT;
-                getNormalY = GET_FLOAT;
-                getNormalZ = GET_FLOAT;
-                setNormalXYZ = SET_FLOAT3;
-                offsetNormalX = offset++;
-                offsetNormalY = offset++;
-                offsetNormalZ = offset++;
-                break;
+        case VERTEX_NORMAL_REGULAR:
+            hasNormals = true;
+            getNormalX = GET_FLOAT;
+            getNormalY = GET_FLOAT;
+            getNormalZ = GET_FLOAT;
+            setNormalXYZ = SET_FLOAT3;
+            offsetNormalX = offset++;
+            offsetNormalY = offset++;
+            offsetNormalZ = offset++;
+            break;
 
-            default:
-            case VERTEX_NORMAL_FACE:
-                hasNormals = false;
-                getNormalX = GET_FLOAT_FAIL;
-                getNormalY = GET_FLOAT_FAIL;
-                getNormalZ = GET_FLOAT_FAIL;
-                setNormalXYZ = SET_FLOAT3_FAIL;
-                offsetNormalX = BAD_ADDRESS;
-                offsetNormalY = BAD_ADDRESS;
-                offsetNormalZ = BAD_ADDRESS;
-                break;
+        default:
+        case VERTEX_NORMAL_FACE:
+            hasNormals = false;
+            getNormalX = GET_FLOAT_FAIL;
+            getNormalY = GET_FLOAT_FAIL;
+            getNormalZ = GET_FLOAT_FAIL;
+            setNormalXYZ = SET_FLOAT3_FAIL;
+            offsetNormalX = BAD_ADDRESS;
+            offsetNormalY = BAD_ADDRESS;
+            offsetNormalZ = BAD_ADDRESS;
+            break;
         }
 
         final int layerCount = getLayerCount(format);
@@ -212,29 +212,19 @@ public class VertexEncoder {
 
         getU1 = layerCount > 1 ? GET_FLOAT : GET_FLOAT_FAIL;
         getV1 = layerCount > 1 ? GET_FLOAT : GET_FLOAT_FAIL;
-        setU1 = multiUV
-                && layerCount > 1 ? SET_FLOAT : SET_FLOAT_FAIL;
-        setV1 = multiUV
-                && layerCount > 1 ? SET_FLOAT : SET_FLOAT_FAIL;
-        setUV1 = multiUV
-                && layerCount > 1 ? SET_FLOAT2 : SET_FLOAT2_FAIL;
-        offsetU1 = multiUV
-                && layerCount > 1 ? offset++ : offsetU0;
-        offsetV1 = multiUV
-                && layerCount > 1 ? offset++ : offsetV0;
+        setU1 = multiUV && layerCount > 1 ? SET_FLOAT : SET_FLOAT_FAIL;
+        setV1 = multiUV && layerCount > 1 ? SET_FLOAT : SET_FLOAT_FAIL;
+        setUV1 = multiUV && layerCount > 1 ? SET_FLOAT2 : SET_FLOAT2_FAIL;
+        offsetU1 = multiUV && layerCount > 1 ? offset++ : offsetU0;
+        offsetV1 = multiUV && layerCount > 1 ? offset++ : offsetV0;
 
         getU2 = layerCount == 3 ? GET_FLOAT : GET_FLOAT_FAIL;
         getV2 = layerCount == 3 ? GET_FLOAT : GET_FLOAT_FAIL;
-        setU2 = multiUV
-                && layerCount == 3 ? SET_FLOAT : SET_FLOAT_FAIL;
-        setV2 = multiUV
-                && layerCount == 3 ? SET_FLOAT : SET_FLOAT_FAIL;
-        setUV2 = multiUV
-                && layerCount == 3 ? SET_FLOAT2 : SET_FLOAT2_FAIL;
-        offsetU2 = multiUV
-                && layerCount == 3 ? offset++ : offsetU0;
-        offsetV2 = multiUV
-                && layerCount == 3 ? offset++ : offsetV0;
+        setU2 = multiUV && layerCount == 3 ? SET_FLOAT : SET_FLOAT_FAIL;
+        setV2 = multiUV && layerCount == 3 ? SET_FLOAT : SET_FLOAT_FAIL;
+        setUV2 = multiUV && layerCount == 3 ? SET_FLOAT2 : SET_FLOAT2_FAIL;
+        offsetU2 = multiUV && layerCount == 3 ? offset++ : offsetU0;
+        offsetV2 = multiUV && layerCount == 3 ? offset++ : offsetV0;
 
         hasColor = getVertexColorFormat(format) == VERTEX_COLOR_PER_VERTEX_LAYER;
         if (hasColor) {
@@ -275,8 +265,8 @@ public class VertexEncoder {
             return null;
 
         final int base = vertexAddress + vertexIndex * vertexStride;
-        Vec3f result = Vec3f.create(getNormalX.get(stream, base + offsetNormalX),
-                getNormalY.get(stream, base + offsetNormalY), getNormalZ.get(stream, base + offsetNormalZ));
+        Vec3f result = Vec3f.create(getNormalX.get(stream, base + offsetNormalX), getNormalY.get(stream, base + offsetNormalY),
+                getNormalZ.get(stream, base + offsetNormalZ));
 
         return result == Vec3f.ZERO ? null : result;
     }
@@ -295,28 +285,24 @@ public class VertexEncoder {
     }
 
     public boolean hasVertexNormal(IIntStream stream, int vertexAddress, int vertexIndex) {
-        return hasNormals
-                && getNormalX.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX) != 0;
+        return hasNormals && getNormalX.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX) != 0;
     }
 
     public float getVertexNormalX(IIntStream stream, int vertexAddress, int vertexIndex) {
-        return interpretMissingNormal(
-                getNormalX.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX));
+        return interpretMissingNormal(getNormalX.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX));
     }
 
     public float getVertexNormalY(IIntStream stream, int vertexAddress, int vertexIndex) {
-        return interpretMissingNormal(
-                getNormalY.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalY));
+        return interpretMissingNormal(getNormalY.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalY));
     }
 
     public float getVertexNormalZ(IIntStream stream, int vertexAddress, int vertexIndex) {
-        return interpretMissingNormal(
-                getNormalZ.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalZ));
+        return interpretMissingNormal(getNormalZ.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalZ));
     }
 
     public void setVertexNormal(IIntStream stream, int vertexAddress, int vertexIndex, float normalX, float normalY, float normalZ) {
-        setNormalXYZ.set(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX,
-                interpretMissingNormal(normalX), interpretMissingNormal(normalY), interpretMissingNormal(normalZ));
+        setNormalXYZ.set(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX, interpretMissingNormal(normalX), interpretMissingNormal(normalY),
+                interpretMissingNormal(normalZ));
     }
 
     public float getVertexX(IIntStream stream, int vertexAddress, int vertexIndex) {

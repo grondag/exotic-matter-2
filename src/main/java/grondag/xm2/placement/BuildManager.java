@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.xm2.placement;
 
 import java.util.concurrent.ExecutorService;
@@ -25,117 +40,100 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
-
-public class BuildManager implements IDomainCapability
-{
+public class BuildManager implements IDomainCapability {
     private static final String NBT_SELF = NBTDictionary.claim("buildMgr");
     private static final String NBT_BUILDS = NBTDictionary.claim("buildData");
 
+    /**
+     * For use by builds and job tasks related to construction that do not require
+     * world access and which don't have in-world machines to service them. For
+     * anything that requires world access, create a machine or use World Task
+     * Manager.
+     */
+    public static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(new ThreadFactory() {
+        private AtomicInteger count = new AtomicInteger(1);
+
+        @Override
+        public Thread newThread(@Nullable Runnable r) {
+            Thread thread = new Thread(r, "Hard Science Build Manager Thread -" + count.getAndIncrement());
+            thread.setDaemon(true);
+            return thread;
+        }
+    });
 
     /**
-     * For use by builds and job tasks related to construction that do not
-     * require world access and which don't have in-world machines to service them.
-     * For anything that requires world access, create a machine or use World Task Manager.
-     */
-    public static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(
-            new ThreadFactory()
-            {
-                private AtomicInteger count = new AtomicInteger(1);
-                @Override
-                public Thread newThread(@Nullable Runnable r)
-                {
-                    Thread thread = new Thread(r, "Hard Science Build Manager Thread -" + count.getAndIncrement());
-                    thread.setDaemon(true);
-                    return thread;
-                }
-            });
-    
-    /**
-     * Convenience method - retrieves active build for given player
-     * in the player's current dimension.
-     * Will fail if user doesn't have construction rights in current domain.
+     * Convenience method - retrieves active build for given player in the player's
+     * current dimension. Will fail if user doesn't have construction rights in
+     * current domain.
      */
     @Nullable
-    public static Build getActiveBuildForPlayer(ServerPlayerEntity player)
-    {
+    public static Build getActiveBuildForPlayer(ServerPlayerEntity player) {
         DomainUser user = DomainManager.instance().getActiveDomain(player).findPlayer(player);
-        if(user == null || !user.hasPrivilege(Privilege.CONSTRUCTION_EDIT)) return null;
+        if (user == null || !user.hasPrivilege(Privilege.CONSTRUCTION_EDIT))
+            return null;
         BuildCapability cap = user.getCapability(BuildCapability.class);
         return cap == null ? null : cap.getActiveBuild(Registry.DIMENSION.getId(player.dimension));
     }
-    
+
     protected IDomain domain;
 
-    private Int2ObjectMap<Build> builds =Int2ObjectMaps.synchronize(new Int2ObjectOpenHashMap<Build>());
-    
-    public Build newBuild(World inWorld)
-    {
+    private Int2ObjectMap<Build> builds = Int2ObjectMaps.synchronize(new Int2ObjectOpenHashMap<Build>());
+
+    public Build newBuild(World inWorld) {
         return newBuild(Registry.DIMENSION.getId(inWorld.dimension.getType()));
     }
-    
-    public Build newBuild(Identifier dimensionId)
-    {
+
+    public Build newBuild(Identifier dimensionId) {
         Build result = new Build(this, dimensionId);
         this.builds.put(result.getId(), result);
         Simulator.instance().assignedNumbersAuthority().register(result);
         return result;
     }
-    
+
     @Override
-    public @Nullable IDomain getDomain()
-    {
+    public @Nullable IDomain getDomain() {
         return this.domain;
-    }
-    
-    @Override
-    public void setDirty()
-    {
-        if(this.domain != null) this.domain.setDirty();
     }
 
     @Override
-    public void deserializeNBT(@Nullable CompoundTag tag)
-    {
+    public void setDirty() {
+        if (this.domain != null)
+            this.domain.setDirty();
+    }
+
+    @Override
+    public void deserializeNBT(@Nullable CompoundTag tag) {
         ListTag nbtBuilds = tag.getList(NBT_BUILDS, 10);
-        if( nbtBuilds != null && !nbtBuilds.isEmpty())
-        {
-            for(Tag subTag : nbtBuilds)
-            {
-                if(subTag != null)
-                {
+        if (nbtBuilds != null && !nbtBuilds.isEmpty()) {
+            for (Tag subTag : nbtBuilds) {
+                if (subTag != null) {
                     Build b = new Build(this, (CompoundTag) subTag);
                     this.builds.put(b.getId(), b);
                 }
-            }   
-        }        
+            }
+        }
     }
 
     @Override
-    public void serializeNBT(CompoundTag tag)
-    {
-        if(!this.builds.isEmpty())
-        {
+    public void serializeNBT(CompoundTag tag) {
+        if (!this.builds.isEmpty()) {
             ListTag nbtJobs = new ListTag();
-            
-            for(Build b : this.builds.values())
-            {
+
+            for (Build b : this.builds.values()) {
                 nbtJobs.add(b.serializeNBT());
             }
             tag.put(NBT_BUILDS, nbtJobs);
-        }        
+        }
     }
 
     @Override
-    public String tagName()
-    {
+    public String tagName() {
         return NBT_SELF;
     }
 
-
     @Override
-    public void setDomain(IDomain domain)
-    {
+    public void setDomain(IDomain domain) {
         this.domain = domain;
     }
- 
+
 }

@@ -25,8 +25,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.client.resource.language.I18n;
 
 public enum BlockOrientationFace implements ILocalized {
-    DYNAMIC(null), MATCH_CLOSEST(null), UP(Direction.UP), DOWN(Direction.DOWN), NORTH(Direction.NORTH),
-    EAST(Direction.EAST), SOUTH(Direction.SOUTH), WEST(Direction.WEST);
+    DYNAMIC(null), MATCH_CLOSEST(null), UP(Direction.UP), DOWN(Direction.DOWN), NORTH(Direction.NORTH), EAST(Direction.EAST), SOUTH(Direction.SOUTH),
+    WEST(Direction.WEST);
 
     private static final String TAG_NAME = NBTDictionary.claim("blockOrientFace");
 
@@ -58,7 +58,6 @@ public enum BlockOrientationFace implements ILocalized {
     }
 
     public boolean isFixed() {
-        return !(this == DYNAMIC
-                || this == MATCH_CLOSEST);
+        return !(this == DYNAMIC || this == MATCH_CLOSEST);
     }
 }

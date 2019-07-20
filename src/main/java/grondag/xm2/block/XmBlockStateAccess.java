@@ -43,7 +43,7 @@ public interface XmBlockStateAccess {
     static @Nullable XmBlockStateImpl get(Block fromBlock) {
         return get(fromBlock.getDefaultState());
     }
-    
+
     static @Nullable ModelState modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
         final XmBlockStateImpl xmState = get(fromState);
         return xmState == null ? null : xmState.getModelState(blockView, pos, refresh);

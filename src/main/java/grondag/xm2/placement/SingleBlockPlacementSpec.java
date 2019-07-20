@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.xm2.placement;
 
 import java.util.function.BooleanSupplier;
@@ -30,31 +45,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
-public class SingleBlockPlacementSpec extends SingleStackPlacementSpec
-{
-    public SingleBlockPlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos)
-    {
+public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
+    public SingleBlockPlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos) {
         super(placedStack, player, pPos);
     }
 
     @Override
-    protected boolean doValidate()
-    {
-        if(!this.player.world.isHeightValidAndBlockLoaded(this.pPos.inPos)) return false;
+    protected boolean doValidate() {
+        if (!this.player.world.isHeightValidAndBlockLoaded(this.pPos.inPos))
+            return false;
 
-        if(this.isExcavation)
-        {
+        if (this.isExcavation) {
             return !this.player.world.isAir(this.pPos.inPos);
-        }
-        else
-        {
-            if(player.world.getBlockState(pPos.inPos).getMaterial().isReplaceable())
-            {
+        } else {
+            if (player.world.getBlockState(pPos.inPos).getMaterial().isReplaceable()) {
                 this.outputStack = PlacementHandler.cubicPlacementStack(this);
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
@@ -62,19 +69,16 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected void drawSelection(Tessellator tessellator, BufferBuilder bufferBuilder)
-    {
+    protected void drawSelection(Tessellator tessellator, BufferBuilder bufferBuilder) {
         // NOOP - selection mode not meaningful for a single-block region
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    protected void drawPlacement(Tessellator tessellator, BufferBuilder bufferBuilder, PlacementPreviewRenderMode previewMode)
-    {
-        switch(previewMode)
-        {
+    protected void drawPlacement(Tessellator tessellator, BufferBuilder bufferBuilder, PlacementPreviewRenderMode previewMode) {
+        switch (previewMode) {
         case EXCAVATE:
-            
+
             Box box = new Box(this.pPos.inPos);
 
             // draw edges without depth to show extent of region
@@ -82,35 +86,35 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec
             GlStateManager.lineWidth(2.0F);
             bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
             // TODO: confirm this is right method - names changed
-            WorldRenderer.buildBoxOutline(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green, previewMode.blue, 1f);
+            WorldRenderer.buildBoxOutline(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green,
+                    previewMode.blue, 1f);
             tessellator.draw();
-            
+
             // draw sides with depth to better show what parts are unobstructed
             GlStateManager.enableDepthTest();
-            
+
             bufferBuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
             // TODO: confirm this is right method - names changed
-            WorldRenderer.buildBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green, previewMode.blue, 0.4f);
+            WorldRenderer.buildBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green,
+                    previewMode.blue, 0.4f);
             tessellator.draw();
-            
+
             break;
         case PLACE:
             this.drawPlacementPreview(tessellator, bufferBuilder);
             break;
-            
+
         case SELECT:
         case OBSTRUCTED:
         default:
             break;
-        
+
         }
     }
 
     @Override
-    public BooleanSupplier worldTask(ServerPlayerEntity player)
-    {
-        if(this.isExcavation)
-        {
+    public BooleanSupplier worldTask(ServerPlayerEntity player) {
+        if (this.isExcavation) {
             return new BooleanSupplier() {
 
                 @Override
@@ -119,28 +123,24 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec
                     World world = player.world;
 
                     BlockPos pos = SingleBlockPlacementSpec.this.pPos.inPos;
-                    if(pos == null) return false;
+                    if (pos == null)
+                        return false;
 
                     // is the position inside the world?
-                    if(!world.isHeightValidAndBlockLoaded(pos)) return false;
+                    if (!world.isHeightValidAndBlockLoaded(pos))
+                        return false;
 
                     BlockState blockState = world.getBlockState(pos);
 
                     // is the block at the position affected
                     // by this excavation?
-                    if(SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(
-                            blockState, 
-                            world, 
-                            pos, 
-                            SingleBlockPlacementSpec.this.placedStack(),
-                            SingleBlockPlacementSpec.this.isVirtual))
-                    {
+                    if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
+                            SingleBlockPlacementSpec.this.isVirtual)) {
                         Job job = new Job(RequestPriority.MEDIUM, player);
                         job.setDimension(world.dimension);
                         job.addTask(new ExcavationTask(pos));
                         IDomain domain = DomainManager.instance().getActiveDomain(player);
-                        if(domain != null)
-                        {
+                        if (domain != null) {
                             domain.getCapability(JobManager.class).addJob(job);
                         }
                     }
@@ -148,9 +148,7 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec
                 }
 
             };
-        }
-        else
-        {
+        } else {
             // Placement world task places virtual blocks in the currently active build
             return new BooleanSupplier() {
 
@@ -158,32 +156,28 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec
                 public boolean getAsBoolean() {
 
                     Build build = BuildManager.getActiveBuildForPlayer(player);
-                    if(build == null || !build.isOpen())
-                    {                        
+                    if (build == null || !build.isOpen()) {
                         String chatMessage = I18n.translate("placement.message.no_build");
                         player.sendMessage(new TranslatableText(chatMessage));
                         return false;
                     }
-                    
+
                     World world = player.world;
 
                     BlockPos pos = SingleBlockPlacementSpec.this.pPos.inPos;
-                    if(pos == null) return false;
+                    if (pos == null)
+                        return false;
 
                     // is the position inside the world?
-                    if(!world.isHeightValidAndBlockLoaded(pos)) return false;
+                    if (!world.isHeightValidAndBlockLoaded(pos))
+                        return false;
 
                     BlockState blockState = world.getBlockState(pos);
 
                     // is the block at the position affected
                     // by this excavation?
-                    if(SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(
-                            blockState, 
-                            world, 
-                            pos, 
-                            SingleBlockPlacementSpec.this.placedStack(),
-                            SingleBlockPlacementSpec.this.isVirtual))
-                    {
+                    if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
+                            SingleBlockPlacementSpec.this.isVirtual)) {
                         PlacementHandler.placeVirtualBlock(world, SingleBlockPlacementSpec.this.outputStack, player, pos, build);
                     }
                     return false;
@@ -193,8 +187,7 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec
     }
 
     @Override
-    public IBlockRegion region()
-    {
+    public IBlockRegion region() {
         return new SingleBlockRegion(this.pPos.inPos);
     }
 }

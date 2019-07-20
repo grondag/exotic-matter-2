@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.machines.base;
 
 import grondag.exotic_matter.block.SuperBlockStackHelper;
@@ -16,118 +31,111 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Holds client-side state for machine TE
  *
  */
-public class MachineClientState
-{
+public class MachineClientState {
     /**
      * For use by TESR - cached items stack based on status info.
      */
     private ItemStack statusStack;
-    
+
     /**
-     * For use by TESR - last time player looked at this machine within the machine rendering distance
+     * For use by TESR - last time player looked at this machine within the machine
+     * rendering distance
      */
     @SideOnly(Side.CLIENT)
     public long lastInViewMillis;
-    
-    /** 
+
+    /**
      * Caches {@link AbstractMachine#hasOnOff() on client}
      */
     public boolean hasOnOff;
-    
-    /** 
+
+    /**
      * Caches {@link AbstractMachine#hasRedstoneControl() on client}
      */
     public boolean hasRedstoneControl;
-    
+
     /**
      * Caches {@link AbstractMachine#maxPowerConsumptionWatts()}
      */
-    public float maxPowerConsumptionWatts; 
-    
+    public float maxPowerConsumptionWatts;
+
     /**
      * Used for client rendering - will only be updated as needed.
      */
     public MachineControlState controlState = new MachineControlState();
-    
+
     /**
      * Used for client rendering - will only be updated as needed.
      */
     public MachineStatusState statusState = new MachineStatusState();
-    
+
     /**
      * Used for client rendering - will only be updated as needed.
      */
     public ClientBufferInfo bufferInfo;
-    
+
     /**
      * Used for client rendering - will only be updated as needed.
      */
     public ClientEnergyInfo powerSupplyInfo;
-    
+
     public String machineName = "???";
-    
-    public MachineClientState(MachineTileEntity mte)
-    {
+
+    public MachineClientState(MachineTileEntity mte) {
         AbstractMachine tempMachine = mte.createNewMachine();
         this.bufferInfo = new ClientBufferInfo();
         this.powerSupplyInfo = new ClientEnergyInfo();
         this.hasOnOff = tempMachine.hasOnOff();
         this.hasRedstoneControl = tempMachine.hasRedstoneControl();
-        
-        //TODO: seems redundant, move to ClientEnergyInfo?
+
+        // TODO: seems redundant, move to ClientEnergyInfo?
         this.maxPowerConsumptionWatts = tempMachine.energyManager().maxDeviceDrawWatts();
     }
-    
+
     /**
      * Handles client status updates received from server.
      */
-    
-    public void handleMachineStatusUpdate(PacketMachineStatusUpdateListener packet)
-    {
+
+    public void handleMachineStatusUpdate(PacketMachineStatusUpdateListener packet) {
         this.controlState = packet.controlState;
         this.statusState = packet.statusState;
         this.statusStack = null;
         this.machineName = packet.machineName;
-        
-        if(this.controlState.hasMaterialBuffer())
-        {
+
+        if (this.controlState.hasMaterialBuffer()) {
             this.bufferInfo = packet.materialBufferInfo;
         }
-        if(this.controlState.hasPowerSupply())
-        {
+        if (this.controlState.hasPowerSupply()) {
             this.powerSupplyInfo = packet.powerSupplyInfo;
         }
     }
-    
-    public boolean isOn()
-    {
-        if(!this.hasOnOff) return false;
-        if(this.controlState == null || this.statusState == null) return false;
+
+    public boolean isOn() {
+        if (!this.hasOnOff)
+            return false;
+        if (this.controlState == null || this.statusState == null)
+            return false;
         return AbstractMachine.computeIsOn(this.controlState, this.statusState);
     }
-    
-    public boolean isRedstoneControlEnabled()
-    {
-        return this.hasRedstoneControl
-                && this.controlState != null
-                && this.controlState.getControlMode().isRedstoneControlEnabled;
+
+    public boolean isRedstoneControlEnabled() {
+        return this.hasRedstoneControl && this.controlState != null && this.controlState.getControlMode().isRedstoneControlEnabled;
     }
-    
+
     /**
-     * For use by TESR - cached items stack based on status info.
-     * Assumes that the target block is a superModel block.
+     * For use by TESR - cached items stack based on status info. Assumes that the
+     * target block is a superModel block.
      */
     @SideOnly(Side.CLIENT)
-    public ItemStack getStatusStack()
-    {
+    public ItemStack getStatusStack() {
         ItemStack result = this.statusStack;
         MachineControlState controlState = this.controlState;
-        
-        if(result == null && controlState.hasModelState())
-        {
+
+        if (result == null && controlState.hasModelState()) {
             ISuperModelState modelState = controlState.getModelState();
-            if(modelState == null) return null;
-            
+            if (modelState == null)
+                return null;
+
             SuperModelBlock newBlock = SuperModelBlock.findAppropriateSuperModelBlock(controlState.getSubstance(), controlState.getModelState());
             result = newBlock.getSubItems().get(0);
             SuperBlockStackHelper.setStackLightValue(result, controlState.getLightValue());

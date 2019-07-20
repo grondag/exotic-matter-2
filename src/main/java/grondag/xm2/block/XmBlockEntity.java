@@ -48,8 +48,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
     /** Returns server-side tag if one is present, creating it if not. */
     public static CompoundTag getServerTag(CompoundTag fromTag) {
         Tag result = fromTag.getTag(NBT_SERVER_SIDE_TAG);
-        if (result == null
-                || result.getType() != 10) {
+        if (result == null || result.getType() != 10) {
             result = new CompoundTag();
             fromTag.put(NBT_SERVER_SIDE_TAG, result);
         }
@@ -62,8 +61,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
      * null if a null tag is passed in.
      */
     public static CompoundTag withoutServerTag(CompoundTag inputTag) {
-        if (inputTag != null
-                && inputTag.containsKey(NBT_SERVER_SIDE_TAG)) {
+        if (inputTag != null && inputTag.containsKey(NBT_SERVER_SIDE_TAG)) {
             inputTag = (CompoundTag) inputTag.copy();
             inputTag.remove(NBT_SERVER_SIDE_TAG);
         }
@@ -150,8 +148,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
 
     private void invalidateClientCache(BlockPos updatePos) {
         BlockEntity target = this.world.getBlockEntity(updatePos);
-        if (target != null
-                && target instanceof XmBlockEntity) {
+        if (target != null && target instanceof XmBlockEntity) {
             ((XmBlockEntity) target).isModelStateCacheDirty = true;
         }
     }
@@ -178,8 +175,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
             isModelStateCacheDirty = true;
         }
 
-        if (isModelStateCacheDirty
-                && refreshFromWorldIfNeeded) {
+        if (isModelStateCacheDirty && refreshFromWorldIfNeeded) {
             MutableModelState result = myState.mutableCopy();
             result.species(state.defaultModelState.species());
             result.refreshFromWorld(state, world, pos);
@@ -187,8 +183,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
             return result;
         } else {
             // honor passed in species if different
-            if (myState.hasSpecies()
-                    && myState.species() != state.defaultModelState.species()) {
+            if (myState.hasSpecies() && myState.species() != state.defaultModelState.species()) {
                 MutableModelState result = myState.mutableCopy();
                 result.species(state.defaultModelState.species());
                 return result;
@@ -202,8 +197,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
      * Use this version when you don't have world state handy
      */
     public ModelState getModelState() {
-        if (!(this.modelState == null
-                || this.isModelStateCacheDirty)) {
+        if (!(this.modelState == null || this.isModelStateCacheDirty)) {
             return this.modelState;
         } else {
             return getModelState(XmBlockStateAccess.get(world.getBlockState(pos)), world, pos, true);
@@ -224,12 +218,8 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
 
     public void setModelState(ModelState modelState) {
         // if making existing appearance static, don't need to refresh on client side
-        boolean needsClientRefresh = this.world != null
-                && this.world.isClient
-                && !(this.modelState != null
-                        && this.modelState.equals(modelState)
-                        && modelState.isStatic()
-                        && this.modelState.isStatic() != modelState.isStatic());
+        boolean needsClientRefresh = this.world != null && this.world.isClient && !(this.modelState != null && this.modelState.equals(modelState)
+                && modelState.isStatic() && this.modelState.isStatic() != modelState.isStatic());
         this.modelState = modelState.toImmutable();
         this.onModelStateChange(needsClientRefresh);
     }

@@ -112,16 +112,14 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
         for (int i = 0; i < depth; i++) {
             if (stream.editorOrigin())
-                QuadPainterFactory.getPainter(modelState, surface, paint, i).paintQuads(stream, modelState, surface,
-                        paint, i);
+                QuadPainterFactory.getPainter(modelState, surface, paint, i).paintQuads(stream, modelState, surface, paint, i);
         }
 
         if (stream.editorOrigin()) {
             do {
                 // omit polys that weren't textured by any painter
                 if (editor.getTextureName(0) != null) {
-                    final int layerCount = editor.getTextureName(1) == null ? 1
-                            : editor.getTextureName(2) == null ? 2 : 3;
+                    final int layerCount = editor.getTextureName(1) == null ? 1 : editor.getTextureName(2) == null ? 2 : 3;
 
                     editor.setLayerCount(layerCount);
                 }
@@ -259,12 +257,10 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         // scale UV coordinates to size of texture sub-region
         final int vCount = poly.vertexCount();
         for (int v = 0; v < vCount; v++) {
-            poly.sprite(v, spriteIndex, minU + spanU * poly.spriteU(v, spriteIndex),
-                    minV + spanV * poly.spriteV(v, spriteIndex));
+            poly.sprite(v, spriteIndex, minU + spanU * poly.spriteU(v, spriteIndex), minV + spanV * poly.spriteV(v, spriteIndex));
         }
 
-        final Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas()
-                .getSprite(poly.getTextureName(spriteIndex));
+        final Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(poly.getTextureName(spriteIndex));
 
         if (poly.shouldContractUVs(spriteIndex)) {
             contractUVs(spriteIndex, sprite, poly);
@@ -278,8 +274,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         // doing interpolation here vs using sprite methods to avoid wasteful multiply
         // and divide by 16
         for (int v = 0; v < vCount; v++) {
-            poly.sprite(v, spriteIndex, spriteMinU + spriteSpanU * poly.spriteU(v, spriteIndex),
-                    spriteMinV + spriteSpanV * poly.spriteV(v, spriteIndex));
+            poly.sprite(v, spriteIndex, spriteMinU + spriteSpanU * poly.spriteU(v, spriteIndex), spriteMinV + spriteSpanV * poly.spriteV(v, spriteIndex));
         }
     }
 
@@ -315,33 +310,33 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
     private void applyTextureRotation(int spriteIndex, IMutablePolygon poly) {
         final int vCount = poly.vertexCount();
         switch (poly.getRotation(spriteIndex)) {
-            case ROTATE_NONE:
-            default:
-                break;
+        case ROTATE_NONE:
+        default:
+            break;
 
-            case ROTATE_90:
-                for (int i = 0; i < vCount; i++) {
-                    final float uOld = poly.spriteU(i, spriteIndex);
-                    final float vOld = poly.spriteV(i, spriteIndex);
-                    poly.sprite(i, spriteIndex, vOld, 1 - uOld);
-                }
-                break;
+        case ROTATE_90:
+            for (int i = 0; i < vCount; i++) {
+                final float uOld = poly.spriteU(i, spriteIndex);
+                final float vOld = poly.spriteV(i, spriteIndex);
+                poly.sprite(i, spriteIndex, vOld, 1 - uOld);
+            }
+            break;
 
-            case ROTATE_180:
-                for (int i = 0; i < vCount; i++) {
-                    final float uOld = poly.spriteU(i, spriteIndex);
-                    final float vOld = poly.spriteV(i, spriteIndex);
-                    poly.sprite(i, spriteIndex, 1 - uOld, 1 - vOld);
-                }
-                break;
+        case ROTATE_180:
+            for (int i = 0; i < vCount; i++) {
+                final float uOld = poly.spriteU(i, spriteIndex);
+                final float vOld = poly.spriteV(i, spriteIndex);
+                poly.sprite(i, spriteIndex, 1 - uOld, 1 - vOld);
+            }
+            break;
 
-            case ROTATE_270:
-                for (int i = 0; i < vCount; i++) {
-                    final float uOld = poly.spriteU(i, spriteIndex);
-                    final float vOld = poly.spriteV(i, spriteIndex);
-                    poly.sprite(i, spriteIndex, 1 - vOld, uOld);
-                }
-                break;
+        case ROTATE_270:
+            for (int i = 0; i < vCount; i++) {
+                final float uOld = poly.spriteU(i, spriteIndex);
+                final float vOld = poly.spriteV(i, spriteIndex);
+                poly.sprite(i, spriteIndex, 1 - vOld, uOld);
+            }
+            break;
 
         }
     }

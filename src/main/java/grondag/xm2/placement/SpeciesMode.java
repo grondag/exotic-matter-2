@@ -52,15 +52,15 @@ public enum SpeciesMode implements ILocalized {
     /** mode to use if player holding alt key */
     public SpeciesMode alternate() {
         switch (this) {
-            case COUNTER_MOST:
-            default:
-                return MATCH_CLICKED;
+        case COUNTER_MOST:
+        default:
+            return MATCH_CLICKED;
 
-            case MATCH_CLICKED:
-                return COUNTER_MOST;
+        case MATCH_CLICKED:
+            return COUNTER_MOST;
 
-            case MATCH_MOST:
-                return COUNTER_MOST;
+        case MATCH_MOST:
+            return COUNTER_MOST;
 
         }
     }

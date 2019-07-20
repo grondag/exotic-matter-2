@@ -90,8 +90,7 @@ public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
      */
     public BlockState dynamicState(BlockState state, ExtendedBlockView world, BlockPos pos) {
         Block dynamicVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getDynamicBlock(this);
-        if (dynamicVersion == null
-                || state.getBlock() != this)
+        if (dynamicVersion == null || state.getBlock() != this)
             return state;
         // TODO: transfer heat block state?
         return dynamicVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE));

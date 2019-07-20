@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.xm2.model.state;
 
 import grondag.xm2.api.allocation.Reference;
@@ -20,26 +35,26 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
         super();
         this.primitive = primitive;
     }
-    
+
     private long flowBits;
     private int glowBits;
-    
+
     @Override
     protected int intSize() {
         return super.intSize() + 3;
     }
-    
+
     @Override
     protected void doRefreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
         super.doRefreshFromWorld(xmState, world, pos);
-        
+
         TerrainState.produceBitsFromWorldStatically(xmState.blockState, world, pos, (t, h) -> {
             this.flowBits = t;
             this.glowBits = h;
             return null;
         });
     }
-    
+
     @Override
     public long getTerrainStateKey() {
         return flowBits;
@@ -66,7 +81,7 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
         glowBits = flowState.getHotness();
         invalidateHashCode();
     }
-    
+
     @Override
     public TerrainModelState geometricState() {
         TerrainModelState result = new TerrainModelState(this.primitive);
@@ -95,7 +110,7 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
     @Override
     public void serializeNBT(CompoundTag tag) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -113,19 +128,19 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
     @Override
     public void setAxis(Axis axis) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setAxisInverted(boolean isInverted) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setAxisRotation(ClockwiseRotation rotation) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override

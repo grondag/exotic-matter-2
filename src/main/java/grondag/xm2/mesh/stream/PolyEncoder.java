@@ -151,39 +151,39 @@ public class PolyEncoder {
         int offset = baseOffset;
 
         switch (getFaceNormalFormat(format)) {
-            case FACE_NORMAL_FORMAT_COMPUTED:
-                getNormalXOffset = offset++;
-                getNormalX = GET_FLOAT;
-                getNormalYOffset = offset++;
-                getNormalY = GET_FLOAT;
-                getNormalZOffset = offset++;
-                getNormalZ = GET_FLOAT;
-                setNormalXYZ = SET_FLOAT3;
-                clearNormal = SET_FLOAT3;
-                break;
+        case FACE_NORMAL_FORMAT_COMPUTED:
+            getNormalXOffset = offset++;
+            getNormalX = GET_FLOAT;
+            getNormalYOffset = offset++;
+            getNormalY = GET_FLOAT;
+            getNormalZOffset = offset++;
+            getNormalZ = GET_FLOAT;
+            setNormalXYZ = SET_FLOAT3;
+            clearNormal = SET_FLOAT3;
+            break;
 
-            default:
-            case FACE_NORMAL_FORMAT_NOMINAL:
-                getNormalXOffset = -1;
-                getNormalX = GET_FLOAT_FAIL;
-                getNormalYOffset = -1;
-                getNormalY = GET_FLOAT_FAIL;
-                getNormalZOffset = -1;
-                getNormalZ = GET_FLOAT_FAIL;
-                setNormalXYZ = SET_FLOAT3_FAIL;
-                clearNormal = SET_FLOAT3_FAIL;
-                break;
+        default:
+        case FACE_NORMAL_FORMAT_NOMINAL:
+            getNormalXOffset = -1;
+            getNormalX = GET_FLOAT_FAIL;
+            getNormalYOffset = -1;
+            getNormalY = GET_FLOAT_FAIL;
+            getNormalZOffset = -1;
+            getNormalZ = GET_FLOAT_FAIL;
+            setNormalXYZ = SET_FLOAT3_FAIL;
+            clearNormal = SET_FLOAT3_FAIL;
+            break;
 
-            case FACE_NORMAL_FORMAT_QUANTIZED:
-                getNormalXOffset = offset++;
-                getNormalYOffset = getNormalXOffset;
-                getNormalZOffset = getNormalXOffset;
-                getNormalX = GET_NORMAL_X_QUANTIZED;
-                getNormalY = GET_NORMAL_Y_QUANTIZED;
-                getNormalZ = GET_NORMAL_Z_QUANTIZED;
-                setNormalXYZ = SET_NORMAL_XYZ_QUANTIZED;
-                clearNormal = SET_FLOAT3_FAIL;
-                break;
+        case FACE_NORMAL_FORMAT_QUANTIZED:
+            getNormalXOffset = offset++;
+            getNormalYOffset = getNormalXOffset;
+            getNormalZOffset = getNormalXOffset;
+            getNormalX = GET_NORMAL_X_QUANTIZED;
+            getNormalY = GET_NORMAL_Y_QUANTIZED;
+            getNormalZ = GET_NORMAL_Z_QUANTIZED;
+            setNormalXYZ = SET_NORMAL_XYZ_QUANTIZED;
+            clearNormal = SET_FLOAT3_FAIL;
+            break;
         }
 
         final int layerCount = getLayerCount(format);
@@ -277,54 +277,54 @@ public class PolyEncoder {
         }
 
         switch (getVertexColorFormat(format)) {
-            case VERTEX_COLOR_WHITE:
-                getColor0 = GET_INT_WHITE;
-                getColor1 = layerCount > 1 ? GET_INT_WHITE : GET_INT_FAIL;
-                getColor2 = layerCount == 3 ? GET_INT_WHITE : GET_INT_FAIL;
-                setColor0 = SET_INT_WHITE;
-                setColor1 = layerCount > 1 ? SET_INT_WHITE : SET_INT_FAIL;
-                setColor2 = layerCount == 3 ? SET_INT_WHITE : SET_INT_FAIL;
-                colorOffset0 = BAD_ADDRESS;
-                colorOffset1 = BAD_ADDRESS;
-                colorOffset2 = BAD_ADDRESS;
-                break;
+        case VERTEX_COLOR_WHITE:
+            getColor0 = GET_INT_WHITE;
+            getColor1 = layerCount > 1 ? GET_INT_WHITE : GET_INT_FAIL;
+            getColor2 = layerCount == 3 ? GET_INT_WHITE : GET_INT_FAIL;
+            setColor0 = SET_INT_WHITE;
+            setColor1 = layerCount > 1 ? SET_INT_WHITE : SET_INT_FAIL;
+            setColor2 = layerCount == 3 ? SET_INT_WHITE : SET_INT_FAIL;
+            colorOffset0 = BAD_ADDRESS;
+            colorOffset1 = BAD_ADDRESS;
+            colorOffset2 = BAD_ADDRESS;
+            break;
 
-            case VERTEX_COLOR_SAME:
-                getColor0 = GET_INT;
-                getColor1 = GET_INT;
-                getColor2 = GET_INT;
-                setColor0 = SET_INT;
-                setColor1 = SET_INT;
-                setColor2 = SET_INT;
-                colorOffset0 = offset++;
-                colorOffset1 = colorOffset0;
-                colorOffset2 = colorOffset0;
-                break;
+        case VERTEX_COLOR_SAME:
+            getColor0 = GET_INT;
+            getColor1 = GET_INT;
+            getColor2 = GET_INT;
+            setColor0 = SET_INT;
+            setColor1 = SET_INT;
+            setColor2 = SET_INT;
+            colorOffset0 = offset++;
+            colorOffset1 = colorOffset0;
+            colorOffset2 = colorOffset0;
+            break;
 
-            case VERTEX_COLOR_SAME_BY_LAYER:
-                getColor0 = GET_INT;
-                getColor1 = GET_INT;
-                getColor2 = GET_INT;
-                setColor0 = SET_INT;
-                setColor1 = SET_INT;
-                setColor2 = SET_INT;
-                colorOffset0 = offset++;
-                colorOffset1 = offset++;
-                colorOffset2 = offset++;
-                break;
+        case VERTEX_COLOR_SAME_BY_LAYER:
+            getColor0 = GET_INT;
+            getColor1 = GET_INT;
+            getColor2 = GET_INT;
+            setColor0 = SET_INT;
+            setColor1 = SET_INT;
+            setColor2 = SET_INT;
+            colorOffset0 = offset++;
+            colorOffset1 = offset++;
+            colorOffset2 = offset++;
+            break;
 
-            default:
-            case VERTEX_COLOR_PER_VERTEX_LAYER:
-                getColor0 = GET_INT_FAIL;
-                getColor1 = GET_INT_FAIL;
-                getColor2 = GET_INT_FAIL;
-                setColor0 = SET_INT_FAIL;
-                setColor1 = SET_INT_FAIL;
-                setColor2 = SET_INT_FAIL;
-                colorOffset0 = BAD_ADDRESS;
-                colorOffset1 = BAD_ADDRESS;
-                colorOffset2 = BAD_ADDRESS;
-                break;
+        default:
+        case VERTEX_COLOR_PER_VERTEX_LAYER:
+            getColor0 = GET_INT_FAIL;
+            getColor1 = GET_INT_FAIL;
+            getColor2 = GET_INT_FAIL;
+            setColor0 = SET_INT_FAIL;
+            setColor1 = SET_INT_FAIL;
+            setColor2 = SET_INT_FAIL;
+            colorOffset0 = BAD_ADDRESS;
+            colorOffset1 = BAD_ADDRESS;
+            colorOffset2 = BAD_ADDRESS;
+            break;
         }
 
         stride = offset - baseOffset;
@@ -350,8 +350,7 @@ public class PolyEncoder {
         final float x = getNormalX.get(stream, baseAddress + getNormalXOffset);
         if (Float.isNaN(x))
             return null;
-        return Vec3f.create(x, getNormalY.get(stream, baseAddress + getNormalYOffset),
-                getNormalZ.get(stream, baseAddress + getNormalZOffset));
+        return Vec3f.create(x, getNormalY.get(stream, baseAddress + getNormalYOffset), getNormalZ.get(stream, baseAddress + getNormalZOffset));
     }
 
     public final float getFaceNormalX(IIntStream stream, int baseAddress) {
@@ -395,8 +394,7 @@ public class PolyEncoder {
 
     public final float getMaxU(IIntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getU0.get(stream, baseAddress + maxUOffset0)
-                : layerIndex == 1 ? getU1.get(stream, baseAddress + maxUOffset1)
-                        : getU2.get(stream, baseAddress + maxUOffset2);
+                : layerIndex == 1 ? getU1.get(stream, baseAddress + maxUOffset1) : getU2.get(stream, baseAddress + maxUOffset2);
     }
 
     public final void setMaxU(IIntStream stream, int baseAddress, int layerIndex, float maxU) {
@@ -410,8 +408,7 @@ public class PolyEncoder {
 
     public final float getMinU(IIntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getU0.get(stream, baseAddress + minUOffset0)
-                : layerIndex == 1 ? getU1.get(stream, baseAddress + minUOffset1)
-                        : getU2.get(stream, baseAddress + minUOffset2);
+                : layerIndex == 1 ? getU1.get(stream, baseAddress + minUOffset1) : getU2.get(stream, baseAddress + minUOffset2);
     }
 
     public final void setMinU(IIntStream stream, int baseAddress, int layerIndex, float minU) {
@@ -425,8 +422,7 @@ public class PolyEncoder {
 
     public final float getMaxV(IIntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getV0.get(stream, baseAddress + maxVOffset0)
-                : layerIndex == 1 ? getV1.get(stream, baseAddress + maxVOffset1)
-                        : getV2.get(stream, baseAddress + maxVOffset2);
+                : layerIndex == 1 ? getV1.get(stream, baseAddress + maxVOffset1) : getV2.get(stream, baseAddress + maxVOffset2);
     }
 
     public final void setMaxV(IIntStream stream, int baseAddress, int layerIndex, float maxV) {
@@ -440,8 +436,7 @@ public class PolyEncoder {
 
     public final float getMinV(IIntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getV0.get(stream, baseAddress + minVOffset0)
-                : layerIndex == 1 ? getV1.get(stream, baseAddress + minVOffset1)
-                        : getV2.get(stream, baseAddress + minVOffset2);
+                : layerIndex == 1 ? getV1.get(stream, baseAddress + minVOffset1) : getV2.get(stream, baseAddress + minVOffset2);
     }
 
     public final void setMinV(IIntStream stream, int baseAddress, int layerIndex, float minV) {
@@ -455,15 +450,13 @@ public class PolyEncoder {
 
     public final String getTextureName(IIntStream stream, int baseAddress, int layerIndex) {
         final int handle = layerIndex == 0 ? getTexture0.get(stream, baseAddress + textureOffset01)
-                : layerIndex == 1 ? getTexture1.get(stream, baseAddress + textureOffset01)
-                        : getTexture2.get(stream, baseAddress + textureOffset2);
+                : layerIndex == 1 ? getTexture1.get(stream, baseAddress + textureOffset01) : getTexture2.get(stream, baseAddress + textureOffset2);
 
         return handle == 0 ? null : textureHandler.fromHandle(handle);
     }
 
     public final void setTextureName(IIntStream stream, int baseAddress, int layerIndex, String textureName) {
-        final int handle = textureName == null
-                || textureName.isEmpty() ? 0 : textureHandler.toHandle(textureName);
+        final int handle = textureName == null || textureName.isEmpty() ? 0 : textureHandler.toHandle(textureName);
         if (layerIndex == 0)
             setTexture0.set(stream, baseAddress + textureOffset01, handle);
         else if (layerIndex == 1)
@@ -474,8 +467,7 @@ public class PolyEncoder {
 
     public final int getVertexColor(IIntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getColor0.get(stream, baseAddress + colorOffset0)
-                : layerIndex == 1 ? getColor1.get(stream, baseAddress + colorOffset1)
-                        : getColor2.get(stream, baseAddress + colorOffset2);
+                : layerIndex == 1 ? getColor1.get(stream, baseAddress + colorOffset1) : getColor2.get(stream, baseAddress + colorOffset2);
     }
 
     public final void setVertexColor(IIntStream stream, int baseAddress, int layerIndex, int color) {

@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.simulator.resource;
 
 import javax.annotation.Nonnull;
@@ -5,34 +20,28 @@ import javax.annotation.Nonnull;
 import grondag.hard_science.simulator.resource.StorageType.StorageTypePower;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class PowerResourceWithQuantity extends AbstractResourceWithQuantity<StorageType.StorageTypePower>
-{
-    public PowerResourceWithQuantity(PowerResource resource, long quantity)
-    {
+public class PowerResourceWithQuantity extends AbstractResourceWithQuantity<StorageType.StorageTypePower> {
+    public PowerResourceWithQuantity(PowerResource resource, long quantity) {
         super(resource, quantity);
     }
-    
-    public PowerResourceWithQuantity()
-    {
+
+    public PowerResourceWithQuantity() {
         super();
     }
-    
-    public PowerResourceWithQuantity(NBTTagCompound tag)
-    {
+
+    public PowerResourceWithQuantity(NBTTagCompound tag) {
         super(PowerResource.JOULES, tag.getLong(NBT_RESOURCE_QUANTITY));
     }
-    
+
     @Override
-    public NBTTagCompound toNBT()
-    {
+    public NBTTagCompound toNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setLong(NBT_RESOURCE_QUANTITY, this.quantity);
         return tag;
     }
-    
+
     @Override
-    public StorageTypePower storageType()
-    {
+    public StorageTypePower storageType() {
         return StorageType.POWER;
     }
 }

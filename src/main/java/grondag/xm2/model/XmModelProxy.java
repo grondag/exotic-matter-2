@@ -56,8 +56,7 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand) {
         final XmBlockStateImpl xmState = XmBlockStateAccess.get(state);
-        return xmState == null ? Collections.emptyList()
-                : XmDispatcher.INSTANCE.get(xmState.defaultModelState).getBakedQuads(state, face, rand);
+        return xmState == null ? Collections.emptyList() : XmDispatcher.INSTANCE.get(xmState.defaultModelState).getBakedQuads(state, face, rand);
     }
 
     @Override

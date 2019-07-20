@@ -34,8 +34,7 @@ import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class CubePrimitive extends AbstractModelPrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-            .add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 
@@ -51,7 +50,7 @@ public class CubePrimitive extends AbstractModelPrimitive {
     public XmSurfaceListImpl surfaces(ModelState modelState) {
         return SURFACES;
     }
-    
+
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         if (cachedQuads.origin()) {
@@ -90,14 +89,14 @@ public class CubePrimitive extends AbstractModelPrimitive {
 
         return result;
     }
-    
+
     @Override
     public ModelState geometricState(ModelState fromState) {
         return defaultState();
     }
-    
+
     @Override
     public boolean doesShapeMatch(ModelState from, ModelState to) {
         return from.primitive() == to.primitive();
-    } 
+    }
 }

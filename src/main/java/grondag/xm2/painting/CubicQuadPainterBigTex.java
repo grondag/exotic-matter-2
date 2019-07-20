@@ -61,8 +61,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
             final boolean allowTexRotation = tex.rotation() != TextureRotation.ROTATE_NONE;
             final TextureScale scale = tex.scale();
 
-            Vec3i surfaceVec = getSurfaceVector(modelState.posX(), modelState.posY(), modelState.posZ(), nominalFace,
-                    scale);
+            Vec3i surfaceVec = getSurfaceVector(modelState.posX(), modelState.posY(), modelState.posZ(), nominalFace, scale);
 
             if (tex.versionCount() == 1) {
                 // no alternates, so do uv flip and offset and rotation based on depth & species
@@ -70,15 +69,12 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 
                 // abs is necessary so that hash input components combine together properly
                 // Small random numbers already have most bits set.
-                int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization()
-                        ? HashCommon.mix((modelState.species() << 8) | editor.getTextureSalt())
-                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.species() << 8)
-                                | (editor.getTextureSalt() << 12));
+                int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization() ? HashCommon.mix((modelState.species() << 8) | editor.getTextureSalt())
+                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.species() << 8) | (editor.getTextureSalt() << 12));
 
                 // rotation
                 editor.setRotation(textureIndex,
-                        allowTexRotation ? Useful.offsetEnumValue(tex.rotation().rotation, depthAndSpeciesHash & 3)
-                                : tex.rotation().rotation);
+                        allowTexRotation ? Useful.offsetEnumValue(tex.rotation().rotation, depthAndSpeciesHash & 3) : tex.rotation().rotation);
 
                 surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
 
@@ -91,10 +87,8 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                 final int newY = (surfaceVec.getY() + yOffset) & scale.sliceCountMask;
                 surfaceVec = new Vec3i(newX, newY, surfaceVec.getZ());
 
-                final boolean flipU = allowTexRotation
-                        && (depthAndSpeciesHash & 256) == 0;
-                final boolean flipV = allowTexRotation
-                        && (depthAndSpeciesHash & 512) == 0;
+                final boolean flipU = allowTexRotation && (depthAndSpeciesHash & 256) == 0;
+                final boolean flipV = allowTexRotation && (depthAndSpeciesHash & 512) == 0;
 
                 final float sliceIncrement = scale.sliceIncrement;
 
@@ -113,16 +107,14 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 
                 // abs is necessary so that hash input components combine together properly
                 // Small random numbers already have most bits set.
-                final int depthHash = editor.surface().ignoreDepthForRandomization()
-                        && editor.getTextureSalt() == 0 ? 0
-                                : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (editor.getTextureSalt() << 8));
+                final int depthHash = editor.surface().ignoreDepthForRandomization() && editor.getTextureSalt() == 0 ? 0
+                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (editor.getTextureSalt() << 8));
 
-                editor.setTextureName(textureIndex, tex.textureName(
-                        (textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.versionMask()));
+                editor.setTextureName(textureIndex, tex.textureName((textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.versionMask()));
 
                 editor.setRotation(textureIndex,
-                        allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState),
-                                (depthHash >> 16) & 3) : textureRotationForFace(nominalFace, tex, modelState));
+                        allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState), (depthHash >> 16) & 3)
+                                : textureRotationForFace(nominalFace, tex, modelState));
 
                 surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
 

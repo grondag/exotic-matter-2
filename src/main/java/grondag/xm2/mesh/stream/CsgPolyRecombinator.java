@@ -65,12 +65,9 @@ public class CsgPolyRecombinator {
         IPolygon polyA = input.polyA(polyAddress);
         final int vCount = polyA.vertexCount();
         final boolean isFlipped = input.isInverted();
-        boolean needsSplit = vCount > 4
-                || (vCount == 4
-                        && !polyA.isConvex());
+        boolean needsSplit = vCount > 4 || (vCount == 4 && !polyA.isConvex());
 
-        if (!(isFlipped
-                || needsSplit)) {
+        if (!(isFlipped || needsSplit)) {
             output.appendCopy(polyA);
             return;
         }
@@ -179,8 +176,7 @@ public class CsgPolyRecombinator {
             IPolygon reader = input.reader();
             do
                 handleOutput(input, reader.streamAddress(), output);
-            while (input.next()
-                    && reader.streamAddress() < limit);
+            while (input.next() && reader.streamAddress() < limit);
         }
     }
 
@@ -279,9 +275,7 @@ public class CsgPolyRecombinator {
                 final float bY = polyB.y(b);
                 final float bZ = polyB.z(b);
 
-                if (aX == bX
-                        && aY == bY
-                        && aZ == bZ) {
+                if (aX == bX && aY == bY && aZ == bZ) {
 
                     final int newPolyAddress = joinAtVertex(input, polyA, a, polyB, b);
                     if (newPolyAddress == IPolygon.NO_LINK_OR_TAG) {
@@ -367,8 +361,7 @@ public class CsgPolyRecombinator {
         int bAfterSharedIndex;
 
         // look for a second matching vertex on either side of known shared vertex
-        if (polyA.x(aAfterTargetIndex) == polyB.x(bBeforeTargetIndex)
-                && polyA.y(aAfterTargetIndex) == polyB.y(bBeforeTargetIndex)
+        if (polyA.x(aAfterTargetIndex) == polyB.x(bBeforeTargetIndex) && polyA.y(aAfterTargetIndex) == polyB.y(bBeforeTargetIndex)
                 && polyA.z(aAfterTargetIndex) == polyB.z(bBeforeTargetIndex)) {
             aFirstSharedIndex = aTargetIndex;
             aSecondSharedIndex = aAfterTargetIndex;
@@ -378,8 +371,7 @@ public class CsgPolyRecombinator {
             bBeforeSharedIndex = bFirstSharedIndex == 0 ? bMaxIndex : bFirstSharedIndex - 1;
             aAfterSharedIndex = aSecondSharedIndex == aMaxIndex ? 0 : aSecondSharedIndex + 1;
             bAfterSharedIndex = bAfterTargetIndex;
-        } else if (polyA.x(aBeforeTargetIndex) == polyB.x(bAfterTargetIndex)
-                && polyA.y(aBeforeTargetIndex) == polyB.y(bAfterTargetIndex)
+        } else if (polyA.x(aBeforeTargetIndex) == polyB.x(bAfterTargetIndex) && polyA.y(aBeforeTargetIndex) == polyB.y(bAfterTargetIndex)
                 && polyA.z(aBeforeTargetIndex) == polyB.z(bAfterTargetIndex)) {
             aFirstSharedIndex = aBeforeTargetIndex;
             aSecondSharedIndex = aTargetIndex;
@@ -403,9 +395,8 @@ public class CsgPolyRecombinator {
 
             if (a == aFirstSharedIndex) {
                 // if vertex is on the same line as prev and next vertex, leave it out.
-                if (!IVec3f.isPointOnLine(polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex),
-                        polyA.z(aFirstSharedIndex), polyA.x(aBeforeSharedIndex), polyA.y(aBeforeSharedIndex),
-                        polyA.z(aBeforeSharedIndex), polyB.x(bAfterSharedIndex), polyB.y(bAfterSharedIndex),
+                if (!IVec3f.isPointOnLine(polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex), polyA.z(aFirstSharedIndex), polyA.x(aBeforeSharedIndex),
+                        polyA.y(aBeforeSharedIndex), polyA.z(aBeforeSharedIndex), polyB.x(bAfterSharedIndex), polyB.y(bAfterSharedIndex),
                         polyB.z(bAfterSharedIndex))) {
                     joinedVertex.add(a + 1);
                 }
@@ -419,9 +410,8 @@ public class CsgPolyRecombinator {
                 }
             } else if (a == aSecondSharedIndex) {
                 // if vertex is on the same line as prev and next vertex, leave it out
-                if (!IVec3f.isPointOnLine(polyA.x(aSecondSharedIndex), polyA.y(aSecondSharedIndex),
-                        polyA.z(aSecondSharedIndex), polyA.x(aAfterSharedIndex), polyA.y(aAfterSharedIndex),
-                        polyA.z(aAfterSharedIndex), polyB.x(bBeforeSharedIndex), polyB.y(bBeforeSharedIndex),
+                if (!IVec3f.isPointOnLine(polyA.x(aSecondSharedIndex), polyA.y(aSecondSharedIndex), polyA.z(aSecondSharedIndex), polyA.x(aAfterSharedIndex),
+                        polyA.y(aAfterSharedIndex), polyA.z(aAfterSharedIndex), polyB.x(bBeforeSharedIndex), polyB.y(bBeforeSharedIndex),
                         polyB.z(bBeforeSharedIndex))) {
                     joinedVertex.add(a + 1);
                 }

@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.network.server_to_client;
 
 import grondag.exotic_matter.network.AbstractServerToPlayerPacket;
@@ -12,50 +27,45 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class PacketMachineStatusUpdateListener extends AbstractServerToPlayerPacket<PacketMachineStatusUpdateListener>
-{
+public class PacketMachineStatusUpdateListener extends AbstractServerToPlayerPacket<PacketMachineStatusUpdateListener> {
     private MachineTileEntity te;
-    
+
     public BlockPos pos;
     public MachineControlState controlState;
     public ClientBufferInfo materialBufferInfo;
     public MachineStatusState statusState;
     public ClientEnergyInfo powerSupplyInfo;
     public String machineName;
-    
-    public PacketMachineStatusUpdateListener() {}
-    
-    public PacketMachineStatusUpdateListener(MachineTileEntity te)
-    {
+
+    public PacketMachineStatusUpdateListener() {
+    }
+
+    public PacketMachineStatusUpdateListener(MachineTileEntity te) {
         this.te = te;
         this.pos = te.getPos();
         this.controlState = te.machine().getControlState();
         this.statusState = te.machine().getStatusState();
-        
-        if(this.controlState.hasPowerSupply())
-        {
+
+        if (this.controlState.hasPowerSupply()) {
             this.powerSupplyInfo = new ClientEnergyInfo(te.machine().energyManager());
         }
-        
+
         this.machineName = te.machine().machineName();
     }
 
     @Override
-    public void fromBytes(PacketBuffer pBuff)
-    {
+    public void fromBytes(PacketBuffer pBuff) {
         this.pos = pBuff.readBlockPos();
         this.controlState = new MachineControlState();
         this.controlState.fromBytes(pBuff);
         this.statusState = new MachineStatusState();
         this.statusState.fromBytes(pBuff);
-        
-        if(this.controlState.hasMaterialBuffer()) 
-        {
+
+        if (this.controlState.hasMaterialBuffer()) {
             this.materialBufferInfo = new ClientBufferInfo();
             this.materialBufferInfo.fromBytes(pBuff);
         }
-        if(this.controlState.hasPowerSupply()) 
-        {
+        if (this.controlState.hasPowerSupply()) {
             this.powerSupplyInfo = new ClientEnergyInfo();
             this.powerSupplyInfo.fromBytes(pBuff);
         }
@@ -63,32 +73,27 @@ public class PacketMachineStatusUpdateListener extends AbstractServerToPlayerPac
     }
 
     @Override
-    public void toBytes(PacketBuffer pBuff)
-    {
+    public void toBytes(PacketBuffer pBuff) {
         pBuff.writeBlockPos(pos);
         this.controlState.toBytes(pBuff);
         this.statusState.toBytes(pBuff);
 
-        if(this.controlState.hasMaterialBuffer()) 
-        {
+        if (this.controlState.hasMaterialBuffer()) {
             ClientBufferInfo.toBytes(this.te.machine().getBufferManager(), pBuff);
         }
 
-        if(this.controlState.hasPowerSupply())
-        {
+        if (this.controlState.hasPowerSupply()) {
             this.powerSupplyInfo.toBytes(pBuff);
         }
-        
+
         pBuff.writeString(this.machineName);
     }
 
     @Override
-    protected void handle(PacketMachineStatusUpdateListener message, MessageContext context)
-    {
+    protected void handle(PacketMachineStatusUpdateListener message, MessageContext context) {
         TileEntity te = Minecraft.getMinecraft().player.world.getTileEntity(message.pos);
-        if(te != null && te instanceof MachineTileEntity)
-        {
-            ((MachineTileEntity)te).handleMachineStatusUpdate(message);
+        if (te != null && te instanceof MachineTileEntity) {
+            ((MachineTileEntity) te).handleMachineStatusUpdate(message);
         }
     }
 

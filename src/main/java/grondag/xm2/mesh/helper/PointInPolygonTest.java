@@ -46,8 +46,7 @@ public class PointInPolygonTest {
      *         <0 for point right of the line
      */
     private static double isLeft(Vector2f lineStart, Vector2f lineEnd, Vector2f point) {
-        return (lineEnd.x - lineStart.x) * (point.y - lineStart.y)
-                - (point.x - lineStart.x) * (lineEnd.y - lineStart.y);
+        return (lineEnd.x - lineStart.x) * (point.y - lineStart.y) - (point.x - lineStart.x) * (lineEnd.y - lineStart.y);
     }
 
     /**
@@ -81,10 +80,8 @@ public class PointInPolygonTest {
 
         // loop through all edges of the polygon
         for (int i = 0; i < size; i++) { // edge from V[i] to V[i+1]
-            if (((vertices[i].y <= point.y)
-                    && (vertices[i + 1].y > point.y)) // an upward crossing
-                    || ((vertices[i].y > point.y)
-                            && (vertices[i + 1].y <= point.y))) // a downward crossing
+            if (((vertices[i].y <= point.y) && (vertices[i + 1].y > point.y)) // an upward crossing
+                    || ((vertices[i].y > point.y) && (vertices[i + 1].y <= point.y))) // a downward crossing
             {
                 // compute the actual edge-ray intersect x-coordinate
                 double vt = (point.y - vertices[i].y) / (vertices[i + 1].y - vertices[i].y);
@@ -200,8 +197,7 @@ public class PointInPolygonTest {
         final float x3 = d.x(v);
         final float y3 = d.y(v);
 
-        return isPointInPolygonTri(x, y, x0, y0, x1, y1, x2, y2)
-                || isPointInPolygonTri(x, y, x0, y0, x2, y2, x3, y3);
+        return isPointInPolygonTri(x, y, x0, y0, x1, y1, x2, y2) || isPointInPolygonTri(x, y, x0, y0, x2, y2, x3, y3);
     }
 
     public static boolean isPointInPolygonTri(IVec3f point, IMutablePolygon quad) {
@@ -217,8 +213,7 @@ public class PointInPolygonTest {
     }
 
     public static boolean isPointInPolygonTri(float x, float y, float x0, float y0, float x1, float y1, float x2, float y2) {
-        return (y1 - y0) * (x - x0) + (-x1 + x0) * (y - y0) >= 0
-                && (y2 - y1) * (x - x1) + (-x2 + x1) * (y - y1) >= 0
+        return (y1 - y0) * (x - x0) + (-x1 + x0) * (y - y0) >= 0 && (y2 - y1) * (x - x1) + (-x2 + x1) * (y - y1) >= 0
                 && (y0 - y2) * (x - x2) + (-x0 + x2) * (y - y2) >= 0;
     }
 

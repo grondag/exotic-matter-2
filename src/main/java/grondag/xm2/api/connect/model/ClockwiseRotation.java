@@ -25,8 +25,7 @@ import net.minecraft.util.math.Direction;
 
 @API(status = STABLE)
 public enum ClockwiseRotation implements StringIdentifiable {
-    ROTATE_NONE(0, Direction.NORTH), ROTATE_90(90, Direction.EAST), ROTATE_180(180, Direction.SOUTH),
-    ROTATE_270(270, Direction.WEST);
+    ROTATE_NONE(0, Direction.NORTH), ROTATE_90(90, Direction.EAST), ROTATE_180(180, Direction.SOUTH), ROTATE_270(270, Direction.WEST);
 
     public final String name;
 
@@ -72,15 +71,15 @@ public enum ClockwiseRotation implements StringIdentifiable {
 
     public ClockwiseRotation clockwise() {
         switch (this) {
-            case ROTATE_180:
-                return ROTATE_270;
-            case ROTATE_270:
-                return ROTATE_NONE;
-            case ROTATE_90:
-                return ROTATE_180;
-            case ROTATE_NONE:
-            default:
-                return ROTATE_90;
+        case ROTATE_180:
+            return ROTATE_270;
+        case ROTATE_270:
+            return ROTATE_NONE;
+        case ROTATE_90:
+            return ROTATE_180;
+        case ROTATE_NONE:
+        default:
+            return ROTATE_90;
         }
     }
 

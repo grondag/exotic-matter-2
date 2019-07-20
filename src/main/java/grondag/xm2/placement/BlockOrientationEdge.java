@@ -25,11 +25,9 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.client.resource.language.I18n;
 
 public enum BlockOrientationEdge implements ILocalized {
-    DYNAMIC(null), MATCH_CLOSEST(null), UP_EAST(BlockEdge.UP_EAST), UP_WEST(BlockEdge.UP_WEST),
-    UP_NORTH(BlockEdge.UP_NORTH), UP_SOUTH(BlockEdge.UP_SOUTH), NORTH_EAST(BlockEdge.NORTH_EAST),
-    NORTH_WEST(BlockEdge.NORTH_WEST), SOUTH_EAST(BlockEdge.SOUTH_EAST), SOUTH_WEST(BlockEdge.SOUTH_WEST),
-    DOWN_EAST(BlockEdge.DOWN_EAST), DOWN_WEST(BlockEdge.DOWN_WEST), DOWN_NORTH(BlockEdge.DOWN_NORTH),
-    DOWN_SOUTH(BlockEdge.DOWN_SOUTH);
+    DYNAMIC(null), MATCH_CLOSEST(null), UP_EAST(BlockEdge.UP_EAST), UP_WEST(BlockEdge.UP_WEST), UP_NORTH(BlockEdge.UP_NORTH), UP_SOUTH(BlockEdge.UP_SOUTH),
+    NORTH_EAST(BlockEdge.NORTH_EAST), NORTH_WEST(BlockEdge.NORTH_WEST), SOUTH_EAST(BlockEdge.SOUTH_EAST), SOUTH_WEST(BlockEdge.SOUTH_WEST),
+    DOWN_EAST(BlockEdge.DOWN_EAST), DOWN_WEST(BlockEdge.DOWN_WEST), DOWN_NORTH(BlockEdge.DOWN_NORTH), DOWN_SOUTH(BlockEdge.DOWN_SOUTH);
 
     public final BlockEdge edge;
 
@@ -61,7 +59,6 @@ public enum BlockOrientationEdge implements ILocalized {
     }
 
     public boolean isFixed() {
-        return !(this == DYNAMIC
-                || this == MATCH_CLOSEST);
+        return !(this == DYNAMIC || this == MATCH_CLOSEST);
     }
 }

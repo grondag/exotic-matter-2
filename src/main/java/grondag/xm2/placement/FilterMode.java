@@ -76,32 +76,30 @@ public enum FilterMode implements ILocalized {
         Block block = blockState.getBlock();
 
         switch (this) {
-            case FILL_REPLACEABLE:
-                return block.getMaterial(blockState).isReplaceable()
-                        && !VirtualBlock.isVirtualBlock(block);
+        case FILL_REPLACEABLE:
+            return block.getMaterial(blockState).isReplaceable() && !VirtualBlock.isVirtualBlock(block);
 
-            case REPLACE_ALL:
-                if (isVirtual) {
-                    return block.getMaterial(blockState).isReplaceable()
-                            || VirtualBlock.isVirtualBlock(block);
-                } else {
-                    return !VirtualBlock.isVirtualBlock(block);
-                }
+        case REPLACE_ALL:
+            if (isVirtual) {
+                return block.getMaterial(blockState).isReplaceable() || VirtualBlock.isVirtualBlock(block);
+            } else {
+                return !VirtualBlock.isVirtualBlock(block);
+            }
 
-            case REPLACE_ALL_EXCEPT:
-                // TODO
-                return true;
+        case REPLACE_ALL_EXCEPT:
+            // TODO
+            return true;
 
-            case REPLACE_ONLY:
-                // TODO
-                return false;
+        case REPLACE_ONLY:
+            // TODO
+            return false;
 
-            case REPLACE_SOLID:
-                // test for non-virtual relies on fact that all virtual blocks are replaceable
-                return isVirtual ? VirtualBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
+        case REPLACE_SOLID:
+            // test for non-virtual relies on fact that all virtual blocks are replaceable
+            return isVirtual ? VirtualBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
 
-            default:
-                return false;
+        default:
+            return false;
 
         }
     }

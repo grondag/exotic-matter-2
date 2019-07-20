@@ -36,8 +36,7 @@ public class CraftingItem extends Item {
         this.modelState = modelState;
         final int colorIndex = this.hashCode() % BlockColorMapProvider.INSTANCE.getColorMapCount();
         XmPaint paint = XmPaint.finder().texture(0, XmTextures.WHITE)
-                .textureColor(0, BlockColorMapProvider.INSTANCE.getColorMap(colorIndex).getColor(EnumColorMap.BASE))
-                .find();
+                .textureColor(0, BlockColorMapProvider.INSTANCE.getColorMap(colorIndex).getColor(EnumColorMap.BASE)).find();
         this.modelState.paintAll(paint);
     }
 }

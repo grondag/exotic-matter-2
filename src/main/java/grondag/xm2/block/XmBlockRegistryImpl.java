@@ -31,17 +31,16 @@ public class XmBlockRegistryImpl {
     private XmBlockRegistryImpl() {
     }
 
-    public static void register(Block block, Function<BlockState, ImmutableModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest) {
+    public static void register(Block block, Function<BlockState, ImmutableModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc,
+            BlockTest blockJoinTest) {
 
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
                 // TODO: localize
-                Xm.LOG.warn(String.format("[%s] BlockState %s already associated with an XmBlockState. Skipping.",
-                        Xm.MODID, blockState.toString()));
+                Xm.LOG.warn(String.format("[%s] BlockState %s already associated with an XmBlockState. Skipping.", Xm.MODID, blockState.toString()));
                 return;
             }
-            XmBlockStateImpl xmState = new XmBlockStateImpl(defaultStateFunc.apply(blockState), worldStateFunc,
-                    blockJoinTest, blockState);
+            XmBlockStateImpl xmState = new XmBlockStateImpl(defaultStateFunc.apply(blockState), worldStateFunc, blockJoinTest, blockState);
             ((XmBlockStateAccess) blockState).xm2_blockState(xmState);
         }
     }
@@ -52,7 +51,8 @@ public class XmBlockRegistryImpl {
         public final ImmutableModelState defaultModelState;
         public final BlockState blockState;
 
-        private XmBlockStateImpl(ImmutableModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest, BlockState blockState) {
+        private XmBlockStateImpl(ImmutableModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest,
+                BlockState blockState) {
 
             this.defaultModelState = defaultModelState;
             this.worldStateFunc = worldStateFunc;

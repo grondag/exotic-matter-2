@@ -95,9 +95,7 @@ public class QuadRotation implements QuadTransform {
 
         // UGLY: Find a better way than this hack.
         // For Indigo, need to reverse and re-apply diffuse shading
-        final boolean reshade = relight
-                && isIndigo
-                && ((RenderMaterialImpl.Value) quad.material()).disableDiffuse(0) == false;
+        final boolean reshade = relight && isIndigo && ((RenderMaterialImpl.Value) quad.material()).disableDiffuse(0) == false;
         if (reshade) {
             ColorHelper.applyDiffuseShading((ShadeableQuad) quad, true);
         }
@@ -119,8 +117,7 @@ public class QuadRotation implements QuadTransform {
     }
 
     private void applyRotation(int vertexIndex, Vector3f vec, MutableQuadView quad) {
-        matrix.transformPosition(quad.x(vertexIndex) - 0.5f, quad.y(vertexIndex) - 0.5f, quad.z(vertexIndex) - 0.5f,
-                vec);
+        matrix.transformPosition(quad.x(vertexIndex) - 0.5f, quad.y(vertexIndex) - 0.5f, quad.z(vertexIndex) - 0.5f, vec);
         quad.pos(vertexIndex, vec.x() + 0.5f, vec.y() + 0.5f, vec.z() + 0.5f);
     }
 

@@ -64,8 +64,7 @@ public class XmStackHelper {
     }
 
     public static OwnedModelState getStackModelState(ItemStack stack) {
-        OwnedModelState stackState = stack.hasTag() ? ModelStates.fromTag(stack.getTag())
-                : null;
+        OwnedModelState stackState = stack.hasTag() ? ModelStates.fromTag(stack.getTag()) : null;
 
         // WAILA or other mods might create a stack with no NBT
         if (stackState != null)

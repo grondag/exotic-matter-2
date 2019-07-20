@@ -38,17 +38,14 @@ import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class StackedPlatesPrimitive extends AbstractModelPrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-            .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-            .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
     public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);
     public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
     public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
 
-    private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH,
-            Direction.SOUTH };
+    private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH };
 
     public StackedPlatesPrimitive(String idString) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION);
@@ -115,7 +112,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
     public BlockOrientationType orientationType(ModelState modelState) {
         return BlockOrientationType.FACE;
     }
-    
+
     @Override
     public ModelState geometricState(ModelState fromState) {
         MutableModelState result = this.newState();
@@ -124,12 +121,10 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive {
         result.primitiveBits(fromState.primitiveBits());
         return result;
     }
-    
+
     @Override
     public boolean doesShapeMatch(ModelState from, ModelState to) {
-        return from.primitive() == to.primitive() 
-               && from.getAxis() == to.getAxis()
-               && from.isAxisInverted() == to.isAxisInverted()
-               && from.primitiveBits() == to.primitiveBits();
+        return from.primitive() == to.primitive() && from.getAxis() == to.getAxis() && from.isAxisInverted() == to.isAxisInverted()
+                && from.primitiveBits() == to.primitiveBits();
     }
 }

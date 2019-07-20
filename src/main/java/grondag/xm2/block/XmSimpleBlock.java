@@ -71,10 +71,8 @@ public class XmSimpleBlock extends Block {
 
     public XmSimpleBlock(Settings blockSettings, MutableModelState defaultModelState) {
         super(prepareInit(blockSettings, defaultModelState));
-        defaultModelState.primitive().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(),
-                defaultModelState);
-        XmBlockRegistryImpl.register(this, defaultModelStateFunc(defaultModelState), XmSimpleBlock::computeModelState,
-                XmBorderMatch.INSTANCE);
+        defaultModelState.primitive().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(), defaultModelState);
+        XmBlockRegistryImpl.register(this, defaultModelStateFunc(defaultModelState), XmSimpleBlock::computeModelState, XmBorderMatch.INSTANCE);
     }
 
     @Override

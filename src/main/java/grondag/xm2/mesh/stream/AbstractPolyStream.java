@@ -53,8 +53,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
     }
 
     protected final boolean isValidAddress(int address) {
-        return address >= originAddress
-                && address < writeAddress;
+        return address >= originAddress && address < writeAddress;
     }
 
     protected final void validateAddress(int address) {
@@ -87,8 +86,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
     protected boolean moveReaderToNext(StreamBackedPolygon targetReader) {
         int currentAddress = targetReader.baseAddress;
-        if (currentAddress >= writeAddress
-                || currentAddress == EncoderFunctions.BAD_ADDRESS)
+        if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS)
             return false;
 
         int nextAddress = currentAddress + targetReader.stride();
@@ -97,8 +95,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
         targetReader.moveTo(nextAddress);
 
-        while (targetReader.isDeleted()
-                && currentAddress < writeAddress) {
+        while (targetReader.isDeleted() && currentAddress < writeAddress) {
             nextAddress = currentAddress + targetReader.stride();
             targetReader.moveTo(nextAddress);
             currentAddress = nextAddress;
@@ -114,8 +111,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
     @Override
     public boolean hasValue() {
-        return isValidAddress(reader.baseAddress)
-                && !reader.isDeleted();
+        return isValidAddress(reader.baseAddress) && !reader.isDeleted();
     }
 
     @Override
@@ -154,8 +150,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
     @Override
     public final void release() {
-        if (didRelease.compareAndSet(false, true)
-                && readerCount.get() == 0) {
+        if (didRelease.compareAndSet(false, true) && readerCount.get() == 0) {
             doRelease();
             returnToPool();
         }
@@ -284,8 +279,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
     @Override
     public boolean hasLink() {
-        return isValidAddress(reader.baseAddress)
-                && reader.getLink() != IPolygon.NO_LINK_OR_TAG;
+        return isValidAddress(reader.baseAddress) && reader.getLink() != IPolygon.NO_LINK_OR_TAG;
     }
 
     @Override
@@ -295,31 +289,26 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
     protected boolean moveReaderToNextLink(StreamBackedPolygon targetReader) {
         int currentAddress = targetReader.baseAddress;
-        if (currentAddress >= writeAddress
-                || currentAddress == EncoderFunctions.BAD_ADDRESS)
+        if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS)
             return false;
 
         int nextAddress = targetReader.getLink();
-        if (nextAddress == IPolygon.NO_LINK_OR_TAG
-                || nextAddress >= writeAddress)
+        if (nextAddress == IPolygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
             return false;
 
         targetReader.moveTo(nextAddress);
         currentAddress = nextAddress;
 
-        while (currentAddress < writeAddress
-                && targetReader.isDeleted()) {
+        while (currentAddress < writeAddress && targetReader.isDeleted()) {
             nextAddress = targetReader.getLink();
-            if (nextAddress == IPolygon.NO_LINK_OR_TAG
-                    || nextAddress >= writeAddress)
+            if (nextAddress == IPolygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
                 return false;
 
             targetReader.moveTo(nextAddress);
             currentAddress = nextAddress;
         }
 
-        return currentAddress < writeAddress
-                && !targetReader.isDeleted();
+        return currentAddress < writeAddress && !targetReader.isDeleted();
     }
 
     @Override
@@ -369,8 +358,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
         @Override
         public final void release() {
             super.release();
-            if (polyStream.readerCount.decrementAndGet() == 0
-                    && polyStream.didRelease.get() == true)
+            if (polyStream.readerCount.decrementAndGet() == 0 && polyStream.didRelease.get() == true)
                 polyStream.doRelease();
             stream = null;
             polyStream = null;

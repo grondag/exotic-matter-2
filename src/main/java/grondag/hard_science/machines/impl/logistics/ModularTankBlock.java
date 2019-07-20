@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.machines.impl.logistics;
 
 import java.util.List;
@@ -35,14 +50,12 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-public class ModularTankBlock extends MachineBlock
-{
+public class ModularTankBlock extends MachineBlock {
     private final boolean dedicated;
     private final IResourcePredicate<StorageTypeFluid> predicate;
     private final int kLcapacity;
-    
-    public ModularTankBlock(String name, int kL, boolean dedicated, IResourcePredicate<StorageTypeFluid> predicate)
-    {
+
+    public ModularTankBlock(String name, int kL, boolean dedicated, IResourcePredicate<StorageTypeFluid> predicate) {
         super(name, ModGui.MODULAR_TANK.ordinal(), MachineBlock.creatBasicMachineModelState(null, ArtBoxTextures.BORDER_CHANNEL_DOTS));
         this.kLcapacity = kL;
         this.dedicated = dedicated;
@@ -50,79 +63,69 @@ public class ModularTankBlock extends MachineBlock
     }
 
     @Override
-    public AbstractMachine createNewMachine()
-    {
-        TankMachine result = dedicated
-                ? new TankMachine.Dedicated()
-                : new TankMachine.Flexible();
+    public AbstractMachine createNewMachine() {
+        TankMachine result = dedicated ? new TankMachine.Dedicated() : new TankMachine.Flexible();
         result.setCapacityInBlocks(this.kLcapacity);
         result.setContentPredicate(this.predicate);
         return result;
     }
-    
+
     @Override
-    public @Nullable TileEntity createNewTileEntity(@Nonnull World worldIn, int meta)
-    {
+    public @Nullable TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new MachineTileEntityTickable();
     }
-    
+
     @Override
-    public TextureAtlasSprite getSymbolSprite()
-    {
+    public TextureAtlasSprite getSymbolSprite() {
         return ArtBoxTextures.DECAL_DRIP.getSampleSprite();
     }
-    
+
     @Override
-    public boolean onBlockActivated(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ) 
-    {
+    public boolean onBlockActivated(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer player,
+            @Nonnull EnumHand hand, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ) {
         // allow fluid handling logic to happen
-        if(!world.isRemote && player.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null))
-        {
+        if (!world.isRemote && player.getHeldItem(hand).hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             TileEntity te = world.getTileEntity(pos);
-            if(te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side))
-            {
+            if (te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) {
                 IFluidHandler fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side);
-                if(FluidUtil.interactWithFluidHandler(player, hand, fluidHandler))
+                if (FluidUtil.interactWithFluidHandler(player, hand, fluidHandler))
                     return true;
             }
         }
         return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
     }
-    
+
     @Override
-    public ItemStack getStackFromBlock(IBlockState state, IBlockAccess world, BlockPos pos)
-    {
+    public ItemStack getStackFromBlock(IBlockState state, IBlockAccess world, BlockPos pos) {
         ItemStack result = super.getStackFromBlock(state, world, pos);
-        
+
         // add lore for stacks generated on server
-        if(result != null)
-        {
+        if (result != null) {
             TileEntity blockTE = world.getTileEntity(pos);
-            if (blockTE != null && blockTE instanceof MachineTileEntity) 
-            {
-                MachineTileEntity mste = (MachineTileEntity)blockTE;
-                
+            if (blockTE != null && blockTE instanceof MachineTileEntity) {
+                MachineTileEntity mste = (MachineTileEntity) blockTE;
+
                 // client won't have the storage instance needed to do this
-                if(mste.getWorld().isRemote) return result;
-                
+                if (mste.getWorld().isRemote)
+                    return result;
+
                 FluidContainer store = mste.machine().fluidStorage();
-                
-                if(store.usedCapacity() == 0) return result;
+
+                if (store.usedCapacity() == 0)
+                    return result;
 
                 // save client-side display info
                 NBTTagCompound displayTag = result.getOrCreateSubCompound("display");
-                    
-                NBTTagList loreTag = new NBTTagList(); 
 
-                List<AbstractResourceWithQuantity<StorageTypeFluid>> items 
-                        = store.find(store.storageType().MATCH_ANY);
-                       
-                if(!items.isEmpty())
-                {
+                NBTTagList loreTag = new NBTTagList();
+
+                List<AbstractResourceWithQuantity<StorageTypeFluid>> items = store.find(store.storageType().MATCH_ANY);
+
+                if (!items.isEmpty()) {
                     loreTag.appendTag(new NBTTagString(items.get(0).toString()));
                 }
                 displayTag.setTag("Lore", loreTag);
-                    
+
                 result.setItemDamage(Math.max(1, (int) (MachineItemBlock.MAX_DAMAGE * store.availableCapacity() / store.getCapacity())));
             }
         }
@@ -130,8 +133,7 @@ public class ModularTankBlock extends MachineBlock
     }
 
     @Override
-    public PortLayout nominalPortLayout()
-    {
+    public PortLayout nominalPortLayout() {
         return ModPortLayouts.utb_low_carrier_all;
     }
 }

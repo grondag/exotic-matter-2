@@ -32,6 +32,6 @@ public class XmDispatcher extends KeyInterningCache<ModelState> {
 
     @Override
     public ImmutableModelState get(ModelState key) {
-        return (ImmutableModelState)super.get(key);
+        return (ImmutableModelState) super.get(key);
     }
 }

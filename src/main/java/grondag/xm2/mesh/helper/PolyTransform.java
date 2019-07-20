@@ -136,8 +136,7 @@ public class PolyTransform {
     public static PolyTransform get(ModelState modelState) {
 
         // TODO: put back
-        return new PolyTransform(
-                computeMatrix(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation()));
+        return new PolyTransform(computeMatrix(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation()));
         // return LOOKUP[computeTransformKey(modelState)];
     }
 
@@ -180,52 +179,45 @@ public class PolyTransform {
      * state. Useful for some serialization scenarios.
      */
     public static int computeTransformKey(ModelState modelState) {
-        return modelState.hasAxis()
-                ? computeKey(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation())
+        return modelState.hasAxis() ? computeKey(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation())
                 : computeKey(null, false, modelState.getAxisRotation());
     }
 
     private static Matrix4f getMatrixForAxis(Direction.Axis axis, boolean isAxisInverted) {
         switch (axis) {
-            case X:
-                return isAxisInverted
-                        ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0)
-                                .rotate((float) Math.toRadians(90), 0, 0, 1)
-                        : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0)
-                                .rotate((float) Math.toRadians(270), 0, 0, 1);
+        case X:
+            return isAxisInverted ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 0, 1)
+                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 0, 1);
 
-            case Y:
-                return isAxisInverted ? new Matrix4f().identity().rotate((float) Math.toRadians(180), 1, 0, 0)
-                        : new Matrix4f().identity();
+        case Y:
+            return isAxisInverted ? new Matrix4f().identity().rotate((float) Math.toRadians(180), 1, 0, 0) : new Matrix4f().identity();
 
-            case Z:
-                return isAxisInverted
-                        ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0)
-                                .rotate((float) Math.toRadians(180), 0, 1, 0)
-                        : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0);
+        case Z:
+            return isAxisInverted ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(180), 0, 1, 0)
+                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0);
 
-            default:
-                return new Matrix4f().identity();
+        default:
+            return new Matrix4f().identity();
 
         }
     }
 
     private static Matrix4f getMatrixForRotation(ClockwiseRotation rotation) {
         switch (rotation) {
-            default:
-            case ROTATE_NONE:
-                return new Matrix4f().identity();
+        default:
+        case ROTATE_NONE:
+            return new Matrix4f().identity();
 
-            case ROTATE_90:
-                // inverted because JOML is counter-clockwise with RH coordinates
-                return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
+        case ROTATE_90:
+            // inverted because JOML is counter-clockwise with RH coordinates
+            return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
 
-            case ROTATE_180:
-                return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
+        case ROTATE_180:
+            return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
 
-            case ROTATE_270:
-                // inverted because JOML is counter-clockwise with RH coordinates
-                return new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0);
+        case ROTATE_270:
+            // inverted because JOML is counter-clockwise with RH coordinates
+            return new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0);
         }
     }
 

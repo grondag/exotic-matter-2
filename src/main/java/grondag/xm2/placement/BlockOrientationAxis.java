@@ -58,7 +58,6 @@ public enum BlockOrientationAxis implements ILocalized {
     }
 
     public boolean isFixed() {
-        return !(this == DYNAMIC
-                || this == MATCH_CLOSEST);
+        return !(this == DYNAMIC || this == MATCH_CLOSEST);
     }
 }

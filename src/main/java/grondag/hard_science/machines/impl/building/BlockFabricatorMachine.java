@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.machines.impl.building;
 
 import javax.annotation.Nullable;
@@ -17,19 +32,17 @@ import grondag.hard_science.simulator.storage.ContainerUsage;
 import grondag.hard_science.simulator.storage.PowerContainer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class BlockFabricatorMachine extends AbstractSimpleMachine
-{
+public class BlockFabricatorMachine extends AbstractSimpleMachine {
     ////////////////////////////////////////////////////////////////////////
-    //  STATIC MEMBERS
+    // STATIC MEMBERS
     ////////////////////////////////////////////////////////////////////////
-    
-    //FIXME: make configurable
+
+    // FIXME: make configurable
 //    private static final int WATTS_IDLE = 20;
 //    private static final int WATTS_FABRICATION = 1200;
 //    private static final int JOULES_PER_TICK_IDLE = Math.round(MachinePower.wattsToJoulesPerTick(WATTS_IDLE));
 //    private static final int JOULES_PER_TICK_FABRICATING = Math.round(MachinePower.wattsToJoulesPerTick(WATTS_FABRICATION));
 //    private static final long TICKS_PER_FULL_BLOCK = 40;
-
 
     // TODO: REMOVE
     // so TESR knows which buffer to render for each gauge
@@ -42,21 +55,21 @@ public class BlockFabricatorMachine extends AbstractSimpleMachine
     public static final int BUFFER_INDEX_MAGENTA = BUFFER_INDEX_CYAN + 1;
     public static final int BUFFER_INDEX_YELLOW = BUFFER_INDEX_MAGENTA + 1;
     public static final int BUFFER_INDEX_TIO2 = BUFFER_INDEX_YELLOW + 1;
-    
+
     ////////////////////////////////////////////////////////////////////////
-    //  INSTANCE MEMBERS
+    // INSTANCE MEMBERS
     ////////////////////////////////////////////////////////////////////////
-    
+
     // job search - not persisted
 //    private Future<AbstractTask> taskSearch = null;
-    
+
     // current job id - persisted
     int taskID = IIdentified.UNASSIGNED_ID;
-    
+
     // current task - lazy lookup, don't use directly
     @Nullable
     BlockFabricationTask task = null;
-    
+
     // Buffer setup - all persisted
 //    private final BufferDelegate bufferFiller;
 //    private final BufferDelegate bufferResinA;
@@ -66,9 +79,8 @@ public class BlockFabricatorMachine extends AbstractSimpleMachine
 //    private final BufferDelegate bufferMagenta;
 //    private final BufferDelegate bufferYellow;
 //    private final BufferDelegate bufferTiO2;   
-    
-    public BlockFabricatorMachine()
-    {
+
+    public BlockFabricatorMachine() {
         super();
         // note that order has to match array declaration
 //        BufferManager bufferInfo = this.getBufferManager();
@@ -82,62 +94,43 @@ public class BlockFabricatorMachine extends AbstractSimpleMachine
 //        this.bufferTiO2 = bufferInfo.getBuffer(BUFFER_INDEX_TIO2);
         this.statusState.setHasBacklog(true);
     }
-    
+
     @Override
-    protected @Nullable BufferManager createBufferManager()
-    {
-        return new BufferManager(
-                this, 
-                64L, 
-                StorageType.ITEM.MATCH_ANY, 
-                64L, 
-                VolumeUnits.KILOLITER.nL * 64L, 
-                StorageType.FLUID.MATCH_ANY, 
-                64L);
+    protected @Nullable BufferManager createBufferManager() {
+        return new BufferManager(this, 64L, StorageType.ITEM.MATCH_ANY, 64L, VolumeUnits.KILOLITER.nL * 64L, StorageType.FLUID.MATCH_ANY, 64L);
     }
 
     @Override
-    protected DeviceEnergyManager createEnergyManager()
-    {
+    protected DeviceEnergyManager createEnergyManager() {
         PowerContainer output = new PowerContainer(this, ContainerUsage.PUBLIC_BUFFER_OUT);
         output.configure(VolumeUnits.LITER.nL, BatteryChemistry.SILICON);
-        
+
         PowerContainer input = new PowerContainer(this, ContainerUsage.PRIVATE_BUFFER_IN);
         input.configure(VolumeUnits.MILLILITER.nL * 10L, BatteryChemistry.CAPACITOR);
-        
-        return new DeviceEnergyManager(
-                this,
-                PolyethyleneFuelCell.basic_1kw(this), 
-                input,
-                output);
+
+        return new DeviceEnergyManager(this, PolyethyleneFuelCell.basic_1kw(this), input, output);
     }
-    
+
     @Nullable
-    public BlockFabricationTask task()
-    {
-        if(this.task == null && this.taskID != IIdentified.UNASSIGNED_ID)
-        {
+    public BlockFabricationTask task() {
+        if (this.task == null && this.taskID != IIdentified.UNASSIGNED_ID) {
             this.task = (BlockFabricationTask) ITask.taskFromId(this.taskID);
         }
         return this.task;
     }
-    
+
     @Override
-    public boolean togglePower(EntityPlayerMP player)
-    {
+    public boolean togglePower(EntityPlayerMP player) {
         boolean result = super.togglePower(player);
-        if(result && !this.isOn())
-        {
+        if (result && !this.isOn()) {
             this.abandonTaskInProgress();
         }
         return result;
     }
-    
-    private void abandonTaskInProgress()
-    {
+
+    private void abandonTaskInProgress() {
         BlockFabricationTask myTask = this.task();
-        if(myTask != null)
-        {
+        if (myTask != null) {
             myTask.abandon();
             this.task = null;
             this.taskID = IIdentified.UNASSIGNED_ID;
@@ -148,7 +141,7 @@ public class BlockFabricatorMachine extends AbstractSimpleMachine
         this.getControlState().setMachineState(MachineState.THINKING);
         this.setDirty();
     }
-    
+
 //    /**
 //     * Call to confirm still have an active task.
 //     * Returns false if no task or task abandoned.
@@ -162,7 +155,7 @@ public class BlockFabricatorMachine extends AbstractSimpleMachine
 //        }
 //        return false;
 //    }
-    
+
 //    private void progressFabrication()
 //    {
 //        if(this.isTaskAbandoned()) return;
@@ -181,7 +174,7 @@ public class BlockFabricatorMachine extends AbstractSimpleMachine
 //            this.blamePowerSupply();
 //        }
 //    }
-    
+
 //    /**
 //     * Unlike inputs, outputs need to go into domain-managed storage
 //     * so that drones can locate them for pickup. If no domain storage
@@ -227,7 +220,7 @@ public class BlockFabricatorMachine extends AbstractSimpleMachine
 //          this.setDirty();
 //          return;
 //    }
-   
+
 //    /** returns substance that should be used to create the block in world if it can be successfully fabricated.  
 //     * Must be called prior to calling fabricate */
 //    private BlockSubstance prepareFabrication(ItemStack stack)
@@ -270,8 +263,7 @@ public class BlockFabricatorMachine extends AbstractSimpleMachine
 //    }
 
     @Override
-    public void onDisconnect()
-    {
+    public void onDisconnect() {
         this.abandonTaskInProgress();
         super.onDisconnect();
     }

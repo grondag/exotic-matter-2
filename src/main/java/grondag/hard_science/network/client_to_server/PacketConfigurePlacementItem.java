@@ -1,5 +1,19 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.network.client_to_server;
-
 
 import javax.annotation.Nullable;
 
@@ -24,11 +38,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * This is a packet that can be used to update the NBT on the held item of a player.
+ * This is a packet that can be used to update the NBT on the held item of a
+ * player.
  */
-public class PacketConfigurePlacementItem extends AbstractPlayerToServerPacket<PacketConfigurePlacementItem>
-{
-    
+public class PacketConfigurePlacementItem extends AbstractPlayerToServerPacket<PacketConfigurePlacementItem> {
+
     private int meta;
     private @Nullable ISuperModelState modelState;
     private @Nullable BlockSubstance blockSubstance;
@@ -45,25 +59,22 @@ public class PacketConfigurePlacementItem extends AbstractPlayerToServerPacket<P
     private boolean isDeleteModeEnabled;
     private boolean isFixedRegionEnabled;
     private @Nullable BlockPos regionSize;
-    
-    
-    public PacketConfigurePlacementItem() 
-    {
+
+    public PacketConfigurePlacementItem() {
     }
-    
-    public PacketConfigurePlacementItem(ItemStack stack) 
-    {
+
+    public PacketConfigurePlacementItem(ItemStack stack) {
         this.meta = stack.getItemDamage();
-        
+
         this.modelState = SuperBlockStackHelper.getStackModelState(stack);
-        if(this.modelState == null) this.modelState = new ModelState();
-        
+        if (this.modelState == null)
+            this.modelState = new ModelState();
+
         this.blockSubstance = SuperBlockStackHelper.getStackSubstance(stack);
         this.lightValue = SuperBlockStackHelper.getStackLightValue(stack);
-        
-        if(IPlacementItem.isPlacementItem(stack))
-        {
-            IPlacementItem item = (IPlacementItem)stack.getItem();
+
+        if (IPlacementItem.isPlacementItem(stack)) {
+            IPlacementItem item = (IPlacementItem) stack.getItem();
             this.mode = item.getTargetMode(stack);
             this.axis = item.getBlockOrientationAxis(stack);
             this.face = item.getBlockOrientationFace(stack);
@@ -73,15 +84,14 @@ public class PacketConfigurePlacementItem extends AbstractPlayerToServerPacket<P
             this.regionOrientation = item.getRegionOrientation(stack);
             this.filterMode = item.getFilterMode(stack);
             this.speciesMode = item.getSpeciesMode(stack);
-            this.isDeleteModeEnabled = false;//item.isDeleteModeEnabled(stack);
+            this.isDeleteModeEnabled = false;// item.isDeleteModeEnabled(stack);
             this.isFixedRegionEnabled = item.isFixedRegionEnabled(stack);
             this.regionSize = item.getRegionSize(stack, false);
         }
     }
 
     @Override
-    public void fromBytes(PacketBuffer pBuff) 
-    {
+    public void fromBytes(PacketBuffer pBuff) {
         this.meta = pBuff.readByte();
         this.modelState = new ModelState();
         this.modelState.fromBytes(pBuff);
@@ -104,8 +114,7 @@ public class PacketConfigurePlacementItem extends AbstractPlayerToServerPacket<P
 
     @SuppressWarnings("null")
     @Override
-    public void toBytes(PacketBuffer pBuff) 
-    {
+    public void toBytes(PacketBuffer pBuff) {
         pBuff.writeByte(this.meta);
         this.modelState.toBytes(pBuff);
         this.blockSubstance.toBytes(pBuff);
@@ -123,19 +132,17 @@ public class PacketConfigurePlacementItem extends AbstractPlayerToServerPacket<P
         pBuff.writeBoolean(this.isFixedRegionEnabled);
         pBuff.writeBlockPos(this.regionSize);
     }
-   
+
     @SuppressWarnings("null")
     @Override
-    protected void handle(PacketConfigurePlacementItem message, EntityPlayerMP player)
-    {
+    protected void handle(PacketConfigurePlacementItem message, EntityPlayerMP player) {
         ItemStack heldStack = player.getHeldItem(EnumHand.MAIN_HAND);
-        if(IPlacementItem.isPlacementItem(heldStack))
-        {
+        if (IPlacementItem.isPlacementItem(heldStack)) {
             heldStack.setItemDamage(message.meta);
             SuperBlockStackHelper.setStackModelState(heldStack, message.modelState);
             SuperBlockStackHelper.setStackSubstance(heldStack, message.blockSubstance);
             SuperBlockStackHelper.setStackLightValue(heldStack, message.lightValue);
-            IPlacementItem item = (IPlacementItem)heldStack.getItem();
+            IPlacementItem item = (IPlacementItem) heldStack.getItem();
             item.setTargetMode(heldStack, message.mode);
             item.setBlockOrientationAxis(heldStack, message.axis);
             item.setBlockOrientationFace(heldStack, message.face);

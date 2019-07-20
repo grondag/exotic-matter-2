@@ -95,15 +95,13 @@ public class BlockOrientationHandler {
 
         closestModelState = XmBlockStateAccess.modelState(onBlockState, world, pPos.onPos, true);
         // can't use onBlock as reference if is of a different type
-        if (closestModelState != null
-                && closestModelState.primitive() != outputModelState.primitive()) {
+        if (closestModelState != null && closestModelState.primitive() != outputModelState.primitive()) {
             closestModelState = null;
         }
 
         // block placed on was bust, so look around
         if (closestModelState == null) {
-            Vec3d location = new Vec3d(pPos.onPos.getX() + pPos.hitX, pPos.onPos.getY() + pPos.hitY,
-                    pPos.onPos.getZ() + pPos.hitZ);
+            Vec3d location = new Vec3d(pPos.onPos.getX() + pPos.hitX, pPos.onPos.getY() + pPos.hitY, pPos.onPos.getZ() + pPos.hitZ);
 
             double closestDistSq = Double.MAX_VALUE;
             for (int x = -1; x <= 1; x++) {
@@ -113,8 +111,8 @@ public class BlockOrientationHandler {
                             BlockPos testPos = pPos.onPos.add(x, y, z);
                             XmBlockState testBlockState = XmBlockStateAccess.get(world.getBlockState(testPos));
                             if (testBlockState != null) {
-                                double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x,
-                                        pPos.onPos.getY() + 0.5 + y, pPos.onPos.getZ() + 0.5 + z);
+                                double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x, pPos.onPos.getY() + 0.5 + y,
+                                        pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
                                     ModelState testModelState = testBlockState.getModelState(world, testPos, true);
                                     if (testModelState.primitive() == outputModelState.primitive()) {
@@ -156,8 +154,7 @@ public class BlockOrientationHandler {
         boolean isRotationDone = false;
 
         if (outputModelState.isAxisOrthogonalToPlacementFace()) {
-            Direction adjacentFace = WorldHelper.closestAdjacentFace(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY,
-                    (float) pPos.hitZ);
+            Direction adjacentFace = WorldHelper.closestAdjacentFace(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY, (float) pPos.hitZ);
 
             BlockEdge edge = BlockEdge.find(pPos.onFace.getOpposite(), adjacentFace);
 
@@ -174,10 +171,8 @@ public class BlockOrientationHandler {
             }
         }
 
-        if (!isRotationDone
-                && outputModelState.hasAxisRotation()) {
-            outputModelState.setAxisRotation(
-                    ClockwiseRotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
+        if (!isRotationDone && outputModelState.hasAxisRotation()) {
+            outputModelState.setAxisRotation(ClockwiseRotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
         }
 
         XmStackHelper.setStackModelState(stack, outputModelState);
@@ -212,8 +207,7 @@ public class BlockOrientationHandler {
             adjacentFace = context.getPlayerFacing();
         } else {
 
-            adjacentFace = WorldHelper.closestAdjacentFace(onFace, (float) (hit.x - pos.getX()),
-                    (float) (hit.y - pos.getY()), (float) (hit.z - pos.getZ()));
+            adjacentFace = WorldHelper.closestAdjacentFace(onFace, (float) (hit.x - pos.getX()), (float) (hit.y - pos.getY()), (float) (hit.z - pos.getZ()));
         }
 
         final BlockEdge edge = BlockEdge.find(onFace.getOpposite(), adjacentFace);

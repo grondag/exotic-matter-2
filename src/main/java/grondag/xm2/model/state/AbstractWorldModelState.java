@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.xm2.model.state;
 
 import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_POS;
@@ -21,31 +36,32 @@ abstract class AbstractWorldModelState extends AbstractModelState {
     private static final BitPacker32<AbstractWorldModelState>.IntElement POS_Y = WORLD_BITS.createIntElement(256);
     private static final BitPacker32<AbstractWorldModelState>.IntElement POS_Z = WORLD_BITS.createIntElement(256);
     private static final BitPacker32<AbstractWorldModelState>.IntElement SPECIES = WORLD_BITS.createIntElement(16);
-    
+
     private int blockBits;
-    
+
     @Override
     protected int intSize() {
         return super.intSize() + 1;
     }
-    
+
     @Override
     protected <T extends AbstractModelState> void copyInternal(T template) {
         super.copyInternal(template);
-        blockBits = ((AbstractWorldModelState)template).blockBits;
+        blockBits = ((AbstractWorldModelState) template).blockBits;
     }
-    
+
     @Override
     protected int computeHashCode() {
         return super.computeHashCode() ^ HashCommon.mix(this.blockBits);
     }
-    
+
     public final void refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
-        if (this.isStatic) return;
-        
+        if (this.isStatic)
+            return;
+
         doRefreshFromWorld(xmState, world, pos);
     }
-    
+
     protected void doRefreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
         final int stateFlags = stateFlags();
         if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS) {
@@ -55,7 +71,7 @@ abstract class AbstractWorldModelState extends AbstractModelState {
             invalidateHashCode();
         }
     }
-    
+
     @Override
     public int posX() {
         return POS_X.getValue(this);
@@ -85,7 +101,7 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         POS_Z.setValue(index, this);
         invalidateHashCode();
     }
-    
+
     @Override
     public int species() {
         return SPECIES.getValue(this);
@@ -95,7 +111,7 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         SPECIES.setValue(species, this);
         invalidateHashCode();
     }
-    
+
     protected boolean isStatic = false;
 
     @Override
@@ -106,13 +122,13 @@ abstract class AbstractWorldModelState extends AbstractModelState {
     public void setStatic(boolean isStatic) {
         this.isStatic = isStatic;
     }
-    
+
     @Override
     protected void doSerializeToInts(int[] data, int startAt) {
-        data[startAt] = this.isStatic ? (blockBits  | Useful.INT_SIGN_BIT) : blockBits;
+        data[startAt] = this.isStatic ? (blockBits | Useful.INT_SIGN_BIT) : blockBits;
         super.doSerializeToInts(data, startAt + 1);
     }
-    
+
     @Override
     protected void doDeserializeFromInts(int[] data, int startAt) {
         // sign on first long word is used to store static indicator
@@ -120,12 +136,12 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         this.blockBits = Useful.INT_SIGN_BIT_INVERSE & data[startAt];
         super.doDeserializeFromInts(data, startAt + 1);
     }
-    
+
     @Override
     protected boolean equalsInner(Object obj) {
-        return super.equalsInner(obj) && this.blockBits == ((AbstractWorldModelState)obj).blockBits;
+        return super.equalsInner(obj) && this.blockBits == ((AbstractWorldModelState) obj).blockBits;
     }
-    
+
     public final boolean equalsIncludeStatic(Object obj) {
         if (this == obj)
             return true;
@@ -137,7 +153,7 @@ abstract class AbstractWorldModelState extends AbstractModelState {
             return false;
         }
     }
-    
+
     @Override
     public void fromBytes(PacketByteBuf pBuff) {
         super.fromBytes(pBuff);

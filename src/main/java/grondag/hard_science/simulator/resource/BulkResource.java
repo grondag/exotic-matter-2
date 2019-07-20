@@ -1,5 +1,19 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.hard_science.simulator.resource;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,21 +31,18 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 
 /**
- * Resources used within device processing or system accounting.
- * Bulk resources have no storage manager and no logistics service. 
- * They do not publish any events and cannot be transported.
- * They CAN be stored in isolated containers.
+ * Resources used within device processing or system accounting. Bulk resources
+ * have no storage manager and no logistics service. They do not publish any
+ * events and cannot be transported. They CAN be stored in isolated containers.
  */
 //public class BulkResource extends IForgeRegistryEntry.Impl<BulkResource> implements IResource<StorageTypeBulk>
-public class BulkResource implements IResource<StorageTypeBulk>
-{
+public class BulkResource implements IResource<StorageTypeBulk> {
     private static Map<Fluid, BulkResource> fluidLookup = new HashMap<Fluid, BulkResource>();
 
-    public static BulkResource fromFluid(Fluid fluid)
-    {
+    public static BulkResource fromFluid(Fluid fluid) {
         return fluidLookup.get(fluid);
     }
-    
+
     private final String systemName;
     public final int color;
 //    public final String label;
@@ -39,26 +50,18 @@ public class BulkResource implements IResource<StorageTypeBulk>
     private final double tempK;
     private final double pressureP;
     private final MatterPhase phase;
-    
+
     /**
      * g/cm3, water ~1.0
      */
     private final double density;
-    
+
     private Fluid fluid;
     private FluidResource resource;
-    
-    public BulkResource(
-            String systemName,
-            int color,
+
+    public BulkResource(String systemName, int color,
 //            String label,
-            IComposition composition,
-            double tempCelsius,
-            double pressureAtm,
-            MatterPhase phase,
-            double density
-            )
-    {
+            IComposition composition, double tempCelsius, double pressureAtm, MatterPhase phase, double density) {
 //        this.setRegistryName(systemName);
         this.systemName = systemName;
         this.color = color;
@@ -69,54 +72,39 @@ public class BulkResource implements IResource<StorageTypeBulk>
         this.phase = phase;
         this.density = density;
     }
-    
+
     /**
-     * Use this form for gasses that can
-     * have density estimated as an ideal gas.
+     * Use this form for gasses that can have density estimated as an ideal gas.
      */
-    public BulkResource(
-            String systemName,
-            int color,
-            IComposition molecule,
-            double tempCelsius,
-            double pressureAtm
-            )
-    {
-        this(systemName, color, molecule, tempCelsius, pressureAtm, MatterPhase.GAS, 
-                Gas.idealGasDensityCA(molecule, tempCelsius, pressureAtm));
+    public BulkResource(String systemName, int color, IComposition molecule, double tempCelsius, double pressureAtm) {
+        this(systemName, color, molecule, tempCelsius, pressureAtm, MatterPhase.GAS, Gas.idealGasDensityCA(molecule, tempCelsius, pressureAtm));
 
     }
-    
-    public String systemName()
-    {
+
+    public String systemName() {
         return this.systemName;
     }
-    
+
     @Override
-    public String displayName()
-    {
+    public String displayName() {
         return I18n.translateToLocal("matter." + this.systemName).trim();
     }
 
     @Override
-    public BulkResourceWithQuantity withQuantity(long quantity)
-    {
+    public BulkResourceWithQuantity withQuantity(long quantity) {
         return new BulkResourceWithQuantity(this, quantity);
     }
-    
-    public BulkResourceWithQuantity withLiters(double liters)
-    {
+
+    public BulkResourceWithQuantity withLiters(double liters) {
         return new BulkResourceWithQuantity(this, (long) (liters * VolumeUnits.LITER.nL));
     }
-    
-    public BulkResourceWithQuantity withKilograms(double kg)
-    {
+
+    public BulkResourceWithQuantity withKilograms(double kg) {
         return new BulkResourceWithQuantity(this, (long) (kg / this.density * VolumeUnits.LITER.nL));
     }
-    
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return this.displayName();
     }
 
@@ -125,38 +113,35 @@ public class BulkResource implements IResource<StorageTypeBulk>
 //    {
 //        return this.getRegistryName().hashCode();
 //    }
-  
+
     @Override
-    public boolean isResourceEqual(@Nullable IResource<?> other)
-    {
+    public boolean isResourceEqual(@Nullable IResource<?> other) {
         return this.equals(other);
     }
 
     @Override
-    public boolean equals(@Nullable Object other)
-    {
-        if(other == this) return true;
-        if(other == null) return false;
-        if(other instanceof BulkResource)
-        {
-            return ((BulkResource)other).systemName().equals(this.systemName());
+    public boolean equals(@Nullable Object other) {
+        if (other == this)
+            return true;
+        if (other == null)
+            return false;
+        if (other instanceof BulkResource) {
+            return ((BulkResource) other).systemName().equals(this.systemName());
 //            return ((BulkResource)other).getRegistryName().equals(this.getRegistryName());
         }
         return false;
     }
-    
+
     @Override
-    public StorageTypeBulk storageType()
-    {
+    public StorageTypeBulk storageType() {
         return StorageType.PRIVATE;
     }
-    
+
     /**
      * Null if not a managed resource.
      */
     @Nullable
-    public Fluid fluid()
-    {
+    public Fluid fluid() {
         return this.fluid;
     }
 
@@ -164,57 +149,47 @@ public class BulkResource implements IResource<StorageTypeBulk>
      * Null if not a managed resource.
      */
     @Nullable
-    public FluidResource fluidResource()
-    {
+    public FluidResource fluidResource() {
         return this.resource;
     }
-    
-    public MatterPhase phase()
-    {
+
+    public MatterPhase phase() {
         return this.phase;
     }
-    
-    public IComposition composition()
-    {
+
+    public IComposition composition() {
         return this.composition;
     }
-    
-    public double temperatureK()
-    {
+
+    public double temperatureK() {
         return this.tempK;
     }
-    
-    public double temperatureC()
-    {
+
+    public double temperatureC() {
         return Temperature.kelvinToCelsius(this.tempK);
     }
-    
-    public double pressureAtm()
-    {
+
+    public double pressureAtm() {
         return Gas.pascalsToAtm(this.pressureP);
     }
-    
-    public double pressurePascals()
-    {
+
+    public double pressurePascals() {
         return this.pressureP;
     }
-    
+
     /**
      * g/cm3, water ~1.0
      */
-    public double density()
-    {
+    public double density() {
         return this.density;
     }
-    
-    public double gPerMol()
-    {
+
+    public double gPerMol() {
         return this.composition.weight();
     }
-    
-    public double molsPerLiter()
-    {
-        
+
+    public double molsPerLiter() {
+
         // d = kg/l
         // d = (g / 1000)/l
         // g/l = 1000d
@@ -223,54 +198,44 @@ public class BulkResource implements IResource<StorageTypeBulk>
         // m/l == m/g * g/l = 1000d / w
         return this.density * 1000 / this.gPerMol();
     }
-    
-    public double molsPerKL()
-    {
+
+    public double molsPerKL() {
         return this.molsPerLiter() * 1000;
     }
-    
-    public double litersPerMol()
-    {
+
+    public double litersPerMol() {
         // d = kg/l = g/1000/l
         // l/g = 1/1000/d
         // g/m * l/g = l/m = g/m / 1000 / d
         return this.gPerMol() / 1000 / this.density;
     }
-    
-    public double nlPerMol()
-    {
+
+    public double nlPerMol() {
         return this.gPerMol() / this.density * VolumeUnits.MILLILITER.nL;
     }
-    
-    public double kLPerMol()
-    {
+
+    public double kLPerMol() {
         return this.litersPerMol() / 1000;
     }
-    
-    public BulkResourceWithQuantity defaultStack()
-    {
-        return this.phase == MatterPhase.SOLID
-               ? this.withKilograms(1)
-               : this.withLiters(1);
+
+    public BulkResourceWithQuantity defaultStack() {
+        return this.phase == MatterPhase.SOLID ? this.withKilograms(1) : this.withLiters(1);
     }
-    
-    public double kgPerBlock()
-    {
+
+    public double kgPerBlock() {
         return this.density * 1000;
     }
-    
-    public double tonnesPerBlock()
-    {
+
+    public double tonnesPerBlock() {
         return this.density;
     }
-    
-    public void registerFluid()
-    {
+
+    public void registerFluid() {
         this.fluid = FluidRegistry.getFluid(systemName);
-        if(this.fluid == null)
-        {
+        if (this.fluid == null) {
             this.fluid = new Fluid(this.systemName, this.phase.iconResource, this.phase.iconResource, this.color);
-            if(this.phase == MatterPhase.GAS) this.fluid.setGaseous(true);
+            if (this.phase == MatterPhase.GAS)
+                this.fluid.setGaseous(true);
             this.fluid.setDensity((int) this.density());
             this.fluid.setTemperature((int) this.temperatureK());
             FluidRegistry.registerFluid(this.fluid);
