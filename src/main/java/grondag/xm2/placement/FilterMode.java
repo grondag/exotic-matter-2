@@ -19,7 +19,7 @@ package grondag.xm2.placement;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
 import grondag.fermion.varia.Useful;
-import grondag.xm2.block.VirtualBlock;
+import grondag.xm2.block.virtual.VirtualBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;

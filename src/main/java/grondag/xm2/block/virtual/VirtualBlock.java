@@ -14,8 +14,9 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.block;
+package grondag.xm2.block.virtual;
 
+import grondag.xm2.api.model.OwnedModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -64,5 +65,10 @@ public interface VirtualBlock {
         Block block = state.getBlock();
         return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player)
                 : !block.getMaterial(state).isReplaceable();
+    }
+
+    static BlockState findAppropriateVirtualBlock(OwnedModelState modelState) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

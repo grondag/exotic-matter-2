@@ -31,12 +31,12 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-public class XmTileEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class XmBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     ////////////////////////////////////////////////////////////////////////
     // STATIC MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    public XmTileEntity(BlockEntityType<?> blockEntityType) {
+    public XmBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
     }
 
@@ -151,8 +151,8 @@ public class XmTileEntity extends BlockEntity implements BlockEntityClientSerial
     private void invalidateClientCache(BlockPos updatePos) {
         BlockEntity target = this.world.getBlockEntity(updatePos);
         if (target != null
-                && target instanceof XmTileEntity) {
-            ((XmTileEntity) target).isModelStateCacheDirty = true;
+                && target instanceof XmBlockEntity) {
+            ((XmBlockEntity) target).isModelStateCacheDirty = true;
         }
     }
 

@@ -1,0 +1,8 @@
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+@FieldsAreNonnullByDefault
+package grondag.hard_science.simulator.device.blocks;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
+import grondag.exotic_matter.varia.FieldsAreNonnullByDefault;

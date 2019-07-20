@@ -102,4 +102,8 @@ public interface ModelPrimitive {
     }
 
     boolean doesShapeMatch(ModelState from, ModelState to);
+
+    default boolean isMultiBlock() {
+        return false;
+    }
 }

@@ -16,7 +16,10 @@
 
 package grondag.xm2.placement;
 
+import java.util.function.BooleanSupplier;
+
 import grondag.fermion.world.IBlockRegion;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public interface IPlacementSpec {
@@ -49,8 +52,7 @@ public interface IPlacementSpec {
      * some of the obstacles are (if not too expensive).
      */
 
-    // TODO: make an hook that calls thhis
-    void renderPreview();
+    void renderPreview(float tickDelta, ClientPlayerEntity player);
 
     /**
      * Encapsulates all work needed to build a spec and apply it to the world. What
@@ -71,7 +73,7 @@ public interface IPlacementSpec {
      * construction job in the player's active domain. The entries will also be
      * saved with the build (for later re-used if desired) and the build closed.
      */
-    public abstract Runnable worldTask(ServerPlayerEntity player);
+    public abstract BooleanSupplier worldTask(ServerPlayerEntity player);
 
     /**
      * True if builder is consistent with EXCAVATION placement result type.
@@ -85,4 +87,5 @@ public interface IPlacementSpec {
      * selection, but could have other uses in future.
      */
     public IBlockRegion region();
+
 }

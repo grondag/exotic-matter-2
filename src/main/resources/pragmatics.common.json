@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "grondag.pragmatics.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinPlayerEntity"
+      ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

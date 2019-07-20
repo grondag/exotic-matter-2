@@ -7,7 +7,7 @@ import grondag.xm2.api.surface.XmSurface;
 import net.minecraft.nbt.CompoundTag;
 
 public interface ModelState extends ModelWorldState, ModelPrimitiveState, Reference {
-    MutableModelState mutableCopy();
+    OwnedModelState mutableCopy();
 
     /**
      * Persisted but not part of hash nor included in equals comparison. If true,

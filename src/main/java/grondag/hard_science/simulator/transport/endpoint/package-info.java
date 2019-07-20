@@ -1,0 +1,8 @@
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+@FieldsAreNonnullByDefault
+package grondag.hard_science.simulator.transport.endpoint;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import mcp.MethodsReturnNonnullByDefault;
+import grondag.exotic_matter.varia.FieldsAreNonnullByDefault;

@@ -17,8 +17,8 @@
   
   "environment": "*",
   "entrypoints": {
-    "main": [ "grondag.xm2.Xm" ],
-    "client": [ "grondag.xm2.XmClient" ]
+    "main": [ "grondag.xm2.Xm", "grondag.pragmatics.Pragmatics" ],
+    "client": [ "grondag.xm2.XmClient", "grondag.pragmatics.PragmaticsClient" ]
   },
   "mixins": [
 	  {
@@ -28,6 +28,10 @@
 	  {
 	      "config": "xm2.client.json",
 	      "environment": "client"
+	  },
+	  {
+	  	  "config": "pragmatics.common.json",
+	      "environment": "*"
 	  }
   ],
   "requires": {

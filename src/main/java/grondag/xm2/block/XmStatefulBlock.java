@@ -43,7 +43,7 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
 
     @Override
     public BlockEntity createBlockEntity(BlockView worldIn) {
-        return new XmTileEntity(blockEntityType);
+        return new XmBlockEntity(blockEntityType);
     }
 
     public BlockEntity getTileEntityReliably(World world, BlockPos pos) {
@@ -65,8 +65,8 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
         final XmBlockStateImpl xmState = (XmBlockStateImpl) xmStateIn;
 
         if (myTE != null
-                && myTE instanceof XmTileEntity) {
-            return ((XmTileEntity) myTE).getModelState(xmState, world, pos, refreshFromWorldIfNeeded);
+                && myTE instanceof XmBlockEntity) {
+            return ((XmBlockEntity) myTE).getModelState(xmState, world, pos, refreshFromWorldIfNeeded);
         } else {
             return XmSimpleBlock.computeModelState(xmState, world, pos, refreshFromWorldIfNeeded);
         }
@@ -81,8 +81,8 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
     public void setModelState(World world, BlockPos pos, ModelState modelState) {
         BlockEntity blockTE = world.getBlockEntity(pos);
         if (blockTE != null
-                && blockTE instanceof XmTileEntity) {
-            ((XmTileEntity) blockTE).setModelState(modelState);
+                && blockTE instanceof XmBlockEntity) {
+            ((XmBlockEntity) blockTE).setModelState(modelState);
         }
     }
 }

@@ -19,8 +19,14 @@ package grondag.xm2;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import grondag.exotic_matter.simulator.Simulator;
+import grondag.exotic_matter.simulator.domain.PlayerDomainChangeCallback;
+import grondag.hard_science.network.Packets;
+import grondag.xm2.block.virtual.ExcavationRenderTracker;
 import grondag.xm2.init.XmBlocks;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.server.ServerStartCallback;
+import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 
 public class Xm implements ModInitializer {
     public static Xm INSTANCE = new Xm();
@@ -28,6 +34,10 @@ public class Xm implements ModInitializer {
     @Override
     public void onInitialize() {
         XmBlocks.init();
+        ServerStartCallback.EVENT.register(Simulator::start);
+        ServerTickCallback.EVENT.register(Simulator.instance()::tick);
+        Packets.initializeCommon();
+        PlayerDomainChangeCallback.EVENT.register(ExcavationRenderTracker::onDomainChanged);
     }
 
     public static Logger LOG = LogManager.getLogger("Exotic Matter");

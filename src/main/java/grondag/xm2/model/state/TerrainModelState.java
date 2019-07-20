@@ -5,6 +5,7 @@ import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.model.ModelPrimitive;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
+import grondag.xm2.api.model.OwnedModelState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm2.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;
@@ -74,7 +75,7 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
     }
 
     @Override
-    public MutableModelState mutableCopy() {
+    public OwnedModelState mutableCopy() {
         // TODO Auto-generated method stub
         return null;
     }

@@ -183,4 +183,7 @@ public class XmConfig {
     public static void recalcDerived() {
         Render.recalcDerived();
     }
+    
+    // From Hard Science
+    public static boolean logExcavationRenderTracking;
 }

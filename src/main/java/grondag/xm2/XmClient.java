@@ -16,6 +16,7 @@
 
 package grondag.xm2;
 
+import grondag.hard_science.network.Packets;
 import grondag.xm2.collision.CollisionBoxDispatcher;
 import grondag.xm2.dispatch.XmDispatcher;
 import grondag.xm2.dispatch.XmVariantProvider;
@@ -30,6 +31,7 @@ public class XmClient implements ClientModInitializer {
         XmTextures.init();
         ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
         InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
+        Packets.initializeClient();
     }
 
     public static void invalidate() {
