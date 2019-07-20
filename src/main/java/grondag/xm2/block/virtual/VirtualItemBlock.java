@@ -55,7 +55,7 @@ public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
         if (!(PlacementItem.getHeldPlacementItem(player).getItem() == this))
             return;
         // TODO: reimplement GUI
-        // player.openGui(HardScience.INSTANCE,
+        // player.openGui(Xm.LOG,
         // ModGuiHandler.ModGui.SUPERMODEL_ITEM.ordinal(), player.world, (int) player.x,
         // (int) player.y, (int) player.z);
     }

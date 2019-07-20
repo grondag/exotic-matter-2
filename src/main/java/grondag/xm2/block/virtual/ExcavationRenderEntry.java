@@ -23,18 +23,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
+import grondag.exotic_matter.network.S2C_ExcavationRenderUpdate;
 import grondag.fermion.structures.SimpleUnorderedArrayList;
 import grondag.fermion.world.IntegerAABB;
-import grondag.hard_science.HsConfig;
-import grondag.hard_science.network.S2C_ExcavationRenderUpdate;
-import grondag.hard_science.simulator.jobs.AbstractPositionedTask;
-import grondag.hard_science.simulator.jobs.AbstractTask;
-import grondag.hard_science.simulator.jobs.ITask;
-import grondag.hard_science.simulator.jobs.ITaskListener;
-import grondag.hard_science.simulator.jobs.Job;
-import grondag.hard_science.simulator.jobs.tasks.ExcavationTask;
-import grondag.hard_science.simulator.jobs.tasks.PlacementTask;
+//import grondag.hs.simulator.jobs.AbstractPositionedTask;
+//import grondag.hs.simulator.jobs.AbstractTask;
+//import grondag.hs.simulator.jobs.ITask;
+//import grondag.hs.simulator.jobs.ITaskListener;
+//import grondag.hs.simulator.jobs.Job;
+//import grondag.hs.simulator.jobs.tasks.ExcavationTask;
+//import grondag.hs.simulator.jobs.tasks.PlacementTask;
 import grondag.xm2.Xm;
+import grondag.xm2.XmConfig;
 import grondag.xm2.placement.BuildManager;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -48,7 +48,7 @@ import net.minecraft.util.registry.Registry;
  * Class exists on server but render methods do not. Server instantiates (and
  * generates IDs) and transmits to clients.
  */
-public class ExcavationRenderEntry implements ITaskListener, Runnable {
+public class ExcavationRenderEntry implements Runnable { //ITaskListener
     private static int nextID = 0;
 
     public final int id;
@@ -156,7 +156,7 @@ public class ExcavationRenderEntry implements ITaskListener, Runnable {
     public ExcavationRenderEntry(Job job) {
         this.id = nextID++;
 
-        if (HsConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id = %d new Entry constructor", this.id);
 
         this.domainID = job.getDomain().getId();
@@ -179,11 +179,11 @@ public class ExcavationRenderEntry implements ITaskListener, Runnable {
         this.isExchange = isExchange;
 
         if (ExcavationRenderEntry.this.positions.size() == 0) {
-            if (HsConfig.logExcavationRenderTracking)
+            if (XmConfig.logExcavationRenderTracking)
                 Xm.LOG.info("id = %d new Entry constructor - invalid", this.id);
             this.isValid = false;
         } else {
-            if (HsConfig.logExcavationRenderTracking)
+            if (XmConfig.logExcavationRenderTracking)
                 Xm.LOG.info("id = %d new Entry constructor - launching compute", this.id);
             ExcavationRenderEntry.this.compute();
         }
@@ -215,7 +215,7 @@ public class ExcavationRenderEntry implements ITaskListener, Runnable {
     }
 
     private void compute() {
-        if (HsConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id = %d Compute called. Already running = %s", this.id, Boolean.toString(this.isScheduled.get()));
         if (this.isScheduled.compareAndSet(false, true)) {
             BuildManager.EXECUTOR.execute(this);
@@ -224,7 +224,7 @@ public class ExcavationRenderEntry implements ITaskListener, Runnable {
 
     @Override
     public void run() {
-        if (HsConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id = %d Compute running.", this.id);
 
         this.isDirty.set(false);
@@ -232,7 +232,7 @@ public class ExcavationRenderEntry implements ITaskListener, Runnable {
         int count = this.positions.size();
 
         if (count == 0) {
-            if (HsConfig.logExcavationRenderTracking)
+            if (XmConfig.logExcavationRenderTracking)
                 Xm.LOG.info("id = %d Compute existing due to empty positions.", this.id);
             this.updateListeners();
             ExcavationRenderTracker.INSTANCE.remove(this);
@@ -284,11 +284,11 @@ public class ExcavationRenderEntry implements ITaskListener, Runnable {
                 this.renderPositions = newPositions;
             }
             needsListenerUpdate = true;
-            if (HsConfig.logExcavationRenderTracking)
+            if (XmConfig.logExcavationRenderTracking)
                 Xm.LOG.info("id %d Computed render position length = %d", this.id, this.renderPositions == null ? 0 : this.renderPositions.length);
         }
 
-        if (HsConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id = %d Compute done, updateListeners=%s, isDirty=%s", this.id, Boolean.toString(needsListenerUpdate),
                     Boolean.toString(this.isDirty.get()));
 
@@ -315,13 +315,13 @@ public class ExcavationRenderEntry implements ITaskListener, Runnable {
     }
 
     public void addListener(ServerPlayerEntity listener, boolean sendPacketIfNew) {
-        if (HsConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id=%d addListenger sendIfNew=%s, isValue=%s, isFirstComputeDone=%s", this.id, Boolean.toString(sendPacketIfNew),
                     Boolean.toString(isValid), Boolean.toString(isFirstComputeDone));
 
         synchronized (this.listeners) {
             if (this.listeners.addIfNotPresent(listener) && sendPacketIfNew && this.isValid && this.isFirstComputeDone) {
-                if (HsConfig.logExcavationRenderTracking)
+                if (XmConfig.logExcavationRenderTracking)
                     Xm.LOG.info("id=%d addListenger scheduling packet.", this.id);
                 ServerSidePacketRegistry.INSTANCE.sendToPlayer(listener, S2C_ExcavationRenderUpdate.toPacket(this));
             }
@@ -367,7 +367,7 @@ public class ExcavationRenderEntry implements ITaskListener, Runnable {
      */
     @Nullable
     public BlockPos[] renderPositions() {
-        if (HsConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id %d Render position retrieval, count = %d", this.id, this.renderPositions == null ? 0 : this.renderPositions.length);
         return this.renderPositions;
     }

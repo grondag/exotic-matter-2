@@ -18,13 +18,13 @@ package grondag.xm2.block.virtual;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import grondag.exotic_matter.network.S2C_ExcavationRenderUpdate;
+import grondag.exotic_matter.network.S2C_PacketExcavationRenderRefresh;
 import grondag.exotic_matter.simulator.domain.DomainManager;
 import grondag.exotic_matter.simulator.domain.IDomain;
 import grondag.fermion.structures.SimpleUnorderedArrayList;
 import grondag.fermion.world.WorldMap;
-import grondag.hard_science.network.S2C_ExcavationRenderUpdate;
-import grondag.hard_science.network.S2C_PacketExcavationRenderRefresh;
-import grondag.hard_science.simulator.jobs.Job;
+import grondag.hs.simulator.jobs.Job;
 import grondag.xm2.Xm;
 import grondag.xm2.XmConfig;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
