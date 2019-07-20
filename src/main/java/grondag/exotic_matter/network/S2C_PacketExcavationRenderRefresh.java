@@ -49,7 +49,7 @@ public abstract class S2C_PacketExcavationRenderRefresh {
             pBuff.writeInt(r.id);
             pBuff.writeLong(r.aabb().minPos().asLong());
             pBuff.writeLong(r.aabb().maxPos().asLong());
-            pBuff.writeBoolean(r.isExchange);
+            pBuff.writeBoolean(r.task.isExchange());
             final BlockPos[] positions = r.renderPositions();
             pBuff.writeInt(positions == null ? 0 : positions.length);
             if (positions != null) {

@@ -26,11 +26,9 @@ import grondag.xm2.api.model.OwnedModelState;
 import grondag.xm2.block.XmBlockHelper;
 import grondag.xm2.block.XmStackHelper;
 import grondag.xm2.block.virtual.VirtualBlock;
-import grondag.xm2.block.virtual.VirtualBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -376,10 +374,11 @@ public abstract class PlacementHandler {
         }
     }
 
-    public static void placeVirtualBlock(World world, ItemStack stack, PlayerEntity player, BlockPos pos, Build build) {
-        if (!player.canModifyWorld() || build == null || !build.isOpen())
+    public static void placeVirtualBlock(World world, ItemStack stack, PlayerEntity player, BlockPos pos) { //, Build build) {
+        if (!player.canModifyWorld()) { // || build == null || !build.isOpen())
             return;
-
+        }
+        
         BlockSoundGroup soundtype = XmStackHelper.getStackSubstance(stack).soundType;
 
         PlacementItem item = PlacementItem.getPlacementItem(stack);
@@ -389,14 +388,14 @@ public abstract class PlacementHandler {
         BlockState placedState = item.getPlacementBlockStateFromStack(stack);
 
         if (placeBlockAt(stack, player, world, pos, null, 0, 0, 0, placedState)) {
-            build.addPosition(pos);
+            //build.addPosition(pos);
 
             world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
-            BlockEntity blockTE = world.getBlockEntity(pos);
-            if (blockTE != null && blockTE instanceof VirtualBlockEntity) {
-                ((VirtualBlockEntity) blockTE).setBuild(build);
-            }
+//            BlockEntity blockTE = world.getBlockEntity(pos);
+//            if (blockTE != null && blockTE instanceof VirtualBlockEntity) {
+//                ((VirtualBlockEntity) blockTE).setBuild(build);
+//            }
         }
     }
 

@@ -29,22 +29,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import grondag.xm2.dispatch.RenderUtil;
-import grondag.xm2.placement.OffsetPosition;
-import grondag.xm2.placement.PlacementPosition;
-import grondag.xm2.placement.PlacementPreviewRenderMode;
-import grondag.xm2.render.XmRenderHelper;
-import grondag.exotic_matter.simulator.domain.DomainManager;
-import grondag.exotic_matter.simulator.domain.IDomain;
-import grondag.exotic_matter.simulator.job.RequestPriority;
 import grondag.fermion.varia.FixedRegionBounds;
 import grondag.fermion.world.CubicBlockRegion;
 import grondag.fermion.world.IBlockRegion;
 import grondag.fermion.world.WorldHelper;
-import grondag.hs.simulator.jobs.AbstractTask;
-import grondag.hs.simulator.jobs.Job;
-import grondag.hs.simulator.jobs.JobManager;
-import grondag.hs.simulator.jobs.tasks.ExcavationTask;
+import grondag.xm2.dispatch.RenderUtil;
+import grondag.xm2.render.XmRenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -54,12 +44,10 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.VisibleRegion;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -295,15 +283,16 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
             // by the player.
             return new BooleanSupplier() {
 //                private CuboidPlacementSpec spec = (CuboidPlacementSpec) buildSpec();
-                private Job job = new Job(RequestPriority.MEDIUM, player);
-                IDomain domain = DomainManager.instance().getActiveDomain(player);
+//                private Job job = new Job(RequestPriority.MEDIUM, player);
+//                IDomain domain = DomainManager.instance().getActiveDomain(player);
 
                 /**
                  * Block positions to be checked. Will initially contain only the starting
                  * (user-clicked) position. Entry is antecedent, or null if no dependency.
                  */
-                ArrayDeque<Pair<BlockPos, ExcavationTask>> queue = new ArrayDeque<Pair<BlockPos, ExcavationTask>>();
-
+                //ArrayDeque<Pair<BlockPos, ExcavationTask>> queue = new ArrayDeque<Pair<BlockPos, ExcavationTask>>();
+                ArrayDeque<BlockPos> queue = new ArrayDeque<>();
+                
                 /**
                  * Block positions that have been tested.
                  */
@@ -312,15 +301,16 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
                 World world = player.world;
 
                 {
-                    scheduleVisitIfNotAlreadyVisited(pPos.inPos, null);
+                    scheduleVisitIfNotAlreadyVisited(pPos.inPos); //, null);
                 }
 
                 @Override
                 public boolean getAsBoolean() {
                     if (!queue.isEmpty()) {
-                        Pair<BlockPos, ExcavationTask> visit = queue.poll();
-                        if (visit != null) {
-                            BlockPos pos = visit.getLeft();
+                        //Pair<BlockPos, ExcavationTask> visit = queue.poll();
+                        BlockPos pos = queue.poll();
+                        if (pos != null) {
+                            //BlockPos pos = visit.getLeft();
 
                             // is the position inside our region?
                             // is the position inside the world?
@@ -331,16 +321,16 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 
                                 // will be antecedent for any branches from here
                                 // if this is empty space, then will be antecedent for this visit
-                                ExcavationTask branchAntecedent = visit.getRight();
+//                                ExcavationTask branchAntecedent = visit.getRight();
 
                                 // is the block at the position affected
                                 // by this excavation?
                                 if (effectiveFilterMode.shouldAffectBlock(blockState, world, pos, outputStack, isVirtual)) {
-                                    branchAntecedent = new ExcavationTask(pos);
-                                    job.addTask(branchAntecedent);
-                                    if (visit.getRight() != null) {
-                                        AbstractTask.link(visit.getRight(), branchAntecedent);
-                                    }
+//                                    branchAntecedent = new ExcavationTask(pos);
+//                                    job.addTask(branchAntecedent);
+//                                    if (visit.getRight() != null) {
+//                                        AbstractTask.link(visit.getRight(), branchAntecedent);
+//                                    }
                                     canPassThrough = true;
                                 }
 
@@ -352,12 +342,13 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
                                 // be accessible and haven't already been
                                 // checked.
                                 if (canPassThrough) {
-                                    scheduleVisitIfNotAlreadyVisited(pos.up(), branchAntecedent);
-                                    scheduleVisitIfNotAlreadyVisited(pos.down(), branchAntecedent);
-                                    scheduleVisitIfNotAlreadyVisited(pos.east(), branchAntecedent);
-                                    scheduleVisitIfNotAlreadyVisited(pos.west(), branchAntecedent);
-                                    scheduleVisitIfNotAlreadyVisited(pos.north(), branchAntecedent);
-                                    scheduleVisitIfNotAlreadyVisited(pos.south(), branchAntecedent);
+                                    // PERF: allocation
+                                    scheduleVisitIfNotAlreadyVisited(pos.up()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.down()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.east()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.west()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.north()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.south()); //, branchAntecedent);
                                 }
                             }
                         }
@@ -366,19 +357,20 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
                     if (queue.isEmpty()) {
                         // when done, finalize entries list and submit job
                         this.checked.clear();
-                        if (domain != null)
-                            domain.getCapability(JobManager.class).addJob(job);
+//                        if (domain != null)
+//                            domain.getCapability(JobManager.class).addJob(job);
                         return false;
                     } else {
                         return true;
                     }
                 }
 
-                private void scheduleVisitIfNotAlreadyVisited(BlockPos pos, ExcavationTask task) {
+                private void scheduleVisitIfNotAlreadyVisited(BlockPos pos) { //, ExcavationTask task) {
                     if (this.checked.contains(pos))
                         return;
                     this.checked.add(pos);
-                    this.queue.addLast(Pair.of(pos, task));
+                    this.queue.addLast(pos.toImmutable());
+//                    this.queue.addLast(Pair.of(pos, task));
                 }
             };
         } else {
@@ -391,21 +383,21 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 
                 private World world = player.world;
 
-                private Build build = BuildManager.getActiveBuildForPlayer(player);
-
-                {
-                    if (build == null) {
-                        String chatMessage = I18n.translate("placement.message.no_build");
-                        player.sendMessage(new TranslatableText(chatMessage));
-                    }
-                }
+//                private Build build = BuildManager.getActiveBuildForPlayer(player);
+//
+//                {
+//                    if (build == null) {
+//                        String chatMessage = I18n.translate("placement.message.no_build");
+//                        player.sendMessage(new TranslatableText(chatMessage));
+//                    }
+//                }
 
                 @Override
                 public boolean getAsBoolean() {
-                    if (build == null)
-                        return false;
+//                    if (build == null)
+//                        return false;
 
-                    if (positionIterator.hasNext() && build.isOpen()) {
+                    if (positionIterator.hasNext()) { // && build.isOpen()) {
                         BlockPos pos = positionIterator.next().toImmutable();
 
                         // is the position inside the world?
@@ -417,12 +409,13 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
                             // by this excavation?
                             if (CuboidPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, CuboidPlacementSpec.this.placedStack(),
                                     CuboidPlacementSpec.this.isVirtual)) {
-                                PlacementHandler.placeVirtualBlock(world, CuboidPlacementSpec.this.outputStack, player, pos, build);
+                                PlacementHandler.placeVirtualBlock(world, CuboidPlacementSpec.this.outputStack, player, pos); //, build);
                             }
                         }
 
                     }
-                    return build != null && build.isOpen() && this.positionIterator.hasNext();
+                    return this.positionIterator.hasNext();
+//                    return build != null && build.isOpen() && this.positionIterator.hasNext();
                 }
             };
 

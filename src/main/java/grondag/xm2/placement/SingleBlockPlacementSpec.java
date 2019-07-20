@@ -21,14 +21,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import grondag.exotic_matter.simulator.domain.DomainManager;
-import grondag.exotic_matter.simulator.domain.IDomain;
-import grondag.exotic_matter.simulator.job.RequestPriority;
 import grondag.fermion.world.IBlockRegion;
 import grondag.fermion.world.SingleBlockRegion;
-import grondag.hs.simulator.jobs.Job;
-import grondag.hs.simulator.jobs.JobManager;
-import grondag.hs.simulator.jobs.tasks.ExcavationTask;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -36,11 +30,9 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
@@ -136,13 +128,13 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
                     // by this excavation?
                     if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
                             SingleBlockPlacementSpec.this.isVirtual)) {
-                        Job job = new Job(RequestPriority.MEDIUM, player);
-                        job.setDimension(world.dimension);
-                        job.addTask(new ExcavationTask(pos));
-                        IDomain domain = DomainManager.instance().getActiveDomain(player);
-                        if (domain != null) {
-                            domain.getCapability(JobManager.class).addJob(job);
-                        }
+//                        Job job = new Job(RequestPriority.MEDIUM, player);
+//                        job.setDimension(world.dimension);
+//                        job.addTask(new ExcavationTask(pos));
+//                        IDomain domain = DomainManager.instance().getActiveDomain(player);
+//                        if (domain != null) {
+//                            domain.getCapability(JobManager.class).addJob(job);
+//                        }
                     }
                     return false;
                 }
@@ -155,12 +147,12 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
                 @Override
                 public boolean getAsBoolean() {
 
-                    Build build = BuildManager.getActiveBuildForPlayer(player);
-                    if (build == null || !build.isOpen()) {
-                        String chatMessage = I18n.translate("placement.message.no_build");
-                        player.sendMessage(new TranslatableText(chatMessage));
-                        return false;
-                    }
+//                    Build build = BuildManager.getActiveBuildForPlayer(player);
+//                    if (build == null || !build.isOpen()) {
+//                        String chatMessage = I18n.translate("placement.message.no_build");
+//                        player.sendMessage(new TranslatableText(chatMessage));
+//                        return false;
+//                    }
 
                     World world = player.world;
 
@@ -178,7 +170,7 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
                     // by this excavation?
                     if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
                             SingleBlockPlacementSpec.this.isVirtual)) {
-                        PlacementHandler.placeVirtualBlock(world, SingleBlockPlacementSpec.this.outputStack, player, pos, build);
+                        PlacementHandler.placeVirtualBlock(world, SingleBlockPlacementSpec.this.outputStack, player, pos); //, build);
                     }
                     return false;
                 }

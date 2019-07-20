@@ -49,7 +49,7 @@ public abstract class S2C_ExcavationRenderUpdate {
         if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id %d New update packet position count = %d, aabb=%s", entry.id, positions == null ? 0 : positions.length,
                     aabb == null ? "null" : aabb.toString());
-        return toPacket(entry.id, aabb, entry.isExchange, positions);
+        return toPacket(entry.id, aabb, entry.task.isExchange(), positions);
     }
 
     /**

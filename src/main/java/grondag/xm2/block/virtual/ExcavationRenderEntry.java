@@ -35,32 +35,25 @@ import grondag.fermion.world.IntegerAABB;
 //import grondag.hs.simulator.jobs.tasks.PlacementTask;
 import grondag.xm2.Xm;
 import grondag.xm2.XmConfig;
-import grondag.xm2.placement.BuildManager;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 
 /**
  * Class exists on server but render methods do not. Server instantiates (and
  * generates IDs) and transmits to clients.
  */
-public class ExcavationRenderEntry implements Runnable { //ITaskListener
+public class ExcavationRenderEntry {
     private static int nextID = 0;
 
     public final int id;
-
-    /**
-     * If true, is replacement instead of straight excavation.
-     */
-    public final boolean isExchange;
-
-    public final int dimensionID;
-
-    public final int domainID;
+    
+    public final int rawDimensionId;
+    
+    public final ExcavationRenderTask task;
 
     @Nullable
     private IntegerAABB aabb;
@@ -78,12 +71,6 @@ public class ExcavationRenderEntry implements Runnable { //ITaskListener
     private Set<BlockPos> positions = Collections.synchronizedSet(new HashSet<BlockPos>());
 
     private boolean isValid = true;
-
-    /**
-     * True if has been submitted for re-computation. If true, will not be
-     * resubmitted when becomes dirty.
-     */
-    private AtomicBoolean isScheduled = new AtomicBoolean();
 
     /**
      * If true, has changed after the start of the last computation. Cleared at
@@ -153,30 +140,17 @@ public class ExcavationRenderEntry implements Runnable { //ITaskListener
     /**
      * For server side
      */
-    public ExcavationRenderEntry(Job job) {
-        this.id = nextID++;
-
+    public ExcavationRenderEntry(ExcavationRenderTask task) {
+        id = nextID++;
+        rawDimensionId = task.world().dimension.getType().getRawId();
+        this.task = task;
+        
         if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id = %d new Entry constructor", this.id);
 
-        this.domainID = job.getDomain().getId();
-
-        this.dimensionID = Registry.DIMENSION.get(job.getDimensionID()).getRawId();
-
-        boolean isExchange = false;
-
-        for (AbstractTask task : job) {
-            if (task instanceof ExcavationTask) {
-                if (!task.isTerminated()) {
-                    task.addListener(ExcavationRenderEntry.this);
-                    this.addPos(((ExcavationTask) task).pos());
-                }
-            } else if (!isExchange && task instanceof PlacementTask) {
-                isExchange = true;
-            }
-        }
-
-        this.isExchange = isExchange;
+        task.addCompletionListener(this::onPositionComplete);
+        
+        task.forEachPosition(this::addPos);
 
         if (ExcavationRenderEntry.this.positions.size() == 0) {
             if (XmConfig.logExcavationRenderTracking)
@@ -189,9 +163,8 @@ public class ExcavationRenderEntry implements Runnable { //ITaskListener
         }
     }
 
-    @Override
-    public void onTaskComplete(ITask task) {
-        boolean needsCompute = this.removePos(((AbstractPositionedTask) task).pos());
+    public void onPositionComplete(BlockPos pos) {
+        boolean needsCompute = this.removePos(pos);
         this.isValid = this.isValid && this.positions.size() > 0;
         if (this.isValid) {
             if (needsCompute)
@@ -214,16 +187,7 @@ public class ExcavationRenderEntry implements Runnable { //ITaskListener
         return this.isFirstComputeDone;
     }
 
-    private void compute() {
-        if (XmConfig.logExcavationRenderTracking)
-            Xm.LOG.info("id = %d Compute called. Already running = %s", this.id, Boolean.toString(this.isScheduled.get()));
-        if (this.isScheduled.compareAndSet(false, true)) {
-            BuildManager.EXECUTOR.execute(this);
-        }
-    }
-
-    @Override
-    public void run() {
+    public void compute() {
         if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id = %d Compute running.", this.id);
 
@@ -295,10 +259,9 @@ public class ExcavationRenderEntry implements Runnable { //ITaskListener
         if (needsListenerUpdate)
             this.updateListeners();
 
-        if (this.isDirty.get() && count > 0)
-            BuildManager.EXECUTOR.execute(this);
-        else
-            this.isScheduled.set(false);
+        if (this.isDirty.get() && count > 0) {
+            compute();
+        }
     }
 
     /**

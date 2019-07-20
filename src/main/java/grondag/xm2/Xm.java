@@ -21,8 +21,6 @@ import org.apache.logging.log4j.Logger;
 
 import grondag.exotic_matter.network.Packets;
 import grondag.exotic_matter.simulator.Simulator;
-import grondag.exotic_matter.simulator.domain.PlayerDomainChangeCallback;
-import grondag.xm2.block.virtual.ExcavationRenderTracker;
 import grondag.xm2.init.XmBlocks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
@@ -37,7 +35,6 @@ public class Xm implements ModInitializer {
         ServerStartCallback.EVENT.register(Simulator::start);
         ServerTickCallback.EVENT.register(Simulator.instance()::tick);
         Packets.initializeCommon();
-        PlayerDomainChangeCallback.EVENT.register(ExcavationRenderTracker::onDomainChanged);
     }
 
     public static Logger LOG = LogManager.getLogger("Exotic Matter");
