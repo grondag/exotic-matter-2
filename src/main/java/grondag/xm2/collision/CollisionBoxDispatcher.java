@@ -29,7 +29,7 @@ import org.joml.Vector3f;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.fermion.cache.ObjectSimpleLoadingCache;
+import grondag.sc.cache.ObjectSimpleLoadingCache;
 import grondag.xm2.api.model.ModelState;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;

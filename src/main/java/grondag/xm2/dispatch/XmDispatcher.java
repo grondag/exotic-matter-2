@@ -16,7 +16,7 @@
 
 package grondag.xm2.dispatch;
 
-import grondag.fermion.cache.KeyInterningCache;
+import grondag.sc.cache.KeyInterningCache;
 import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelState;
 

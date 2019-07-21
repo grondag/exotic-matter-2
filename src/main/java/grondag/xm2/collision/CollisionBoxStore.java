@@ -16,9 +16,9 @@
 
 package grondag.xm2.collision;
 
-import grondag.fermion.cache.IntSimpleCacheLoader;
-import grondag.fermion.cache.IntSimpleLoadingCache;
 import grondag.fermion.functions.IBoxBoundsObjectFunction;
+import grondag.sc.cache.IntSimpleCacheLoader;
+import grondag.sc.cache.IntSimpleLoadingCache;
 import net.minecraft.util.math.Box;
 
 /**

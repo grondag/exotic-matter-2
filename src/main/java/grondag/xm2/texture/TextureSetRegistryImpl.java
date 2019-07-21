@@ -18,7 +18,7 @@ package grondag.xm2.texture;
 
 import java.util.HashMap;
 
-import grondag.fermion.structures.NullHandler;
+import grondag.sc.structures.NullHandler;
 import grondag.xm2.api.texture.TextureGroup;
 import grondag.xm2.api.texture.TextureLayoutMap;
 import grondag.xm2.api.texture.TextureRenderIntent;

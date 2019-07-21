@@ -17,11 +17,11 @@
 package grondag.xm2.terrain;
 
 import grondag.fermion.varia.BitPacker64;
-import grondag.fermion.varia.Useful;
 import grondag.fermion.world.PackedBlockPos;
 import grondag.xm2.api.connect.model.HorizontalEdge;
 import grondag.xm2.api.connect.model.HorizontalFace;
 import grondag.xm2.mesh.helper.QuadHelper;
+import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockPos.Mutable;
@@ -143,7 +143,7 @@ public class TerrainState {
 
     @Override
     public final int hashCode() {
-        return (int) Useful.longHash(this.stateKey ^ this.hotness);
+        return (int) HashCommon.mix(this.stateKey ^ this.hotness);
     }
 
     @Override

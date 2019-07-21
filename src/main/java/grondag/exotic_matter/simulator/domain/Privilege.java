@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.exotic_matter.simulator.domain;
 
-import grondag.fermion.structures.BinaryEnumSet;
+import grondag.sc.structures.BinaryEnumSet;
 
 public enum Privilege {
     ADMIN, REMOVE_NODE, ADD_NODE, ACCESS_INVENTORY, CONSTRUCTION_VIEW, CONSTRUCTION_EDIT;

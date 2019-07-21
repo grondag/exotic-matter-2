@@ -19,8 +19,8 @@ package grondag.xm2.mesh.vertex;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import grondag.fermion.cache.ISimpleLoadingCache;
-import grondag.fermion.varia.Useful;
+import grondag.sc.cache.ISimpleLoadingCache;
+import it.unimi.dsi.fastutil.HashCommon;
 
 class Vec3fSimpleLoadingCache {
     static final Vec3fSimpleLoadingCache INSTANCE = new Vec3fSimpleLoadingCache(0x80000);
@@ -62,7 +62,7 @@ class Vec3fSimpleLoadingCache {
 
         final long hash = ((long) Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16) ^ (((long) Float.floatToIntBits(z)) << 32);
 
-        int position = (int) (Useful.longHash(hash) & positionMask);
+        int position = (int) (HashCommon.mix(hash) & positionMask);
 
         do {
             Vec3f check = localState.values[position];

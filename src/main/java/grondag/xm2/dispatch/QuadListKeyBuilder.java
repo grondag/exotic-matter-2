@@ -19,9 +19,9 @@ package grondag.xm2.dispatch;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
-import grondag.fermion.varia.Useful;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.vertex.IVec3f;
+import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 
 public class QuadListKeyBuilder implements Consumer<IPolygon> {
@@ -68,7 +68,7 @@ public class QuadListKeyBuilder implements Consumer<IPolygon> {
     public int getQuadListKey() {
         long key = 0L;
         for (Long vk : vertexKeys) {
-            key += Useful.longHash(vk);
+            key += HashCommon.mix(vk);
         }
         return (int) (key & 0xFFFFFFFF);
     }

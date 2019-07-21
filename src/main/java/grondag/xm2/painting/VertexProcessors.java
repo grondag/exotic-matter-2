@@ -18,7 +18,7 @@ package grondag.xm2.painting;
 
 import java.util.HashMap;
 
-import grondag.fermion.structures.NullHandler;
+import grondag.sc.structures.NullHandler;
 import grondag.xm2.Xm;
 
 /**
