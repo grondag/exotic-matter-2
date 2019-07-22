@@ -27,7 +27,6 @@ import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 
 public class Xm implements ModInitializer {
-    public static Xm INSTANCE = new Xm();
 
     @Override
     public void onInitialize() {
