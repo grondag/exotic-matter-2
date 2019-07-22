@@ -20,6 +20,7 @@ import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintRegistry;
 import grondag.xm2.api.surface.XmSurface;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.PacketByteBuf;
 
 public interface ModelState extends ModelWorldState, ModelPrimitiveState, Reference {
     OwnedModelState mutableCopy();
@@ -53,4 +54,12 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState, Refere
     boolean doesAppearanceMatch(ModelState other);
 
     void serializeNBT(CompoundTag tag);
+
+    default CompoundTag toTag() {
+        CompoundTag result = new CompoundTag();
+        serializeNBT(result);
+        return result;
+    }
+
+    void toBytes(PacketByteBuf pBuff);
 }

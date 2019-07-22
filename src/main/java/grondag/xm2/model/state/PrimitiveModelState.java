@@ -57,6 +57,10 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
     static OwnedModelState claim(ModelPrimitive primitive) {
         return claimInner(TEMPLATE, primitive);
     }
+    
+    static OwnedModelState claim() {
+        return claimInner(TEMPLATE, XmPrimitives.CUBE);
+    }
 
     private static PrimitiveModelState claimInner(PrimitiveModelState template, ModelPrimitive primitive) {
         PrimitiveModelState result = POOL.poll();

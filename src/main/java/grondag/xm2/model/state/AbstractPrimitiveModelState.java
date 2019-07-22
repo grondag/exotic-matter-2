@@ -56,7 +56,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
     private static final BitPacker32<AbstractPrimitiveModelState>.IntElement MASONRY_JOIN = SHAPE_PACKER.createIntElement(SimpleJoinState.STATE_COUNT);
 
     private static final BitPacker32<AbstractPrimitiveModelState>.IntElement PRIMITIVE_BITS = SHAPE_PACKER
-            .createIntElement(1 << ModelStates.PRIMITIVE_BIT_COUNT);
+            .createIntElement(1 << ModelStatesImpl.PRIMITIVE_BIT_COUNT);
 
     static {
         assert SHAPE_PACKER.bitLength() <= 32;

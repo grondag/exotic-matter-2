@@ -37,7 +37,7 @@ import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
 import grondag.xm2.model.varia.BlockOrientationType;
-import grondag.xm2.model.state.ModelStates;
+import grondag.xm2.model.state.ModelStatesImpl;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
 import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
@@ -63,7 +63,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     private static final BitPacker32<SquareColumnPrimitive>.BooleanElement STATE_LIT = STATE_PACKER.createBooleanElement();
 
     static {
-        assert STATE_PACKER.bitLength() <= ModelStates.PRIMITIVE_BIT_COUNT;
+        assert STATE_PACKER.bitLength() <= ModelStatesImpl.PRIMITIVE_BIT_COUNT;
     }
 
     private static class FaceSpec {

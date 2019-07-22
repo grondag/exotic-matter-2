@@ -21,7 +21,7 @@ import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm2.model.state.ModelStates;
+import grondag.xm2.model.state.ModelStatesImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -156,7 +156,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
     @Override
     public void fromTag(CompoundTag compound) {
         super.fromTag(compound);
-        this.modelState = ModelStates.fromTag(compound).toImmutable();
+        this.modelState = ModelStatesImpl.fromTag(compound).toImmutable();
         this.onModelStateChange(true);
     }
 

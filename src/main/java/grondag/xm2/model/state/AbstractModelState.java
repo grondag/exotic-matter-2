@@ -16,6 +16,7 @@
 package grondag.xm2.model.state;
 
 import grondag.xm2.api.model.ModelPrimitive;
+import grondag.xm2.api.model.ModelPrimitiveRegistry;
 import grondag.xm2.api.model.ModelState;
 import net.minecraft.util.PacketByteBuf;
 
@@ -144,13 +145,16 @@ abstract class AbstractModelState implements ModelState {
     }
 
     public void fromBytes(PacketByteBuf pBuff) {
+        this.primitive = ModelPrimitiveRegistry.INSTANCE.get(pBuff.readVarInt());
         final int limit = primitive.surfaces(this).size();
         for (int i = 0; i < limit; i++) {
             this.paints[i] = pBuff.readVarInt();
         }
     }
 
+    @Override
     public void toBytes(PacketByteBuf pBuff) {
+        pBuff.writeVarInt(primitive.index());
         final int limit = primitive.surfaces(this).size();
         for (int i = 0; i < limit; i++) {
             pBuff.writeVarInt(paints[i]);
