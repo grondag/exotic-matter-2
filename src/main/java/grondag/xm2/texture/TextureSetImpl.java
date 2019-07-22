@@ -23,7 +23,6 @@ import grondag.xm2.api.texture.TextureRotation;
 import grondag.xm2.api.texture.TextureSet;
 import grondag.xm2.api.texture.TextureSetBuilder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 
@@ -113,11 +112,6 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     @Override
     public String textureName(int version, int index) {
         return layoutMap.buildTextureName(this, version & versionMask, index);
-    }
-
-    @Override
-    public final String displayName() {
-        return I18n.translate(displayNameToken);
     }
 
     @Override

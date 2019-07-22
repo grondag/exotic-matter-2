@@ -14,13 +14,14 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm2.block;
+package grondag.xm2.api.block;
 
 import javax.annotation.Nullable;
 
 import grondag.xm2.api.connect.world.BlockTest;
 import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelState;
+import grondag.xm2.block.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;

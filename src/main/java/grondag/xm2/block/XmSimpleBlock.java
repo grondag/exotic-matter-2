@@ -19,6 +19,7 @@ package grondag.xm2.block;
 import java.util.List;
 import java.util.function.Function;
 
+import grondag.xm2.api.block.XmBlockState;
 import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelPrimitiveState;

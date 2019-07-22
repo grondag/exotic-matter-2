@@ -19,6 +19,7 @@ package grondag.xm2.api.texture;
 import java.util.function.Consumer;
 
 import grondag.xm2.texture.TextureSetImpl;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 
@@ -94,10 +95,14 @@ public interface TextureSet {
     /** for border-layout textures, controls if "no border" texture is rendered */
     boolean renderNoBorderAsTile();
 
+    String displayNameToken();
+    
     /**
      * Player-friendly, localized name for this texture palette
      */
-    String displayName();
+    default String displayName() {
+        return I18n.translate(displayNameToken());
+    }
 
     /**
      * Use {@link #sampleSprite()} when possible, not all texture formats work well

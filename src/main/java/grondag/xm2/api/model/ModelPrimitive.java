@@ -70,7 +70,7 @@ public interface ModelPrimitive {
 
     ModelState geometricState(ModelState fromState);
 
-    default MutableModelState newState() {
+    default OwnedModelState newState() {
         return defaultState().mutableCopy();
     }
 

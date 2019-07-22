@@ -39,7 +39,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
-import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 
 /**
@@ -303,7 +302,7 @@ public class Simulator extends PersistentState implements IDirtKeeper {
         return nbt;
     }
 
-    public @Nullable World getWorld() {
+    public @Nullable ServerWorld getWorld() {
         return world;
     }
 

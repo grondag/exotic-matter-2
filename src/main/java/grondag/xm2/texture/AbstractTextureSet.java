@@ -69,7 +69,7 @@ abstract class AbstractTextureSet {
         return renderNoBorderAsTile;
     }
 
-    public String displayName() {
+    public String displayNameToken() {
         return displayNameToken;
     }
 

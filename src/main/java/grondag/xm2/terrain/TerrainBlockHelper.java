@@ -183,6 +183,15 @@ public class TerrainBlockHelper {
         }
     }
 
+    public static @Nullable TerrainState terrainState(BlockState blockState, BlockView blockAccess, BlockPos pos) {
+        final XmBlockStateImpl xmState = XmBlockStateAccess.get(blockState);
+        if (isFlowBlock(xmState.blockState)) {
+            return xmState.getModelState(blockAccess, pos, true).getTerrainState();
+        } else {
+            return null;
+        }
+    }
+    
     /**
      * Use for filler blocks. Returns values from +1 to +2, or zero if not a filler.
      */

@@ -17,12 +17,12 @@
 package grondag.xm2.placement;
 
 import grondag.fermion.world.WorldHelper;
+import grondag.xm2.api.block.XmBlockState;
 import grondag.xm2.api.connect.model.BlockCorner;
 import grondag.xm2.api.connect.model.BlockEdge;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
-import grondag.xm2.block.XmBlockState;
 import grondag.xm2.block.XmBlockStateAccess;
 import grondag.xm2.block.XmStackHelper;
 import net.minecraft.block.BlockState;
