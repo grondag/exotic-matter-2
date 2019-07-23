@@ -58,6 +58,7 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive {
         return true;
     }
 
+    // PERF: should be an owned model state
     @Override
     public ModelState geometricState(ModelState fromState) {
         MutableModelState result = this.newState();

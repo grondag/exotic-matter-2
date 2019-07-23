@@ -16,6 +16,8 @@
 
 package grondag.xm2.mesh.stream;
 
+import java.util.function.Consumer;
+
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.polygon.IStreamReaderPolygon;
 
@@ -274,5 +276,16 @@ public interface IPolyStream {
 
     default void flipMark(int address) {
         setMark(!isMarked(address));
+    }
+    
+    /** Moves reader! */
+    default void forEach(Consumer<IPolygon> target) {
+        if (origin()) {
+            IPolygon reader = reader();
+
+            do
+                target.accept(reader);
+            while (next());
+        }
     }
 }

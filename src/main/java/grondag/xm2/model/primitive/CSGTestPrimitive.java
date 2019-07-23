@@ -56,13 +56,7 @@ public class CSGTestPrimitive extends AbstractModelPrimitive {
 
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
-        if (cachedQuads.origin()) {
-            IPolygon reader = cachedQuads.reader();
-
-            do
-                target.accept(reader);
-            while (cachedQuads.next());
-        }
+        cachedQuads.forEach(target);
     }
 
     private IPolyStream getTestQuads() {

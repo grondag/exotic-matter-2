@@ -34,7 +34,7 @@ import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class CubePrimitive extends AbstractModelPrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 
@@ -53,13 +53,7 @@ public class CubePrimitive extends AbstractModelPrimitive {
 
     @Override
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
-        if (cachedQuads.origin()) {
-            IPolygon reader = cachedQuads.reader();
-
-            do
-                target.accept(reader);
-            while (cachedQuads.next());
-        }
+        cachedQuads.forEach(target);
     }
 
     private IPolyStream getCubeQuads() {
