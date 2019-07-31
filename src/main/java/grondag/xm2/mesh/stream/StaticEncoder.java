@@ -17,9 +17,9 @@
 package grondag.xm2.mesh.stream;
 
 import grondag.fermion.intstream.IIntStream;
+import grondag.fermion.structures.IndexedInterner;
 import grondag.fermion.varia.BitPacker32;
 import grondag.fermion.world.Rotation;
-import grondag.sc.structures.IndexedInterner;
 import grondag.xm2.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 

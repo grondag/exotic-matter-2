@@ -21,21 +21,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import grondag.fermion.color.BlockColorMapProvider;
 import grondag.fermion.color.Chroma;
 import grondag.fermion.color.Hue;
 import grondag.fermion.color.Luminance;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.fermion.varia.ILocalized;
-import grondag.sc.structures.NullHandler;
 import grondag.xm2.Xm;
 import grondag.xm2.init.SubstanceConfig;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.block.Material;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.ai.pathing.PathNodeType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.PacketByteBuf;
 
 /**
  * Similar to Minecraft Material. Didn't want to tie to that implementation.
@@ -60,7 +61,7 @@ public class BlockSubstance implements ILocalized {
             BlockSoundGroup.WOOL, BlockColorMapProvider.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.MEDIUM_LIGHT).ordinal);
 
     public static BlockSubstance deserializeNBT(CompoundTag tag) {
-        return NullHandler.defaultIfNull(allByName.get(tag.getString(NBT_SUBSTANCE)), BlockSubstance.DEFAULT);
+        return ObjectUtils.defaultIfNull(allByName.get(tag.getString(NBT_SUBSTANCE)), BlockSubstance.DEFAULT);
     }
 
     public static BlockSubstance fromBytes(PacketByteBuf pBuff) {

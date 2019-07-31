@@ -18,7 +18,8 @@ package grondag.xm2.painting;
 
 import java.util.HashMap;
 
-import grondag.sc.structures.NullHandler;
+import org.apache.commons.lang3.ObjectUtils;
+
 import grondag.xm2.Xm;
 
 /**
@@ -41,11 +42,11 @@ public class VertexProcessors {
     }
 
     public static VertexProcessor get(String systemName) {
-        return NullHandler.defaultIfNull(allByName.get(systemName), VertexProcessorDefault.INSTANCE);
+        return ObjectUtils.defaultIfNull(allByName.get(systemName), VertexProcessorDefault.INSTANCE);
     }
 
     public static VertexProcessor get(int ordinal) {
-        return NullHandler.defaultIfNull(allByOrdinal[ordinal], VertexProcessorDefault.INSTANCE);
+        return ObjectUtils.defaultIfNull(allByOrdinal[ordinal], VertexProcessorDefault.INSTANCE);
     }
 
 }

@@ -19,7 +19,7 @@ package grondag.xm2.mesh.vertex;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import grondag.sc.cache.ISimpleLoadingCache;
+import grondag.fermion.sc.cache.ISimpleLoadingCache;
 import it.unimi.dsi.fastutil.HashCommon;
 
 class Vec3fSimpleLoadingCache {

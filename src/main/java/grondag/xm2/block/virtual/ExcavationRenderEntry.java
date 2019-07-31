@@ -24,8 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nullable;
 
 import grondag.exotic_matter.network.S2C_ExcavationRenderUpdate;
+import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.fermion.world.IntegerAABB;
-import grondag.sc.structures.SimpleUnorderedArrayList;
 //import grondag.hs.simulator.jobs.AbstractPositionedTask;
 //import grondag.hs.simulator.jobs.AbstractTask;
 //import grondag.hs.simulator.jobs.ITask;

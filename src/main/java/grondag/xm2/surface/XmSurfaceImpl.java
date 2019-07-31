@@ -16,7 +16,7 @@
 
 package grondag.xm2.surface;
 
-import grondag.sc.structures.SimpleUnorderedArrayList;
+import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.surface.XmSurfaceList;
 import grondag.xm2.api.surface.XmSurfaceListBuilder;

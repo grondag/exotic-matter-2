@@ -19,10 +19,10 @@ package grondag.xm2.placement;
 import org.apache.commons.lang3.tuple.Pair;
 
 import grondag.fermion.serialization.NBTDictionary;
+import grondag.fermion.structures.BinaryEnumSet;
 import grondag.fermion.varia.FixedRegionBounds;
 import grondag.fermion.varia.Useful;
 import grondag.fermion.world.PackedBlockPos;
-import grondag.sc.structures.BinaryEnumSet;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.model.MutableModelState;

@@ -54,7 +54,7 @@ import static grondag.xm2.mesh.stream.PolyStreamFormat.isTagged;
 import static grondag.xm2.mesh.stream.PolyStreamFormat.polyFormatKey;
 
 import grondag.fermion.intstream.IIntStream;
-import grondag.sc.structures.IndexedInterner;
+import grondag.fermion.structures.IndexedInterner;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.EncoderFunctions.FloatGetter;
 import grondag.xm2.mesh.stream.EncoderFunctions.FloatSetter;
