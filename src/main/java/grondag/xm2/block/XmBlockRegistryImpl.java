@@ -19,6 +19,7 @@ package grondag.xm2.block;
 import java.util.function.Function;
 
 import grondag.xm2.Xm;
+import grondag.xm2.api.block.XmBlockRegistry;
 import grondag.xm2.api.block.XmBlockState;
 import grondag.xm2.api.connect.world.BlockTest;
 import grondag.xm2.api.model.ImmutableModelState;
@@ -28,7 +29,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-public class XmBlockRegistryImpl {
+public class XmBlockRegistryImpl implements XmBlockRegistry {
     private XmBlockRegistryImpl() {
     }
 

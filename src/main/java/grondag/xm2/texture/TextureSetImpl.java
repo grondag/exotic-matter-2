@@ -65,6 +65,8 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
         }
 
         this.stateFlags = flags;
+        
+        TextureSetRegistryImpl.INSTANCE.add(this);
     }
 
     @Override

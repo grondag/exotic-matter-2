@@ -59,6 +59,7 @@ public class XmTextures {
                 final int limit = texReg.size();
                 for (int i = 0; i < limit; i++) {
                     TextureSetImpl set = texReg.getByIndex(i);
+                    assert set != null;
                     if (set.used()) {
                         set.prestitch(id -> registry.register(id));
                     }

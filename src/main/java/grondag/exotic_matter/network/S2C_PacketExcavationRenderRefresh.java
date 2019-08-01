@@ -39,7 +39,7 @@ public abstract class S2C_PacketExcavationRenderRefresh {
     private S2C_PacketExcavationRenderRefresh() {
     }
 
-    public static final Identifier ID = new Identifier(Xm.MODID, "EXRR");
+    public static final Identifier ID = new Identifier(Xm.MODID, "exrr");
 
     public static Packet<?> toPacket(Collection<ExcavationRenderEntry> entries) {
         PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());

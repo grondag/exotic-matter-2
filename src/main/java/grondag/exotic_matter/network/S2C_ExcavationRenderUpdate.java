@@ -38,7 +38,7 @@ public abstract class S2C_ExcavationRenderUpdate {
     private S2C_ExcavationRenderUpdate() {
     }
 
-    public static final Identifier ID = new Identifier(Xm.MODID, "EXRU");
+    public static final Identifier ID = new Identifier(Xm.MODID, "exru");
 
     /**
      * Use this for new and changed.

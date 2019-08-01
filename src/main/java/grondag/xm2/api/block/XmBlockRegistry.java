@@ -13,15 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.pragmatics;
 
-import grondag.pragmatics.impl.PlayerModifierHandler;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
+package grondag.xm2.api.block;
 
-public class PragmaticsClient implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
-       ClientTickCallback.EVENT.register(PlayerModifierHandler::update);
+import java.util.function.Function;
+
+import grondag.xm2.api.connect.world.BlockTest;
+import grondag.xm2.api.model.ImmutableModelState;
+import grondag.xm2.block.WorldToModelStateFunction;
+import grondag.xm2.block.XmBlockRegistryImpl;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+
+public interface XmBlockRegistry {
+    static void register(
+            Block block, 
+            Function<BlockState, ImmutableModelState> defaultStateFunc, 
+            WorldToModelStateFunction worldStateFunc,
+            BlockTest blockJoinTest) {
+        
+        XmBlockRegistryImpl.register(block, defaultStateFunc, worldStateFunc, blockJoinTest);
     }
 }
