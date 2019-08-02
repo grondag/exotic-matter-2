@@ -20,7 +20,7 @@ import static grondag.xm2.api.paint.XmPaint.MAX_TEXTURE_DEPTH;
 
 import javax.annotation.Nullable;
 
-import grondag.fermion.varia.BitPacker64;
+import grondag.fermion.bits.BitPacker64;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.paint.XmPaintFinder;
 import grondag.xm2.api.texture.TextureSet;

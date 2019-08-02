@@ -21,7 +21,7 @@ import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOI
 import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
 import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
-import grondag.fermion.varia.BitPacker32;
+import grondag.fermion.bits.BitPacker32;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.connect.state.SimpleJoinState;

@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.exotic_matter.simulator.domain;
 
-import grondag.fermion.serialization.ReadWriteNBT;
+import grondag.fermion.varia.ReadWriteNBT;
 
 public interface IUserCapability extends ReadWriteNBT {
     public String tagName();

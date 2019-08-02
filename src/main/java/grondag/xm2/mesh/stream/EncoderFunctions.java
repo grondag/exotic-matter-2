@@ -16,50 +16,50 @@
 
 package grondag.xm2.mesh.stream;
 
-import grondag.fermion.intstream.IIntStream;
-import grondag.fermion.varia.NormalQuantizer;
+import grondag.fermion.intstream.IntStream;
+import grondag.xm2.mesh.helper.NormalQuantizer;
 
 public abstract class EncoderFunctions {
     public static final int BAD_ADDRESS = Integer.MIN_VALUE;
 
     @FunctionalInterface
     public static interface ByteGetter {
-        int get(IIntStream stream, int byteIndex, int baseAddress);
+        int get(IntStream stream, int byteIndex, int baseAddress);
     }
 
     @FunctionalInterface
     public static interface ByteSetter {
-        void set(IIntStream stream, int baseAddress, int byteIndex, int value);
+        void set(IntStream stream, int baseAddress, int byteIndex, int value);
     }
 
     @FunctionalInterface
     public static interface IntGetter {
-        int get(IIntStream stream, int baseAddress);
+        int get(IntStream stream, int baseAddress);
     }
 
     @FunctionalInterface
     public static interface IntSetter {
-        void set(IIntStream stream, int baseAddress, int value);
+        void set(IntStream stream, int baseAddress, int value);
     }
 
     @FunctionalInterface
     public static interface FloatGetter {
-        float get(IIntStream stream, int baseAddress);
+        float get(IntStream stream, int baseAddress);
     }
 
     @FunctionalInterface
     public static interface FloatSetter {
-        void set(IIntStream stream, int baseAddress, float value);
+        void set(IntStream stream, int baseAddress, float value);
     }
 
     @FunctionalInterface
     public static interface FloatSetter2 {
-        void set(IIntStream stream, int baseAddress, float u, float v);
+        void set(IntStream stream, int baseAddress, float u, float v);
     }
 
     @FunctionalInterface
     public static interface FloatSetter3 {
-        void set(IIntStream stream, int baseAddress, float x, float y, float z);
+        void set(IntStream stream, int baseAddress, float x, float y, float z);
     }
 
     public static final ByteGetter GET_BYTE_FAIL = (stream, address, byteIndex) -> {

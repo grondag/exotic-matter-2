@@ -16,24 +16,23 @@
 
 package grondag.xm2.placement;
 
-import grondag.fermion.serialization.NBTDictionary;
-import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm2.block.virtual.VirtualBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.world.World;
 
 /**
  * For selection modes that use a region, determines which blocks in the region
  * are affected.
  */
-public enum FilterMode implements ILocalized {
+public enum FilterMode {
     FILL_REPLACEABLE(false), REPLACE_SOLID(false), REPLACE_ALL(false), REPLACE_ONLY(true), REPLACE_ALL_EXCEPT(true);
 
     private static String NBT_TAG = NBTDictionary.claim("filterMode");
@@ -64,7 +63,6 @@ public enum FilterMode implements ILocalized {
         pBuff.writeEnumConstant(this);
     }
 
-    @Override
     public String localizedName() {
         return I18n.translate("placement.filter_mode." + this.name().toLowerCase());
     }

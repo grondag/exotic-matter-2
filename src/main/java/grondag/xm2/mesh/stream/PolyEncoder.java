@@ -53,8 +53,8 @@ import static grondag.xm2.mesh.stream.PolyStreamFormat.isLinked;
 import static grondag.xm2.mesh.stream.PolyStreamFormat.isTagged;
 import static grondag.xm2.mesh.stream.PolyStreamFormat.polyFormatKey;
 
-import grondag.fermion.intstream.IIntStream;
-import grondag.fermion.structures.IndexedInterner;
+import grondag.fermion.intstream.IntStream;
+import grondag.fermion.varia.IndexedInterner;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.EncoderFunctions.FloatGetter;
 import grondag.xm2.mesh.stream.EncoderFunctions.FloatSetter;
@@ -334,34 +334,34 @@ public class PolyEncoder {
         return stride;
     }
 
-    public final void setFaceNormal(IIntStream stream, int baseAddress, Vec3f normal) {
+    public final void setFaceNormal(IntStream stream, int baseAddress, Vec3f normal) {
         setFaceNormal(stream, baseAddress, normal.x(), normal.y(), normal.z());
     }
 
-    public final void setFaceNormal(IIntStream stream, int baseAddress, float x, float y, float z) {
+    public final void setFaceNormal(IntStream stream, int baseAddress, float x, float y, float z) {
         setNormalXYZ.set(stream, baseAddress + getNormalXOffset, x, y, z);
     }
 
-    public final void clearFaceNormal(IIntStream stream, int baseAddress) {
+    public final void clearFaceNormal(IntStream stream, int baseAddress) {
         clearNormal.set(stream, baseAddress + getNormalXOffset, MISSING_NORMAL, MISSING_NORMAL, MISSING_NORMAL);
     }
 
-    public final Vec3f getFaceNormal(IIntStream stream, int baseAddress) {
+    public final Vec3f getFaceNormal(IntStream stream, int baseAddress) {
         final float x = getNormalX.get(stream, baseAddress + getNormalXOffset);
         if (Float.isNaN(x))
             return null;
         return Vec3f.create(x, getNormalY.get(stream, baseAddress + getNormalYOffset), getNormalZ.get(stream, baseAddress + getNormalZOffset));
     }
 
-    public final float getFaceNormalX(IIntStream stream, int baseAddress) {
+    public final float getFaceNormalX(IntStream stream, int baseAddress) {
         return getNormalX.get(stream, baseAddress + getNormalXOffset);
     }
 
-    public final float getFaceNormalY(IIntStream stream, int baseAddress) {
+    public final float getFaceNormalY(IntStream stream, int baseAddress) {
         return getNormalY.get(stream, baseAddress + getNormalYOffset);
     }
 
-    public final float getFaceNormalZ(IIntStream stream, int baseAddress) {
+    public final float getFaceNormalZ(IntStream stream, int baseAddress) {
         return getNormalZ.get(stream, baseAddress + getNormalZOffset);
     }
 
@@ -372,32 +372,32 @@ public class PolyEncoder {
         return valueIn == 0 ? IPolygon.NO_LINK_OR_TAG : valueIn == IPolygon.NO_LINK_OR_TAG ? 0 : valueIn;
     }
 
-    public final int getTag(IIntStream stream, int baseAddress) {
+    public final int getTag(IntStream stream, int baseAddress) {
         // want to return NO_TAG if never set, so swap with default (zero) value here
         return swapZeroNaNValues(getTag.get(stream, baseAddress + tagOffset));
     }
 
-    public final void setTag(IIntStream stream, int baseAddress, int tag) {
+    public final void setTag(IntStream stream, int baseAddress, int tag) {
         // want to return NO_TAG if never set, so swap with default (zero) value here
         setTag.set(stream, baseAddress + tagOffset, swapZeroNaNValues(tag));
     }
 
-    public final int getLink(IIntStream stream, int baseAddress) {
+    public final int getLink(IntStream stream, int baseAddress) {
         // want to return NO_LINK if never set, so swap with default (zero) value here
         return swapZeroNaNValues(getLink.get(stream, baseAddress + linkOffset));
     }
 
-    public final void setLink(IIntStream stream, int baseAddress, int link) {
+    public final void setLink(IntStream stream, int baseAddress, int link) {
         // want to return NO_LINK if never set, so swap with default (zero) value here
         setLink.set(stream, baseAddress + linkOffset, swapZeroNaNValues(link));
     }
 
-    public final float getMaxU(IIntStream stream, int baseAddress, int layerIndex) {
+    public final float getMaxU(IntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getU0.get(stream, baseAddress + maxUOffset0)
                 : layerIndex == 1 ? getU1.get(stream, baseAddress + maxUOffset1) : getU2.get(stream, baseAddress + maxUOffset2);
     }
 
-    public final void setMaxU(IIntStream stream, int baseAddress, int layerIndex, float maxU) {
+    public final void setMaxU(IntStream stream, int baseAddress, int layerIndex, float maxU) {
         if (layerIndex == 0)
             setU0.set(stream, baseAddress + maxUOffset0, maxU);
         else if (layerIndex == 1)
@@ -406,12 +406,12 @@ public class PolyEncoder {
             setU2.set(stream, baseAddress + maxUOffset2, maxU);
     }
 
-    public final float getMinU(IIntStream stream, int baseAddress, int layerIndex) {
+    public final float getMinU(IntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getU0.get(stream, baseAddress + minUOffset0)
                 : layerIndex == 1 ? getU1.get(stream, baseAddress + minUOffset1) : getU2.get(stream, baseAddress + minUOffset2);
     }
 
-    public final void setMinU(IIntStream stream, int baseAddress, int layerIndex, float minU) {
+    public final void setMinU(IntStream stream, int baseAddress, int layerIndex, float minU) {
         if (layerIndex == 0)
             setU0.set(stream, baseAddress + minUOffset0, minU);
         else if (layerIndex == 1)
@@ -420,12 +420,12 @@ public class PolyEncoder {
             setU2.set(stream, baseAddress + minUOffset2, minU);
     }
 
-    public final float getMaxV(IIntStream stream, int baseAddress, int layerIndex) {
+    public final float getMaxV(IntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getV0.get(stream, baseAddress + maxVOffset0)
                 : layerIndex == 1 ? getV1.get(stream, baseAddress + maxVOffset1) : getV2.get(stream, baseAddress + maxVOffset2);
     }
 
-    public final void setMaxV(IIntStream stream, int baseAddress, int layerIndex, float maxV) {
+    public final void setMaxV(IntStream stream, int baseAddress, int layerIndex, float maxV) {
         if (layerIndex == 0)
             setV0.set(stream, baseAddress + maxVOffset0, maxV);
         else if (layerIndex == 1)
@@ -434,12 +434,12 @@ public class PolyEncoder {
             setV2.set(stream, baseAddress + maxVOffset2, maxV);
     }
 
-    public final float getMinV(IIntStream stream, int baseAddress, int layerIndex) {
+    public final float getMinV(IntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getV0.get(stream, baseAddress + minVOffset0)
                 : layerIndex == 1 ? getV1.get(stream, baseAddress + minVOffset1) : getV2.get(stream, baseAddress + minVOffset2);
     }
 
-    public final void setMinV(IIntStream stream, int baseAddress, int layerIndex, float minV) {
+    public final void setMinV(IntStream stream, int baseAddress, int layerIndex, float minV) {
         if (layerIndex == 0)
             setV0.set(stream, baseAddress + minVOffset0, minV);
         else if (layerIndex == 1)
@@ -448,14 +448,14 @@ public class PolyEncoder {
             setV2.set(stream, baseAddress + minVOffset2, minV);
     }
 
-    public final String getTextureName(IIntStream stream, int baseAddress, int layerIndex) {
+    public final String getTextureName(IntStream stream, int baseAddress, int layerIndex) {
         final int handle = layerIndex == 0 ? getTexture0.get(stream, baseAddress + textureOffset01)
                 : layerIndex == 1 ? getTexture1.get(stream, baseAddress + textureOffset01) : getTexture2.get(stream, baseAddress + textureOffset2);
 
         return handle == 0 ? null : textureHandler.fromHandle(handle);
     }
 
-    public final void setTextureName(IIntStream stream, int baseAddress, int layerIndex, String textureName) {
+    public final void setTextureName(IntStream stream, int baseAddress, int layerIndex, String textureName) {
         final int handle = textureName == null || textureName.isEmpty() ? 0 : textureHandler.toHandle(textureName);
         if (layerIndex == 0)
             setTexture0.set(stream, baseAddress + textureOffset01, handle);
@@ -465,12 +465,12 @@ public class PolyEncoder {
             setTexture2.set(stream, baseAddress + textureOffset2, handle);
     }
 
-    public final int getVertexColor(IIntStream stream, int baseAddress, int layerIndex) {
+    public final int getVertexColor(IntStream stream, int baseAddress, int layerIndex) {
         return layerIndex == 0 ? getColor0.get(stream, baseAddress + colorOffset0)
                 : layerIndex == 1 ? getColor1.get(stream, baseAddress + colorOffset1) : getColor2.get(stream, baseAddress + colorOffset2);
     }
 
-    public final void setVertexColor(IIntStream stream, int baseAddress, int layerIndex, int color) {
+    public final void setVertexColor(IntStream stream, int baseAddress, int layerIndex, int color) {
         if (layerIndex == 0)
             setColor0.set(stream, baseAddress + colorOffset0, color);
         else if (layerIndex == 1)

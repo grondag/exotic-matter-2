@@ -16,7 +16,7 @@
 
 package grondag.xm2.mesh.stream;
 
-import grondag.fermion.varia.BitPacker32;
+import grondag.fermion.bits.BitPacker32;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.vertex.Vec3f;
 import net.minecraft.util.math.Direction;

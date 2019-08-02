@@ -22,7 +22,7 @@ import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
 import java.util.function.Consumer;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.surface.XmSurface;

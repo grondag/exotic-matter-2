@@ -17,7 +17,7 @@ package grondag.exotic_matter.network;
 
 import java.util.Collection;
 
-import grondag.fermion.world.IntegerAABB;
+import grondag.fermion.position.IntegerBox;
 import grondag.xm2.Xm;
 import grondag.xm2.XmConfig;
 import grondag.xm2.block.virtual.ExcavationRenderEntry;
@@ -88,7 +88,7 @@ public abstract class S2C_PacketExcavationRenderRefresh {
 
                 if (XmConfig.logExcavationRenderTracking)
                     Xm.LOG.info("id %d Refresh toBytes position count = %d", id, list == null ? 0 : list.length);
-                ExcavationRenderManager.addOrUpdate(new ExcavationRenderer(id, new IntegerAABB(minPos, maxPos).toAABB(), isExchange, list));
+                ExcavationRenderManager.addOrUpdate(new ExcavationRenderer(id, new IntegerBox(minPos, maxPos).toAABB(), isExchange, list));
             }
         }
     }

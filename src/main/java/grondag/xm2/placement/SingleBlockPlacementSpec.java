@@ -21,8 +21,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import grondag.fermion.world.IBlockRegion;
-import grondag.fermion.world.SingleBlockRegion;
+import grondag.fermion.position.BlockRegion;
+import grondag.fermion.position.SingleBlockRegion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -179,7 +179,7 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
     }
 
     @Override
-    public IBlockRegion region() {
+    public BlockRegion region() {
         return new SingleBlockRegion(this.pPos.inPos);
     }
 }

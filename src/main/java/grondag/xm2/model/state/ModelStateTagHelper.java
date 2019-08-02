@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm2.model.state;
 
-import grondag.fermion.serialization.NBTDictionary;
+import grondag.fermion.varia.NBTDictionary;
 import net.minecraft.nbt.CompoundTag;
 
 public abstract class ModelStateTagHelper {

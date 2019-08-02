@@ -20,7 +20,7 @@ import static grondag.xm2.collision.BoxFinderUtils.EMPTY;
 
 import java.util.function.IntConsumer;
 
-import grondag.fermion.varia.BitHelper;
+import grondag.fermion.bits.BitHelper;
 import grondag.xm2.Xm;
 import grondag.xm2.collision.BoxFinderUtils.Slice;
 import grondag.xm2.collision.Functions.AreaBoundsIntFunction;

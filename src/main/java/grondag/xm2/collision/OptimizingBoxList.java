@@ -18,8 +18,8 @@ package grondag.xm2.collision;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.fermion.config.FermionConfig;
 import grondag.fermion.varia.Useful;
+import grondag.xm2.XmConfig;
 import grondag.xm2.api.model.ImmutableModelState;
 import grondag.xm2.api.model.ModelState;
 import net.minecraft.util.math.Box;
@@ -74,7 +74,7 @@ public class OptimizingBoxList implements Runnable {
         if (trueVolume == 0)
             assert oldSize == 0 : "Fast collision box non-empty but detailed is empty";
         else if (trueVolume != -1) {
-            if (oldSize > FermionConfig.BLOCKS.collisionBoxBudget || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2)
+            if (oldSize > XmConfig.BLOCKS.collisionBoxBudget || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2)
                 wrapped = generator.build();
             shape = makeShapeFromBoxes(wrapped);
         }

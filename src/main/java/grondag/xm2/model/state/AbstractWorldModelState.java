@@ -17,7 +17,7 @@ package grondag.xm2.model.state;
 
 import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NEEDS_POS;
 
-import grondag.fermion.varia.BitPacker32;
+import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.varia.Useful;
 import grondag.xm2.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import it.unimi.dsi.fastutil.HashCommon;

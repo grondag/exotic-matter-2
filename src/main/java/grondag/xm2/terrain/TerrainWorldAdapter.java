@@ -20,7 +20,7 @@ import static it.unimi.dsi.fastutil.HashCommon.arraySize;
 
 import java.util.function.Supplier;
 
-import grondag.fermion.world.PackedBlockPos;
+import grondag.fermion.position.PackedBlockPos;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

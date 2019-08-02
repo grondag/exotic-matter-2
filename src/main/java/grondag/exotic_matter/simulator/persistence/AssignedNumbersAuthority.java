@@ -19,8 +19,8 @@ import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
-import grondag.fermion.serialization.ReadWriteNBT;
-import grondag.fermion.serialization.NBTDictionary;
+import grondag.fermion.varia.NBTDictionary;
+import grondag.fermion.varia.ReadWriteNBT;
 import grondag.xm2.Xm;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.CompoundTag;

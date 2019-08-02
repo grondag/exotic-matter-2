@@ -20,8 +20,8 @@ import java.util.IdentityHashMap;
 
 import javax.annotation.Nullable;
 
-import grondag.fermion.serialization.ReadWriteNBT;
-import grondag.fermion.serialization.NBTDictionary;
+import grondag.fermion.varia.NBTDictionary;
+import grondag.fermion.varia.ReadWriteNBT;
 import grondag.xm2.Xm;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;

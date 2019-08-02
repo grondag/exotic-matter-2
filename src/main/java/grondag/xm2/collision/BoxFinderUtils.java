@@ -16,7 +16,7 @@
 
 package grondag.xm2.collision;
 
-import grondag.fermion.varia.BitHelper;
+import grondag.fermion.bits.BitHelper;
 import grondag.xm2.collision.Functions.AreaBoundsIntFunction;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrays;

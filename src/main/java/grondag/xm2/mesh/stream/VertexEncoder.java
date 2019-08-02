@@ -50,7 +50,7 @@ import static grondag.xm2.mesh.stream.PolyStreamFormat.setVertexNormalFormat;
 import static grondag.xm2.mesh.stream.PolyStreamFormat.setVertexUVFormat;
 import static grondag.xm2.mesh.stream.PolyStreamFormat.vertexFormatKey;
 
-import grondag.fermion.intstream.IIntStream;
+import grondag.fermion.intstream.IntStream;
 import grondag.xm2.mesh.stream.EncoderFunctions.FloatGetter;
 import grondag.xm2.mesh.stream.EncoderFunctions.FloatSetter;
 import grondag.xm2.mesh.stream.EncoderFunctions.FloatSetter2;
@@ -260,7 +260,7 @@ public class VertexEncoder {
         return hasNormals;
     }
 
-    public Vec3f getVertexNormal(IIntStream stream, int vertexAddress, int vertexIndex) {
+    public Vec3f getVertexNormal(IntStream stream, int vertexAddress, int vertexIndex) {
         if (!hasNormals)
             return null;
 
@@ -284,40 +284,40 @@ public class VertexEncoder {
             return rawValue;
     }
 
-    public boolean hasVertexNormal(IIntStream stream, int vertexAddress, int vertexIndex) {
+    public boolean hasVertexNormal(IntStream stream, int vertexAddress, int vertexIndex) {
         return hasNormals && getNormalX.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX) != 0;
     }
 
-    public float getVertexNormalX(IIntStream stream, int vertexAddress, int vertexIndex) {
+    public float getVertexNormalX(IntStream stream, int vertexAddress, int vertexIndex) {
         return interpretMissingNormal(getNormalX.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX));
     }
 
-    public float getVertexNormalY(IIntStream stream, int vertexAddress, int vertexIndex) {
+    public float getVertexNormalY(IntStream stream, int vertexAddress, int vertexIndex) {
         return interpretMissingNormal(getNormalY.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalY));
     }
 
-    public float getVertexNormalZ(IIntStream stream, int vertexAddress, int vertexIndex) {
+    public float getVertexNormalZ(IntStream stream, int vertexAddress, int vertexIndex) {
         return interpretMissingNormal(getNormalZ.get(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalZ));
     }
 
-    public void setVertexNormal(IIntStream stream, int vertexAddress, int vertexIndex, float normalX, float normalY, float normalZ) {
+    public void setVertexNormal(IntStream stream, int vertexAddress, int vertexIndex, float normalX, float normalY, float normalZ) {
         setNormalXYZ.set(stream, vertexAddress + vertexIndex * vertexStride + offsetNormalX, interpretMissingNormal(normalX), interpretMissingNormal(normalY),
                 interpretMissingNormal(normalZ));
     }
 
-    public float getVertexX(IIntStream stream, int vertexAddress, int vertexIndex) {
+    public float getVertexX(IntStream stream, int vertexAddress, int vertexIndex) {
         return getPosX.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosX);
     }
 
-    public float getVertexY(IIntStream stream, int vertexAddress, int vertexIndex) {
+    public float getVertexY(IntStream stream, int vertexAddress, int vertexIndex) {
         return getPosY.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosY);
     }
 
-    public float getVertexZ(IIntStream stream, int vertexAddress, int vertexIndex) {
+    public float getVertexZ(IntStream stream, int vertexAddress, int vertexIndex) {
         return getPosZ.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosZ);
     }
 
-    public void setVertexPos(IIntStream stream, int vertexAddress, int vertexIndex, float x, float y, float z) {
+    public void setVertexPos(IntStream stream, int vertexAddress, int vertexIndex, float x, float y, float z) {
         setPosXYZ.set(stream, vertexAddress + vertexIndex * vertexStride + offsetPosX, x, y, z);
     }
 
@@ -325,13 +325,13 @@ public class VertexEncoder {
         return hasColor;
     }
 
-    public int getVertexColor(IIntStream stream, int vertexAddress, int layerIndex, int vertexIndex) {
+    public int getVertexColor(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex) {
         return layerIndex == 0 ? getColor0.get(stream, vertexAddress + vertexIndex * vertexStride + offsetColor0)
                 : layerIndex == 1 ? getColor1.get(stream, vertexAddress + vertexIndex * vertexStride + offsetColor1)
                         : getColor2.get(stream, vertexAddress + vertexIndex * vertexStride + offsetColor2);
     }
 
-    public void setVertexColor(IIntStream stream, int vertexAddress, int layerIndex, int vertexIndex, int color) {
+    public void setVertexColor(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex, int color) {
         if (layerIndex == 0)
             setColor0.set(stream, vertexAddress + vertexIndex * vertexStride + offsetColor0, color);
         else if (layerIndex == 1)
@@ -340,13 +340,13 @@ public class VertexEncoder {
             setColor2.set(stream, vertexAddress + vertexIndex * vertexStride + offsetColor2, color);
     }
 
-    public float getVertexU(IIntStream stream, int vertexAddress, int layerIndex, int vertexIndex) {
+    public float getVertexU(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex) {
         return layerIndex == 0 ? getU0.get(stream, vertexAddress + vertexIndex * vertexStride + offsetU0)
                 : layerIndex == 1 ? getU1.get(stream, vertexAddress + vertexIndex * vertexStride + offsetU1)
                         : getU2.get(stream, vertexAddress + vertexIndex * vertexStride + offsetU2);
     }
 
-    public void setVertexU(IIntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float u) {
+    public void setVertexU(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float u) {
         if (layerIndex == 0)
             setU0.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU0, u);
         else if (layerIndex == 1)
@@ -355,13 +355,13 @@ public class VertexEncoder {
             setU2.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU2, u);
     }
 
-    public float getVertexV(IIntStream stream, int vertexAddress, int layerIndex, int vertexIndex) {
+    public float getVertexV(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex) {
         return layerIndex == 0 ? getV0.get(stream, vertexAddress + vertexIndex * vertexStride + offsetV0)
                 : layerIndex == 1 ? getV1.get(stream, vertexAddress + vertexIndex * vertexStride + offsetV1)
                         : getV2.get(stream, vertexAddress + vertexIndex * vertexStride + offsetV2);
     }
 
-    public void setVertexV(IIntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float v) {
+    public void setVertexV(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float v) {
         if (layerIndex == 0)
             setV0.set(stream, vertexAddress + vertexIndex * vertexStride + offsetV0, v);
         else if (layerIndex == 1)
@@ -370,7 +370,7 @@ public class VertexEncoder {
             setV2.set(stream, vertexAddress + vertexIndex * vertexStride + offsetV2, v);
     }
 
-    public void setVertexUV(IIntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float u, float v) {
+    public void setVertexUV(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float u, float v) {
         if (layerIndex == 0)
             setUV0.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU0, u, v);
         else if (layerIndex == 1)

@@ -192,7 +192,7 @@ public abstract class PlacementHandler {
      * Determines species that should be used for placing a region according to
      * current stack settings.
      */
-    public static int speciesForPlacement(PlayerEntity player, BlockPos onPos, Direction onFace, ItemStack stack, grondag.fermion.world.IBlockRegion region) {
+    public static int speciesForPlacement(PlayerEntity player, BlockPos onPos, Direction onFace, ItemStack stack, grondag.fermion.position.BlockRegion region) {
         // ways this can happen:
         // have a species we want to match because we clicked on a face
         // break with everything - need to know adjacent species

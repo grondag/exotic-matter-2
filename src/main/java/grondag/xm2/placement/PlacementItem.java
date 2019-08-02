@@ -18,11 +18,10 @@ package grondag.xm2.placement;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import grondag.fermion.serialization.NBTDictionary;
-import grondag.fermion.structures.BinaryEnumSet;
-import grondag.fermion.varia.FixedRegionBounds;
+import grondag.fermion.bits.EnumBitSet;
+import grondag.fermion.position.PackedBlockPos;
+import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
-import grondag.fermion.world.PackedBlockPos;
 import grondag.xm2.api.connect.model.ClockwiseRotation;
 import grondag.xm2.api.model.MutableModelPrimitiveState;
 import grondag.xm2.api.model.MutableModelState;
@@ -54,7 +53,7 @@ public interface PlacementItem {
     public final static String NBT_FIXED_REGION_ENABLED = NBTDictionary.claim("fixedRegionOn");
     public final static String NBT_FIXED_REGION_SELECT_POS = NBTDictionary.claim("fixedRegionPos");
 
-    public static BinaryEnumSet<PlacementItemFeature> BENUMSET_FEATURES = new BinaryEnumSet<PlacementItemFeature>(PlacementItemFeature.class);
+    public static EnumBitSet<PlacementItemFeature> BENUMSET_FEATURES = new EnumBitSet<PlacementItemFeature>(PlacementItemFeature.class);
 
     /**
      * Returns PlacementItem held by player in either hand, or null if player isn't

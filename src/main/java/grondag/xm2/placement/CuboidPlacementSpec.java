@@ -29,9 +29,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import grondag.fermion.varia.FixedRegionBounds;
-import grondag.fermion.world.CubicBlockRegion;
-import grondag.fermion.world.IBlockRegion;
+import grondag.fermion.position.BlockRegion;
+import grondag.fermion.position.CubicBlockRegion;
 import grondag.fermion.world.WorldHelper;
 import grondag.xm2.dispatch.RenderUtil;
 import grondag.xm2.render.XmRenderHelper;
@@ -423,7 +422,7 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
     }
 
     @Override
-    public IBlockRegion region() {
+    public BlockRegion region() {
         return this.region;
     }
 }

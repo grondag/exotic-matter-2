@@ -34,8 +34,8 @@ import static grondag.xm2.api.texture.TextureScale.SINGLE;
 import static grondag.xm2.api.texture.TextureScale.SMALL;
 import static grondag.xm2.api.texture.TextureScale.TINY;
 
-import grondag.fermion.config.FermionConfig;
 import grondag.xm2.Xm;
+import grondag.xm2.XmConfig;
 import grondag.xm2.api.texture.TextureLayoutMap;
 import grondag.xm2.api.texture.TextureRenderIntent;
 import grondag.xm2.api.texture.TextureSet;
@@ -76,11 +76,11 @@ public class XmTextures {
     // blocks if test textures are temporarily disabled
 
     public static final TextureSet BIGTEX_TEST_SINGLE = TextureSet.builder().displayNameToken("bigtex_test_single")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/bigtex_single" : "xm2:blocks/noise_moderate_0_0").versionCount(1)
+            .baseTextureName(XmConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/bigtex_single" : "xm2:blocks/noise_moderate_0_0").versionCount(1)
             .scale(SMALL).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("xm2:bigtex_test_single");
 
     public static final TextureSet BIGTEX_TEST1 = TextureSet.builder().displayNameToken("big_tex_test1")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/bigtex" : "xm2:blocks/noise_moderate_0").versionCount(4).scale(TINY)
+            .baseTextureName(XmConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/bigtex" : "xm2:blocks/noise_moderate_0").versionCount(4).scale(TINY)
             .layout(TextureLayoutMap.VERSIONED).rotation(ROTATE_RANDOM).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("xm2:big_tex_test1");
 
     public static final TextureSet BIGTEX_TEST2 = TextureSet.builder(BIGTEX_TEST1).displayNameToken("big_tex_test2").scale(SMALL).build("xm2:big_tex_test2");
@@ -92,7 +92,7 @@ public class XmTextures {
     public static final TextureSet BIGTEX_TEST5 = TextureSet.builder(BIGTEX_TEST1).displayNameToken("big_tex_test5").scale(GIANT).build("xm2:big_tex_test5");
 
     public static final TextureSet TEST = TextureSet.builder().displayNameToken("test")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/test" : "xm2:blocks/noise_moderate_0").versionCount(2).scale(SINGLE)
+            .baseTextureName(XmConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/test" : "xm2:blocks/noise_moderate_0").versionCount(2).scale(SINGLE)
             .layout(TextureLayoutMap.VERSIONED).rotation(ROTATE_NONE).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("xm2:test");
 
     public static final TextureSet TEST_ZOOM = TextureSet.builder(TEST).displayNameToken("test_zoom").scale(TINY).build("xm2:test_zoom");
@@ -110,7 +110,7 @@ public class XmTextures {
     public static final TextureSet TEST_270_ZOOM = TextureSet.builder(TEST_270).displayNameToken("test_270_zoom").scale(TINY).build("xm2:test_270_zoom");
 
     public static final TextureSet TEST_4X4 = TextureSet.builder().displayNameToken("test4x4")
-            .baseTextureName(FermionConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/test4x4" : "xm2:blocks/noise_moderate_0_0").versionCount(1).scale(SMALL)
+            .baseTextureName(XmConfig.BLOCKS.showHiddenTextures ? "xm2:blocks/test4x4" : "xm2:blocks/noise_moderate_0_0").versionCount(1).scale(SMALL)
             .layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("xm2:test4x4");
 
     public static final TextureSet TEST_4x4_90 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_90").rotation(ROTATE_90).build("xm2:test4x4_90");

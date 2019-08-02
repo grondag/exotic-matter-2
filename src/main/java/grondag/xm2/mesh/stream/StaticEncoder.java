@@ -16,10 +16,10 @@
 
 package grondag.xm2.mesh.stream;
 
-import grondag.fermion.intstream.IIntStream;
-import grondag.fermion.structures.IndexedInterner;
-import grondag.fermion.varia.BitPacker32;
-import grondag.fermion.world.Rotation;
+import grondag.fermion.bits.BitPacker32;
+import grondag.fermion.intstream.IntStream;
+import grondag.fermion.spatial.Rotation;
+import grondag.fermion.varia.IndexedInterner;
 import grondag.xm2.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 
@@ -41,27 +41,27 @@ public class StaticEncoder {
      */
     public static final int INTEGER_WIDTH = 4;
 
-    public static XmSurfaceImpl surface(IIntStream stream, int baseAddress) {
+    public static XmSurfaceImpl surface(IntStream stream, int baseAddress) {
         return xmSurfaces.fromHandle(stream.get(baseAddress + SURFACE_OFFSET));
     }
 
-    public static void surface(IIntStream stream, int baseAddress, XmSurfaceImpl surface) {
+    public static void surface(IntStream stream, int baseAddress, XmSurfaceImpl surface) {
         stream.set(baseAddress + SURFACE_OFFSET, xmSurfaces.toHandle(surface));
     }
 
-    public static float uvWrapDistance(IIntStream stream, int baseAddress) {
+    public static float uvWrapDistance(IntStream stream, int baseAddress) {
         return Float.intBitsToFloat(stream.get(baseAddress + UV_WRAP_DIST_OFFSET));
     }
 
-    public static void uvWrapDistance(IIntStream stream, int baseAddress, float uvWrapDistance) {
+    public static void uvWrapDistance(IntStream stream, int baseAddress, float uvWrapDistance) {
         stream.set(baseAddress + UV_WRAP_DIST_OFFSET, Float.floatToRawIntBits(uvWrapDistance));
     }
 
-    public static int getPipelineIndex(IIntStream stream, int baseAddress) {
+    public static int getPipelineIndex(IntStream stream, int baseAddress) {
         return stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) >>> 16;
     }
 
-    public static void setPipelineIndex(IIntStream stream, int baseAddress, int pipelineIndex) {
+    public static void setPipelineIndex(IntStream stream, int baseAddress, int pipelineIndex) {
         final int surfaceVal = stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) & 0x0000FFFF;
         stream.set(baseAddress + TEXTURE_PIPELINE_OFFSET, surfaceVal | (pipelineIndex << 16));
     }
@@ -75,13 +75,13 @@ public class StaticEncoder {
         CONTRACT_UV[2] = BITPACKER.createBooleanElement();
     }
 
-    public static boolean shouldContractUVs(IIntStream stream, int baseAddress, int layerIndex) {
+    public static boolean shouldContractUVs(IntStream stream, int baseAddress, int layerIndex) {
         // want default to be true - easiest way is to flip here so that 0 bit gives
         // right default
         return !CONTRACT_UV[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setContractUVs(IIntStream stream, int baseAddress, int layerIndex, boolean shouldContract) {
+    public static void setContractUVs(IntStream stream, int baseAddress, int layerIndex, boolean shouldContract) {
         // want default to be true - easiest way is to flip here so that 0 bit gives
         // right default
         final int bits = stream.get(baseAddress + BIT_OFFSET);
@@ -97,22 +97,22 @@ public class StaticEncoder {
         ROTATION[2] = BITPACKER.createEnumElement(Rotation.class);
     }
 
-    public static Rotation getRotation(IIntStream stream, int baseAddress, int layerIndex) {
+    public static Rotation getRotation(IntStream stream, int baseAddress, int layerIndex) {
         return ROTATION[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setRotation(IIntStream stream, int baseAddress, int layerIndex, Rotation rotation) {
+    public static void setRotation(IntStream stream, int baseAddress, int layerIndex, Rotation rotation) {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, ROTATION[layerIndex].setValue(rotation, bits));
     }
 
     private static final BitPacker32<StaticEncoder>.IntElement SALT = BITPACKER.createIntElement(256);
 
-    public static int getTextureSalt(IIntStream stream, int baseAddress) {
+    public static int getTextureSalt(IntStream stream, int baseAddress) {
         return SALT.getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setTextureSalt(IIntStream stream, int baseAddress, int salt) {
+    public static void setTextureSalt(IntStream stream, int baseAddress, int salt) {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, SALT.setValue(salt, bits));
     }
@@ -126,11 +126,11 @@ public class StaticEncoder {
         LOCK_UV[2] = BITPACKER.createBooleanElement();
     }
 
-    public static boolean isLockUV(IIntStream stream, int baseAddress, int layerIndex) {
+    public static boolean isLockUV(IntStream stream, int baseAddress, int layerIndex) {
         return LOCK_UV[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setLockUV(IIntStream stream, int baseAddress, int layerIndex, boolean lockUV) {
+    public static void setLockUV(IntStream stream, int baseAddress, int layerIndex, boolean lockUV) {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, LOCK_UV[layerIndex].setValue(lockUV, bits));
     }
@@ -144,11 +144,11 @@ public class StaticEncoder {
         EMISSIVE[2] = BITPACKER.createBooleanElement();
     }
 
-    public static boolean isEmissive(IIntStream stream, int baseAddress, int layerIndex) {
+    public static boolean isEmissive(IntStream stream, int baseAddress, int layerIndex) {
         return EMISSIVE[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setEmissive(IIntStream stream, int baseAddress, int layerIndex, boolean isEmissive) {
+    public static void setEmissive(IntStream stream, int baseAddress, int layerIndex, boolean isEmissive) {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, EMISSIVE[layerIndex].setValue(isEmissive, bits));
     }
@@ -164,11 +164,11 @@ public class StaticEncoder {
         assert BITPACKER.bitLength() <= 32;
     }
 
-    public static BlockRenderLayer getRenderLayer(IIntStream stream, int baseAddress, int layerIndex) {
+    public static BlockRenderLayer getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {
         return RENDER_LAYER[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setRenderLayer(IIntStream stream, int baseAddress, int layerIndex, BlockRenderLayer layer) {
+    public static void setRenderLayer(IntStream stream, int baseAddress, int layerIndex, BlockRenderLayer layer) {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, RENDER_LAYER[layerIndex].setValue(layer, bits));
     }

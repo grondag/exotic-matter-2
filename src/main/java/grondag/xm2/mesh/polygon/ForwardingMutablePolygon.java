@@ -16,7 +16,7 @@
 
 package grondag.xm2.mesh.polygon;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.helper.FaceVertex;
 import grondag.xm2.mesh.vertex.Vec3f;

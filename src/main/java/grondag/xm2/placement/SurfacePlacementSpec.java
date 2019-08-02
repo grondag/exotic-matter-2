@@ -17,7 +17,7 @@ package grondag.xm2.placement;
 
 import java.util.function.BooleanSupplier;
 
-import grondag.fermion.world.IBlockRegion;
+import grondag.fermion.position.BlockRegion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BufferBuilder;
@@ -62,7 +62,7 @@ public class SurfacePlacementSpec extends SingleStackPlacementSpec {
     }
 
     @Override
-    public IBlockRegion region() {
+    public BlockRegion region() {
         // TODO Auto-generated method stub
         return null;
     }

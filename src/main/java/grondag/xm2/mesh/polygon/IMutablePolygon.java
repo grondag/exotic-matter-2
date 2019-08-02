@@ -19,7 +19,7 @@ package grondag.xm2.mesh.polygon;
 import java.util.List;
 import java.util.function.Consumer;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.helper.FaceVertex;
 import grondag.xm2.mesh.helper.QuadHelper;

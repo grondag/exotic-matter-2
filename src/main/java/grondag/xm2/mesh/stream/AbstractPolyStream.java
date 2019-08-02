@@ -20,12 +20,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import grondag.fermion.intstream.IIntStream;
+import grondag.fermion.intstream.IntStream;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.polygon.IStreamReaderPolygon;
 
 public abstract class AbstractPolyStream implements IPolyStream {
-    protected IIntStream stream;
+    protected IntStream stream;
 
     /**
      * Address in stream where poly info starts. Some streams with additional
@@ -131,7 +131,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
         return reader;
     }
 
-    void prepare(IIntStream stream) {
+    void prepare(IntStream stream) {
         didRelease.set(false);
         this.stream = stream;
         originAddress = newOrigin();

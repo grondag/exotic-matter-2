@@ -18,7 +18,7 @@ package grondag.xm2.placement;
 
 import java.util.function.BooleanSupplier;
 
-import grondag.fermion.world.IBlockRegion;
+import grondag.fermion.position.BlockRegion;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -86,6 +86,6 @@ public interface IPlacementSpec {
      * Enumerates block positions potentially affected. Intended for use by species
      * selection, but could have other uses in future.
      */
-    public IBlockRegion region();
+    public BlockRegion region();
 
 }

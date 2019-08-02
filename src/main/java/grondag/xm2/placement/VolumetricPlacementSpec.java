@@ -17,7 +17,7 @@ package grondag.xm2.placement;
 
 import java.util.HashSet;
 
-import grondag.fermion.world.CubicBlockRegion;
+import grondag.fermion.position.CubicBlockRegion;
 import grondag.xm2.XmConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

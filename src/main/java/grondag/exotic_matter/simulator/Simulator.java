@@ -33,7 +33,7 @@ import grondag.exotic_matter.simulator.persistence.AssignedNumbersAuthority;
 import grondag.exotic_matter.simulator.persistence.IDirtKeeper;
 import grondag.exotic_matter.simulator.persistence.SimulationTopNode;
 import grondag.fermion.sc.concurrency.ScatterGatherThreadPool;
-import grondag.fermion.serialization.NBTDictionary;
+import grondag.fermion.varia.NBTDictionary;
 import grondag.xm2.Xm;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;

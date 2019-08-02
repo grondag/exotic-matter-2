@@ -20,7 +20,7 @@ import static grondag.xm2.api.model.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.mesh.helper.CubeInputs;

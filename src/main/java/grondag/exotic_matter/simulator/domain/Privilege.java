@@ -15,10 +15,10 @@
  ******************************************************************************/
 package grondag.exotic_matter.simulator.domain;
 
-import grondag.fermion.structures.BinaryEnumSet;
+import grondag.fermion.bits.EnumBitSet;
 
 public enum Privilege {
     ADMIN, REMOVE_NODE, ADD_NODE, ACCESS_INVENTORY, CONSTRUCTION_VIEW, CONSTRUCTION_EDIT;
 
-    public static final BinaryEnumSet<Privilege> PRIVILEGE_FLAG_SET = new BinaryEnumSet<Privilege>(Privilege.class);
+    public static final EnumBitSet<Privilege> PRIVILEGE_FLAG_SET = new EnumBitSet<Privilege>(Privilege.class);
 }

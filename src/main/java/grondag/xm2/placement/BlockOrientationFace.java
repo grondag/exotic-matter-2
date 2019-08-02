@@ -16,15 +16,14 @@
 
 package grondag.xm2.placement;
 
-import grondag.fermion.serialization.NBTDictionary;
-import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
-import net.minecraft.client.resource.language.I18n;
 
-public enum BlockOrientationFace implements ILocalized {
+public enum BlockOrientationFace {
     DYNAMIC(null), MATCH_CLOSEST(null), UP(Direction.UP), DOWN(Direction.DOWN), NORTH(Direction.NORTH), EAST(Direction.EAST), SOUTH(Direction.SOUTH),
     WEST(Direction.WEST);
 
@@ -52,7 +51,6 @@ public enum BlockOrientationFace implements ILocalized {
         pBuff.writeEnumConstant(this);
     }
 
-    @Override
     public String localizedName() {
         return I18n.translate("placement.orientation.face." + this.name().toLowerCase());
     }

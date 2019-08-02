@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.exotic_matter.network;
 
-import grondag.fermion.world.IntegerAABB;
+import grondag.fermion.position.IntegerBox;
 import grondag.xm2.Xm;
 import grondag.xm2.XmConfig;
 import grondag.xm2.block.virtual.ExcavationRenderEntry;
@@ -44,7 +44,7 @@ public abstract class S2C_ExcavationRenderUpdate {
      * Use this for new and changed.
      */
     public static Packet<?> toPacket(ExcavationRenderEntry entry) {
-        final IntegerAABB aabb = entry.aabb();
+        final IntegerBox aabb = entry.aabb();
         final BlockPos[] positions = entry.renderPositions();
         if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id %d New update packet position count = %d, aabb=%s", entry.id, positions == null ? 0 : positions.length,
@@ -60,7 +60,7 @@ public abstract class S2C_ExcavationRenderUpdate {
         return toPacket(deletedId, null, false, null);
     }
 
-    private static Packet<?> toPacket(int id, IntegerAABB aabb, boolean isExchange, BlockPos[] positions) {
+    private static Packet<?> toPacket(int id, IntegerBox aabb, boolean isExchange, BlockPos[] positions) {
         PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
         if (XmConfig.logExcavationRenderTracking)
             Xm.LOG.info("id %d Update toBytes position count = %d", id, positions == null ? 0 : positions.length);
@@ -86,7 +86,7 @@ public abstract class S2C_ExcavationRenderUpdate {
     public static void accept(PacketContext context, PacketByteBuf pBuff) {
 
         final int id = pBuff.readInt();
-        final IntegerAABB aabb;
+        final IntegerBox aabb;
         final BlockPos[] positions;
         final boolean isExchange;
         if (pBuff.readBoolean()) {
@@ -97,7 +97,7 @@ public abstract class S2C_ExcavationRenderUpdate {
         } else {
             BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
             BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
-            aabb = new IntegerAABB(minPos, maxPos);
+            aabb = new IntegerBox(minPos, maxPos);
             isExchange = pBuff.readBoolean();
 
             int posCount = pBuff.readInt();

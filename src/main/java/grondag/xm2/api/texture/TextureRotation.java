@@ -16,7 +16,7 @@
 
 package grondag.xm2.api.texture;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 
 // TODO: Restore RANDOM_CONSISTENT to distinguish multi-block textures that can and can't have rotations intermingled per-plane.
 // As is, have to assume can't, but 2x2 cobble would be an example that could.

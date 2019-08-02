@@ -16,8 +16,8 @@
 
 package grondag.xm2.painting;
 
+import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
-import grondag.fermion.world.Rotation;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.api.surface.XmSurface;
 import grondag.xm2.api.texture.TextureSet;

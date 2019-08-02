@@ -16,18 +16,31 @@
 
 package grondag.xm2.mesh.helper;
 
-import grondag.fermion.spatial.Rotation;
+public class NormalQuantizer {
+    private static int packComponent(float n) {
+        return Math.round(n * 256) + 256;
+    }
 
-public class FaceQuadInputs {
-    public final int textureOffset;
-    public final Rotation rotation;
-    public final boolean flipU;
-    public final boolean flipV;
+    private static float unpackComponent(int q) {
+        return (q - 256) / 256f;
+    }
 
-    public FaceQuadInputs(int textureOffset, Rotation rotation, boolean flipU, boolean flipV) {
-        this.textureOffset = textureOffset;
-        this.rotation = rotation;
-        this.flipU = flipU;
-        this.flipV = flipV;
+    public static int pack(float x, float y, float z) {
+        final int qx = packComponent(x);
+        final int qy = packComponent(y);
+        final int qz = packComponent(z);
+        return qx | (qy << 10) | (qz << 20);
+    }
+
+    public static float unpackX(int q) {
+        return unpackComponent(q & 0x3FF);
+    }
+
+    public static float unpackY(int q) {
+        return unpackComponent((q >> 10) & 0x3FF);
+    }
+
+    public static float unpackZ(int q) {
+        return unpackComponent((q >> 20) & 0x3FF);
     }
 }

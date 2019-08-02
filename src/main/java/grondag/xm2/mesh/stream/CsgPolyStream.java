@@ -18,7 +18,7 @@ package grondag.xm2.mesh.stream;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import grondag.fermion.intstream.IIntStream;
+import grondag.fermion.intstream.IntStream;
 import grondag.fermion.intstream.IntStreams;
 import grondag.xm2.mesh.helper.QuadHelper;
 import grondag.xm2.mesh.polygon.IPolygon;
@@ -104,7 +104,7 @@ public class CsgPolyStream extends MutablePolyStream {
         }
     };
 
-    private IIntStream nodeStream;
+    private IntStream nodeStream;
 
     private int nextNodeAddress = 0;
 

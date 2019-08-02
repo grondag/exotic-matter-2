@@ -16,7 +16,7 @@
 
 package grondag.xm2.mesh.stream;
 
-import grondag.fermion.intstream.IIntStream;
+import grondag.fermion.intstream.IntStream;
 import grondag.fermion.intstream.IntStreams;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
@@ -33,8 +33,8 @@ public class WritablePolyStream extends AbstractPolyStream implements IWritableP
     protected final StreamBackedMutablePolygon writer;
     protected final StreamBackedPolygon copyFrom = new StreamBackedPolygon();
 
-    protected IIntStream writerStream;
-    protected IIntStream defaultStream;
+    protected IntStream writerStream;
+    protected IntStream defaultStream;
 
     /**
      * Format flags used for the writer polygon. Always includes mutable flag. Also
@@ -63,7 +63,7 @@ public class WritablePolyStream extends AbstractPolyStream implements IWritableP
         loadDefaults();
     }
 
-    protected final void prepare(IIntStream stream, int formatFlags) {
+    protected final void prepare(IntStream stream, int formatFlags) {
         super.prepare(stream);
         copyFrom.stream = stream;
         defaultStream = IntStreams.claim();
@@ -79,7 +79,7 @@ public class WritablePolyStream extends AbstractPolyStream implements IWritableP
     }
 
     @Override
-    protected final void prepare(IIntStream stream) {
+    protected final void prepare(IntStream stream) {
         prepare(stream, 0);
     }
 

@@ -16,7 +16,7 @@
 
 package grondag.xm2.block;
 
-import grondag.fermion.serialization.NBTDictionary;
+import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.model.OwnedModelState;

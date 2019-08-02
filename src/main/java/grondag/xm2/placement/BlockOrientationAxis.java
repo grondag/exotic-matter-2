@@ -16,15 +16,14 @@
 
 package grondag.xm2.placement;
 
-import grondag.fermion.serialization.NBTDictionary;
-import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
-import net.minecraft.client.resource.language.I18n;
 
-public enum BlockOrientationAxis implements ILocalized {
+public enum BlockOrientationAxis {
 
     DYNAMIC(null), MATCH_CLOSEST(null), X(Direction.Axis.X), Y(Direction.Axis.Y), Z(Direction.Axis.Z);
 
@@ -52,7 +51,6 @@ public enum BlockOrientationAxis implements ILocalized {
         pBuff.writeEnumConstant(this);
     }
 
-    @Override
     public String localizedName() {
         return I18n.translate("placement.orientation.axis." + this.name().toLowerCase());
     }

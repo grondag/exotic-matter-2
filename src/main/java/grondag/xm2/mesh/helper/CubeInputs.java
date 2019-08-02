@@ -16,7 +16,7 @@
 
 package grondag.xm2.mesh.helper;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.surface.XmSurfaceImpl;

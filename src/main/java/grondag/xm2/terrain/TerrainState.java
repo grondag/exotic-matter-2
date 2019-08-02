@@ -16,8 +16,8 @@
 
 package grondag.xm2.terrain;
 
-import grondag.fermion.varia.BitPacker64;
-import grondag.fermion.world.PackedBlockPos;
+import grondag.fermion.bits.BitPacker64;
+import grondag.fermion.position.PackedBlockPos;
 import grondag.xm2.api.connect.model.HorizontalEdge;
 import grondag.xm2.api.connect.model.HorizontalFace;
 import grondag.xm2.mesh.helper.QuadHelper;

@@ -23,12 +23,11 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import grondag.fermion.color.ColorAtlas;
 import grondag.fermion.color.Chroma;
+import grondag.fermion.color.ColorAtlas;
 import grondag.fermion.color.Hue;
 import grondag.fermion.color.Luminance;
-import grondag.fermion.serialization.NBTDictionary;
-import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.NBTDictionary;
 import grondag.xm2.Xm;
 import grondag.xm2.init.SubstanceConfig;
 import net.minecraft.block.Material;
@@ -42,7 +41,7 @@ import net.minecraft.util.PacketByteBuf;
  * Similar to Minecraft Material. Didn't want to tie to that implementation.
  * Determines Minecraft material and other physical properties.
  */
-public class BlockSubstance implements ILocalized {
+public class BlockSubstance {
     private static final String NBT_SUBSTANCE = NBTDictionary.claim("substance");
 
     /**
@@ -142,7 +141,6 @@ public class BlockSubstance implements ILocalized {
 
     }
 
-    @Override
     public String localizedName() {
         return I18n.translate("material." + this.systemName.toLowerCase());
     }

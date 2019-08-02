@@ -18,7 +18,7 @@ package grondag.xm2.model.primitive;
 
 import java.util.function.Consumer;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.api.model.ModelState;
 import grondag.xm2.mesh.helper.PolyTransform;
 import grondag.xm2.mesh.polygon.IMutablePolygon;

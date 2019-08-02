@@ -18,17 +18,17 @@ package grondag.xm2.mesh.stream;
 
 import static grondag.xm2.mesh.stream.PolyStreamFormat.*;
 
-import grondag.fermion.intstream.IIntStream;
+import grondag.fermion.intstream.IntStream;
 
 public abstract class GlowEncoder {
     private static final GlowEncoder NO_GLOW = new GlowEncoder() {
         @Override
-        public final int getGlow(IIntStream stream, int glowAddress, int vertexIndex) {
+        public final int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
             return 0;
         }
 
         @Override
-        public final void setGlow(IIntStream stream, int glowAddress, int vertexIndex, int glow) {
+        public final void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
             throw new UnsupportedOperationException();
         }
 
@@ -45,12 +45,12 @@ public abstract class GlowEncoder {
 
     private static final GlowEncoder SAME_GLOW = new GlowEncoder() {
         @Override
-        public final int getGlow(IIntStream stream, int glowAddress, int vertexIndex) {
+        public final int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
             return stream.get(glowAddress);
         }
 
         @Override
-        public final void setGlow(IIntStream stream, int glowAddress, int vertexIndex, int glow) {
+        public final void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
             stream.set(glowAddress, glow);
         }
 
@@ -67,7 +67,7 @@ public abstract class GlowEncoder {
 
     private static final GlowEncoder VERTEX_GLOW = new GlowEncoder() {
         @Override
-        public final int getGlow(IIntStream stream, int glowAddress, int vertexIndex) {
+        public final int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
             final int streamIndex = glowAddress + (vertexIndex >> 2);
             final int byteIndex = vertexIndex & 3;
             final int shift = 8 * byteIndex;
@@ -75,7 +75,7 @@ public abstract class GlowEncoder {
         }
 
         @Override
-        public final void setGlow(IIntStream stream, int glowAddress, int vertexIndex, int glow) {
+        public final void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
             final int streamIndex = glowAddress + (vertexIndex >> 2);
             final int byteIndex = vertexIndex & 3;
             final int shift = 8 * byteIndex;
@@ -104,9 +104,9 @@ public abstract class GlowEncoder {
 
     public abstract int glowFormat();
 
-    public abstract int getGlow(IIntStream stream, int glowAddress, int vertexIndex);
+    public abstract int getGlow(IntStream stream, int glowAddress, int vertexIndex);
 
-    public abstract void setGlow(IIntStream stream, int glowAddress, int vertexIndex, int glow);
+    public abstract void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow);
 
     protected abstract int stride(int format);
 }

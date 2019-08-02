@@ -18,8 +18,8 @@ package grondag.xm2.mesh.stream;
 
 import java.util.function.IntUnaryOperator;
 
-import grondag.fermion.intstream.IIntStream;
-import grondag.fermion.world.Rotation;
+import grondag.fermion.intstream.IntStream;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.vertex.Vec3f;
 import grondag.xm2.surface.XmSurfaceImpl;
@@ -75,7 +75,7 @@ public class StreamBackedPolygon implements IPolygon {
      */
     protected int stride = 0;
 
-    protected IIntStream stream;
+    protected IntStream stream;
 
     protected int format() {
         return stream.get(baseAddress);

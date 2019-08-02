@@ -16,15 +16,14 @@
 
 package grondag.xm2.placement;
 
-import grondag.fermion.serialization.NBTDictionary;
-import grondag.fermion.varia.ILocalized;
+import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.client.resource.language.I18n;
 
-public enum RegionOrientation implements ILocalized {
+public enum RegionOrientation {
     AUTOMATIC, XYZ, ZYX, ZXY, XZY, YXZ, YZX;
 
     private static final String TAG_NAME = NBTDictionary.claim("regionOrientation");
@@ -45,7 +44,6 @@ public enum RegionOrientation implements ILocalized {
         pBuff.writeEnumConstant(this);
     }
 
-    @Override
     public String localizedName() {
         return I18n.translate("placement.orientation.region." + this.name().toLowerCase());
     }

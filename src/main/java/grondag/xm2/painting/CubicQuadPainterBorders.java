@@ -31,7 +31,7 @@ import static grondag.xm2.api.texture.TextureNameFunction.BORDER_SIDES_TOP_LEFT_
 import static grondag.xm2.api.texture.TextureNameFunction.BORDER_SIDES_TOP_RIGHT;
 import static grondag.xm2.api.texture.TextureNameFunction.BORDER_SIDE_TOP;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.api.connect.state.CornerJoinFaceStates;
 import grondag.xm2.api.connect.state.CornerJoinState;
 import grondag.xm2.api.paint.XmPaint;

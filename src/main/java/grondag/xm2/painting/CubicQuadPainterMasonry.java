@@ -16,7 +16,7 @@
 
 package grondag.xm2.painting;
 
-import grondag.fermion.world.Rotation;
+import grondag.fermion.spatial.Rotation;
 import grondag.xm2.api.connect.state.SimpleJoinFaceState;
 import grondag.xm2.api.connect.state.SimpleJoinState;
 import grondag.xm2.api.paint.XmPaint;

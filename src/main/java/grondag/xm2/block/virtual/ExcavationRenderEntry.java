@@ -24,8 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nullable;
 
 import grondag.exotic_matter.network.S2C_ExcavationRenderUpdate;
+import grondag.fermion.position.IntegerBox;
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
-import grondag.fermion.world.IntegerAABB;
 //import grondag.hs.simulator.jobs.AbstractPositionedTask;
 //import grondag.hs.simulator.jobs.AbstractTask;
 //import grondag.hs.simulator.jobs.ITask;
@@ -56,7 +56,7 @@ public class ExcavationRenderEntry {
     public final ExcavationRenderTask task;
 
     @Nullable
-    private IntegerAABB aabb;
+    private IntegerBox aabb;
 
     private boolean isFirstComputeDone = false;
 
@@ -230,7 +230,7 @@ public class ExcavationRenderEntry {
             }
         }
 
-        IntegerAABB newBox = new IntegerAABB(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
+        IntegerBox newBox = new IntegerBox(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
 
         // always send start time computed
         boolean needsListenerUpdate = !this.isFirstComputeDone;
@@ -273,7 +273,7 @@ public class ExcavationRenderEntry {
         return isValid;
     }
 
-    public IntegerAABB aabb() {
+    public IntegerBox aabb() {
         return aabb;
     }
 

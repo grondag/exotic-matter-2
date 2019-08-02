@@ -18,9 +18,8 @@ package grondag.xm2.model.primitive;
 
 import java.util.function.Consumer;
 
+import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.color.Color;
-import grondag.fermion.varia.BitPacker32;
-import grondag.fermion.varia.DirectionHelper;
 import grondag.xm2.api.connect.model.FaceEdge;
 import grondag.xm2.api.connect.state.CornerJoinFaceState;
 import grondag.xm2.api.connect.state.CornerJoinFaceStates;
@@ -36,11 +35,12 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IWritablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
-import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.model.state.ModelStatesImpl;
+import grondag.xm2.model.varia.BlockOrientationType;
 import grondag.xm2.painting.SurfaceTopology;
 import grondag.xm2.surface.XmSurfaceImpl;
 import grondag.xm2.surface.XmSurfaceImpl.XmSurfaceListImpl;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 
 public class SquareColumnPrimitive extends AbstractModelPrimitive {
@@ -111,7 +111,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive {
     public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
         FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
         for (int i = 0; i < 6; i++) {
-            this.makeFaceQuads(modelState, DirectionHelper.fromOrdinal(i), spec, target);
+            this.makeFaceQuads(modelState, ModelHelper.faceFromIndex(i), spec, target);
         }
     }
 
