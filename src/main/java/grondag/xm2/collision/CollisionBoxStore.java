@@ -16,7 +16,7 @@
 
 package grondag.xm2.collision;
 
-import grondag.fermion.functions.IBoxBoundsObjectFunction;
+import grondag.xm2.collision.Functions.BoxBoundsObjectFunction;
 import grondag.fermion.sc.cache.IntSimpleCacheLoader;
 import grondag.fermion.sc.cache.IntSimpleLoadingCache;
 import net.minecraft.util.math.Box;
@@ -32,7 +32,7 @@ public class CollisionBoxStore {
         return boxCache.get(boxKey);
     }
 
-    static final IBoxBoundsObjectFunction<Box> boxMaker = (minX, minY, minZ, maxX, maxY, maxZ) -> {
+    static final BoxBoundsObjectFunction<Box> boxMaker = (minX, minY, minZ, maxX, maxY, maxZ) -> {
         return new Box(minX / 8f, minY / 8f, minZ / 8f, maxX / 8f, maxY / 8f, maxZ / 8f);
     };
 

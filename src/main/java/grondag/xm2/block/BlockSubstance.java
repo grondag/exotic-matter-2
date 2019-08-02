@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import grondag.fermion.color.BlockColorMapProvider;
+import grondag.fermion.color.ColorAtlas;
 import grondag.fermion.color.Chroma;
 import grondag.fermion.color.Hue;
 import grondag.fermion.color.Luminance;
@@ -58,7 +58,7 @@ public class BlockSubstance implements ILocalized {
     private static int nextOrdinal = 0;
 
     public static final BlockSubstance DEFAULT = create("default", new SubstanceConfig(1, BlockHarvestTool.ANY, 0, 10, 1.0), Material.EARTH,
-            BlockSoundGroup.WOOL, BlockColorMapProvider.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.MEDIUM_LIGHT).ordinal);
+            BlockSoundGroup.WOOL, ColorAtlas.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.MEDIUM_LIGHT).ordinal);
 
     public static BlockSubstance deserializeNBT(CompoundTag tag) {
         return ObjectUtils.defaultIfNull(allByName.get(tag.getString(NBT_SUBSTANCE)), BlockSubstance.DEFAULT);

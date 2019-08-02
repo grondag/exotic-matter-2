@@ -16,8 +16,8 @@
 
 package grondag.xm2.dispatch;
 
-import grondag.fermion.color.BlockColorMapProvider;
-import grondag.fermion.color.ColorMap.EnumColorMap;
+import grondag.fermion.color.ColorAtlas;
+import grondag.fermion.color.ColorSet.Tone;
 import grondag.xm2.api.paint.XmPaint;
 import grondag.xm2.init.XmTextures;
 import grondag.xm2.api.model.MutableModelState;
@@ -34,9 +34,9 @@ public class CraftingItem extends Item {
     public CraftingItem(Settings settings, MutableModelState modelState) {
         super(settings);
         this.modelState = modelState;
-        final int colorIndex = this.hashCode() % BlockColorMapProvider.INSTANCE.getColorMapCount();
+        final int colorIndex = this.hashCode() % ColorAtlas.INSTANCE.getColorMapCount();
         XmPaint paint = XmPaint.finder().texture(0, XmTextures.WHITE)
-                .textureColor(0, BlockColorMapProvider.INSTANCE.getColorMap(colorIndex).getColor(EnumColorMap.BASE)).find();
+                .textureColor(0, ColorAtlas.INSTANCE.getColorMap(colorIndex).getColor(Tone.BASE)).find();
         this.modelState.paintAll(paint);
     }
 }

@@ -54,11 +54,11 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
         TEMPLATE.primitive = XmPrimitives.CUBE;
     }
 
-    static OwnedModelState claim(ModelPrimitive primitive) {
+    static PrimitiveModelState claim(ModelPrimitive primitive) {
         return claimInner(TEMPLATE, primitive);
     }
     
-    static OwnedModelState claim() {
+    static PrimitiveModelState claim() {
         return claimInner(TEMPLATE, XmPrimitives.CUBE);
     }
 

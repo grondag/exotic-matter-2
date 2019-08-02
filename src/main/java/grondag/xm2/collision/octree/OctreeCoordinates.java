@@ -18,10 +18,10 @@ package grondag.xm2.collision.octree;
 
 import java.util.Arrays;
 
-import grondag.fermion.functions.Float3Consumer;
-import grondag.fermion.functions.Float3Test;
-import grondag.fermion.functions.IBoxBoundsIntConsumer;
-import grondag.fermion.functions.Int3Consumer;
+import grondag.xm2.collision.Functions.Float3Consumer;
+import grondag.xm2.collision.Functions.Float3Test;
+import grondag.xm2.collision.Functions.BoxBoundsIntConsumer;
+import grondag.xm2.collision.Functions.Int3Consumer;
 
 public class OctreeCoordinates {
     public static final long FULL_BITS = 0xFFFFFFFFFFFFFFFFL;
@@ -278,7 +278,7 @@ public class OctreeCoordinates {
         final int mask = (1 << divisionLevel) - 1;
         return test.apply(((xyz & mask) + 0.5f) * d, (((xyz >> divisionLevel) & mask) + 0.5f) * d, (((xyz >> (divisionLevel * 2)) & mask) + 0.5f) * d);
     }
-
+    
     public static void withXYZ(final int index, final int divisionLevel, Int3Consumer consumer) {
         final int xyz = indexToXYZ(index, divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
@@ -289,7 +289,7 @@ public class OctreeCoordinates {
      * Gives numerators of AABB coordinates aligned to 1/8 divisions. Meant only for
      * division levels 0-3. (Level 4 is 1/16)
      */
-    public static void withBounds8(final int index, final int divisionLevel, IBoxBoundsIntConsumer consumer) {
+    public static void withBounds8(final int index, final int divisionLevel, BoxBoundsIntConsumer consumer) {
         final int xyz = indexToXYZ(index, divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
         final int x = xyz & mask;

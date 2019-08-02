@@ -16,7 +16,7 @@
 
 package grondag.xm2.collision.octree;
 
-import grondag.fermion.functions.Int3Consumer;
+import grondag.xm2.collision.Functions.Int3Consumer;
 
 /**
  * Operations on Cartesian representation of 16x16x16 voxels in unit cube that

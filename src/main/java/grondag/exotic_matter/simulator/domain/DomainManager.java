@@ -211,7 +211,7 @@ public class DomainManager extends SimulationTopNode {
 
         if (!domains.isEmpty()) {
             for (IIdentified domain : domains.values()) {
-                nbtDomains.add(((Domain) domain).serializeNBT());
+                nbtDomains.add(((Domain) domain).toTag());
             }
         }
         tag.put(NBT_DOMAIN_MANAGER_DOMAINS, nbtDomains);

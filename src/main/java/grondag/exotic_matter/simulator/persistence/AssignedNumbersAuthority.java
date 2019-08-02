@@ -19,13 +19,13 @@ import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
-import grondag.fermion.serialization.IReadWriteNBT;
+import grondag.fermion.serialization.ReadWriteNBT;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.xm2.Xm;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 
-public class AssignedNumbersAuthority implements IReadWriteNBT, IDirtNotifier {
+public class AssignedNumbersAuthority implements ReadWriteNBT, IDirtNotifier {
 
     private static final String NBT_TAG = NBTDictionary.claim("assignedNumAuth");
 
@@ -108,7 +108,7 @@ public class AssignedNumbersAuthority implements IReadWriteNBT, IDirtNotifier {
     }
 
     @Override
-    public synchronized void deserializeNBT(@Nullable CompoundTag tag) {
+    public synchronized void writeTag(@Nullable CompoundTag tag) {
         int input[] = tag.getIntArray(NBT_TAG);
         if (input.length == 0) {
             this.clear();
@@ -125,7 +125,7 @@ public class AssignedNumbersAuthority implements IReadWriteNBT, IDirtNotifier {
     }
 
     @Override
-    public synchronized void serializeNBT(CompoundTag tag) {
+    public synchronized void readTag(CompoundTag tag) {
         tag.putIntArray(NBT_TAG, Arrays.copyOf(lastID, lastID.length));
     }
 

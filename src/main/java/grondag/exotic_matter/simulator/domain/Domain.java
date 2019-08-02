@@ -29,14 +29,14 @@ import grondag.exotic_matter.simulator.persistence.AssignedNumber;
 import grondag.exotic_matter.simulator.persistence.IDirtListener;
 import grondag.exotic_matter.simulator.persistence.IDirtListenerProvider;
 import grondag.exotic_matter.simulator.persistence.IIdentified;
-import grondag.fermion.serialization.IReadWriteNBT;
+import grondag.fermion.serialization.ReadWriteNBT;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.xm2.Xm;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 
-public class Domain implements IReadWriteNBT, IDirtListenerProvider, IIdentified, IDomain {
+public class Domain implements ReadWriteNBT, IDirtListenerProvider, IIdentified, IDomain {
     private static final String NBT_DOMAIN_SECURITY_ENABLED = NBTDictionary.claim("domSecOn");
     private static final String NBT_DOMAIN_NAME = NBTDictionary.claim("domName");
     private static final String NBT_DOMAIN_USERS = NBTDictionary.claim("domUsers");
@@ -78,7 +78,7 @@ public class Domain implements IReadWriteNBT, IDirtListenerProvider, IIdentified
 
     Domain(DomainManager domainManager, CompoundTag tag) {
         this(domainManager);
-        this.deserializeNBT(tag);
+        this.writeTag(tag);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class Domain implements IReadWriteNBT, IDirtListenerProvider, IIdentified
     }
 
     @Override
-    public void serializeNBT(CompoundTag tag) {
+    public void readTag(CompoundTag tag) {
         this.serializeID(tag);
         tag.putBoolean(NBT_DOMAIN_SECURITY_ENABLED, this.isSecurityEnabled);
         tag.putString(NBT_DOMAIN_NAME, this.name);
@@ -181,14 +181,14 @@ public class Domain implements IReadWriteNBT, IDirtListenerProvider, IIdentified
 
         if (!this.users.isEmpty()) {
             for (DomainUser user : this.users.values()) {
-                nbtUsers.add(user.serializeNBT());
+                nbtUsers.add(user.toTag());
             }
         }
         tag.put(NBT_DOMAIN_USERS, nbtUsers);
     }
 
     @Override
-    public void deserializeNBT(@Nullable CompoundTag tag) {
+    public void writeTag(@Nullable CompoundTag tag) {
         this.deserializeID(tag);
         this.isSecurityEnabled = tag.getBoolean(NBT_DOMAIN_SECURITY_ENABLED);
         this.name = tag.getString(NBT_DOMAIN_NAME);

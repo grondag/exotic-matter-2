@@ -37,7 +37,7 @@ public abstract class ModelStatesImpl {
     }
 
     public static @Nullable OwnedModelState fromBuffer(PacketByteBuf buf) {
-        OwnedModelState result = PrimitiveModelState.claim();
+        PrimitiveModelState result = PrimitiveModelState.claim();
         result.fromBytes(buf);
         return result;
     }

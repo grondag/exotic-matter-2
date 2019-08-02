@@ -18,8 +18,8 @@ package grondag.xm2.collision;
 
 import java.util.function.IntConsumer;
 
-import grondag.fermion.functions.IBoxBoundsIntFunction;
-import grondag.fermion.functions.IBoxBoundsObjectFunction;
+import grondag.xm2.collision.Functions.BoxBoundsIntFunction;
+import grondag.xm2.collision.Functions.BoxBoundsObjectFunction;
 import net.minecraft.util.math.Direction;
 
 /**
@@ -168,12 +168,12 @@ public class CollisionBoxEncoder {
         });
     }
 
-    static int forBounds(int boxKey, IBoxBoundsIntFunction consumer) {
+    static int forBounds(int boxKey, BoxBoundsIntFunction consumer) {
         return consumer.accept(boxKey & 0xF, (boxKey >> MIN_Y_SHIFT) & 0xF, (boxKey >> MIN_Z_SHIFT) & 0xF, (boxKey >> MAX_X_SHIFT) & 0xF,
                 (boxKey >> MAX_Y_SHIFT) & 0xF, (boxKey >> MAX_Z_SHIFT) & 0xF);
     }
 
-    static <V> V forBoundsObject(int boxKey, IBoxBoundsObjectFunction<V> consumer) {
+    static <V> V forBoundsObject(int boxKey, BoxBoundsObjectFunction<V> consumer) {
         return consumer.accept(boxKey & 0xF, (boxKey >> MIN_Y_SHIFT) & 0xF, (boxKey >> MIN_Z_SHIFT) & 0xF, (boxKey >> MAX_X_SHIFT) & 0xF,
                 (boxKey >> MAX_Y_SHIFT) & 0xF, (boxKey >> MAX_Z_SHIFT) & 0xF);
     }

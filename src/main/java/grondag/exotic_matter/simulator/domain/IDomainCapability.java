@@ -16,9 +16,9 @@
 package grondag.exotic_matter.simulator.domain;
 
 import grondag.exotic_matter.simulator.persistence.ISimulationNode;
-import grondag.fermion.serialization.IReadWriteNBT;
+import grondag.fermion.serialization.ReadWriteNBT;
 
-public interface IDomainCapability extends IDomainMember, ISimulationNode, IReadWriteNBT {
+public interface IDomainCapability extends IDomainMember, ISimulationNode, ReadWriteNBT {
     public String tagName();
 
     /**

@@ -22,7 +22,7 @@ import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import net.minecraft.util.math.Box;
 
-public interface ICollisionBoxListBuilder {
+interface CollisionBoxListBuilder {
     IntCollection boxes();
 
     void clear();

@@ -17,7 +17,7 @@
 package grondag.xm2.collision;
 
 import grondag.fermion.varia.BitHelper;
-import grondag.fermion.functions.IAreaBoundsIntFunction;
+import grondag.xm2.collision.Functions.AreaBoundsIntFunction;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrays;
 import it.unimi.dsi.fastutil.ints.IntComparator;
@@ -409,7 +409,7 @@ public class BoxFinderUtils {
     /**
      * Single-pass lookup of x, y bounds for given area index.
      */
-    static int testAreaBounds(int areaIndex, IAreaBoundsIntFunction test) {
+    static int testAreaBounds(int areaIndex, AreaBoundsIntFunction test) {
         final int bounds = BOUNDS[areaIndex];
 
         return test.apply(bounds & 7, (bounds >> 6) & 7, (bounds >> 3) & 7, (bounds >> 9) & 7);

@@ -28,7 +28,7 @@ import net.minecraft.util.math.Direction;
 public class StreamBackedMutablePolygon extends StreamBackedPolygon implements IMutablePolygon {
     @Override
     public final IMutablePolygon setVertexLayer(int layerIndex, int vertexIndex, float u, float v, int color, int glow) {
-        vertexIndex = vertexIndexer.apply(vertexIndex);
+        vertexIndex = vertexIndexer.applyAsInt(vertexIndex);
         spriteColor(vertexIndex, layerIndex, color);
         sprite(vertexIndex, layerIndex, u, v);
         setVertexGlow(vertexIndex, glow);
@@ -121,7 +121,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
 
     @Override
     public final IMutablePolygon setVertex(int vertexIndex, float x, float y, float z, float u, float v, int color, int glow) {
-        vertexIndex = vertexIndexer.apply(vertexIndex);
+        vertexIndex = vertexIndexer.applyAsInt(vertexIndex);
         pos(vertexIndex, x, y, z);
         sprite(vertexIndex, 0, u, v);
         spriteColor(vertexIndex, 0, color);
@@ -131,20 +131,20 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
 
     @Override
     public final IMutablePolygon pos(int vertexIndex, float x, float y, float z) {
-        vertexEncoder.setVertexPos(stream, vertexAddress, vertexIndexer.apply(vertexIndex), x, y, z);
+        vertexEncoder.setVertexPos(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), x, y, z);
         return this;
     }
 
     @Override
     public final IMutablePolygon pos(int vertexIndex, Vec3f pos) {
-        vertexEncoder.setVertexPos(stream, vertexAddress, vertexIndexer.apply(vertexIndex), pos.x(), pos.y(), pos.z());
+        vertexEncoder.setVertexPos(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), pos.x(), pos.y(), pos.z());
         return this;
     }
 
     @Override
     public final IMutablePolygon spriteColor(int vertexIndex, int layerIndex, int color) {
         if (vertexEncoder.hasColor())
-            vertexEncoder.setVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex), color);
+            vertexEncoder.setVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), color);
         else
             polyEncoder.setVertexColor(stream, baseAddress, layerIndex, color);
         return this;
@@ -152,25 +152,25 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
 
     @Override
     public final IMutablePolygon spriteU(int vertexIndex, int layerIndex, float u) {
-        vertexEncoder.setVertexU(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex), u);
+        vertexEncoder.setVertexU(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), u);
         return this;
     }
 
     @Override
     public final IMutablePolygon spriteV(int vertexIndex, int layerIndex, float v) {
-        vertexEncoder.setVertexV(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex), v);
+        vertexEncoder.setVertexV(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), v);
         return this;
     }
 
     @Override
     public final IMutablePolygon sprite(int vertexIndex, int layerIndex, float u, float v) {
-        vertexEncoder.setVertexUV(stream, vertexAddress, layerIndex, vertexIndexer.apply(vertexIndex), u, v);
+        vertexEncoder.setVertexUV(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), u, v);
         return this;
     }
 
     @Override
     public final IMutablePolygon setVertexGlow(int vertexIndex, int glow) {
-        glowEncoder.setGlow(stream, glowAddress, vertexIndexer.apply(vertexIndex), glow);
+        glowEncoder.setGlow(stream, glowAddress, vertexIndexer.applyAsInt(vertexIndex), glow);
         return this;
     }
 
@@ -178,9 +178,9 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     public final IMutablePolygon normal(int vertexIndex, Vec3f normal) {
         if (vertexEncoder.hasNormals()) {
             if (normal == null)
-                vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), Float.NaN, Float.NaN, Float.NaN);
+                vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), Float.NaN, Float.NaN, Float.NaN);
             else
-                vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), normal.x(), normal.y(), normal.z());
+                vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), normal.x(), normal.y(), normal.z());
         }
         return this;
     }
@@ -188,7 +188,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     @Override
     public final IMutablePolygon normal(int vertexIndex, float x, float y, float z) {
         if (vertexEncoder.hasNormals())
-            vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.apply(vertexIndex), x, y, z);
+            vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), x, y, z);
         return this;
     }
 

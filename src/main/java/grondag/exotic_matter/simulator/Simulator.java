@@ -289,14 +289,14 @@ public class Simulator extends PersistentState implements IDirtKeeper {
 
     @Override
     public void fromTag(CompoundTag nbt) {
-        this.assignedNumbersAuthority.deserializeNBT(nbt);
+        this.assignedNumbersAuthority.writeTag(nbt);
         this.lastSimTick = nbt.getInt(NBT_TAG_LAST_TICK);
         this.worldTickOffset = nbt.getLong(NBT_TAG_WORLD_TICK_OFFSET);
     }
 
     @Override
     public CompoundTag toTag(CompoundTag nbt) {
-        this.assignedNumbersAuthority.serializeNBT(nbt);
+        this.assignedNumbersAuthority.readTag(nbt);
         nbt.putInt(NBT_TAG_LAST_TICK, lastSimTick);
         nbt.putLong(NBT_TAG_WORLD_TICK_OFFSET, worldTickOffset);
         return nbt;

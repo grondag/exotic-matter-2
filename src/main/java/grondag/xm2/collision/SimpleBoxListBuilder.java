@@ -23,7 +23,7 @@ import it.unimi.dsi.fastutil.ints.IntCollection;
  * Makes no attempt to combine boxes.<br>
  * Used when boxes are already known to be optimal.
  */
-public class SimpleBoxListBuilder implements ICollisionBoxListBuilder {
+public class SimpleBoxListBuilder implements CollisionBoxListBuilder {
     final IntArrayList boxes = new IntArrayList();
 
     @Override

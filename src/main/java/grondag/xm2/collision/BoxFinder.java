@@ -23,7 +23,7 @@ import java.util.function.IntConsumer;
 import grondag.fermion.varia.BitHelper;
 import grondag.xm2.Xm;
 import grondag.xm2.collision.BoxFinderUtils.Slice;
-import grondag.fermion.functions.IAreaBoundsIntFunction;
+import grondag.xm2.collision.Functions.AreaBoundsIntFunction;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
@@ -225,14 +225,14 @@ public class BoxFinder {
         return (voxelScore << 16) | boxScore;
     }
 
-    public void outputBoxes(ICollisionBoxListBuilder builder) {
+    public void outputBoxes(CollisionBoxListBuilder builder) {
         while (outputBest(builder)) {
         }
         ;
         outputRemainders(builder);
     }
 
-    void outputRemainders(ICollisionBoxListBuilder builder) {
+    void outputRemainders(CollisionBoxListBuilder builder) {
         outputRemaindersInner(0, builder);
         outputRemaindersInner(1, builder);
         outputRemaindersInner(2, builder);
@@ -244,10 +244,10 @@ public class BoxFinder {
     }
 
     private class RemaindersConsumer implements IntConsumer {
-        ICollisionBoxListBuilder builder;
+        CollisionBoxListBuilder builder;
         int z;
 
-        RemaindersConsumer prepare(int z, ICollisionBoxListBuilder builder) {
+        RemaindersConsumer prepare(int z, CollisionBoxListBuilder builder) {
             this.z = z;
             this.builder = builder;
             return this;
@@ -263,7 +263,7 @@ public class BoxFinder {
 
     private final RemaindersConsumer remaindersConsumer = new RemaindersConsumer();
 
-    void outputRemaindersInner(int z, ICollisionBoxListBuilder builder) {
+    void outputRemaindersInner(int z, CollisionBoxListBuilder builder) {
         final long bits = voxels[z];
 
         if (bits == 0L)
@@ -329,9 +329,9 @@ public class BoxFinder {
     }
 
     private class OutputConsumer implements IntConsumer {
-        ICollisionBoxListBuilder builder;
+        CollisionBoxListBuilder builder;
 
-        OutputConsumer prepare(ICollisionBoxListBuilder builder) {
+        OutputConsumer prepare(CollisionBoxListBuilder builder) {
             this.builder = builder;
             return this;
         }
@@ -345,7 +345,7 @@ public class BoxFinder {
 
     final OutputConsumer outputConsumer = new OutputConsumer();
 
-    private void outputDisjointSet(long disjointSet, ICollisionBoxListBuilder builder) {
+    private void outputDisjointSet(long disjointSet, CollisionBoxListBuilder builder) {
         BitHelper.forEachBit(disjointSet, outputConsumer.prepare(builder));
     }
 
@@ -387,13 +387,13 @@ public class BoxFinder {
         });
     }
 
-    private boolean outputBest(ICollisionBoxListBuilder builder) {
+    private boolean outputBest(CollisionBoxListBuilder builder) {
         calcCombined();
         populateMaximalVolumes();
         return outputBestInner(builder);
     }
 
-    private boolean outputBestInner(ICollisionBoxListBuilder builder) {
+    private boolean outputBestInner(CollisionBoxListBuilder builder) {
         if (this.volumeCount <= 1) {
             if (this.volumeCount == 1)
                 addBox(maximalVolumes[0], builder);
@@ -452,11 +452,11 @@ public class BoxFinder {
         return counter.total;
     }
 
-    private class AddBoxConsumer implements IAreaBoundsIntFunction {
+    private class AddBoxConsumer implements AreaBoundsIntFunction {
         Slice slice;
-        ICollisionBoxListBuilder builder;
+        CollisionBoxListBuilder builder;
 
-        AddBoxConsumer prepare(int volumeKey, ICollisionBoxListBuilder builder) {
+        AddBoxConsumer prepare(int volumeKey, CollisionBoxListBuilder builder) {
             slice = BoxFinderUtils.sliceFromKey(volumeKey);
             this.builder = builder;
             return this;
@@ -472,7 +472,7 @@ public class BoxFinder {
 
     private final AddBoxConsumer addBoxConsumer = new AddBoxConsumer();
 
-    void addBox(int volumeKey, ICollisionBoxListBuilder builder) {
+    void addBox(int volumeKey, CollisionBoxListBuilder builder) {
         BoxFinderUtils.testAreaBounds(BoxFinderUtils.patternIndexFromKey(volumeKey), addBoxConsumer.prepare(volumeKey, builder));
     }
 
@@ -522,7 +522,7 @@ public class BoxFinder {
         combined[Slice.D8_0.ordinal()] = combined[Slice.D7_0.ordinal()] & voxels[7];
     }
 
-    private class VolumeMaximalConsumer implements IAreaBoundsIntFunction {
+    private class VolumeMaximalConsumer implements AreaBoundsIntFunction {
         Slice slice;
         long pattern;
 
@@ -663,7 +663,7 @@ public class BoxFinder {
         }
     }
 
-    private class FillUnionConsumer implements IAreaBoundsIntFunction {
+    private class FillUnionConsumer implements AreaBoundsIntFunction {
         Slice s0;
         Slice s1;
         // +1 because max is inclusive
@@ -685,7 +685,7 @@ public class BoxFinder {
             return this;
         }
 
-        private class FillUnionConsumerInner implements IAreaBoundsIntFunction {
+        private class FillUnionConsumerInner implements AreaBoundsIntFunction {
             @Override
             public int apply(int minX1, int minY1, int maxX1, int maxY1) {
                 final int minX = Math.min(minX0, minX1);

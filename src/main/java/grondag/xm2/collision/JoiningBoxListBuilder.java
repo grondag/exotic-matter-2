@@ -29,7 +29,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
  * automatically combines boxes that share a surface.
  * <p>
  */
-public class JoiningBoxListBuilder implements ICollisionBoxListBuilder {
+public class JoiningBoxListBuilder implements CollisionBoxListBuilder {
     @SuppressWarnings("unused")
     private static final int MIN_A_SHIFT = 0;
     private static final int MIN_B_SHIFT = 2;

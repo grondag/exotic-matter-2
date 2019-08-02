@@ -16,6 +16,10 @@
 
 package grondag.xm2.init;
 
+import grondag.fermion.color.Chroma;
+import grondag.fermion.color.Color;
+import grondag.fermion.color.Hue;
+import grondag.fermion.color.Luminance;
 import grondag.xm2.Xm;
 import grondag.xm2.api.model.MutableModelState;
 import grondag.xm2.api.paint.XmPaint;
@@ -37,24 +41,24 @@ public class XmBlocks {
         Xm.LOG.debug("Registering Exotic Matter Test Blocks");
 
         final XmPaintFinder paintFinder = XmPaint.finder();
-
-        MutableModelState model = XmPrimitives.CUBE.newState();
         XmPaint paint = paintFinder.textureDepth(2)
                 .texture(0, XmTextures.SANDSTONE_ZOOM)
-                .textureColor(0, 0xFF808590)
+                .textureColor(0, Color.fromHCL(Hue.AZURE, Chroma.NEUTRAL, Luminance.LIGHT).ARGB)
                 .texture(1, XmTextures.BORDER_CAUTION)
                 .blendMode(1, BlockRenderLayer.TRANSLUCENT)
                 .emissive(1, true)
-                .textureColor(1, 0xFFFFD300).find();
+                .textureColor(1, 0xFFFFD300)
+                .find();
+        
+        MutableModelState model = XmPrimitives.CUBE.newState();
         model.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), model), "test_borders");
         
-        
-        paint = paintFinder.texture(0, XmTextures.WHITE).textureColor(0, 0xFFFFFFFF).find();
         model = XmPrimitives.WEDGE.newState();
         model.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), model), "test_wedge");
 
+        paint = paintFinder.texture(0, XmTextures.WHITE).textureColor(0, 0xFFFFFFFF).find();
         model = XmPrimitives.CUBE.newState();
         model.paintAll(paint);
         register(new XmSimpleBlock(FabricBlockSettings.of(Material.STONE).strength(1, 1).build(), model), "test_cube");

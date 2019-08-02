@@ -20,13 +20,13 @@ import java.util.IdentityHashMap;
 
 import javax.annotation.Nullable;
 
-import grondag.fermion.serialization.IReadWriteNBT;
+import grondag.fermion.serialization.ReadWriteNBT;
 import grondag.fermion.serialization.NBTDictionary;
 import grondag.xm2.Xm;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 
-public class DomainUser implements IReadWriteNBT, IDomainMember {
+public class DomainUser implements ReadWriteNBT, IDomainMember {
     private static final HashSet<Class<? extends IUserCapability>> capabilityTypes = new HashSet<>();
 
     public static void registerCapability(Class<? extends IUserCapability> capabilityType) {
@@ -57,7 +57,7 @@ public class DomainUser implements IReadWriteNBT, IDomainMember {
     public DomainUser(IDomain domain, CompoundTag tag) {
         this.domain = domain;
         this.createCapabilities();
-        this.deserializeNBT(tag);
+        this.writeTag(tag);
     }
 
     private void createCapabilities() {
@@ -103,7 +103,7 @@ public class DomainUser implements IReadWriteNBT, IDomainMember {
     }
 
     @Override
-    public void serializeNBT(CompoundTag nbt) {
+    public void readTag(CompoundTag nbt) {
         nbt.putString(DOMAIN_USER_NAME, this.userName);
         nbt.putString(DOMAIN_USER_UUID, this.uuid);
         nbt.putInt(DOMAIN_USER_FLAGS, this.privilegeFlags);
@@ -111,13 +111,13 @@ public class DomainUser implements IReadWriteNBT, IDomainMember {
         if (!this.capabilities.isEmpty()) {
             for (IUserCapability cap : this.capabilities.values()) {
                 if (!cap.isSerializationDisabled())
-                    nbt.put(cap.tagName(), cap.serializeNBT());
+                    nbt.put(cap.tagName(), cap.toTag());
             }
         }
     }
 
     @Override
-    public void deserializeNBT(@Nullable CompoundTag nbt) {
+    public void writeTag(@Nullable CompoundTag nbt) {
         this.userName = nbt.getString(DOMAIN_USER_NAME);
         this.uuid = nbt.getString(DOMAIN_USER_UUID);
         this.privilegeFlags = nbt.getInt(DOMAIN_USER_FLAGS);
@@ -126,7 +126,7 @@ public class DomainUser implements IReadWriteNBT, IDomainMember {
         if (!this.capabilities.isEmpty()) {
             for (IUserCapability cap : this.capabilities.values()) {
                 if (nbt.containsKey(cap.tagName())) {
-                    cap.deserializeNBT(nbt.getCompound(cap.tagName()));
+                    cap.writeTag(nbt.getCompound(cap.tagName()));
                 }
             }
         }

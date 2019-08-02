@@ -25,6 +25,7 @@ import grondag.xm2.mesh.polygon.IMutablePolygon;
 import grondag.xm2.mesh.polygon.IPolygon;
 import grondag.xm2.mesh.stream.IMutablePolyStream;
 import grondag.xm2.mesh.stream.PolyStreams;
+import grondag.xm2.painting.QuadPainter.IPaintMethod;
 import grondag.xm2.api.model.ImmutableModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -111,8 +112,15 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         }
 
         for (int i = 0; i < depth; i++) {
-            if (stream.editorOrigin())
-                QuadPainterFactory.getPainter(modelState, surface, paint, i).paintQuads(stream, modelState, surface, paint, i);
+            if (stream.editorOrigin()) {
+                final IPaintMethod painter = QuadPainterFactory.getPainter(modelState, surface, paint, i);
+                if(painter != null) {
+                    painter.paintQuads(stream, modelState, surface, paint, i);
+                } else {
+                    //TODO: put back
+                    //assert false : "Missing paint method";
+                }
+            }
         }
 
         if (stream.editorOrigin()) {
