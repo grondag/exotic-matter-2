@@ -17,8 +17,8 @@
   
   "environment": "*",
   "entrypoints": {
-    "main": [ "grondag.xm2.Xm", "grondag.pragmatics.Pragmatics" ],
-    "client": [ "grondag.xm2.XmClient", "grondag.pragmatics.PragmaticsClient" ]
+    "main": [ "grondag.xm2.Xm" ],
+    "client": [ "grondag.xm2.XmClient" ]
   },
   "mixins": [
 	  {
@@ -28,17 +28,11 @@
 	  {
 	      "config": "xm2.client.json",
 	      "environment": "client"
-	  },
-	  {
-	  	  "config": "pragmatics.common.json",
-	      "environment": "*"
 	  }
   ],
-  "requires": {
+  "depends": {
     "fabricloader": ">=0.4.0",
-    "fabric": "*",
-    "frex": ">=0.7.3",
-    "fermion": ">=0.6.3"
+    "fabric": "*"
   },
   "custom": {
     "modmenu:api": true,

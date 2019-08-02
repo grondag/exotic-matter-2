@@ -18,7 +18,7 @@ package grondag.xm2.placement;
 import javax.annotation.Nullable;
 
 import grondag.fermion.varia.Useful;
-import grondag.pragmatics.api.PlayerModifiers;
+import grondag.fermion.modkeys.api.ModKeys;
 import grondag.xm2.XmConfig;
 import grondag.xm2.api.connect.model.HorizontalFace;
 import grondag.xm2.api.model.ModelState;
@@ -141,7 +141,7 @@ public abstract class PlacementHandler {
         }
 
         // Ctrl + right click: start new placement region
-        if (PlayerModifiers.isControlPressed(player)) {
+        if (ModKeys.isControlPressed(player)) {
             ItemStack tweakedStack = stack.copy();
             item.fixedRegionStart(tweakedStack, pPos.inPos, false);
 
@@ -203,7 +203,7 @@ public abstract class PlacementHandler {
         PlacementItem item = (PlacementItem) stack.getItem();
 
         SpeciesMode mode = item.getSpeciesMode(stack);
-        if (PlayerModifiers.isAltPressed(player))
+        if (ModKeys.isAltPressed(player))
             mode = mode.alternate();
 
         boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;

@@ -17,7 +17,7 @@ package grondag.xm2.placement;
 
 import javax.annotation.Nullable;
 
-import grondag.timeshare.WorldTaskManager;
+import grondag.fermion.world.WorldTaskManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;

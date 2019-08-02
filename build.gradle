@@ -110,12 +110,18 @@ dependencies {
 	
 	modRuntime "grondag:canvas:0.7.5+"
 	
+	modImplementation "grondag:fermion:${project.fermion_version}+"
+    include "fermion:${project.fermion_version}+"
+    
 	modImplementation "grondag:fermion-color:${project.color_version}+"
     include "fermion-color:${project.color_version}+"
     
-    modImplementation "grondag:fermion:0.8+"
-    include "grondag:fermion:0.8+"
-	
+    modImplementation "grondag:fermion-varia:${project.varia_version}+"
+    include "fermion-varia:${project.varia_version}+"
+    
+	modImplementation "grondag:fermion-special-circumstances:${project.sc_version}+"
+    include "fermion-special-circumstances:${project.sc_version}+"
+    
 	modImplementation "grondag:joml-mod:1.0+"
     include "grondag:joml-mod:1.0+"
     
