@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.4-SNAPSHOT'
+	id 'fabric-loom' version '0.2.5-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -20,19 +20,19 @@ ext.getVersionCode = { ->
     }
 }
 
-archivesBaseName = "exotic-matter"
-group = "grondag"
-version = version = "2.0.0+build." + project.getVersionCode();
+archivesBaseName = 'exotic-matter'
+group = 'grondag'
+if (project.hasProperty('exotic_matter_version')){
+	version = project.getProperty('exotic_matter_version') + '.' + project.getVersionCode() + '+' + project.minecraft_version
+} else {
+	version = '999.999.999+LOCAL'
+}
 
 minecraft {
 }
 
 repositories {
     mavenLocal()
-    //flatDir {
-    //    dirs '../fabric/build/libs'
-    //}
-    
     maven { url "https://tehnut.info/maven"}
     maven { url "http://maven.sargunv.s3-website-us-west-2.amazonaws.com/" }
     maven { url "https://minecraft.curseforge.com/api/maven" }
@@ -100,43 +100,43 @@ sourceSets {
     }
 }
 
-def mcVersion = "1.14.3"
-
 dependencies {
-   minecraft "com.mojang:minecraft:$mcVersion"
-	mappings "net.fabricmc:yarn:$mcVersion+build.1"
-    modImplementation "net.fabricmc:fabric-loader:0.4.8+build.155"
-    modCompile "net.fabricmc.fabric-api:fabric-api:0.3.0+build.191"
-	
-	modRuntime "grondag:canvas:0.7.5+"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
 	modImplementation "grondag:fermion:${project.fermion_version}+"
-    include "fermion:${project.fermion_version}+"
+    include "grondag:fermion:${project.fermion_version}+"
     
-	modImplementation "grondag:fermion-color:${project.color_version}+"
-    include "fermion-color:${project.color_version}+"
+	modImplementation "grondag:fermion-modkeys:${project.fermion_modkeys_version}+"
+    include "grondag:fermion-modkeys:${project.fermion_modkeys_version}+"
     
-    modImplementation "grondag:fermion-varia:${project.varia_version}+"
-    include "fermion-varia:${project.varia_version}+"
+    modImplementation "grondag:fermion-varia:${project.fermion_varia_version}+"
+    include "grondag:fermion-varia:${project.fermion_varia_version}+"
     
-	modImplementation "grondag:fermion-special-circumstances:${project.sc_version}+"
-    include "fermion-special-circumstances:${project.sc_version}+"
+	modImplementation "grondag:special-circumstances:${project.special_circumstances_version}+"
+    include "grondag:special-circumstances:${project.special_circumstances_version}+"
+        
+	modImplementation "grondag:frex:${project.frex_version}+"
+    include "grondag:frex:${project.frex_version}+"
     
 	modImplementation "grondag:joml-mod:1.0+"
     include "grondag:joml-mod:1.0+"
-    
-	modApi "grondag:frex:0.8.1+"
 	
 	modImplementation "blue.endless:jankson:1.1.2"
-	include "blue.endless:jankson:1.1.2" //{ transitive = false }
+	include "blue.endless:jankson:1.1.2"
 	
 	modImplementation "cloth-config:ClothConfig2:0.2.0"
     include "cloth-config:ClothConfig2:0.2.0"
     
-	// For dev env testing 
-	modRuntime "com.jamieswhiteshirt:developer-mode:1.0.11"
-	modApi "io.github.prospector.modmenu:ModMenu:1.6.2-92"
+	modApi "me.shedaniel.cloth:config-2:${clothconfig_version}"
+	include "me.shedaniel.cloth:config-2:${clothconfig_version}"
 	
+	// For dev env testing 
+	modRuntime "com.jamieswhiteshirt:developer-mode:${project.devmode_version}"
+	modApi "io.github.prospector:modmenu:${project.modmenu_version}"
+		
 	// dev env annotation support
 	compile "org.apiguardian:apiguardian-api:1.0.0"
 	compile "com.google.code.findbugs:jsr305:3.0.2"
