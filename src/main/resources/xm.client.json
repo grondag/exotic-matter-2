@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "grondag.xm.mixin.client",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinGameRenderer"
+      ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

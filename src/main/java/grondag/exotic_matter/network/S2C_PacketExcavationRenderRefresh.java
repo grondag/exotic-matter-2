@@ -18,11 +18,11 @@ package grondag.exotic_matter.network;
 import java.util.Collection;
 
 import grondag.fermion.position.IntegerBox;
-import grondag.xm2.Xm;
-import grondag.xm2.XmConfig;
-import grondag.xm2.block.virtual.ExcavationRenderEntry;
-import grondag.xm2.block.virtual.ExcavationRenderManager;
-import grondag.xm2.block.virtual.ExcavationRenderer;
+import grondag.xm.Xm;
+import grondag.xm.XmConfig;
+import grondag.xm.block.virtual.ExcavationRenderEntry;
+import grondag.xm.block.virtual.ExcavationRenderManager;
+import grondag.xm.block.virtual.ExcavationRenderer;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;

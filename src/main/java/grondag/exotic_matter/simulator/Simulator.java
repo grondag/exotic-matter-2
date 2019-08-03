@@ -34,7 +34,7 @@ import grondag.exotic_matter.simulator.persistence.IDirtKeeper;
 import grondag.exotic_matter.simulator.persistence.SimulationTopNode;
 import grondag.fermion.sc.concurrency.ScatterGatherThreadPool;
 import grondag.fermion.varia.NBTDictionary;
-import grondag.xm2.Xm;
+import grondag.xm.Xm;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;

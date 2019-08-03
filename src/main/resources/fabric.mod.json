@@ -1,32 +1,33 @@
 {
   "schemaVersion": 1,
-  "id": "xm2",
+  "id": "exotic-matter",
   "version": "${version}",
-  "name": "Exotic Matter 2",
-  "description": "Model generation and texturing functions for Minecraft Fabric mods",
+  "name": "Exotic Matter",
+  "description": "Model generation and texturing functions for Minecraft Fabric mods.",
   "authors": [
     "Grondag"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/exotic-matter-library",
-    "sources": "https://github.com/grondag/brocade"
+    "sources": "https://github.com/grondag/exotic-matter-2",
+    "issues": "https://github.com/grondag/exotic-matter-2/issues"
   },
   
   "license": "Apache-2.0",
-  "icon": "assets/xm2/xm2_icon.png",
+  "icon": "assets/exotic-matter/exotic_matter_icon.png",
   
   "environment": "*",
   "entrypoints": {
-    "main": [ "grondag.xm2.Xm" ],
-    "client": [ "grondag.xm2.XmClient" ]
+    "main": [ "grondag.xm.Xm" ],
+    "client": [ "grondag.xm.XmClient" ]
   },
   "mixins": [
 	  {
-	      "config": "xm2.common.json",
+	      "config": "xm.common.json",
 	      "environment": "*"
 	  },
 	  {
-	      "config": "xm2.client.json",
+	      "config": "xm.client.json",
 	      "environment": "client"
 	  }
   ],

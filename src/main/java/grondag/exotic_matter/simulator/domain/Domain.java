@@ -31,7 +31,7 @@ import grondag.exotic_matter.simulator.persistence.IDirtListenerProvider;
 import grondag.exotic_matter.simulator.persistence.IIdentified;
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.ReadWriteNBT;
-import grondag.xm2.Xm;
+import grondag.xm.Xm;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

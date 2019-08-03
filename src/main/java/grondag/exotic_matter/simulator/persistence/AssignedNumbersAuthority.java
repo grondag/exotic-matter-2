@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.ReadWriteNBT;
-import grondag.xm2.Xm;
+import grondag.xm.Xm;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
 

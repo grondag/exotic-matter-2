@@ -127,9 +127,6 @@ dependencies {
 	modImplementation "blue.endless:jankson:1.1.2"
 	include "blue.endless:jankson:1.1.2"
 	
-	modImplementation "cloth-config:ClothConfig2:0.2.0"
-    include "cloth-config:ClothConfig2:0.2.0"
-    
 	modApi "me.shedaniel.cloth:config-2:${clothconfig_version}"
 	include "me.shedaniel.cloth:config-2:${clothconfig_version}"
 	
