@@ -16,7 +16,7 @@
 
 package grondag.xm.terrain;
 
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmSimpleBlock;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;

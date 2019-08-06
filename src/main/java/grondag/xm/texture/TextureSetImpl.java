@@ -18,7 +18,7 @@ package grondag.xm.texture;
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.model.ModelStateFlags;
+import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetBuilder;

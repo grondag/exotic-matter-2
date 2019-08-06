@@ -24,8 +24,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import grondag.xm.block.XmStackHelper;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;

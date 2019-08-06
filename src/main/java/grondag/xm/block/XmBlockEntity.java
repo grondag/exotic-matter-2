@@ -17,9 +17,9 @@
 package grondag.xm.block;
 
 import grondag.fermion.varia.NBTDictionary;
-import grondag.xm.api.model.ImmutableModelState;
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.ImmutableModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.model.state.ModelStatesImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;

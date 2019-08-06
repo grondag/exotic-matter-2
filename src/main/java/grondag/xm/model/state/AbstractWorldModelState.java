@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.model.state;
 
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_NEEDS_POS;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_POS;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.varia.Useful;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.model;
+package grondag.xm.api.modelstate;
 
 import blue.endless.jankson.annotation.Nullable;
 import grondag.xm.api.connect.state.CornerJoinState;

@@ -15,9 +15,9 @@
  ******************************************************************************/
 package grondag.xm.model.state;
 
-import grondag.xm.api.model.ModelPrimitive;
-import grondag.xm.api.model.ModelPrimitiveRegistry;
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.primitive.ModelPrimitive;
+import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import net.minecraft.util.PacketByteBuf;
 
 abstract class AbstractModelState implements ModelState {

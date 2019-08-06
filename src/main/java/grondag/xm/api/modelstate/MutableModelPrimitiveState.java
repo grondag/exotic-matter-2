@@ -13,10 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.model;
+package grondag.xm.api.modelstate;
 
-import grondag.xm.api.allocation.Reference;
+import grondag.xm.api.connect.model.ClockwiseRotation;
+import grondag.xm.terrain.TerrainState;
+import net.minecraft.util.math.Direction;
 
-public interface OwnedModelState extends MutableModelState, Reference.Owned {
+public interface MutableModelPrimitiveState extends ModelPrimitiveState {
+    void setAxis(Direction.Axis axis);
 
+    void setAxisInverted(boolean isInverted);
+
+    /**
+     * For machines and other blocks with a privileged horizontal face, North is
+     * considered the zero rotation.
+     */
+    void setAxisRotation(ClockwiseRotation rotation);
+
+    default void setTerrainState(TerrainState flowState) {
+    }
+
+    default void setTerrainStateKey(long terrainStateKey) {
+    }
+
+    default void primitiveBits(int bits) {
+    }
 }

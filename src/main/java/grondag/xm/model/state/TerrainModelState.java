@@ -17,10 +17,10 @@ package grondag.xm.model.state;
 
 import grondag.xm.api.allocation.Reference;
 import grondag.xm.api.connect.model.ClockwiseRotation;
-import grondag.xm.api.model.ModelPrimitive;
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelState;
-import grondag.xm.api.model.OwnedModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.terrain.TerrainState;
 import net.minecraft.nbt.CompoundTag;

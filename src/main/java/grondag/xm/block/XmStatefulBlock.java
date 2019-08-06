@@ -17,8 +17,8 @@
 package grondag.xm.block;
 
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.entity.BlockEntity;

@@ -17,8 +17,8 @@ package grondag.xm.model.state;
 
 import javax.annotation.Nullable;
 
-import grondag.xm.api.model.ModelPrimitive;
-import grondag.xm.api.model.OwnedModelState;
+import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.primitive.ModelPrimitive;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 

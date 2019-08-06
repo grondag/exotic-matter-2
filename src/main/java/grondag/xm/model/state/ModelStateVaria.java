@@ -16,10 +16,10 @@
 package grondag.xm.model.state;
 
 import grondag.xm.api.connect.world.ModelStateFunction;
-import grondag.xm.api.model.ModelPrimitive;
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.ModelStateFlags;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.paint.XmPaint;
+import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.block.XmBlockStateAccess;
 
 class ModelStateVaria {

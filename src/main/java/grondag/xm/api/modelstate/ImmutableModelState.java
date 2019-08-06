@@ -13,30 +13,25 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.model;
 
-import grondag.xm.api.connect.state.CornerJoinState;
-import grondag.xm.api.connect.state.SimpleJoinState;
+package grondag.xm.api.modelstate;
 
-public interface MutableModelWorldState extends ModelWorldState {
-    default void posX(int index) {
-    }
+import java.util.List;
+import java.util.Random;
 
-    default void posY(int index) {
-    };
+import grondag.xm.api.allocation.Reference;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.util.math.Direction;
 
-    default void posZ(int index) {
-    };
+public interface ImmutableModelState extends ModelState, Reference.Immutable {
 
-    default void species(int species) {
-    }
+    @Environment(EnvType.CLIENT)
+    List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);
 
-    default void cornerJoin(CornerJoinState join) {
-    }
-
-    default void simpleJoin(SimpleJoinState join) {
-    }
-
-    default void masonryJoin(SimpleJoinState join) {
-    }
+    @Environment(EnvType.CLIENT)
+    void emitQuads(RenderContext context);
 }

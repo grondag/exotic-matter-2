@@ -13,11 +13,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.model;
+package grondag.xm.api.modelstate;
 
 import javax.annotation.Nullable;
 
 import grondag.xm.api.connect.model.ClockwiseRotation;
+import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.terrain.TerrainState;
 import net.minecraft.util.math.Direction;

@@ -20,7 +20,7 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;

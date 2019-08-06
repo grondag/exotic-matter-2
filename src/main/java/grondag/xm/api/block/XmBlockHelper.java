@@ -16,22 +16,24 @@
 
 package grondag.xm.api.block;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ImmutableModelState;
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.block.WorldToModelStateFunction;
-import grondag.xm.block.XmBlockRegistryImpl;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 
-public interface XmBlockRegistry {
-    static void register(
+public interface XmBlockHelper {
+    static void wrapBlock(
             Block block, 
-            Function<BlockState, ImmutableModelState> defaultStateFunc, 
+            ModelPrimitive primitive,
+            Consumer<MutableModelState> stateBuilder,
             WorldToModelStateFunction worldStateFunc,
             BlockTest blockJoinTest) {
         
-        XmBlockRegistryImpl.register(block, defaultStateFunc, worldStateFunc, blockJoinTest);
+        final ImmutableModelState modelState = primitive.newState().apply(stateBuilder).releaseToImmutable();
+        XmBlockRegistry.register(block, b -> modelState, worldStateFunc, blockJoinTest);
     }
 }

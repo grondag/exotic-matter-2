@@ -16,7 +16,7 @@
 
 package grondag.xm.init;
 
-import grondag.xm.api.model.ModelPrimitive;
+import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.model.primitive.CSGTestPrimitive;
 import grondag.xm.model.primitive.CubePrimitive;
 import grondag.xm.model.primitive.SpherePrimitive;

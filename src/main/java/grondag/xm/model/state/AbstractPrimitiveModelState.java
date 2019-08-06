@@ -16,18 +16,18 @@
 
 package grondag.xm.model.state;
 
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmMasonryMatch;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.connect.CornerJoinStateSelector;

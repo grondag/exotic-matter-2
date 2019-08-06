@@ -17,7 +17,7 @@
 package grondag.xm.block;
 
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 

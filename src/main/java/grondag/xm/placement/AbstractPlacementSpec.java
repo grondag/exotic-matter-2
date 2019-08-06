@@ -23,7 +23,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.block.XmStackHelper;
 import grondag.xm.collision.CollisionBoxDispatcher;
 import net.fabricmc.api.EnvType;

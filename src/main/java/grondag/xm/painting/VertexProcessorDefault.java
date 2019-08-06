@@ -17,7 +17,7 @@
 package grondag.xm.painting;
 
 import grondag.fermion.color.ColorHelper;
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.IMutablePolygon;

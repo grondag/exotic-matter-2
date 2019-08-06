@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.api.model;
+package grondag.xm.api.primitive;
 
 import java.util.function.Consumer;
 

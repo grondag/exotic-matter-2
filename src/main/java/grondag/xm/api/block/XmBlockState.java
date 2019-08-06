@@ -19,8 +19,8 @@ package grondag.xm.api.block;
 import javax.annotation.Nullable;
 
 import grondag.xm.api.connect.world.BlockTest;
-import grondag.xm.api.model.ImmutableModelState;
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ImmutableModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

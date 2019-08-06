@@ -18,7 +18,7 @@ package grondag.xm.dispatch;
 
 import grondag.fermion.color.ColorAtlas;
 import grondag.fermion.color.ColorSet.Tone;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.init.XmTextures;
 import net.minecraft.item.Item;

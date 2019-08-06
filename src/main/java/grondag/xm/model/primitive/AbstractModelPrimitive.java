@@ -17,12 +17,12 @@
 package grondag.xm.model.primitive;
 
 import grondag.xm.Xm;
-import grondag.xm.api.model.ImmutableModelState;
-import grondag.xm.api.model.ModelPrimitive;
-import grondag.xm.api.model.ModelPrimitiveRegistry;
-import grondag.xm.api.model.ModelPrimitiveState;
-import grondag.xm.api.model.MutableModelState;
-import grondag.xm.api.model.OwnedModelState;
+import grondag.xm.api.modelstate.ImmutableModelState;
+import grondag.xm.api.modelstate.ModelPrimitiveState;
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.primitive.ModelPrimitive;
+import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import grondag.xm.model.state.ModelStatesImpl;
 import net.minecraft.util.Identifier;
 

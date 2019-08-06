@@ -13,25 +13,21 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
+package grondag.xm.api.modelstate;
 
-package grondag.xm.api.model;
-
-import java.util.List;
-import java.util.Random;
+import java.util.function.Consumer;
 
 import grondag.xm.api.allocation.Reference;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.util.math.Direction;
 
-public interface ImmutableModelState extends ModelState, Reference.Immutable {
-
-    @Environment(EnvType.CLIENT)
-    List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);
-
-    @Environment(EnvType.CLIENT)
-    void emitQuads(RenderContext context);
+public interface OwnedModelState extends MutableModelState, Reference.Owned {
+    default ImmutableModelState releaseToImmutable() {
+        final ImmutableModelState result = toImmutable();
+        release();
+        return result;
+    }
+    
+    default OwnedModelState apply(Consumer<MutableModelState> consumer) {
+        consumer.accept(this);
+        return this;
+    }
 }

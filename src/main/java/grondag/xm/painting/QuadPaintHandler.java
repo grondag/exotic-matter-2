@@ -19,7 +19,7 @@ package grondag.xm.painting;
 import java.util.function.Consumer;
 
 import grondag.frex.Frex;
-import grondag.xm.api.model.ImmutableModelState;
+import grondag.xm.api.modelstate.ImmutableModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.IMutablePolygon;

@@ -18,8 +18,8 @@ package grondag.xm.model;
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.model.ModelPrimitive;
-import grondag.xm.api.model.ModelPrimitiveRegistry;
+import grondag.xm.api.primitive.ModelPrimitive;
+import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

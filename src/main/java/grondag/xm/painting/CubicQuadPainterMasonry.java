@@ -19,7 +19,7 @@ package grondag.xm.painting;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.state.SimpleJoinFaceState;
 import grondag.xm.api.connect.state.SimpleJoinState;
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;

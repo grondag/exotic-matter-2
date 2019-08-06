@@ -1,31 +1,26 @@
 plugins {
 	id 'fabric-loom' version '0.2.5-SNAPSHOT'
 	id 'maven-publish'
+	id "org.ajoberstar.grgit" version "3.1.1"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-ext.getVersionCode = { ->
-    try {
-        def stdout = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'rev-list', '--first-parent', '--count', 'origin/master'
-            standardOutput = stdout
-        }
-        return Integer.parseInt(stdout.toString().trim())
-    }
-    catch (ignored) {
-        return -1;
-    }
-}
-
 archivesBaseName = "exotic-art-bigtex"
 group = "grondag"
-if (project.hasProperty('exotic_art_bigtex_version')){
-	version = project.getProperty('exotic_art_bigtex_version') + '.' + project.getVersionCode() + '+' + project.minecraft_version
+def version_tag = 'exotic_art_bigtex_version'
+
+if (grgit == null) {
+	version = '99.0.0-nogit'
+} else if (project.hasProperty(version_tag)) {
+	if(grgit.status().isClean()) {
+		version = project.getProperty(version_tag) + '.' + grgit.log().size() + '+' + project.minecraft_version
+	} else {
+		version = project.getProperty(version_tag) + '.' + (grgit.log().size() + 1) + '-snapshot+' + project.minecraft_version
+	}
 } else {
-	version = '999.999.999+LOCAL'
+	version = '99.0.0-local'
 }
 
 minecraft {
@@ -115,22 +110,23 @@ dependencies {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-			artifact(jar.archivePath) {
-	    		builtBy remapJar
+	publications {
+		mavenJava(MavenPublication) {
+			artifact(remapJar) {
+				builtBy remapJar
 			}
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
 			}
-        }
-    }
-    
-    repositories {
-        maven {
+		}
+	}
+
+	repositories {
+		mavenLocal()
+		maven {
             url "https://grondag-repo.appspot.com"
             credentials {
-            	if (project.hasProperty('maven_user')){
+				if (project.hasProperty('maven_user')){
 					username = project.getProperty('maven_user')
 				}
 				if (project.hasProperty('maven_password')){
@@ -138,5 +134,5 @@ publishing {
 				}
 			}
         }
-    }
+	}
 }

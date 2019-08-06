@@ -16,13 +16,13 @@
 
 package grondag.xm.model.primitive;
 
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS;
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;

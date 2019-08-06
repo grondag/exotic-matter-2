@@ -22,8 +22,8 @@ import org.joml.Vector4f;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.model.ClockwiseRotation;
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.mesh.polygon.IMutablePolygon;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;

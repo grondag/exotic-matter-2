@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.block.virtual;
 
-import grondag.xm.api.model.OwnedModelState;
+import grondag.xm.api.modelstate.OwnedModelState;
 import grondag.xm.block.XmStackHelper;
 import grondag.xm.placement.FilterMode;
 import grondag.xm.placement.PlacementItem;

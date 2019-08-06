@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.api.model;
+package grondag.xm.api.modelstate;
 
 public interface ModelStateFlags {
     /**

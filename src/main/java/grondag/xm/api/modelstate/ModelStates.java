@@ -1,4 +1,4 @@
-package grondag.xm.api.model;
+package grondag.xm.api.modelstate;
 
 import javax.annotation.Nullable;
 

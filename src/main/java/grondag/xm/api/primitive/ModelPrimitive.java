@@ -14,14 +14,18 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.api.model;
+package grondag.xm.api.primitive;
 
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS;
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
 
 import java.util.function.Consumer;
 
+import grondag.xm.api.modelstate.ImmutableModelState;
+import grondag.xm.api.modelstate.ModelPrimitiveState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.OwnedModelState;
 import grondag.xm.api.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.model.varia.BlockOrientationType;

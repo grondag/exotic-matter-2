@@ -18,8 +18,8 @@ package grondag.xm.block;
 
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.model.MutableModelState;
-import grondag.xm.api.model.OwnedModelState;
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.modelstate.OwnedModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.model.state.ModelStateTagHelper;
 import grondag.xm.model.state.ModelStatesImpl;

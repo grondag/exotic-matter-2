@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.placement;
 
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.block.XmStackHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

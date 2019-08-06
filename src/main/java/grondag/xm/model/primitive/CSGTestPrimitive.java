@@ -16,11 +16,11 @@
 
 package grondag.xm.model.primitive;
 
-import static grondag.xm.api.model.ModelStateFlags.STATE_FLAG_NONE;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.model.ModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.CsgPolyStream;

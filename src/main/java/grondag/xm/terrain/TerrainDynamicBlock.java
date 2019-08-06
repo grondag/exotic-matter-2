@@ -16,8 +16,8 @@
 
 package grondag.xm.terrain;
 
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import grondag.xm.init.XmPrimitives;
 import net.minecraft.block.Block;

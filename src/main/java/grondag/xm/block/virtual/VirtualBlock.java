@@ -16,7 +16,7 @@
 
 package grondag.xm.block.virtual;
 
-import grondag.xm.api.model.OwnedModelState;
+import grondag.xm.api.modelstate.OwnedModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

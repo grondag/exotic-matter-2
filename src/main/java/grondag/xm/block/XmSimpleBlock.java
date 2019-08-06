@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.function.Function;
 
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.model.ImmutableModelState;
-import grondag.xm.api.model.ModelState;
-import grondag.xm.api.model.MutableModelPrimitiveState;
-import grondag.xm.api.model.MutableModelState;
+import grondag.xm.api.modelstate.ImmutableModelState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelPrimitiveState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.collision.CollisionBoxDispatcher;
 import net.fabricmc.api.EnvType;
