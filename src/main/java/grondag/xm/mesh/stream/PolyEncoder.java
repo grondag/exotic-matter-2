@@ -452,7 +452,7 @@ public class PolyEncoder {
         final int handle = layerIndex == 0 ? getTexture0.get(stream, baseAddress + textureOffset01)
                 : layerIndex == 1 ? getTexture1.get(stream, baseAddress + textureOffset01) : getTexture2.get(stream, baseAddress + textureOffset2);
 
-        return handle == 0 ? null : textureHandler.fromHandle(handle);
+        return handle == 0 ? "" : textureHandler.fromHandle(handle);
     }
 
     public final void setTextureName(IntStream stream, int baseAddress, int layerIndex, String textureName) {

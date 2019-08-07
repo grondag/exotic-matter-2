@@ -21,11 +21,17 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
+//TODO: docs and remove references to layouts - that's part of layout map and name function now
 public enum TextureLayout {
     /**
      * Separate random tiles with naming convention base_j_i where i is 0-7 and j is
      * 0 or more.
+     * 
+     * Use {@code SIMPLE} instead.  This should be a layout map and will be removed.
+     * 
+     * TODO: convert to layout map, remove
      */
+    @Deprecated
     SPLIT_X_8(STATE_FLAG_NONE),
 
     /**
@@ -55,19 +61,19 @@ public enum TextureLayout {
     MASONRY_5(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_MASONRY_JOIN | STATE_FLAG_NEEDS_SPECIES, 5),
 
     /**
-     * Animated big textures stored as series of .jpg files
+     * Animated big textures stored as series of .jpg files.
+     * 
+     * Holdover from 1.12 - not yet clear if will be implemented or removed.
      */
+    @Deprecated
     BIGTEX_ANIMATED(STATE_FLAG_NONE),
 
     /**
-     * Compact border texture on format, typically with multiple variants. Each
+     * Compact connected texture format, optionally with multiple variants. Each
      * quadrant of the texture represents one quadrant of a face that can be
      * connected. All are present on same image. Each quadrant must be able to
      * connect with other quadrants in any (connecting) rotation or texture
      * variation.
-     * <p>
-     * 
-     * Follows same naming convention as {@link #SIMPLE}.
      */
     QUADRANT_CONNECTED(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES);
 

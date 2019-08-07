@@ -16,24 +16,37 @@
 
 package grondag.xm.api.block;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ImmutableModelState;
 import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.modelstate.OwnedModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.block.WorldToModelStateFunction;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 
-public interface XmBlockHelper {
-    static void wrapBlock(
+public interface XmModelHelper {
+    static void remodelBlock(
             Block block, 
             ModelPrimitive primitive,
-            Consumer<MutableModelState> stateBuilder,
+            BiConsumer<BlockState, MutableModelState> stateMapper,
             WorldToModelStateFunction worldStateFunc,
             BlockTest blockJoinTest) {
         
-        final ImmutableModelState modelState = primitive.newState().apply(stateBuilder).releaseToImmutable();
-        XmBlockRegistry.register(block, b -> modelState, worldStateFunc, blockJoinTest);
+        XmBlockRegistry.register(block, b -> applyMapper(primitive, b, stateMapper), worldStateFunc, blockJoinTest);
     }
+    
+    
+    //TODO: move to impl
+    static ImmutableModelState applyMapper(
+            ModelPrimitive primitive,
+            BlockState blockState,
+            BiConsumer<BlockState, MutableModelState> stateMapper) {
+        final OwnedModelState oms = primitive.newState();
+        stateMapper.accept(blockState, oms);
+        return oms.releaseToImmutable();
+    }
+            
 }

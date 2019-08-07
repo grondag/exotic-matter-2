@@ -27,5 +27,5 @@ import net.minecraft.world.BlockView;
  */
 @FunctionalInterface
 public interface WorldToModelStateFunction {
-    ModelState apply(XmBlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded);
+    ModelState apply(XmBlockState xmBlockState, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded);
 }
