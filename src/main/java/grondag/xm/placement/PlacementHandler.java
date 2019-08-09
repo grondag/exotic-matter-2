@@ -21,7 +21,7 @@ import grondag.fermion.varia.Useful;
 import grondag.xm.XmConfig;
 import grondag.xm.api.connect.model.HorizontalFace;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockHelper;
 import grondag.xm.block.XmStackHelper;
 import grondag.xm.block.virtual.VirtualBlock;
@@ -176,7 +176,7 @@ public abstract class PlacementHandler {
     public static ItemStack cubicPlacementStack(SingleStackPlacementSpec specBuilder) {
         final ItemStack stack = specBuilder.placedStack().copy();
         final PlacementPosition pPos = specBuilder.placementPosition();
-        final OwnedModelState modelState = XmStackHelper.getStackModelState(stack);
+        final MutableModelState modelState = XmStackHelper.getStackModelState(stack);
         if (modelState != null && modelState.hasSpecies()) {
             final int species = speciesForPlacement(specBuilder.player(), pPos.onPos, pPos.onFace, stack, specBuilder.region());
             if (species >= 0) {

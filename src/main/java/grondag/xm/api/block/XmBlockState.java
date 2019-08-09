@@ -19,8 +19,8 @@ package grondag.xm.api.block;
 import javax.annotation.Nullable;
 
 import grondag.xm.api.connect.world.BlockTest;
-import grondag.xm.api.modelstate.ImmutableModelState;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -48,7 +48,7 @@ public interface XmBlockState {
      * Returns an instance of the default model state for this block. Because model
      * states are mutable, every call returns a new instance.
      */
-    ImmutableModelState defaultModelState();
+    ModelState defaultModelState();
 
     /**
      * If last parameter is false, does not perform a refresh from world for
@@ -56,5 +56,5 @@ public interface XmBlockState {
      * recursion when need to reference some static state ) information in order to
      * determine dynamic world state. Block tests are main use case for false.
      */
-    ModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld);
+    MutableModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld);
 }

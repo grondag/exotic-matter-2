@@ -17,30 +17,22 @@
 package grondag.xm.model.state;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
-import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.block.XmMasonryMatch;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.connect.CornerJoinStateSelector;
 import grondag.xm.mesh.helper.PolyTransform;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BlockView;
 
-abstract class AbstractPrimitiveModelState extends AbstractWorldModelState implements MutableModelState {
+abstract class AbstractPrimitiveModelState extends AbstractWorldModelState {
     private static final BitPacker32<AbstractPrimitiveModelState> SHAPE_PACKER = new BitPacker32<AbstractPrimitiveModelState>(m -> m.shapeBits,
             (m, b) -> m.shapeBits = b);
 
@@ -77,12 +69,6 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
     }
 
     @Override
-    public AbstractPrimitiveModelState copyFrom(ModelState templateIn) {
-        copyInternal((AbstractPrimitiveModelState) templateIn);
-        return this;
-    }
-
-    @Override
     protected void doSerializeToInts(int[] data, int startAt) {
         data[startAt] = shapeBits;
         super.doSerializeToInts(data, startAt + 1);
@@ -105,38 +91,6 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         return super.computeHashCode() ^ HashCommon.mix(this.shapeBits);
     }
 
-    @Override
-    protected void doRefreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
-        super.doRefreshFromWorld(xmState, world, pos);
-
-        final int stateFlags = stateFlags();
-
-        BlockNeighbors neighbors = null;
-
-        if ((STATE_FLAG_NEEDS_CORNER_JOIN & stateFlags) == STATE_FLAG_NEEDS_CORNER_JOIN) {
-            neighbors = BlockNeighbors.claim(world, pos, ModelStateVaria.TEST_GETTER_STATIC, xmState.blockJoinTest());
-            BLOCK_JOIN.setValue(CornerJoinState.fromWorld(neighbors).ordinal(), this);
-
-        } else if ((STATE_FLAG_NEEDS_SIMPLE_JOIN & stateFlags) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
-            neighbors = BlockNeighbors.claim(world, pos, ModelStateVaria.TEST_GETTER_STATIC, xmState.blockJoinTest());
-            BLOCK_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
-        }
-
-        if ((STATE_FLAG_NEEDS_MASONRY_JOIN & stateFlags) == STATE_FLAG_NEEDS_MASONRY_JOIN) {
-            if (neighbors == null) {
-                neighbors = BlockNeighbors.claim(world, pos, ModelStateVaria.TEST_GETTER_STATIC, XmMasonryMatch.INSTANCE);
-            } else {
-                neighbors.withTest(XmMasonryMatch.INSTANCE);
-            }
-            MASONRY_JOIN.setValue(SimpleJoinState.fromWorld(neighbors).ordinal(), this);
-        }
-
-        if (neighbors != null) {
-            invalidateHashCode();
-            neighbors.release();
-        }
-    }
-
     ////////////////////////////////////////////////////
     // PACKER 0 ATTRIBUTES (NOT SHAPE-DEPENDENT)
     ////////////////////////////////////////////////////
@@ -146,8 +100,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         return AXIS.getValue(this);
     }
 
-    @Override
-    public void setAxis(Direction.Axis axis) {
+    protected final void setAxisInner(Direction.Axis axis) {
         AXIS.setValue(axis, this);
         invalidateHashCode();
     }
@@ -157,8 +110,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         return AXIS_INVERTED.getValue(this);
     }
 
-    @Override
-    public void setAxisInverted(boolean isInverted) {
+    protected final void setAxisInvertedInner(boolean isInverted) {
         AXIS_INVERTED.setValue(isInverted, this);
         invalidateHashCode();
     }
@@ -172,8 +124,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         return CornerJoinStateSelector.fromOrdinal(MathHelper.clamp(BLOCK_JOIN.getValue(this), 0, CornerJoinState.STATE_COUNT - 1));
     }
 
-    @Override
-    public void cornerJoin(CornerJoinState join) {
+    protected final void cornerJoinInner(CornerJoinState join) {
         BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
@@ -186,8 +137,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         return ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0) ? SimpleJoinState.fromOrdinal(BLOCK_JOIN.getValue(this)) : cornerJoin().simpleJoin();
     }
 
-    @Override
-    public void simpleJoin(SimpleJoinState join) {
+    protected final void simpleJoinInner(SimpleJoinState join) {
         BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
@@ -197,8 +147,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         return SimpleJoinState.fromOrdinal(MASONRY_JOIN.getValue(this));
     }
 
-    @Override
-    public void masonryJoin(SimpleJoinState join) {
+    protected final void masonryJoinInner(SimpleJoinState join) {
         MASONRY_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
     }
@@ -208,8 +157,7 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         return AXIS_ROTATION.getValue(this);
     }
 
-    @Override
-    public void setAxisRotation(ClockwiseRotation rotation) {
+    protected final void setAxisRotationInner(ClockwiseRotation rotation) {
         AXIS_ROTATION.setValue(rotation, this);
         invalidateHashCode();
     }
@@ -225,7 +173,6 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
         return primitive.doesShapeMatch(this, other) && doesAppearanceMatch(other);
     }
 
-    @Override
     public Direction rotateFace(Direction face) {
         return PolyTransform.rotateFace(this, face);
     }
@@ -260,17 +207,11 @@ abstract class AbstractPrimitiveModelState extends AbstractWorldModelState imple
     }
 
     @Override
-    public boolean isImmutable() {
-        return false;
-    }
-
-    @Override
     public int primitiveBits() {
         return PRIMITIVE_BITS.getValue(this);
     }
 
-    @Override
-    public void primitiveBits(int bits) {
+    protected final void primitiveBitsInner(int bits) {
         PRIMITIVE_BITS.setValue(bits, this);
     }
 }

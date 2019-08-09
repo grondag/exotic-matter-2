@@ -15,22 +15,40 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
-import grondag.xm.api.allocation.Reference;
+import java.util.List;
+import java.util.Random;
+
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.api.surface.XmSurface;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.Direction;
 
-public interface ModelState extends ModelWorldState, ModelPrimitiveState, Reference {
-    OwnedModelState mutableCopy();
+public interface ModelState extends ModelWorldState, ModelPrimitiveState {
+    MutableModelState mutableCopy();
 
     /**
      * Persisted but not part of hash nor included in equals comparison. If true,
      * refreshFromWorldState does nothing.
      */
     boolean isStatic();
+    
+    boolean isImmutable();
+    
+    ModelState toImmutable();
 
+    @Environment(EnvType.CLIENT)
+    List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);
+
+    @Environment(EnvType.CLIENT)
+    void emitQuads(RenderContext context);
+    
     int paintIndex(int surfaceIndex);
 
     default XmPaint paint(int surfaceIndex) {
@@ -62,4 +80,6 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState, Refere
     }
 
     void toBytes(PacketByteBuf pBuff);
+
+    int stateFlags();
 }

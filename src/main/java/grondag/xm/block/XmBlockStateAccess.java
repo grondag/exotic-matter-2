@@ -18,7 +18,7 @@ package grondag.xm.block;
 
 import javax.annotation.Nullable;
 
-import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -44,7 +44,7 @@ public interface XmBlockStateAccess {
         return get(fromBlock.getDefaultState());
     }
 
-    static @Nullable ModelState modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
+    static @Nullable MutableModelState modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
         final XmBlockStateImpl xmState = get(fromState);
         return xmState == null ? null : xmState.getModelState(blockView, pos, refresh);
     }

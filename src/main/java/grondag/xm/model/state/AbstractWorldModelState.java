@@ -15,15 +15,11 @@
  ******************************************************************************/
 package grondag.xm.model.state;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_POS;
-
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.varia.Useful;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
 abstract class AbstractWorldModelState extends AbstractModelState {
     /**
@@ -55,29 +51,12 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         return super.computeHashCode() ^ HashCommon.mix(this.blockBits);
     }
 
-    public final void refreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
-        if (this.isStatic)
-            return;
-
-        doRefreshFromWorld(xmState, world, pos);
-    }
-
-    protected void doRefreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
-        final int stateFlags = stateFlags();
-        if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS) {
-            POS_X.setValue((pos.getX()), this);
-            POS_Y.setValue((pos.getY()), this);
-            POS_Z.setValue((pos.getZ()), this);
-            invalidateHashCode();
-        }
-    }
-
     @Override
     public int posX() {
         return POS_X.getValue(this);
     }
 
-    public void posX(int index) {
+    protected final void posXInner(int index) {
         POS_X.setValue(index, this);
         invalidateHashCode();
     }
@@ -87,7 +66,7 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         return POS_Y.getValue(this);
     }
 
-    public void posY(int index) {
+    protected final void posYInner(int index) {
         POS_Y.setValue(index, this);
         invalidateHashCode();
     }
@@ -97,17 +76,24 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         return POS_Z.getValue(this);
     }
 
-    public void posZ(int index) {
+    protected final void posZInner(int index) {
         POS_Z.setValue(index, this);
         invalidateHashCode();
     }
 
+    protected final void posInner(BlockPos pos) {
+        POS_X.setValue((pos.getX()), this);
+        POS_Y.setValue((pos.getY()), this);
+        POS_Z.setValue((pos.getZ()), this);
+        invalidateHashCode();
+    }
+    
     @Override
     public int species() {
         return SPECIES.getValue(this);
     }
 
-    public void species(int species) {
+    protected final void speciesInner(int species) {
         SPECIES.setValue(species, this);
         invalidateHashCode();
     }
@@ -119,7 +105,7 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         return this.isStatic;
     }
 
-    public void setStatic(boolean isStatic) {
+    protected final void setStaticInner(boolean isStatic) {
         this.isStatic = isStatic;
     }
 

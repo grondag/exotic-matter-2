@@ -21,7 +21,6 @@ import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.connect.model.BlockCorner;
 import grondag.xm.api.connect.model.BlockEdge;
 import grondag.xm.api.connect.model.ClockwiseRotation;
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import grondag.xm.block.XmStackHelper;
@@ -89,7 +88,7 @@ public class BlockOrientationHandler {
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // find closest instance, starting with block placed on
         MutableModelState outputModelState = XmStackHelper.getStackModelState(stack);
-        ModelState closestModelState = null;
+        MutableModelState closestModelState = null;
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
 
@@ -114,10 +113,12 @@ public class BlockOrientationHandler {
                                 double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x, pPos.onPos.getY() + 0.5 + y,
                                         pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
-                                    ModelState testModelState = testBlockState.getModelState(world, testPos, true);
+                                    MutableModelState testModelState = testBlockState.getModelState(world, testPos, true);
                                     if (testModelState.primitive() == outputModelState.primitive()) {
                                         closestDistSq = distSq;
-                                        closestModelState = testModelState.toImmutable();
+                                        closestModelState = testModelState;
+                                    } else {
+                                        testModelState.release();
                                     }
                                 }
                             }
@@ -141,9 +142,11 @@ public class BlockOrientationHandler {
             if (outputModelState.hasAxisRotation()) {
                 outputModelState.setAxisRotation(closestModelState.getAxisRotation());
             }
+            closestModelState.release();
         }
 
         XmStackHelper.setStackModelState(stack, outputModelState);
+        outputModelState.release();
     }
 
     // FIX: pretty sure this doesn't work now
@@ -176,6 +179,7 @@ public class BlockOrientationHandler {
         }
 
         XmStackHelper.setStackModelState(stack, outputModelState);
+        outputModelState.release();
     }
 
     public static final EnumProperty<Axis> AXIS_PROP = EnumProperty.of("xm2_axis", Axis.class);

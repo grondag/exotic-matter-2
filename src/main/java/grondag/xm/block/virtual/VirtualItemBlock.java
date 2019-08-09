@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.block.virtual;
 
-import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmStackHelper;
 import grondag.xm.placement.FilterMode;
 import grondag.xm.placement.PlacementItem;
@@ -32,6 +32,7 @@ import net.minecraft.world.World;
 
 public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
 
+    @SuppressWarnings("hiding")
     public static final int FEATURE_FLAGS = PlacementItem.BENUMSET_FEATURES.getFlagsForIncludedValues(PlacementItemFeature.FIXED_REGION,
             PlacementItemFeature.REGION_SIZE, PlacementItemFeature.REGION_ORIENTATION, PlacementItemFeature.SELECTION_RANGE, PlacementItemFeature.SPECIES_MODE,
             PlacementItemFeature.TARGET_MODE, PlacementItemFeature.BLOCK_ORIENTATION);
@@ -80,11 +81,11 @@ public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
     public BlockState getPlacementBlockStateFromStack(ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof VirtualItemBlock) {
-            final OwnedModelState modelState = XmStackHelper.getStackModelState(stack);
+            final MutableModelState modelState = XmStackHelper.getStackModelState(stack);
             if (modelState == null)
                 return null;
 
-            return VirtualBlock.findAppropriateVirtualBlock(modelState);
+            return modelState.applyAndRelease(VirtualBlock::findAppropriateVirtualBlock);
         } else {
             return Blocks.AIR.getDefaultState();
         }

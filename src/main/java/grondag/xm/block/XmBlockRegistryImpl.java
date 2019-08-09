@@ -22,8 +22,8 @@ import grondag.xm.Xm;
 import grondag.xm.api.block.XmBlockRegistry;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.connect.world.BlockTest;
-import grondag.xm.api.modelstate.ImmutableModelState;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +33,7 @@ public class XmBlockRegistryImpl implements XmBlockRegistry {
     private XmBlockRegistryImpl() {
     }
 
-    public static void register(Block block, Function<BlockState, ImmutableModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc,
+    public static void register(Block block, Function<BlockState, ModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc,
             BlockTest blockJoinTest) {
 
         for (BlockState blockState : block.getStateFactory().getStates()) {
@@ -50,10 +50,10 @@ public class XmBlockRegistryImpl implements XmBlockRegistry {
     public static class XmBlockStateImpl implements XmBlockState {
         public final WorldToModelStateFunction worldStateFunc;
         public final BlockTest blockJoinTest;
-        public final ImmutableModelState defaultModelState;
+        public final ModelState defaultModelState;
         public final BlockState blockState;
 
-        private XmBlockStateImpl(ImmutableModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest,
+        private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest,
                 BlockState blockState) {
 
             this.defaultModelState = defaultModelState;
@@ -68,13 +68,13 @@ public class XmBlockRegistryImpl implements XmBlockRegistry {
         }
 
         @Override
-        public ImmutableModelState defaultModelState() {
+        public ModelState defaultModelState() {
             return defaultModelState;
         }
 
         @Override
-        public ModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
-            return worldStateFunc.apply(this, world, pos, refreshFromWorld);
+        public MutableModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
+            return worldStateFunc.apply(this, world, pos, refreshFromWorld && !defaultModelState.isStatic());
         }
 
         @Override

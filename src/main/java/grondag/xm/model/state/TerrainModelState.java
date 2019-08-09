@@ -15,14 +15,20 @@
  ******************************************************************************/
 package grondag.xm.model.state;
 
-import grondag.xm.api.allocation.Reference;
+import java.util.List;
+import java.util.Random;
+
 import grondag.xm.api.connect.model.ClockwiseRotation;
+import grondag.xm.api.connect.state.CornerJoinState;
+import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.modelstate.OwnedModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.terrain.TerrainState;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -44,9 +50,9 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
         return super.intSize() + 3;
     }
 
-    @Override
-    protected void doRefreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
-        super.doRefreshFromWorld(xmState, world, pos);
+    public void doRefreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
+        //TODO: restore super state retrieval and move whole thing to external helper
+        //super.doRefreshFromWorld(xmState, world, pos);
 
         TerrainState.produceBitsFromWorldStatically(xmState.blockState, world, pos, (t, h) -> {
             this.flowBits = t;
@@ -66,8 +72,9 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
     }
 
     @Override
-    public void setTerrainStateKey(long terrainStateKey) {
+    public MutableModelState setTerrainStateKey(long terrainStateKey) {
         flowBits = terrainStateKey;
+        return this;
     }
 
     @Override
@@ -76,10 +83,11 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
     }
 
     @Override
-    public void setTerrainState(TerrainState flowState) {
+    public MutableModelState setTerrainState(TerrainState flowState) {
         flowBits = flowState.getStateKey();
         glowBits = flowState.getHotness();
         invalidateHashCode();
+        return this;
     }
 
     @Override
@@ -90,7 +98,7 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
     }
 
     @Override
-    public OwnedModelState mutableCopy() {
+    public MutableModelState mutableCopy() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -119,29 +127,6 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
         return false;
     }
 
-    @Override
-    public <T extends Reference> T toImmutable() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void setAxis(Axis axis) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setAxisInverted(boolean isInverted) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void setAxisRotation(ClockwiseRotation rotation) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void fromBytes(PacketByteBuf pBuff) {
@@ -165,6 +150,108 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
 
     @Override
     public Direction rotateFace(Direction face) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ModelState toImmutable() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void emitQuads(RenderContext context) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public MutableModelState setAxis(Axis axis) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState setAxisInverted(boolean isInverted) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState setAxisRotation(ClockwiseRotation rotation) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState primitiveBits(int bits) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState posX(int index) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState posY(int index) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState posZ(int index) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState pos(BlockPos pos) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState species(int species) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState cornerJoin(CornerJoinState join) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState simpleJoin(SimpleJoinState join) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState masonryJoin(SimpleJoinState join) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState setStatic(boolean isStatic) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableModelState paint(int surfaceIndex, int paintIndex) {
         // TODO Auto-generated method stub
         return null;
     }

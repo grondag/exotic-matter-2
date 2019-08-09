@@ -17,15 +17,20 @@
 package grondag.xm.block;
 
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 /**
  * Produces model state instance from world state, refreshing if necessary.
- * Resulting state may or may not be immutable.
  */
 @FunctionalInterface
 public interface WorldToModelStateFunction {
-    ModelState apply(XmBlockState xmBlockState, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded);
+    void accept(MutableModelState modelState, XmBlockState xmBlockState, BlockView world, BlockPos pos, boolean refreshFromWorld);
+    
+    default MutableModelState apply(XmBlockState xmBlockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        final MutableModelState result = xmBlockState.defaultModelState().mutableCopy();
+        accept(result, xmBlockState, world, pos, refreshFromWorld);
+        return result;
+    }
 }

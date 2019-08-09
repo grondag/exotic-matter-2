@@ -22,10 +22,9 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTA
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.modelstate.ImmutableModelState;
 import grondag.xm.api.modelstate.ModelPrimitiveState;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.model.varia.BlockOrientationType;
@@ -70,11 +69,11 @@ public interface ModelPrimitive {
      */
     void produceQuads(ModelState modelState, Consumer<IPolygon> target);
 
-    ImmutableModelState defaultState();
+    ModelState defaultState();
 
     ModelState geometricState(ModelState fromState);
 
-    default OwnedModelState newState() {
+    default MutableModelState newState() {
         return defaultState().mutableCopy();
     }
 

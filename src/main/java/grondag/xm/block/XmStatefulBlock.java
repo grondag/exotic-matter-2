@@ -20,6 +20,7 @@ import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm.model.state.PrimitiveModelState;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -61,14 +62,14 @@ public class XmStatefulBlock extends XmSimpleBlock implements BlockEntityProvide
         return result;
     }
 
-    public static ModelState computeModelState(XmBlockState xmStateIn, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+    public static MutableModelState computeModelState(XmBlockState xmStateIn, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         final BlockEntity myTE = world.getBlockEntity(pos);
         final XmBlockStateImpl xmState = (XmBlockStateImpl) xmStateIn;
 
         if (myTE != null && myTE instanceof XmBlockEntity) {
             return ((XmBlockEntity) myTE).getModelState(xmState, world, pos, refreshFromWorldIfNeeded);
         } else {
-            return XmSimpleBlock.computeModelState(xmState, world, pos, refreshFromWorldIfNeeded);
+            return PrimitiveModelState.DEFAULT_PRIMITIVE.apply(xmStateIn, world, pos, refreshFromWorldIfNeeded);
         }
     }
 

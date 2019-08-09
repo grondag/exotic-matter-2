@@ -16,53 +16,65 @@
 
 package grondag.xm.api.modelstate;
 
-import grondag.xm.api.allocation.Reference;
+import java.util.function.Function;
+
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.surface.XmSurfaceList;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.mesh.helper.PolyTransform;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 
-public interface MutableModelState extends ModelState, MutableModelPrimitiveState, MutableModelWorldState, Reference.Mutable {
+public interface MutableModelState extends ModelState, MutableModelPrimitiveState, MutableModelWorldState {
+    void release();
+    
+    void retain();
+    
     /**
      * Copies what it can, excluding the primitive, and returns self.
      */
     MutableModelState copyFrom(ModelState template);
 
-    void setStatic(boolean isStatic);
+    MutableModelState setStatic(boolean isStatic);
 
     boolean equalsIncludeStatic(Object obj);
 
-    /** returns self as convenience method */
-    void refreshFromWorld(XmBlockStateImpl state, BlockView world, BlockPos pos);
-
-    default void paint(XmSurface surface, XmPaint paint) {
-        paint(surface.ordinal(), paint.index());
+    default MutableModelState paint(XmSurface surface, XmPaint paint) {
+        return paint(surface.ordinal(), paint.index());
     }
 
-    default void paint(XmSurface surface, int paintIndex) {
-        paint(surface.ordinal(), paintIndex);
+    default MutableModelState paint(XmSurface surface, int paintIndex) {
+        return paint(surface.ordinal(), paintIndex);
     }
 
-    void paint(int surfaceIndex, int paintIndex);
+    MutableModelState paint(int surfaceIndex, int paintIndex);
 
-    default void paintAll(XmPaint paint) {
-        paintAll(paint.index());
+    default MutableModelState paintAll(XmPaint paint) {
+        return paintAll(paint.index());
     }
 
-    default void paintAll(int paintIndex) {
+    default MutableModelState paintAll(int paintIndex) {
         XmSurfaceList slist = primitive().surfaces(this);
         final int limit = slist.size();
         for (int i = 0; i < limit; i++) {
             paint(i, paintIndex);
         }
+        return this;
     }
 
     /**
      * See {@link PolyTransform#rotateFace(MutableModelState, Direction)}
      */
     Direction rotateFace(Direction face);
+
+    default <T> T applyAndRelease(Function<MutableModelState, T> func) {
+        final T result = func.apply(this);
+        this.release();
+        return result;
+    }
+
+    default ModelState releaseToImmutable() {
+        final ModelState result = this.toImmutable();
+        this.release();
+        return result;
+    }
 }

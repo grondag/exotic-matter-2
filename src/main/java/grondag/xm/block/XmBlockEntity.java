@@ -17,11 +17,11 @@
 package grondag.xm.block;
 
 import grondag.fermion.varia.NBTDictionary;
-import grondag.xm.api.modelstate.ImmutableModelState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.model.state.ModelStatesImpl;
+import grondag.xm.model.state.PrimitiveModelState;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -77,7 +77,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
     // INSTANCE MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    protected ImmutableModelState modelState = null;
+    protected ModelState modelState = null;
 
     // public IExtendedBlockState exBlockState;
     private boolean isModelStateCacheDirty = true;
@@ -167,7 +167,7 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
         return compound;
     }
 
-    public ModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+    public MutableModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
         ModelState myState = this.modelState;
 
         if (myState == null) {
@@ -178,17 +178,16 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
         if (isModelStateCacheDirty && refreshFromWorldIfNeeded) {
             MutableModelState result = myState.mutableCopy();
             result.species(state.defaultModelState.species());
-            result.refreshFromWorld(state, world, pos);
+            PrimitiveModelState.DEFAULT_PRIMITIVE.apply(state, world, pos, true);
+            myState = result.toImmutable();
             this.isModelStateCacheDirty = false;
             return result;
         } else {
             // honor passed in species if different
             if (myState.hasSpecies() && myState.species() != state.defaultModelState.species()) {
-                MutableModelState result = myState.mutableCopy();
-                result.species(state.defaultModelState.species());
-                return result;
+                return myState.mutableCopy().species(state.defaultModelState.species());
             } else {
-                return myState;
+                return myState.mutableCopy();
             }
         }
     }

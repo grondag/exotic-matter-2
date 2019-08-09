@@ -19,7 +19,7 @@ package grondag.xm.painting;
 import java.util.function.Consumer;
 
 import grondag.frex.Frex;
-import grondag.xm.api.modelstate.ImmutableModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.IMutablePolygon;
@@ -47,17 +47,17 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
     private static final boolean FREX_ACTIVE = Frex.isAvailable();
 
-    public static Mesh paint(ImmutableModelState meshState) {
+    public static Mesh paint(ModelState meshState) {
         return POOL.get().handlePaint(meshState);
     }
 
     private final MeshBuilder builder = RENDERER.meshBuilder();
     private final IMutablePolyStream work = PolyStreams.claimMutable(0);
     private final QuadEmitter emitter = builder.getEmitter();
-    private ImmutableModelState modelState;
+    private ModelState modelState;
     private MaterialFinder finder = RENDERER.materialFinder();
 
-    private Mesh handlePaint(ImmutableModelState modelState) {
+    private Mesh handlePaint(ModelState modelState) {
         this.modelState = modelState;
         modelState.primitive().produceQuads(modelState, this);
         return builder.build();
@@ -65,7 +65,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
     @Override
     public void accept(IPolygon poly) {
-        final ImmutableModelState modelState = this.modelState;
+        final ModelState modelState = this.modelState;
         final QuadEmitter emitter = this.emitter;
         final IMutablePolyStream stream = this.work;
         IMutablePolygon editor = stream.editor();

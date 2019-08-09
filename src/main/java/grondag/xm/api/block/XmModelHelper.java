@@ -19,9 +19,8 @@ package grondag.xm.api.block;
 import java.util.function.BiConsumer;
 
 import grondag.xm.api.connect.world.BlockTest;
-import grondag.xm.api.modelstate.ImmutableModelState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.modelstate.OwnedModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.block.WorldToModelStateFunction;
 import net.minecraft.block.Block;
@@ -40,11 +39,11 @@ public interface XmModelHelper {
     
     
     //TODO: move to impl
-    static ImmutableModelState applyMapper(
+    static ModelState applyMapper(
             ModelPrimitive primitive,
             BlockState blockState,
             BiConsumer<BlockState, MutableModelState> stateMapper) {
-        final OwnedModelState oms = primitive.newState();
+        final MutableModelState oms = primitive.newState();
         stateMapper.accept(blockState, oms);
         return oms.releaseToImmutable();
     }

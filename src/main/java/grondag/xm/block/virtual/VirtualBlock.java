@@ -16,7 +16,7 @@
 
 package grondag.xm.block.virtual;
 
-import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -66,7 +66,7 @@ public interface VirtualBlock {
         return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player) : !block.getMaterial(state).isReplaceable();
     }
 
-    static BlockState findAppropriateVirtualBlock(OwnedModelState modelState) {
+    static BlockState findAppropriateVirtualBlock(ModelState modelState) {
         // TODO Auto-generated method stub
         return null;
     }

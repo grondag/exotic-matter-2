@@ -16,6 +16,11 @@
 
 package grondag.xm.model.state;
 
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_POS;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
+
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -26,10 +31,14 @@ import grondag.xm.Xm;
 import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
-import grondag.xm.api.modelstate.ImmutableModelState;
-import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.connect.world.BlockNeighbors;
+import grondag.xm.api.connect.world.ModelStateFunction;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
+import grondag.xm.block.WorldToModelStateFunction;
+import grondag.xm.block.XmMasonryMatch;
 import grondag.xm.init.XmPrimitives;
 import grondag.xm.painting.QuadPaintHandler;
 import grondag.xm.terrain.TerrainState;
@@ -42,11 +51,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
-class PrimitiveModelState extends AbstractPrimitiveModelState implements ImmutableModelState, OwnedModelState {
-    private static ArrayBlockingQueue<PrimitiveModelState> POOL = new ArrayBlockingQueue<>(4096);
+public class PrimitiveModelState extends AbstractPrimitiveModelState implements ModelState {
+    private static ArrayBlockingQueue<Mutable> POOL = new ArrayBlockingQueue<>(4096);
 
     private static final PrimitiveModelState TEMPLATE = new PrimitiveModelState();
 
@@ -54,146 +64,168 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
         TEMPLATE.primitive = XmPrimitives.CUBE;
     }
 
-    static PrimitiveModelState claim(ModelPrimitive primitive) {
+    static Mutable claim(ModelPrimitive primitive) {
         return claimInner(TEMPLATE, primitive);
     }
     
-    static PrimitiveModelState claim() {
+    static Mutable claim() {
         return claimInner(TEMPLATE, XmPrimitives.CUBE);
     }
 
-    private static PrimitiveModelState claimInner(PrimitiveModelState template, ModelPrimitive primitive) {
-        PrimitiveModelState result = POOL.poll();
+    private static Mutable claimInner(PrimitiveModelState template, ModelPrimitive primitive) {
+        Mutable result = POOL.poll();
         if (result == null) {
-            result = new PrimitiveModelState();
+            result = new Mutable();
         } else {
-            result.isImmutable = false;
+            result.retain();
         }
         result.primitive = primitive;
         result.copyFrom(template);
         return result;
     }
 
-    private static void release(PrimitiveModelState state) {
-        state.isImmutable = true;
-        POOL.offer(state);
+    static class Mutable extends PrimitiveModelState implements MutableModelState {
+        private Mutable() {}
+        
+        private Mutable(PrimitiveModelState template) {
+            copyInternal(template);
+        }
+        
+        @Override
+        protected final void onLastRelease() {
+            POOL.offer(this);
+        }
+        
+        @Override
+        public final MutableModelState setStatic(boolean isStatic) {
+            setStaticInner(isStatic);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState setAxis(Axis axis) {
+            setAxisInner(axis);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState setAxisInverted(boolean isInverted) {
+            setAxisInvertedInner(isInverted);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState posX(int index) {
+            posXInner(index);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState posY(int index) {
+            posYInner(index);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState posZ(int index) {
+            posZInner(index);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState species(int species) {
+            speciesInner(species);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState cornerJoin(CornerJoinState join) {
+            cornerJoinInner(join);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState simpleJoin(SimpleJoinState join) {
+            simpleJoinInner(join);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState masonryJoin(SimpleJoinState join) {
+            masonryJoinInner(join);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState setAxisRotation(ClockwiseRotation rotation) {
+            setAxisRotationInner(rotation);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState setTerrainStateKey(long terrainStateKey) {
+            return this;
+        }
+
+        @Override
+        public final MutableModelState setTerrainState(TerrainState flowState) {
+            return this;
+        }
+
+        @Override
+        public final void fromBytes(PacketByteBuf pBuff) {
+            super.fromBytes(pBuff);
+        }
+        
+        @Override
+        public final boolean isImmutable() {
+            return false;
+        }
+        
+        @Override
+        public final ModelState toImmutable() {
+            return new PrimitiveModelState(this);
+        }
+
+        @Override
+        public final MutableModelState primitiveBits(int bits) {
+            primitiveBitsInner(bits);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState pos(BlockPos pos) {
+            posInner(pos);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState copyFrom(ModelState template) {
+            copyInternal((PrimitiveModelState)template);
+            return this;
+        }
+
+        @Override
+        public final MutableModelState paint(int surfaceIndex, int paintIndex) {
+            paintInner(surfaceIndex, paintIndex);
+            return this;
+        }
     }
 
-    private boolean isImmutable = false;
-
-    @Override
-    public void setStatic(boolean isStatic) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.setStatic(isStatic);
+    private PrimitiveModelState() {}
+    
+    private PrimitiveModelState(PrimitiveModelState template) {
+        copyInternal(template);
     }
-
-    @Override
-    public void setAxis(Axis axis) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.setAxis(axis);
-    }
-
-    @Override
-    public void setAxisInverted(boolean isInverted) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.setAxisInverted(isInverted);
-    }
-
-    @Override
-    public void posX(int index) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.posX(index);
-    }
-
-    @Override
-    public void posY(int index) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.posY(index);
-    }
-
-    @Override
-    public void posZ(int index) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.posZ(index);
-    }
-
-    @Override
-    public void species(int species) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.species(species);
-    }
-
-    @Override
-    public void cornerJoin(CornerJoinState join) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.cornerJoin(join);
-    }
-
-    @Override
-    public void simpleJoin(SimpleJoinState join) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.simpleJoin(join);
-    }
-
-    @Override
-    public void masonryJoin(SimpleJoinState join) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.masonryJoin(join);
-    }
-
-    @Override
-    public void setAxisRotation(ClockwiseRotation rotation) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.setAxisRotation(rotation);
-    }
-
-    @Override
-    public void setTerrainStateKey(long terrainStateKey) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.setTerrainStateKey(terrainStateKey);
-    }
-
-    @Override
-    public void setTerrainState(TerrainState flowState) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.setTerrainState(flowState);
-    }
-
-    @Override
-    public void fromBytes(PacketByteBuf pBuff) {
-        if (isImmutable)
-            throw new IllegalStateException();
-        super.fromBytes(pBuff);
-    }
-
+    
     @Override
     public boolean isImmutable() {
-        return isImmutable;
+        return true;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public ImmutableModelState toImmutable() {
-        if (isImmutable) {
-            return this;
-        } else {
-            PrimitiveModelState result = claimInner(this, this.primitive);
-            result.isImmutable = true;
-            return result;
-        }
+    public ModelState toImmutable() {
+        return this;
     }
 
     @Environment(EnvType.CLIENT)
@@ -201,6 +233,39 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
 
     @Environment(EnvType.CLIENT)
     private List<BakedQuad>[] quadLists = null;
+
+    public static final WorldToModelStateFunction DEFAULT_PRIMITIVE = (modelState, xmBlockState, world, pos, refreshFromWorld) -> {
+        if(refreshFromWorld) {
+            final int stateFlags = modelState.stateFlags();
+            if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS) {
+                modelState.pos(pos);
+            }
+            
+            BlockNeighbors neighbors = null;
+    
+            if ((STATE_FLAG_NEEDS_CORNER_JOIN & stateFlags) == STATE_FLAG_NEEDS_CORNER_JOIN) {
+                neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, xmBlockState.blockJoinTest());
+                modelState.cornerJoin(CornerJoinState.fromWorld(neighbors));
+    
+            } else if ((STATE_FLAG_NEEDS_SIMPLE_JOIN & stateFlags) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
+                neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, xmBlockState.blockJoinTest());
+                modelState.simpleJoin(SimpleJoinState.fromWorld(neighbors));
+            }
+    
+            if ((STATE_FLAG_NEEDS_MASONRY_JOIN & stateFlags) == STATE_FLAG_NEEDS_MASONRY_JOIN) {
+                if (neighbors == null) {
+                    neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, XmMasonryMatch.INSTANCE);
+                } else {
+                    neighbors.withTest(XmMasonryMatch.INSTANCE);
+                }
+                modelState.masonryJoin(SimpleJoinState.fromWorld(neighbors));
+            }
+    
+            if (neighbors != null) {
+                neighbors.release();
+            }
+        }
+    };
 
     @Environment(EnvType.CLIENT)
     private Mesh mesh() {
@@ -230,12 +295,12 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
         context.meshConsumer().accept(mesh());
     }
 
-    static OwnedModelState fromTag(CompoundTag tag) {
+    static Mutable fromTag(CompoundTag tag) {
         ModelPrimitive shape = ModelPrimitiveRegistry.INSTANCE.get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
         if (shape == null) {
             return null;
         }
-        PrimitiveModelState result = claimInner(TEMPLATE, shape);
+        Mutable result = claimInner(TEMPLATE, shape);
 
         if (tag.containsKey(ModelStateTagHelper.NBT_MODEL_BITS)) {
             int[] stateBits = tag.getIntArray(ModelStateTagHelper.NBT_MODEL_BITS);
@@ -276,14 +341,7 @@ class PrimitiveModelState extends AbstractPrimitiveModelState implements Immutab
     }
 
     @Override
-    public OwnedModelState mutableCopy() {
-        return claimInner(this, this.primitive);
-    }
-
-    @Override
-    public void release() {
-        if (isImmutable)
-            throw new IllegalStateException();
-        release(this);
+    public MutableModelState mutableCopy() {
+        return new Mutable(this);
     }
 }

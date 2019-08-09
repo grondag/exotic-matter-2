@@ -15,12 +15,10 @@
  ******************************************************************************/
 package grondag.xm.model.state;
 
-import grondag.xm.api.connect.world.ModelStateFunction;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
-import grondag.xm.block.XmBlockStateAccess;
 
 class ModelStateVaria {
 
@@ -46,16 +44,4 @@ class ModelStateVaria {
 
         return flags;
     }
-
-    /**
-     * Use this as factory for model state block tests that DON'T need to refresh
-     * from world.
-     */
-    static final ModelStateFunction TEST_GETTER_STATIC = (w, b, p) -> XmBlockStateAccess.modelState(b, w, p, false);
-    /**
-     * Use this as factory for model state block tests that DO need to refresh from
-     * world.
-     */
-    static final ModelStateFunction TEST_GETTER_DYNAMIC = (w, b, p) -> XmBlockStateAccess.modelState(b, w, p, true);
-
 }

@@ -17,26 +17,22 @@ package grondag.xm.api.modelstate;
 
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
+import net.minecraft.util.math.BlockPos;
 
 public interface MutableModelWorldState extends ModelWorldState {
-    default void posX(int index) {
-    }
+    MutableModelState posX(int index);
 
-    default void posY(int index) {
-    };
+    MutableModelState posY(int index);
 
-    default void posZ(int index) {
-    };
+    MutableModelState posZ(int index);
+    
+    MutableModelState pos(BlockPos pos);
 
-    default void species(int species) {
-    }
+    MutableModelState species(int species);
 
-    default void cornerJoin(CornerJoinState join) {
-    }
+    MutableModelState cornerJoin(CornerJoinState join);
 
-    default void simpleJoin(SimpleJoinState join) {
-    }
+    MutableModelState simpleJoin(SimpleJoinState join);
 
-    default void masonryJoin(SimpleJoinState join) {
-    }
+    MutableModelState masonryJoin(SimpleJoinState join);
 }

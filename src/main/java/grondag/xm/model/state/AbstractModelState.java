@@ -15,12 +15,40 @@
  ******************************************************************************/
 package grondag.xm.model.state;
 
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import net.minecraft.util.PacketByteBuf;
 
 abstract class AbstractModelState implements ModelState {
+    
+    private static final AtomicIntegerFieldUpdater<AbstractModelState> retainCountUpdater =
+            AtomicIntegerFieldUpdater.newUpdater(AbstractModelState.class, "refCount");
+
+    private volatile int refCount = 1;
+    
+    public final int refCount() {
+        return refCount; 
+    }
+    
+    public void retain() {
+        retainCountUpdater.getAndIncrement(this);
+    }
+    
+    public void release() {
+        final int oldCount = retainCountUpdater.getAndDecrement(this);
+        if(oldCount == 1) {
+            onLastRelease();
+        } else if (oldCount <= 0) {
+            retainCountUpdater.getAndIncrement(this);
+            throw new IllegalStateException("Encountered attempt to release an unreferenced ModelState instance.");
+        }
+    }
+    
+    protected void onLastRelease() {}
+    
     // UGLY: belongs somewhere else
     public static final int MAX_SURFACES = 8;
 
@@ -73,7 +101,8 @@ abstract class AbstractModelState implements ModelState {
         return primitive;
     }
 
-    protected final int stateFlags() {
+    @Override
+    public final int stateFlags() {
         int result = stateFlags;
         if (result == 0) {
             result = ModelStateVaria.getFlags(this);
@@ -161,7 +190,7 @@ abstract class AbstractModelState implements ModelState {
         }
     }
 
-    public final void paint(int surfaceIndex, int paintIndex) {
+    protected final void paintInner(int surfaceIndex, int paintIndex) {
         paints[surfaceIndex] = paintIndex;
     }
 

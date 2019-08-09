@@ -17,7 +17,7 @@ package grondag.xm.model.state;
 
 import javax.annotation.Nullable;
 
-import grondag.xm.api.modelstate.OwnedModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
@@ -28,16 +28,16 @@ public abstract class ModelStatesImpl {
 
     public static final int PRIMITIVE_BIT_COUNT = 6;
 
-    public static OwnedModelState claimSimple(ModelPrimitive primitive) {
+    public static MutableModelState claimSimple(ModelPrimitive primitive) {
         return PrimitiveModelState.claim(primitive);
     }
 
-    public static @Nullable OwnedModelState fromTag(CompoundTag tag) {
+    public static @Nullable MutableModelState fromTag(CompoundTag tag) {
         return PrimitiveModelState.fromTag(tag);
     }
 
-    public static @Nullable OwnedModelState fromBuffer(PacketByteBuf buf) {
-        PrimitiveModelState result = PrimitiveModelState.claim();
+    public static @Nullable MutableModelState fromBuffer(PacketByteBuf buf) {
+        PrimitiveModelState.Mutable result = PrimitiveModelState.claim();
         result.fromBytes(buf);
         return result;
     }

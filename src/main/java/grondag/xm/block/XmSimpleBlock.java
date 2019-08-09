@@ -19,13 +19,10 @@ package grondag.xm.block;
 import java.util.List;
 import java.util.function.Function;
 
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ImmutableModelState;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelPrimitiveState;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.collision.CollisionBoxDispatcher;
+import grondag.xm.model.state.PrimitiveModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -60,20 +57,11 @@ public class XmSimpleBlock extends Block {
         return blockSettings;
     }
 
-    public static ModelState computeModelState(XmBlockState xmState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
-        if (refreshFromWorld) {
-            MutableModelState result = xmState.defaultModelState().mutableCopy();
-            result.refreshFromWorld((XmBlockStateImpl) xmState, world, pos);
-            return result;
-        } else {
-            return xmState.defaultModelState();
-        }
-    }
-
     public XmSimpleBlock(Settings blockSettings, MutableModelState defaultModelState) {
+        //UGLY: scap this whole thing
         super(prepareInit(blockSettings, defaultModelState));
         defaultModelState.primitive().orientationType(defaultModelState).stateFunc.accept(this.getDefaultState(), defaultModelState);
-        XmBlockRegistryImpl.register(this, defaultModelStateFunc(defaultModelState), XmSimpleBlock::computeModelState, XmBorderMatch.INSTANCE);
+        XmBlockRegistryImpl.register(this, defaultModelStateFunc(defaultModelState), PrimitiveModelState.DEFAULT_PRIMITIVE, XmBorderMatch.INSTANCE);
     }
 
     @Override
@@ -93,8 +81,8 @@ public class XmSimpleBlock extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, EntityContext entityContext) {
-        final ModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
-        return CollisionBoxDispatcher.getOutlineShape(modelState);
+        final MutableModelState modelState = XmBlockStateAccess.get(state).getModelState(blockView, pos, true);
+        return modelState.applyAndRelease(CollisionBoxDispatcher::getOutlineShape);
     }
 
     // TODO: add hook in or around BlockCrackParticle
@@ -210,7 +198,7 @@ public class XmSimpleBlock extends Block {
         super.buildTooltip(stack, world, tooltip, context);
         tooltip.add(new TranslatableText("label.meta", stack.getDamage()));
 
-        MutableModelPrimitiveState modelState = XmStackHelper.getStackModelState(stack);
+        MutableModelState modelState = XmStackHelper.getStackModelState(stack);
 
         if (modelState != null) {
             tooltip.add(new TranslatableText("label.shape", modelState.primitive().translationKey()));
@@ -370,7 +358,7 @@ public class XmSimpleBlock extends Block {
         return modelState.primitive().orientationType(modelState).placementFunc.apply(getDefaultState(), context);
     }
 
-    public static Function<BlockState, ImmutableModelState> defaultModelStateFunc(MutableModelState baseModelState) {
+    public static Function<BlockState, ModelState> defaultModelStateFunc(MutableModelState baseModelState) {
         return (state) -> {
             MutableModelState result = baseModelState.mutableCopy();
 

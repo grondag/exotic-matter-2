@@ -20,22 +20,19 @@ import grondag.xm.terrain.TerrainState;
 import net.minecraft.util.math.Direction;
 
 public interface MutableModelPrimitiveState extends ModelPrimitiveState {
-    void setAxis(Direction.Axis axis);
+    MutableModelState setAxis(Direction.Axis axis);
 
-    void setAxisInverted(boolean isInverted);
+    MutableModelState setAxisInverted(boolean isInverted);
 
     /**
      * For machines and other blocks with a privileged horizontal face, North is
      * considered the zero rotation.
      */
-    void setAxisRotation(ClockwiseRotation rotation);
+    MutableModelState setAxisRotation(ClockwiseRotation rotation);
 
-    default void setTerrainState(TerrainState flowState) {
-    }
+    MutableModelState setTerrainState(TerrainState flowState);
 
-    default void setTerrainStateKey(long terrainStateKey) {
-    }
+    MutableModelState setTerrainStateKey(long terrainStateKey);
 
-    default void primitiveBits(int bits) {
-    }
+    MutableModelState primitiveBits(int bits);
 }

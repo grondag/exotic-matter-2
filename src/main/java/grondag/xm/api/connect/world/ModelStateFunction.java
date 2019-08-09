@@ -16,10 +16,11 @@
 
 package grondag.xm.api.connect.world;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.block.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -29,8 +30,19 @@ import net.minecraft.world.BlockView;
  * to retrieve values with lazy evaluation and caching. The resulting values
  * will also be provided to {@link BlockTest}.
  */
-@API(status = STABLE)
+@API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface ModelStateFunction {
     public Object get(BlockView world, BlockState blockState, BlockPos pos);
+    
+    /**
+     * Use this as factory for model state block tests that DON'T need to refresh
+     * from world.
+     */
+    static final ModelStateFunction STATIC = (w, b, p) -> XmBlockStateAccess.modelState(b, w, p, false);
+    /**
+     * Use this as factory for model state block tests that DO need to refresh from
+     * world.
+     */
+    static final ModelStateFunction DYNAMIC = (w, b, p) -> XmBlockStateAccess.modelState(b, w, p, true);
 }

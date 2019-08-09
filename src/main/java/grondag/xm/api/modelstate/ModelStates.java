@@ -8,11 +8,11 @@ import net.minecraft.util.PacketByteBuf;
 
 public interface ModelStates {
 
-    public static @Nullable OwnedModelState fromTag(CompoundTag tag) {
+    public static @Nullable MutableModelState fromTag(CompoundTag tag) {
         return ModelStatesImpl.fromTag(tag);
     }
     
-    public static @Nullable OwnedModelState fromBuffer(PacketByteBuf buf) {
+    public static @Nullable MutableModelState fromBuffer(PacketByteBuf buf) {
         return ModelStatesImpl.fromBuffer(buf);
     }
 }
