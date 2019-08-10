@@ -115,7 +115,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive<PrimitiveMode
     @Override
     public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
         PrimitiveModelState result = this.newState();
-        result.setAxis(fromState.getAxis());
+        result.axis(fromState.axis());
         result.setAxisInverted(fromState.isAxisInverted());
         result.primitiveBits(fromState.primitiveBits());
         return result;
@@ -123,7 +123,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive<PrimitiveMode
 
     @Override
     public boolean doesShapeMatch(PrimitiveModelState from, PrimitiveModelState to) {
-        return from.primitive() == to.primitive() && from.getAxis() == to.getAxis() && from.isAxisInverted() == to.isAxisInverted()
+        return from.primitive() == to.primitive() && from.axis() == to.axis() && from.isAxisInverted() == to.isAxisInverted()
                 && from.primitiveBits() == to.primitiveBits();
     }
 }

@@ -17,58 +17,43 @@ package grondag.xm.model.state;
 
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.paint.XmPaint;
-import grondag.xm.api.paint.XmPaintRegistry;
-import grondag.xm.api.surface.XmSurface;
-
 abstract class AbstractModelState {
+
+    /////// REFERENCE COUNTING /////////
     
-    private static final AtomicIntegerFieldUpdater<AbstractModelState> retainCountUpdater =
-            AtomicIntegerFieldUpdater.newUpdater(AbstractModelState.class, "refCount");
+    private static final AtomicIntegerFieldUpdater<AbstractModelState> retainCountUpdater = AtomicIntegerFieldUpdater.newUpdater(AbstractModelState.class,
+            "refCount");
 
     private volatile int refCount = 0;
     
-    protected boolean isImmutable = true;
-    
     public final int refCount() {
-        return refCount; 
+        return refCount;
     }
-    
-    public final boolean isImmutable() {
-        return isImmutable;
-    }
-    
-    protected final void confirmMutable() {
-        if(isImmutable) {
-            throw new UnsupportedOperationException("Encounted attempt to modify immutable model state.");
-        }
-    }
-    public void retain() {
-        confirmMutable();
-        retainCountUpdater.getAndIncrement(this);
-    }
-    
+
+    protected abstract void onLastRelease();
+
     public void release() {
         confirmMutable();
         final int oldCount = retainCountUpdater.getAndDecrement(this);
-        if(oldCount == 1) {
+        if (oldCount == 1) {
             onLastRelease();
         } else if (oldCount <= 0) {
             retainCountUpdater.getAndIncrement(this);
             throw new IllegalStateException("Encountered attempt to release an unreferenced ModelState instance.");
         }
     }
-    
-    protected void onLastRelease() {}
-    
-    // UGLY: belongs somewhere else
-    public static final int MAX_SURFACES = 8;
 
-    
-    protected final int[] paints = new int[MAX_SURFACES];
+    public void retain() {
+        confirmMutable();
+        retainCountUpdater.getAndIncrement(this);
+    }
 
+    /////// HASH CODE /////////
+    
     private int hashCode = -1;
+
+    protected abstract int computeHashCode();
+
 
     @Override
     public final int hashCode() {
@@ -79,43 +64,33 @@ abstract class AbstractModelState {
         }
         return result;
     }
-
-    protected <T extends AbstractModelState> void copyInternal(T template) {
-        System.arraycopy(((AbstractModelState) template).paints, 0, this.paints, 0, this.surfaceCount());
-    }
-
-    protected abstract int surfaceCount();
     
-    protected int intSize() {
-        return surfaceCount();
-    }
-
-    /**
-     * Very important to call super and ammend it!
-     */
-    protected int computeHashCode() {
-        int result = 0;
-        final int limit = this.surfaceCount();
-        for (int i = 0; i < limit; i++) {
-            result ^= paints[i];
-        }
-        return result;
-    }
-
     protected final void invalidateHashCode() {
         if (this.hashCode != -1)
             this.hashCode = -1;
     }
+    
+    /////// MUTABILITY /////////
 
-    protected final int[] serializeToInts() {
-        int[] result = new int[intSize()];
-        doSerializeToInts(result, 0);
-        return result;
+    protected boolean isImmutable = true;
+
+    public final boolean isImmutable() {
+        return isImmutable;
+    }
+    
+    protected final void confirmMutable() {
+        if (isImmutable) {
+            throw new UnsupportedOperationException("Encounted attempt to modify immutable model state.");
+        }
     }
 
-    protected void doSerializeToInts(int[] data, int startAt) {
-        System.arraycopy(paints, 0, data, startAt, surfaceCount());
-    }
+    /////// INT ARRAY SERIALIZATION /////////
+
+    protected abstract int intSize();
+
+    protected abstract void doDeserializeFromInts(int[] data, int startAt);
+
+    protected abstract void doSerializeToInts(int[] data, int startAt);
 
     /**
      * Note does not reset state flag - do that if calling on an existing instance.
@@ -124,47 +99,10 @@ abstract class AbstractModelState {
         doDeserializeFromInts(bits, 0);
     }
 
-    protected void doDeserializeFromInts(int[] data, int startAt) {
-        System.arraycopy(data, startAt, paints, 0, surfaceCount());
-    }
 
-    public final boolean doPaintsMatch(AbstractModelState other) {
-        final int limit = surfaceCount();
-        if (limit == other.surfaceCount()) {
-            final int[] paints = this.paints;
-            final int[] otherPaints = other.paints;
-            for (int i = 0; i < limit; i++) {
-                if (otherPaints[i] != paints[i]) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Returns true if visual elements match. Does not consider species or geometry
-     * in matching.
-     */
-    public final boolean doesAppearanceMatch(ModelState other) {
-        return other != null && other instanceof AbstractModelState && doPaintsMatch((AbstractModelState) other);
-    }
-
-    protected final void paintInner(int surfaceIndex, int paintIndex) {
-        paints[surfaceIndex] = paintIndex;
-    }
-
-    public final int paintIndex(int surfaceIndex) {
-        return paints[surfaceIndex];
-    }
-    
-    public final XmPaint paint(int surfaceIndex) {
-        return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
-    }
-
-    public final XmPaint paint(XmSurface surface) {
-        return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
+    protected final int[] serializeToInts() {
+        int[] result = new int[intSize()];
+        doSerializeToInts(result, 0);
+        return result;
     }
 }

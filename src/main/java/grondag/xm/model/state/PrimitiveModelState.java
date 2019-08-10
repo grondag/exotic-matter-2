@@ -30,6 +30,7 @@ import grondag.xm.block.WorldToModelStateFunction;
 import grondag.xm.block.XmMasonryMatch;
 
 public class PrimitiveModelState extends AbstractPrimitiveModelState<PrimitiveModelState> implements MutableModelState {
+    public static final int MAX_SURFACES = 8;
     
     public static final ModelStateFactory<PrimitiveModelState> FACTORY = new ModelStateFactory<>(PrimitiveModelState::new);
 
@@ -70,5 +71,10 @@ public class PrimitiveModelState extends AbstractPrimitiveModelState<PrimitiveMo
     @Override
     public final ModelStateFactory<PrimitiveModelState> factory() {
         return FACTORY;
+    }
+
+    @Override
+    protected int maxSurfaces() {
+        return MAX_SURFACES;
     }
 }

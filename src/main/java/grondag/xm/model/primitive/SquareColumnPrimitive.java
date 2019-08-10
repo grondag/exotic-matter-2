@@ -128,7 +128,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive<PrimitiveModel
         // Why create a stream just to pipe it to the consumer? Or cache the result.
 
         CornerJoinState bjs = state.cornerJoin();
-        Direction.Axis axis = state.getAxis();
+        Direction.Axis axis = state.axis();
         IWritablePolyStream stream = PolyStreams.claimWritable();
 
         stream.setVertexCount(4);
@@ -550,7 +550,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive<PrimitiveModel
     @Override
     public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
         final PrimitiveModelState result = this.newState();
-        result.setAxis(fromState.getAxis());
+        result.axis(fromState.axis());
         result.primitiveBits(fromState.primitiveBits());
         result.cornerJoin(fromState.cornerJoin());
         return result;
@@ -559,7 +559,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive<PrimitiveModel
     @Override
     public boolean doesShapeMatch(PrimitiveModelState from, PrimitiveModelState to) {
         
-        return from.primitive() == to.primitive() && from.getAxis() == to.getAxis() && from.cornerJoin() == to.cornerJoin()
+        return from.primitive() == to.primitive() && from.axis() == to.axis() && from.cornerJoin() == to.cornerJoin()
                 && from.primitiveBits() == to.primitiveBits();
     }
 }

@@ -17,12 +17,10 @@ package grondag.xm.model.state;
 
 import java.util.List;
 import java.util.Random;
-import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.terrain.TerrainState;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -137,14 +135,14 @@ public class TerrainModelState extends AbstractPrimitiveModelState<TerrainModelS
         // TODO Auto-generated method stub
         
     }
-    
-    @Override
-    public void produceQuads(Consumer<IPolygon> target) {
-        primitive.produceQuads(this, target);
-    }
 
     @Override
     public ModelStateFactory<TerrainModelState> factory() {
         return FACTORY;
+    }
+
+    @Override
+    protected int maxSurfaces() {
+        return 4;
     }
 }

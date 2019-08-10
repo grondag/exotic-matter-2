@@ -62,17 +62,17 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive<Prim
     @Override
     public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
         PrimitiveModelState result = this.newState();
-        result.setAxis(fromState.getAxis());
+        result.axis(fromState.axis());
         result.setAxisInverted(fromState.isAxisInverted());
-        result.setAxisRotation(fromState.getAxisRotation());
+        result.axisRotation(fromState.axisRotation());
         result.primitiveBits(fromState.primitiveBits());
         return result;
     }
 
     @Override
     public boolean doesShapeMatch(PrimitiveModelState from, PrimitiveModelState to) {
-        return from.primitive() == to.primitive() && from.getAxis() == to.getAxis() && from.isAxisInverted() == to.isAxisInverted()
-                && from.getAxisRotation() == to.getAxisRotation() && from.primitiveBits() == to.primitiveBits();
+        return from.primitive() == to.primitive() && from.axis() == to.axis() && from.isAxisInverted() == to.isAxisInverted()
+                && from.axisRotation() == to.axisRotation() && from.primitiveBits() == to.primitiveBits();
     }
 
     public static boolean isCorner(PrimitiveModelState modelState) {

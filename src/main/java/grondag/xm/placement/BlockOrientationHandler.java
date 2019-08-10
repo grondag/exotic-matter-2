@@ -72,14 +72,14 @@ public class BlockOrientationHandler {
         AbstractPrimitiveModelState<?> modelState = XmStackHelper.getStackModelState(stack);
 
         if (modelState.hasAxis()) {
-            modelState.setAxis(item.getBlockPlacementAxis(stack));
+            modelState.axis(item.getBlockPlacementAxis(stack));
 
             if (modelState.hasAxisOrientation()) {
                 modelState.setAxisInverted(item.getBlockPlacementAxisIsInverted(stack));
             }
         }
         if (modelState.hasAxisRotation()) {
-            modelState.setAxisRotation(item.getBlockPlacementRotation(stack));
+            modelState.axisRotation(item.getBlockPlacementRotation(stack));
         }
 
         XmStackHelper.setStackModelState(stack, modelState);
@@ -133,14 +133,14 @@ public class BlockOrientationHandler {
             applyDynamicOrientation(stack, player, pPos);
         } else {
             if (outputModelState.hasAxis()) {
-                outputModelState.setAxis(closestModelState.getAxis());
+                outputModelState.axis(closestModelState.axis());
 
                 if (outputModelState.hasAxisOrientation()) {
                     outputModelState.setAxisInverted(closestModelState.isAxisInverted());
                 }
             }
             if (outputModelState.hasAxisRotation()) {
-                outputModelState.setAxisRotation(closestModelState.getAxisRotation());
+                outputModelState.axisRotation(closestModelState.axisRotation());
             }
             closestModelState.release();
         }
@@ -161,21 +161,21 @@ public class BlockOrientationHandler {
 
             BlockEdge edge = BlockEdge.find(pPos.onFace.getOpposite(), adjacentFace);
 
-            outputModelState.setAxis(edge.face1.getAxis());
+            outputModelState.axis(edge.face1.getAxis());
 
             if (outputModelState.hasAxisRotation()) {
-                outputModelState.setAxisRotation(edge.rotation);
+                outputModelState.axisRotation(edge.rotation);
                 isRotationDone = true;
             }
         } else {
-            outputModelState.setAxis(pPos.onFace.getAxis());
+            outputModelState.axis(pPos.onFace.getAxis());
             if (outputModelState.hasAxisOrientation()) {
                 outputModelState.setAxisInverted(pPos.onFace.getDirection() == AxisDirection.NEGATIVE);
             }
         }
 
         if (!isRotationDone && outputModelState.hasAxisRotation()) {
-            outputModelState.setAxisRotation(ClockwiseRotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
+            outputModelState.axisRotation(ClockwiseRotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
         }
 
         XmStackHelper.setStackModelState(stack, outputModelState);
@@ -239,9 +239,9 @@ public class BlockOrientationHandler {
     public static void edgeModelState(BlockState stateIn, AbstractPrimitiveModelState<?> modelState) {
         final BlockEdge edge = (BlockEdge) stateIn.getEntries().get(EDGE_PROP);
         if (edge != null) {
-            modelState.setAxis(edge.face1.getAxis());
+            modelState.axis(edge.face1.getAxis());
             modelState.setAxisInverted(edge.face1.getDirection() != AxisDirection.NEGATIVE);
-            modelState.setAxisRotation(edge.rotation);
+            modelState.axisRotation(edge.rotation);
         }
     }
 

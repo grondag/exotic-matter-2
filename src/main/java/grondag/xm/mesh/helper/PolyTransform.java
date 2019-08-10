@@ -136,7 +136,7 @@ public class PolyTransform {
     public static PolyTransform get(AbstractPrimitiveModelState<?> modelState) {
 
         // TODO: put back
-        return new PolyTransform(computeMatrix(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation()));
+        return new PolyTransform(computeMatrix(modelState.axis(), modelState.isAxisInverted(), modelState.axisRotation()));
         // return LOOKUP[computeTransformKey(modelState)];
     }
 
@@ -179,8 +179,8 @@ public class PolyTransform {
      * state. Useful for some serialization scenarios.
      */
     public static int computeTransformKey(AbstractPrimitiveModelState<?> modelState) {
-        return modelState.hasAxis() ? computeKey(modelState.getAxis(), modelState.isAxisInverted(), modelState.getAxisRotation())
-                : computeKey(null, false, modelState.getAxisRotation());
+        return modelState.hasAxis() ? computeKey(modelState.axis(), modelState.isAxisInverted(), modelState.axisRotation())
+                : computeKey(null, false, modelState.axisRotation());
     }
 
     private static Matrix4f getMatrixForAxis(Direction.Axis axis, boolean isAxisInverted) {
