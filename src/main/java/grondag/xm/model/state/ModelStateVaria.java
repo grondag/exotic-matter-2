@@ -15,7 +15,6 @@
  ******************************************************************************/
 package grondag.xm.model.state;
 
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
@@ -28,12 +27,13 @@ class ModelStateVaria {
      * Results are returns as STATE_FLAG_XXXX values from ModelState for easy
      * persistence and usage within that class.
      */
-    static final int getFlags(ModelState state) {
-        final ModelPrimitive mesh = state.primitive();
+    @SuppressWarnings("unchecked")
+    static final <T extends AbstractPrimitiveModelState<T>> int getFlags(AbstractPrimitiveModelState<T> state) {
+        final ModelPrimitive<T> mesh = state.primitive();
 
-        int flags = ModelStateFlags.STATE_FLAG_IS_POPULATED | mesh.stateFlags(state);
+        int flags = ModelStateFlags.STATE_FLAG_IS_POPULATED | mesh.stateFlags((T) state);
 
-        final int surfCount = mesh.surfaces(state).size();
+        final int surfCount = mesh.surfaces((T) state).size();
         for (int i = 0; i < surfCount; i++) {
             XmPaint p = state.paint(i);
             final int texDepth = p.textureDepth();

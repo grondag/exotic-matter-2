@@ -17,14 +17,12 @@ package grondag.xm.model.state;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
-import grondag.xm.api.connect.model.ClockwiseRotation;
-import grondag.xm.api.connect.state.CornerJoinState;
-import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
+import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.terrain.TerrainState;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -33,14 +31,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.world.BlockView;
 
-class TerrainModelState extends AbstractWorldModelState implements MutableModelState {
-    protected TerrainModelState(ModelPrimitive primitive) {
-        super();
-        this.primitive = primitive;
-    }
+//TODO: move to terrain package
+public class TerrainModelState extends AbstractPrimitiveModelState<TerrainModelState> implements MutableModelState {
+    public static final ModelStateFactory<TerrainModelState> FACTORY = new ModelStateFactory<>(TerrainModelState::new);
+    
 
     private long flowBits;
     private int glowBits;
@@ -61,28 +57,23 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
         });
     }
 
-    @Override
     public long getTerrainStateKey() {
         return flowBits;
     }
 
-    @Override
     public int getTerrainHotness() {
         return glowBits;
     }
 
-    @Override
     public MutableModelState setTerrainStateKey(long terrainStateKey) {
         flowBits = terrainStateKey;
         return this;
     }
 
-    @Override
     public TerrainState getTerrainState() {
         return new TerrainState(flowBits, glowBits);
     }
 
-    @Override
     public MutableModelState setTerrainState(TerrainState flowState) {
         flowBits = flowState.getStateKey();
         glowBits = flowState.getHotness();
@@ -92,27 +83,15 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
 
     @Override
     public TerrainModelState geometricState() {
-        TerrainModelState result = new TerrainModelState(this.primitive);
+        TerrainModelState result = FACTORY.claim(this.primitive);
         result.flowBits = this.flowBits;
         return result;
     }
 
     @Override
-    public MutableModelState mutableCopy() {
+    public TerrainModelState mutableCopy() {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public boolean doShapeAndAppearanceMatch(ModelState other) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean doesAppearanceMatch(ModelState other) {
-        // TODO Auto-generated method stub
-        return false;
     }
 
     @Override
@@ -120,13 +99,6 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
         // TODO Auto-generated method stub
 
     }
-
-    @Override
-    public boolean isImmutable() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
 
     @Override
     public void fromBytes(PacketByteBuf pBuff) {
@@ -143,19 +115,13 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
     }
 
     @Override
-    public MutableModelState copyFrom(ModelState template) {
+    public TerrainModelState copyFrom(ModelState template) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public Direction rotateFace(Direction face) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public ModelState toImmutable() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -171,88 +137,14 @@ class TerrainModelState extends AbstractWorldModelState implements MutableModelS
         // TODO Auto-generated method stub
         
     }
-
+    
     @Override
-    public MutableModelState setAxis(Axis axis) {
-        // TODO Auto-generated method stub
-        return null;
+    public void produceQuads(Consumer<IPolygon> target) {
+        primitive.produceQuads(this, target);
     }
 
     @Override
-    public MutableModelState setAxisInverted(boolean isInverted) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState setAxisRotation(ClockwiseRotation rotation) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState primitiveBits(int bits) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState posX(int index) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState posY(int index) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState posZ(int index) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState pos(BlockPos pos) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState species(int species) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState cornerJoin(CornerJoinState join) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState simpleJoin(SimpleJoinState join) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState masonryJoin(SimpleJoinState join) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState setStatic(boolean isStatic) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public MutableModelState paint(int surfaceIndex, int paintIndex) {
-        // TODO Auto-generated method stub
-        return null;
+    public ModelStateFactory<TerrainModelState> factory() {
+        return FACTORY;
     }
 }

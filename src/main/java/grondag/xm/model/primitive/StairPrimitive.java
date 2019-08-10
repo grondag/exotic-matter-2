@@ -19,12 +19,12 @@ package grondag.xm.model.primitive;
 import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.model.state.PrimitiveModelState;
 import net.minecraft.util.math.Direction;
 
 public class StairPrimitive extends AbstractWedgePrimitive {
@@ -33,7 +33,7 @@ public class StairPrimitive extends AbstractWedgePrimitive {
     }
 
     @Override
-    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(PrimitiveModelState modelState, Consumer<IPolygon> target) {
         // Axis for this shape is along the face of the sloping surface
         // Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
         // Default geometry is Y orthogonalAxis with full sides against north/east

@@ -28,6 +28,7 @@ import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.connect.world.ModelStateFunction;
+import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -40,21 +41,22 @@ import net.minecraft.world.BlockView;
  * position. Position is immutable, blockstates are looked up lazily and values
  * are cached for reuse.
  */
+@SuppressWarnings("rawtypes")
 @API(status = INTERNAL)
 public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     private static final int STATE_COUNT = 6 + 12 + 8;
     private static final BlockState EMPTY_BLOCK_STATE[] = new BlockState[STATE_COUNT];
-    private static final Object EMPTY_MODEL_STATE[] = new Object[STATE_COUNT];
+    private static final ModelState EMPTY_MODEL_STATE[] = new ModelState[STATE_COUNT];
 
     private static ThreadLocal<BlocksNeighborsImpl> THREADLOCAL = ThreadLocal.withInitial(BlocksNeighborsImpl::new);
 
-    public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest blockTest) {
+    public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> blockTest) {
         return THREADLOCAL.get().prepare(world, x, y, z, stateFunc, blockTest);
     }
 
     private static final ArrayBlockingQueue<BlocksNeighborsImpl> POOL = new ArrayBlockingQueue<>(64);
 
-    public static BlocksNeighborsImpl claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest blockTest) {
+    public static BlocksNeighborsImpl claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> blockTest) {
         BlocksNeighborsImpl result = POOL.poll();
         if (result == null) {
             result = new BlocksNeighborsImpl();
@@ -71,7 +73,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     private final BlockState blockStates[] = new BlockState[STATE_COUNT];
-    private final Object modelStates[] = new Object[STATE_COUNT];
+    private final ModelState modelStates[] = new ModelState[STATE_COUNT];
     private final BlockPos.Mutable mutablePos = new BlockPos.Mutable();
 
     private boolean allowReclaim = false;
@@ -88,12 +90,12 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     private BlockTest blockTest;
     private BlockState myBlockState;
     private final BlockPos.Mutable myPos = new BlockPos.Mutable();
-    private Object myModelState;
+    private ModelState myModelState;
 
     // valid during tests - the "to" values
     private final BlockPos.Mutable targetPos = new BlockPos.Mutable();
     private BlockState targetBlockState = Blocks.AIR.getDefaultState();
-    private Object targetModelState = null;
+    private ModelState targetModelState = null;
 
     protected BlocksNeighborsImpl() {
     }
@@ -191,11 +193,11 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     //////////////////////////////
 
     @Override
-    public Object modelState() {
+    public ModelState modelState() {
         if (this.stateFunc == null)
             return null;
 
-        Object result = this.myModelState;
+        ModelState result = this.myModelState;
         if (result == null) {
             BlockState state = this.blockState();
             mutablePos.set(x, y, z);
@@ -206,11 +208,11 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public Object modelState(Direction face) {
+    public ModelState modelState(Direction face) {
         if (this.stateFunc == null)
             return null;
 
-        Object result = modelStates[face.ordinal()];
+        ModelState result = modelStates[face.ordinal()];
         if (result == null) {
             BlockState state = this.blockState(face);
             setPos(mutablePos, face);
@@ -221,11 +223,11 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public Object modelState(BlockEdge edge) {
+    public ModelState modelState(BlockEdge edge) {
         if (this.stateFunc == null)
             return null;
 
-        Object result = modelStates[edge.superOrdinal];
+        ModelState result = modelStates[edge.superOrdinal];
         if (result == null) {
             BlockState state = blockState(edge);
             setPos(mutablePos, edge);
@@ -236,11 +238,11 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public Object modelState(BlockCorner corner) {
+    public ModelState modelState(BlockCorner corner) {
         if (this.stateFunc == null)
             return null;
 
-        Object result = modelStates[corner.superOrdinal];
+        ModelState result = modelStates[corner.superOrdinal];
         if (result == null) {
             BlockState state = blockState(corner);
             setPos(mutablePos, corner);
@@ -262,6 +264,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     private boolean doTest(Direction face) {
         targetModelState = stateFunc == null ? null : modelState(face);
         targetBlockState = blockState(face);
@@ -269,6 +272,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
         return blockTest.apply(this);
     }
 
+    @SuppressWarnings("unchecked")
     private boolean doTest(BlockEdge edge) {
         targetModelState = stateFunc == null ? null : modelState(edge);
         targetBlockState = blockState(edge);
@@ -276,6 +280,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
         return blockTest.apply(this);
     }
 
+    @SuppressWarnings("unchecked")
     private boolean doTest(BlockCorner corner) {
         targetModelState = stateFunc == null ? null : modelState(corner);
         targetBlockState = blockState(corner);
@@ -360,7 +365,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public Object fromModelState() {
+    public ModelState fromModelState() {
         return modelState();
     }
 
@@ -375,7 +380,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public Object toModelState() {
+    public ModelState toModelState() {
         return targetModelState;
     }
 }

@@ -16,15 +16,9 @@
 
 package grondag.xm.api.modelstate;
 
-import java.util.function.Function;
+import net.minecraft.util.PacketByteBuf;
 
-import grondag.xm.api.paint.XmPaint;
-import grondag.xm.api.surface.XmSurface;
-import grondag.xm.api.surface.XmSurfaceList;
-import grondag.xm.mesh.helper.PolyTransform;
-import net.minecraft.util.math.Direction;
-
-public interface MutableModelState extends ModelState, MutableModelPrimitiveState, MutableModelWorldState {
+public interface MutableModelState extends ModelState {
     void release();
     
     void retain();
@@ -36,45 +30,14 @@ public interface MutableModelState extends ModelState, MutableModelPrimitiveStat
 
     MutableModelState setStatic(boolean isStatic);
 
-    boolean equalsIncludeStatic(Object obj);
+//
+//    /**
+//     * See {@link PolyTransform#rotateFace(MutableModelState, Direction)}
+//     */
+//    Direction rotateFace(Direction face);
 
-    default MutableModelState paint(XmSurface surface, XmPaint paint) {
-        return paint(surface.ordinal(), paint.index());
-    }
+    ModelState releaseToImmutable();
 
-    default MutableModelState paint(XmSurface surface, int paintIndex) {
-        return paint(surface.ordinal(), paintIndex);
-    }
-
-    MutableModelState paint(int surfaceIndex, int paintIndex);
-
-    default MutableModelState paintAll(XmPaint paint) {
-        return paintAll(paint.index());
-    }
-
-    default MutableModelState paintAll(int paintIndex) {
-        XmSurfaceList slist = primitive().surfaces(this);
-        final int limit = slist.size();
-        for (int i = 0; i < limit; i++) {
-            paint(i, paintIndex);
-        }
-        return this;
-    }
-
-    /**
-     * See {@link PolyTransform#rotateFace(MutableModelState, Direction)}
-     */
-    Direction rotateFace(Direction face);
-
-    default <T> T applyAndRelease(Function<MutableModelState, T> func) {
-        final T result = func.apply(this);
-        this.release();
-        return result;
-    }
-
-    default ModelState releaseToImmutable() {
-        final ModelState result = this.toImmutable();
-        this.release();
-        return result;
-    }
+    void fromBytes(PacketByteBuf pBuff);
+   
 }

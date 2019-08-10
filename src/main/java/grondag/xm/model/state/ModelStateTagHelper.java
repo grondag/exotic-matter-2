@@ -24,7 +24,7 @@ public abstract class ModelStateTagHelper {
 
     static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
 
-    static final String NBT_SHAPE = NBTDictionary.claim("shape");
+    public static final String NBT_SHAPE = NBTDictionary.claim("shape");
 
     /**
      * Stores string containing registry names of textures, vertex processors

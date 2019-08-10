@@ -17,28 +17,31 @@
 package grondag.xm.model.primitive;
 
 import grondag.xm.Xm;
-import grondag.xm.api.modelstate.ModelPrimitiveState;
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
-import grondag.xm.model.state.ModelStatesImpl;
+import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.AbstractPrimitiveModelState.ModelStateFactory;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
-public abstract class AbstractModelPrimitive implements ModelPrimitive {
-    private final ModelState defaultState;
+public abstract class AbstractModelPrimitive<T extends AbstractPrimitiveModelState<T>> implements ModelPrimitive<T> {
+    private final T defaultState;
 
+    private final ModelStateFactory<T> factory;
+    
     private final Identifier id;
-
+    
     /**
      * bits flags used by ModelState to know which optional state elements are
      * needed by this shape
      */
     private final int stateFlags;
 
-    protected AbstractModelPrimitive(Identifier id, int stateFlags) {
+    protected AbstractModelPrimitive(Identifier id, int stateFlags, ModelStateFactory<T> factory) {
         this.stateFlags = stateFlags;
         this.id = id;
+        this.factory = factory;
 
         // we handle registration here because model state currently relies on it for
         // serialization
@@ -46,23 +49,22 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
             Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + id.toString());
         }
 
-        MutableModelState state = ModelStatesImpl.claimSimple(this);
+        T state = factory.claim(this);
         updateDefaultState(state);
-        this.defaultState = state.toImmutable();
-        state.release();
+        this.defaultState = state.releaseToImmutable();
     }
 
-    protected AbstractModelPrimitive(String idString, int stateFlags) {
-        this(new Identifier(idString), stateFlags);
+    protected AbstractModelPrimitive(String idString, int stateFlags, ModelStateFactory<T> factory) {
+        this(new Identifier(idString), stateFlags, factory);
     }
 
     @Override
-    public ModelState defaultState() {
+    public T defaultState() {
         return defaultState;
     }
 
     @Override
-    public int stateFlags(ModelPrimitiveState modelState) {
+    public int stateFlags(T modelState) {
         return stateFlags;
     }
 
@@ -74,6 +76,16 @@ public abstract class AbstractModelPrimitive implements ModelPrimitive {
     /**
      * Override if default state should be something other than the, erm... default.
      */
-    protected void updateDefaultState(MutableModelState modelState) {
+    protected void updateDefaultState(T modelState) {
+    }
+    
+    @Override
+    public final T fromBuffer(PacketByteBuf buf) {
+        return factory.fromBuffer(this, buf);
+    }
+    
+    @Override
+    public final T fromTag(CompoundTag tag) {
+        return factory.fromTag(this, tag);
     }
 }

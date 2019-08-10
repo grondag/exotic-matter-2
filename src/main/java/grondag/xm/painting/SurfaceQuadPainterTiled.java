@@ -20,7 +20,6 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
@@ -30,6 +29,7 @@ import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.polygon.IStreamPolygon;
 import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.model.state.AbstractPrimitiveModelState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -361,7 +361,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
         return remainderAddress;
     }
 
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    public static void paintQuads(IMutablePolyStream stream, AbstractPrimitiveModelState<?> modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         /**
          * We add new polys, none of which need to be repainted by this routine. So,
          * when we get to this address we know we are done.

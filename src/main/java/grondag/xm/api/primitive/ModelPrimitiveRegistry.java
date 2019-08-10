@@ -18,23 +18,26 @@ package grondag.xm.api.primitive;
 
 import java.util.function.Consumer;
 
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.model.ModelPrimitiveRegistryImpl;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
 public interface ModelPrimitiveRegistry {
     static ModelPrimitiveRegistry INSTANCE = ModelPrimitiveRegistryImpl.INSTANCE;
 
-    boolean register(ModelPrimitive primitive);
+    <T extends MutableModelState> boolean register(ModelPrimitive<T> primitive);
 
-    ModelPrimitive get(int primitiveIndex);
+    <T extends MutableModelState> ModelPrimitive<T> get(int primitiveIndex);
 
-    default ModelPrimitive get(Identifier primitiveId) {
+    default <T extends MutableModelState> ModelPrimitive<T> get(Identifier primitiveId) {
         return get(primitiveId.toString());
     }
 
-    ModelPrimitive get(String idString);
+    <T extends MutableModelState> ModelPrimitive<T> get(String idString);
 
-    void forEach(Consumer<ModelPrimitive> consumer);
+    void forEach(Consumer<ModelPrimitive<?>> consumer);
 
     int count();
 
@@ -44,7 +47,11 @@ public interface ModelPrimitiveRegistry {
         return indexOf(primitiveId.toString());
     }
 
-    default int indexOf(ModelPrimitive primitive) {
+    default <T extends MutableModelState> int indexOf(ModelPrimitive<T> primitive) {
         return indexOf(primitive.id());
     }
+    
+    <T extends MutableModelState> T fromTag(CompoundTag tag);
+    
+    <T extends MutableModelState> T fromBuffer(PacketByteBuf buf);
 }

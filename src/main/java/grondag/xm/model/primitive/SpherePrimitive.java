@@ -20,19 +20,19 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IPolyStream;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.model.state.PrimitiveModelState;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
-public class SpherePrimitive extends AbstractModelPrimitive {
+public class SpherePrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
@@ -41,17 +41,17 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     private final IPolyStream cachedQuads;
 
     public SpherePrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE);
+        super(idString, STATE_FLAG_NONE, PrimitiveModelState.FACTORY);
         this.cachedQuads = generateQuads();
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(ModelState modelState) {
+    public XmSurfaceListImpl surfaces(PrimitiveModelState modelState) {
         return SURFACES;
     }
 
     @Override
-    public void produceQuads(ModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(PrimitiveModelState modelState, Consumer<IPolygon> target) {
         if (cachedQuads.isEmpty())
             return;
 
@@ -74,12 +74,12 @@ public class SpherePrimitive extends AbstractModelPrimitive {
     }
 
     @Override
-    public ModelState geometricState(ModelState fromState) {
-        return defaultState();
+    public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
+        return defaultState().mutableCopy();
     }
 
     @Override
-    public boolean doesShapeMatch(ModelState from, ModelState to) {
+    public boolean doesShapeMatch(PrimitiveModelState from, PrimitiveModelState to) {
         return from.primitive() == to.primitive();
     }
 }

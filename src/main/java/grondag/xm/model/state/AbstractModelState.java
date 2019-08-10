@@ -18,26 +18,39 @@ package grondag.xm.model.state;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.primitive.ModelPrimitive;
-import grondag.xm.api.primitive.ModelPrimitiveRegistry;
-import net.minecraft.util.PacketByteBuf;
+import grondag.xm.api.paint.XmPaint;
+import grondag.xm.api.paint.XmPaintRegistry;
+import grondag.xm.api.surface.XmSurface;
 
-abstract class AbstractModelState implements ModelState {
+abstract class AbstractModelState {
     
     private static final AtomicIntegerFieldUpdater<AbstractModelState> retainCountUpdater =
             AtomicIntegerFieldUpdater.newUpdater(AbstractModelState.class, "refCount");
 
-    private volatile int refCount = 1;
+    private volatile int refCount = 0;
+    
+    protected boolean isImmutable = true;
     
     public final int refCount() {
         return refCount; 
     }
     
+    public final boolean isImmutable() {
+        return isImmutable;
+    }
+    
+    protected final void confirmMutable() {
+        if(isImmutable) {
+            throw new UnsupportedOperationException("Encounted attempt to modify immutable model state.");
+        }
+    }
     public void retain() {
+        confirmMutable();
         retainCountUpdater.getAndIncrement(this);
     }
     
     public void release() {
+        confirmMutable();
         final int oldCount = retainCountUpdater.getAndDecrement(this);
         if(oldCount == 1) {
             onLastRelease();
@@ -52,14 +65,10 @@ abstract class AbstractModelState implements ModelState {
     // UGLY: belongs somewhere else
     public static final int MAX_SURFACES = 8;
 
-    protected ModelPrimitive primitive;
-
-    private final int[] paints = new int[MAX_SURFACES];
+    
+    protected final int[] paints = new int[MAX_SURFACES];
 
     private int hashCode = -1;
-
-    /** contains indicators derived from shape and painters */
-    private int stateFlags = 0;
 
     @Override
     public final int hashCode() {
@@ -72,11 +81,13 @@ abstract class AbstractModelState implements ModelState {
     }
 
     protected <T extends AbstractModelState> void copyInternal(T template) {
-        System.arraycopy(((AbstractModelState) template).paints, 0, this.paints, 0, this.primitive.surfaces(this).size());
+        System.arraycopy(((AbstractModelState) template).paints, 0, this.paints, 0, this.surfaceCount());
     }
 
+    protected abstract int surfaceCount();
+    
     protected int intSize() {
-        return primitive.surfaces(this).size();
+        return surfaceCount();
     }
 
     /**
@@ -84,7 +95,7 @@ abstract class AbstractModelState implements ModelState {
      */
     protected int computeHashCode() {
         int result = 0;
-        final int limit = primitive.surfaces(this).size();
+        final int limit = this.surfaceCount();
         for (int i = 0; i < limit; i++) {
             result ^= paints[i];
         }
@@ -96,25 +107,6 @@ abstract class AbstractModelState implements ModelState {
             this.hashCode = -1;
     }
 
-    @Override
-    public ModelPrimitive primitive() {
-        return primitive;
-    }
-
-    @Override
-    public final int stateFlags() {
-        int result = stateFlags;
-        if (result == 0) {
-            result = ModelStateVaria.getFlags(this);
-            stateFlags = result;
-        }
-        return result;
-    }
-
-    protected final void clearStateFlags() {
-        stateFlags = 0;
-    }
-
     protected final int[] serializeToInts() {
         int[] result = new int[intSize()];
         doSerializeToInts(result, 0);
@@ -122,7 +114,7 @@ abstract class AbstractModelState implements ModelState {
     }
 
     protected void doSerializeToInts(int[] data, int startAt) {
-        System.arraycopy(paints, 0, data, startAt, primitive.surfaces(this).size());
+        System.arraycopy(paints, 0, data, startAt, surfaceCount());
     }
 
     /**
@@ -133,23 +125,12 @@ abstract class AbstractModelState implements ModelState {
     }
 
     protected void doDeserializeFromInts(int[] data, int startAt) {
-        System.arraycopy(data, startAt, paints, 0, primitive.surfaces(this).size());
+        System.arraycopy(data, startAt, paints, 0, surfaceCount());
     }
 
-    /**
-     * Does NOT consider isStatic in comparison. <br>
-     * <br>
-     * 
-     * {@inheritDoc}
-     */
-    @Override
-    public final boolean equals(Object obj) {
-        return this == obj ? true : obj != null && obj.getClass() == this.getClass() && equalsInner(obj);
-    }
-
-    private boolean doPaintsMatch(AbstractModelState other) {
-        final int limit = primitive.surfaces(this).size();
-        if (limit == other.primitive.surfaces(other).size()) {
+    public final boolean doPaintsMatch(AbstractModelState other) {
+        final int limit = surfaceCount();
+        if (limit == other.surfaceCount()) {
             final int[] paints = this.paints;
             final int[] otherPaints = other.paints;
             for (int i = 0; i < limit; i++) {
@@ -163,39 +144,27 @@ abstract class AbstractModelState implements ModelState {
         }
     }
 
-    protected boolean equalsInner(Object obj) {
-        final AbstractModelState other = (AbstractModelState) obj;
-        return this.primitive == other.primitive && doPaintsMatch(other);
-    }
-
-    @Override
-    public boolean doesAppearanceMatch(ModelState other) {
+    /**
+     * Returns true if visual elements match. Does not consider species or geometry
+     * in matching.
+     */
+    public final boolean doesAppearanceMatch(ModelState other) {
         return other != null && other instanceof AbstractModelState && doPaintsMatch((AbstractModelState) other);
-    }
-
-    public void fromBytes(PacketByteBuf pBuff) {
-        this.primitive = ModelPrimitiveRegistry.INSTANCE.get(pBuff.readVarInt());
-        final int limit = primitive.surfaces(this).size();
-        for (int i = 0; i < limit; i++) {
-            this.paints[i] = pBuff.readVarInt();
-        }
-    }
-
-    @Override
-    public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeVarInt(primitive.index());
-        final int limit = primitive.surfaces(this).size();
-        for (int i = 0; i < limit; i++) {
-            pBuff.writeVarInt(paints[i]);
-        }
     }
 
     protected final void paintInner(int surfaceIndex, int paintIndex) {
         paints[surfaceIndex] = paintIndex;
     }
 
-    @Override
     public final int paintIndex(int surfaceIndex) {
         return paints[surfaceIndex];
+    }
+    
+    public final XmPaint paint(int surfaceIndex) {
+        return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
+    }
+
+    public final XmPaint paint(XmSurface surface) {
+        return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
     }
 }

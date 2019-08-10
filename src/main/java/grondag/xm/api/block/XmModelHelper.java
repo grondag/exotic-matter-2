@@ -29,10 +29,10 @@ import net.minecraft.block.BlockState;
 public interface XmModelHelper {
     static void remodelBlock(
             Block block, 
-            ModelPrimitive primitive,
+            ModelPrimitive<?> primitive,
             BiConsumer<BlockState, MutableModelState> stateMapper,
             WorldToModelStateFunction worldStateFunc,
-            BlockTest blockJoinTest) {
+            BlockTest<?> blockJoinTest) {
         
         XmBlockRegistry.register(block, b -> applyMapper(primitive, b, stateMapper), worldStateFunc, blockJoinTest);
     }
@@ -40,12 +40,12 @@ public interface XmModelHelper {
     
     //TODO: move to impl
     static ModelState applyMapper(
-            ModelPrimitive primitive,
+            ModelPrimitive<?> primitive,
             BlockState blockState,
             BiConsumer<BlockState, MutableModelState> stateMapper) {
-        final MutableModelState oms = primitive.newState();
-        stateMapper.accept(blockState, oms);
-        return oms.releaseToImmutable();
+                final MutableModelState oms = primitive.newState();
+                stateMapper.accept(blockState, oms);
+                return oms.releaseToImmutable();
     }
             
 }

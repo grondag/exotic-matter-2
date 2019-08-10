@@ -15,13 +15,13 @@
  ******************************************************************************/
 package grondag.xm.block.virtual;
 
-import grondag.xm.block.XmBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 
-public class VirtualBlockEntity extends XmBlockEntity {
+public class VirtualBlockEntity extends BlockEntity {
     public VirtualBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
     }
@@ -47,7 +47,6 @@ public class VirtualBlockEntity extends XmBlockEntity {
 //     */
 //    private int buildID = IIdentified.UNASSIGNED_ID;
 
-    @Override
     public boolean isVirtual() {
         return true;
     }

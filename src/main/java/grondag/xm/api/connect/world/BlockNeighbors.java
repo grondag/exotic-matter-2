@@ -73,7 +73,7 @@ import net.minecraft.world.BlockView;
 public interface BlockNeighbors {
     void release();
 
-    BlockNeighbors withTest(BlockTest blockTest);
+    BlockNeighbors withTest(BlockTest<?> blockTest);
 
     BlockState blockState();
 
@@ -148,7 +148,7 @@ public interface BlockNeighbors {
         return result(BlockCorner.find(face1, face2, face3));
     }
 
-    public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest test) {
+    public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> test) {
         return BlocksNeighborsImpl.threadLocal(world, x, y, z, stateFunc, test);
     }
 
@@ -156,7 +156,7 @@ public interface BlockNeighbors {
         return threadLocal(world, x, y, z, stateFunc, null);
     }
 
-    public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, BlockTest test) {
+    public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, BlockTest<?> test) {
         return threadLocal(world, x, y, z, null, test);
     }
 
@@ -164,7 +164,7 @@ public interface BlockNeighbors {
         return threadLocal(world, x, y, z, null, null);
     }
 
-    public static BlockNeighbors threadLocal(BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest test) {
+    public static BlockNeighbors threadLocal(BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
         return threadLocal(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
     }
 
@@ -172,7 +172,7 @@ public interface BlockNeighbors {
         return threadLocal(world, pos, stateFunc, null);
     }
 
-    public static BlockNeighbors threadLocal(BlockView world, BlockPos pos, BlockTest test) {
+    public static BlockNeighbors threadLocal(BlockView world, BlockPos pos, BlockTest<?> test) {
         return threadLocal(world, pos, null, test);
     }
 
@@ -180,7 +180,7 @@ public interface BlockNeighbors {
         return threadLocal(world, pos, null, null);
     }
 
-    public static BlockNeighbors claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest test) {
+    public static BlockNeighbors claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> test) {
         return BlocksNeighborsImpl.claim(world, x, y, z, stateFunc, test);
     }
 
@@ -188,7 +188,7 @@ public interface BlockNeighbors {
         return claim(world, x, y, z, stateFunc, null);
     }
 
-    public static BlockNeighbors claim(BlockView world, int x, int y, int z, BlockTest test) {
+    public static BlockNeighbors claim(BlockView world, int x, int y, int z, BlockTest<?> test) {
         return claim(world, x, y, z, null, test);
     }
 
@@ -196,7 +196,7 @@ public interface BlockNeighbors {
         return claim(world, x, y, z, null, null);
     }
 
-    public static BlockNeighbors claim(BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest test) {
+    public static BlockNeighbors claim(BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
         return claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
     }
 
@@ -204,7 +204,7 @@ public interface BlockNeighbors {
         return claim(world, pos, stateFunc, null);
     }
 
-    public static BlockNeighbors claim(BlockView world, BlockPos pos, BlockTest test) {
+    public static BlockNeighbors claim(BlockView world, BlockPos pos, BlockTest<?> test) {
         return claim(world, pos, null, test);
     }
 

@@ -18,7 +18,6 @@ package grondag.xm.model.state;
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.varia.Useful;
 import it.unimi.dsi.fastutil.HashCommon;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
 abstract class AbstractWorldModelState extends AbstractModelState {
@@ -31,9 +30,9 @@ abstract class AbstractWorldModelState extends AbstractModelState {
     private static final BitPacker32<AbstractWorldModelState>.IntElement POS_X = WORLD_BITS.createIntElement(256);
     private static final BitPacker32<AbstractWorldModelState>.IntElement POS_Y = WORLD_BITS.createIntElement(256);
     private static final BitPacker32<AbstractWorldModelState>.IntElement POS_Z = WORLD_BITS.createIntElement(256);
-    private static final BitPacker32<AbstractWorldModelState>.IntElement SPECIES = WORLD_BITS.createIntElement(16);
+    protected static final BitPacker32<AbstractWorldModelState>.IntElement SPECIES = WORLD_BITS.createIntElement(16);
 
-    private int blockBits;
+    protected int blockBits;
 
     @Override
     protected int intSize() {
@@ -51,7 +50,6 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         return super.computeHashCode() ^ HashCommon.mix(this.blockBits);
     }
 
-    @Override
     public int posX() {
         return POS_X.getValue(this);
     }
@@ -61,7 +59,6 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         invalidateHashCode();
     }
 
-    @Override
     public int posY() {
         return POS_Y.getValue(this);
     }
@@ -71,7 +68,6 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         invalidateHashCode();
     }
 
-    @Override
     public int posZ() {
         return POS_Z.getValue(this);
     }
@@ -88,19 +84,8 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         invalidateHashCode();
     }
     
-    @Override
-    public int species() {
-        return SPECIES.getValue(this);
-    }
-
-    protected final void speciesInner(int species) {
-        SPECIES.setValue(species, this);
-        invalidateHashCode();
-    }
-
     protected boolean isStatic = false;
 
-    @Override
     public boolean isStatic() {
         return this.isStatic;
     }
@@ -121,34 +106,5 @@ abstract class AbstractWorldModelState extends AbstractModelState {
         this.isStatic = (Useful.INT_SIGN_BIT & data[startAt]) == Useful.INT_SIGN_BIT;
         this.blockBits = Useful.INT_SIGN_BIT_INVERSE & data[startAt];
         super.doDeserializeFromInts(data, startAt + 1);
-    }
-
-    @Override
-    protected boolean equalsInner(Object obj) {
-        return super.equalsInner(obj) && this.blockBits == ((AbstractWorldModelState) obj).blockBits;
-    }
-
-    public final boolean equalsIncludeStatic(Object obj) {
-        if (this == obj)
-            return true;
-
-        if (obj instanceof PrimitiveModelState) {
-            PrimitiveModelState other = (PrimitiveModelState) obj;
-            return this.isStatic == other.isStatic && equalsInner(other);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void fromBytes(PacketByteBuf pBuff) {
-        super.fromBytes(pBuff);
-        this.blockBits = pBuff.readInt();
-    }
-
-    @Override
-    public void toBytes(PacketByteBuf pBuff) {
-        super.toBytes(pBuff);
-        pBuff.writeInt(this.blockBits);
     }
 }

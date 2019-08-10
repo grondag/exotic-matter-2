@@ -19,13 +19,13 @@ package grondag.xm.painting;
 import java.util.function.Consumer;
 
 import grondag.frex.Frex;
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IMutablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.model.state.AbstractPrimitiveModelState;
 import grondag.xm.painting.QuadPainter.IPaintMethod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -47,25 +47,25 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
     private static final boolean FREX_ACTIVE = Frex.isAvailable();
 
-    public static Mesh paint(ModelState meshState) {
+    public static Mesh paint(AbstractPrimitiveModelState<?> meshState) {
         return POOL.get().handlePaint(meshState);
     }
 
     private final MeshBuilder builder = RENDERER.meshBuilder();
     private final IMutablePolyStream work = PolyStreams.claimMutable(0);
     private final QuadEmitter emitter = builder.getEmitter();
-    private ModelState modelState;
+    private AbstractPrimitiveModelState<?> modelState;
     private MaterialFinder finder = RENDERER.materialFinder();
 
-    private Mesh handlePaint(ModelState modelState) {
+    private Mesh handlePaint(AbstractPrimitiveModelState<?> modelState) {
         this.modelState = modelState;
-        modelState.primitive().produceQuads(modelState, this);
+        modelState.produceQuads(this);
         return builder.build();
     }
 
     @Override
     public void accept(IPolygon poly) {
-        final ModelState modelState = this.modelState;
+        final AbstractPrimitiveModelState<?> modelState = this.modelState;
         final QuadEmitter emitter = this.emitter;
         final IMutablePolyStream stream = this.work;
         IMutablePolygon editor = stream.editor();

@@ -22,15 +22,15 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTA
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.modelstate.ModelPrimitiveState;
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.model.varia.BlockOrientationType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 
-public interface ModelPrimitive {
+public interface ModelPrimitive<T extends MutableModelState> {
     /**
      * Used for registration and serialization of model state.
      */
@@ -52,31 +52,37 @@ public interface ModelPrimitive {
         return "xm2_primitive_name." + id().getNamespace() + "." + id().getPath();
     }
 
-    XmSurfaceList surfaces(ModelState modelState);
+    XmSurfaceList surfaces(T modelState);
 
     /**
      * Override if shape has an orientation to be selected during placement.
      */
-    default BlockOrientationType orientationType(ModelState modelState) {
+    default BlockOrientationType orientationType(T modelState) {
         return BlockOrientationType.NONE;
     }
 
-    int stateFlags(ModelPrimitiveState modelState);
+    int stateFlags(T modelState);
 
     /**
      * Output polygons must be quads or tris. Consumer MUST NOT hold references to
      * any of the polys received.
      */
-    void produceQuads(ModelState modelState, Consumer<IPolygon> target);
+    void produceQuads(T modelState, Consumer<IPolygon> target);
 
-    ModelState defaultState();
+    T defaultState();
 
-    ModelState geometricState(ModelState fromState);
+    T geometricState(T fromState);
 
-    default MutableModelState newState() {
-        return defaultState().mutableCopy();
+    @SuppressWarnings("unchecked")
+    default T newState() {
+        return (T) defaultState().mutableCopy();
     }
 
+    T fromBuffer(PacketByteBuf buf);
+    
+
+    T fromTag(CompoundTag tag);
+    
     /**
      * If true, shape can be placed on itself to become bigger.
      */
@@ -92,19 +98,19 @@ public interface ModelPrimitive {
         return false;
     }
 
-    default boolean hasAxis(ModelPrimitiveState modelState) {
+    default boolean hasAxis(T modelState) {
         return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS) == STATE_FLAG_HAS_AXIS;
     }
 
-    default boolean hasAxisOrientation(ModelPrimitiveState modelState) {
+    default boolean hasAxisOrientation(T modelState) {
         return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
     }
 
-    default boolean hasAxisRotation(ModelPrimitiveState modelState) {
+    default boolean hasAxisRotation(T modelState) {
         return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
     }
 
-    boolean doesShapeMatch(ModelState from, ModelState to);
+    boolean doesShapeMatch(T from, T to);
 
     default boolean isMultiBlock() {
         return false;

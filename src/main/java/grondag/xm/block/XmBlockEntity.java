@@ -1,3 +1,5 @@
+//TODO: remove
+
 /*******************************************************************************
  * Copyright 2019 grondag
  * 
@@ -17,28 +19,28 @@
 package grondag.xm.block;
 
 import grondag.fermion.varia.NBTDictionary;
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm.model.state.ModelStatesImpl;
-import grondag.xm.model.state.PrimitiveModelState;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.MinecraftClient;
+//import grondag.xm.api.modelstate.ModelState;
+//import grondag.xm.api.modelstate.MutableModelState;
+//import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
+//import grondag.xm.model.state.ModelStatesImpl;
+//import grondag.xm.model.state.PrimitiveModelState;
+//import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+//import net.minecraft.block.entity.BlockEntity;
+//import net.minecraft.block.entity.BlockEntityType;
+//import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+//import net.minecraft.util.math.BlockPos;
+//import net.minecraft.world.BlockView;
 
-public class XmBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public class XmBlockEntity { //extends BlockEntity implements BlockEntityClientSerializable {
     ////////////////////////////////////////////////////////////////////////
     // STATIC MEMBERS
     ////////////////////////////////////////////////////////////////////////
 
-    public XmBlockEntity(BlockEntityType<?> blockEntityType) {
-        super(blockEntityType);
-    }
+//    public XmBlockEntity(BlockEntityType<?> blockEntityType) {
+//        super(blockEntityType);
+//    }
 
     /**
      * Anything stored in this tag will not be sent to clients.
@@ -68,197 +70,198 @@ public class XmBlockEntity extends BlockEntity implements BlockEntityClientSeria
         return inputTag;
     }
 
-    /**
-     * Will be updated to actual game render distance on client side.
-     */
-    private static int maxSuperBlockRenderDistanceSq = 4096;
-
-    ////////////////////////////////////////////////////////////////////////
-    // INSTANCE MEMBERS
-    ////////////////////////////////////////////////////////////////////////
-
-    protected ModelState modelState = null;
-
-    // public IExtendedBlockState exBlockState;
-    private boolean isModelStateCacheDirty = true;
-
-    /**
-     * Called client side at start up and when setting is changed.
-     */
-    public static void updateRenderDistance() {
-        int configuredDist = MinecraftClient.getInstance().options.viewDistance * 16;
-        maxSuperBlockRenderDistanceSq = configuredDist * configuredDist;
-    }
-
-    @Override
-    public double getSquaredRenderDistance() {
-        return maxSuperBlockRenderDistanceSq;
-    }
-
-    /**
-     * Want to avoid the synchronization penalty of pooled block pos.
-     */
-    private static ThreadLocal<BlockPos.Mutable> updateClientPos = ThreadLocal.withInitial(BlockPos.Mutable::new);
-
-    public void updateClientRenderState() {
-        this.isModelStateCacheDirty = true;
-
-        BlockPos.Mutable mPos = updateClientPos.get();
-        final int x = pos.getX();
-        final int y = pos.getY();
-        final int z = pos.getZ();
-
-        invalidateClientCache(mPos.set(x - 1, y - 1, z - 1));
-        invalidateClientCache(mPos.set(x - 1, y - 1, z));
-        invalidateClientCache(mPos.set(x - 1, y - 1, z + 1));
-
-        invalidateClientCache(mPos.set(x - 1, y, z - 1));
-        invalidateClientCache(mPos.set(x - 1, y, z));
-        invalidateClientCache(mPos.set(x - 1, y, z + 1));
-
-        invalidateClientCache(mPos.set(x - 1, y + 1, z - 1));
-        invalidateClientCache(mPos.set(x - 1, y + 1, z));
-        invalidateClientCache(mPos.set(x - 1, y + 1, z + 1));
-
-        invalidateClientCache(mPos.set(x, y - 1, z - 1));
-        invalidateClientCache(mPos.set(x, y - 1, z));
-        invalidateClientCache(mPos.set(x, y - 1, z + 1));
-
-        invalidateClientCache(mPos.set(x, y, z - 1));
-        invalidateClientCache(mPos.set(x, y, z + 1));
-
-        invalidateClientCache(mPos.set(x, y + 1, z - 1));
-        invalidateClientCache(mPos.set(x, y + 1, z));
-        invalidateClientCache(mPos.set(x, y + 1, z + 1));
-
-        invalidateClientCache(mPos.set(x + 1, y - 1, z - 1));
-        invalidateClientCache(mPos.set(x + 1, y - 1, z));
-        invalidateClientCache(mPos.set(x + 1, y - 1, z + 1));
-
-        invalidateClientCache(mPos.set(x + 1, y, z - 1));
-        invalidateClientCache(mPos.set(x + 1, y, z));
-        invalidateClientCache(mPos.set(x + 1, y, z + 1));
-
-        invalidateClientCache(mPos.set(x + 1, y + 1, z - 1));
-        invalidateClientCache(mPos.set(x + 1, y + 1, z));
-        invalidateClientCache(mPos.set(x + 1, y + 1, z + 1));
-
-        MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1);
-    }
-
-    private void invalidateClientCache(BlockPos updatePos) {
-        BlockEntity target = this.world.getBlockEntity(updatePos);
-        if (target != null && target instanceof XmBlockEntity) {
-            ((XmBlockEntity) target).isModelStateCacheDirty = true;
-        }
-    }
-
-    @Override
-    public void fromTag(CompoundTag compound) {
-        super.fromTag(compound);
-        this.modelState = ModelStatesImpl.fromTag(compound).toImmutable();
-        this.onModelStateChange(true);
-    }
-
-    @Override
-    public CompoundTag toTag(CompoundTag compound) {
-        compound = super.toTag(compound);
-        this.modelState.serializeNBT(compound);
-        return compound;
-    }
-
-    public MutableModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
-        ModelState myState = this.modelState;
-
-        if (myState == null) {
-            myState = state.defaultModelState;
-            isModelStateCacheDirty = true;
-        }
-
-        if (isModelStateCacheDirty && refreshFromWorldIfNeeded) {
-            MutableModelState result = myState.mutableCopy();
-            result.species(state.defaultModelState.species());
-            PrimitiveModelState.DEFAULT_PRIMITIVE.apply(state, world, pos, true);
-            myState = result.toImmutable();
-            this.isModelStateCacheDirty = false;
-            return result;
-        } else {
-            // honor passed in species if different
-            if (myState.hasSpecies() && myState.species() != state.defaultModelState.species()) {
-                return myState.mutableCopy().species(state.defaultModelState.species());
-            } else {
-                return myState.mutableCopy();
-            }
-        }
-    }
-
-    /**
-     * Use this version when you don't have world state handy
-     */
-    public ModelState getModelState() {
-        if (!(this.modelState == null || this.isModelStateCacheDirty)) {
-            return this.modelState;
-        } else {
-            return getModelState(XmBlockStateAccess.get(world.getBlockState(pos)), world, pos, true);
-        }
-    }
-
-    // /**
-    // * intended for use in TESR - don't refresh unless missing because should be
-    // up
-    // * to date from getExtendedState called before this
-    // */
-    // @SuppressWarnings("null")
-    // public ISuperModelState getCachedModelState() {
-    // return this.modelState == null
-    // ? getModelState(world.getBlockState(pos), world, pos, true)
-    // : this.modelState;
-    // }
-
-    public void setModelState(ModelState modelState) {
-        // if making existing appearance static, don't need to refresh on client side
-        boolean needsClientRefresh = this.world != null && this.world.isClient && !(this.modelState != null && this.modelState.equals(modelState)
-                && modelState.isStatic() && this.modelState.isStatic() != modelState.isStatic());
-        this.modelState = modelState.toImmutable();
-        this.onModelStateChange(needsClientRefresh);
-    }
-
-    /**
-     * call whenever modelState changes (or at least probably did). Parameter should
-     * always be true except in case of changing dynamic blocks to static without
-     * altering appearance.
-     */
-    protected void onModelStateChange(boolean refreshClientRenderState) {
-        /**
-         * This can be called by onBlockPlaced after we've already been established. If
-         * that happens, need to treat it like an update, markDirty(), refresh client
-         * state, etc.
-         */
-        this.isModelStateCacheDirty = true;
-        if (this.world != null) {
-            if (this.world.isClient) {
-                if (refreshClientRenderState)
-                    this.updateClientRenderState();
-            } else {
-                this.markDirty();
-            }
-        }
-    }
-
-    /**
-     * Only true for virtual blocks. Prevents "instanceof" checking.
-     */
-    public boolean isVirtual() {
-        return false;
-    }
-
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        fromTag(tag);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return withoutServerTag(toTag(tag));
-    }
+//    /**
+//     * Will be updated to actual game render distance on client side.
+//     */
+//    private static int maxSuperBlockRenderDistanceSq = 4096;
 }
+//
+//    ////////////////////////////////////////////////////////////////////////
+//    // INSTANCE MEMBERS
+//    ////////////////////////////////////////////////////////////////////////
+//
+//    protected ModelState modelState = null;
+//
+//    // public IExtendedBlockState exBlockState;
+//    private boolean isModelStateCacheDirty = true;
+//
+//    /**
+//     * Called client side at start up and when setting is changed.
+//     */
+//    public static void updateRenderDistance() {
+//        int configuredDist = MinecraftClient.getInstance().options.viewDistance * 16;
+//        maxSuperBlockRenderDistanceSq = configuredDist * configuredDist;
+//    }
+//
+//    @Override
+//    public double getSquaredRenderDistance() {
+//        return maxSuperBlockRenderDistanceSq;
+//    }
+//
+//    /**
+//     * Want to avoid the synchronization penalty of pooled block pos.
+//     */
+//    private static ThreadLocal<BlockPos.Mutable> updateClientPos = ThreadLocal.withInitial(BlockPos.Mutable::new);
+//
+//    public void updateClientRenderState() {
+//        this.isModelStateCacheDirty = true;
+//
+//        BlockPos.Mutable mPos = updateClientPos.get();
+//        final int x = pos.getX();
+//        final int y = pos.getY();
+//        final int z = pos.getZ();
+//
+//        invalidateClientCache(mPos.set(x - 1, y - 1, z - 1));
+//        invalidateClientCache(mPos.set(x - 1, y - 1, z));
+//        invalidateClientCache(mPos.set(x - 1, y - 1, z + 1));
+//
+//        invalidateClientCache(mPos.set(x - 1, y, z - 1));
+//        invalidateClientCache(mPos.set(x - 1, y, z));
+//        invalidateClientCache(mPos.set(x - 1, y, z + 1));
+//
+//        invalidateClientCache(mPos.set(x - 1, y + 1, z - 1));
+//        invalidateClientCache(mPos.set(x - 1, y + 1, z));
+//        invalidateClientCache(mPos.set(x - 1, y + 1, z + 1));
+//
+//        invalidateClientCache(mPos.set(x, y - 1, z - 1));
+//        invalidateClientCache(mPos.set(x, y - 1, z));
+//        invalidateClientCache(mPos.set(x, y - 1, z + 1));
+//
+//        invalidateClientCache(mPos.set(x, y, z - 1));
+//        invalidateClientCache(mPos.set(x, y, z + 1));
+//
+//        invalidateClientCache(mPos.set(x, y + 1, z - 1));
+//        invalidateClientCache(mPos.set(x, y + 1, z));
+//        invalidateClientCache(mPos.set(x, y + 1, z + 1));
+//
+//        invalidateClientCache(mPos.set(x + 1, y - 1, z - 1));
+//        invalidateClientCache(mPos.set(x + 1, y - 1, z));
+//        invalidateClientCache(mPos.set(x + 1, y - 1, z + 1));
+//
+//        invalidateClientCache(mPos.set(x + 1, y, z - 1));
+//        invalidateClientCache(mPos.set(x + 1, y, z));
+//        invalidateClientCache(mPos.set(x + 1, y, z + 1));
+//
+//        invalidateClientCache(mPos.set(x + 1, y + 1, z - 1));
+//        invalidateClientCache(mPos.set(x + 1, y + 1, z));
+//        invalidateClientCache(mPos.set(x + 1, y + 1, z + 1));
+//
+//        MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x - 1, y - 1, z - 1, x + 1, y + 1, z + 1);
+//    }
+//
+//    private void invalidateClientCache(BlockPos updatePos) {
+//        BlockEntity target = this.world.getBlockEntity(updatePos);
+//        if (target != null && target instanceof XmBlockEntity) {
+//            ((XmBlockEntity) target).isModelStateCacheDirty = true;
+//        }
+//    }
+//
+//    @Override
+//    public void fromTag(CompoundTag compound) {
+//        super.fromTag(compound);
+//        this.modelState = ModelStatesImpl.fromTag(compound).toImmutable();
+//        this.onModelStateChange(true);
+//    }
+//
+//    @Override
+//    public CompoundTag toTag(CompoundTag compound) {
+//        compound = super.toTag(compound);
+//        this.modelState.serializeNBT(compound);
+//        return compound;
+//    }
+//
+//    public MutableModelState getModelState(XmBlockStateImpl state, BlockView world, BlockPos pos, boolean refreshFromWorldIfNeeded) {
+//        ModelState myState = this.modelState;
+//
+//        if (myState == null) {
+//            myState = state.defaultModelState;
+//            isModelStateCacheDirty = true;
+//        }
+//
+//        if (isModelStateCacheDirty && refreshFromWorldIfNeeded) {
+//            MutableModelState result = myState.mutableCopy();
+//            result.species(state.defaultModelState.species());
+//            PrimitiveModelState.DEFAULT_PRIMITIVE.apply(state, world, pos, true);
+//            myState = result.toImmutable();
+//            this.isModelStateCacheDirty = false;
+//            return result;
+//        } else {
+//            // honor passed in species if different
+//            if (myState.hasSpecies() && myState.species() != state.defaultModelState.species()) {
+//                return myState.mutableCopy().species(state.defaultModelState.species());
+//            } else {
+//                return myState.mutableCopy();
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Use this version when you don't have world state handy
+//     */
+//    public ModelState getModelState() {
+//        if (!(this.modelState == null || this.isModelStateCacheDirty)) {
+//            return this.modelState;
+//        } else {
+//            return getModelState(XmBlockStateAccess.get(world.getBlockState(pos)), world, pos, true);
+//        }
+//    }
+//
+//    // /**
+//    // * intended for use in TESR - don't refresh unless missing because should be
+//    // up
+//    // * to date from getExtendedState called before this
+//    // */
+//    // @SuppressWarnings("null")
+//    // public ISuperModelState getCachedModelState() {
+//    // return this.modelState == null
+//    // ? getModelState(world.getBlockState(pos), world, pos, true)
+//    // : this.modelState;
+//    // }
+//
+//    public void setModelState(ModelState modelState) {
+//        // if making existing appearance static, don't need to refresh on client side
+//        boolean needsClientRefresh = this.world != null && this.world.isClient && !(this.modelState != null && this.modelState.equals(modelState)
+//                && modelState.isStatic() && this.modelState.isStatic() != modelState.isStatic());
+//        this.modelState = modelState.toImmutable();
+//        this.onModelStateChange(needsClientRefresh);
+//    }
+//
+//    /**
+//     * call whenever modelState changes (or at least probably did). Parameter should
+//     * always be true except in case of changing dynamic blocks to static without
+//     * altering appearance.
+//     */
+//    protected void onModelStateChange(boolean refreshClientRenderState) {
+//        /**
+//         * This can be called by onBlockPlaced after we've already been established. If
+//         * that happens, need to treat it like an update, markDirty(), refresh client
+//         * state, etc.
+//         */
+//        this.isModelStateCacheDirty = true;
+//        if (this.world != null) {
+//            if (this.world.isClient) {
+//                if (refreshClientRenderState)
+//                    this.updateClientRenderState();
+//            } else {
+//                this.markDirty();
+//            }
+//        }
+//    }
+//
+//    /**
+//     * Only true for virtual blocks. Prevents "instanceof" checking.
+//     */
+//    public boolean isVirtual() {
+//        return false;
+//    }
+//
+//    @Override
+//    public void fromClientTag(CompoundTag tag) {
+//        fromTag(tag);
+//    }
+//
+//    @Override
+//    public CompoundTag toClientTag(CompoundTag tag) {
+//        return withoutServerTag(toTag(tag));
+//    }
+//}

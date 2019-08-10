@@ -18,9 +18,9 @@ package grondag.xm.dispatch;
 
 import grondag.fermion.color.ColorAtlas;
 import grondag.fermion.color.ColorSet.Tone;
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.init.XmTextures;
+import grondag.xm.model.state.AbstractPrimitiveModelState;
 import net.minecraft.item.Item;
 
 /**
@@ -28,10 +28,10 @@ import net.minecraft.item.Item;
  * creative tab for mod that uses it.
  */
 public class CraftingItem extends Item {
-    public final MutableModelState modelState;
+    public final AbstractPrimitiveModelState<?> modelState;
 
     // TODO: pretty sure this doesn't work after big refactor - is even stil needed?
-    public CraftingItem(Settings settings, MutableModelState modelState) {
+    public CraftingItem(Settings settings, AbstractPrimitiveModelState<?> modelState) {
         super(settings);
         this.modelState = modelState;
         final int colorIndex = this.hashCode() % ColorAtlas.INSTANCE.getColorMapCount();

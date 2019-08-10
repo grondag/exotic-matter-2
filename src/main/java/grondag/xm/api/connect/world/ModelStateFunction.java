@@ -20,6 +20,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +34,7 @@ import net.minecraft.world.BlockView;
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface ModelStateFunction {
-    public Object get(BlockView world, BlockState blockState, BlockPos pos);
+    public ModelState get(BlockView world, BlockState blockState, BlockPos pos);
     
     /**
      * Use this as factory for model state block tests that DON'T need to refresh

@@ -34,7 +34,7 @@ public class XmBlockRegistryImpl implements XmBlockRegistry {
     }
 
     public static void register(Block block, Function<BlockState, ModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc,
-            BlockTest blockJoinTest) {
+            BlockTest<?> blockJoinTest) {
 
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
@@ -49,11 +49,11 @@ public class XmBlockRegistryImpl implements XmBlockRegistry {
 
     public static class XmBlockStateImpl implements XmBlockState {
         public final WorldToModelStateFunction worldStateFunc;
-        public final BlockTest blockJoinTest;
+        public final BlockTest<?> blockJoinTest;
         public final ModelState defaultModelState;
         public final BlockState blockState;
 
-        private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest blockJoinTest,
+        private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest<?> blockJoinTest,
                 BlockState blockState) {
 
             this.defaultModelState = defaultModelState;
@@ -63,7 +63,7 @@ public class XmBlockRegistryImpl implements XmBlockRegistry {
         }
 
         @Override
-        public BlockTest blockJoinTest() {
+        public BlockTest<?> blockJoinTest() {
             return blockJoinTest;
         }
 

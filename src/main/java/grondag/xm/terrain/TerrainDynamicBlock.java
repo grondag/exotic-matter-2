@@ -20,6 +20,7 @@ import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import grondag.xm.init.XmPrimitives;
+import grondag.xm.model.state.TerrainModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,8 +33,8 @@ public class TerrainDynamicBlock extends TerrainBlock {
     }
 
     // PERF: sucks
-    private static MutableModelState adjustShape(ModelState stateIn, boolean isFiller) {
-        MutableModelState result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
+    private static TerrainModelState adjustShape(ModelState stateIn, boolean isFiller) {
+        TerrainModelState result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
         result.copyFrom(stateIn);
         result.setStatic(false);
         return result;

@@ -20,9 +20,9 @@ import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.model.state.ModelStateTagHelper;
-import grondag.xm.model.state.ModelStatesImpl;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -63,18 +63,19 @@ public class XmStackHelper {
         modelState.serializeNBT(tag);
     }
 
-    public static MutableModelState getStackModelState(ItemStack stack) {
-        MutableModelState stackState = stack.hasTag() ? ModelStatesImpl.fromTag(stack.getTag()) : null;
+    @SuppressWarnings("unchecked")
+    public static <T extends MutableModelState> T getStackModelState(ItemStack stack) {
+        MutableModelState stackState = stack.hasTag() ? ModelPrimitiveRegistry.INSTANCE.fromTag(stack.getTag()) : null;
 
         // WAILA or other mods might create a stack with no NBT
         if (stackState != null)
-            return stackState;
+            return (T) stackState;
 
         if (stack.getItem() instanceof BlockItem) {
             BlockItem item = (BlockItem) stack.getItem();
             XmBlockStateImpl xmState = XmBlockStateAccess.get(item.getBlock().getDefaultState());
             if (xmState != null) {
-                return xmState.defaultModelState.mutableCopy();
+                return (T) xmState.defaultModelState.mutableCopy();
             }
         }
         return null;

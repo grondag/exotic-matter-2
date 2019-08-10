@@ -18,17 +18,17 @@ package grondag.xm.painting;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.model.state.AbstractPrimitiveModelState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterTiles extends QuadPainter {
-    public static void paintQuads(IMutablePolyStream stream, ModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    public static void paintQuads(IMutablePolyStream stream, AbstractPrimitiveModelState<?> modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
         do {
             editor.setLockUV(textureIndex, true);

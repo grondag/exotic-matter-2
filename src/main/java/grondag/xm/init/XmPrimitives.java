@@ -24,18 +24,21 @@ import grondag.xm.model.primitive.SquareColumnPrimitive;
 import grondag.xm.model.primitive.StackedPlatesPrimitive;
 import grondag.xm.model.primitive.StairPrimitive;
 import grondag.xm.model.primitive.WedgePrimitive;
+import grondag.xm.model.state.PrimitiveModelState;
+import grondag.xm.model.state.TerrainModelState;
 
 public class XmPrimitives {
-    public static final ModelPrimitive CUBE = new CubePrimitive("xm2:cube");
-    public static final ModelPrimitive COLUMN_SQUARE = new SquareColumnPrimitive("xm2:column_square");
-    public static final ModelPrimitive STACKED_PLATES = new StackedPlatesPrimitive("xm2:stacked_plates");
-    public static final ModelPrimitive WEDGE = new WedgePrimitive("xm2:wedge");
-    public static final ModelPrimitive STAIR = new StairPrimitive("xm2:stair");
-    public static final ModelPrimitive SPHERE = new SpherePrimitive("xm2:sphere");
-    public static final ModelPrimitive CSGTEST = new CSGTestPrimitive("xm2:csgtest");
+    public static final ModelPrimitive<PrimitiveModelState> CUBE = new CubePrimitive("xm2:cube");
+    public static final ModelPrimitive<PrimitiveModelState> COLUMN_SQUARE = new SquareColumnPrimitive("xm2:column_square");
+    public static final ModelPrimitive<PrimitiveModelState> STACKED_PLATES = new StackedPlatesPrimitive("xm2:stacked_plates");
+    public static final ModelPrimitive<PrimitiveModelState> WEDGE = new WedgePrimitive("xm2:wedge");
+    public static final ModelPrimitive<PrimitiveModelState> STAIR = new StairPrimitive("xm2:stair");
+    public static final ModelPrimitive<PrimitiveModelState> SPHERE = new SpherePrimitive("xm2:sphere");
+    public static final ModelPrimitive<PrimitiveModelState> CSGTEST = new CSGTestPrimitive("xm2:csgtest");
 
-    public static final ModelPrimitive TERRAIN_HEIGHT = null; // ModelShapes.create("terrain_height",
+    public static final ModelPrimitive<TerrainModelState> TERRAIN_CUBE = null; // ModelShapes.create("terrain_height",
+    public static final ModelPrimitive<TerrainModelState> TERRAIN_HEIGHT = null; // ModelShapes.create("terrain_height",
     // TerrainMeshFactory.class, SHAPE);
-    public static final ModelPrimitive TERRAIN_FILLER = null; // ModelShapes.create("terrain_filler",
+    public static final ModelPrimitive<TerrainModelState> TERRAIN_FILLER = null; // ModelShapes.create("terrain_filler",
     // TerrainMeshFactory.class, SHAPE);
 }

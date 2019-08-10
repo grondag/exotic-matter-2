@@ -17,10 +17,9 @@ package grondag.xm.api.modelstate;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Consumer;
 
-import grondag.xm.api.paint.XmPaint;
-import grondag.xm.api.paint.XmPaintRegistry;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.mesh.polygon.IPolygon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -30,7 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 
-public interface ModelState extends ModelWorldState, ModelPrimitiveState {
+public interface ModelState {
     MutableModelState mutableCopy();
 
     /**
@@ -38,6 +37,8 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState {
      * refreshFromWorldState does nothing.
      */
     boolean isStatic();
+    
+    boolean equalsIncludeStatic(Object obj);
     
     boolean isImmutable();
     
@@ -49,28 +50,12 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState {
     @Environment(EnvType.CLIENT)
     void emitQuads(RenderContext context);
     
-    int paintIndex(int surfaceIndex);
-
-    default XmPaint paint(int surfaceIndex) {
-        return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
-    }
-
-    default XmPaint paint(XmSurface surface) {
-        return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
-    }
-
     /**
-     * Returns true if visual elements and geometry match. Does not consider species
-     * in matching.
+     * Output polygons must be quads or tris. Consumer MUST NOT hold references to
+     * any of the polys received.
      */
-    boolean doShapeAndAppearanceMatch(ModelState other);
-
-    /**
-     * Returns true if visual elements match. Does not consider species or geometry
-     * in matching.
-     */
-    boolean doesAppearanceMatch(ModelState other);
-
+    void produceQuads(Consumer<IPolygon> target);
+    
     void serializeNBT(CompoundTag tag);
 
     default CompoundTag toTag() {
@@ -81,5 +66,9 @@ public interface ModelState extends ModelWorldState, ModelPrimitiveState {
 
     void toBytes(PacketByteBuf pBuff);
 
-    int stateFlags();
+  /**
+  * Returns a copy of this model state with only the bits that matter for
+  * geometry. Used as lookup key for block damage models.
+  */
+    ModelState geometricState();
 }

@@ -18,7 +18,6 @@ package grondag.xm.terrain;
 
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.block.XmStatefulBlock;
 import grondag.xm.init.XmPrimitives;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,13 +29,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 
-public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
+public class TerrainStaticBlock extends Block implements IHotBlock {
 
     public TerrainStaticBlock(Settings blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
-        super(blockSettings, adjustShape(defaultModelState, isFiller), blockEntityType);
+        super(blockSettings); //, adjustShape(defaultModelState, isFiller), blockEntityType);
     }
 
     // PERF: sucks
+    @SuppressWarnings("unused")
     private static MutableModelState adjustShape(ModelState stateIn, boolean isFiller) {
         MutableModelState result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
         result.copyFrom(stateIn);
@@ -94,5 +94,10 @@ public class TerrainStaticBlock extends XmStatefulBlock implements IHotBlock {
             return state;
         // TODO: transfer heat block state?
         return dynamicVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE));
+    }
+
+    public void setModelState(World world, BlockPos pos, MutableModelState myModelState) {
+        // TODO Auto-generated method stub
+        
     }
 }

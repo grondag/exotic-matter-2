@@ -38,11 +38,12 @@ public interface XmBlockState {
      */
     BlockState blockState();
 
+    //TODO: should not be here
     /**
      * Block test that should be used for border/shape joins for this block. Used in
      * model state refresh from world.
      */
-    BlockTest blockJoinTest();
+    BlockTest<?> blockJoinTest();
 
     /**
      * Returns an instance of the default model state for this block. Because model

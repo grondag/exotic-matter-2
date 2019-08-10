@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.terrain;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
@@ -27,13 +27,14 @@ import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IPolyStream;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.model.state.PrimitiveModelState;
+import grondag.xm.model.primitive.AbstractModelPrimitive;
+import grondag.xm.model.state.TerrainModelState;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class CubePrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
+public class TerrainCubePrimitive extends AbstractModelPrimitive<TerrainModelState> {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
@@ -41,18 +42,18 @@ public class CubePrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
     /** never changes so may as well save it */
     private final IPolyStream cachedQuads;
 
-    public CubePrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, PrimitiveModelState.FACTORY);
+    public TerrainCubePrimitive(String idString) {
+        super(idString, STATE_FLAG_NONE, TerrainModelState.FACTORY);
         this.cachedQuads = getCubeQuads();
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(PrimitiveModelState modelState) {
+    public XmSurfaceListImpl surfaces(TerrainModelState modelState) {
         return SURFACES;
     }
 
     @Override
-    public void produceQuads(PrimitiveModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(TerrainModelState modelState, Consumer<IPolygon> target) {
         cachedQuads.forEach(target);
     }
 
@@ -85,12 +86,12 @@ public class CubePrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
     }
 
     @Override
-    public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
+    public TerrainModelState geometricState(TerrainModelState fromState) {
         return defaultState().mutableCopy();
     }
 
     @Override
-    public boolean doesShapeMatch(PrimitiveModelState from, PrimitiveModelState to) {
+    public boolean doesShapeMatch(TerrainModelState from, TerrainModelState to) {
         return from.primitive() == to.primitive();
     }
 }

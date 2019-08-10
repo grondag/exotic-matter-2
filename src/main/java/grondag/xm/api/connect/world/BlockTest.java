@@ -20,6 +20,8 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.modelstate.ModelState;
+
 /**
  * Implement to define when a block neighbor should be considered "present and
  * matching" for purposes of computing a join state. Can also be used for more
@@ -39,6 +41,6 @@ import org.apiguardian.api.API;
  */
 @API(status = STABLE)
 @FunctionalInterface
-public interface BlockTest {
-    boolean apply(BlockTestContext context);
+public interface BlockTest<T extends ModelState> {
+    boolean apply(BlockTestContext<T> context);
 }

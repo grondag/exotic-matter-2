@@ -44,8 +44,9 @@ public interface XmBlockStateAccess {
         return get(fromBlock.getDefaultState());
     }
 
-    static @Nullable MutableModelState modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
+    @SuppressWarnings("unchecked")
+    static @Nullable <T extends MutableModelState> T modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
         final XmBlockStateImpl xmState = get(fromState);
-        return xmState == null ? null : xmState.getModelState(blockView, pos, refresh);
+        return xmState == null ? null : (T) xmState.getModelState(blockView, pos, refresh);
     }
 }

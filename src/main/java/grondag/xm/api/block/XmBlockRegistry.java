@@ -30,7 +30,7 @@ public interface XmBlockRegistry {
             Block block, 
             Function<BlockState, ModelState> defaultStateFunc, 
             WorldToModelStateFunction worldStateFunc,
-            BlockTest blockJoinTest) {
+            BlockTest<?> blockJoinTest) {
         
         XmBlockRegistryImpl.register(block, defaultStateFunc, worldStateFunc, blockJoinTest);
     }
