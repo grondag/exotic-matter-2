@@ -20,18 +20,19 @@ import grondag.fermion.color.ColorAtlas;
 import grondag.fermion.color.ColorSet.Tone;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.init.XmTextures;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import net.minecraft.item.Item;
 
 /**
  * Generic item class with a SuperModel render and state. Be sure to set
  * creative tab for mod that uses it.
  */
+@SuppressWarnings("rawtypes")
 public class CraftingItem extends Item {
-    public final AbstractPrimitiveModelState<?> modelState;
+    public final BaseModelState.Mutable modelState;
 
     // TODO: pretty sure this doesn't work after big refactor - is even stil needed?
-    public CraftingItem(Settings settings, AbstractPrimitiveModelState<?> modelState) {
+    public CraftingItem(Settings settings, BaseModelState.Mutable modelState) {
         super(settings);
         this.modelState = modelState;
         final int colorIndex = this.hashCode() % ColorAtlas.INSTANCE.getColorMapCount();

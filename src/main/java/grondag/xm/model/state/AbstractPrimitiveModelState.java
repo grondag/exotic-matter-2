@@ -62,7 +62,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveModelState<V>> extends AbstractModelState implements MutableModelState {
+public abstract class AbstractPrimitiveModelState
+    <V extends AbstractPrimitiveModelState<V, R, W>, R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> 
+    extends AbstractModelState implements MutableModelState, BaseModelState<R, W>, BaseModelState.Mutable<R, W> {
     
     ////////////////////////////////////////// BIT-WISE ENCODING //////////////////////////////////////////
     
@@ -90,16 +92,18 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
     
     ////////////////////////////////////////// FACTORY //////////////////////////////////////////
     
-    public static class ModelStateFactory<T extends AbstractPrimitiveModelState<T>> {
+    public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> 
+        implements ModelStateFactory<R, W> 
+    {
         private final ArrayBlockingQueue<T> POOL = new ArrayBlockingQueue<>(4096);
         
         private final Supplier<T> factory;
         
-        ModelStateFactory(Supplier<T> factory) {
+        ModelStateFactoryImpl(Supplier<T> factory) {
             this.factory = factory;
         }
         
-        public final T claim(ModelPrimitive<T> primitive) {
+        protected final T claimInner(ModelPrimitive<R, W> primitive) {
             T result = POOL.poll();
             if (result == null) {
                 result = factory.get();
@@ -110,18 +114,35 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
             return result;
         }
         
-        public final T claim(T template, ModelPrimitive<T> primitive) {
-            T result = claim(primitive);
+        protected final T claimInner(T template) {
+            T result = POOL.poll();
+            if (result == null) {
+                result = factory.get();
+                result.isImmutable = false;
+            }
+            result.retain();
+            result.primitive = template.primitive;
+            return result;
+        }
+        
+        @Override
+        public final W claim(ModelPrimitive<R, W> primitive) {
+            return (W) claimInner(primitive);
+        }
+        
+        public final W claim(R template, ModelPrimitive<R, W> primitive) {
+            W result = claim(primitive);
             result.copyFrom(template);
             return result;
         }
         
-        public final T claim(T template) {
-            return claim(template, template.primitive);
+        public final W claim(R template) {
+            return claim(template, template.primitive());
         }
         
-        public final T fromTag(ModelPrimitive<T> shape, CompoundTag tag) {
-            T result = claim(shape);
+        @Override
+        public final W fromTag(ModelPrimitive<R, W> shape, CompoundTag tag) {
+            T result = claimInner(shape);
 
             if (tag.containsKey(ModelStateTagHelper.NBT_MODEL_BITS)) {
                 int[] stateBits = tag.getIntArray(ModelStateTagHelper.NBT_MODEL_BITS);
@@ -158,19 +179,18 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
             //        }
 
             result.clearStateFlags();
-            return result;
+            return (W) result;
         }
 
-        public final T fromBuffer(ModelPrimitive<T> shape, PacketByteBuf buf) {
-            T result = claim(shape);
+        @Override
+        public final W fromBuffer(ModelPrimitive<R, W> shape, PacketByteBuf buf) {
+            T result = claimInner(shape);
             result.fromBytes(buf);
-            return result;
+            return (W) result;
         }
     }
     
     ////////////////////////////////////////// GENERAL DECLARATIONS //////////////////////////////////////////
-    
-    protected final V self = (V)this; 
     
     @Override
     protected int computeHashCode() {
@@ -182,27 +202,33 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
         return result ^ HashCommon.mix(this.shapeBits | (this.worldBits << 32));
     }
     
-    public abstract ModelStateFactory<V> factory();
+    protected abstract ModelStateFactoryImpl<V, R, W> factoryImpl();
     
-    public final <T> T applyAndRelease(Function<V, T> func) {
-        final T result = func.apply(self);
+    @Override
+    public final ModelStateFactory<R, W> factory() {
+        return factoryImpl();
+    }
+    
+    @Override
+    public final <T> T applyAndRelease(Function<ModelState, T> func) {
+        final T result = func.apply((W)this);
         this.release();
         return result;
     }
     
     @Override
     protected final void onLastRelease() {
-        factory().POOL.offer(self);
+        factoryImpl().POOL.offer((V)this);
     }
 
     @Override
-    public V toImmutable() {
+    public R toImmutable() {
         if(this.isImmutable) {
-            return self;
+            return (R)this;
         } else {
-            V result = factory().claim(self);
+            V result = factoryImpl().claimInner((V)this);
             result.isImmutable = true;
-            return result;
+            return (R)result;
         }
     }
 
@@ -214,21 +240,21 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
     }
     
     @Override
-    public V copyFrom(ModelState template) {
+    public W copyFrom(ModelState template) {
         copyInternal((V)template);
-        return self;
+        return (W)this;
     }
 
     @Override
-    public V releaseToImmutable() {
-        final V result = this.toImmutable();
+    public R releaseToImmutable() {
+        final R result = this.toImmutable();
         this.release();
         return result;
     }
     
     @Override
-    public V mutableCopy() {
-        return factory().claim(self, primitive);
+    public W mutableCopy() {
+        return (W) factoryImpl().claimInner((V)this);
     }
     
     ////////////////////////////////////////// COMPARISON //////////////////////////////////////////
@@ -244,11 +270,11 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
     }
 
     protected boolean equalsInner(Object obj) {
-        final PrimitiveModelState other = (PrimitiveModelState) obj;
+        final AbstractPrimitiveModelState other = (AbstractPrimitiveModelState) obj;
         return this.primitive == other.primitive 
                 && this.worldBits == other.worldBits
                 && this.shapeBits == other.shapeBits
-                && doPaintsMatch(other);
+                && doPaintsMatchNative(other);
     }
 
     @Override
@@ -256,8 +282,8 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
         if (this == obj)
             return true;
 
-        if (obj instanceof PrimitiveModelState) {
-            PrimitiveModelState other = (PrimitiveModelState) obj;
+        if (obj instanceof AbstractPrimitiveModelState) {
+            AbstractPrimitiveModelState other = (AbstractPrimitiveModelState) obj;
             return this.isStatic == other.isStatic && equalsInner(other);
         } else {
             return false;
@@ -268,17 +294,19 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
      * Returns true if visual elements and geometry match. Does not consider species
      * in matching.
      */
+    @Override
     public final boolean doShapeAndAppearanceMatch(ModelState other) {
         if(other.getClass() != this.getClass()) return false;
-        return primitive.doesShapeMatch(self, (V) other) && doesAppearanceMatch(other);
+        return primitive.doesShapeMatch((R)this, (R)other) && doesAppearanceMatch(other);
     }
     
     /**
      * Returns true if visual elements match. Does not consider species or geometry
      * in matching.
      */
+    @Override
     public final boolean doesAppearanceMatch(ModelState other) {
-        return other != null && other instanceof AbstractPrimitiveModelState && doPaintsMatch((AbstractPrimitiveModelState) other);
+        return other != null && doPaintsMatch(other);
     }
     
     ////////////////////////////////////////// SERIALIZATION //////////////////////////////////////////
@@ -325,7 +353,7 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
     public void fromBytes(PacketByteBuf pBuff) {
         shapeBits = pBuff.readInt();
         worldBits = pBuff.readInt();
-        final int limit = primitive.surfaces(self).size();
+        final int limit = primitive.surfaces((R)this).size();
         for (int i = 0; i < limit; i++) {
             this.paints[i] = pBuff.readVarInt();
         }
@@ -336,7 +364,7 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
         pBuff.writeVarInt(primitive.index());
         pBuff.writeInt(shapeBits);
         pBuff.writeInt(worldBits);
-        final int limit = primitive.surfaces(self).size();
+        final int limit = primitive.surfaces((R)this).size();
         for (int i = 0; i < limit; i++) {
             pBuff.writeVarInt(paints[i]);
         }
@@ -347,13 +375,14 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
     /** contains indicators derived from shape and painters */
     private int stateFlags = 0;
     
+    @Override
     public final int stateFlags() {
         int result = stateFlags;
         if (result == 0) {
 
-            result = ModelStateFlags.STATE_FLAG_IS_POPULATED | primitive.stateFlags(self);
+            result = ModelStateFlags.STATE_FLAG_IS_POPULATED | primitive.stateFlags((R)this);
 
-            final int surfCount = primitive.surfaces(self).size();
+            final int surfCount = primitive.surfaces((R)this).size();
             for (int i = 0; i < surfCount; i++) {
                 XmPaint p = paint(i);
                 final int texDepth = p.textureDepth();
@@ -372,48 +401,55 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
     
     ////////////////////////////////////////// PRIMITIVE //////////////////////////////////////////
     
-    protected ModelPrimitive<V> primitive;
+    protected ModelPrimitive<R, W> primitive;
 
-    public final ModelPrimitive<V> primitive() {
+    @Override
+    public final ModelPrimitive<R, W> primitive() {
         return primitive;
     }
     
     @Override
     public final void produceQuads(Consumer<IPolygon> target) {
-        primitive.produceQuads(self, target);
+        primitive.produceQuads((R)this, target);
     }
     
     @Override
-    public V geometricState() {
-        return primitive.geometricState(self);
+    public W geometricState() {
+        return primitive.geometricState((R)this);
     }
     
+    @Override
     public final boolean hasAxisOrientation() {
-      return primitive.hasAxisOrientation(self);
+      return primitive.hasAxisOrientation((R)this);
     }
     
+    @Override
     public final boolean hasAxisRotation() {
-      return primitive.hasAxisRotation(self);
+      return primitive.hasAxisRotation((R)this);
     }
     
+    @Override
     public final boolean hasAxis() {
-      return primitive.hasAxis(self);
+      return primitive.hasAxis((R)this);
     }
     
+    @Override
     public final BlockOrientationType orientationType() {
-      return primitive.orientationType(self);
+      return primitive.orientationType((R)this);
     }
     
     protected final int surfaceCount() {
-        return primitive.surfaces(self).size();
+        return primitive.surfaces((R)this).size();
     }
     
+    @Override
     public final boolean isAxisOrthogonalToPlacementFace() {
         return primitive.isAxisOrthogonalToPlacementFace();
     }
     
+    @Override
     public Direction rotateFace(Direction face) {
-        return PolyTransform.rotateFace(this, face);
+        return PolyTransform.rotateFace((R)this, face);
     }
     
     ////////////////////////////////////////// WORLD REFRESH CONTROL //////////////////////////////////////////
@@ -426,9 +462,9 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
     }
 
     @Override
-    public final V setStatic(boolean isStatic) {
+    public final W setStatic(boolean isStatic) {
         this.isStatic = isStatic;
-        return self;
+        return (W)this;
     }
     
     ////////////////////////////////////////// PAINT //////////////////////////////////////////
@@ -437,7 +473,12 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 
     protected final int[] paints = new int[maxSurfaces()];
     
-    public final boolean doPaintsMatch(AbstractPrimitiveModelState other) {
+    @Override
+    public final boolean doPaintsMatch(ModelState other) {
+        return other instanceof AbstractPrimitiveModelState && doPaintsMatchNative((AbstractPrimitiveModelState) other);
+    }
+    
+    protected final boolean doPaintsMatchNative(AbstractPrimitiveModelState other) {
         final int limit = surfaceCount();
         if (limit == other.surfaceCount()) {
             final int[] paints = this.paints;
@@ -448,51 +489,58 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
                 }
             }
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     protected final void paintInner(int surfaceIndex, int paintIndex) {
         paints[surfaceIndex] = paintIndex;
     }
 
+    @Override
     public final int paintIndex(int surfaceIndex) {
         return paints[surfaceIndex];
     }
     
+    @Override
     public final XmPaint paint(int surfaceIndex) {
         return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
     }
 
+    @Override
     public final XmPaint paint(XmSurface surface) {
         return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
     }
     
-    public final V paint(int surfaceIndex, int paintIndex) {
+    @Override
+    public final W paint(int surfaceIndex, int paintIndex) {
         paintInner(surfaceIndex, paintIndex);
-        return self;
+        return (W)this;
     }
     
-    public final V paint(XmSurface surface, XmPaint paint) {
+    @Override
+    public final W paint(XmSurface surface, XmPaint paint) {
       return paint(surface.ordinal(), paint.index());
     }
     
-    public final V paint(XmSurface surface, int paintIndex) {
+    @Override
+    public final W paint(XmSurface surface, int paintIndex) {
       return paint(surface.ordinal(), paintIndex);
     }
 
-    public final V paintAll(XmPaint paint) {
+    @Override
+    public final W paintAll(XmPaint paint) {
       return paintAll(paint.index());
     }
 
-    public final V paintAll(int paintIndex) {
-      XmSurfaceList slist = primitive().surfaces(self);
+    @Override
+    public final W paintAll(int paintIndex) {
+      XmSurfaceList slist = primitive().surfaces((R)this);
       final int limit = slist.size();
       for (int i = 0; i < limit; i++) {
           paint(i, paintIndex);
       }
-      return self;
+      return (W)this;
     }
     
     
@@ -500,48 +548,56 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
     
     protected int worldBits;
     
+    @Override
     public int posX() {
         return POS_X.getValue(this);
     }
     
+    @Override
     public int posY() {
         return POS_Y.getValue(this);
     }
     
+    @Override
     public int posZ() {
         return POS_Z.getValue(this);
     }
 
-    public final V posX(int index) {
+    @Override
+    public final W posX(int index) {
         POS_X.setValue(index, this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
-    public final V posY(int index) {
+    @Override
+    public final W posY(int index) {
         POS_Y.setValue(index, this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
-    public final V posZ(int index) {
+    @Override
+    public final W posZ(int index) {
         POS_Z.setValue(index, this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
-    public final V pos(BlockPos pos) {
+    @Override
+    public final W pos(BlockPos pos) {
         POS_X.setValue((pos.getX()), this);
         POS_Y.setValue((pos.getY()), this);
         POS_Z.setValue((pos.getZ()), this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
     
     /**
      * Means that one or more elements (like a texture) uses species. Does not mean
      * that the shape or block actually capture or generate species other than 0.
      */
+    @Override
     public final boolean hasSpecies() {
         final int stateFlags = stateFlags();
         return ((stateFlags & STATE_FLAG_NEEDS_SPECIES) == STATE_FLAG_NEEDS_SPECIES);
@@ -553,50 +609,59 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
      * 
      * @return
      */
+    @Override
     public final int species() {
         return SPECIES.getValue(this);
     }
 
-    public final V species(int species) {
+    @Override
+    public final W species(int species) {
         SPECIES.setValue(species, this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
     
     ////////////////////////////////////////// SHAPE ATTRIBUTES //////////////////////////////////////////
     
     protected int shapeBits;
 
+    @Override
     public final Direction.Axis axis() {
         return AXIS.getValue(this);
     }
 
-    public final V axis(Direction.Axis axis) {
+    @Override
+    public final W axis(Direction.Axis axis) {
         AXIS.setValue(axis, this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
+    @Override
     public boolean isAxisInverted() {
         return AXIS_INVERTED.getValue(this);
     }
 
-    public final V setAxisInverted(boolean isInverted) {
+    @Override
+    public final W setAxisInverted(boolean isInverted) {
         AXIS_INVERTED.setValue(isInverted, this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
+    @Override
     public CornerJoinState cornerJoin() {
         return CornerJoinStateSelector.fromOrdinal(MathHelper.clamp(BLOCK_JOIN.getValue(this), 0, CornerJoinState.STATE_COUNT - 1));
     }
 
-    public final V cornerJoin(CornerJoinState join) {
+    @Override
+    public final W cornerJoin(CornerJoinState join) {
         BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
+    @Override
     public SimpleJoinState simpleJoin() {
         // If this state is using corner join, join index is for a corner join
         // and so need to derive simple join from the corner join
@@ -604,43 +669,50 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
         return ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0) ? SimpleJoinState.fromOrdinal(BLOCK_JOIN.getValue(this)) : cornerJoin().simpleJoin();
     }
 
-    public final V simpleJoin(SimpleJoinState join) {
+    @Override
+    public final W simpleJoin(SimpleJoinState join) {
         BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
+    @Override
     public SimpleJoinState masonryJoin() {
         return SimpleJoinState.fromOrdinal(MASONRY_JOIN.getValue(this));
     }
 
-    public final V masonryJoin(SimpleJoinState join) {
+    @Override
+    public final W masonryJoin(SimpleJoinState join) {
         MASONRY_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
     /**
      * For machines and other blocks with a privileged horizontal face, North is
      * considered the zero rotation.
      */
+    @Override
     public ClockwiseRotation axisRotation() {
         return AXIS_ROTATION.getValue(this);
     }
 
-    public final V axisRotation(ClockwiseRotation rotation) {
+    @Override
+    public final W axisRotation(ClockwiseRotation rotation) {
         AXIS_ROTATION.setValue(rotation, this);
         invalidateHashCode();
-        return self;
+        return (W)this;
     }
 
+    @Override
     public int primitiveBits() {
         return PRIMITIVE_BITS.getValue(this);
     }
 
-    public final V primitiveBits(int bits) {
+    @Override
+    public final W primitiveBits(int bits) {
         PRIMITIVE_BITS.setValue(bits, this);
-        return self;
+        return (W)this;
     }
 
 

@@ -23,12 +23,13 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES
 
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.model.state.PrimitiveModelState;
+import grondag.xm.model.state.PrimitiveModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 
-public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
+public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
     private static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
             .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
@@ -40,7 +41,7 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive<Prim
 
     public AbstractWedgePrimitive(String idString) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION,
-                PrimitiveModelState.FACTORY);
+                PrimitiveModelStateImpl.FACTORY);
     }
 
     @Override
@@ -60,8 +61,8 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive<Prim
 
     // PERF: should be an owned model state
     @Override
-    public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
-        PrimitiveModelState result = this.newState();
+    public PrimitiveModelState.Mutable geometricState(PrimitiveModelState fromState) {
+        PrimitiveModelState.Mutable result = this.newState();
         result.axis(fromState.axis());
         result.setAxisInverted(fromState.isAxisInverted());
         result.axisRotation(fromState.axisRotation());
@@ -83,7 +84,7 @@ public abstract class AbstractWedgePrimitive extends AbstractModelPrimitive<Prim
      * If true, cuts in shape are on the block boundary. Saves value in static shape
      * bits in model state
      */
-    public static void setCorner(boolean isCorner, PrimitiveModelState modelState) {
+    public static void setCorner(boolean isCorner, PrimitiveModelState.Mutable modelState) {
         modelState.primitiveBits(isCorner ? 1 : 0);
     }
 }

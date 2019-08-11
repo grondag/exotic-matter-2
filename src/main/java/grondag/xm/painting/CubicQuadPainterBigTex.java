@@ -24,7 +24,7 @@ import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.stream.IMutablePolyStream;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -50,7 +50,8 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
     // layers.
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
-    public static void paintQuads(IMutablePolyStream stream, AbstractPrimitiveModelState<?> modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    @SuppressWarnings("rawtypes")
+    public static void paintQuads(IMutablePolyStream stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
         do {
             editor.setLockUV(textureIndex, true);

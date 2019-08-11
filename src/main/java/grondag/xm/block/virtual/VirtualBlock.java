@@ -66,7 +66,7 @@ public interface VirtualBlock {
         return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player) : !block.getMaterial(state).isReplaceable();
     }
 
-    static BlockState findAppropriateVirtualBlock(ModelState modelState) {
+    public static BlockState findAppropriateVirtualBlock(ModelState modelState) {
         // TODO Auto-generated method stub
         return null;
     }

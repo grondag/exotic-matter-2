@@ -27,6 +27,7 @@ import grondag.xm.mesh.stream.IPolyStream;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.model.state.PrimitiveModelState;
+import grondag.xm.model.state.PrimitiveModelStateImpl;
 import grondag.xm.model.varia.CSG;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
@@ -34,7 +35,7 @@ import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Box;
 
-public class CSGTestPrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
+public class CSGTestPrimitive extends AbstractBasePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
             .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
@@ -45,7 +46,7 @@ public class CSGTestPrimitive extends AbstractModelPrimitive<PrimitiveModelState
     private final IPolyStream cachedQuads;
 
     public CSGTestPrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, PrimitiveModelState.FACTORY);
+        super(idString, STATE_FLAG_NONE, PrimitiveModelStateImpl.FACTORY);
         this.cachedQuads = getTestQuads();
     }
 
@@ -116,7 +117,7 @@ public class CSGTestPrimitive extends AbstractModelPrimitive<PrimitiveModelState
     }
 
     @Override
-    public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
+    public PrimitiveModelState.Mutable geometricState(PrimitiveModelState fromState) {
         return defaultState().mutableCopy();
     }
 

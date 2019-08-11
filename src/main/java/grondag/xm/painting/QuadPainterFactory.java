@@ -20,12 +20,12 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import grondag.xm.painting.QuadPainter.IPaintMethod;
 
+@SuppressWarnings("rawtypes")
 public class QuadPainterFactory {
-
-    public static IPaintMethod getPainter(AbstractPrimitiveModelState<?> modelState, XmSurface surface, XmPaint paint, int textureDepth) {
+    public static IPaintMethod getPainter(BaseModelState modelState, XmSurface surface, XmPaint paint, int textureDepth) {
 
         TextureSet texture = paint.texture(textureDepth);
 

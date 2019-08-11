@@ -25,7 +25,7 @@ import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IMutablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import grondag.xm.painting.QuadPainter.IPaintMethod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,6 +40,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
+@SuppressWarnings("rawtypes")
 public class QuadPaintHandler implements Consumer<IPolygon> {
     private static final ThreadLocal<QuadPaintHandler> POOL = ThreadLocal.withInitial(QuadPaintHandler::new);
 
@@ -47,17 +48,17 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
     private static final boolean FREX_ACTIVE = Frex.isAvailable();
 
-    public static Mesh paint(AbstractPrimitiveModelState<?> meshState) {
+    public static Mesh paint(BaseModelState meshState) {
         return POOL.get().handlePaint(meshState);
     }
 
     private final MeshBuilder builder = RENDERER.meshBuilder();
     private final IMutablePolyStream work = PolyStreams.claimMutable(0);
     private final QuadEmitter emitter = builder.getEmitter();
-    private AbstractPrimitiveModelState<?> modelState;
+    private BaseModelState modelState;
     private MaterialFinder finder = RENDERER.materialFinder();
 
-    private Mesh handlePaint(AbstractPrimitiveModelState<?> modelState) {
+    private Mesh handlePaint(BaseModelState modelState) {
         this.modelState = modelState;
         modelState.produceQuads(this);
         return builder.build();
@@ -65,7 +66,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
     @Override
     public void accept(IPolygon poly) {
-        final AbstractPrimitiveModelState<?> modelState = this.modelState;
+        final BaseModelState modelState = this.modelState;
         final QuadEmitter emitter = this.emitter;
         final IMutablePolyStream stream = this.work;
         IMutablePolygon editor = stream.editor();

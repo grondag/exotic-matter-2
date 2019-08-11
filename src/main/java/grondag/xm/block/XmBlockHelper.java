@@ -17,7 +17,7 @@
 
 package grondag.xm.block;
 
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -32,7 +32,8 @@ public class XmBlockHelper {
      * Returns -1 if no XM block at position or if join not possible.
      */
     // TODO: remove if not used
-    public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState, AbstractPrimitiveModelState<?> withModelState) {
+    @SuppressWarnings("rawtypes")
+    public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState, BaseModelState withModelState) {
         if (withBlockState == null || withModelState == null)
             return -1;
 
@@ -41,12 +42,14 @@ public class XmBlockHelper {
 
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() == withBlockState.getBlock()) {
-            AbstractPrimitiveModelState<?> mState = XmBlockStateAccess.modelState(state, world, pos, false);
+            BaseModelState.Mutable mState = XmBlockStateAccess.modelState(state, world, pos, false);
             if (mState == null)
                 return -1;
 
-            if (mState.doShapeAndAppearanceMatch(withModelState))
-                return mState.species();
+            if (mState.doShapeAndAppearanceMatch(withModelState)) {
+                mState.release();
+                return withModelState.species();
+            }
         }
         return -1;
     }

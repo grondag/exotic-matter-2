@@ -26,13 +26,14 @@ import grondag.xm.mesh.stream.IPolyStream;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.model.state.PrimitiveModelState;
+import grondag.xm.model.state.PrimitiveModelStateImpl;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
-public class SpherePrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
+public class SpherePrimitive extends AbstractBasePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
@@ -41,7 +42,7 @@ public class SpherePrimitive extends AbstractModelPrimitive<PrimitiveModelState>
     private final IPolyStream cachedQuads;
 
     public SpherePrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, PrimitiveModelState.FACTORY);
+        super(idString, STATE_FLAG_NONE, PrimitiveModelStateImpl.FACTORY);
         this.cachedQuads = generateQuads();
     }
 
@@ -74,7 +75,7 @@ public class SpherePrimitive extends AbstractModelPrimitive<PrimitiveModelState>
     }
 
     @Override
-    public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
+    public PrimitiveModelState.Mutable geometricState(PrimitiveModelState fromState) {
         return defaultState().mutableCopy();
     }
 

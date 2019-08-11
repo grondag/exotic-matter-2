@@ -40,7 +40,7 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.mesh.helper.FaceQuadInputs;
 import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.stream.IMutablePolyStream;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterBorders extends QuadPainter {
@@ -166,7 +166,8 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
         }
     }
 
-    public static void paintQuads(IMutablePolyStream stream, AbstractPrimitiveModelState<?> modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    @SuppressWarnings("rawtypes")
+    public static void paintQuads(IMutablePolyStream stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
         do {
 

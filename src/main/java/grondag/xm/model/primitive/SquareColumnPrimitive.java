@@ -35,6 +35,7 @@ import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.model.state.AbstractPrimitiveModelState;
 import grondag.xm.model.state.PrimitiveModelState;
+import grondag.xm.model.state.PrimitiveModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
@@ -42,7 +43,7 @@ import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 
-public class SquareColumnPrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
+public class SquareColumnPrimitive extends AbstractBasePrimitive {
     private static final XmSurfaceListImpl SURFACES_DARK = XmSurfaceImpl.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
@@ -92,13 +93,13 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive<PrimitiveModel
     }
 
     @Override
-    protected void updateDefaultState(PrimitiveModelState modelState) {
+    protected void updateDefaultState(PrimitiveModelState.Mutable modelState) {
         setCutCount(3, modelState);
         setCutsOnEdge(true, modelState);
     }
 
     public SquareColumnPrimitive(String idString) {
-        super(idString, ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS, PrimitiveModelState.FACTORY);
+        super(idString, ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS, PrimitiveModelStateImpl.FACTORY);
     }
 
     @Override
@@ -514,7 +515,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive<PrimitiveModel
      * If true, cuts in shape are on the block boundary. Saves value in static shape
      * bits in model state
      */
-    public static void setCutsOnEdge(boolean areCutsOnEdge, PrimitiveModelState modelState) {
+    public static void setCutsOnEdge(boolean areCutsOnEdge, PrimitiveModelState.Mutable modelState) {
         modelState.primitiveBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, modelState.primitiveBits()));
     }
 
@@ -530,7 +531,7 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive<PrimitiveModel
      * Number of cuts that appear on each face of model. Saves value in static shape
      * bits in model state
      */
-    public static void setCutCount(int cutCount, PrimitiveModelState modelState) {
+    public static void setCutCount(int cutCount, PrimitiveModelState.Mutable modelState) {
         modelState.primitiveBits(STATE_CUT_COUNT.setValue(cutCount, modelState.primitiveBits()));
     }
 
@@ -542,14 +543,14 @@ public class SquareColumnPrimitive extends AbstractModelPrimitive<PrimitiveModel
      * Number of cuts that appear on each face of model. Saves value in static shape
      * bits in model state
      */
-    public static void setLit(boolean isLit, PrimitiveModelState modelState) {
+    public static void setLit(boolean isLit, PrimitiveModelState.Mutable modelState) {
         modelState.primitiveBits(STATE_LIT.setValue(isLit, modelState.primitiveBits()));
     }
 
     // PERF: consolidate states if there is more then one for glowing vs not glowing
     @Override
-    public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
-        final PrimitiveModelState result = this.newState();
+    public PrimitiveModelState.Mutable geometricState(PrimitiveModelState fromState) {
+        final PrimitiveModelState.Mutable result = this.newState();
         result.axis(fromState.axis());
         result.primitiveBits(fromState.primitiveBits());
         result.cornerJoin(fromState.cornerJoin());

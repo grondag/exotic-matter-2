@@ -27,14 +27,14 @@ import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IPolyStream;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.model.primitive.AbstractModelPrimitive;
 import grondag.xm.model.state.TerrainModelState;
+import grondag.xm.model.state.TerrainModelStateImpl;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class TerrainCubePrimitive extends AbstractModelPrimitive<TerrainModelState> {
+public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
@@ -43,7 +43,7 @@ public class TerrainCubePrimitive extends AbstractModelPrimitive<TerrainModelSta
     private final IPolyStream cachedQuads;
 
     public TerrainCubePrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, TerrainModelState.FACTORY);
+        super(idString, STATE_FLAG_NONE, TerrainModelStateImpl.FACTORY);
         this.cachedQuads = getCubeQuads();
     }
 
@@ -86,7 +86,7 @@ public class TerrainCubePrimitive extends AbstractModelPrimitive<TerrainModelSta
     }
 
     @Override
-    public TerrainModelState geometricState(TerrainModelState fromState) {
+    public TerrainModelState.Mutable geometricState(TerrainModelState fromState) {
         return defaultState().mutableCopy();
     }
 

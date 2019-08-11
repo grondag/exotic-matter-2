@@ -30,13 +30,14 @@ import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.model.state.PrimitiveModelState;
+import grondag.xm.model.state.PrimitiveModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class StackedPlatesPrimitive extends AbstractModelPrimitive<PrimitiveModelState> {
+public class StackedPlatesPrimitive extends AbstractBasePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
@@ -47,7 +48,7 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive<PrimitiveMode
     private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH };
 
     public StackedPlatesPrimitive(String idString) {
-        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION, PrimitiveModelState.FACTORY);
+        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION, PrimitiveModelStateImpl.FACTORY);
     }
 
     @Override
@@ -113,12 +114,11 @@ public class StackedPlatesPrimitive extends AbstractModelPrimitive<PrimitiveMode
     }
 
     @Override
-    public PrimitiveModelState geometricState(PrimitiveModelState fromState) {
-        PrimitiveModelState result = this.newState();
-        result.axis(fromState.axis());
-        result.setAxisInverted(fromState.isAxisInverted());
-        result.primitiveBits(fromState.primitiveBits());
-        return result;
+    public PrimitiveModelState.Mutable geometricState(PrimitiveModelState fromState) {
+        return this.newState()
+                .axis(fromState.axis())
+                .setAxisInverted(fromState.isAxisInverted())
+                .primitiveBits(fromState.primitiveBits());
     }
 
     @Override

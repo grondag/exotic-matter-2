@@ -16,7 +16,7 @@
 
 package grondag.xm.init;
 
-import grondag.xm.api.primitive.ModelPrimitive;
+import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.model.primitive.CSGTestPrimitive;
 import grondag.xm.model.primitive.CubePrimitive;
 import grondag.xm.model.primitive.SpherePrimitive;
@@ -24,21 +24,20 @@ import grondag.xm.model.primitive.SquareColumnPrimitive;
 import grondag.xm.model.primitive.StackedPlatesPrimitive;
 import grondag.xm.model.primitive.StairPrimitive;
 import grondag.xm.model.primitive.WedgePrimitive;
-import grondag.xm.model.state.PrimitiveModelState;
-import grondag.xm.model.state.TerrainModelState;
+import grondag.xm.terrain.TerrainPrimitive;
 
 public class XmPrimitives {
-    public static final ModelPrimitive<PrimitiveModelState> CUBE = new CubePrimitive("xm2:cube");
-    public static final ModelPrimitive<PrimitiveModelState> COLUMN_SQUARE = new SquareColumnPrimitive("xm2:column_square");
-    public static final ModelPrimitive<PrimitiveModelState> STACKED_PLATES = new StackedPlatesPrimitive("xm2:stacked_plates");
-    public static final ModelPrimitive<PrimitiveModelState> WEDGE = new WedgePrimitive("xm2:wedge");
-    public static final ModelPrimitive<PrimitiveModelState> STAIR = new StairPrimitive("xm2:stair");
-    public static final ModelPrimitive<PrimitiveModelState> SPHERE = new SpherePrimitive("xm2:sphere");
-    public static final ModelPrimitive<PrimitiveModelState> CSGTEST = new CSGTestPrimitive("xm2:csgtest");
+    public static final SimplePrimitive CUBE = new CubePrimitive("xm2:cube");
+    public static final SimplePrimitive COLUMN_SQUARE = new SquareColumnPrimitive("xm2:column_square");
+    public static final SimplePrimitive STACKED_PLATES = new StackedPlatesPrimitive("xm2:stacked_plates");
+    public static final SimplePrimitive WEDGE = new WedgePrimitive("xm2:wedge");
+    public static final SimplePrimitive STAIR = new StairPrimitive("xm2:stair");
+    public static final SimplePrimitive SPHERE = new SpherePrimitive("xm2:sphere");
+    public static final SimplePrimitive CSGTEST = new CSGTestPrimitive("xm2:csgtest");
 
-    public static final ModelPrimitive<TerrainModelState> TERRAIN_CUBE = null; // ModelShapes.create("terrain_height",
-    public static final ModelPrimitive<TerrainModelState> TERRAIN_HEIGHT = null; // ModelShapes.create("terrain_height",
+    public static final TerrainPrimitive TERRAIN_CUBE = null; // ModelShapes.create("terrain_height",
+    public static final TerrainPrimitive TERRAIN_HEIGHT = null; // ModelShapes.create("terrain_height",
     // TerrainMeshFactory.class, SHAPE);
-    public static final ModelPrimitive<TerrainModelState> TERRAIN_FILLER = null; // ModelShapes.create("terrain_filler",
+    public static final TerrainPrimitive TERRAIN_FILLER = null; // ModelShapes.create("terrain_filler",
     // TerrainMeshFactory.class, SHAPE);
 }

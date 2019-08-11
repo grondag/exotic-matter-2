@@ -18,26 +18,27 @@ package grondag.xm.block;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
 // For masonry, true result means border IS present
-public class XmMasonryMatch implements BlockTest<AbstractPrimitiveModelState<?>> {
+@SuppressWarnings("rawtypes")
+public class XmMasonryMatch implements BlockTest<BaseModelState> {
     private XmMasonryMatch() {
     }
 
     public static final XmMasonryMatch INSTANCE = new XmMasonryMatch();
 
     @Override
-    public boolean apply(BlockTestContext<AbstractPrimitiveModelState<?>> context) {
+    public boolean apply(BlockTestContext<BaseModelState> context) {
 
         if (context.fromModelState() == null) {
             return false;
         }
 
-        final AbstractPrimitiveModelState<?> fromState = context.fromModelState();
-        final AbstractPrimitiveModelState<?> toState = context.toModelState();
+        final BaseModelState fromState = context.fromModelState();
+        final BaseModelState toState = context.toModelState();
         final BlockState toBlockState = context.toBlockState();
         final BlockState fromBlockState = context.fromBlockState();
         final BlockPos toPos = context.toPos();

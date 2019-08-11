@@ -15,8 +15,11 @@
  ******************************************************************************/
 package grondag.xm.block.virtual;
 
+import java.util.function.Function;
+
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.block.XmStackHelper;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import grondag.xm.placement.FilterMode;
 import grondag.xm.placement.PlacementItem;
 import grondag.xm.placement.PlacementItemFeature;
@@ -71,21 +74,25 @@ public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
         return FilterMode.FILL_REPLACEABLE;
     }
 
+    private static final Function<ModelState, BlockState> VFUNC = VirtualBlock::findAppropriateVirtualBlock;
     /**
      * Gets the appropriate virtual block to place from a given item stack if it is
      * a virtual item stack. Returns block state for AIR otherwise. May be different
      * than the stack block because virtul in-world blocks are dependent rendering
      * needs.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public BlockState getPlacementBlockStateFromStack(ItemStack stack) {
         Item item = stack.getItem();
         if (item instanceof VirtualItemBlock) {
-            final AbstractPrimitiveModelState<?> modelState = (AbstractPrimitiveModelState<?>) XmStackHelper.getStackModelState(stack);
-            if (modelState == null)
+            @SuppressWarnings("rawtypes")
+            final BaseModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
+            if (modelState == null) {
                 return null;
-
-            return modelState.applyAndRelease(VirtualBlock::findAppropriateVirtualBlock);
+            } else {
+                return  (BlockState) modelState.applyAndRelease(VFUNC);
+            }
         } else {
             return Blocks.AIR.getDefaultState();
         }

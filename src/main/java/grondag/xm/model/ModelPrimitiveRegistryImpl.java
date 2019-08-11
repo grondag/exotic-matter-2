@@ -18,9 +18,9 @@ package grondag.xm.model;
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
+import grondag.xm.model.state.BaseModelState;
 import grondag.xm.model.state.ModelStateTagHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -28,18 +28,19 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
+@SuppressWarnings("rawtypes")
 public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
     public static ModelPrimitiveRegistryImpl INSTANCE = new ModelPrimitiveRegistryImpl();
 
-    private final Object2ObjectOpenHashMap<String, ModelPrimitive<?>> map = new Object2ObjectOpenHashMap<>();
-    private final ObjectArrayList<ModelPrimitive<?>> list = new ObjectArrayList<>();
+    private final Object2ObjectOpenHashMap<String, ModelPrimitive> map = new Object2ObjectOpenHashMap<>();
+    private final ObjectArrayList<ModelPrimitive> list = new ObjectArrayList<>();
     private final Object2IntOpenHashMap<String> reverseMap = new Object2IntOpenHashMap<>();
 
     private ModelPrimitiveRegistryImpl() {
     }
 
     @Override
-    public synchronized <T extends MutableModelState> boolean register(ModelPrimitive<T> primitive) {
+    public synchronized <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> boolean register(ModelPrimitive<R, W> primitive) {
         boolean result = map.putIfAbsent(primitive.id().toString(), primitive) == null;
         if (result) {
             final int index = list.size();
@@ -51,18 +52,18 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends MutableModelState> ModelPrimitive<T> get(int primitiveIndex) {
-        return (ModelPrimitive<T>) list.get(primitiveIndex);
+    public <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> ModelPrimitive<R, W> get(int primitiveIndex) {
+        return list.get(primitiveIndex);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends MutableModelState>  ModelPrimitive<T> get(String idString) {
-        return (ModelPrimitive<T>) map.get(idString);
+    public <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>>  ModelPrimitive<R, W> get(String idString) {
+        return map.get(idString);
     }
 
     @Override
-    public synchronized void forEach(Consumer<ModelPrimitive<?>> consumer) {
+    public synchronized void forEach(Consumer<ModelPrimitive> consumer) {
         list.forEach(consumer);
     }
 
@@ -77,8 +78,8 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
     }
 
     @Override
-    public <T extends MutableModelState> T fromTag(CompoundTag tag) {
-        ModelPrimitive<T> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
+    public <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> W fromTag(CompoundTag tag) {
+        ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
         if (shape == null) {
             return null;
         }
@@ -86,8 +87,8 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
     }
 
     @Override
-    public <T extends MutableModelState> T fromBuffer(PacketByteBuf buf) {
-        ModelPrimitive<T> shape = get(buf.readVarInt());
+    public <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> W fromBuffer(PacketByteBuf buf) {
+        ModelPrimitive<R, W> shape = get(buf.readVarInt());
         if (shape == null) {
             return null;
         }

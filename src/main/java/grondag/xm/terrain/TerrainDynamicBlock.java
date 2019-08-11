@@ -33,8 +33,8 @@ public class TerrainDynamicBlock extends TerrainBlock {
     }
 
     // PERF: sucks
-    private static TerrainModelState adjustShape(ModelState stateIn, boolean isFiller) {
-        TerrainModelState result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
+    private static TerrainModelState.Mutable adjustShape(ModelState stateIn, boolean isFiller) {
+        TerrainModelState.Mutable result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
         result.copyFrom(stateIn);
         result.setStatic(false);
         return result;

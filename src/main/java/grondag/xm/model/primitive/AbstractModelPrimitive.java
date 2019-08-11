@@ -19,16 +19,16 @@ package grondag.xm.model.primitive;
 import grondag.xm.Xm;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
-import grondag.xm.model.state.AbstractPrimitiveModelState.ModelStateFactory;
+import grondag.xm.model.state.BaseModelState;
+import grondag.xm.model.state.BaseModelState.ModelStateFactory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public abstract class AbstractModelPrimitive<T extends AbstractPrimitiveModelState<T>> implements ModelPrimitive<T> {
-    private final T defaultState;
+public abstract class AbstractModelPrimitive<R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> implements ModelPrimitive<R, W> {
+    private final R defaultState;
 
-    private final ModelStateFactory<T> factory;
+    private final ModelStateFactory<R, W> factory;
     
     private final Identifier id;
     
@@ -38,7 +38,7 @@ public abstract class AbstractModelPrimitive<T extends AbstractPrimitiveModelSta
      */
     private final int stateFlags;
 
-    protected AbstractModelPrimitive(Identifier id, int stateFlags, ModelStateFactory<T> factory) {
+    protected AbstractModelPrimitive(Identifier id, int stateFlags, ModelStateFactory<R, W> factory) {
         this.stateFlags = stateFlags;
         this.id = id;
         this.factory = factory;
@@ -49,22 +49,22 @@ public abstract class AbstractModelPrimitive<T extends AbstractPrimitiveModelSta
             Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + id.toString());
         }
 
-        T state = factory.claim(this);
+        W state = factory.claim(this);
         updateDefaultState(state);
         this.defaultState = state.releaseToImmutable();
     }
 
-    protected AbstractModelPrimitive(String idString, int stateFlags, ModelStateFactory<T> factory) {
+    protected AbstractModelPrimitive(String idString, int stateFlags, ModelStateFactory<R, W> factory) {
         this(new Identifier(idString), stateFlags, factory);
     }
 
     @Override
-    public T defaultState() {
+    public R defaultState() {
         return defaultState;
     }
 
     @Override
-    public int stateFlags(T modelState) {
+    public int stateFlags(R modelState) {
         return stateFlags;
     }
 
@@ -76,16 +76,16 @@ public abstract class AbstractModelPrimitive<T extends AbstractPrimitiveModelSta
     /**
      * Override if default state should be something other than the, erm... default.
      */
-    protected void updateDefaultState(T modelState) {
+    protected void updateDefaultState(W modelState) {
     }
     
     @Override
-    public final T fromBuffer(PacketByteBuf buf) {
+    public final W fromBuffer(PacketByteBuf buf) {
         return factory.fromBuffer(this, buf);
     }
     
     @Override
-    public final T fromTag(CompoundTag tag) {
+    public final W fromTag(CompoundTag tag) {
         return factory.fromTag(this, tag);
     }
 }

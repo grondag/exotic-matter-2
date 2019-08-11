@@ -23,7 +23,7 @@ import grondag.xm.api.connect.model.BlockEdge;
 import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.block.XmBlockStateAccess;
 import grondag.xm.block.XmStackHelper;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.model.state.BaseModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -40,6 +40,7 @@ import net.minecraft.world.World;
  * Handles configuration of block orientation before placement based on stack
  * settings and placement context.
  */
+@SuppressWarnings("rawtypes")
 public class BlockOrientationHandler {
     /**
      * Updates model state in provided stack if necessary based on other inputs.
@@ -69,7 +70,7 @@ public class BlockOrientationHandler {
 
         PlacementItem item = (PlacementItem) stack.getItem();
 
-        AbstractPrimitiveModelState<?> modelState = XmStackHelper.getStackModelState(stack);
+        BaseModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
 
         if (modelState.hasAxis()) {
             modelState.axis(item.getBlockPlacementAxis(stack));
@@ -87,8 +88,8 @@ public class BlockOrientationHandler {
 
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // find closest instance, starting with block placed on
-        AbstractPrimitiveModelState<?> outputModelState = XmStackHelper.getStackModelState(stack);
-        AbstractPrimitiveModelState<?> closestModelState = null;
+        BaseModelState.Mutable outputModelState = XmStackHelper.getStackModelState(stack);
+        BaseModelState.Mutable closestModelState = null;
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
 
@@ -113,7 +114,7 @@ public class BlockOrientationHandler {
                                 double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x, pPos.onPos.getY() + 0.5 + y,
                                         pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
-                                    AbstractPrimitiveModelState<?> testModelState = (AbstractPrimitiveModelState<?>) testBlockState.getModelState(world, testPos, true);
+                                    BaseModelState.Mutable testModelState = testBlockState.getModelState(world, testPos, true);
                                     if (testModelState.primitive() == outputModelState.primitive()) {
                                         closestDistSq = distSq;
                                         closestModelState = testModelState;
@@ -152,7 +153,7 @@ public class BlockOrientationHandler {
     // FIX: pretty sure this doesn't work now
     /** handle hit-sensitive placement for stairs, wedges */
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
-        AbstractPrimitiveModelState<?> outputModelState = XmStackHelper.getStackModelState(stack);
+        BaseModelState.Mutable outputModelState = XmStackHelper.getStackModelState(stack);
 
         boolean isRotationDone = false;
 
@@ -226,17 +227,17 @@ public class BlockOrientationHandler {
     }
 
     /** updates model state from block state */
-    public static void axisModelState(BlockState stateIn, AbstractPrimitiveModelState<?> modelState) {
+    public static void axisModelState(BlockState stateIn, BaseModelState.Mutable modelState) {
         // TODO: implement
     }
 
     /** updates model state from block state */
-    public static void faceModelState(BlockState stateIn, AbstractPrimitiveModelState<?> modelState) {
+    public static void faceModelState(BlockState stateIn, BaseModelState.Mutable modelState) {
         // TODO: implement
     }
 
     /** updates model state from block state */
-    public static void edgeModelState(BlockState stateIn, AbstractPrimitiveModelState<?> modelState) {
+    public static void edgeModelState(BlockState stateIn, BaseModelState.Mutable modelState) {
         final BlockEdge edge = (BlockEdge) stateIn.getEntries().get(EDGE_PROP);
         if (edge != null) {
             modelState.axis(edge.face1.getAxis());
@@ -246,7 +247,7 @@ public class BlockOrientationHandler {
     }
 
     /** updates model state from block state */
-    public static void cornerModelState(BlockState stateIn, AbstractPrimitiveModelState<?> modelState) {
+    public static void cornerModelState(BlockState stateIn, BaseModelState.Mutable modelState) {
         // TODO: implement
     }
 }

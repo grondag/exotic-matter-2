@@ -67,11 +67,13 @@ public class XmBlockRegistryImpl implements XmBlockRegistry {
             return blockJoinTest;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public ModelState defaultModelState() {
             return defaultModelState;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public MutableModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
             return worldStateFunc.apply(this, world, pos, refreshFromWorld && !defaultModelState.isStatic());

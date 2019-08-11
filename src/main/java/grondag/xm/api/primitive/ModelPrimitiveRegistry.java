@@ -18,8 +18,8 @@ package grondag.xm.api.primitive;
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.model.ModelPrimitiveRegistryImpl;
+import grondag.xm.model.state.BaseModelState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -27,17 +27,18 @@ import net.minecraft.util.PacketByteBuf;
 public interface ModelPrimitiveRegistry {
     static ModelPrimitiveRegistry INSTANCE = ModelPrimitiveRegistryImpl.INSTANCE;
 
-    <T extends MutableModelState> boolean register(ModelPrimitive<T> primitive);
+    <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> boolean register(ModelPrimitive<R, W> primitive);
 
-    <T extends MutableModelState> ModelPrimitive<T> get(int primitiveIndex);
+    <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> ModelPrimitive<R, W> get(int primitiveIndex);
 
-    default <T extends MutableModelState> ModelPrimitive<T> get(Identifier primitiveId) {
+    default <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> ModelPrimitive<R, W> get(Identifier primitiveId) {
         return get(primitiveId.toString());
     }
 
-    <T extends MutableModelState> ModelPrimitive<T> get(String idString);
+    <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> ModelPrimitive<R, W> get(String idString);
 
-    void forEach(Consumer<ModelPrimitive<?>> consumer);
+    @SuppressWarnings("rawtypes")
+    void forEach(Consumer<ModelPrimitive> consumer);
 
     int count();
 
@@ -47,11 +48,11 @@ public interface ModelPrimitiveRegistry {
         return indexOf(primitiveId.toString());
     }
 
-    default <T extends MutableModelState> int indexOf(ModelPrimitive<T> primitive) {
+    default <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> int indexOf(ModelPrimitive<R, W> primitive) {
         return indexOf(primitive.id());
     }
     
-    <T extends MutableModelState> T fromTag(CompoundTag tag);
+    <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> W fromTag(CompoundTag tag);
     
-    <T extends MutableModelState> T fromBuffer(PacketByteBuf buf);
+    <R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> W fromBuffer(PacketByteBuf buf);
 }
