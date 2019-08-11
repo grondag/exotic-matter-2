@@ -124,6 +124,7 @@ public abstract class AbstractPrimitiveModelState
             }
             result.retain();
             result.primitive = template.primitive;
+            result.copyInternal(template);
             return result;
         }
         

@@ -174,7 +174,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             CornerJoinState bjs = modelState.cornerJoin();
             Direction face = editor.nominalFace();
             FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][bjs.faceState(face).ordinal()];
-
+            
             // if can't identify a face, skip texturing
             if (inputs == null)
                 continue;
