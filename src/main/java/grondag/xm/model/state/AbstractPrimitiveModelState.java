@@ -52,9 +52,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
+import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.texture.MissingSprite;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -725,9 +729,6 @@ public abstract class AbstractPrimitiveModelState
     private Mesh mesh = null;
 
     @Environment(EnvType.CLIENT)
-    private List<BakedQuad>[] quadLists = null;
-    
-    @Environment(EnvType.CLIENT)
     private Mesh mesh() {
         Mesh result = mesh;
         if (result == null) {
@@ -736,10 +737,57 @@ public abstract class AbstractPrimitiveModelState
         }
         return result;
     }
+    
+    @Override
+    @Environment(EnvType.CLIENT)
+    public final void emitQuads(RenderContext context) {
+        context.meshConsumer().accept(mesh());
+    }
+    
+    @Environment(EnvType.CLIENT)
+    private Sprite particleSprite = null;
+    
+    @Environment(EnvType.CLIENT)
+    private int particleColorARBG = 0;
+    
+    @Override
+    @Environment(EnvType.CLIENT)
+    public final Sprite particleSprite() {
+        if(particleSprite == null) {
+            final Mesh mesh = mesh();
+            mesh.forEach(q -> {
+                if(particleSprite == null) {
+                    SpriteFinder finder = SpriteFinder.get(MinecraftClient.getInstance().getSpriteAtlas());
+                    particleSprite = finder.find(q, 0);
+                    particleColorARBG = q.spriteColor(0, 0);
+                }
+            });
+            if(particleSprite == null) {
+                particleSprite = MissingSprite.getMissingSprite();
+            }
+        }
+        return particleSprite;
+    }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand) {
+    public final int particleColorARBG() {
+        final int result = particleColorARBG;
+        if(result == 0) {
+            // if zero then probably requires lookup
+            particleSprite();
+            return particleColorARBG;
+        } else {
+            return result;
+        }
+    }
+    
+    @Environment(EnvType.CLIENT)
+    private List<BakedQuad>[] quadLists = null;
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public final List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand) {
         List<BakedQuad>[] lists = quadLists;
         if (lists == null) {
             lists = ModelHelper.toQuadLists(mesh());
@@ -747,12 +795,5 @@ public abstract class AbstractPrimitiveModelState
         }
         List<BakedQuad> result = lists[face == null ? 6 : face.getId()];
         return result == null ? ImmutableList.of() : result;
-    }
-    
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public void emitQuads(RenderContext context) {
-        context.meshConsumer().accept(mesh());
     }
 }

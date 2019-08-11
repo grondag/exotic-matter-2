@@ -25,6 +25,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
@@ -44,6 +45,12 @@ public interface ModelState {
 
     ModelState toImmutable();
 
+    /**
+     * Returns a copy of this model state with only the bits that matter for
+     * geometry. Used as lookup key for block damage models.
+     */
+    ModelState geometricState();
+    
     void serializeNBT(CompoundTag tag);
 
     void toBytes(PacketByteBuf pBuff);
@@ -67,11 +74,11 @@ public interface ModelState {
     @Environment(EnvType.CLIENT)
     void emitQuads(RenderContext context);
 
-    /**
-     * Returns a copy of this model state with only the bits that matter for
-     * geometry. Used as lookup key for block damage models.
-     */
-    ModelState geometricState();
+    @Environment(EnvType.CLIENT)
+    Sprite particleSprite();
+
+    @Environment(EnvType.CLIENT)
+    int particleColorARBG();
     
     public static interface Mutable extends ModelState {
         void release();
