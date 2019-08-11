@@ -21,52 +21,18 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_POS;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
 
+import grondag.xm.api.block.WorldToModelStateFunction;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.ModelStateFunction;
+import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.modelstate.SimpleModelState;
-import grondag.xm.block.WorldToModelStateFunction;
-import grondag.xm.block.XmMasonryMatch;
 
 public class SimpleModelStateImpl extends AbstractPrimitiveModelState<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> implements SimpleModelState.Mutable {
     public static final int MAX_SURFACES = 8;
     
     public static final ModelStateFactoryImpl<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> FACTORY = new ModelStateFactoryImpl<>(SimpleModelStateImpl::new);
-
-    public static final WorldToModelStateFunction DEFAULT_PRIMITIVE = (modelStateIn, xmBlockState, world, pos, refreshFromWorld) -> {
-        if(refreshFromWorld) {
-            SimpleModelStateImpl modelState = (SimpleModelStateImpl) modelStateIn;
-            final int stateFlags = modelState.stateFlags();
-            if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS) {
-                modelState.pos(pos);
-            }
-
-            BlockNeighbors neighbors = null;
-
-            if ((STATE_FLAG_NEEDS_CORNER_JOIN & stateFlags) == STATE_FLAG_NEEDS_CORNER_JOIN) {
-                neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, xmBlockState.blockJoinTest());
-                modelState.cornerJoin(CornerJoinState.fromWorld(neighbors));
-
-            } else if ((STATE_FLAG_NEEDS_SIMPLE_JOIN & stateFlags) == STATE_FLAG_NEEDS_SIMPLE_JOIN) {
-                neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, xmBlockState.blockJoinTest());
-                modelState.simpleJoin(SimpleJoinState.fromWorld(neighbors));
-            }
-
-            if ((STATE_FLAG_NEEDS_MASONRY_JOIN & stateFlags) == STATE_FLAG_NEEDS_MASONRY_JOIN) {
-                if (neighbors == null) {
-                    neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, XmMasonryMatch.INSTANCE);
-                } else {
-                    neighbors.withTest(XmMasonryMatch.INSTANCE);
-                }
-                modelState.masonryJoin(SimpleJoinState.fromWorld(neighbors));
-            }
-
-            if (neighbors != null) {
-                neighbors.release();
-            }
-        }
-    };
 
     @Override
     public final ModelStateFactoryImpl<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> factoryImpl() {

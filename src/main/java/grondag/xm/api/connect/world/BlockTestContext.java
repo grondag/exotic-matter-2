@@ -23,7 +23,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-//TODO: move this and others to separate world package - prevent conflict with earlier release
 public interface BlockTestContext<T extends ModelState> {
     BlockView world();
 

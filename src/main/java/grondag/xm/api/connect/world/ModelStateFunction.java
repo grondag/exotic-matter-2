@@ -21,7 +21,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.block.XmBlockStateAccess;
+import grondag.xm.api.block.XmBlockState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -40,10 +40,10 @@ public interface ModelStateFunction {
      * Use this as factory for model state block tests that DON'T need to refresh
      * from world.
      */
-    static final ModelStateFunction STATIC = (w, b, p) -> XmBlockStateAccess.modelState(b, w, p, false);
+    static final ModelStateFunction STATIC = (w, b, p) -> XmBlockState.modelState(b, w, p, false);
     /**
      * Use this as factory for model state block tests that DO need to refresh from
      * world.
      */
-    static final ModelStateFunction DYNAMIC = (w, b, p) -> XmBlockStateAccess.modelState(b, w, p, true);
+    static final ModelStateFunction DYNAMIC = (w, b, p) -> XmBlockState.modelState(b, w, p, true);
 }

@@ -14,9 +14,8 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.block;
+package grondag.xm.api.block;
 
-import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;

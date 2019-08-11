@@ -20,13 +20,14 @@ import java.util.function.Function;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.block.WorldToModelStateFunction;
 import grondag.xm.block.XmBlockRegistryImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 
-public interface XmBlockRegistry {
-    static void register(
+public class XmBlockRegistry {
+    private XmBlockRegistry() {}
+    
+    public static void register(
             Block block, 
             Function<BlockState, ModelState> defaultStateFunc, 
             WorldToModelStateFunction worldStateFunc,

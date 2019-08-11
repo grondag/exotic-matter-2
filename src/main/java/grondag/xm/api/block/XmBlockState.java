@@ -31,13 +31,16 @@ public interface XmBlockState {
         return XmBlockStateAccess.get(fromState);
     }
 
+    static @Nullable <T extends ModelState.Mutable> T modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
+        return XmBlockStateAccess.modelState(fromState, blockView, pos, refresh);
+    }
+    
     /**
      * Minecraft block state associated with this Exotic Matter block state.
      * Association is always 1:1.
      */
     BlockState blockState();
 
-    //TODO: should not be here
     /**
      * Block test that should be used for border/shape joins for this block. Used in
      * model state refresh from world.

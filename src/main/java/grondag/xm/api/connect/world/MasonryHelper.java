@@ -14,45 +14,41 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.block;
+package grondag.xm.api.connect.world;
 
-import grondag.xm.api.connect.world.BlockTest;
-import grondag.xm.api.connect.world.BlockTestContext;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.SimpleModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
 // For masonry, true result means border IS present
-@SuppressWarnings("rawtypes")
-public class XmMasonryMatch implements BlockTest<PrimitiveModelState> {
-    private XmMasonryMatch() {
+public class MasonryHelper implements BlockTest<SimpleModelState> {
+    private MasonryHelper() {
     }
 
-    public static final XmMasonryMatch INSTANCE = new XmMasonryMatch();
+    private static final ThreadLocal<MasonryHelper> POOL = ThreadLocal.withInitial(MasonryHelper::new);
 
+    public static BlockTest<SimpleModelState> wrap(BlockTest<SimpleModelState> test) {
+        MasonryHelper result = POOL.get();
+        result.test = test;
+        return result;
+    }
+    
+    private BlockTest<SimpleModelState> test;
+    
     @Override
-    public boolean apply(BlockTestContext<PrimitiveModelState> context) {
+    public boolean apply(BlockTestContext<SimpleModelState> context) {
 
         if (context.fromModelState() == null) {
             return false;
         }
 
-        final PrimitiveModelState fromState = context.fromModelState();
-        final PrimitiveModelState toState = context.toModelState();
         final BlockState toBlockState = context.toBlockState();
-        final BlockState fromBlockState = context.fromBlockState();
         final BlockPos toPos = context.toPos();
-
+        
         // if not a sibling, mortar if against full opaque
-        if (fromBlockState.getBlock() != toBlockState.getBlock() || toState == null) {
+        if (!test.apply(context)) {
             return toBlockState.isFullOpaque(context.world(), toPos);
         }
-
-        // no mortar between siblings with same species
-        if (fromState.species() == toState.species()) {
-            return false;
-        }
-        ;
 
         final BlockPos fromPos = context.fromPos();
 

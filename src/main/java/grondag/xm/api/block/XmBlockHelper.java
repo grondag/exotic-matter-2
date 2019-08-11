@@ -15,7 +15,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.block;
+package grondag.xm.api.block;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import net.minecraft.block.BlockState;
@@ -23,16 +23,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 /**
- * Convenience methods for XM Blocks
+ * Convenience methods for XM Blocks and Model States
  */
+@SuppressWarnings("rawtypes")
 public class XmBlockHelper {
-
+    private  XmBlockHelper() {}
+    
     /**
      * Returns species at position if it could join with the given block/modelState
      * Returns -1 if no XM block at position or if join not possible.
      */
-    // TODO: remove if not used
-    @SuppressWarnings("rawtypes")
     public static int getJoinableSpecies(BlockView world, BlockPos pos, BlockState withBlockState, PrimitiveModelState withModelState) {
         if (withBlockState == null || withModelState == null)
             return -1;
@@ -42,7 +42,7 @@ public class XmBlockHelper {
 
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() == withBlockState.getBlock()) {
-            PrimitiveModelState.Mutable mState = XmBlockStateAccess.modelState(state, world, pos, false);
+            PrimitiveModelState.Mutable mState = XmBlockState.modelState(state, world, pos, false);
             if (mState == null)
                 return -1;
 
