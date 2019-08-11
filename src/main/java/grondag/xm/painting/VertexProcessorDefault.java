@@ -17,10 +17,10 @@
 package grondag.xm.painting;
 
 import grondag.fermion.color.ColorHelper;
+import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.model.state.BaseModelState;
 
 public class VertexProcessorDefault extends VertexProcessor {
     public final static VertexProcessor INSTANCE = new VertexProcessorDefault();
@@ -35,7 +35,7 @@ public class VertexProcessorDefault extends VertexProcessor {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public final void process(IMutablePolygon poly, int textureIndex, BaseModelState modelState, XmSurface surface, XmPaint paint) {
+    public final void process(IMutablePolygon poly, int textureIndex, PrimitiveModelState modelState, XmSurface surface, XmPaint paint) {
         int color = paint.textureColor(textureIndex);
 
         // TODO: remove? Was causing problems when acuity is enabled because renderpass

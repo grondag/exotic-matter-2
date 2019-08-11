@@ -20,14 +20,14 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
+import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.CsgPolyStream;
 import grondag.xm.mesh.stream.IPolyStream;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.model.state.PrimitiveModelState;
-import grondag.xm.model.state.PrimitiveModelStateImpl;
+import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.CSG;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
@@ -46,17 +46,17 @@ public class CSGTestPrimitive extends AbstractBasePrimitive {
     private final IPolyStream cachedQuads;
 
     public CSGTestPrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, PrimitiveModelStateImpl.FACTORY);
+        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
         this.cachedQuads = getTestQuads();
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(PrimitiveModelState modelState) {
+    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
 
     @Override
-    public void produceQuads(PrimitiveModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(SimpleModelState modelState, Consumer<IPolygon> target) {
         cachedQuads.forEach(target);
     }
 
@@ -117,12 +117,12 @@ public class CSGTestPrimitive extends AbstractBasePrimitive {
     }
 
     @Override
-    public PrimitiveModelState.Mutable geometricState(PrimitiveModelState fromState) {
+    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
         return defaultState().mutableCopy();
     }
 
     @Override
-    public boolean doesShapeMatch(PrimitiveModelState from, PrimitiveModelState to) {
+    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
         return from.primitive() == to.primitive();
     }
 }

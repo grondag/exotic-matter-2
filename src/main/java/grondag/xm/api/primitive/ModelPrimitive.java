@@ -22,15 +22,15 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTA
 
 import java.util.function.Consumer;
 
+import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.model.state.BaseModelState;
 import grondag.xm.model.varia.BlockOrientationType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> {
+public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> {
     /**
      * Used for registration and serialization of model state.
      */

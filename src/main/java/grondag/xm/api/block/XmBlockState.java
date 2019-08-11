@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -57,5 +56,5 @@ public interface XmBlockState {
      * recursion when need to reference some static state ) information in order to
      * determine dynamic world state. Block tests are main use case for false.
      */
-    <T extends MutableModelState> T getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld);
+    <T extends ModelState.Mutable> T getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld);
 }

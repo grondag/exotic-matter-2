@@ -22,9 +22,8 @@ import org.joml.Vector4f;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.model.ClockwiseRotation;
-import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.model.state.BaseModelState;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -134,7 +133,7 @@ public class PolyTransform {
      * opposite of what I just described. See this in
      * {@link #getMatrixForAxisAndRotation(net.minecraft.util.math.Direction.Axis, boolean, Rotation)}
      */
-    public static PolyTransform get(BaseModelState modelState) {
+    public static PolyTransform get(PrimitiveModelState modelState) {
 
         // TODO: put back
         return new PolyTransform(computeMatrix(modelState.axis(), modelState.isAxisInverted(), modelState.axisRotation()));
@@ -179,7 +178,7 @@ public class PolyTransform {
      * Returns a key that can be used to retrieve values without the input model
      * state. Useful for some serialization scenarios.
      */
-    public static int computeTransformKey(BaseModelState modelState) {
+    public static int computeTransformKey(PrimitiveModelState modelState) {
         return modelState.hasAxis() ? computeKey(modelState.axis(), modelState.isAxisInverted(), modelState.axisRotation())
                 : computeKey(null, false, modelState.axisRotation());
     }
@@ -234,7 +233,7 @@ public class PolyTransform {
      * (or doesn't have any orientation to be transformed) then simply returns the
      * input face.
      */
-    public static Direction rotateFace(BaseModelState modelState, Direction face) {
+    public static Direction rotateFace(PrimitiveModelState modelState, Direction face) {
         return FACE_MAPS[computeTransformKey(modelState)].map(face);
     }
 
@@ -248,7 +247,7 @@ public class PolyTransform {
      * {@link #rotateFace(MutableModelState, Direction)} for each face in Enum
      * order.
      */
-    public static FaceMap getFaceMap(BaseModelState modelState) {
+    public static FaceMap getFaceMap(PrimitiveModelState modelState) {
         return FACE_MAPS[computeTransformKey(modelState)];
     }
 

@@ -23,7 +23,6 @@ import grondag.xm.api.block.XmBlockRegistry;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -75,7 +74,7 @@ public class XmBlockRegistryImpl implements XmBlockRegistry {
 
         @SuppressWarnings("unchecked")
         @Override
-        public MutableModelState getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        public ModelState.Mutable getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
             return worldStateFunc.apply(this, world, pos, refreshFromWorld && !defaultModelState.isStatic());
         }
 

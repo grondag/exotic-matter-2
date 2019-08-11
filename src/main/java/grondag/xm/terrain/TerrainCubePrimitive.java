@@ -22,13 +22,12 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.mesh.helper.CubeInputs;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IPolyStream;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.model.state.TerrainModelState;
-import grondag.xm.model.state.TerrainModelStateImpl;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;

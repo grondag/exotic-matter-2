@@ -25,10 +25,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.block.XmBlockStateAccess;
 import grondag.xm.block.XmStackHelper;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.dispatch.XmDispatcher;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -69,7 +68,7 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        final MutableModelState modelState = XmStackHelper.getStackModelState(stack);
+        final ModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
         if (modelState != null) {
             XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
         }

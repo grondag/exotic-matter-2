@@ -16,9 +16,10 @@
 
 package grondag.xm.terrain;
 
+import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
+import grondag.xm.api.terrain.TerrainModelState;
+import grondag.xm.api.terrain.TerrainPrimitive;
 import grondag.xm.model.primitive.AbstractModelPrimitive;
-import grondag.xm.model.state.BaseModelState.ModelStateFactory;
-import grondag.xm.model.state.TerrainModelState;
 import net.minecraft.util.Identifier;
 
 public abstract class AbstractTerrainPrimitive extends AbstractModelPrimitive<TerrainModelState, TerrainModelState.Mutable> implements TerrainPrimitive {

@@ -16,7 +16,7 @@
 
 package grondag.xm.terrain;
 
-import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
@@ -25,7 +25,7 @@ public class TerrainBlock extends Block implements IHotBlock {
     public static final IntProperty HEAT = IntProperty.of("xm2_heat", 0, 15);
     public static final EnumProperty<TerrainType> TERRAIN_TYPE = EnumProperty.of("xm2_terrain", TerrainType.class);
 
-    public TerrainBlock(Settings blockSettings, MutableModelState defaultModelState) {
+    public TerrainBlock(Settings blockSettings, ModelState.Mutable defaultModelState) {
         super(blockSettings);
     }
 

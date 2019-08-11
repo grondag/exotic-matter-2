@@ -36,7 +36,7 @@ import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.ModelStateFlags;
-import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.api.primitive.ModelPrimitive;
@@ -63,8 +63,10 @@ import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class AbstractPrimitiveModelState
-    <V extends AbstractPrimitiveModelState<V, R, W>, R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> 
-    extends AbstractModelState implements MutableModelState, BaseModelState<R, W>, BaseModelState.Mutable<R, W> {
+    <V extends AbstractPrimitiveModelState<V, R, W>, R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> 
+    extends AbstractModelState 
+    implements ModelState.Mutable, PrimitiveModelState<R, W>, PrimitiveModelState.Mutable<R, W>
+{
     
     ////////////////////////////////////////// BIT-WISE ENCODING //////////////////////////////////////////
     
@@ -92,18 +94,18 @@ public abstract class AbstractPrimitiveModelState
     
     ////////////////////////////////////////// FACTORY //////////////////////////////////////////
     
-    public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> 
+    public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> 
         implements ModelStateFactory<R, W> 
     {
         private final ArrayBlockingQueue<T> POOL = new ArrayBlockingQueue<>(4096);
         
         private final Supplier<T> factory;
         
-        ModelStateFactoryImpl(Supplier<T> factory) {
+        public ModelStateFactoryImpl(Supplier<T> factory) {
             this.factory = factory;
         }
         
-        protected final T claimInner(ModelPrimitive<R, W> primitive) {
+        public final T claimInner(ModelPrimitive<R, W> primitive) {
             T result = POOL.poll();
             if (result == null) {
                 result = factory.get();

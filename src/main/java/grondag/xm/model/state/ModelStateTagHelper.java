@@ -22,14 +22,14 @@ public abstract class ModelStateTagHelper {
     private ModelStateTagHelper() {
     }
 
-    static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
+    public static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
 
     public static final String NBT_SHAPE = NBTDictionary.claim("shape");
 
     /**
      * Stores string containing registry names of textures, vertex processors
      */
-    static final String NBT_LAYERS = NBTDictionary.claim("layers");
+    public static final String NBT_LAYERS = NBTDictionary.claim("layers");
 
     /**
      * Removes model state from the tag if present.

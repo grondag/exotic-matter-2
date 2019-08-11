@@ -17,15 +17,15 @@
 package grondag.xm.model.primitive;
 
 import grondag.xm.Xm;
+import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
-import grondag.xm.model.state.BaseModelState;
-import grondag.xm.model.state.BaseModelState.ModelStateFactory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public abstract class AbstractModelPrimitive<R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> implements ModelPrimitive<R, W> {
+public abstract class AbstractModelPrimitive<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> implements ModelPrimitive<R, W> {
     private final R defaultState;
 
     private final ModelStateFactory<R, W> factory;

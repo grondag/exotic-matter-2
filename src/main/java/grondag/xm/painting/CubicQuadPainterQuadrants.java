@@ -19,12 +19,12 @@ package grondag.xm.painting;
 import grondag.xm.api.connect.model.FaceCorner;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
+import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.stream.IMutablePolyStream;
-import grondag.xm.model.state.BaseModelState;
 import net.minecraft.util.math.Direction;
 
 /**
@@ -55,7 +55,7 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(IMutablePolyStream stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    public static void paintQuads(IMutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         IMutablePolygon editor = stream.editor();
 
         do {

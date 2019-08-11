@@ -30,33 +30,23 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 
 public interface ModelState {
-    MutableModelState mutableCopy();
+    Mutable mutableCopy();
 
     /**
      * Persisted but not part of hash nor included in equals comparison. If true,
      * refreshFromWorldState does nothing.
      */
     boolean isStatic();
-    
+
     boolean equalsIncludeStatic(Object obj);
-    
+
     boolean isImmutable();
-    
+
     ModelState toImmutable();
 
-    @Environment(EnvType.CLIENT)
-    List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);
-
-    @Environment(EnvType.CLIENT)
-    void emitQuads(RenderContext context);
-    
-    /**
-     * Output polygons must be quads or tris. Consumer MUST NOT hold references to
-     * any of the polys received.
-     */
-    void produceQuads(Consumer<IPolygon> target);
-    
     void serializeNBT(CompoundTag tag);
+
+    void toBytes(PacketByteBuf pBuff);
 
     default CompoundTag toTag() {
         CompoundTag result = new CompoundTag();
@@ -64,11 +54,45 @@ public interface ModelState {
         return result;
     }
 
-    void toBytes(PacketByteBuf pBuff);
+    /**
+     * Output polygons must be quads or tris. Consumer MUST NOT hold references to
+     * any of the polys received.
+     */
+    @Environment(EnvType.CLIENT)
+    void produceQuads(Consumer<IPolygon> target);
 
-  /**
-  * Returns a copy of this model state with only the bits that matter for
-  * geometry. Used as lookup key for block damage models.
-  */
+    @Environment(EnvType.CLIENT)
+    List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);
+
+    @Environment(EnvType.CLIENT)
+    void emitQuads(RenderContext context);
+
+    /**
+     * Returns a copy of this model state with only the bits that matter for
+     * geometry. Used as lookup key for block damage models.
+     */
     ModelState geometricState();
+    
+    public static interface Mutable extends ModelState {
+        void release();
+        
+        void retain();
+        
+        /**
+         * Copies what it can, excluding the primitive, and returns self.
+         */
+        Mutable copyFrom(ModelState template);
+
+        Mutable setStatic(boolean isStatic);
+
+    //
+//        /**
+//         * See {@link PolyTransform#rotateFace(MutableModelState, Direction)}
+//         */
+//        Direction rotateFace(Direction face);
+
+        ModelState releaseToImmutable();
+
+        void fromBytes(PacketByteBuf pBuff);
+    }
 }

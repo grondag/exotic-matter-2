@@ -16,18 +16,18 @@
 
 package grondag.xm.model.primitive;
 
+import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
+import grondag.xm.api.modelstate.SimpleModelState.Mutable;
 import grondag.xm.api.primitive.SimplePrimitive;
-import grondag.xm.model.state.BaseModelState.ModelStateFactory;
-import grondag.xm.model.state.PrimitiveModelState;
-import grondag.xm.model.state.PrimitiveModelState.Mutable;
 import net.minecraft.util.Identifier;
 
-public abstract class AbstractBasePrimitive extends AbstractModelPrimitive<PrimitiveModelState, PrimitiveModelState.Mutable> implements SimplePrimitive {
-    protected AbstractBasePrimitive(Identifier id, int stateFlags, ModelStateFactory<PrimitiveModelState, Mutable> factory) {
+public abstract class AbstractBasePrimitive extends AbstractModelPrimitive<SimpleModelState, SimpleModelState.Mutable> implements SimplePrimitive {
+    protected AbstractBasePrimitive(Identifier id, int stateFlags, ModelStateFactory<SimpleModelState, Mutable> factory) {
         super(id, stateFlags, factory);
     }
     
-    protected AbstractBasePrimitive(String idString, int stateFlags, ModelStateFactory<PrimitiveModelState, Mutable> factory) {
+    protected AbstractBasePrimitive(String idString, int stateFlags, ModelStateFactory<SimpleModelState, Mutable> factory) {
         super(idString, stateFlags, factory);
     }
 }

@@ -14,10 +14,9 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.terrain;
+package grondag.xm.api.terrain;
 
 import grondag.xm.api.primitive.ModelPrimitive;
-import grondag.xm.model.state.TerrainModelState;
 
 public interface TerrainPrimitive extends ModelPrimitive<TerrainModelState, TerrainModelState.Mutable>{
 

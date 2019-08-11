@@ -1,4 +1,4 @@
-package grondag.xm.model.state;
+package grondag.xm.api.modelstate;
 
 import java.util.List;
 import java.util.Random;
@@ -8,8 +8,6 @@ import java.util.function.Function;
 import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.surface.XmSurface;
@@ -25,9 +23,9 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
-public interface BaseModelState<R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> extends ModelState {
+public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> extends ModelState {
     
-    public static interface ModelStateFactory<R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R,W>> {
+    public static interface ModelStateFactory<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> {
 
         W claim(ModelPrimitive<R, W> primitive);
 
@@ -158,7 +156,7 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends BaseMo
     @Environment(EnvType.CLIENT)
     void emitQuads(RenderContext context);
     
-    public static interface Mutable<R extends BaseModelState<R, W>, W extends BaseModelState.Mutable<R, W>> extends BaseModelState<R, W>, MutableModelState {
+    public static interface Mutable<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R, W>> extends PrimitiveModelState<R, W>, ModelState.Mutable {
         @Override
         W copyFrom(ModelState template);
 

@@ -23,14 +23,14 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES
 import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.IMutablePolygon;
 import grondag.xm.mesh.polygon.IPolygon;
 import grondag.xm.mesh.stream.IWritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.model.state.PrimitiveModelState;
-import grondag.xm.model.state.PrimitiveModelStateImpl;
+import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
@@ -48,16 +48,16 @@ public class StackedPlatesPrimitive extends AbstractBasePrimitive {
     private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH };
 
     public StackedPlatesPrimitive(String idString) {
-        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION, PrimitiveModelStateImpl.FACTORY);
+        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION, SimpleModelStateImpl.FACTORY);
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(PrimitiveModelState modelState) {
+    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
 
     @Override
-    public void produceQuads(PrimitiveModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(SimpleModelState modelState, Consumer<IPolygon> target) {
         // FIX: Add height to block/model state once model state refactor is complete
         final int meta = 0; // modelState.getMetaData();
         final PolyTransform transform = PolyTransform.get(modelState);
@@ -109,12 +109,12 @@ public class StackedPlatesPrimitive extends AbstractBasePrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(PrimitiveModelState modelState) {
+    public BlockOrientationType orientationType(SimpleModelState modelState) {
         return BlockOrientationType.FACE;
     }
 
     @Override
-    public PrimitiveModelState.Mutable geometricState(PrimitiveModelState fromState) {
+    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
         return this.newState()
                 .axis(fromState.axis())
                 .setAxisInverted(fromState.isAxisInverted())
@@ -122,7 +122,7 @@ public class StackedPlatesPrimitive extends AbstractBasePrimitive {
     }
 
     @Override
-    public boolean doesShapeMatch(PrimitiveModelState from, PrimitiveModelState to) {
+    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
         return from.primitive() == to.primitive() && from.axis() == to.axis() && from.isAxisInverted() == to.isAxisInverted()
                 && from.primitiveBits() == to.primitiveBits();
     }

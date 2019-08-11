@@ -20,7 +20,6 @@ import java.util.function.BiConsumer;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.block.WorldToModelStateFunction;
 import net.minecraft.block.Block;
@@ -31,7 +30,7 @@ public interface XmModelHelper {
     static void remodelBlock(
             Block block, 
             ModelPrimitive primitive,
-            BiConsumer<BlockState, MutableModelState> stateMapper,
+            BiConsumer<BlockState, ModelState.Mutable> stateMapper,
             WorldToModelStateFunction worldStateFunc,
             BlockTest blockJoinTest) {
         
@@ -43,8 +42,8 @@ public interface XmModelHelper {
     static ModelState applyMapper(
             ModelPrimitive primitive,
             BlockState blockState,
-            BiConsumer<BlockState, MutableModelState> stateMapper) {
-                final MutableModelState oms = primitive.newState();
+            BiConsumer<BlockState, ModelState.Mutable> stateMapper) {
+                final ModelState.Mutable oms = primitive.newState();
                 stateMapper.accept(blockState, oms);
                 return oms.releaseToImmutable();
     }

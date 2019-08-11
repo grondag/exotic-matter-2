@@ -17,6 +17,7 @@
 package grondag.xm.init;
 
 import grondag.xm.api.primitive.SimplePrimitive;
+import grondag.xm.api.terrain.TerrainPrimitive;
 import grondag.xm.model.primitive.CSGTestPrimitive;
 import grondag.xm.model.primitive.CubePrimitive;
 import grondag.xm.model.primitive.SpherePrimitive;
@@ -24,7 +25,6 @@ import grondag.xm.model.primitive.SquareColumnPrimitive;
 import grondag.xm.model.primitive.StackedPlatesPrimitive;
 import grondag.xm.model.primitive.StairPrimitive;
 import grondag.xm.model.primitive.WedgePrimitive;
-import grondag.xm.terrain.TerrainPrimitive;
 
 public class XmPrimitives {
     public static final SimplePrimitive CUBE = new CubePrimitive("xm2:cube");

@@ -18,20 +18,20 @@ package grondag.xm.block;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
-import grondag.xm.model.state.BaseModelState;
+import grondag.xm.api.modelstate.PrimitiveModelState;
 import net.minecraft.block.BlockState;
 
 @SuppressWarnings("rawtypes")
-public class XmBorderMatch implements BlockTest<BaseModelState> {
+public class XmBorderMatch implements BlockTest<PrimitiveModelState> {
     private XmBorderMatch() {
     }
 
     public static final XmBorderMatch INSTANCE = new XmBorderMatch();
 
     @Override
-    public boolean apply(BlockTestContext<BaseModelState> context) {
-        final BaseModelState fromState = context.fromModelState();
-        final BaseModelState toState = context.toModelState();
+    public boolean apply(BlockTestContext<PrimitiveModelState> context) {
+        final PrimitiveModelState fromState = context.fromModelState();
+        final PrimitiveModelState toState = context.toModelState();
         final BlockState toBlockState = context.toBlockState();
         final BlockState fromBlockState = context.fromBlockState();
 

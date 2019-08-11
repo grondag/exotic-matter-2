@@ -17,7 +17,6 @@
 package grondag.xm.terrain;
 
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.init.XmPrimitives;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -37,8 +36,8 @@ public class TerrainStaticBlock extends Block implements IHotBlock {
 
     // PERF: sucks
     @SuppressWarnings("unused")
-    private static MutableModelState adjustShape(ModelState stateIn, boolean isFiller) {
-        MutableModelState result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
+    private static ModelState.Mutable adjustShape(ModelState stateIn, boolean isFiller) {
+        ModelState.Mutable result = isFiller ? XmPrimitives.TERRAIN_FILLER.newState() : XmPrimitives.TERRAIN_HEIGHT.newState();
         result.copyFrom(stateIn);
         result.setStatic(true);
         return result;
@@ -96,7 +95,7 @@ public class TerrainStaticBlock extends Block implements IHotBlock {
         return dynamicVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE));
     }
 
-    public void setModelState(World world, BlockPos pos, MutableModelState myModelState) {
+    public void setModelState(World world, BlockPos pos, ModelState.Mutable myModelState) {
         // TODO Auto-generated method stub
         
     }

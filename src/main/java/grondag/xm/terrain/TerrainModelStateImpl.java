@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.model.state;
+package grondag.xm.terrain;
 
+import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import grondag.xm.terrain.TerrainState;
+import grondag.xm.model.state.AbstractPrimitiveModelState;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;

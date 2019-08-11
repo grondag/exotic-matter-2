@@ -21,8 +21,8 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import grondag.fermion.position.PackedBlockPos;
+import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.block.XmBlockStateAccess;
-import grondag.xm.model.state.TerrainModelState;
 import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

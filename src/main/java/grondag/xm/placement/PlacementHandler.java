@@ -21,10 +21,10 @@ import grondag.fermion.modkeys.api.ModKeys;
 import grondag.fermion.varia.Useful;
 import grondag.xm.XmConfig;
 import grondag.xm.api.connect.model.HorizontalFace;
+import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.block.XmBlockHelper;
 import grondag.xm.block.XmStackHelper;
 import grondag.xm.block.virtual.VirtualBlock;
-import grondag.xm.model.state.BaseModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -176,7 +176,7 @@ public abstract class PlacementHandler {
         final ItemStack stack = specBuilder.placedStack().copy();
         final PlacementPosition pPos = specBuilder.placementPosition();
         @SuppressWarnings("rawtypes")
-        final BaseModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
+        final PrimitiveModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
         if (modelState != null && modelState.hasSpecies()) {
             final int species = speciesForPlacement(specBuilder.player(), pPos.onPos, pPos.onFace, stack, specBuilder.region());
             if (species >= 0) {
@@ -209,7 +209,7 @@ public abstract class PlacementHandler {
         boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
 
         @SuppressWarnings("rawtypes")
-        BaseModelState.Mutable withModelState = XmStackHelper.getStackModelState(stack);
+        PrimitiveModelState.Mutable withModelState = XmStackHelper.getStackModelState(stack);
         if (withModelState == null || !withModelState.hasSpecies())
             return 0;
 

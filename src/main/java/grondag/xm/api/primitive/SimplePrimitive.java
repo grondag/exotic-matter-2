@@ -16,8 +16,8 @@
 
 package grondag.xm.api.primitive;
 
-import grondag.xm.model.state.PrimitiveModelState;
+import grondag.xm.api.modelstate.SimpleModelState;
 
-public interface SimplePrimitive extends ModelPrimitive<PrimitiveModelState, PrimitiveModelState.Mutable>{
+public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, SimpleModelState.Mutable>{
 
 }

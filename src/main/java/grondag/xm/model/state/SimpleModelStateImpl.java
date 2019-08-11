@@ -25,17 +25,18 @@ import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.ModelStateFunction;
+import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.block.WorldToModelStateFunction;
 import grondag.xm.block.XmMasonryMatch;
 
-public class PrimitiveModelStateImpl extends AbstractPrimitiveModelState<PrimitiveModelStateImpl, PrimitiveModelState, PrimitiveModelState.Mutable> implements PrimitiveModelState.Mutable {
+public class SimpleModelStateImpl extends AbstractPrimitiveModelState<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> implements SimpleModelState.Mutable {
     public static final int MAX_SURFACES = 8;
     
-    public static final ModelStateFactoryImpl<PrimitiveModelStateImpl, PrimitiveModelState, PrimitiveModelState.Mutable> FACTORY = new ModelStateFactoryImpl<>(PrimitiveModelStateImpl::new);
+    public static final ModelStateFactoryImpl<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> FACTORY = new ModelStateFactoryImpl<>(SimpleModelStateImpl::new);
 
     public static final WorldToModelStateFunction DEFAULT_PRIMITIVE = (modelStateIn, xmBlockState, world, pos, refreshFromWorld) -> {
         if(refreshFromWorld) {
-            PrimitiveModelStateImpl modelState = (PrimitiveModelStateImpl) modelStateIn;
+            SimpleModelStateImpl modelState = (SimpleModelStateImpl) modelStateIn;
             final int stateFlags = modelState.stateFlags();
             if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS) {
                 modelState.pos(pos);
@@ -68,7 +69,7 @@ public class PrimitiveModelStateImpl extends AbstractPrimitiveModelState<Primiti
     };
 
     @Override
-    public final ModelStateFactoryImpl<PrimitiveModelStateImpl, PrimitiveModelState, PrimitiveModelState.Mutable> factoryImpl() {
+    public final ModelStateFactoryImpl<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> factoryImpl() {
         return FACTORY;
     }
 

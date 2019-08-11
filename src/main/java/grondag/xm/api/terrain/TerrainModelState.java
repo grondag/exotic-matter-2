@@ -14,13 +14,14 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.state;
+package grondag.xm.api.terrain;
 
+import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.terrain.TerrainState;
 
-public interface TerrainModelState extends BaseModelState<TerrainModelState, TerrainModelState.Mutable>  {
+public interface TerrainModelState extends PrimitiveModelState<TerrainModelState, TerrainModelState.Mutable>  {
 
-    public static interface Mutable extends TerrainModelState, BaseModelState.Mutable<TerrainModelState, TerrainModelState.Mutable> {
+    public static interface Mutable extends TerrainModelState, PrimitiveModelState.Mutable<TerrainModelState, TerrainModelState.Mutable> {
         TerrainModelState.Mutable setTerrainStateKey(long terrainStateKey);
         
         TerrainModelState.Mutable setTerrainState(TerrainState flowState);

@@ -21,9 +21,9 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIE
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
+import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
-import grondag.xm.model.state.PrimitiveModelState;
-import grondag.xm.model.state.PrimitiveModelStateImpl;
+import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
@@ -41,16 +41,16 @@ public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
 
     public AbstractWedgePrimitive(String idString) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION,
-                PrimitiveModelStateImpl.FACTORY);
+                SimpleModelStateImpl.FACTORY);
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(PrimitiveModelState modelState) {
+    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
 
     @Override
-    public BlockOrientationType orientationType(PrimitiveModelState modelState) {
+    public BlockOrientationType orientationType(SimpleModelState modelState) {
         return isCorner(modelState) ? BlockOrientationType.CORNER : BlockOrientationType.EDGE;
     }
 
@@ -61,8 +61,8 @@ public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
 
     // PERF: should be an owned model state
     @Override
-    public PrimitiveModelState.Mutable geometricState(PrimitiveModelState fromState) {
-        PrimitiveModelState.Mutable result = this.newState();
+    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
+        SimpleModelState.Mutable result = this.newState();
         result.axis(fromState.axis());
         result.setAxisInverted(fromState.isAxisInverted());
         result.axisRotation(fromState.axisRotation());
@@ -71,12 +71,12 @@ public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
     }
 
     @Override
-    public boolean doesShapeMatch(PrimitiveModelState from, PrimitiveModelState to) {
+    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
         return from.primitive() == to.primitive() && from.axis() == to.axis() && from.isAxisInverted() == to.isAxisInverted()
                 && from.axisRotation() == to.axisRotation() && from.primitiveBits() == to.primitiveBits();
     }
 
-    public static boolean isCorner(PrimitiveModelState modelState) {
+    public static boolean isCorner(SimpleModelState modelState) {
         return modelState.primitiveBits() == 1;
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
      * If true, cuts in shape are on the block boundary. Saves value in static shape
      * bits in model state
      */
-    public static void setCorner(boolean isCorner, PrimitiveModelState.Mutable modelState) {
+    public static void setCorner(boolean isCorner, SimpleModelState.Mutable modelState) {
         modelState.primitiveBits(isCorner ? 1 : 0);
     }
 }
