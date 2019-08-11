@@ -21,7 +21,6 @@ import java.util.function.Function;
 import grondag.xm.Xm;
 import grondag.xm.api.block.WorldToModelStateFunction;
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,8 +31,7 @@ public class XmBlockRegistryImpl {
     private XmBlockRegistryImpl() {
     }
 
-    public static void register(Block block, Function<BlockState, ModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc,
-            BlockTest<?> blockJoinTest) {
+    public static void register(Block block, Function<BlockState, ModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc) {
 
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
@@ -41,30 +39,23 @@ public class XmBlockRegistryImpl {
                 Xm.LOG.warn(String.format("[%s] BlockState %s already associated with an XmBlockState. Skipping.", Xm.MODID, blockState.toString()));
                 return;
             }
-            XmBlockStateImpl xmState = new XmBlockStateImpl(defaultStateFunc.apply(blockState), worldStateFunc, blockJoinTest, blockState);
+            XmBlockStateImpl xmState = new XmBlockStateImpl(defaultStateFunc.apply(blockState), worldStateFunc, blockState);
             ((XmBlockStateAccess) blockState).xm2_blockState(xmState);
         }
     }
 
     public static class XmBlockStateImpl implements XmBlockState {
         public final WorldToModelStateFunction worldStateFunc;
-        public final BlockTest<?> blockJoinTest;
         public final ModelState defaultModelState;
         public final BlockState blockState;
 
-        private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockTest<?> blockJoinTest,
-                BlockState blockState) {
+        private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockState blockState) {
 
             this.defaultModelState = defaultModelState;
             this.worldStateFunc = worldStateFunc;
-            this.blockJoinTest = blockJoinTest;
             this.blockState = blockState;
         }
 
-        @Override
-        public BlockTest<?> blockJoinTest() {
-            return blockJoinTest;
-        }
 
         @SuppressWarnings("unchecked")
         @Override

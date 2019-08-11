@@ -16,17 +16,6 @@
 
 package grondag.xm.model.state;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_POS;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
-
-import grondag.xm.api.block.WorldToModelStateFunction;
-import grondag.xm.api.connect.state.CornerJoinState;
-import grondag.xm.api.connect.state.SimpleJoinState;
-import grondag.xm.api.connect.world.BlockNeighbors;
-import grondag.xm.api.connect.world.ModelStateFunction;
-import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.modelstate.SimpleModelState;
 
 public class SimpleModelStateImpl extends AbstractPrimitiveModelState<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> implements SimpleModelState.Mutable {

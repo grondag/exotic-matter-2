@@ -44,9 +44,12 @@ import grondag.xm.api.modelstate.ModelState;
 public interface BlockTest<T extends ModelState> {
     boolean apply(BlockTestContext<T> context);
     
-    /** True when blocks are same instance */
     @SuppressWarnings("rawtypes")
-    static BlockTest SAME_BLOCK = ctx -> {
-        return ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock();
-    };
+    static BlockTest SAME_BLOCK = ctx -> ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock();
+    
+    /** True when blocks are same instance */
+    @SuppressWarnings("unchecked")
+    static <T extends ModelState> BlockTest<T> sameBlock() {
+        return SAME_BLOCK;
+    }
 }

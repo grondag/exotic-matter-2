@@ -18,7 +18,6 @@ package grondag.xm.api.block;
 
 import javax.annotation.Nullable;
 
-import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.block.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
@@ -40,12 +39,6 @@ public interface XmBlockState {
      * Association is always 1:1.
      */
     BlockState blockState();
-
-    /**
-     * Block test that should be used for border/shape joins for this block. Used in
-     * model state refresh from world.
-     */
-    BlockTest<?> blockJoinTest();
 
     /**
      * Returns an instance of the default model state for this block. Because model

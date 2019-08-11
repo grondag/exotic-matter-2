@@ -19,7 +19,7 @@ package grondag.xm;
 import grondag.xm.collision.CollisionBoxDispatcher;
 import grondag.xm.dispatch.XmDispatcher;
 import grondag.xm.dispatch.XmVariantProvider;
-import grondag.xm.init.XmTextures;
+import grondag.xm.init.XmTexturesImpl;
 import grondag.xm.network.Packets;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
@@ -28,7 +28,7 @@ import net.fabricmc.fabric.api.client.render.InvalidateRenderStateCallback;
 public class XmClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        XmTextures.init();
+        XmTexturesImpl.init();
         ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
         InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
         Packets.initializeClient();

@@ -18,7 +18,6 @@ package grondag.xm.api.block;
 
 import java.util.function.Function;
 
-import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.block.XmBlockRegistryImpl;
 import net.minecraft.block.Block;
@@ -30,9 +29,8 @@ public class XmBlockRegistry {
     public static void register(
             Block block, 
             Function<BlockState, ModelState> defaultStateFunc, 
-            WorldToModelStateFunction worldStateFunc,
-            BlockTest<?> blockJoinTest) {
+            WorldToModelStateFunction worldStateFunc) {
         
-        XmBlockRegistryImpl.register(block, defaultStateFunc, worldStateFunc, blockJoinTest);
+        XmBlockRegistryImpl.register(block, defaultStateFunc, worldStateFunc);
     }
 }
