@@ -16,11 +16,11 @@
 
 package grondag.xm;
 
-import grondag.exotic_matter.network.Packets;
 import grondag.xm.collision.CollisionBoxDispatcher;
 import grondag.xm.dispatch.XmDispatcher;
 import grondag.xm.dispatch.XmVariantProvider;
 import grondag.xm.init.XmTextures;
+import grondag.xm.network.Packets;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.InvalidateRenderStateCallback;

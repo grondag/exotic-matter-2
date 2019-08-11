@@ -19,8 +19,8 @@ package grondag.xm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import grondag.exotic_matter.network.Packets;
-import grondag.exotic_matter.simulator.Simulator;
+import grondag.fermion.simulator.Simulator;
+import grondag.xm.network.Packets;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;

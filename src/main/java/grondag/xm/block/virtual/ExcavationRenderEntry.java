@@ -23,11 +23,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
-import grondag.exotic_matter.network.S2C_ExcavationRenderUpdate;
 import grondag.fermion.position.IntegerBox;
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
+import grondag.xm.network.S2C_ExcavationRenderUpdate;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;

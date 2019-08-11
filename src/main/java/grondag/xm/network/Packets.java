@@ -13,12 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.exotic_matter.simulator.persistence;
+package grondag.xm.network;
 
-/**
- * Tracks if the instance needs to be persisted. Used by persistence nodes and
- * some sub nodes.
- */
-public interface IDirtListener {
-    public void setDirty();
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+
+public class Packets {
+
+    public static void initializeCommon() {
+        ServerSidePacketRegistry.INSTANCE.register(S2C_ExcavationRenderUpdate.ID, S2C_ExcavationRenderUpdate::accept);
+        ServerSidePacketRegistry.INSTANCE.register(S2C_PacketExcavationRenderRefresh.ID, S2C_PacketExcavationRenderRefresh::accept);
+    }
+    
+    @Environment(EnvType.CLIENT)
+    public static void initializeClient() {
+    }
 }

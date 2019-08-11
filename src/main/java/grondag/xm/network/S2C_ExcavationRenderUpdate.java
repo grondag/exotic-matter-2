@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.exotic_matter.network;
+package grondag.xm.network;
 
 import grondag.fermion.position.IntegerBox;
 import grondag.xm.Xm;
