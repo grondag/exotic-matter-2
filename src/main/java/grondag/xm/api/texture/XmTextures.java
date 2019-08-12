@@ -27,6 +27,7 @@ import static grondag.xm.api.texture.TextureRotation.ROTATE_NONE;
 import static grondag.xm.api.texture.TextureRotation.ROTATE_RANDOM;
 import static grondag.xm.api.texture.TextureScale.LARGE;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
+import static grondag.xm.texture.TextureSetHelper.addBorderRandom;
 
 public class XmTextures {
     private XmTextures() {}
@@ -76,4 +77,5 @@ public class XmTextures {
             .rotation(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
             .groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_b");
 
+    public static final TextureSet BORDER_GRITTY_SINGLE_LINE = addBorderRandom("exotic-matter", "border_gritty_single_line", false, false);
 }

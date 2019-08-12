@@ -29,7 +29,7 @@ public class XmBlockRegistry {
     public static void register(
             Block block, 
             Function<BlockState, ModelState> defaultStateFunc, 
-            WorldToModelStateFunction worldStateFunc) {
+            WorldToModelStateFunction<?> worldStateFunc) {
         
         XmBlockRegistryImpl.register(block, defaultStateFunc, worldStateFunc);
     }

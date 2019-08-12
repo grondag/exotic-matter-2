@@ -126,8 +126,10 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
         if (stream.editorOrigin()) {
             do {
-                // omit polys that weren't textured by any painter
+                // omit layers that weren't textured by any painter
                 if (!editor.getTextureName(0).isEmpty()) {
+                    final int layerCount = editor.getTextureName(1).isEmpty() ? 1 : editor.getTextureName(2).isEmpty() ? 2 : 3;
+                    editor.setLayerCount(layerCount);
                     polyToMesh(editor, emitter);
                 }
             } while (stream.editorNext());

@@ -30,8 +30,8 @@ import net.minecraft.world.BlockView;
 public class XmBlockRegistryImpl {
     private XmBlockRegistryImpl() {
     }
-
-    public static void register(Block block, Function<BlockState, ModelState> defaultStateFunc, WorldToModelStateFunction worldStateFunc) {
+    
+    public static void register(Block block, Function<BlockState, ModelState> defaultStateFunc, WorldToModelStateFunction<?> worldStateFunc) {
 
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
@@ -45,17 +45,15 @@ public class XmBlockRegistryImpl {
     }
 
     public static class XmBlockStateImpl implements XmBlockState {
-        public final WorldToModelStateFunction worldStateFunc;
+        public final WorldToModelStateFunction<?> worldStateFunc;
         public final ModelState defaultModelState;
         public final BlockState blockState;
 
-        private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction worldStateFunc, BlockState blockState) {
-
+        private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction<?> worldStateFunc, BlockState blockState) {
             this.defaultModelState = defaultModelState;
             this.worldStateFunc = worldStateFunc;
             this.blockState = blockState;
         }
-
 
         @SuppressWarnings("unchecked")
         @Override

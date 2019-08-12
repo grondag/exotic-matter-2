@@ -526,6 +526,11 @@ public abstract class AbstractPrimitiveModelState
     }
     
     @Override
+    public final W paint(int surfaceIndex, XmPaint paint) {
+      return paint(surfaceIndex, paint.index());
+    }
+    
+    @Override
     public final W paint(XmSurface surface, XmPaint paint) {
       return paint(surface.ordinal(), paint.index());
     }

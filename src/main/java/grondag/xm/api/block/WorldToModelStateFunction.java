@@ -16,6 +16,9 @@
 
 package grondag.xm.api.block;
 
+import javax.annotation.Nullable;
+
+import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -24,12 +27,13 @@ import net.minecraft.world.BlockView;
  * Produces model state instance from world state, refreshing if necessary.
  */
 @FunctionalInterface
-public interface WorldToModelStateFunction {
-    void accept(ModelState.Mutable modelState, XmBlockState xmBlockState, BlockView world, BlockPos pos, boolean refreshFromWorld);
+@SuppressWarnings("unchecked")
+public interface WorldToModelStateFunction<T extends ModelState.Mutable> {
+    void accept(T modelState, XmBlockState xmBlockState, BlockView world, BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
     
-    default ModelState.Mutable apply(XmBlockState xmBlockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
-        final ModelState.Mutable result = xmBlockState.defaultModelState().mutableCopy();
-        accept(result, xmBlockState, world, pos, refreshFromWorld);
+    default T apply(XmBlockState xmBlockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        final T result = (T) xmBlockState.defaultModelState().mutableCopy();
+        accept(result, xmBlockState, world, pos, null, refreshFromWorld);
         return result;
     }
 }

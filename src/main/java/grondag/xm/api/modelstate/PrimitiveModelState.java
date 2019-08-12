@@ -168,6 +168,8 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
 
         W paint(int surfaceIndex, int paintIndex);
 
+        W paint(int surfaceIndex, XmPaint paint);
+        
         W paint(XmSurface surface, XmPaint paint);
 
         W paint(XmSurface surface, int paintIndex);
