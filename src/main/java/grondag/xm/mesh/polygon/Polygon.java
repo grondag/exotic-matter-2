@@ -19,8 +19,8 @@ package grondag.xm.mesh.polygon;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.QuadHelper;
-import grondag.xm.mesh.vertex.IVec3f;
-import grondag.xm.mesh.vertex.IVertexCollection;
+import grondag.xm.mesh.vertex.Vertex3f;
+import grondag.xm.mesh.vertex.VertexCollection;
 import grondag.xm.mesh.vertex.Vec3f;
 import grondag.xm.painting.SurfaceTopology;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
@@ -30,27 +30,26 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
-public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelinedQuad
-{
-    public Vec3f getFaceNormal();
+public interface Polygon extends VertexCollection, StreamPolygon {
+    public Vec3f faceNormal();
 
-    public default float getFaceNormalX() {
-        return getFaceNormal().x();
+    public default float faceNormalX() {
+        return faceNormal().x();
     }
 
-    public default float getFaceNormalY() {
-        return getFaceNormal().y();
+    public default float faceNormalY() {
+        return faceNormal().y();
     }
 
-    public default float getFaceNormalZ() {
-        return getFaceNormal().z();
+    public default float faceNormalZ() {
+        return faceNormal().z();
     }
 
-    public default Box getAABB() {
-        IVec3f p0 = getPos(0);
-        IVec3f p1 = getPos(1);
-        IVec3f p2 = getPos(2);
-        IVec3f p3 = getPos(3);
+    public default Box bounds() {
+        Vertex3f p0 = getPos(0);
+        Vertex3f p1 = getPos(1);
+        Vertex3f p2 = getPos(2);
+        Vertex3f p3 = getPos(3);
 
         double minX = Math.min(Math.min(p0.x(), p1.x()), Math.min(p2.x(), p3.x()));
         double minY = Math.min(Math.min(p0.y(), p1.y()), Math.min(p2.y(), p3.y()));
@@ -69,7 +68,7 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
      * Will return {@link #VERTEX_NOT_FOUND} (-1) if vertex is not found in this
      * polygon.
      */
-    public default int indexForVertex(Vec3f v) {
+    public default int indexOf(Vec3f v) {
         final int limit = this.vertexCount();
         for (int i = 0; i < limit; i++) {
             if (v.equals(this.getPos(i)))
@@ -84,7 +83,7 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
     public default boolean isOrthogonalTo(Direction face) {
         Vec3i dv = face.getVector();
-        float dot = this.getFaceNormal().dotProduct(dv.getX(), dv.getY(), dv.getZ());
+        float dot = this.faceNormal().dotProduct(dv.getX(), dv.getY(), dv.getZ());
         return Math.abs(dot) <= QuadHelper.EPSILON;
     }
 
@@ -92,16 +91,16 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
         if (this.vertexCount() == 3)
             return true;
 
-        IVec3f fn = this.getFaceNormal();
+        Vertex3f fn = this.faceNormal();
 
         float faceX = fn.x();
         float faceY = fn.y();
         float faceZ = fn.z();
 
-        IVec3f first = this.getPos(0);
+        Vertex3f first = this.getPos(0);
 
         for (int i = 3; i < this.vertexCount(); i++) {
-            IVec3f v = this.getPos(i);
+            Vertex3f v = this.getPos(i);
 
             float dx = v.x() - first.x();
             float dy = v.y() - first.y();
@@ -126,10 +125,10 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
 
     public default Vec3f computeFaceNormal() {
         try {
-            final IVec3f v0 = getPos(0);
-            final IVec3f v1 = getPos(1);
-            final IVec3f v2 = getPos(2);
-            final IVec3f v3 = getPos(3);
+            final Vertex3f v0 = getPos(0);
+            final Vertex3f v1 = getPos(1);
+            final Vertex3f v2 = getPos(2);
+            final Vertex3f v3 = getPos(3);
 
             final float x0 = v2.x() - v0.x();
             final float y0 = v2.y() - v0.y();
@@ -161,13 +160,13 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
     // iSurfer.org makes no warranty for this code, and cannot be held
     // liable for any real or imagined damage resulting from its use.
     // Users of this code must verify correctness for their application.
-    public default float getArea() {
+    public default float area() {
         float area = 0;
         float an, ax, ay, az; // abs value of normal and its coords
         int coord; // coord to ignore: 1=x, 2=y, 3=z
         int i, j, k; // loop indices
         final int n = this.vertexCount();
-        Vec3f N = this.getFaceNormal();
+        Vec3f N = this.faceNormal();
 
         if (n < 3)
             return 0; // a degenerate polygon
@@ -232,13 +231,13 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
     /**
      * Returns computed face normal if no explicit normal assigned.
      */
-    public Vec3f getVertexNormal(int vertexIndex);
+    public Vec3f vertexNormal(int vertexIndex);
 
     /**
      * Face to use for shading testing. Based on which way face points. Never null
      */
     public default Direction lightFace() {
-        return QuadHelper.computeFaceForNormal(this.getFaceNormal());
+        return QuadHelper.computeFaceForNormal(this.faceNormal());
     }
 
     Direction nominalFace();
@@ -262,13 +261,13 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
         return null;
     }
 
-    float getMaxU(int layerIndex);
+    float maxU(int layerIndex);
 
-    float getMaxV(int layerIndex);
+    float maxV(int layerIndex);
 
-    float getMinU(int layerIndex);
+    float minU(int layerIndex);
 
-    float getMinV(int layerIndex);
+    float minV(int layerIndex);
 
     /**
      * The maximum wrapping uv distance for either dimension on this surface.
@@ -295,9 +294,9 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
      */
     float uvWrapDistance();
 
-    int layerCount();
+    int spriteDepth();
 
-    String getTextureName(int layerIndex);
+    String spriteName(int layerIndex);
 
     boolean shouldContractUVs(int layerIndex);
 
@@ -313,21 +312,21 @@ public interface IPolygon extends IVertexCollection, IStreamPolygon// , IPipelin
      */
     int getVertexGlow(int vertexIndex);
 
-    int getTextureSalt();
+    int textureSalt();
 
-    boolean isLockUV(int layerIndex);
+    boolean lockUV(int layerIndex);
 
     public default boolean hasRenderLayer(BlockRenderLayer layer) {
-        if (getRenderLayer(0) == layer)
+        if (blendMode(0) == layer)
             return true;
 
-        final int count = this.layerCount();
-        return (count > 1 && getRenderLayer(1) == layer) || (count == 3 && getRenderLayer(2) == layer);
+        final int count = this.spriteDepth();
+        return (count > 1 && blendMode(1) == layer) || (count == 3 && blendMode(2) == layer);
     }
 
-    BlockRenderLayer getRenderLayer(int layerIndex);
+    BlockRenderLayer blendMode(int layerIndex);
 
-    boolean isEmissive(int layerIndex);
+    boolean emissive(int layerIndex);
 
     // Use materials instead
 //    int getPipelineIndex();

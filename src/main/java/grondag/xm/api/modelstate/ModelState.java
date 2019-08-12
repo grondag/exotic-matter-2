@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -66,7 +66,7 @@ public interface ModelState {
      * any of the polys received.
      */
     @Environment(EnvType.CLIENT)
-    void produceQuads(Consumer<IPolygon> target);
+    void produceQuads(Consumer<Polygon> target);
 
     @Environment(EnvType.CLIENT)
     List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);

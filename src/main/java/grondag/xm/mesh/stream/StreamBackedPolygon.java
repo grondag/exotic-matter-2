@@ -20,13 +20,13 @@ import java.util.function.IntUnaryOperator;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vec3f;
 import grondag.xm.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
-public class StreamBackedPolygon implements IPolygon {
+public class StreamBackedPolygon implements Polygon {
     protected static final int NO_ADDRESS = -1;
 
     protected static final IntUnaryOperator VERTEX_FUNC_TRIANGLE = (v) -> v == 3 ? 0 : v;
@@ -157,7 +157,7 @@ public class StreamBackedPolygon implements IPolygon {
         return polyEncoder.getTag(stream, baseAddress);
     }
 
-    public IPolygon tag(int tag) {
+    public Polygon tag(int tag) {
         polyEncoder.setTag(stream, baseAddress, tag);
         return this;
     }
@@ -202,22 +202,22 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
-    public final Vec3f getFaceNormal() {
+    public final Vec3f faceNormal() {
         return checkFaceNormal() ? Vec3f.forFace(nominalFace()) : polyEncoder.getFaceNormal(stream, baseAddress);
     }
 
     @Override
-    public final float getFaceNormalX() {
+    public final float faceNormalX() {
         return checkFaceNormal() ? Vec3f.forFace(nominalFace()).x() : polyEncoder.getFaceNormalX(stream, baseAddress);
     }
 
     @Override
-    public final float getFaceNormalY() {
+    public final float faceNormalY() {
         return checkFaceNormal() ? Vec3f.forFace(nominalFace()).y() : polyEncoder.getFaceNormalY(stream, baseAddress);
     }
 
     @Override
-    public final float getFaceNormalZ() {
+    public final float faceNormalZ() {
         return checkFaceNormal() ? Vec3f.forFace(nominalFace()).z() : polyEncoder.getFaceNormalZ(stream, baseAddress);
     }
 
@@ -233,10 +233,10 @@ public class StreamBackedPolygon implements IPolygon {
 
     @Override
     @Deprecated
-    public final Vec3f getVertexNormal(int vertexIndex) {
+    public final Vec3f vertexNormal(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
                 ? vertexEncoder.getVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
-                : getFaceNormal();
+                : faceNormal();
     }
 
     @Override
@@ -248,40 +248,40 @@ public class StreamBackedPolygon implements IPolygon {
     public final float normalX(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
                 ? vertexEncoder.getVertexNormalX(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
-                : getFaceNormalX();
+                : faceNormalX();
     }
 
     @Override
     public final float normalY(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
                 ? vertexEncoder.getVertexNormalY(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
-                : getFaceNormalY();
+                : faceNormalY();
     }
 
     @Override
     public final float normalZ(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
                 ? vertexEncoder.getVertexNormalZ(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
-                : getFaceNormalZ();
+                : faceNormalZ();
     }
 
     @Override
-    public final float getMaxU(int layerIndex) {
+    public final float maxU(int layerIndex) {
         return polyEncoder.getMaxU(stream, baseAddress, layerIndex);
     }
 
     @Override
-    public final float getMaxV(int layerIndex) {
+    public final float maxV(int layerIndex) {
         return polyEncoder.getMaxV(stream, baseAddress, layerIndex);
     }
 
     @Override
-    public final float getMinU(int layerIndex) {
+    public final float minU(int layerIndex) {
         return polyEncoder.getMinU(stream, baseAddress, layerIndex);
     }
 
     @Override
-    public final float getMinV(int layerIndex) {
+    public final float minV(int layerIndex) {
         return polyEncoder.getMinV(stream, baseAddress, layerIndex);
     }
 
@@ -291,12 +291,12 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
-    public final int layerCount() {
+    public final int spriteDepth() {
         return PolyStreamFormat.getLayerCount(format());
     }
 
     @Override
-    public final String getTextureName(int layerIndex) {
+    public final String spriteName(int layerIndex) {
         return polyEncoder.getTextureName(stream, baseAddress, layerIndex);
     }
 
@@ -347,22 +347,22 @@ public class StreamBackedPolygon implements IPolygon {
     }
 
     @Override
-    public final int getTextureSalt() {
+    public final int textureSalt() {
         return StaticEncoder.getTextureSalt(stream, baseAddress);
     }
 
     @Override
-    public final boolean isLockUV(int layerIndex) {
+    public final boolean lockUV(int layerIndex) {
         return StaticEncoder.isLockUV(stream, baseAddress, layerIndex);
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer(int layerIndex) {
+    public BlockRenderLayer blendMode(int layerIndex) {
         return StaticEncoder.getRenderLayer(stream, baseAddress, layerIndex);
     }
 
     @Override
-    public boolean isEmissive(int layerIndex) {
+    public boolean emissive(int layerIndex) {
         return StaticEncoder.isEmissive(stream, baseAddress, layerIndex);
     }
 

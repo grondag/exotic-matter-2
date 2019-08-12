@@ -22,10 +22,10 @@ import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.CsgPolyStream;
-import grondag.xm.mesh.stream.IPolyStream;
-import grondag.xm.mesh.stream.IWritablePolyStream;
+import grondag.xm.mesh.stream.PolyStream;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.CSG;
@@ -43,7 +43,7 @@ public class CSGTestPrimitive extends AbstractBasePrimitive {
     public static final XmSurfaceImpl SURFACE_B = SURFACES.get(1);
 
     /** never changes so may as well save it */
-    private final IPolyStream cachedQuads;
+    private final PolyStream cachedQuads;
 
     public CSGTestPrimitive(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
@@ -56,11 +56,11 @@ public class CSGTestPrimitive extends AbstractBasePrimitive {
     }
 
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         cachedQuads.forEach(target);
     }
 
-    private IPolyStream getTestQuads() {
+    private PolyStream getTestQuads() {
         // union opposite overlapping coplanar faces
 //      result = new CSGShape(QuadFactory.makeBox(new BoundingBox(0, .4, .5, 1, 1, 1), template));
 //      delta = new CSGShape(QuadFactory.makeBox(new BoundingBox(.3, 0, 0, .7, .6, .5), template));
@@ -80,18 +80,18 @@ public class CSGTestPrimitive extends AbstractBasePrimitive {
 //    result = new CSGShape(QuadFactory.makeIcosahedron(new Vec3d(.5, .5, .5), 0.5, template));
 
         CsgPolyStream quadsA = PolyStreams.claimCSG();
-        quadsA.writer().setLockUV(0, true);
+        quadsA.writer().lockUV(0, true);
         quadsA.writer().surface(SURFACE_A);
         quadsA.saveDefaults();
         MeshHelper.makePaintableBox(new Box(0, 0.4, 0.4, 1.0, 0.6, 0.6), quadsA);
 
         CsgPolyStream quadsB = PolyStreams.claimCSG();
-        quadsB.writer().setLockUV(0, true);
+        quadsB.writer().lockUV(0, true);
         quadsB.writer().surface(SURFACE_B);
         quadsB.saveDefaults();
         MeshHelper.makePaintableBox(new Box(0.2, 0, 0.4, 0.6, 1.0, 0.8), quadsB);
 
-        IWritablePolyStream output = PolyStreams.claimWritable();
+        WritablePolyStream output = PolyStreams.claimWritable();
         CSG.union(quadsA, quadsB, output);
 
         quadsA.release();

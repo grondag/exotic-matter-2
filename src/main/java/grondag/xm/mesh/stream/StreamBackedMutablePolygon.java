@@ -18,85 +18,85 @@ package grondag.xm.mesh.stream;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.surface.XmSurface;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vec3f;
 import grondag.xm.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
-public class StreamBackedMutablePolygon extends StreamBackedPolygon implements IMutablePolygon {
+public class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutablePolygon {
     @Override
-    public final IMutablePolygon setVertexLayer(int layerIndex, int vertexIndex, float u, float v, int color, int glow) {
+    public final MutablePolygon spriteVertex(int layerIndex, int vertexIndex, float u, float v, int color, int glow) {
         vertexIndex = vertexIndexer.applyAsInt(vertexIndex);
         spriteColor(vertexIndex, layerIndex, color);
         sprite(vertexIndex, layerIndex, u, v);
-        setVertexGlow(vertexIndex, glow);
+        vertexGlow(vertexIndex, glow);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setMaxU(int layerIndex, float maxU) {
+    public final MutablePolygon maxU(int layerIndex, float maxU) {
         polyEncoder.setMaxU(stream, baseAddress, layerIndex, maxU);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setMaxV(int layerIndex, float maxV) {
+    public final MutablePolygon maxV(int layerIndex, float maxV) {
         polyEncoder.setMaxV(stream, baseAddress, layerIndex, maxV);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setMinU(int layerIndex, float minU) {
+    public final MutablePolygon minU(int layerIndex, float minU) {
         polyEncoder.setMinU(stream, baseAddress, layerIndex, minU);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setMinV(int layerIndex, float minV) {
+    public final MutablePolygon minV(int layerIndex, float minV) {
         polyEncoder.setMinV(stream, baseAddress, layerIndex, minV);
         return this;
     }
 
     @Override
-    public IMutablePolygon uvWrapDistance(float uvWrapDistance) {
+    public MutablePolygon uvWrapDistance(float uvWrapDistance) {
         StaticEncoder.uvWrapDistance(stream, baseAddress, uvWrapDistance);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setTextureSalt(int salt) {
+    public final MutablePolygon textureSalt(int salt) {
         StaticEncoder.setTextureSalt(stream, baseAddress, salt);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setLockUV(int layerIndex, boolean lockUV) {
+    public final MutablePolygon lockUV(int layerIndex, boolean lockUV) {
         StaticEncoder.setLockUV(stream, baseAddress, layerIndex, lockUV);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setTextureName(int layerIndex, String textureName) {
+    public final MutablePolygon sprite(int layerIndex, String textureName) {
         polyEncoder.setTextureName(stream, baseAddress, layerIndex, textureName);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setRotation(int layerIndex, Rotation rotation) {
+    public final MutablePolygon rotation(int layerIndex, Rotation rotation) {
         StaticEncoder.setRotation(stream, baseAddress, layerIndex, rotation);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setShouldContractUVs(int layerIndex, boolean contractUVs) {
+    public final MutablePolygon contractUV(int layerIndex, boolean contractUVs) {
         StaticEncoder.setContractUVs(stream, baseAddress, layerIndex, contractUVs);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setRenderLayer(int layerIndex, BlockRenderLayer layer) {
+    public final MutablePolygon blendMode(int layerIndex, BlockRenderLayer layer) {
         StaticEncoder.setRenderLayer(stream, baseAddress, layerIndex, layer);
         return this;
     }
@@ -105,7 +105,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
      * Throws exception if not a mutable format.
      */
     @Override
-    public final IMutablePolygon setLayerCount(int layerCount) {
+    public final MutablePolygon spriteDepth(int layerCount) {
         final int format = format();
         if (!PolyStreamFormat.isMutable(format))
             throw new UnsupportedOperationException("Cannot change layer count on immutable polygon");
@@ -114,35 +114,35 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     }
 
     @Override
-    public final IMutablePolygon setEmissive(int layerIndex, boolean emissive) {
+    public final MutablePolygon emissive(int layerIndex, boolean emissive) {
         StaticEncoder.setEmissive(stream, baseAddress, layerIndex, emissive);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setVertex(int vertexIndex, float x, float y, float z, float u, float v, int color, int glow) {
+    public final MutablePolygon vertex(int vertexIndex, float x, float y, float z, float u, float v, int color, int glow) {
         vertexIndex = vertexIndexer.applyAsInt(vertexIndex);
         pos(vertexIndex, x, y, z);
         sprite(vertexIndex, 0, u, v);
         spriteColor(vertexIndex, 0, color);
-        setVertexGlow(vertexIndex, glow);
+        vertexGlow(vertexIndex, glow);
         return this;
     }
 
     @Override
-    public final IMutablePolygon pos(int vertexIndex, float x, float y, float z) {
+    public final MutablePolygon pos(int vertexIndex, float x, float y, float z) {
         vertexEncoder.setVertexPos(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), x, y, z);
         return this;
     }
 
     @Override
-    public final IMutablePolygon pos(int vertexIndex, Vec3f pos) {
+    public final MutablePolygon pos(int vertexIndex, Vec3f pos) {
         vertexEncoder.setVertexPos(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), pos.x(), pos.y(), pos.z());
         return this;
     }
 
     @Override
-    public final IMutablePolygon spriteColor(int vertexIndex, int layerIndex, int color) {
+    public final MutablePolygon spriteColor(int vertexIndex, int layerIndex, int color) {
         if (vertexEncoder.hasColor())
             vertexEncoder.setVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), color);
         else
@@ -151,31 +151,31 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     }
 
     @Override
-    public final IMutablePolygon spriteU(int vertexIndex, int layerIndex, float u) {
+    public final MutablePolygon spriteU(int vertexIndex, int layerIndex, float u) {
         vertexEncoder.setVertexU(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), u);
         return this;
     }
 
     @Override
-    public final IMutablePolygon spriteV(int vertexIndex, int layerIndex, float v) {
+    public final MutablePolygon spriteV(int vertexIndex, int layerIndex, float v) {
         vertexEncoder.setVertexV(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), v);
         return this;
     }
 
     @Override
-    public final IMutablePolygon sprite(int vertexIndex, int layerIndex, float u, float v) {
+    public final MutablePolygon sprite(int vertexIndex, int layerIndex, float u, float v) {
         vertexEncoder.setVertexUV(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), u, v);
         return this;
     }
 
     @Override
-    public final IMutablePolygon setVertexGlow(int vertexIndex, int glow) {
+    public final MutablePolygon vertexGlow(int vertexIndex, int glow) {
         glowEncoder.setGlow(stream, glowAddress, vertexIndexer.applyAsInt(vertexIndex), glow);
         return this;
     }
 
     @Override
-    public final IMutablePolygon normal(int vertexIndex, Vec3f normal) {
+    public final MutablePolygon normal(int vertexIndex, Vec3f normal) {
         if (vertexEncoder.hasNormals()) {
             if (normal == null)
                 vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), Float.NaN, Float.NaN, Float.NaN);
@@ -186,7 +186,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     }
 
     @Override
-    public final IMutablePolygon normal(int vertexIndex, float x, float y, float z) {
+    public final MutablePolygon normal(int vertexIndex, float x, float y, float z) {
         if (vertexEncoder.hasNormals())
             vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), x, y, z);
         return this;
@@ -200,7 +200,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
 //    }
 
     @Override
-    public final IMutablePolygon clearFaceNormal() {
+    public final MutablePolygon clearFaceNormal() {
         int normalFormat = PolyStreamFormat.getFaceNormalFormat(format());
 
         assert normalFormat == PolyStreamFormat.FACE_NORMAL_FORMAT_COMPUTED : "Face normal clear should only happen for full-precision normals";
@@ -210,23 +210,23 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     }
 
     @Override
-    public final IMutablePolygon setNominalFace(Direction face) {
+    public final MutablePolygon nominalFace(Direction face) {
         setFormat(PolyStreamFormat.setNominalFace(format(), face));
         return this;
     }
 
-    public final IMutablePolygon surface(XmSurfaceImpl surface) {
+    public final MutablePolygon surface(XmSurfaceImpl surface) {
         StaticEncoder.surface(stream, baseAddress, surface);
         return this;
     }
 
     @Override
-    public IMutablePolygon surface(XmSurface surface) {
+    public MutablePolygon surface(XmSurface surface) {
         return surface((XmSurfaceImpl) surface);
     }
 
     @Override
-    public final IMutablePolygon copyVertexFrom(int targetIndex, IPolygon source, int sourceIndex) {
+    public final MutablePolygon copyVertexFrom(int targetIndex, Polygon source, int sourceIndex) {
         if (source.hasNormal(sourceIndex)) {
             assert vertexEncoder.hasNormals();
             normal(targetIndex, source.normalX(sourceIndex), source.normalY(sourceIndex), source.normalZ(sourceIndex));
@@ -236,12 +236,12 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
         pos(targetIndex, source.x(sourceIndex), source.y(sourceIndex), source.z(sourceIndex));
 
         if (glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_PER_VERTEX)
-            setVertexGlow(targetIndex, source.getVertexGlow(sourceIndex));
+            vertexGlow(targetIndex, source.getVertexGlow(sourceIndex));
         else if (targetIndex == 0 && glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_SAME)
-            setVertexGlow(0, source.getVertexGlow(sourceIndex));
+            vertexGlow(0, source.getVertexGlow(sourceIndex));
 
-        final int layerCount = source.layerCount();
-        assert layerCount <= layerCount();
+        final int layerCount = source.spriteDepth();
+        assert layerCount <= spriteDepth();
 
         // do for all vertices even if all the same - slightly wasteful but fewer logic
         // paths
@@ -265,34 +265,34 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
     }
 
     @Override
-    public final void copyFrom(IPolygon polyIn, boolean includeVertices) {
+    public final void copyFrom(Polygon polyIn, boolean includeVertices) {
         // PERF: make this faster for other stream-based polys
-        setNominalFace(polyIn.nominalFace());
+        nominalFace(polyIn.nominalFace());
 
         final int faceNormalFormat = PolyStreamFormat.getFaceNormalFormat(format());
         if (faceNormalFormat == PolyStreamFormat.FACE_NORMAL_FORMAT_COMPUTED)
             clearFaceNormal();
         else if (faceNormalFormat == PolyStreamFormat.FACE_NORMAL_FORMAT_QUANTIZED)
-            polyEncoder.setFaceNormal(stream, faceNormalFormat, polyIn.getFaceNormal());
+            polyEncoder.setFaceNormal(stream, faceNormalFormat, polyIn.faceNormal());
 
-        final int layerCount = polyIn.layerCount();
-        assert layerCount == layerCount();
+        final int layerCount = polyIn.spriteDepth();
+        assert layerCount == spriteDepth();
 
-        setTextureSalt(polyIn.getTextureSalt());
+        textureSalt(polyIn.textureSalt());
         surface(polyIn.surface());
         uvWrapDistance(polyIn.uvWrapDistance());
 
         for (int l = 0; l < layerCount; l++) {
-            setMaxU(l, polyIn.getMaxU(l));
-            setMaxV(l, polyIn.getMaxV(l));
-            setMinU(l, polyIn.getMinU(l));
-            setMinV(l, polyIn.getMinV(l));
-            setEmissive(l, polyIn.isEmissive(l));
-            setRenderLayer(l, polyIn.getRenderLayer(l));
-            setLockUV(l, polyIn.isLockUV(l));
-            setShouldContractUVs(l, polyIn.shouldContractUVs(l));
-            setRotation(l, polyIn.getRotation(l));
-            setTextureName(l, polyIn.getTextureName(l));
+            maxU(l, polyIn.maxU(l));
+            maxV(l, polyIn.maxV(l));
+            minU(l, polyIn.minU(l));
+            minV(l, polyIn.minV(l));
+            emissive(l, polyIn.emissive(l));
+            blendMode(l, polyIn.blendMode(l));
+            lockUV(l, polyIn.lockUV(l));
+            contractUV(l, polyIn.shouldContractUVs(l));
+            rotation(l, polyIn.getRotation(l));
+            sprite(l, polyIn.spriteName(l));
         }
 
         if (includeVertices) {
@@ -310,26 +310,26 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements I
      * Specialized version for CSG operations. Never includes vertex info and does
      * include marks and tags.
      */
-    public void copyFromCSG(IPolygon polyIn) {
+    public void copyFromCSG(Polygon polyIn) {
         copyFrom(polyIn, false);
         tag(polyIn.tag());
         setMark(polyIn.isMarked());
     }
 
     public void loadStandardDefaults() {
-        setMaxU(0, 1f);
-        setMaxU(1, 1f);
-        setMaxU(2, 1f);
+        maxU(0, 1f);
+        maxU(1, 1f);
+        maxU(2, 1f);
 
-        setMaxV(0, 1f);
-        setMaxV(1, 1f);
-        setMaxV(2, 1f);
+        maxV(0, 1f);
+        maxV(1, 1f);
+        maxV(2, 1f);
 
         clearFaceNormal();
     }
 
     @Override
-    public IMutablePolygon tag(int tag) {
+    public MutablePolygon tag(int tag) {
         polyEncoder.setTag(stream, baseAddress, tag);
         return this;
     }

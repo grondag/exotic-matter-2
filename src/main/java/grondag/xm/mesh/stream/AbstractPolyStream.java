@@ -21,10 +21,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import grondag.fermion.intstream.IntStream;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.polygon.IStreamReaderPolygon;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.polygon.StreamReaderPolygon;
 
-public abstract class AbstractPolyStream implements IPolyStream {
+public abstract class AbstractPolyStream implements PolyStream {
     protected IntStream stream;
 
     /**
@@ -67,7 +67,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
     }
 
     @Override
-    public final IPolygon reader() {
+    public final Polygon reader() {
         return reader;
     }
 
@@ -126,7 +126,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
     }
 
     @Override
-    public IPolygon reader(int address) {
+    public Polygon reader(int address) {
         moveTo(address);
         return reader;
     }
@@ -177,7 +177,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
     }
 
     @Override
-    public IPolygon polyA() {
+    public Polygon polyA() {
         return polyA;
     }
 
@@ -188,13 +188,13 @@ public abstract class AbstractPolyStream implements IPolyStream {
     }
 
     @Override
-    public IPolygon polyA(int address) {
+    public Polygon polyA(int address) {
         movePolyA(address);
         return polyA;
     }
 
     @Override
-    public IPolygon polyB() {
+    public Polygon polyB() {
         return polyB;
     }
 
@@ -205,7 +205,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
     }
 
     @Override
-    public IPolygon polyB(int address) {
+    public Polygon polyB(int address) {
         movePolyB(address);
         return polyB;
     }
@@ -224,7 +224,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
     @Override
     public int getTag() {
-        return hasValue() ? reader.tag() : IPolygon.NO_LINK_OR_TAG;
+        return hasValue() ? reader.tag() : Polygon.NO_LINK_OR_TAG;
     }
 
     @Override
@@ -279,12 +279,12 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
     @Override
     public boolean hasLink() {
-        return isValidAddress(reader.baseAddress) && reader.getLink() != IPolygon.NO_LINK_OR_TAG;
+        return isValidAddress(reader.baseAddress) && reader.getLink() != Polygon.NO_LINK_OR_TAG;
     }
 
     @Override
     public void clearLink() {
-        reader.setLink(IPolygon.NO_LINK_OR_TAG);
+        reader.setLink(Polygon.NO_LINK_OR_TAG);
     }
 
     protected boolean moveReaderToNextLink(StreamBackedPolygon targetReader) {
@@ -293,7 +293,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
             return false;
 
         int nextAddress = targetReader.getLink();
-        if (nextAddress == IPolygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
+        if (nextAddress == Polygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
             return false;
 
         targetReader.moveTo(nextAddress);
@@ -301,7 +301,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
 
         while (currentAddress < writeAddress && targetReader.isDeleted()) {
             nextAddress = targetReader.getLink();
-            if (nextAddress == IPolygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
+            if (nextAddress == Polygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
                 return false;
 
             targetReader.moveTo(nextAddress);
@@ -340,7 +340,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
         return internal.isMarked();
     }
 
-    protected void appendCopy(IPolygon polyIn, int withFormat) {
+    protected void appendCopy(Polygon polyIn, int withFormat) {
         final boolean needReaderLoad = reader.baseAddress == writeAddress;
         final int newFormat = PolyStreamFormat.minimalFixedFormat(polyIn, withFormat);
         stream.set(writeAddress, newFormat);
@@ -352,7 +352,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
             reader.loadFormat();
     }
 
-    private static class ThreadSafeReader extends StreamBackedPolygon implements IStreamReaderPolygon {
+    private static class ThreadSafeReader extends StreamBackedPolygon implements StreamReaderPolygon {
         AbstractPolyStream polyStream;
 
         @Override
@@ -402,7 +402,7 @@ public abstract class AbstractPolyStream implements IPolyStream {
     /**
      * Should only be exposed for streams that are immutable.
      */
-    protected IStreamReaderPolygon claimThreadSafeReaderImpl() {
+    protected StreamReaderPolygon claimThreadSafeReaderImpl() {
         readerCount.incrementAndGet();
 
         if (this.didRelease.get()) {

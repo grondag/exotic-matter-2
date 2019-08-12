@@ -24,8 +24,8 @@ import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.stream.MutablePolyStream;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -55,7 +55,7 @@ public abstract class QuadPainter {
          * <p>
          * 
          */
-        void paintQuads(IMutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
+        void paintQuads(MutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
     }
 
     /**
@@ -63,9 +63,9 @@ public abstract class QuadPainter {
      * then adds to the output list.
      */
     // UGLY: change arg order to match others
-    protected static void commonPostPaint(IMutablePolygon editor, int textureIndex, PrimitiveModelState modelState, XmSurface surface, XmPaint paint) {
-        editor.setRenderLayer(textureIndex, paint.blendMode(textureIndex));
-        editor.setEmissive(textureIndex, paint.emissive(textureIndex));
+    protected static void commonPostPaint(MutablePolygon editor, int textureIndex, PrimitiveModelState modelState, XmSurface surface, XmPaint paint) {
+        editor.blendMode(textureIndex, paint.blendMode(textureIndex));
+        editor.emissive(textureIndex, paint.emissive(textureIndex));
 
         paint.vertexProcessor(textureIndex).process(editor, textureIndex, modelState, surface, paint);
     }

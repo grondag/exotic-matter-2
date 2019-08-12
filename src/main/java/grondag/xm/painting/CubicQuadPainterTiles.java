@@ -22,17 +22,17 @@ import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.stream.MutablePolyStream;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterTiles extends QuadPainter {
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(IMutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        IMutablePolygon editor = stream.editor();
+    public static void paintQuads(MutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+        MutablePolygon editor = stream.editor();
         do {
-            editor.setLockUV(textureIndex, true);
+            editor.lockUV(textureIndex, true);
             editor.assignLockedUVCoordinates(textureIndex);
 
             final Direction nominalFace = editor.nominalFace();
@@ -41,16 +41,16 @@ public abstract class CubicQuadPainterTiles extends QuadPainter {
             Rotation rotation = textureRotationForFace(nominalFace, tex, modelState);
             int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
 
-            final int salt = editor.getTextureSalt();
+            final int salt = editor.textureSalt();
             if (salt != 0) {
                 int saltHash = HashCommon.mix(salt);
                 rotation = Useful.offsetEnumValue(rotation, saltHash & 3);
                 textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();
             }
 
-            editor.setRotation(textureIndex, rotation);
-            editor.setTextureName(textureIndex, tex.textureName(textureVersion));
-            editor.setShouldContractUVs(textureIndex, true);
+            editor.rotation(textureIndex, rotation);
+            editor.sprite(textureIndex, tex.textureName(textureVersion));
+            editor.contractUV(textureIndex, true);
 
             commonPostPaint(editor, textureIndex, modelState, surface, paint);
 

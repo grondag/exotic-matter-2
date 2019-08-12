@@ -18,7 +18,7 @@ package grondag.xm.mesh.vertex;
 
 import grondag.fermion.color.ColorHelper;
 
-public interface IMutableVertex extends IVec3f {
+public interface MutableVertex extends Vertex3f {
     /**
      * WARNING: Will always return an immutable reference to ensure safety. Do not
      * use on mutable instances to avoid memory allocation overhead.
@@ -59,7 +59,7 @@ public interface IMutableVertex extends IVec3f {
      * must have the same layer count. Neither input instance will be modified.<br>
      * Does not retain a reference to the output or either input.<br>
      */
-    public default void interpolate(IMutableVertex other, float otherWeight, IMutableVertex output) {
+    public default void interpolate(MutableVertex other, float otherWeight, MutableVertex output) {
         final int layerCount = getLayerCount();
         assert layerCount == other.getLayerCount();
         output.setLayerCount(layerCount);
@@ -119,7 +119,7 @@ public interface IMutableVertex extends IVec3f {
 
     public void setLayerCount(int layerCount);
 
-    public default void copyFrom(IMutableVertex source) {
+    public default void copyFrom(MutableVertex source) {
         if (source.hasNormal())
             setNormal(source.normalX(), source.normalY(), source.normalZ());
         else

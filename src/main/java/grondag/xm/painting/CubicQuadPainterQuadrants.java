@@ -23,8 +23,8 @@ import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.stream.MutablePolyStream;
 import net.minecraft.util.math.Direction;
 
 /**
@@ -55,11 +55,11 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(IMutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        IMutablePolygon editor = stream.editor();
+    public static void paintQuads(MutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+        MutablePolygon editor = stream.editor();
 
         do {
-            editor.setLockUV(textureIndex, true);
+            editor.lockUV(textureIndex, true);
             editor.assignLockedUVCoordinates(textureIndex);
 
             final FaceCorner quadrant = QuadrantSplitter.uvQuadrant(editor, textureIndex);
@@ -74,8 +74,8 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
             TextureSet tex = paint.texture(textureIndex);
             final int textureVersion = tex.versionMask() & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
 
-            editor.setTextureName(textureIndex, tex.textureName(textureVersion));
-            editor.setShouldContractUVs(textureIndex, true);
+            editor.sprite(textureIndex, tex.textureName(textureVersion));
+            editor.contractUV(textureIndex, true);
 
             final CornerJoinFaceState faceState = modelState.cornerJoin().faceState(nominalFace);
 

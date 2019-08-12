@@ -18,9 +18,9 @@ package grondag.xm.painting;
 
 import grondag.xm.api.connect.model.FaceCorner;
 import grondag.xm.mesh.helper.QuadHelper;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.MutablePolyStream;
 
 /**
  * Helper class to splits UV-locked quads into four quadrants at the u,v = 0.5,
@@ -29,7 +29,7 @@ import grondag.xm.mesh.stream.IMutablePolyStream;
  */
 public class QuadrantSplitter {
 
-    public final static FaceCorner uvQuadrant(IMutablePolygon quad, int layerIndex) {
+    public final static FaceCorner uvQuadrant(MutablePolygon quad, int layerIndex) {
         final int vCount = quad.vertexCount();
 
         float uMin = quad.spriteU(0, layerIndex);
@@ -95,9 +95,9 @@ public class QuadrantSplitter {
      * 
      * May also move reader, and does not restore reader position if it does so.
      */
-    public static final void split(IMutablePolyStream stream, int layerIndex) {
+    public static final void split(MutablePolyStream stream, int layerIndex) {
         final int editorAddress = stream.editorAddress();
-        final IPolygon reader = stream.reader(editorAddress);
+        final Polygon reader = stream.reader(editorAddress);
 
         int lowCount = 0;
         int highCount = 0;
@@ -119,7 +119,7 @@ public class QuadrantSplitter {
             splitV(stream, editorAddress, false, layerIndex);
         else {
             // spanning
-            IMutablePolygon writer = stream.writer();
+            MutablePolygon writer = stream.writer();
 
             int highAddress = stream.writerAddress();
             int iHighVertex = 0;
@@ -179,8 +179,8 @@ public class QuadrantSplitter {
         }
     }
 
-    private static final void splitV(IMutablePolyStream stream, int polyAddress, boolean isHighU, int layerIndex) {
-        final IPolygon reader = stream.reader(polyAddress);
+    private static final void splitV(MutablePolyStream stream, int polyAddress, boolean isHighU, int layerIndex) {
+        final Polygon reader = stream.reader(polyAddress);
 
         int lowCount = 0;
         int highCount = 0;
@@ -202,7 +202,7 @@ public class QuadrantSplitter {
             return;
         else {
             // spanning
-            IMutablePolygon writer = stream.writer();
+            MutablePolygon writer = stream.writer();
 
             int highAddress = stream.writerAddress();
             int iHighVertex = 0;

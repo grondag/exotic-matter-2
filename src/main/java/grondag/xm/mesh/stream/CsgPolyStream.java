@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.intstream.IntStreams;
 import grondag.xm.mesh.helper.QuadHelper;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vec3f;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -38,7 +38,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
  * optimize bounds testing for CSG operations.
  * <p>
  */
-public class CsgPolyStream extends MutablePolyStream {
+public class CsgPolyStream extends MutablePolyStreamImpl {
     /**
      * Ensures poly tags for recombination are globally unique. <br>
      * Could probably use stream address, but to be certain would have to
@@ -69,7 +69,7 @@ public class CsgPolyStream extends MutablePolyStream {
             return FRONT_INCREMENT;
     }
 
-    private static final int vertexType(IPolygon poly, int vertexIndex, float normalX, float normalY, float normalZ, float dist) {
+    private static final int vertexType(Polygon poly, int vertexIndex, float normalX, float normalY, float normalZ, float dist) {
         return vertexType(poly.x(vertexIndex), poly.y(vertexIndex), poly.z(vertexIndex), normalX, normalY, normalZ, dist);
     }
 
@@ -155,7 +155,7 @@ public class CsgPolyStream extends MutablePolyStream {
      * facilitate recombination of split polys after CSG operations complete.
      */
     @Override
-    protected void appendCopy(IPolygon polyIn, int withFormat) {
+    protected void appendCopy(Polygon polyIn, int withFormat) {
         // anything after complete should be calling raw version
         assert !isComplete;
 
@@ -179,7 +179,7 @@ public class CsgPolyStream extends MutablePolyStream {
      * 
      * Guarantees internal poly is set at new poly on exit.
      */
-    protected void appendRawCopy(IPolygon polyIn, int withFormat) {
+    protected void appendRawCopy(Polygon polyIn, int withFormat) {
         int newAddress = writerAddress();
         super.appendCopy(polyIn, withFormat);
         internal.moveTo(newAddress);
@@ -192,7 +192,7 @@ public class CsgPolyStream extends MutablePolyStream {
 
     /**
      * Like {@link #append()} but doesn't update bounds, etc. Uses
-     * {@link #appendRawCopy(IPolygon, int)} internally. See that method for more
+     * {@link #appendRawCopy(Polygon, int)} internally. See that method for more
      * info.
      */
     void appendRaw() {
@@ -205,7 +205,7 @@ public class CsgPolyStream extends MutablePolyStream {
      * Does not update bounds. Does not add to BSP tree.<br>
      * Returns address of new poly.
      */
-    protected int appendEmptySplit(IPolygon template, int vertexCount) {
+    protected int appendEmptySplit(Polygon template, int vertexCount) {
         int newAddress = writerAddress();
         setVertexCount(vertexCount);
         writer.copyFromCSG(template);
@@ -498,9 +498,9 @@ public class CsgPolyStream extends MutablePolyStream {
             if ((combinedCount & FRONT_MASK) == 0) {
                 if (combinedCount == 0) // coplanar
                 {
-                    float faceNormX = polyB.getFaceNormalX();
-                    float faceNormY = polyB.getFaceNormalY();
-                    float faceNormZ = polyB.getFaceNormalZ();
+                    float faceNormX = polyB.faceNormalX();
+                    float faceNormY = polyB.faceNormalY();
+                    float faceNormZ = polyB.faceNormalZ();
                     if (targetStream.isInverted()) {
                         faceNormX = -faceNormX;
                         faceNormY = -faceNormY;
@@ -550,7 +550,7 @@ public class CsgPolyStream extends MutablePolyStream {
                     // Don't create back side poly if we are going to discard it.
                     // Will discard if at a back-side leaf node.
                     final int backNodeAddress = clippingStream.getBackNode(nodeAddress);
-                    final int backAddress = backNodeAddress == NO_NODE_ADDRESS ? IPolygon.NO_LINK_OR_TAG
+                    final int backAddress = backNodeAddress == NO_NODE_ADDRESS ? Polygon.NO_LINK_OR_TAG
                             : targetStream.appendEmptySplit(polyB, ((combinedCount & BACK_MASK) >> BACK_SHIFT) + 2);
                     int iBack = 0;
 
@@ -565,7 +565,7 @@ public class CsgPolyStream extends MutablePolyStream {
                         case 1: // I COPLANAR - J FRONT
                         case 2: // I COPLANAR - J BACK
                             targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG)
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
                             break;
 
@@ -576,7 +576,7 @@ public class CsgPolyStream extends MutablePolyStream {
 
                         case 6: // I BACK- J COPLANAR
                         case 8: // I BACK - J BACK
-                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG)
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
                             break;
 
@@ -605,7 +605,7 @@ public class CsgPolyStream extends MutablePolyStream {
                             float t = (dist - iDot) / tDot;
 
                             targetStream.editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
-                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG)
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, targetStream.polyA(frontAddress), iFront);
                             iFront++;
 
@@ -614,7 +614,7 @@ public class CsgPolyStream extends MutablePolyStream {
 
                         case 7: {
                             // I BACK - J FRONT
-                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG)
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
 
                             // see notes for 5
@@ -631,7 +631,7 @@ public class CsgPolyStream extends MutablePolyStream {
                             float t = (dist - iDot) / tDot;
 
                             targetStream.editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
-                            if (backAddress != IPolygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG)
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, targetStream.polyA(frontAddress), iFront);
                             iFront++;
                             break;
@@ -650,7 +650,7 @@ public class CsgPolyStream extends MutablePolyStream {
                         stack.push(frontNodeAddress);
                     }
 
-                    if (backAddress != IPolygon.NO_LINK_OR_TAG) {
+                    if (backAddress != Polygon.NO_LINK_OR_TAG) {
                         // no need to check / find back node address
                         // if we get here, means there is a back node
                         // put new poly on stack with back node and come back to it
@@ -681,7 +681,7 @@ public class CsgPolyStream extends MutablePolyStream {
      * on bounds and rejoined polys will be in same node as polys that were joined.
      * Obviously, the joined polys will be marked deleted.
      */
-    public void outputRecombinedQuads(IWritablePolyStream output) {
+    public void outputRecombinedQuads(WritablePolyStream output) {
         CsgPolyRecombinator.outputRecombinedQuads(this, output);
     }
 
@@ -704,8 +704,8 @@ public class CsgPolyStream extends MutablePolyStream {
     }
 
     private int createNode(int polyAddress) {
-        IPolygon p = reader(polyAddress);
-        final int newNodeAddress = createNode(p.getFaceNormal(), p.x(0), p.y(0), p.z(0));
+        Polygon p = reader(polyAddress);
+        final int newNodeAddress = createNode(p.faceNormal(), p.x(0), p.y(0), p.z(0));
         return newNodeAddress;
     }
 

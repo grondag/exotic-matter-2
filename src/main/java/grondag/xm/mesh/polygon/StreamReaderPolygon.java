@@ -14,19 +14,17 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.mesh.vertex;
+package grondag.xm.mesh.polygon;
 
-public interface IVertexCollection {
-    public int vertexCount();
+/**
+ * For stream reader polygons that can be moved to an address within the stream.
+ */
+public interface StreamReaderPolygon extends Polygon {
+    public void moveTo(int address);
 
-    // PERF: use value types instead
-    @Deprecated
-    public Vec3f getPos(int index);
+    public boolean hasValue();
 
-    /**
-     * Wraps around if index out of range.
-     */
-    public default Vec3f getPosModulo(int index) {
-        return getPos(index % vertexCount());
-    }
+    public boolean next();
+
+    public boolean nextLink();
 }

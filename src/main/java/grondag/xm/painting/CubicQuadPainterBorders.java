@@ -39,8 +39,8 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.mesh.helper.FaceQuadInputs;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.stream.MutablePolyStream;
 import net.minecraft.util.math.Direction;
 
 public abstract class CubicQuadPainterBorders extends QuadPainter {
@@ -167,8 +167,8 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(IMutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        IMutablePolygon editor = stream.editor();
+    public static void paintQuads(MutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+        MutablePolygon editor = stream.editor();
         do {
 
             CornerJoinState bjs = modelState.cornerJoin();
@@ -185,16 +185,16 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             if (inputs == NO_BORDER && !tex.renderNoBorderAsTile())
                 continue;
 
-            editor.setLockUV(textureIndex, true);
+            editor.lockUV(textureIndex, true);
             editor.assignLockedUVCoordinates(textureIndex);
 
-            editor.setRotation(textureIndex, inputs.rotation);
+            editor.rotation(textureIndex, inputs.rotation);
 //            cubeInputs.rotateBottom = false;
-            editor.setMinU(textureIndex, inputs.flipU ? 1 : 0);
-            editor.setMinV(textureIndex, inputs.flipV ? 1 : 0);
-            editor.setMaxU(textureIndex, inputs.flipU ? 0 : 1);
-            editor.setMaxV(textureIndex, inputs.flipV ? 0 : 1);
-            editor.setTextureName(textureIndex, tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
+            editor.minU(textureIndex, inputs.flipU ? 1 : 0);
+            editor.minV(textureIndex, inputs.flipV ? 1 : 0);
+            editor.maxU(textureIndex, inputs.flipU ? 0 : 1);
+            editor.maxV(textureIndex, inputs.flipV ? 0 : 1);
+            editor.sprite(textureIndex, tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
             commonPostPaint(editor, textureIndex, modelState, surface, paint);
 

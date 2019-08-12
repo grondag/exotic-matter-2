@@ -23,7 +23,7 @@ import org.joml.Vector4f;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.mesh.polygon.IMutablePolygon;
+import grondag.xm.mesh.polygon.MutablePolygon;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -38,7 +38,7 @@ public class PolyTransform {
         this.matrix = matrix;
     }
 
-    public void apply(IMutablePolygon poly) {
+    public void apply(MutablePolygon poly) {
         final Matrix4f matrix = this.matrix;
         final int vertexCount = poly.vertexCount();
         final Vector3f vec = VEC3.get();
@@ -58,7 +58,7 @@ public class PolyTransform {
 
         // transform nominal face
         matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
-        poly.setNominalFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
+        poly.nominalFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
     }
 
     private static final ThreadLocal<Vector3f> VEC3 = ThreadLocal.withInitial(Vector3f::new);

@@ -22,9 +22,9 @@ import grondag.frex.Frex;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.surface.XmSurface;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.MutablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.painting.QuadPainter.IPaintMethod;
 import net.fabricmc.api.EnvType;
@@ -41,7 +41,7 @@ import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("rawtypes")
-public class QuadPaintHandler implements Consumer<IPolygon> {
+public class QuadPaintHandler implements Consumer<Polygon> {
     private static final ThreadLocal<QuadPaintHandler> POOL = ThreadLocal.withInitial(QuadPaintHandler::new);
 
     private static final Renderer RENDERER = RendererAccess.INSTANCE.getRenderer();
@@ -53,7 +53,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
     }
 
     private final MeshBuilder builder = RENDERER.meshBuilder();
-    private final IMutablePolyStream work = PolyStreams.claimMutable(0);
+    private final MutablePolyStream work = PolyStreams.claimMutable(0);
     private final QuadEmitter emitter = builder.getEmitter();
     private PrimitiveModelState modelState;
     private MaterialFinder finder = RENDERER.materialFinder();
@@ -65,11 +65,11 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
     }
 
     @Override
-    public void accept(IPolygon poly) {
+    public void accept(Polygon poly) {
         final PrimitiveModelState modelState = this.modelState;
         final QuadEmitter emitter = this.emitter;
-        final IMutablePolyStream stream = this.work;
-        IMutablePolygon editor = stream.editor();
+        final MutablePolyStream stream = this.work;
+        MutablePolygon editor = stream.editor();
 
         XmSurface surface = poly.surface();
         XmPaint paint = modelState.paint(surface);
@@ -78,24 +78,24 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         stream.editorOrigin();
 
         final int depth = paint.textureDepth();
-        editor.setLayerCount(depth);
+        editor.spriteDepth(depth);
 
         // Copy generator UVs (quad and vertex)
         // from layer 0 to upper layers.
         if (depth > 1) {
-            final float minU = editor.getMinU(0);
-            final float maxU = editor.getMaxU(0);
-            final float minV = editor.getMinV(0);
-            final float maxV = editor.getMaxV(0);
-            editor.setMinU(1, minU);
-            editor.setMaxU(1, maxU);
-            editor.setMinV(1, minV);
-            editor.setMaxV(1, maxV);
+            final float minU = editor.minU(0);
+            final float maxU = editor.maxU(0);
+            final float minV = editor.minV(0);
+            final float maxV = editor.maxV(0);
+            editor.minU(1, minU);
+            editor.maxU(1, maxU);
+            editor.minV(1, minV);
+            editor.maxV(1, maxV);
             if (depth == 3) {
-                editor.setMinU(2, minU);
-                editor.setMaxU(2, maxU);
-                editor.setMinV(2, minV);
-                editor.setMaxV(2, maxV);
+                editor.minU(2, minU);
+                editor.maxU(2, maxU);
+                editor.minV(2, minV);
+                editor.maxV(2, maxV);
             }
 
             final int vertexCount = editor.vertexCount();
@@ -127,9 +127,9 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         if (stream.editorOrigin()) {
             do {
                 // omit layers that weren't textured by any painter
-                if (!editor.getTextureName(0).isEmpty()) {
-                    final int layerCount = editor.getTextureName(1).isEmpty() ? 1 : editor.getTextureName(2).isEmpty() ? 2 : 3;
-                    editor.setLayerCount(layerCount);
+                if (!editor.spriteName(0).isEmpty()) {
+                    final int layerCount = editor.spriteName(1).isEmpty() ? 1 : editor.spriteName(2).isEmpty() ? 2 : 3;
+                    editor.spriteDepth(layerCount);
                     polyToMesh(editor, emitter);
                 }
             } while (stream.editorNext());
@@ -138,7 +138,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         stream.clear();
     }
 
-    private void polyToMesh(IMutablePolygon poly, QuadEmitter emitter) {
+    private void polyToMesh(MutablePolygon poly, QuadEmitter emitter) {
         if (FREX_ACTIVE) {
             polyToMeshFrex(poly, emitter);
         } else {
@@ -146,28 +146,28 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         }
     }
 
-    private void polyToMeshFrex(IMutablePolygon poly, QuadEmitter emitter) {
-        final int depth = poly.layerCount();
+    private void polyToMeshFrex(MutablePolygon poly, QuadEmitter emitter) {
+        final int depth = poly.spriteDepth();
         final MaterialFinder finder = this.finder;
 
         finder.clear().spriteDepth(depth);
 
-        finder.blendMode(0, poly.getRenderLayer(0));
-        if (poly.isEmissive(0)) {
+        finder.blendMode(0, poly.blendMode(0));
+        if (poly.emissive(0)) {
             finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
         }
         bakeSprite(0, poly);
 
         if (depth > 1) {
             bakeSprite(1, poly);
-            finder.blendMode(1, poly.getRenderLayer(1));
-            if (poly.isEmissive(1)) {
+            finder.blendMode(1, poly.blendMode(1));
+            if (poly.emissive(1)) {
                 finder.disableAo(1, true).disableDiffuse(1, true).emissive(1, true);
             }
             if (depth == 3) {
                 bakeSprite(2, poly);
-                finder.blendMode(2, poly.getRenderLayer(2));
-                if (poly.isEmissive(2)) {
+                finder.blendMode(2, poly.blendMode(2));
+                if (poly.emissive(2)) {
                     finder.disableAo(2, true).disableDiffuse(2, true).emissive(2, true);
                 }
             }
@@ -201,14 +201,14 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         emitter.emit();
     }
 
-    private void polyToMeshIndigo(IMutablePolygon poly, QuadEmitter emitter) {
-        final int depth = poly.layerCount();
+    private void polyToMeshIndigo(MutablePolygon poly, QuadEmitter emitter) {
+        final int depth = poly.spriteDepth();
         final MaterialFinder finder = this.finder;
 
         finder.clear();
 
-        finder.blendMode(0, poly.getRenderLayer(0));
-        if (poly.isEmissive(0)) {
+        finder.blendMode(0, poly.blendMode(0));
+        if (poly.emissive(0)) {
             finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
         }
         bakeSprite(0, poly);
@@ -217,8 +217,8 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
         if (depth > 1) {
             bakeSprite(1, poly);
-            finder.clear().blendMode(0, poly.getRenderLayer(1));
-            if (poly.isEmissive(1)) {
+            finder.clear().blendMode(0, poly.blendMode(1));
+            if (poly.emissive(1)) {
                 finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
             }
             emitter.material(finder.find());
@@ -226,8 +226,8 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
 
             if (depth == 3) {
                 bakeSprite(2, poly);
-                finder.clear().blendMode(0, poly.getRenderLayer(2));
-                if (poly.isEmissive(2)) {
+                finder.clear().blendMode(0, poly.blendMode(2));
+                if (poly.emissive(2)) {
                     finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
                 }
                 emitter.material(finder.find());
@@ -236,7 +236,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         }
     }
 
-    private static void outputIndigoQuad(IMutablePolygon poly, QuadEmitter emitter, int spriteIndex) {
+    private static void outputIndigoQuad(MutablePolygon poly, QuadEmitter emitter, int spriteIndex) {
         emitter.cullFace(poly.cullFace());
         emitter.nominalFace(poly.nominalFace());
         emitter.tag(poly.tag());
@@ -254,11 +254,11 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
     }
 
     // PERF: consider in-lining all the coordinates
-    private void bakeSprite(int spriteIndex, IMutablePolygon poly) {
-        final float minU = poly.getMinU(spriteIndex);
-        final float minV = poly.getMinV(spriteIndex);
-        final float spanU = poly.getMaxU(spriteIndex) - minU;
-        final float spanV = poly.getMaxV(spriteIndex) - minV;
+    private void bakeSprite(int spriteIndex, MutablePolygon poly) {
+        final float minU = poly.minU(spriteIndex);
+        final float minV = poly.minV(spriteIndex);
+        final float spanU = poly.maxU(spriteIndex) - minU;
+        final float spanV = poly.maxV(spriteIndex) - minV;
 
         applyTextureRotation(spriteIndex, poly);
 
@@ -268,7 +268,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
             poly.sprite(v, spriteIndex, minU + spanU * poly.spriteU(v, spriteIndex), minV + spanV * poly.spriteV(v, spriteIndex));
         }
 
-        final Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(poly.getTextureName(spriteIndex));
+        final Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(poly.spriteName(spriteIndex));
 
         if (poly.shouldContractUVs(spriteIndex)) {
             contractUVs(spriteIndex, sprite, poly);
@@ -291,7 +291,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
      * texture coordinates slightly towards the vertex centroid of the UV
      * coordinates.
      */
-    private void contractUVs(int spriteIndex, Sprite sprite, IMutablePolygon poly) {
+    private void contractUVs(int spriteIndex, Sprite sprite, MutablePolygon poly) {
         final float uPixels = (float) sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU());
         final float vPixels = (float) sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV());
         final float nudge = 4.0f / Math.max(vPixels, uPixels);
@@ -315,7 +315,7 @@ public class QuadPaintHandler implements Consumer<IPolygon> {
         poly.sprite(3, spriteIndex, MathHelper.lerp(nudge, u3, uCenter), MathHelper.lerp(nudge, v3, vCenter));
     }
 
-    private void applyTextureRotation(int spriteIndex, IMutablePolygon poly) {
+    private void applyTextureRotation(int spriteIndex, MutablePolygon poly) {
         final int vCount = poly.vertexCount();
         switch (poly.getRotation(spriteIndex)) {
         case ROTATE_NONE:

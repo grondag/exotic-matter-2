@@ -20,8 +20,8 @@ import java.util.function.Consumer;
 
 import grondag.fermion.intstream.IntStreams;
 import grondag.xm.dispatch.QuadListKeyBuilder;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.polygon.IStreamReaderPolygon;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.polygon.StreamReaderPolygon;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
@@ -34,9 +34,9 @@ import net.minecraft.util.math.Direction;
  * Will have a format with links no matter how claimed and will ignore any links
  * in the stream used to create it.
  */
-public class DispatchPolyStream extends AbstractPolyStream implements IReadOnlyPolyStream, Consumer<IPolygon> {
+public class DispatchPolyStream extends AbstractPolyStream implements ReadOnlyPolyStream, Consumer<Polygon> {
     protected boolean isBuilt = false;
-    protected int lastAppendAddress = IPolygon.NO_LINK_OR_TAG;
+    protected int lastAppendAddress = Polygon.NO_LINK_OR_TAG;
 
     public final int getOcclusionHash(Direction face) {
         assert isBuilt;
@@ -56,13 +56,13 @@ public class DispatchPolyStream extends AbstractPolyStream implements IReadOnlyP
         assert isBuilt;
 
         int address = firstAddress(BlockRenderLayer.SOLID, face);
-        if (address == IPolygon.NO_LINK_OR_TAG)
+        if (address == Polygon.NO_LINK_OR_TAG)
             return 0;
 
         QuadListKeyBuilder keyBuilder = QuadListKeyBuilder.prepareThreadLocal(face);
-        IStreamReaderPolygon r = claimThreadSafeReader();
+        StreamReaderPolygon r = claimThreadSafeReader();
 
-        while (address != IPolygon.NO_LINK_OR_TAG) {
+        while (address != Polygon.NO_LINK_OR_TAG) {
             r.moveTo(address);
             keyBuilder.accept(r);
             address = r.getLink();
@@ -100,7 +100,7 @@ public class DispatchPolyStream extends AbstractPolyStream implements IReadOnlyP
         // FIXME: needs to happen during clear, or maybe no longer needed - perhaps
         // store in mesh or via tags
         isBuilt = false;
-        lastAppendAddress = IPolygon.NO_LINK_OR_TAG;
+        lastAppendAddress = Polygon.NO_LINK_OR_TAG;
 
         // clear occlusion hash data
         stream.set(0, -1);
@@ -112,7 +112,7 @@ public class DispatchPolyStream extends AbstractPolyStream implements IReadOnlyP
     }
 
     @Override
-    public void accept(IPolygon p) {
+    public void accept(Polygon p) {
         assert !isBuilt;
 
         if (p.isDeleted())
@@ -136,19 +136,19 @@ public class DispatchPolyStream extends AbstractPolyStream implements IReadOnlyP
         // populate list starts with value indicating empty list
         final int limit = writeAddress + 28;
         for (int i = writeAddress; i < limit; i++)
-            stream.set(i, IPolygon.NO_LINK_OR_TAG);
+            stream.set(i, Polygon.NO_LINK_OR_TAG);
 
         int currentAddress = lastAppendAddress;
         final StreamBackedPolygon p = this.internal;
 
-        while (currentAddress != IPolygon.NO_LINK_OR_TAG) {
+        while (currentAddress != Polygon.NO_LINK_OR_TAG) {
             p.moveTo(currentAddress);
 
             // save our next address before we overwrite it
             final int nextAddress = p.getLink();
 
             // figure out what list it belongs in
-            final int listAddress = listHeadAddress(p.getRenderLayer(0), p.cullFace());
+            final int listAddress = listHeadAddress(p.blendMode(0), p.cullFace());
 
             // find current first address in the list, which could be "none"
             final int currentHead = stream.get(listAddress);
@@ -181,7 +181,7 @@ public class DispatchPolyStream extends AbstractPolyStream implements IReadOnlyP
     }
 
     @Override
-    public final IStreamReaderPolygon claimThreadSafeReader() {
+    public final StreamReaderPolygon claimThreadSafeReader() {
         assert isBuilt;
         return super.claimThreadSafeReaderImpl();
     }

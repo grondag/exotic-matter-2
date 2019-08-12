@@ -24,9 +24,9 @@ import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.CubeInputs;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.stream.IPolyStream;
-import grondag.xm.mesh.stream.IWritablePolyStream;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.PolyStream;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.painting.SurfaceTopology;
@@ -40,7 +40,7 @@ public class CubePrimitive extends AbstractBasePrimitive {
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 
     /** never changes so may as well save it */
-    private final IPolyStream cachedQuads;
+    private final PolyStream cachedQuads;
 
     public CubePrimitive(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
@@ -53,11 +53,11 @@ public class CubePrimitive extends AbstractBasePrimitive {
     }
 
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         cachedQuads.forEach(target);
     }
 
-    private IPolyStream getCubeQuads() {
+    private PolyStream getCubeQuads() {
         CubeInputs cube = new CubeInputs();
         cube.color = 0xFFFFFFFF;
         cube.textureRotation = Rotation.ROTATE_NONE;
@@ -69,7 +69,7 @@ public class CubePrimitive extends AbstractBasePrimitive {
         cube.isOverlay = false;
         cube.surface = SURFACE_ALL;
 
-        IWritablePolyStream stream = PolyStreams.claimWritable();
+        WritablePolyStream stream = PolyStreams.claimWritable();
         cube.appendFace(stream, Direction.DOWN);
         cube.appendFace(stream, Direction.UP);
         cube.appendFace(stream, Direction.EAST);
@@ -77,7 +77,7 @@ public class CubePrimitive extends AbstractBasePrimitive {
         cube.appendFace(stream, Direction.NORTH);
         cube.appendFace(stream, Direction.SOUTH);
 
-        IPolyStream result = stream.releaseAndConvertToReader();
+        PolyStream result = stream.releaseAndConvertToReader();
 
         result.origin();
         assert result.reader().vertexCount() == 4;

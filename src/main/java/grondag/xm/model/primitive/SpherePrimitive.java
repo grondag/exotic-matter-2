@@ -22,9 +22,9 @@ import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.stream.IPolyStream;
-import grondag.xm.mesh.stream.IWritablePolyStream;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.PolyStream;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.MeshHelper;
@@ -39,7 +39,7 @@ public class SpherePrimitive extends AbstractBasePrimitive {
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 
     /** never changes so may as well save it */
-    private final IPolyStream cachedQuads;
+    private final PolyStream cachedQuads;
 
     public SpherePrimitive(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
@@ -52,21 +52,21 @@ public class SpherePrimitive extends AbstractBasePrimitive {
     }
 
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         if (cachedQuads.isEmpty())
             return;
 
         cachedQuads.origin();
-        IPolygon reader = cachedQuads.reader();
+        Polygon reader = cachedQuads.reader();
 
         do
             target.accept(reader);
         while (cachedQuads.next());
     }
 
-    private IPolyStream generateQuads() {
-        IWritablePolyStream stream = PolyStreams.claimWritable();
-        stream.writer().setLockUV(0, false);
+    private PolyStream generateQuads() {
+        WritablePolyStream stream = PolyStreams.claimWritable();
+        stream.writer().lockUV(0, false);
         stream.writer().surface(SURFACE_ALL);
         stream.saveDefaults();
 

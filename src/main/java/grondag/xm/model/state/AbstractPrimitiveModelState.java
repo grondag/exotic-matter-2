@@ -44,7 +44,7 @@ import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
 import grondag.xm.mesh.helper.PolyTransform;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.QuadPaintHandler;
 import it.unimi.dsi.fastutil.HashCommon;
@@ -416,7 +416,7 @@ public abstract class AbstractPrimitiveModelState
     }
     
     @Override
-    public final void produceQuads(Consumer<IPolygon> target) {
+    public final void produceQuads(Consumer<Polygon> target) {
         primitive.produceQuads((R)this, target);
     }
     

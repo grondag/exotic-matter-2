@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.model.varia.BlockOrientationType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
@@ -67,7 +67,7 @@ public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends P
      * Output polygons must be quads or tris. Consumer MUST NOT hold references to
      * any of the polys received.
      */
-    void produceQuads(R modelState, Consumer<IPolygon> target);
+    void produceQuads(R modelState, Consumer<Polygon> target);
 
     R defaultState();
 

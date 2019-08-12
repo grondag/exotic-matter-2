@@ -26,11 +26,11 @@ import grondag.xm.XmConfig;
 import grondag.xm.collision.octree.OctreeCoordinates;
 import grondag.xm.collision.octree.VoxelVolume16;
 import grondag.xm.mesh.helper.TriangleBoxTest;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.vertex.IVec3f;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.vertex.Vertex3f;
 import net.minecraft.util.math.Box;
 
-public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<IPolygon> {
+public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
     private static void div1(final float[] polyData, final long[] voxelBits) {
         if (TriangleBoxTest.triBoxOverlap(CLOW1, CLOW1, CLOW1, R1, polyData))
             div2(00000, 0.0f, 0.0f, 0.0f, polyData, voxelBits);
@@ -179,7 +179,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
     final BoxFinder bf = new BoxFinder();
 
     @Override
-    protected void acceptTriangle(IVec3f v0, IVec3f v1, IVec3f v2) {
+    protected void acceptTriangle(Vertex3f v0, Vertex3f v1, Vertex3f v2) {
         final float[] data = polyData;
         TriangleBoxTest.packPolyData(v0, v1, v2, data);
         div1(polyData, voxelBits);
@@ -189,7 +189,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
      * Returns voxel volume of loaded mesh after simplification. Simplification
      * level is estimated based on the count of maximal bounding volumes vs the
      * budget per mesh. Call after inputing mesh via
-     * {@link #accept(grondag.xm2.primitives.IPolygon)} and before calling
+     * {@link #accept(grondag.Polygon.primitives.IPolygon)} and before calling
      * {@link #build()}
      * <p>
      * .

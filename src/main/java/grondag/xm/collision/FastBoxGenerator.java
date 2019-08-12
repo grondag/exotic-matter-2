@@ -25,8 +25,8 @@ import com.google.common.collect.ImmutableList;
 import grondag.xm.collision.octree.OctreeCoordinates;
 import grondag.xm.collision.octree.VoxelVolume8;
 import grondag.xm.mesh.helper.TriangleBoxTest;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.vertex.IVec3f;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.vertex.Vertex3f;
 import net.minecraft.util.math.Box;
 
 /**
@@ -51,7 +51,7 @@ import net.minecraft.util.math.Box;
  * representation is better (or at least as good) for the subsequent
  * simplification, fill and output operations.
  */
-public class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<IPolygon> {
+public class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
     private static void div1(final float[] polyData, final long[] voxelBits) {
         if (TriangleBoxTest.triBoxOverlap(CLOW1, CLOW1, CLOW1, R1, polyData))
             div2(0000, 0.0f, 0.0f, 0.0f, polyData, voxelBits);
@@ -159,7 +159,7 @@ public class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<I
     private final JoiningBoxListBuilder builder = new JoiningBoxListBuilder();
 
     @Override
-    protected final void acceptTriangle(IVec3f v0, IVec3f v1, IVec3f v2) {
+    protected final void acceptTriangle(Vertex3f v0, Vertex3f v1, Vertex3f v2) {
         final float[] data = polyData;
         TriangleBoxTest.packPolyData(v0, v1, v2, data);
         div1(polyData, voxelBits);

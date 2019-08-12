@@ -21,19 +21,19 @@ import grondag.xm.mesh.helper.QuadHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
-public interface IVec3f {
+public interface Vertex3f {
     public default float dotProduct(float xIn, float yIn, float zIn) {
         return Vec3Function.dotProduct(this.x(), this.y(), this.z(), xIn, yIn, zIn);
     }
 
-    public default float dotProduct(IVec3f vec) {
+    public default float dotProduct(Vertex3f vec) {
         return dotProduct(vec.x(), vec.y(), vec.z());
     }
 
     /**
      * Returns a new vector with the result of this vector x the specified vector.
      */
-    public default IVec3f crossProduct(IVec3f vec) {
+    public default Vertex3f crossProduct(Vertex3f vec) {
         return Vec3f.create(this.y() * vec.z() - this.z() * vec.y(), this.z() * vec.x() - this.x() * vec.z(), this.x() * vec.y() - this.y() * vec.x());
     }
 
@@ -92,7 +92,7 @@ public interface IVec3f {
     /**
      * True if both vertices are at the same point.
      */
-    public default boolean isCsgEqual(IVec3f vertexIn) {
+    public default boolean isCsgEqual(Vertex3f vertexIn) {
         return Math.abs(vertexIn.x() - this.x()) < QuadHelper.EPSILON && Math.abs(vertexIn.y() - this.y()) < QuadHelper.EPSILON
                 && Math.abs(vertexIn.z() - this.z()) < QuadHelper.EPSILON;
     }
@@ -128,7 +128,7 @@ public interface IVec3f {
         return isPointOnLine(this.x(), this.y(), this.z(), x0, y0, z0, x1, y1, z1);
     }
 
-    public default boolean isOnLine(IVec3f v0, IVec3f v1) {
+    public default boolean isOnLine(Vertex3f v0, Vertex3f v1) {
         return this.isOnLine(v0.x(), v0.y(), v0.z(), v1.x(), v1.y(), v1.z());
     }
 

@@ -20,51 +20,51 @@ import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.polygon.Polygon;
 
 public class PolyStreams {
     public static final int FORMAT_TAGS = PolyStreamFormat.HAS_TAG_FLAG;
     public static final int FORMAT_LINKS = PolyStreamFormat.HAS_LINK_FLAG;
 
-    private static final ArrayBlockingQueue<WritablePolyStream> writables = new ArrayBlockingQueue<>(256);
-    private static final ArrayBlockingQueue<MutablePolyStream> mutables = new ArrayBlockingQueue<>(128);
+    private static final ArrayBlockingQueue<WritablePolyStreamImpl> writables = new ArrayBlockingQueue<>(256);
+    private static final ArrayBlockingQueue<MutablePolyStreamImpl> mutables = new ArrayBlockingQueue<>(128);
     private static final ArrayBlockingQueue<CsgPolyStream> csgStreams = new ArrayBlockingQueue<>(128);
-    private static final ArrayBlockingQueue<ReadOnlyPolyStream> readables = new ArrayBlockingQueue<>(256);
+    private static final ArrayBlockingQueue<ReadOnlyPolyStreamImpl> readables = new ArrayBlockingQueue<>(256);
     private static final ArrayBlockingQueue<DispatchPolyStream> dispatches = new ArrayBlockingQueue<>(256);
 
-    public static IWritablePolyStream claimWritable() {
+    public static WritablePolyStream claimWritable() {
         return claimWritable(0);
     }
 
-    public static IWritablePolyStream claimWritable(int formatFlags) {
-        WritablePolyStream result = writables.poll();
+    public static WritablePolyStream claimWritable(int formatFlags) {
+        WritablePolyStreamImpl result = writables.poll();
         if (result == null)
-            result = new WritablePolyStream();
+            result = new WritablePolyStreamImpl();
         result.prepare(formatFlags);
         return result;
     }
 
-    static void release(WritablePolyStream freeStream) {
+    static void release(WritablePolyStreamImpl freeStream) {
         writables.offer(freeStream);
     }
 
-    public static IMutablePolyStream claimMutable(int formatFlags) {
-        MutablePolyStream result = mutables.poll();
+    public static MutablePolyStream claimMutable(int formatFlags) {
+        MutablePolyStreamImpl result = mutables.poll();
         if (result == null)
-            result = new MutablePolyStream();
+            result = new MutablePolyStreamImpl();
         result.prepare(formatFlags);
         return result;
     }
 
-    static void release(MutablePolyStream freeStream) {
+    static void release(MutablePolyStreamImpl freeStream) {
         mutables.offer(freeStream);
     }
 
-    public static IReadOnlyPolyStream claimReadOnly(WritablePolyStream writablePolyStream, int formatFlags) {
-        ReadOnlyPolyStream result = readables.poll();
+    public static ReadOnlyPolyStream claimReadOnly(WritablePolyStreamImpl writablePolyStream, int formatFlags) {
+        ReadOnlyPolyStreamImpl result = readables.poll();
         if (result == null)
-            result = new ReadOnlyPolyStream();
+            result = new ReadOnlyPolyStreamImpl();
         result.load(writablePolyStream, formatFlags);
         return result;
     }
@@ -75,18 +75,18 @@ public class PolyStreams {
      * 
      * Does not modify or release the input stream.
      */
-    public static IReadOnlyPolyStream claimRecoloredCopy(IPolyStream input) {
-        IWritablePolyStream result = claimWritable();
+    public static ReadOnlyPolyStream claimRecoloredCopy(PolyStream input) {
+        WritablePolyStream result = claimWritable();
         if (input.origin()) {
             Random r = ThreadLocalRandom.current();
 
-            IPolygon reader = input.reader();
-            IMutablePolygon writer = result.writer();
+            Polygon reader = input.reader();
+            MutablePolygon writer = result.writer();
             do {
                 result.setVertexCount(reader.vertexCount());
-                result.setLayerCount(reader.layerCount());
+                result.setLayerCount(reader.spriteDepth());
                 writer.copyFrom(reader, true);
-                writer.spriteColorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
+                writer.colorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
                 result.append();
             } while (input.next());
         }
@@ -94,7 +94,7 @@ public class PolyStreams {
         return result.releaseAndConvertToReader();
     }
 
-    static void release(ReadOnlyPolyStream freeStream) {
+    static void release(ReadOnlyPolyStreamImpl freeStream) {
         readables.offer(freeStream);
     }
 
@@ -118,7 +118,7 @@ public class PolyStreams {
         return result;
     }
 
-    public static CsgPolyStream claimCSG(IPolyStream stream) {
+    public static CsgPolyStream claimCSG(PolyStream stream) {
         CsgPolyStream result = claimCSG();
         result.appendAll(stream);
         return result;

@@ -26,9 +26,9 @@ import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.PolyTransform;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.stream.IWritablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
@@ -57,7 +57,7 @@ public class StackedPlatesPrimitive extends AbstractBasePrimitive {
     }
 
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         // FIX: Add height to block/model state once model state refactor is complete
         final int meta = 0; // modelState.getMetaData();
         final PolyTransform transform = PolyTransform.get(modelState);
@@ -66,35 +66,35 @@ public class StackedPlatesPrimitive extends AbstractBasePrimitive {
         // PERF: if have a consumer and doing this dynamically - should consumer simply
         // be a stream?
         // Why create a stream just to pipe it to the consumer? Or cache the result.
-        final IWritablePolyStream stream = PolyStreams.claimWritable();
-        final IMutablePolygon writer = stream.writer();
+        final WritablePolyStream stream = PolyStreams.claimWritable();
+        final MutablePolygon writer = stream.writer();
 
-        writer.setRotation(0, Rotation.ROTATE_NONE);
-        writer.setLockUV(0, true);
+        writer.rotation(0, Rotation.ROTATE_NONE);
+        writer.lockUV(0, true);
         stream.saveDefaults();
 
         writer.surface(SURFACE_TOP);
-        writer.setNominalFace(Direction.UP);
+        writer.nominalFace(Direction.UP);
         writer.setupFaceQuad(0, 0, 1, 1, 1 - height, Direction.NORTH);
         transform.apply(writer);
         stream.append();
 
         for (Direction face : HORIZONTAL_FACES) {
             writer.surface(SURFACE_SIDES);
-            writer.setNominalFace(face);
+            writer.nominalFace(face);
             writer.setupFaceQuad(0, 0, 1, height, 0, Direction.UP);
             transform.apply(writer);
             stream.append();
         }
 
         writer.surface(SURFACE_BOTTOM);
-        writer.setNominalFace(Direction.DOWN);
+        writer.nominalFace(Direction.DOWN);
         writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
         stream.append();
 
         if (stream.origin()) {
-            IPolygon reader = stream.reader();
+            Polygon reader = stream.reader();
 
             do
                 target.accept(reader);

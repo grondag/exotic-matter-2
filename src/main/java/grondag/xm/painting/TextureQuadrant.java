@@ -19,7 +19,7 @@ package grondag.xm.painting;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.model.FaceCorner;
 import grondag.xm.api.connect.model.FaceEdge;
-import grondag.xm.mesh.polygon.IMutablePolygon;
+import grondag.xm.mesh.polygon.MutablePolygon;
 
 /**
  * Identifies content of each quadrant within texture file, starting at top
@@ -48,7 +48,7 @@ public enum TextureQuadrant {
      */
     SIDE_RIGHT(1) {
         @Override
-        public void applyForQuadrant(IMutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
+        public void applyForQuadrant(MutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
             super.applyForQuadrant(polygon, layerIndex, quadrant);
             final int i = quadrant.rightSide.ordinal();
             polygon.offsetVertexUV(layerIndex, RIGHT_SIDE_U_SHIFT[i], RIGHT_SIDE_V_SHIFT[i]);
@@ -104,7 +104,7 @@ public enum TextureQuadrant {
      * identified by the given corner.
      * <p>
      */
-    public void applyForQuadrant(IMutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
-        polygon.setRotation(layerIndex, Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - this.rotation) & 3]);
+    public void applyForQuadrant(MutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
+        polygon.rotation(layerIndex, Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - this.rotation) & 3]);
     }
 }

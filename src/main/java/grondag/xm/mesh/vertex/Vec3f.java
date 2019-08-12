@@ -19,7 +19,7 @@ package grondag.xm.mesh.vertex;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
-public class Vec3f implements IVec3f {
+public class Vec3f implements Vertex3f {
 //    private static AtomicInteger createCount = new AtomicInteger();
 //    private static AtomicInteger initCount = new AtomicInteger();
 

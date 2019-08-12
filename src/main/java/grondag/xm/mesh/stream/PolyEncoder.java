@@ -55,7 +55,7 @@ import static grondag.xm.mesh.stream.PolyStreamFormat.polyFormatKey;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.varia.IndexedInterner;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatGetter;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatSetter;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatSetter3;
@@ -369,7 +369,7 @@ public class PolyEncoder {
      * Replaces zeros with NaN and replaces NaN with zeros.
      */
     protected static int swapZeroNaNValues(int valueIn) {
-        return valueIn == 0 ? IPolygon.NO_LINK_OR_TAG : valueIn == IPolygon.NO_LINK_OR_TAG ? 0 : valueIn;
+        return valueIn == 0 ? Polygon.NO_LINK_OR_TAG : valueIn == Polygon.NO_LINK_OR_TAG ? 0 : valueIn;
     }
 
     public final int getTag(IntStream stream, int baseAddress) {

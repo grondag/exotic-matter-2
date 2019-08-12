@@ -20,7 +20,7 @@ package grondag.xm.mesh.polygon;
  * Subset of IPolygon that applies only to polys that are part of a polystream.
  * These operations all involve metadata, and therefore
  */
-public interface IStreamPolygon {
+public interface StreamPolygon {
     /**
      * Address of this poly within its stream.<br>
      * Will throw exception if not a stream-back poly.

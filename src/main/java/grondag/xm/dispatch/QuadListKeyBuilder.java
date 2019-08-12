@@ -19,12 +19,12 @@ package grondag.xm.dispatch;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.vertex.IVec3f;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.vertex.Vertex3f;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 
-public class QuadListKeyBuilder implements Consumer<IPolygon> {
+public class QuadListKeyBuilder implements Consumer<Polygon> {
     private static ThreadLocal<QuadListKeyBuilder> locals = new ThreadLocal<QuadListKeyBuilder>() {
         @Override
         protected QuadListKeyBuilder initialValue() {
@@ -103,10 +103,10 @@ public class QuadListKeyBuilder implements Consumer<IPolygon> {
     }
 
     @Override
-    public void accept(IPolygon t) {
+    public void accept(Polygon t) {
         final int limit = t.vertexCount();
         for (int i = 0; i < limit; i++) {
-            IVec3f v = t.getPos(i);
+            Vertex3f v = t.getPos(i);
             this.acceptVertex(v.x(), v.y(), v.z());
         }
     }

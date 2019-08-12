@@ -16,95 +16,43 @@
 
 package grondag.xm.mesh.stream;
 
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.MutablePolygon;
 
-public class MutablePolyStream extends WritablePolyStream implements IMutablePolyStream {
-    protected final StreamBackedMutablePolygon editor = new StreamBackedMutablePolygon();
+/**
+ * Polygons in this stream can be edited after appending via an editor cursor.
+ * To allow for editing, polygons in this type of stream consume more memory.
+ * <p>
+ * 
+ * The number of layers can be changed after appending, but number of vertices
+ * cannot.
+ */
+public interface MutablePolyStream extends WritablePolyStream {
+    MutablePolygon editor();
 
-    @Override
-    protected void prepare(int formatFlags) {
-        super.prepare(formatFlags);
-        editor.stream = stream;
-    }
+    /**
+     * Moves editor to the first polygon. Returns true if moved editor has a value.
+     * (Stream not empty and not all polys deleted.)
+     */
+    boolean editorOrigin();
 
-    @Override
-    public void clear() {
-        super.clear();
-        editor.invalidate();
-    }
+    /**
+     * True if moves editor to next non-deleted poly. False if at the end of the
+     * stream.
+     */
+    boolean editorNext();
 
-    @Override
-    protected void doRelease() {
-        super.doRelease();
-        editor.stream = null;
-    }
+    /**
+     * Moves editor to given address.
+     */
+    void moveEditor(int address);
 
-    @Override
-    protected void returnToPool() {
-        PolyStreams.release(this);
-    }
+    /**
+     * Combo of {@link #moveEditor(int)} and {@link #editor()}.<br>
+     * Moves editor to given address and returns the editor cursor for concision.
+     */
+    MutablePolygon editor(int address);
 
-    @Override
-    public IMutablePolygon editor() {
-        return editor;
-    }
+    boolean editorHasValue();
 
-    @Override
-    public boolean editorOrigin() {
-        if (isEmpty()) {
-            editor.invalidate();
-            return false;
-        } else {
-            editor.moveTo(originAddress);
-            if (editor.isDeleted())
-                editorNext();
-            return editorHasValue();
-        }
-    }
-
-    @Override
-    public boolean editorNext() {
-        return moveReaderToNext(this.editor);
-    }
-
-    @Override
-    public boolean editorHasValue() {
-        return isValidAddress(editor.baseAddress) && !editor.isDeleted();
-    }
-
-    @Override
-    public void moveEditor(int address) {
-        validateAddress(address);
-        editor.moveTo(address);
-    }
-
-    @Override
-    public IMutablePolygon editor(int address) {
-        moveEditor(address);
-        return editor;
-    }
-
-    @Override
-    public int editorAddress() {
-        return editor.baseAddress;
-    }
-
-    @Override
-    protected void appendCopy(IPolygon polyIn, int withFormat) {
-        final boolean needReaderLoad = reader.baseAddress == writeAddress;
-
-        // formatFlags for writer poly should already include mutable
-        assert PolyStreamFormat.isMutable(withFormat);
-
-        int newFormat = PolyStreamFormat.setLayerCount(withFormat, polyIn.layerCount());
-        newFormat = PolyStreamFormat.setVertexCount(newFormat, polyIn.vertexCount());
-        stream.set(writeAddress, newFormat);
-        internal.moveTo(writeAddress);
-        internal.copyFrom(polyIn, true);
-        writeAddress += PolyStreamFormat.polyStride(newFormat, true);
-
-        if (needReaderLoad)
-            reader.loadFormat();
-    }
+    int editorAddress();
 }

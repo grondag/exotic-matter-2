@@ -22,7 +22,7 @@ import grondag.xm.mesh.vertex.Vec3f;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
-public class ForwardingPolygon implements IPolygon {
+public class ForwardingPolygon implements Polygon {
     @FunctionalInterface
     public static interface BooleanGetter {
         boolean getValue();
@@ -51,9 +51,9 @@ public class ForwardingPolygon implements IPolygon {
     public static final IntSetter DEFAULT_INT_SETTER = (i) -> {
         throw new UnsupportedOperationException();
     };
-    public static final IntGetter DEFAULT_INT_GETTER = () -> IPolygon.NO_LINK_OR_TAG;
+    public static final IntGetter DEFAULT_INT_GETTER = () -> Polygon.NO_LINK_OR_TAG;
 
-    public IPolygon wrapped;
+    public Polygon wrapped;
 
     public BooleanSetter markSetter = DEFAULT_BOOL_SETTER;
     public BooleanGetter markGetter = DEFAULT_BOOL_GETTER;
@@ -78,8 +78,8 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public Vec3f getFaceNormal() {
-        return wrapped.getFaceNormal();
+    public Vec3f faceNormal() {
+        return wrapped.faceNormal();
     }
 
     @Override
@@ -93,8 +93,8 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public Vec3f getVertexNormal(int vertexIndex) {
-        return wrapped.getVertexNormal(vertexIndex);
+    public Vec3f vertexNormal(int vertexIndex) {
+        return wrapped.vertexNormal(vertexIndex);
     }
 
     @Override
@@ -118,23 +118,23 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public float getMaxU(int layerIndex) {
-        return wrapped.getMaxU(layerIndex);
+    public float maxU(int layerIndex) {
+        return wrapped.maxU(layerIndex);
     }
 
     @Override
-    public float getMaxV(int layerIndex) {
-        return wrapped.getMaxV(layerIndex);
+    public float maxV(int layerIndex) {
+        return wrapped.maxV(layerIndex);
     }
 
     @Override
-    public float getMinU(int layerIndex) {
-        return wrapped.getMinU(layerIndex);
+    public float minU(int layerIndex) {
+        return wrapped.minU(layerIndex);
     }
 
     @Override
-    public float getMinV(int layerIndex) {
-        return wrapped.getMinV(layerIndex);
+    public float minV(int layerIndex) {
+        return wrapped.minV(layerIndex);
     }
 
     @Override
@@ -143,13 +143,13 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public int layerCount() {
-        return wrapped.layerCount();
+    public int spriteDepth() {
+        return wrapped.spriteDepth();
     }
 
     @Override
-    public String getTextureName(int layerIndex) {
-        return wrapped.getTextureName(layerIndex);
+    public String spriteName(int layerIndex) {
+        return wrapped.spriteName(layerIndex);
     }
 
     @Override
@@ -198,13 +198,13 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public int getTextureSalt() {
-        return wrapped.getTextureSalt();
+    public int textureSalt() {
+        return wrapped.textureSalt();
     }
 
     @Override
-    public boolean isLockUV(int layerIndex) {
-        return wrapped.isLockUV(layerIndex);
+    public boolean lockUV(int layerIndex) {
+        return wrapped.lockUV(layerIndex);
     }
 
     @Override
@@ -213,13 +213,13 @@ public class ForwardingPolygon implements IPolygon {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer(int layerIndex) {
-        return wrapped.getRenderLayer(layerIndex);
+    public BlockRenderLayer blendMode(int layerIndex) {
+        return wrapped.blendMode(layerIndex);
     }
 
     @Override
-    public boolean isEmissive(int textureLayerIndex) {
-        return wrapped.isEmissive(textureLayerIndex);
+    public boolean emissive(int textureLayerIndex) {
+        return wrapped.emissive(textureLayerIndex);
     }
 
     @Override

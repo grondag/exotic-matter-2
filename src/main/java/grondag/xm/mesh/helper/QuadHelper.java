@@ -24,8 +24,8 @@ import org.joml.Vector4f;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.xm.mesh.vertex.IVec3f;
-import grondag.xm.mesh.vertex.IVertexCollection;
+import grondag.xm.mesh.vertex.Vertex3f;
+import grondag.xm.mesh.vertex.VertexCollection;
 import grondag.xm.mesh.vertex.Vec3Function;
 import grondag.xm.mesh.vertex.Vec3f;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
@@ -225,7 +225,7 @@ public class QuadHelper {
         return retVal;
     }
 
-    public static boolean isConvex(IVertexCollection vertices) {
+    public static boolean isConvex(VertexCollection vertices) {
         final int vertexCount = vertices.vertexCount();
         if (vertexCount == 3)
             return true;
@@ -235,11 +235,11 @@ public class QuadHelper {
         float testZ = 0;
         boolean needTest = true;
 
-        IVec3f priorVertex = vertices.getPos(vertexCount - 2);
-        IVec3f thisVertex = vertices.getPos(vertexCount - 1);
+        Vertex3f priorVertex = vertices.getPos(vertexCount - 2);
+        Vertex3f thisVertex = vertices.getPos(vertexCount - 1);
 
         for (int nextIndex = 0; nextIndex < vertexCount; nextIndex++) {
-            IVec3f nextVertex = vertices.getPos(nextIndex);
+            Vertex3f nextVertex = vertices.getPos(nextIndex);
 
             final float ax = thisVertex.x() - priorVertex.x();
             final float ay = thisVertex.y() - priorVertex.y();

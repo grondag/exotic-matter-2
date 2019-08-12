@@ -18,10 +18,10 @@ package grondag.xm.mesh.stream;
 
 import java.util.function.Consumer;
 
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.polygon.IStreamReaderPolygon;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.polygon.StreamReaderPolygon;
 
-public interface IPolyStream {
+public interface PolyStream {
     boolean isEmpty();
 
     /**
@@ -31,12 +31,12 @@ public interface IPolyStream {
      * 
      * THIS READ IS NOT THREAD-SAFE and should only be used the allocating thread.
      */
-    IPolygon reader();
+    Polygon reader();
 
     /**
      * Moves reader and returns it.
      */
-    IPolygon reader(int address);
+    Polygon reader(int address);
 
     /**
      * Claims a reader appropriate for concurrent access. Will fail for streams that
@@ -46,7 +46,7 @@ public interface IPolyStream {
      * Reader must be released after use or stream can never be recycled to the pool
      * when released.
      */
-    default IStreamReaderPolygon claimThreadSafeReader() {
+    default StreamReaderPolygon claimThreadSafeReader() {
         throw new UnsupportedOperationException();
     }
 
@@ -101,7 +101,7 @@ public interface IPolyStream {
      * DO NOT STORE A REFERENCE. Meant only for use in a local operation. Calls to
      * {@link #movePolyA(int)} will produce new values.
      */
-    IPolygon polyA();
+    Polygon polyA();
 
     /**
      * Sets address for {@link #polyA()} and returns same as convenience.
@@ -111,12 +111,12 @@ public interface IPolyStream {
     /**
      * Sets address for {@link #polyA()} and returns same as convenience.
      */
-    IPolygon polyA(int address);
+    Polygon polyA(int address);
 
     /**
      * Secondary instance of {@link #polyA()}. For interpolation.
      */
-    IPolygon polyB();
+    Polygon polyB();
 
     /**
      * Secondary instance of {@link #movePolyA(int)}. For interpolation.
@@ -126,7 +126,7 @@ public interface IPolyStream {
     /**
      * Secondary instance of {@link #polyA(int)}. For interpolation.
      */
-    IPolygon polyB(int address);
+    Polygon polyB(int address);
 
     /**
      * Mark this poly or clear the mark for the poly at the read cursor. Meaning of
@@ -151,11 +151,11 @@ public interface IPolyStream {
     }
 
     default int getTag() {
-        return IPolygon.NO_LINK_OR_TAG;
+        return Polygon.NO_LINK_OR_TAG;
     }
 
     default int getTag(int address) {
-        return IPolygon.NO_LINK_OR_TAG;
+        return Polygon.NO_LINK_OR_TAG;
     }
 
     /**
@@ -193,7 +193,7 @@ public interface IPolyStream {
      * Returns link value for poly at given address.
      */
     default int getLink(int address) {
-        return IPolygon.NO_LINK_OR_TAG;
+        return Polygon.NO_LINK_OR_TAG;
     }
 
     /**
@@ -279,9 +279,9 @@ public interface IPolyStream {
     }
     
     /** Moves reader! */
-    default void forEach(Consumer<IPolygon> target) {
+    default void forEach(Consumer<Polygon> target) {
         if (origin()) {
-            IPolygon reader = reader();
+            Polygon reader = reader();
 
             do
                 target.accept(reader);

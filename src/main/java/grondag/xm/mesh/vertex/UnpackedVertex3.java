@@ -18,7 +18,7 @@ package grondag.xm.mesh.vertex;
 
 import grondag.xm.mesh.polygon.PolygonAccessor.VertexLayer;
 
-public class UnpackedVertex3 extends AbstractVertex<UnpackedVertex3> implements IMutableVertex {
+public class UnpackedVertex3 extends AbstractVertex<UnpackedVertex3> implements MutableVertex {
     @SuppressWarnings("unchecked")
     private static final VertexLayer<UnpackedVertex3>[] LAYERS = new VertexLayer[3];
 
@@ -200,11 +200,11 @@ public class UnpackedVertex3 extends AbstractVertex<UnpackedVertex3> implements 
     }
 
     @Override
-    public final void copyFrom(IMutableVertex source) {
+    public final void copyFrom(MutableVertex source) {
         if (source instanceof UnpackedVertex3)
             copyFromFast((UnpackedVertex3) source);
         else
-            IMutableVertex.super.copyFrom(source);
+            MutableVertex.super.copyFrom(source);
     }
 
     private final void copyFromFast(UnpackedVertex3 source) {

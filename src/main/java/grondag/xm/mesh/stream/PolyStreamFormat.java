@@ -17,7 +17,7 @@
 package grondag.xm.mesh.stream;
 
 import grondag.fermion.bits.BitPacker32;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vec3f;
 import net.minecraft.util.math.Direction;
 
@@ -321,9 +321,9 @@ public class PolyStreamFormat {
      * mutable = false because this meant for optimal storage and there would be no
      * guarantee changes could be stored in the format.
      */
-    public static int minimalFixedFormat(IPolygon polyIn, int formatFlags) {
+    public static int minimalFixedFormat(Polygon polyIn, int formatFlags) {
         int result = formatFlags;
-        final int layerCount = polyIn.layerCount();
+        final int layerCount = polyIn.spriteDepth();
         assert layerCount >= 1;
 
         final int vertexCount = polyIn.vertexCount();
@@ -337,7 +337,7 @@ public class PolyStreamFormat {
         Direction nominalFace = polyIn.nominalFace();
         result = setNominalFace(result, nominalFace);
 
-        Vec3f faceNormal = polyIn.getFaceNormal();
+        Vec3f faceNormal = polyIn.faceNormal();
         if (faceNormal.equals(Vec3f.forFace(nominalFace)))
             result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_NOMINAL);
         else
@@ -363,7 +363,7 @@ public class PolyStreamFormat {
                 allSameGlow = false;
 
             // vertex normal
-            if (allFaceNormal && polyIn.hasNormal(v) && !polyIn.getVertexNormal(v).equals(faceNormal))
+            if (allFaceNormal && polyIn.hasNormal(v) && !polyIn.vertexNormal(v).equals(faceNormal))
                 allFaceNormal = false;
 
             if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 0) != color0)
@@ -412,10 +412,10 @@ public class PolyStreamFormat {
 
     /**
      * Computes the size of the input polygon, in integers, if stored using the
-     * optimal format given by {@link #minimalFixedFormat(IPolygon, int)}. Includes
+     * optimal format given by {@link #minimalFixedFormat(Polygon, int)}. Includes
      * size vertex data.
      */
-    public static int minimalFixedSize(IPolygon polyIn, int formatFlags) {
+    public static int minimalFixedSize(Polygon polyIn, int formatFlags) {
         return polyStride(minimalFixedFormat(polyIn, formatFlags), true);
     }
 

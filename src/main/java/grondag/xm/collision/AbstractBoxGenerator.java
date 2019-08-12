@@ -18,10 +18,10 @@ package grondag.xm.collision;
 
 import java.util.function.Consumer;
 
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.vertex.IVec3f;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.vertex.Vertex3f;
 
-public abstract class AbstractBoxGenerator implements Consumer<IPolygon> {
+public abstract class AbstractBoxGenerator implements Consumer<Polygon> {
     // diameters
     static final float D1 = 0.5f;
     static final float D2 = D1 * 0.5f;
@@ -48,12 +48,12 @@ public abstract class AbstractBoxGenerator implements Consumer<IPolygon> {
     static final float CHIGH4 = CLOW4 + D4;
 
     @Override
-    public final void accept(IPolygon poly) {
+    public final void accept(Polygon poly) {
         acceptTriangle(poly.getPos(0), poly.getPos(1), poly.getPos(2));
 
         if (poly.vertexCount() == 4)
             acceptTriangle(poly.getPos(0), poly.getPos(2), poly.getPos(3));
     }
 
-    protected abstract void acceptTriangle(IVec3f v0, IVec3f v1, IVec3f v2);
+    protected abstract void acceptTriangle(Vertex3f v0, Vertex3f v1, Vertex3f v2);
 }

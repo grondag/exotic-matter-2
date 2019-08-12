@@ -17,8 +17,8 @@
 package grondag.xm.mesh.helper;
 
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.stream.IWritablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.surface.XmSurfaceImpl;
 import net.minecraft.util.math.Direction;
 
@@ -54,59 +54,59 @@ public class CubeInputs {
         this.rotateBottom = true;
     }
 
-    public void appendFace(IWritablePolyStream stream, Direction side) {
-        final IMutablePolygon q = stream.writer();
+    public void appendFace(WritablePolyStream stream, Direction side) {
+        final MutablePolygon q = stream.writer();
 
-        q.setLockUV(0, true);
-        q.setRotation(0, (rotateBottom && side == Direction.DOWN) ? this.textureRotation.clockwise().clockwise() : this.textureRotation);
-        q.setTextureName(0, this.textureName);
+        q.lockUV(0, true);
+        q.rotation(0, (rotateBottom && side == Direction.DOWN) ? this.textureRotation.clockwise().clockwise() : this.textureRotation);
+        q.sprite(0, this.textureName);
         q.surface(this.surface);
 
         float minBound = this.isOverlay ? -0.0002f : 0.0f;
         float maxBound = this.isOverlay ? 1.0002f : 1.0f;
-        q.setNominalFace(side);
+        q.nominalFace(side);
 
         switch (side) {
         case UP:
-            q.setVertex(0, minBound, maxBound, minBound, u0, v0, this.color);
-            q.setVertex(1, minBound, maxBound, maxBound, u0, v1, this.color);
-            q.setVertex(2, maxBound, maxBound, maxBound, u1, v1, this.color);
-            q.setVertex(3, maxBound, maxBound, minBound, u1, v0, this.color);
+            q.vertex(0, minBound, maxBound, minBound, u0, v0, this.color);
+            q.vertex(1, minBound, maxBound, maxBound, u0, v1, this.color);
+            q.vertex(2, maxBound, maxBound, maxBound, u1, v1, this.color);
+            q.vertex(3, maxBound, maxBound, minBound, u1, v0, this.color);
             break;
 
         case DOWN:
-            q.setVertex(0, minBound, minBound, maxBound, u1, v1, this.color);
-            q.setVertex(1, minBound, minBound, minBound, u1, v0, this.color);
-            q.setVertex(2, maxBound, minBound, minBound, u0, v0, this.color);
-            q.setVertex(3, maxBound, minBound, maxBound, u0, v1, this.color);
+            q.vertex(0, minBound, minBound, maxBound, u1, v1, this.color);
+            q.vertex(1, minBound, minBound, minBound, u1, v0, this.color);
+            q.vertex(2, maxBound, minBound, minBound, u0, v0, this.color);
+            q.vertex(3, maxBound, minBound, maxBound, u0, v1, this.color);
             break;
 
         case WEST:
-            q.setVertex(0, minBound, maxBound, minBound, u0, v0, this.color);
-            q.setVertex(1, minBound, minBound, minBound, u0, v1, this.color);
-            q.setVertex(2, minBound, minBound, maxBound, u1, v1, this.color);
-            q.setVertex(3, minBound, maxBound, maxBound, u1, v0, this.color);
+            q.vertex(0, minBound, maxBound, minBound, u0, v0, this.color);
+            q.vertex(1, minBound, minBound, minBound, u0, v1, this.color);
+            q.vertex(2, minBound, minBound, maxBound, u1, v1, this.color);
+            q.vertex(3, minBound, maxBound, maxBound, u1, v0, this.color);
             break;
 
         case EAST:
-            q.setVertex(0, maxBound, maxBound, maxBound, u0, v0, this.color);
-            q.setVertex(1, maxBound, minBound, maxBound, u0, v1, this.color);
-            q.setVertex(2, maxBound, minBound, minBound, u1, v1, this.color);
-            q.setVertex(3, maxBound, maxBound, minBound, u1, v0, this.color);
+            q.vertex(0, maxBound, maxBound, maxBound, u0, v0, this.color);
+            q.vertex(1, maxBound, minBound, maxBound, u0, v1, this.color);
+            q.vertex(2, maxBound, minBound, minBound, u1, v1, this.color);
+            q.vertex(3, maxBound, maxBound, minBound, u1, v0, this.color);
             break;
 
         case NORTH:
-            q.setVertex(0, maxBound, maxBound, minBound, u0, v0, this.color);
-            q.setVertex(1, maxBound, minBound, minBound, u0, v1, this.color);
-            q.setVertex(2, minBound, minBound, minBound, u1, v1, this.color);
-            q.setVertex(3, minBound, maxBound, minBound, u1, v0, this.color);
+            q.vertex(0, maxBound, maxBound, minBound, u0, v0, this.color);
+            q.vertex(1, maxBound, minBound, minBound, u0, v1, this.color);
+            q.vertex(2, minBound, minBound, minBound, u1, v1, this.color);
+            q.vertex(3, minBound, maxBound, minBound, u1, v0, this.color);
             break;
 
         case SOUTH:
-            q.setVertex(0, minBound, maxBound, maxBound, u0, v0, this.color);
-            q.setVertex(1, minBound, minBound, maxBound, u0, v1, this.color);
-            q.setVertex(2, maxBound, minBound, maxBound, u1, v1, this.color);
-            q.setVertex(3, maxBound, maxBound, maxBound, u1, v0, this.color);
+            q.vertex(0, minBound, maxBound, maxBound, u0, v0, this.color);
+            q.vertex(1, minBound, minBound, maxBound, u0, v1, this.color);
+            q.vertex(2, maxBound, minBound, maxBound, u1, v1, this.color);
+            q.vertex(3, maxBound, maxBound, maxBound, u1, v0, this.color);
             break;
         }
 

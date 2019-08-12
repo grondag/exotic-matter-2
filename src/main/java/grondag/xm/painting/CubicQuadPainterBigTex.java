@@ -23,8 +23,8 @@ import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.stream.IMutablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.stream.MutablePolyStream;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -51,10 +51,10 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(IMutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        IMutablePolygon editor = stream.editor();
+    public static void paintQuads(MutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+        MutablePolygon editor = stream.editor();
         do {
-            editor.setLockUV(textureIndex, true);
+            editor.lockUV(textureIndex, true);
             editor.assignLockedUVCoordinates(textureIndex);
 
             final Direction nominalFace = editor.nominalFace();
@@ -70,16 +70,16 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 
                 // abs is necessary so that hash input components combine together properly
                 // Small random numbers already have most bits set.
-                int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization() ? HashCommon.mix((modelState.species() << 8) | editor.getTextureSalt())
-                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.species() << 8) | (editor.getTextureSalt() << 12));
+                int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization() ? HashCommon.mix((modelState.species() << 8) | editor.textureSalt())
+                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.species() << 8) | (editor.textureSalt() << 12));
 
                 // rotation
-                editor.setRotation(textureIndex,
+                editor.rotation(textureIndex,
                         allowTexRotation ? Useful.offsetEnumValue(tex.rotation().rotation, depthAndSpeciesHash & 3) : tex.rotation().rotation);
 
                 surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
 
-                editor.setTextureName(textureIndex, tex.textureName(0));
+                editor.sprite(textureIndex, tex.textureName(0));
 
                 final int xOffset = (depthAndSpeciesHash >> 2) & scale.sliceCountMask;
                 final int yOffset = (depthAndSpeciesHash >> 8) & scale.sliceCountMask;
@@ -96,11 +96,11 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                 final int x = flipU ? scale.sliceCount - surfaceVec.getX() : surfaceVec.getX();
                 final int y = flipV ? scale.sliceCount - surfaceVec.getY() : surfaceVec.getY();
 
-                editor.setMinU(textureIndex, x * sliceIncrement);
-                editor.setMaxU(textureIndex, editor.getMinU(textureIndex) + (flipU ? -sliceIncrement : sliceIncrement));
+                editor.minU(textureIndex, x * sliceIncrement);
+                editor.maxU(textureIndex, editor.minU(textureIndex) + (flipU ? -sliceIncrement : sliceIncrement));
 
-                editor.setMinV(textureIndex, y * sliceIncrement);
-                editor.setMaxV(textureIndex, editor.getMinV(textureIndex) + (flipV ? -sliceIncrement : sliceIncrement));
+                editor.minV(textureIndex, y * sliceIncrement);
+                editor.maxV(textureIndex, editor.minV(textureIndex) + (flipV ? -sliceIncrement : sliceIncrement));
 
             } else {
                 // multiple texture versions, so do rotation and alternation normally, except
@@ -108,12 +108,12 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 
                 // abs is necessary so that hash input components combine together properly
                 // Small random numbers already have most bits set.
-                final int depthHash = editor.surface().ignoreDepthForRandomization() && editor.getTextureSalt() == 0 ? 0
-                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (editor.getTextureSalt() << 8));
+                final int depthHash = editor.surface().ignoreDepthForRandomization() && editor.textureSalt() == 0 ? 0
+                        : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (editor.textureSalt() << 8));
 
-                editor.setTextureName(textureIndex, tex.textureName((textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.versionMask()));
+                editor.sprite(textureIndex, tex.textureName((textureVersionForFace(nominalFace, tex, modelState) + depthHash) & tex.versionMask()));
 
-                editor.setRotation(textureIndex,
+                editor.rotation(textureIndex,
                         allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState), (depthHash >> 16) & 3)
                                 : textureRotationForFace(nominalFace, tex, modelState));
 
@@ -121,11 +121,11 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
 
                 final float sliceIncrement = scale.sliceIncrement;
 
-                editor.setMinU(textureIndex, surfaceVec.getX() * sliceIncrement);
-                editor.setMaxU(textureIndex, editor.getMinU(textureIndex) + sliceIncrement);
+                editor.minU(textureIndex, surfaceVec.getX() * sliceIncrement);
+                editor.maxU(textureIndex, editor.minU(textureIndex) + sliceIncrement);
 
-                editor.setMinV(textureIndex, surfaceVec.getY() * sliceIncrement);
-                editor.setMaxV(textureIndex, editor.getMinV(textureIndex) + sliceIncrement);
+                editor.minV(textureIndex, surfaceVec.getY() * sliceIncrement);
+                editor.maxV(textureIndex, editor.minV(textureIndex) + sliceIncrement);
             }
 
             commonPostPaint(editor, textureIndex, modelState, surface, paint);

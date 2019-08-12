@@ -21,9 +21,9 @@ import java.util.function.Consumer;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.mesh.helper.PolyTransform;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.polygon.IPolygon;
-import grondag.xm.mesh.stream.IWritablePolyStream;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import net.minecraft.util.math.Direction;
 
@@ -33,7 +33,7 @@ public class StairPrimitive extends AbstractWedgePrimitive {
     }
 
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<IPolygon> target) {
+    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         // Axis for this shape is along the face of the sloping surface
         // Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
         // Default geometry is Y orthogonalAxis with full sides against north/east
@@ -42,23 +42,23 @@ public class StairPrimitive extends AbstractWedgePrimitive {
         // PERF: if have a consumer and doing this dynamically - should consumer simply
         // be a stream?
         // Why create a stream just to pipe it to the consumer? Or cache the result.
-        final IWritablePolyStream stream = PolyStreams.claimWritable();
-        final IMutablePolygon quad = stream.writer();
+        final WritablePolyStream stream = PolyStreams.claimWritable();
+        final MutablePolygon quad = stream.writer();
 
         PolyTransform transform = PolyTransform.get(modelState);
 
-        quad.setRotation(0, Rotation.ROTATE_NONE);
-        quad.setLockUV(0, true);
+        quad.rotation(0, Rotation.ROTATE_NONE);
+        quad.lockUV(0, true);
         stream.saveDefaults();
 
         quad.surface(SURFACE_BACK);
-        quad.setNominalFace(Direction.NORTH);
+        quad.nominalFace(Direction.NORTH);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         transform.apply(quad);
         stream.append();
 
         quad.surface(SURFACE_BOTTOM);
-        quad.setNominalFace(Direction.EAST);
+        quad.nominalFace(Direction.EAST);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         transform.apply(quad);
         stream.append();
@@ -110,7 +110,7 @@ public class StairPrimitive extends AbstractWedgePrimitive {
         // salt is so cuts appear different from top/front face
         // wedges can't connect textures with adjacent flat blocks consistently anyway,
         // so doesn't hurt them
-        quad.setTextureSalt(1);
+        quad.textureSalt(1);
         quad.setupFaceQuad(Direction.SOUTH, 0.0, 0.0, 0.5, 1.0, 0.5, Direction.UP);
         transform.apply(quad);
         stream.append();
@@ -121,13 +121,13 @@ public class StairPrimitive extends AbstractWedgePrimitive {
         stream.append();
 
         quad.surface(SURFACE_TOP);
-        quad.setTextureSalt(1);
+        quad.textureSalt(1);
         quad.setupFaceQuad(Direction.WEST, 0.5, 0.0, 1.0, 1.0, 0.5, Direction.UP);
         transform.apply(quad);
         stream.append();
 
         if (stream.origin()) {
-            IPolygon reader = stream.reader();
+            Polygon reader = stream.reader();
 
             do
                 target.accept(reader);

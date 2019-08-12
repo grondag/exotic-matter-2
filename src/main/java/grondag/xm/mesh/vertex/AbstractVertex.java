@@ -18,7 +18,7 @@ package grondag.xm.mesh.vertex;
 
 import grondag.xm.mesh.polygon.PolygonAccessor.VertexLayer;
 
-public abstract class AbstractVertex<T extends AbstractVertex<T>> implements IMutableVertex {
+public abstract class AbstractVertex<T extends AbstractVertex<T>> implements MutableVertex {
     protected abstract VertexLayer<T>[] layerVertexArray();
 
     @SuppressWarnings("unchecked")

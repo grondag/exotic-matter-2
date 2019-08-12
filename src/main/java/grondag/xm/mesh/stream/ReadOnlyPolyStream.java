@@ -16,31 +16,15 @@
 
 package grondag.xm.mesh.stream;
 
-import grondag.fermion.intstream.IntStreams;
-import grondag.xm.mesh.polygon.IPolygon;
+/**
+ * Implementations of IPolyStream that declare this interface guarantee that no
+ * polygon in the stream will be mutated.
+ * <p>
+ * 
+ * If present means IMutablePolyStream is NOT implemented but
+ * IWritablePolyStream may be. Use to exclude mutable streams from use cases
+ * where they would cause problems.
+ */
+public interface ReadOnlyPolyStream extends PolyStream {
 
-public class ReadOnlyPolyStream extends AbstractPolyStream implements IReadOnlyPolyStream {
-    void load(WritablePolyStream streamIn, int formatFlags) {
-        prepare(IntStreams.claim(streamIn.stream.capacity()));
-
-        if (!streamIn.isEmpty()) {
-            streamIn.origin();
-            IPolygon reader = streamIn.reader();
-            do
-                this.appendCopy(reader, formatFlags);
-            while (streamIn.next());
-        }
-
-        this.stream.compact();
-    }
-
-    @Override
-    protected void doRelease() {
-        super.doRelease();
-    }
-
-    @Override
-    protected void returnToPool() {
-        PolyStreams.release(this);
-    }
 }

@@ -16,197 +16,129 @@
 
 package grondag.xm.mesh.stream;
 
-import grondag.fermion.intstream.IntStream;
-import grondag.fermion.intstream.IntStreams;
-import grondag.xm.mesh.polygon.IMutablePolygon;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.mesh.polygon.Polygon;
 
-public class WritablePolyStream extends AbstractPolyStream implements IWritablePolyStream {
-    private static final int MAX_STRIDE;
-
-    static {
-        final int maxFormat = PolyStreamFormat.MUTABLE_FLAG | PolyStreamFormat.HAS_LINK_FLAG | PolyStreamFormat.HAS_TAG_FLAG;
-
-        MAX_STRIDE = 1 + StaticEncoder.INTEGER_WIDTH + PolyEncoder.get(maxFormat).stride();
-    }
-
-    protected final StreamBackedMutablePolygon writer;
-    protected final StreamBackedPolygon copyFrom = new StreamBackedPolygon();
-
-    protected IntStream writerStream;
-    protected IntStream defaultStream;
+/**
+ * Stream that allows appending to end in wip area but is immutable for polygons
+ * already created.
+ */
+public interface WritablePolyStream extends PolyStream {
 
     /**
-     * Format flags used for the writer polygon. Always includes mutable flag. Also
-     * the main stream format for mutable subclass.
+     * Current setting for packed normals. See {@link #setPackedNormals(boolean)}
      */
-    protected int formatFlags = 0;
-
-    public WritablePolyStream() {
-        writer = new StreamBackedMutablePolygon();
-        // note this never changes - writer stream is dedicated,
-        // and we already write at the start of it
-        writer.baseAddress = 0;
+    default boolean usePackedNormals() {
+        return false;
     }
 
-    @Override
-    public void clear() {
-        stream.clear();
-        originAddress = newOrigin();
-        writeAddress = originAddress;
-        // force error on read
-        reader.invalidate();
-        polyA.invalidate();
-        polyB.invalidate();
-        internal.invalidate();
-        clearDefaults();
-        loadDefaults();
+    /**
+     * Set to true to compress face and vertex normals.
+     * <p>
+     * 
+     * Packed normals are less precise, so should only use for streams that will be
+     * used for rendering and not CSG or other operations.
+     * <p>
+     * 
+     * False by default. Not all stream writers support. If unsupported, stream will
+     * simply ignore.
+     */
+    default void setPackedNormals(boolean usePacked) {
+        // NOOP
     }
 
-    protected final void prepare(IntStream stream, int formatFlags) {
-        super.prepare(stream);
-        copyFrom.stream = stream;
-        defaultStream = IntStreams.claim();
-        writerStream = IntStreams.claim();
-        writer.stream = writerStream;
-        this.formatFlags = formatFlags | PolyStreamFormat.MUTABLE_FLAG;
-        clearDefaults();
-        loadDefaults();
+    /**
+     * Holds WIP poly data that will be appended by next call to {@link #append()}.
+     * Is reset to defaults when append is called.
+     * <p>
+     * 
+     * DO NOT HOLD A NON-LOCAL REFERENCE TO THIS.
+     */
+    MutablePolygon writer();
+
+    /**
+     * Address that will be used for next appended polygon when append is
+     * called.<br>
+     * Cannot be used with move... methods until writer is appended.
+     */
+    int writerAddress();
+
+    /**
+     * Appends WIP as new poly and resets WIP to default values. Increases size of
+     * stream by 1.
+     */
+    void append();
+
+    /**
+     * Current poly settings will be used to initialize WIP after append.
+     */
+    void saveDefaults();
+
+    /**
+     * Undoes effects of {@link #saveDefaults()} so that defaults are for a new poly
+     * stream.
+     */
+    void clearDefaults();
+
+    /**
+     * Loads default values into WIP.
+     */
+    void loadDefaults();
+
+    /**
+     * Releases this stream and returns an immutable reader stream. The reader strip
+     * will use non-pooled heap memory and thus should only be used for streams with
+     * a significant lifetime to prevent needless garbage collection.
+     * <p>
+     * 
+     * The reader stream will not include deleted polygons, and will only include
+     * tag, link or bounds metadata if those flags are specified.
+     */
+    ReadOnlyPolyStream releaseAndConvertToReader(int formatFlags);
+
+    /**
+     * Version of {@link #releaseAndConvertToReader(int)} that strips all metadata.
+     */
+    default ReadOnlyPolyStream releaseAndConvertToReader() {
+        return releaseAndConvertToReader(0);
     }
 
-    protected void prepare(int formatFlags) {
-        prepare(IntStreams.claim(), formatFlags);
-    }
+    /**
+     * Sets vertex count for current writer. Value can be saved as part of defaults.
+     */
+    void setVertexCount(int vertexCount);
 
-    @Override
-    protected final void prepare(IntStream stream) {
-        prepare(stream, 0);
-    }
+    /**
+     * Sets layer count for current writer. Value can be saved as part of defaults.
+     */
+    void setLayerCount(int layerCount);
 
-    @Override
-    protected void doRelease() {
-        super.doRelease();
-        copyFrom.stream = null;
-        defaultStream.release();
-        writerStream.release();
-        defaultStream = null;
-        writerStream = null;
-    }
+    /**
+     * Makes no change to writer state, except address.
+     */
+    void appendCopy(Polygon poly);
 
-    @Override
-    protected void returnToPool() {
-        PolyStreams.release(this);
-    }
-
-    @Override
-    public IMutablePolygon writer() {
-        return writer;
-    }
-
-    @Override
-    public int writerAddress() {
-        return writeAddress;
-    }
-
-    @Override
-    public final void append() {
-        appendCopy(writer, formatFlags);
-        loadDefaults();
-    }
-
-    @Override
-    public void saveDefaults() {
-        writer.clearFaceNormal();
-        defaultStream.clear();
-        defaultStream.copyFrom(0, writerStream, 0, PolyStreamFormat.polyStride(writer.format(), false));
-    }
-
-    @Override
-    public void clearDefaults() {
-        defaultStream.clear();
-        defaultStream.set(0, PolyStreamFormat.setVertexCount(formatFlags, 4));
-        writer.stream = defaultStream;
-        writer.loadFormat();
-
-        writer.loadStandardDefaults();
-
-        writer.stream = writerStream;
-        writer.loadFormat();
-    }
-
-    @Override
-    public void loadDefaults() {
-        writerStream.clear();
-        writerStream.copyFrom(0, defaultStream, 0, MAX_STRIDE);
-        writer.loadFormat();
-    }
-
-    @Override
-    public IReadOnlyPolyStream releaseAndConvertToReader(int formatFlags) {
-        IReadOnlyPolyStream result = PolyStreams.claimReadOnly(this, formatFlags);
-        release();
-        return result;
-    }
-
-    @Override
-    public void setVertexCount(int vertexCount) {
-        writer.setFormat(PolyStreamFormat.setVertexCount(writer.format(), vertexCount));
-    }
-
-    @Override
-    public void setLayerCount(int layerCount) {
-        writer.setLayerCount(layerCount);
-    }
-
-    @Override
-    public void appendCopy(IPolygon poly) {
-        appendCopy(poly, formatFlags);
-    }
-
-    @Override
-    public int splitIfNeeded(int targetAddress) {
-        internal.moveTo(targetAddress);
-        final int inCount = internal.vertexCount();
-        if (inCount == 3 || (inCount == 4 && internal.isConvex()))
-            return IPolygon.NO_LINK_OR_TAG;
-
-        int firstSplitAddress = this.writerAddress();
-
-        int head = inCount - 1;
-        int tail = 2;
-        setVertexCount(4);
-        writer.copyFrom(internal, false);
-        writer.copyVertexFrom(0, internal, head);
-        writer.copyVertexFrom(1, internal, 0);
-        writer.copyVertexFrom(2, internal, 1);
-        writer.copyVertexFrom(3, internal, tail);
-        append();
-
-        while (head - tail > 1) {
-            final int vCount = head - tail == 2 ? 3 : 4;
-            setVertexCount(vCount);
-            writer.copyFrom(internal, false);
-            writer.copyVertexFrom(0, internal, head);
-            writer.copyVertexFrom(1, internal, tail);
-            writer.copyVertexFrom(2, internal, ++tail);
-            if (vCount == 4) {
-                writer.copyVertexFrom(3, internal, --head);
-
-                // if we end up with a convex quad
-                // backtrack and output a tri instead
-                if (!writer.isConvex()) {
-                    head++;
-                    tail--;
-                    setVertexCount(3);
-                    writer.copyFrom(internal, false);
-                    writer.copyVertexFrom(0, internal, head);
-                    writer.copyVertexFrom(1, internal, tail);
-                    writer.copyVertexFrom(2, internal, ++tail);
-                }
-            }
-            append();
+    default void appendAll(PolyStream stream) {
+        if (stream.origin()) {
+            Polygon reader = stream.reader();
+            do {
+                assert !reader.isDeleted();
+                this.appendCopy(reader);
+            } while (stream.next());
         }
-        internal.setDeleted();
-        return firstSplitAddress;
     }
+
+    /**
+     * If the poly at the given address is a tri or a convex quad, does nothing and
+     * returns IStreamPolygon#NO_ADDRESS.
+     * <p>
+     * 
+     * If the poly is a concave quad or higher-order polygon, appends new polys
+     * split from this one at end of the stream, marks the poly at the given address
+     * as deleted, and returns the address of the first split output.
+     * <p>
+     */
+    public int splitIfNeeded(int targetAddress);
+
+    public void clear();
 }

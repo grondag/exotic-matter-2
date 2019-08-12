@@ -11,7 +11,7 @@ import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.surface.XmSurface;
-import grondag.xm.mesh.polygon.IPolygon;
+import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.model.varia.BlockOrientationType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -79,7 +79,7 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
     ModelPrimitive<R, W> primitive();
 
     @Override
-    void produceQuads(Consumer<IPolygon> target);
+    void produceQuads(Consumer<Polygon> target);
 
     @Override
     W geometricState();
