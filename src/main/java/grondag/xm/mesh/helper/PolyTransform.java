@@ -42,7 +42,6 @@ public class PolyTransform {
         final Matrix4f matrix = this.matrix;
         final int vertexCount = poly.vertexCount();
         final Vector3f vec = VEC3.get();
-        final Vec3i oldVec = poly.nominalFace().getVector();
 
         // transform vertices
         for (int i = 0; i < vertexCount; i++) {
@@ -57,8 +56,15 @@ public class PolyTransform {
         }
 
         // transform nominal face
+        Vec3i oldVec = poly.nominalFace().getVector();
         matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
         poly.nominalFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
+        final Direction cullFace = poly.cullFace();
+        if(cullFace != null) {
+            oldVec = cullFace.getVector();
+            matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
+            poly.cullFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
+        }
     }
 
     private static final ThreadLocal<Vector3f> VEC3 = ThreadLocal.withInitial(Vector3f::new);
@@ -134,10 +140,8 @@ public class PolyTransform {
      * {@link #getMatrixForAxisAndRotation(net.minecraft.util.math.Direction.Axis, boolean, Rotation)}
      */
     public static PolyTransform get(PrimitiveModelState modelState) {
-
-        // TODO: put back
-        return new PolyTransform(computeMatrix(modelState.axis(), modelState.isAxisInverted(), modelState.axisRotation()));
-        // return LOOKUP[computeTransformKey(modelState)];
+        //return new PolyTransform(computeMatrix(modelState.axis(), modelState.isAxisInverted(), modelState.axisRotation()));
+         return LOOKUP[computeTransformKey(modelState)];
     }
 
     private static Matrix4f computeMatrix(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {

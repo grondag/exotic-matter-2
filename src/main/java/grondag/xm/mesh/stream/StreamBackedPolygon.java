@@ -227,6 +227,11 @@ public class StreamBackedPolygon implements Polygon {
     }
 
     @Override
+    public final Direction cullFace() {
+        return PolyStreamFormat.getCullFace(format());
+    }
+    
+    @Override
     public final XmSurfaceImpl surface() {
         return StaticEncoder.surface(stream, baseAddress);
     }

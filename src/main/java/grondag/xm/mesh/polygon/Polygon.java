@@ -19,9 +19,9 @@ package grondag.xm.mesh.polygon;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.QuadHelper;
+import grondag.xm.mesh.vertex.Vec3f;
 import grondag.xm.mesh.vertex.Vertex3f;
 import grondag.xm.mesh.vertex.VertexCollection;
-import grondag.xm.mesh.vertex.Vec3f;
 import grondag.xm.painting.SurfaceTopology;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.BlockRenderLayer;
@@ -246,7 +246,9 @@ public interface Polygon extends VertexCollection, StreamPolygon {
      * Face to use for occlusion testing. Null if not fully on one of the faces.
      * Fudges a bit because painted quads can be slightly offset from the plane.
      */
-    public default Direction cullFace() {
+    public Direction cullFace();
+
+    public default Direction computeCullFace() {
         Direction nominalFace = this.nominalFace();
 
         // semantic face will be right most of the time
@@ -258,9 +260,10 @@ public interface Polygon extends VertexCollection, StreamPolygon {
             if (f != nominalFace && this.isOnFace(f, QuadHelper.EPSILON))
                 return f;
         }
+        
         return null;
     }
-
+    
     float maxU(int layerIndex);
 
     float maxV(int layerIndex);

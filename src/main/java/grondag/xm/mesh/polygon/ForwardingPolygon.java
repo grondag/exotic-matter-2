@@ -88,6 +88,11 @@ public class ForwardingPolygon implements Polygon {
     }
 
     @Override
+    public Direction cullFace() {
+        return wrapped.cullFace();
+    }
+    
+    @Override
     public XmSurface surface() {
         return wrapped.surface();
     }

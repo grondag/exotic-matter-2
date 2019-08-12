@@ -223,6 +223,12 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements Mutab
         ((MutablePolygon) wrapped).nominalFace(face);
         return this;
     }
+    
+    @Override
+    public MutablePolygon cullFace(Direction face) {
+        ((MutablePolygon) wrapped).cullFace(face);
+        return this;
+    }
 
     @Override
     public MutablePolygon surface(XmSurface surface) {

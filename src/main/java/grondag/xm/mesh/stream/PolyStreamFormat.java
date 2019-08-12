@@ -58,6 +58,16 @@ public class PolyStreamFormat {
         return NOMINAL_FACE.setValue(face, formatIn);
     }
 
+    private static final BitPacker32<PolyStreamFormat>.NullableEnumElement<Direction> CULL_FACE = BITPACKER.createNullableEnumElement(Direction.class);
+
+    public static Direction getCullFace(int formatIn) {
+        return CULL_FACE.getValue(formatIn);
+    }
+
+    public static int setCullFace(int formatIn, Direction face) {
+        return CULL_FACE.setValue(face, formatIn);
+    }
+    
     private static final BitPacker32<PolyStreamFormat>.BooleanElement IS_MARKED = BITPACKER.createBooleanElement();
 
     public static boolean isMarked(int formatIn) {
@@ -231,7 +241,7 @@ public class PolyStreamFormat {
     public static int setVertexGlowFormat(int formatIn, int glowFormat) {
         return VERTEX_GLOW_FORMAT.setValue(glowFormat, formatIn);
     }
-
+    
     // static features
 //    isMutable   2   1       poly    yes yes
 //    vertexCount 128 7       vertex  no  no
@@ -302,6 +312,8 @@ public class PolyStreamFormat {
         VERTEX_FORMAT_SHIFT = Integer.numberOfTrailingZeros(vertexMask);
         VERTEX_FORMAT_MASK = vertexMask >> VERTEX_FORMAT_SHIFT;
         VERTEX_FORMAT_COUNT = VERTEX_FORMAT_MASK + 1;
+        
+        assert BITPACKER.bitLength() <= 32;
     }
 
     public static int polyFormatKey(int formatIn) {
@@ -344,6 +356,8 @@ public class PolyStreamFormat {
 
         Direction nominalFace = polyIn.nominalFace();
         result = setNominalFace(result, nominalFace);
+        
+        result = setCullFace(result, polyIn.cullFace());
 
         Vec3f faceNormal = polyIn.faceNormal();
         if (faceNormal.equals(Vec3f.forFace(nominalFace)))

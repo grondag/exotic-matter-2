@@ -348,8 +348,9 @@ public abstract class AbstractPolyStream implements PolyStream {
         internal.copyFrom(polyIn, true);
         writeAddress += PolyStreamFormat.polyStride(newFormat, true);
 
-        if (needReaderLoad)
+        if (needReaderLoad) {
             reader.loadFormat();
+        }
     }
 
     private static class ThreadSafeReader extends StreamBackedPolygon implements StreamReaderPolygon {

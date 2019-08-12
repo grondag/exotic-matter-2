@@ -49,7 +49,7 @@ public class VertexProcessorDefault extends VertexProcessor {
                 final XmPaint lampPaint = modelState.paint(lampSurface.ordinal());
                 if(lampPaint != null) {
                     final int lampColor = lampPaint.textureColor(0);
-                    final int lampBrightness = lampPaint.emissive(0) ? 255 : 0;
+                    final int lampBrightness = lampPaint.emissive(0) ? 0xF0 : 0;
                     
                     // keep target surface alpha
                     int alpha = color & 0xFF000000;

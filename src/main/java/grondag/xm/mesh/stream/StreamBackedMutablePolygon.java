@@ -227,6 +227,12 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         return this;
     }
 
+    @Override
+    public final MutablePolygon cullFace(Direction face) {
+        setFormat(PolyStreamFormat.setCullFace(format(), face));
+        return this;
+    }
+    
     public final MutablePolygon surface(XmSurfaceImpl surface) {
         StaticEncoder.surface(stream, baseAddress, surface);
         return this;
@@ -280,6 +286,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
     public final void copyFrom(Polygon polyIn, boolean includeVertices) {
         // PERF: make this faster for other stream-based polys
         nominalFace(polyIn.nominalFace());
+        cullFace(polyIn.cullFace());
 
         final int faceNormalFormat = PolyStreamFormat.getFaceNormalFormat(format());
         if (faceNormalFormat == PolyStreamFormat.FACE_NORMAL_FORMAT_COMPUTED)
@@ -337,7 +344,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         maxV(0, 1f);
         maxV(1, 1f);
         maxV(2, 1f);
-
+        cullFace(null);
         clearFaceNormal();
     }
 

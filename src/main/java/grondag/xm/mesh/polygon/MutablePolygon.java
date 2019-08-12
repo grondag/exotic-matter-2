@@ -319,6 +319,11 @@ public interface MutablePolygon extends Polygon {
             break;
         }
 
+        //TODO: put back
+        if(cullFace() == null) {
+            cullFace(computeCullFace());
+        }
+        
         return this;
     }
 
@@ -379,6 +384,8 @@ public interface MutablePolygon extends Polygon {
 
     public MutablePolygon nominalFace(Direction face);
 
+    public MutablePolygon cullFace(Direction face);
+    
     /**
      * Reverses winding order, clears face normal and flips vertex normals if
      * present. Used by CSG. TODO: Do this with streams

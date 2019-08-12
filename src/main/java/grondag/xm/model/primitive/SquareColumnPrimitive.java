@@ -141,7 +141,7 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
         WritablePolyStream stream = PolyStreams.claimWritable();
 
         stream.setVertexCount(4);
-        stream.writer().lockUV(0, true);
+        stream.writer().lockUV(0, true).cullFace(face);
         stream.saveDefaults();
 
         XmSurfaceListImpl surfaces = surfaces(state);
@@ -168,6 +168,10 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
 
         final MutablePolygon writer = stream.writer();
 
+        if(writer.cullFace() != face) {
+            System.out.println("boop");
+        }
+        
         Direction topFace = QuadHelper.getAxisTop(axis);
         Direction bottomFace = topFace.getOpposite();
         Direction leftFace = QuadHelper.leftOf(face, topFace);
@@ -346,7 +350,11 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
             return;
 
         final MutablePolygon writer = stream.writer();
-
+        
+        if(writer.cullFace() != face) {
+            System.out.println("boop");
+        }
+        
         /** used to randomize cut textures */
         int salt = 1;
 
@@ -503,13 +511,13 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
     }
 
     private void setupCutSideQuad(MutablePolygon qi, SimpleQuadBounds qb) {
-        final int glow = qi.surface().isLampGradient() ? 128 : 0;
+        final int glow = qi.surface().isLampGradient() ? 210 : 0;
         
         qi.setupFaceQuad(qb.face, 
                 new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, Color.WHITE, glow),
                 new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, Color.WHITE, glow),
-                new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, 0),
-                new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, Color.WHITE, 0),
+                new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, glow / 3),
+                new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, Color.WHITE, glow / 3),
                 qb.topFace);
     }
 
