@@ -23,6 +23,7 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTA
 import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.model.varia.BlockOrientationType;
@@ -54,6 +55,10 @@ public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends P
 
     XmSurfaceList surfaces(R modelState);
 
+    default XmSurface lampSurface(R modelState) {
+        return null;
+    }
+    
     /**
      * Override if shape has an orientation to be selected during placement.
      */
@@ -114,4 +119,6 @@ public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends P
     default boolean isMultiBlock() {
         return false;
     }
+    
+    default void invalidateCache() { }
 }

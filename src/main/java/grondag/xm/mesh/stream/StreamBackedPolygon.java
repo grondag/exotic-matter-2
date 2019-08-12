@@ -159,6 +159,10 @@ public class StreamBackedPolygon implements Polygon {
 
     public Polygon tag(int tag) {
         polyEncoder.setTag(stream, baseAddress, tag);
+        //TODO: remove
+        if(polyEncoder.getTag(stream, baseAddress) != tag) {
+            System.out.println("derp");
+        }
         return this;
     }
 
@@ -306,7 +310,7 @@ public class StreamBackedPolygon implements Polygon {
     }
 
     @Override
-    public final Rotation getRotation(int layerIndex) {
+    public final Rotation rotation(int layerIndex) {
         return StaticEncoder.getRotation(stream, baseAddress, layerIndex);
     }
 
@@ -332,7 +336,7 @@ public class StreamBackedPolygon implements Polygon {
     }
 
     @Override
-    public final int getVertexGlow(int vertexIndex) {
+    public final int glow(int vertexIndex) {
         return glowEncoder.getGlow(stream, glowAddress, vertexIndexer.applyAsInt(vertexIndex));
     }
 
@@ -364,6 +368,16 @@ public class StreamBackedPolygon implements Polygon {
     @Override
     public boolean emissive(int layerIndex) {
         return StaticEncoder.isEmissive(stream, baseAddress, layerIndex);
+    }
+    
+    @Override
+    public boolean disableAo(int layerIndex) {
+        return StaticEncoder.disableAo(stream, baseAddress, layerIndex);
+    }
+
+    @Override
+    public boolean disableDiffuse(int layerIndex) {
+        return StaticEncoder.disableDiffuse(stream, baseAddress, layerIndex);
     }
 
     // TODO: convert to material

@@ -83,7 +83,6 @@ public class PolyStreamFormat {
     // each other so that masks can be used as keys for encoders.
 
     private static final BitPacker32<PolyStreamFormat>.BooleanElement HAS_LINK = BITPACKER.createBooleanElement();
-    public static final int HAS_LINK_FLAG = HAS_LINK.comparisonMask();
 
     public static boolean isLinked(int formatIn) {
         return HAS_LINK.getValue(formatIn);
@@ -97,7 +96,6 @@ public class PolyStreamFormat {
     }
 
     private static final BitPacker32<PolyStreamFormat>.BooleanElement HAS_TAG = BITPACKER.createBooleanElement();
-    public static final int HAS_TAG_FLAG = HAS_TAG.comparisonMask();
 
     public static boolean isTagged(int formatIn) {
         return HAS_TAG.getValue(formatIn);
@@ -260,28 +258,34 @@ public class PolyStreamFormat {
     // glow encoder features
 //    vertexGlow  3   2   None/Same/Per Vertex    vertex layer    no  no
 
-    final static int POLY_FORMAT_MASK;
+    final static int POLY_FORMAT_SHIFTED_MASK;
     final static int POLY_FORMAT_SHIFT;
     final static int POLY_FORMAT_COUNT;
 
-    final static int POLY_FORMAT_MUTABLE_MASK;
+    final static int POLY_FORMAT_MUTABLE_UNSHIFTED_MASK;
     final static int POLY_FORMAT_MUTABLE_BITS;
 
     final static int VERTEX_FORMAT_MASK;
     final static int VERTEX_FORMAT_SHIFT;
     final static int VERTEX_FORMAT_COUNT;
 
+    public static final int HAS_LINK_FLAG;
+    public static final int HAS_TAG_FLAG;
+
     static {
         final int polyMask = HAS_LINK.comparisonMask() | HAS_TAG.comparisonMask() | FACE_NORMAL_FORMAT.comparisonMask()
                 | HALF_PRECISION_POLY_UV.comparisonMask() | LAYER_COUNT.comparisonMask() | VERTEX_COLOR_FORMAT.comparisonMask();
 
         POLY_FORMAT_SHIFT = Integer.numberOfTrailingZeros(polyMask);
-        POLY_FORMAT_MASK = polyMask >> POLY_FORMAT_SHIFT;
-        POLY_FORMAT_COUNT = POLY_FORMAT_MASK + 1;
+        POLY_FORMAT_SHIFTED_MASK = polyMask >> POLY_FORMAT_SHIFT;
+        POLY_FORMAT_COUNT = POLY_FORMAT_SHIFTED_MASK + 1;
 
+        HAS_LINK_FLAG = HAS_LINK.comparisonMask();
+        HAS_TAG_FLAG = HAS_TAG.comparisonMask();
+        
         // force certain features to full flexibility for mutable formats
         // doesn't include CSG bounds
-        POLY_FORMAT_MUTABLE_MASK = ~(HAS_LINK.comparisonMask() | HAS_TAG.comparisonMask() | FACE_NORMAL_FORMAT.comparisonMask()
+        POLY_FORMAT_MUTABLE_UNSHIFTED_MASK = ~(HAS_LINK.comparisonMask() | HAS_TAG.comparisonMask() | FACE_NORMAL_FORMAT.comparisonMask()
                 | HALF_PRECISION_POLY_UV.comparisonMask() | LAYER_COUNT.comparisonMask() | VERTEX_COLOR_FORMAT.comparisonMask());
 
         int mutableBits = setLinked(0, true);
@@ -303,8 +307,8 @@ public class PolyStreamFormat {
     public static int polyFormatKey(int formatIn) {
         // force certain features to full flexibility for mutable formats
         if (isMutable(formatIn))
-            formatIn = (formatIn & POLY_FORMAT_MUTABLE_MASK) | POLY_FORMAT_MUTABLE_BITS;
-        return (formatIn >> POLY_FORMAT_SHIFT) & POLY_FORMAT_MASK;
+            formatIn = (formatIn & POLY_FORMAT_MUTABLE_UNSHIFTED_MASK) | POLY_FORMAT_MUTABLE_BITS;
+        return (formatIn >> POLY_FORMAT_SHIFT) & POLY_FORMAT_SHIFTED_MASK;
     }
 
     public static int vertexFormatKey(int formatIn) {
@@ -329,6 +333,10 @@ public class PolyStreamFormat {
         final int vertexCount = polyIn.vertexCount();
         assert vertexCount >= 3;
 
+        if(polyIn.tag() != Polygon.NO_LINK_OR_TAG) {
+            result |= HAS_TAG_FLAG;
+        }
+        
         result = setLayerCount(result, layerCount);
         result = setVertexCount(result, vertexCount);
 
@@ -344,7 +352,7 @@ public class PolyStreamFormat {
             result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_COMPUTED);
 
         boolean allFaceNormal = true;
-        int firstGlow = polyIn.getVertexGlow(0);
+        int firstGlow = polyIn.glow(0);
         boolean allSameGlow = true;
         boolean allSameUV = layerCount > 1;
 
@@ -359,7 +367,7 @@ public class PolyStreamFormat {
 
         for (int v = 0; v < vertexCount; v++) {
             // glow
-            if (allSameGlow && v > 0 && polyIn.getVertexGlow(v) != firstGlow)
+            if (allSameGlow && v > 0 && polyIn.glow(v) != firstGlow)
                 allSameGlow = false;
 
             // vertex normal

@@ -26,7 +26,7 @@ import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.MutablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.painting.QuadPainter.IPaintMethod;
+import grondag.xm.painting.QuadPainter.PaintMethod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
@@ -74,6 +74,11 @@ public class QuadPaintHandler implements Consumer<Polygon> {
         XmSurface surface = poly.surface();
         XmPaint paint = modelState.paint(surface);
 
+        //TODO: remove
+        if(poly.tag() == 42) {
+            System.out.println(42);
+        }
+        
         stream.appendCopy(poly);
         stream.editorOrigin();
 
@@ -114,7 +119,7 @@ public class QuadPaintHandler implements Consumer<Polygon> {
 
         for (int i = 0; i < depth; i++) {
             if (stream.editorOrigin()) {
-                final IPaintMethod painter = QuadPainterFactory.getPainter(modelState, surface, paint, i);
+                final PaintMethod painter = QuadPainterFactory.getPainter(modelState, surface, paint, i);
                 if(painter != null) {
                     painter.paintQuads(stream, modelState, surface, paint, i);
                 } else {
@@ -150,42 +155,66 @@ public class QuadPaintHandler implements Consumer<Polygon> {
         final int depth = poly.spriteDepth();
         final MaterialFinder finder = this.finder;
 
-        finder.clear().spriteDepth(depth);
-
-        finder.blendMode(0, poly.blendMode(0));
-        if (poly.emissive(0)) {
-            finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
+        //TODO: remove
+        if(poly.surface().ordinal() == 1) {
+            System.out.println("out color = " + Integer.toHexString(poly.spriteColor(0, 0)));
+            System.out.println("tag = " + poly.tag());
         }
+        
+        finder.clear()
+            .spriteDepth(depth)
+            .blendMode(0, poly.blendMode(0))
+            .emissive(0, poly.emissive(0))
+            .disableAo(0, poly.disableAo(0))
+            .disableDiffuse(0, poly.disableDiffuse(0));
+        
         bakeSprite(0, poly);
 
         if (depth > 1) {
             bakeSprite(1, poly);
-            finder.blendMode(1, poly.blendMode(1));
-            if (poly.emissive(1)) {
-                finder.disableAo(1, true).disableDiffuse(1, true).emissive(1, true);
-            }
+            finder.blendMode(1, poly.blendMode(1))
+                .emissive(1, poly.emissive(1))
+                .disableAo(1, poly.disableAo(1))
+                .disableDiffuse(1, poly.disableDiffuse(1));
+            
             if (depth == 3) {
                 bakeSprite(2, poly);
-                finder.blendMode(2, poly.blendMode(2));
-                if (poly.emissive(2)) {
-                    finder.disableAo(2, true).disableDiffuse(2, true).emissive(2, true);
-                }
+                finder.blendMode(2, poly.blendMode(2))
+                    .emissive(2, poly.emissive(2))
+                    .disableAo(2, poly.disableAo(2))
+                    .disableDiffuse(2, poly.disableDiffuse(2));
             }
         }
 
         emitter.material(finder.find());
         emitter.cullFace(poly.cullFace());
         emitter.nominalFace(poly.nominalFace());
-        emitter.tag(poly.tag());
-
+        // FIXME: no tag output
+        if(poly.tag() != Polygon.NO_LINK_OR_TAG) {
+            emitter.tag(poly.tag());
+        }
         for (int v = 0; v < 4; v++) {
             emitter.pos(v, poly.x(v), poly.y(v), poly.z(v));
+            
+            final int g = poly.glow(v);
+            if(g > 0) {
+                //TODO: remove/put back
+//                System.out.println(g);
+//                emitter.lightmap(v, g << 4);
+            }
+            
             if (poly.hasNormal(v)) {
                 emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
             }
 
             emitter.sprite(v, 0, poly.spriteU(v, 0), poly.spriteV(v, 0));
-            emitter.spriteColor(v, 0, poly.spriteColor(v, 0));
+            //TODO: remove
+            final int c = poly.spriteColor(v, 0);
+            if(poly.surface().ordinal() == 1) {
+                System.out.println("out color = " + Integer.toHexString(c));
+            }
+            emitter.spriteColor(v, 0, c);
+//            emitter.spriteColor(v, 0, poly.spriteColor(v, 0));
 
             if (depth > 1) {
                 emitter.sprite(v, 1, poly.spriteU(v, 1), poly.spriteV(v, 1));
@@ -205,31 +234,40 @@ public class QuadPaintHandler implements Consumer<Polygon> {
         final int depth = poly.spriteDepth();
         final MaterialFinder finder = this.finder;
 
-        finder.clear();
+        finder.clear()
+            .spriteDepth(depth)
+            .blendMode(0, poly.blendMode(0))
+            .emissive(0, poly.emissive(0))
+            .disableAo(0, poly.disableAo(0))
+            .disableDiffuse(0, poly.disableDiffuse(0));
 
-        finder.blendMode(0, poly.blendMode(0));
-        if (poly.emissive(0)) {
-            finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
-        }
         bakeSprite(0, poly);
         emitter.material(finder.find());
         outputIndigoQuad(poly, emitter, 0);
 
         if (depth > 1) {
             bakeSprite(1, poly);
-            finder.clear().blendMode(0, poly.blendMode(1));
-            if (poly.emissive(1)) {
-                finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
-            }
+
+            finder.clear()
+                .spriteDepth(depth)
+                .blendMode(0, poly.blendMode(1))
+                .emissive(0, poly.emissive(1))
+                .disableAo(0, poly.disableAo(1))
+                .disableDiffuse(0, poly.disableDiffuse(1));
+            
             emitter.material(finder.find());
             outputIndigoQuad(poly, emitter, 1);
 
             if (depth == 3) {
                 bakeSprite(2, poly);
-                finder.clear().blendMode(0, poly.blendMode(2));
-                if (poly.emissive(2)) {
-                    finder.disableAo(0, true).disableDiffuse(0, true).emissive(0, true);
-                }
+               
+                finder.clear()
+                    .spriteDepth(depth)
+                    .blendMode(0, poly.blendMode(2))
+                    .emissive(0, poly.emissive(2))
+                    .disableAo(0, poly.disableAo(2))
+                    .disableDiffuse(0, poly.disableDiffuse(2));
+                
                 emitter.material(finder.find());
                 outputIndigoQuad(poly, emitter, 2);
             }
@@ -317,7 +355,7 @@ public class QuadPaintHandler implements Consumer<Polygon> {
 
     private void applyTextureRotation(int spriteIndex, MutablePolygon poly) {
         final int vCount = poly.vertexCount();
-        switch (poly.getRotation(spriteIndex)) {
+        switch (poly.rotation(spriteIndex)) {
         case ROTATE_NONE:
         default:
             break;

@@ -33,7 +33,7 @@ import net.minecraft.util.math.Vec3i;
 @SuppressWarnings("rawtypes")
 public abstract class QuadPainter {
     @FunctionalInterface
-    public static interface IPaintMethod {
+    public static interface PaintMethod {
         /**
          * Assigns specific texture and texture rotation based on model state and
          * information in the polygon and surface. Also handles texture UV mapping.
@@ -63,11 +63,12 @@ public abstract class QuadPainter {
      * then adds to the output list.
      */
     // UGLY: change arg order to match others
-    protected static void commonPostPaint(MutablePolygon editor, int textureIndex, PrimitiveModelState modelState, XmSurface surface, XmPaint paint) {
-        editor.blendMode(textureIndex, paint.blendMode(textureIndex));
-        editor.emissive(textureIndex, paint.emissive(textureIndex));
-
-        paint.vertexProcessor(textureIndex).process(editor, textureIndex, modelState, surface, paint);
+    protected static void commonPostPaint(MutablePolygon editor, int spriteIndex, PrimitiveModelState modelState, XmSurface surface, XmPaint paint) {
+        editor.blendMode(spriteIndex, paint.blendMode(spriteIndex));
+        editor.emissive(spriteIndex, paint.emissive(spriteIndex));
+        editor.disableAo(spriteIndex, paint.disableAo(spriteIndex));
+        editor.disableDiffuse(spriteIndex, paint.disableDiffuse(spriteIndex));
+        paint.vertexProcessor(spriteIndex).process(editor, spriteIndex, modelState, surface, paint);
     }
 
     /**

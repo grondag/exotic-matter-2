@@ -118,23 +118,23 @@ public class ForwardingPolygon implements Polygon {
     }
 
     @Override
-    public float maxU(int layerIndex) {
-        return wrapped.maxU(layerIndex);
+    public float maxU(int spriteIndex) {
+        return wrapped.maxU(spriteIndex);
     }
 
     @Override
-    public float maxV(int layerIndex) {
-        return wrapped.maxV(layerIndex);
+    public float maxV(int spriteIndex) {
+        return wrapped.maxV(spriteIndex);
     }
 
     @Override
-    public float minU(int layerIndex) {
-        return wrapped.minU(layerIndex);
+    public float minU(int spriteIndex) {
+        return wrapped.minU(spriteIndex);
     }
 
     @Override
-    public float minV(int layerIndex) {
-        return wrapped.minV(layerIndex);
+    public float minV(int spriteIndex) {
+        return wrapped.minV(spriteIndex);
     }
 
     @Override
@@ -148,18 +148,18 @@ public class ForwardingPolygon implements Polygon {
     }
 
     @Override
-    public String spriteName(int layerIndex) {
-        return wrapped.spriteName(layerIndex);
+    public String spriteName(int spriteIndex) {
+        return wrapped.spriteName(spriteIndex);
     }
 
     @Override
-    public boolean shouldContractUVs(int layerIndex) {
-        return wrapped.shouldContractUVs(layerIndex);
+    public boolean shouldContractUVs(int spriteIndex) {
+        return wrapped.shouldContractUVs(spriteIndex);
     }
 
     @Override
-    public Rotation getRotation(int layerIndex) {
-        return wrapped.getRotation(layerIndex);
+    public Rotation rotation(int spriteIndex) {
+        return wrapped.rotation(spriteIndex);
     }
 
     @Override
@@ -178,23 +178,23 @@ public class ForwardingPolygon implements Polygon {
     }
 
     @Override
-    public int spriteColor(int vertexIndex, int layerIndex) {
-        return wrapped.spriteColor(vertexIndex, layerIndex);
+    public int spriteColor(int vertexIndex, int spriteIndex) {
+        return wrapped.spriteColor(vertexIndex, spriteIndex);
     }
 
     @Override
-    public int getVertexGlow(int vertexIndex) {
-        return wrapped.getVertexGlow(vertexIndex);
+    public int glow(int vertexIndex) {
+        return wrapped.glow(vertexIndex);
     }
 
     @Override
-    public float spriteU(int vertexIndex, int layerIndex) {
-        return wrapped.spriteU(vertexIndex, layerIndex);
+    public float spriteU(int vertexIndex, int spriteIndex) {
+        return wrapped.spriteU(vertexIndex, spriteIndex);
     }
 
     @Override
-    public float spriteV(int vertexIndex, int layerIndex) {
-        return wrapped.spriteV(vertexIndex, layerIndex);
+    public float spriteV(int vertexIndex, int spriteIndex) {
+        return wrapped.spriteV(vertexIndex, spriteIndex);
     }
 
     @Override
@@ -203,8 +203,8 @@ public class ForwardingPolygon implements Polygon {
     }
 
     @Override
-    public boolean lockUV(int layerIndex) {
-        return wrapped.lockUV(layerIndex);
+    public boolean lockUV(int spriteIndex) {
+        return wrapped.lockUV(spriteIndex);
     }
 
     @Override
@@ -213,15 +213,25 @@ public class ForwardingPolygon implements Polygon {
     }
 
     @Override
-    public BlockRenderLayer blendMode(int layerIndex) {
-        return wrapped.blendMode(layerIndex);
+    public BlockRenderLayer blendMode(int spriteIndex) {
+        return wrapped.blendMode(spriteIndex);
     }
 
     @Override
-    public boolean emissive(int textureLayerIndex) {
-        return wrapped.emissive(textureLayerIndex);
+    public boolean emissive(int spriteIndex) {
+        return wrapped.emissive(spriteIndex);
     }
 
+    @Override
+    public boolean disableAo(int spriteIndex) {
+        return wrapped.disableAo(spriteIndex);
+    }
+
+    @Override
+    public boolean disableDiffuse(int spriteIndex) {
+        return wrapped.disableDiffuse(spriteIndex);
+    }
+    
     @Override
     public boolean isMarked() {
         return markGetter.getValue();

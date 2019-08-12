@@ -300,7 +300,7 @@ public interface Polygon extends VertexCollection, StreamPolygon {
 
     boolean shouldContractUVs(int layerIndex);
 
-    Rotation getRotation(int layerIndex);
+    Rotation rotation(int layerIndex);
 
     /**
      * Will return quad color if vertex color not set.
@@ -310,7 +310,7 @@ public interface Polygon extends VertexCollection, StreamPolygon {
     /**
      * Will return zero if vertex color not set.
      */
-    int getVertexGlow(int vertexIndex);
+    int glow(int vertexIndex);
 
     int textureSalt();
 
@@ -327,6 +327,10 @@ public interface Polygon extends VertexCollection, StreamPolygon {
     BlockRenderLayer blendMode(int layerIndex);
 
     boolean emissive(int layerIndex);
+    
+    boolean disableAo(int layerIndex);
+    
+    boolean disableDiffuse(int layerIndex);
 
     // Use materials instead
 //    int getPipelineIndex();

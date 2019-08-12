@@ -224,6 +224,13 @@ public abstract class AbstractPrimitiveModelState
     }
     
     @Override
+    public final W apply(Consumer<W> consumer) {
+        final W self = (W)this;
+        consumer.accept(self);
+        return self;
+    }
+    
+    @Override
     protected final void onLastRelease() {
         factoryImpl().POOL.offer((V)this);
     }

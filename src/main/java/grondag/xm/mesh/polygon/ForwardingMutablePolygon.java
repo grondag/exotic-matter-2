@@ -25,32 +25,32 @@ import net.minecraft.util.math.Direction;
 
 public class ForwardingMutablePolygon extends ForwardingPolygon implements MutablePolygon {
     @Override
-    public MutablePolygon spriteVertex(int layerIndex, int vertexIndex, float u, float v, int color, int glow) {
-        ((MutablePolygon) wrapped).spriteVertex(layerIndex, vertexIndex, u, v, color, glow);
+    public MutablePolygon spriteVertex(int spriteIndex, int vertexIndex, float u, float v, int color, int glow) {
+        ((MutablePolygon) wrapped).spriteVertex(spriteIndex, vertexIndex, u, v, color, glow);
         return this;
     }
 
     @Override
-    public MutablePolygon maxU(int layerIndex, float maxU) {
-        ((MutablePolygon) wrapped).maxU(layerIndex, maxU);
+    public MutablePolygon maxU(int spriteIndex, float maxU) {
+        ((MutablePolygon) wrapped).maxU(spriteIndex, maxU);
         return this;
     }
 
     @Override
-    public MutablePolygon maxV(int layerIndex, float maxV) {
-        ((MutablePolygon) wrapped).maxV(layerIndex, maxV);
+    public MutablePolygon maxV(int spriteIndex, float maxV) {
+        ((MutablePolygon) wrapped).maxV(spriteIndex, maxV);
         return this;
     }
 
     @Override
-    public MutablePolygon minU(int layerIndex, float minU) {
-        ((MutablePolygon) wrapped).minU(layerIndex, minU);
+    public MutablePolygon minU(int spriteIndex, float minU) {
+        ((MutablePolygon) wrapped).minU(spriteIndex, minU);
         return this;
     }
 
     @Override
-    public MutablePolygon minV(int layerIndex, float minV) {
-        ((MutablePolygon) wrapped).minV(layerIndex, minV);
+    public MutablePolygon minV(int spriteIndex, float minV) {
+        ((MutablePolygon) wrapped).minV(spriteIndex, minV);
         return this;
     }
 
@@ -67,32 +67,32 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements Mutab
     }
 
     @Override
-    public MutablePolygon lockUV(int layerIndex, boolean lockUV) {
-        ((MutablePolygon) wrapped).lockUV(layerIndex, lockUV);
+    public MutablePolygon lockUV(int spriteIndex, boolean lockUV) {
+        ((MutablePolygon) wrapped).lockUV(spriteIndex, lockUV);
         return this;
     }
 
     @Override
-    public MutablePolygon sprite(int layerIndex, String textureName) {
-        ((MutablePolygon) wrapped).sprite(layerIndex, textureName);
+    public MutablePolygon sprite(int spriteIndex, String textureName) {
+        ((MutablePolygon) wrapped).sprite(spriteIndex, textureName);
         return this;
     }
 
     @Override
-    public MutablePolygon rotation(int layerIndex, Rotation rotation) {
-        ((MutablePolygon) wrapped).rotation(layerIndex, rotation);
+    public MutablePolygon rotation(int spriteIndex, Rotation rotation) {
+        ((MutablePolygon) wrapped).rotation(spriteIndex, rotation);
         return this;
     }
 
     @Override
-    public MutablePolygon contractUV(int layerIndex, boolean contractUVs) {
-        ((MutablePolygon) wrapped).contractUV(layerIndex, contractUVs);
+    public MutablePolygon contractUV(int spriteIndex, boolean contractUVs) {
+        ((MutablePolygon) wrapped).contractUV(spriteIndex, contractUVs);
         return this;
     }
 
     @Override
-    public MutablePolygon blendMode(int layerIndex, BlockRenderLayer layer) {
-        ((MutablePolygon) wrapped).blendMode(layerIndex, layer);
+    public MutablePolygon blendMode(int spriteIndex, BlockRenderLayer layer) {
+        ((MutablePolygon) wrapped).blendMode(spriteIndex, layer);
         return this;
     }
 
@@ -103,11 +103,23 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements Mutab
     }
 
     @Override
-    public MutablePolygon emissive(int textureLayerIndex, boolean emissive) {
-        ((MutablePolygon) wrapped).emissive(textureLayerIndex, emissive);
+    public MutablePolygon emissive(int spriteIndex, boolean emissive) {
+        ((MutablePolygon) wrapped).emissive(spriteIndex, emissive);
         return this;
     }
 
+    @Override
+    public MutablePolygon disableAo(int spriteIndex, boolean disable) {
+        ((MutablePolygon) wrapped).disableAo(spriteIndex, disable);
+        return this;
+    }
+
+    @Override
+    public MutablePolygon disableDiffuse(int spriteIndex, boolean disable) {
+        ((MutablePolygon) wrapped).disableDiffuse(spriteIndex, disable);
+        return this;
+    }
+    
     @Override
     public MutablePolygon vertex(int vertexIndex, float x, float y, float z, float u, float v, int color, int glow) {
         ((MutablePolygon) wrapped).vertex(vertexIndex, x, y, z, u, v, color, glow);
@@ -127,20 +139,20 @@ public class ForwardingMutablePolygon extends ForwardingPolygon implements Mutab
     }
 
     @Override
-    public MutablePolygon spriteColor(int vertexIndex, int layerIndex, int color) {
-        ((MutablePolygon) wrapped).spriteColor(vertexIndex, layerIndex, color);
+    public MutablePolygon spriteColor(int vertexIndex, int spriteIndex, int color) {
+        ((MutablePolygon) wrapped).spriteColor(vertexIndex, spriteIndex, color);
         return this;
     }
 
     @Override
-    public MutablePolygon sprite(int vertexIndex, int layerIndex, float u, float v) {
-        ((MutablePolygon) wrapped).sprite(vertexIndex, layerIndex, u, v);
+    public MutablePolygon sprite(int vertexIndex, int spriteIndex, float u, float v) {
+        ((MutablePolygon) wrapped).sprite(vertexIndex, spriteIndex, u, v);
         return this;
     }
 
     @Override
-    public MutablePolygon vertexGlow(int vertexIndex, int glow) {
-        ((MutablePolygon) wrapped).vertexGlow(vertexIndex, glow);
+    public MutablePolygon glow(int vertexIndex, int glow) {
+        ((MutablePolygon) wrapped).glow(vertexIndex, glow);
         return this;
     }
 

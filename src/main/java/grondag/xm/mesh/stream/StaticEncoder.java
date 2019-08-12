@@ -25,21 +25,21 @@ import net.minecraft.block.BlockRenderLayer;
 
 public class StaticEncoder {
     private static final BitPacker32<StaticEncoder> BITPACKER = new BitPacker32<StaticEncoder>(null, null);
-
+    private static final BitPacker32<StaticEncoder> BITPACKER_2 = new BitPacker32<StaticEncoder>(null, null);
+    
     private static final IndexedInterner<XmSurfaceImpl> xmSurfaces = new IndexedInterner<>(XmSurfaceImpl.class);
 
     private static final int BIT_OFFSET = 1;
-    private static final int TEXTURE_PIPELINE_OFFSET = 2;
-    // PERF: can probably pack this into bitpacker once old surface is gone and
-    // using paint
-    private static final int SURFACE_OFFSET = 3;
-    private static final int UV_WRAP_DIST_OFFSET = 4;
+    private static final int BIT_OFFSET_2 = 2;
+    private static final int TEXTURE_PIPELINE_OFFSET = 3;
+    private static final int SURFACE_OFFSET = 4;
+    private static final int UV_WRAP_DIST_OFFSET = 5;
 
     /**
      * How many integers in the stream are needed for static encoding. This is in
      * addition to the format header.
      */
-    public static final int INTEGER_WIDTH = 4;
+    public static final int INTEGER_WIDTH = 5;
 
     public static XmSurfaceImpl surface(IntStream stream, int baseAddress) {
         return xmSurfaces.fromHandle(stream.get(baseAddress + SURFACE_OFFSET));
@@ -121,38 +121,67 @@ public class StaticEncoder {
     private static final BitPacker32<StaticEncoder>.BooleanElement[] LOCK_UV = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
 
     static {
-        LOCK_UV[0] = BITPACKER.createBooleanElement();
-        LOCK_UV[1] = BITPACKER.createBooleanElement();
-        LOCK_UV[2] = BITPACKER.createBooleanElement();
+        LOCK_UV[0] = BITPACKER_2.createBooleanElement();
+        LOCK_UV[1] = BITPACKER_2.createBooleanElement();
+        LOCK_UV[2] = BITPACKER_2.createBooleanElement();
     }
 
     public static boolean isLockUV(IntStream stream, int baseAddress, int layerIndex) {
-        return LOCK_UV[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+        return LOCK_UV[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET_2));
     }
 
     public static void setLockUV(IntStream stream, int baseAddress, int layerIndex, boolean lockUV) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, LOCK_UV[layerIndex].setValue(lockUV, bits));
+        final int bits = stream.get(baseAddress + BIT_OFFSET_2);
+        stream.set(baseAddress + BIT_OFFSET_2, LOCK_UV[layerIndex].setValue(lockUV, bits));
     }
 
+    //PERF: improve LOR
     @SuppressWarnings("unchecked")
     private static final BitPacker32<StaticEncoder>.BooleanElement[] EMISSIVE = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
+    @SuppressWarnings("unchecked")
+    private static final BitPacker32<StaticEncoder>.BooleanElement[] AO = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
+    @SuppressWarnings("unchecked")
+    private static final BitPacker32<StaticEncoder>.BooleanElement[] DIFFUSE = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
 
     static {
         EMISSIVE[0] = BITPACKER.createBooleanElement();
         EMISSIVE[1] = BITPACKER.createBooleanElement();
         EMISSIVE[2] = BITPACKER.createBooleanElement();
+        AO[0] = BITPACKER.createBooleanElement();
+        AO[1] = BITPACKER.createBooleanElement();
+        AO[2] = BITPACKER.createBooleanElement();
+        DIFFUSE[0] = BITPACKER.createBooleanElement();
+        DIFFUSE[1] = BITPACKER.createBooleanElement();
+        DIFFUSE[2] = BITPACKER.createBooleanElement();
     }
 
     public static boolean isEmissive(IntStream stream, int baseAddress, int layerIndex) {
         return EMISSIVE[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setEmissive(IntStream stream, int baseAddress, int layerIndex, boolean isEmissive) {
+    public static void setEmissive(IntStream stream, int baseAddress, int layerIndex, boolean disable) {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, EMISSIVE[layerIndex].setValue(isEmissive, bits));
+        stream.set(baseAddress + BIT_OFFSET, EMISSIVE[layerIndex].setValue(disable, bits));
     }
 
+    public static boolean disableAo(IntStream stream, int baseAddress, int layerIndex) {
+        return AO[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+    }
+
+    public static void disableAo(IntStream stream, int baseAddress, int layerIndex, boolean disable) {
+        final int bits = stream.get(baseAddress + BIT_OFFSET);
+        stream.set(baseAddress + BIT_OFFSET, AO[layerIndex].setValue(disable, bits));
+    }
+    
+    public static boolean disableDiffuse(IntStream stream, int baseAddress, int layerIndex) {
+        return DIFFUSE[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+    }
+
+    public static void disableDiffuse(IntStream stream, int baseAddress, int layerIndex, boolean isEmissive) {
+        final int bits = stream.get(baseAddress + BIT_OFFSET);
+        stream.set(baseAddress + BIT_OFFSET, DIFFUSE[layerIndex].setValue(isEmissive, bits));
+    }
+    
     @SuppressWarnings("unchecked")
     private static final BitPacker32<StaticEncoder>.EnumElement<BlockRenderLayer>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<BlockRenderLayer>[]) new BitPacker32<?>.EnumElement<?>[3];
 
@@ -162,6 +191,7 @@ public class StaticEncoder {
         RENDER_LAYER[2] = BITPACKER.createEnumElement(BlockRenderLayer.class);
 
         assert BITPACKER.bitLength() <= 32;
+        assert BITPACKER_2.bitLength() <= 32;
     }
 
     public static BlockRenderLayer getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {

@@ -31,7 +31,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         vertexIndex = vertexIndexer.applyAsInt(vertexIndex);
         spriteColor(vertexIndex, layerIndex, color);
         sprite(vertexIndex, layerIndex, u, v);
-        vertexGlow(vertexIndex, glow);
+        glow(vertexIndex, glow);
         return this;
     }
 
@@ -118,6 +118,18 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         StaticEncoder.setEmissive(stream, baseAddress, layerIndex, emissive);
         return this;
     }
+    
+    @Override
+    public MutablePolygon disableAo(int layerIndex, boolean disable) {
+        StaticEncoder.disableAo(stream, baseAddress, layerIndex, disable);
+        return this;
+    }
+
+    @Override
+    public MutablePolygon disableDiffuse(int layerIndex, boolean disable) {
+        StaticEncoder.disableDiffuse(stream, baseAddress, layerIndex, disable);
+        return this;
+    }
 
     @Override
     public final MutablePolygon vertex(int vertexIndex, float x, float y, float z, float u, float v, int color, int glow) {
@@ -125,7 +137,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         pos(vertexIndex, x, y, z);
         sprite(vertexIndex, 0, u, v);
         spriteColor(vertexIndex, 0, color);
-        vertexGlow(vertexIndex, glow);
+        glow(vertexIndex, glow);
         return this;
     }
 
@@ -169,7 +181,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
     }
 
     @Override
-    public final MutablePolygon vertexGlow(int vertexIndex, int glow) {
+    public final MutablePolygon glow(int vertexIndex, int glow) {
         glowEncoder.setGlow(stream, glowAddress, vertexIndexer.applyAsInt(vertexIndex), glow);
         return this;
     }
@@ -236,9 +248,9 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         pos(targetIndex, source.x(sourceIndex), source.y(sourceIndex), source.z(sourceIndex));
 
         if (glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_PER_VERTEX)
-            vertexGlow(targetIndex, source.getVertexGlow(sourceIndex));
+            glow(targetIndex, source.glow(sourceIndex));
         else if (targetIndex == 0 && glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_SAME)
-            vertexGlow(0, source.getVertexGlow(sourceIndex));
+            glow(0, source.glow(sourceIndex));
 
         final int layerCount = source.spriteDepth();
         assert layerCount <= spriteDepth();
@@ -291,7 +303,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
             blendMode(l, polyIn.blendMode(l));
             lockUV(l, polyIn.lockUV(l));
             contractUV(l, polyIn.shouldContractUVs(l));
-            rotation(l, polyIn.getRotation(l));
+            rotation(l, polyIn.rotation(l));
             sprite(l, polyIn.spriteName(l));
         }
 

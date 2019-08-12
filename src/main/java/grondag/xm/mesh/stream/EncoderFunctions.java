@@ -25,41 +25,57 @@ public abstract class EncoderFunctions {
     @FunctionalInterface
     public static interface ByteGetter {
         int get(IntStream stream, int byteIndex, int baseAddress);
+        
+        static ByteGetter ZERO  = (s, b, a) -> 0;
     }
 
     @FunctionalInterface
     public static interface ByteSetter {
         void set(IntStream stream, int baseAddress, int byteIndex, int value);
+        
+        static ByteSetter VOID = (s, a, b, v) -> {};
     }
 
     @FunctionalInterface
     public static interface IntGetter {
         int get(IntStream stream, int baseAddress);
+        
+        static IntGetter ZERO  = (s, b) -> 0;
     }
 
     @FunctionalInterface
     public static interface IntSetter {
         void set(IntStream stream, int baseAddress, int value);
+        
+        static IntSetter VOID = (s, b, v) -> {};
     }
 
     @FunctionalInterface
     public static interface FloatGetter {
         float get(IntStream stream, int baseAddress);
+        
+        static FloatGetter ZERO  = (s, b) -> 0f;
     }
 
     @FunctionalInterface
     public static interface FloatSetter {
         void set(IntStream stream, int baseAddress, float value);
+        
+        static FloatSetter VOID = (s, b, v) -> {};
     }
 
     @FunctionalInterface
     public static interface FloatSetter2 {
         void set(IntStream stream, int baseAddress, float u, float v);
+        
+        static FloatSetter2 VOID = (s, b, u, v) -> {};
     }
 
     @FunctionalInterface
     public static interface FloatSetter3 {
         void set(IntStream stream, int baseAddress, float x, float y, float z);
+        
+        static FloatSetter3 VOID = (s, b, x, y, z) -> {};
     }
 
     public static final ByteGetter GET_BYTE_FAIL = (stream, address, byteIndex) -> {

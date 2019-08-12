@@ -38,37 +38,49 @@ public class VertexProcessorDefault extends VertexProcessor {
     public final void process(MutablePolygon poly, int textureIndex, PrimitiveModelState modelState, XmSurface surface, XmPaint paint) {
         int color = paint.textureColor(textureIndex);
 
-        // TODO: remove? Was causing problems when acuity is enabled because renderpass
-        // will be solid
-//        if(modelState.getRenderPass(paintLayer) != BlockRenderLayer.TRANSLUCENT)
-//            color =  0xFF000000 | color;
-
         // If surface is a lamp gradient then glow bits are used
         // to blend the lamp color/brighness with the nominal color/brightness.
         // This does not apply with the lamp paint layer itself (makes no sense).
         // (Generally gradient surfaces should not be painted by lamp color)
-        // TODO: put back lamp gradient processing
-//        if (surface.isLampGradient()) {
-//            int lampColor = .getColorARGB(PaintLayer.LAMP);
-//            int lampBrightness = modelState.isEmissive(PaintLayer.LAMP) ? 255 : 0;
-//
-//            // keep target surface alpha
-//            int alpha = color & 0xFF000000;
-//
-//            for (int i = 0; i < poly.vertexCount(); i++) {
-//                final float w = poly.getVertexGlow(i) / 255f;
-//                int b = Math.round(lampBrightness * w);
-//                int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
-//                poly.spriteColor(i, layerIndex, c | alpha);
-//                poly.setVertexGlow(i, b);
-//            }
-//        } else {
-        // normal shaded surface - tint existing colors, usually WHITE to start with
-        for (int i = 0; i < poly.vertexCount(); i++) {
-            final int c = ColorHelper.multiplyColor(color, poly.spriteColor(i, textureIndex));
-            poly.spriteColor(i, textureIndex, c);
+        if (surface.isLampGradient()) {
+            @SuppressWarnings("unchecked")
+            final XmSurface lampSurface = modelState.primitive().lampSurface(modelState);
+            if (lampSurface != null) {
+                final XmPaint lampPaint = modelState.paint(lampSurface.ordinal());
+                if(lampPaint != null) {
+                    final int lampColor = lampPaint.textureColor(0);
+                    final int lampBrightness = lampPaint.emissive(0) ? 255 : 0;
+        
+                    //TODO: remove
+                    System.out.println(Integer.toHexString(color));
+                    
+                    // keep target surface alpha
+                    int alpha = color & 0xFF000000;
+        
+                    for (int i = 0; i < poly.vertexCount(); i++) {
+                        final float w = poly.glow(i) / 255f;
+                        if(w > 0) {
+                            //TODO: remove
+                            System.out.println(w);
+                        }
+                        int b = Math.round(lampBrightness * w);
+                        int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
+                        poly.spriteColor(i, textureIndex, c | alpha);
+                        //TODO: remove
+                        if(poly.spriteColor(i, textureIndex) != (c | alpha)) {
+                            System.out.println("oops! color = " + Integer.toHexString(poly.spriteColor(i, textureIndex)));
+                        }
+                        poly.glow(i, b);
+                    }
+                }
+            }
+        } else {
+            //normal shaded surface - tint existing colors, usually WHITE to start with
+            for (int i = 0; i < poly.vertexCount(); i++) {
+                final int c = ColorHelper.multiplyColor(color, poly.spriteColor(i, textureIndex));
+                poly.spriteColor(i, textureIndex, c);
+            }
         }
-//        }
     }
 
 }

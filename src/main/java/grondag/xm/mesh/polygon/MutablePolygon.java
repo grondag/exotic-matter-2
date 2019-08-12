@@ -125,6 +125,10 @@ public interface MutablePolygon extends Polygon {
 
     MutablePolygon emissive(int layerIndex, boolean emissive);
 
+    MutablePolygon disableAo(int layerIndex, boolean disable);
+    
+    MutablePolygon disableDiffuse(int layerIndex, boolean disable);
+    
     /**
      * Assumes layer 0
      */
@@ -180,7 +184,7 @@ public interface MutablePolygon extends Polygon {
     /**
      * glow is clamped to allowed values
      */
-    MutablePolygon vertexGlow(int vertexIndex, int glow);
+    MutablePolygon glow(int vertexIndex, int glow);
 
     MutablePolygon normal(int vertexIndex, Vec3f normal);
 

@@ -94,4 +94,8 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
         }
         return shape.fromBuffer(buf);
     }
+    
+    public void invalidateCache() {
+        list.forEach(p -> p.invalidateCache());
+    }
 }

@@ -77,7 +77,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                 editor.rotation(textureIndex,
                         allowTexRotation ? Useful.offsetEnumValue(tex.rotation().rotation, depthAndSpeciesHash & 3) : tex.rotation().rotation);
 
-                surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
+                surfaceVec = rotateFacePerspective(surfaceVec, editor.rotation(textureIndex), scale);
 
                 editor.sprite(textureIndex, tex.textureName(0));
 
@@ -117,7 +117,7 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                         allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState), (depthHash >> 16) & 3)
                                 : textureRotationForFace(nominalFace, tex, modelState));
 
-                surfaceVec = rotateFacePerspective(surfaceVec, editor.getRotation(textureIndex), scale);
+                surfaceVec = rotateFacePerspective(surfaceVec, editor.rotation(textureIndex), scale);
 
                 final float sliceIncrement = scale.sliceIncrement;
 

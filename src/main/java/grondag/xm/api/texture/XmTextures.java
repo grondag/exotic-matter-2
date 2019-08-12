@@ -25,7 +25,7 @@ import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_CUTOUT_
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT;
 import static grondag.xm.api.texture.TextureRotation.ROTATE_NONE;
 import static grondag.xm.api.texture.TextureRotation.ROTATE_RANDOM;
-import static grondag.xm.api.texture.TextureScale.LARGE;
+import static grondag.xm.api.texture.TextureScale.GIANT;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.texture.TextureSetHelper.addBorderRandom;
 
@@ -62,7 +62,7 @@ public class XmTextures {
             .renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_smooth_blended");
 
     public static final TextureSet BIGTEX_SANDSTONE = TextureSet.builder().displayNameToken("sandstone").baseTextureName("exotic-matter:blocks/sandstone").versionCount(1)
-            .scale(LARGE).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_NO_CUTOUT)
+            .scale(GIANT).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_NO_CUTOUT)
             .groups(STATIC_TILES).build("exotic-matter:sandstone");
     
     public static final TextureSet TILE_NOISE_BLUE_A = TextureSet.builder().displayNameToken("blue_noise_a")

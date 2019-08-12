@@ -203,5 +203,7 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
         W primitiveBits(int bits);
 
         <T> T applyAndRelease(Function<ModelState, T> func);
+        
+        W apply(Consumer<W> consumer);
     }
 }

@@ -44,11 +44,15 @@ import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 
 public class SquareColumnPrimitive extends AbstractBasePrimitive {
-    private static final XmSurfaceListImpl SURFACES_DARK = XmSurfaceImpl.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+    private static final XmSurfaceListImpl SURFACES_DARK = XmSurfaceImpl.builder()
+            .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+            .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
-    private static final XmSurfaceListImpl SURFACES_LIT = XmSurfaceImpl.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT).add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP).build();
+    private static final XmSurfaceListImpl SURFACES_LIT = XmSurfaceImpl.builder()
+            .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
+            .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP).build();
 
     public static final int SURFACE_MAIN = 0;
     public static final int SURFACE_CUT = 1;
@@ -60,7 +64,6 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
     private static final BitPacker32<SquareColumnPrimitive> STATE_PACKER = new BitPacker32<SquareColumnPrimitive>(null, null);
     private static final BitPacker32<SquareColumnPrimitive>.BooleanElement STATE_ARE_CUTS_ON_EDGE = STATE_PACKER.createBooleanElement();
     private static final BitPacker32<SquareColumnPrimitive>.IntElement STATE_CUT_COUNT = STATE_PACKER.createIntElement(MIN_CUTS, MAX_CUTS);
-    private static final BitPacker32<SquareColumnPrimitive>.BooleanElement STATE_LIT = STATE_PACKER.createBooleanElement();
 
     static {
         assert STATE_PACKER.bitLength() <= AbstractPrimitiveModelState.PRIMITIVE_BIT_COUNT;
@@ -102,6 +105,11 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
         super(idString, ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS, SimpleModelStateImpl.FACTORY);
     }
 
+    @Override
+    public XmSurface lampSurface(SimpleModelState modelState) {
+        return isLit(modelState) ? SURFACES_LIT.get(SURFACE_LAMP) : null;
+    }
+    
     @Override
     public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
         return isLit(modelState) ? SURFACES_LIT : SURFACES_DARK;
@@ -147,9 +155,13 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
         if (stream.origin()) {
             Polygon reader = stream.reader();
 
-            do
+            do {
+                //TODO: remove
+                if(reader.surface().ordinal() == SURFACE_CUT) {
+                    System.out.println("read cut = " + reader.tag());
+                }
                 target.accept(reader);
-            while (stream.next());
+            } while (stream.next());
         }
         stream.release();
     }
@@ -497,10 +509,20 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
 
     private void setupCutSideQuad(MutablePolygon qi, SimpleQuadBounds qb) {
         final int glow = qi.surface().isLampGradient() ? 128 : 0;
-
-        qi.setupFaceQuad(qb.face, new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, Color.WHITE, glow),
-                new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, Color.WHITE, glow), new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, 0),
-                new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, Color.WHITE, 0), qb.topFace);
+        //TODO: remove
+        System.out.println("setting tag = 42, glow = " + glow);
+        qi.tag(42);
+        
+        qi.setupFaceQuad(qb.face, 
+                new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, Color.WHITE, glow),
+                new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, Color.WHITE, glow),
+                new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, 0),
+                new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, Color.WHITE, 0),
+                qb.topFace);
+        
+        //TODO: remove
+        assert qi.tag() == 42;
+        assert qi.surface().ordinal() == SURFACE_CUT;
     }
 
     /**
@@ -536,15 +558,7 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
     }
 
     public static boolean isLit(SimpleModelState modelState) {
-        return STATE_LIT.getValue(modelState.primitiveBits());
-    }
-
-    /**
-     * Number of cuts that appear on each face of model. Saves value in static shape
-     * bits in model state
-     */
-    public static void setLit(boolean isLit, SimpleModelState.Mutable modelState) {
-        modelState.primitiveBits(STATE_LIT.setValue(isLit, modelState.primitiveBits()));
+        return modelState.paint(SURFACE_LAMP).emissive(0);
     }
 
     // PERF: consolidate states if there is more then one for glowing vs not glowing
