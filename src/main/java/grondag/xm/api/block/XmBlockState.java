@@ -20,20 +20,13 @@ import javax.annotation.Nullable;
 
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.block.XmBlockStateAccess;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.BlockItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 public interface XmBlockState {
-
-    static @Nullable XmBlockState get(BlockState fromState) {
-        return XmBlockStateAccess.get(fromState);
-    }
-
-    static @Nullable <T extends ModelState.Mutable> T modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
-        return XmBlockStateAccess.modelState(fromState, blockView, pos, refresh);
-    }
-    
     /**
      * Minecraft block state associated with this Exotic Matter block state.
      * Association is always 1:1.
@@ -41,16 +34,32 @@ public interface XmBlockState {
     BlockState blockState();
 
     /**
-     * Returns an instance of the default model state for this block. Because model
-     * states are mutable, every call returns a new instance.
-     */
-    <T extends ModelState> T defaultModelState();
-
-    /**
      * If last parameter is false, does not perform a refresh from world for
      * world-dependent state attributes. Use this option to prevent infinite
      * recursion when need to reference some static state ) information in order to
      * determine dynamic world state. Block tests are main use case for false.
      */
-    <T extends ModelState.Mutable> T getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld);
+    <T extends ModelState.Mutable> T getModelState(@Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
+    
+    default <T extends ModelState.Mutable> T defaultModelState() {
+        return getModelState(null, null, false);
+    }
+    
+    static @Nullable XmBlockState get(BlockState fromState) {
+        return ((XmBlockStateAccess)fromState).xm2_toXmBlockState();
+    }
+
+    static @Nullable XmBlockState get(BlockItem fromItem) {
+        return get(fromItem.getBlock());
+    }
+
+    static @Nullable XmBlockState get(Block fromBlock) {
+        return get(fromBlock.getDefaultState());
+    }
+
+    @SuppressWarnings("unchecked")
+    static @Nullable <T extends ModelState.Mutable> T modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
+        final XmBlockState xmState = get(fromState);
+        return xmState == null ? null : (T) xmState.getModelState(blockView, pos, refresh);
+    }
 }

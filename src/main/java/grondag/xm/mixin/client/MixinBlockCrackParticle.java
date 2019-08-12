@@ -21,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.block.XmBlockStateAccess;
 import grondag.xm.dispatch.XmDispatcher;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.particle.BlockCrackParticle;
@@ -41,7 +41,7 @@ public abstract class MixinBlockCrackParticle extends SpriteBillboardParticle {
     
     @Inject(method = "<init>", at = @At(value = "RETURN"), cancellable = false, require = 0)
     void onNew(World world, double double_1, double double_2, double double_3, double double_4, double double_5, double double_6, BlockState blockState, CallbackInfo ci) {
-        final ModelState.Mutable lookupState = XmBlockStateAccess.modelState(blockState, world, POS.get().set(x, y, z), false);
+        final ModelState.Mutable lookupState = XmBlockState.modelState(blockState, world, POS.get().set(x, y, z), false);
         if(lookupState != null) {
             final ModelState renderState = XmDispatcher.INSTANCE.get(lookupState);
             lookupState.release();

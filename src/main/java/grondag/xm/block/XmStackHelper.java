@@ -18,9 +18,9 @@ package grondag.xm.block;
 
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
+import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.model.state.ModelStateTagHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -72,9 +72,9 @@ public class XmStackHelper {
 
         if (stack.getItem() instanceof BlockItem) {
             BlockItem item = (BlockItem) stack.getItem();
-            XmBlockStateImpl xmState = XmBlockStateAccess.get(item.getBlock().getDefaultState());
+            XmBlockState xmState = XmBlockState.get(item);
             if (xmState != null) {
-                return (T) xmState.defaultModelState.mutableCopy();
+                return (T) xmState.defaultModelState();
             }
         }
         return null;

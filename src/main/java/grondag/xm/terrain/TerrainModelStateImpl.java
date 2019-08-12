@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.terrain.TerrainModelState;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
 import grondag.xm.model.state.AbstractPrimitiveModelState;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -34,11 +34,11 @@ public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainMo
         return super.intSize() + 3;
     }
 
-    public void doRefreshFromWorld(XmBlockStateImpl xmState, BlockView world, BlockPos pos) {
+    public void doRefreshFromWorld(XmBlockState xmState, BlockView world, BlockPos pos) {
         //TODO: restore super state retrieval and move whole thing to external helper
         //super.doRefreshFromWorld(xmState, world, pos);
 
-        TerrainState.produceBitsFromWorldStatically(xmState.blockState, world, pos, (t, h) -> {
+        TerrainState.produceBitsFromWorldStatically(xmState.blockState(), world, pos, (t, h) -> {
             this.flowBits = t;
             this.glowBits = h;
             return null;

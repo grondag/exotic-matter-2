@@ -18,35 +18,13 @@ package grondag.xm.block;
 
 import javax.annotation.Nullable;
 
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import grondag.xm.api.block.WorldToModelStateFunction;
+import grondag.xm.api.block.XmBlockState;
 
 public interface XmBlockStateAccess {
+    void xm2_worldFunc(WorldToModelStateFunction<?> func);
 
-    void xm2_blockState(XmBlockStateImpl state);
-
-    XmBlockStateImpl xm2_blockState();
-
-    static @Nullable XmBlockStateImpl get(BlockState fromState) {
-        return ((XmBlockStateAccess) fromState).xm2_blockState();
-    }
-
-    static @Nullable XmBlockStateImpl get(BlockItem fromItem) {
-        return get(fromItem.getBlock());
-    }
-
-    static @Nullable XmBlockStateImpl get(Block fromBlock) {
-        return get(fromBlock.getDefaultState());
-    }
-
-    @SuppressWarnings("unchecked")
-    static @Nullable <T extends ModelState.Mutable> T modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
-        final XmBlockStateImpl xmState = get(fromState);
-        return xmState == null ? null : (T) xmState.getModelState(blockView, pos, refresh);
-    }
+    WorldToModelStateFunction<?> xm2_worldFunc();
+    
+    @Nullable XmBlockState xm2_toXmBlockState();
 }

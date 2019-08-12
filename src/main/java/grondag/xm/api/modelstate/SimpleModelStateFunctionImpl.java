@@ -7,31 +7,33 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_
 
 import java.util.ArrayList;
 
-import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.connect.world.ModelStateFunction;
-import grondag.xm.api.modelstate.SimpleModelState.Mutable;
+import grondag.xm.init.XmPrimitives;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
     private final BlockTest<SimpleModelState> joinTest;
-    private final SimpleModelStateFunction updater;
+    private final SimpleModelStateOperation updater;
+    private final SimpleModelState defaultState;
     
     private SimpleModelStateFunctionImpl(BuilderImpl builder) {
         this.joinTest = builder.joinTest;
+        this.defaultState = builder.defaultState;
         if(builder.updaters.isEmpty()) {
             updater = (modelState, xmBlockState, world, pos, neighbors, refreshFromWorld) -> {};
         } else if(builder.updaters.size() == 1) {
             updater = builder.updaters.get(0);
         } else {
-            final SimpleModelStateFunction[] funcs = builder.updaters.toArray(new SimpleModelStateFunction[builder.updaters.size()]);
+            final SimpleModelStateOperation[] funcs = builder.updaters.toArray(new SimpleModelStateOperation[builder.updaters.size()]);
             updater = (modelState, xmBlockState, world, pos, neighbors, refreshFromWorld) -> {
-                for(SimpleModelStateFunction func : funcs) {
+                for(SimpleModelStateOperation func : funcs) {
                     func.accept(modelState, xmBlockState, world, pos, neighbors, refreshFromWorld);
                 }
             };
@@ -39,8 +41,12 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
     };
     
     @Override
-    public void accept(Mutable modelState, XmBlockState xmBlockState, BlockView world, BlockPos pos, BlockNeighbors neighbors, boolean refreshFromWorld) {
-        if(refreshFromWorld) {
+    public SimpleModelState.Mutable apply(BlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        SimpleModelState.Mutable modelState = defaultState.mutableCopy();
+        if(!modelState.isStatic() && refreshFromWorld) {
+            
+            BlockNeighbors neighbors = null;
+            
             final int stateFlags = modelState.stateFlags();
             if ((stateFlags & STATE_FLAG_NEEDS_POS) == STATE_FLAG_NEEDS_POS) {
                 modelState.pos(pos);
@@ -64,20 +70,28 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
                 modelState.masonryJoin(SimpleJoinState.fromWorld(neighbors));
             }
             
-            updater.accept(modelState, xmBlockState, world, pos, neighbors, refreshFromWorld);
+            updater.accept(modelState, blockState, world, pos, neighbors, refreshFromWorld);
 
             if (neighbors != null) {
                 neighbors.release();
             }
-        }        
+        }      
+        return modelState;
     }
     
     private static class BuilderImpl implements SimpleModelStateFunction.Builder {
         private BlockTest<SimpleModelState> joinTest = BlockTest.sameBlock();
-        private ArrayList<SimpleModelStateFunction> updaters = new ArrayList<>();
+        private ArrayList<SimpleModelStateOperation> updaters = new ArrayList<>();
+        private SimpleModelState defaultState = XmPrimitives.CUBE.defaultState();
         
         private BuilderImpl() {}
 
+        @Override
+        public Builder withDefaultState(SimpleModelState defaultState) {
+            this.defaultState = defaultState == null ? XmPrimitives.CUBE.defaultState() : defaultState;
+            return this;
+        }
+        
         @Override
         public Builder withJoin(BlockTest<SimpleModelState> joinTest) {
             this.joinTest = joinTest == null ? BlockTest.sameBlock() : joinTest;
@@ -85,7 +99,7 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
         }
         
         @Override
-        public Builder withUpdate(SimpleModelStateFunction function) {
+        public Builder withUpdate(SimpleModelStateOperation function) {
             if(function != null) {
                 updaters.add(function);
             }
@@ -95,6 +109,7 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
         @Override
         public Builder clear() {
             joinTest = BlockTest.sameBlock();
+            defaultState = XmPrimitives.CUBE.defaultState();
             updaters.clear();
             return this;
         }

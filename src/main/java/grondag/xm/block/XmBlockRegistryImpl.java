@@ -21,55 +21,21 @@ import java.util.function.Function;
 import grondag.xm.Xm;
 import grondag.xm.api.block.WorldToModelStateFunction;
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
 public class XmBlockRegistryImpl {
     private XmBlockRegistryImpl() {
     }
     
-    public static void register(Block block, Function<BlockState, ModelState> defaultStateFunc, WorldToModelStateFunction<?> worldStateFunc) {
-
+    public static void register(Block block, Function<BlockState, ? extends WorldToModelStateFunction<?>> modelFunctionMap) {
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
                 // TODO: localize
                 Xm.LOG.warn(String.format("[%s] BlockState %s already associated with an XmBlockState. Skipping.", Xm.MODID, blockState.toString()));
                 return;
             }
-            XmBlockStateImpl xmState = new XmBlockStateImpl(defaultStateFunc.apply(blockState), worldStateFunc, blockState);
-            ((XmBlockStateAccess) blockState).xm2_blockState(xmState);
-        }
-    }
-
-    public static class XmBlockStateImpl implements XmBlockState {
-        public final WorldToModelStateFunction<?> worldStateFunc;
-        public final ModelState defaultModelState;
-        public final BlockState blockState;
-
-        private XmBlockStateImpl(ModelState defaultModelState, WorldToModelStateFunction<?> worldStateFunc, BlockState blockState) {
-            this.defaultModelState = defaultModelState;
-            this.worldStateFunc = worldStateFunc;
-            this.blockState = blockState;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public ModelState defaultModelState() {
-            return defaultModelState;
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public ModelState.Mutable getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
-            return worldStateFunc.apply(this, world, pos, refreshFromWorld && !defaultModelState.isStatic());
-        }
-
-        @Override
-        public BlockState blockState() {
-            return blockState;
+            ((XmBlockStateAccess) blockState).xm2_worldFunc(modelFunctionMap.apply(blockState));
         }
     }
 }

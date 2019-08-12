@@ -16,8 +16,19 @@
 
 package grondag.xm.api.modelstate;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.PillarBlock;
+
 public interface SimpleModelState extends PrimitiveModelState<SimpleModelState, SimpleModelState.Mutable>  {
     public static interface Mutable extends SimpleModelState, PrimitiveModelState.Mutable<SimpleModelState, SimpleModelState.Mutable> {
         
     }
+    
+    ModelStateMap.Modifier<BlockState, Mutable> AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
+        Comparable<?> axis = blockState.getEntries().get(PillarBlock.AXIS);
+        if (axis != null) {
+            modelState.axis(PillarBlock.AXIS.getValueType().cast(axis));
+        }
+        return modelState;
+    };
 }

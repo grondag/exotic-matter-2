@@ -22,7 +22,6 @@ import grondag.xm.api.connect.model.BlockCorner;
 import grondag.xm.api.connect.model.BlockEdge;
 import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.block.XmBlockStateAccess;
 import grondag.xm.block.XmStackHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -93,7 +92,7 @@ public class BlockOrientationHandler {
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
 
-        closestModelState = XmBlockStateAccess.modelState(onBlockState, world, pPos.onPos, true);
+        closestModelState = XmBlockState.modelState(onBlockState, world, pPos.onPos, true);
         // can't use onBlock as reference if is of a different type
         if (closestModelState != null && closestModelState.primitive() != outputModelState.primitive()) {
             closestModelState = null;
@@ -109,7 +108,7 @@ public class BlockOrientationHandler {
                     for (int z = -1; z <= 1; z++) {
                         if ((x | y | z) != 0) {
                             BlockPos testPos = pPos.onPos.add(x, y, z);
-                            XmBlockState testBlockState = XmBlockStateAccess.get(world.getBlockState(testPos));
+                            XmBlockState testBlockState = XmBlockState.get(world.getBlockState(testPos));
                             if (testBlockState != null) {
                                 double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x, pPos.onPos.getY() + 0.5 + y,
                                         pPos.onPos.getZ() + 0.5 + z);
