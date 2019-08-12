@@ -154,12 +154,7 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
 
         if (stream.origin()) {
             Polygon reader = stream.reader();
-
             do {
-                //TODO: remove
-                if(reader.surface().ordinal() == SURFACE_CUT) {
-                    System.out.println("read cut = " + reader.tag());
-                }
                 target.accept(reader);
             } while (stream.next());
         }
@@ -509,9 +504,6 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
 
     private void setupCutSideQuad(MutablePolygon qi, SimpleQuadBounds qb) {
         final int glow = qi.surface().isLampGradient() ? 128 : 0;
-        //TODO: remove
-        System.out.println("setting tag = 42, glow = " + glow);
-        qi.tag(42);
         
         qi.setupFaceQuad(qb.face, 
                 new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, Color.WHITE, glow),
@@ -519,10 +511,6 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
                 new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, 0),
                 new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, Color.WHITE, 0),
                 qb.topFace);
-        
-        //TODO: remove
-        assert qi.tag() == 42;
-        assert qi.surface().ordinal() == SURFACE_CUT;
     }
 
     /**

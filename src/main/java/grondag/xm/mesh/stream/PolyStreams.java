@@ -31,7 +31,6 @@ public class PolyStreams {
     private static final ArrayBlockingQueue<MutablePolyStreamImpl> mutables = new ArrayBlockingQueue<>(128);
     private static final ArrayBlockingQueue<CsgPolyStream> csgStreams = new ArrayBlockingQueue<>(128);
     private static final ArrayBlockingQueue<ReadOnlyPolyStreamImpl> readables = new ArrayBlockingQueue<>(256);
-    private static final ArrayBlockingQueue<DispatchPolyStream> dispatches = new ArrayBlockingQueue<>(256);
 
     public static WritablePolyStream claimWritable() {
         return claimWritable(0);
@@ -96,18 +95,6 @@ public class PolyStreams {
 
     static void release(ReadOnlyPolyStreamImpl freeStream) {
         readables.offer(freeStream);
-    }
-
-    public static DispatchPolyStream claimDispatch() {
-        DispatchPolyStream result = dispatches.poll();
-        if (result == null)
-            result = new DispatchPolyStream();
-        result.prepare();
-        return result;
-    }
-
-    static void release(DispatchPolyStream freeStream) {
-        dispatches.offer(freeStream);
     }
 
     public static CsgPolyStream claimCSG() {

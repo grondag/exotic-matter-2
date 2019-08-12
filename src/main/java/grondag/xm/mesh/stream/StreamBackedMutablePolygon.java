@@ -293,6 +293,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         textureSalt(polyIn.textureSalt());
         surface(polyIn.surface());
         uvWrapDistance(polyIn.uvWrapDistance());
+        tag(polyIn.tag());
 
         for (int l = 0; l < layerCount; l++) {
             maxU(l, polyIn.maxU(l));

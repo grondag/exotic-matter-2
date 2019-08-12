@@ -159,10 +159,6 @@ public class StreamBackedPolygon implements Polygon {
 
     public Polygon tag(int tag) {
         polyEncoder.setTag(stream, baseAddress, tag);
-        //TODO: remove
-        if(polyEncoder.getTag(stream, baseAddress) != tag) {
-            System.out.println("derp");
-        }
         return this;
     }
 
@@ -379,12 +375,6 @@ public class StreamBackedPolygon implements Polygon {
     public boolean disableDiffuse(int layerIndex) {
         return StaticEncoder.disableDiffuse(stream, baseAddress, layerIndex);
     }
-
-    // TODO: convert to material
-//    @Override
-//    public int getPipelineIndex() {
-//        return StaticEncoder.getPipelineIndex(stream, baseAddress);
-//    }
 
     @Override
     public int streamAddress() {

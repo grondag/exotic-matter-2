@@ -273,7 +273,7 @@ public class PolyEncoder {
         } else {
             tagOffset = BAD_ADDRESS;
             getTag = IntGetter.ZERO;
-            setTag = SET_INT_FAIL;
+            setTag = IntSetter.VOID;
         }
 
         switch (getVertexColorFormat(format)) {

@@ -74,11 +74,6 @@ public class QuadPaintHandler implements Consumer<Polygon> {
         XmSurface surface = poly.surface();
         XmPaint paint = modelState.paint(surface);
 
-        //TODO: remove
-        if(poly.tag() == 42) {
-            System.out.println(42);
-        }
-        
         stream.appendCopy(poly);
         stream.editorOrigin();
 
@@ -154,12 +149,6 @@ public class QuadPaintHandler implements Consumer<Polygon> {
     private void polyToMeshFrex(MutablePolygon poly, QuadEmitter emitter) {
         final int depth = poly.spriteDepth();
         final MaterialFinder finder = this.finder;
-
-        //TODO: remove
-        if(poly.surface().ordinal() == 1) {
-            System.out.println("out color = " + Integer.toHexString(poly.spriteColor(0, 0)));
-            System.out.println("tag = " + poly.tag());
-        }
         
         finder.clear()
             .spriteDepth(depth)
@@ -189,7 +178,6 @@ public class QuadPaintHandler implements Consumer<Polygon> {
         emitter.material(finder.find());
         emitter.cullFace(poly.cullFace());
         emitter.nominalFace(poly.nominalFace());
-        // FIXME: no tag output
         if(poly.tag() != Polygon.NO_LINK_OR_TAG) {
             emitter.tag(poly.tag());
         }
@@ -198,9 +186,7 @@ public class QuadPaintHandler implements Consumer<Polygon> {
             
             final int g = poly.glow(v);
             if(g > 0) {
-                //TODO: remove/put back
-//                System.out.println(g);
-//                emitter.lightmap(v, g << 4);
+                emitter.lightmap(v, g);
             }
             
             if (poly.hasNormal(v)) {
@@ -208,13 +194,7 @@ public class QuadPaintHandler implements Consumer<Polygon> {
             }
 
             emitter.sprite(v, 0, poly.spriteU(v, 0), poly.spriteV(v, 0));
-            //TODO: remove
-            final int c = poly.spriteColor(v, 0);
-            if(poly.surface().ordinal() == 1) {
-                System.out.println("out color = " + Integer.toHexString(c));
-            }
-            emitter.spriteColor(v, 0, c);
-//            emitter.spriteColor(v, 0, poly.spriteColor(v, 0));
+            emitter.spriteColor(v, 0, poly.spriteColor(v, 0));
 
             if (depth > 1) {
                 emitter.sprite(v, 1, poly.spriteU(v, 1), poly.spriteV(v, 1));

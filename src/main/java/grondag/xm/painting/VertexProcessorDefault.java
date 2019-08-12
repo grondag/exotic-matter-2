@@ -50,26 +50,15 @@ public class VertexProcessorDefault extends VertexProcessor {
                 if(lampPaint != null) {
                     final int lampColor = lampPaint.textureColor(0);
                     final int lampBrightness = lampPaint.emissive(0) ? 255 : 0;
-        
-                    //TODO: remove
-                    System.out.println(Integer.toHexString(color));
                     
                     // keep target surface alpha
                     int alpha = color & 0xFF000000;
         
                     for (int i = 0; i < poly.vertexCount(); i++) {
                         final float w = poly.glow(i) / 255f;
-                        if(w > 0) {
-                            //TODO: remove
-                            System.out.println(w);
-                        }
                         int b = Math.round(lampBrightness * w);
                         int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
                         poly.spriteColor(i, textureIndex, c | alpha);
-                        //TODO: remove
-                        if(poly.spriteColor(i, textureIndex) != (c | alpha)) {
-                            System.out.println("oops! color = " + Integer.toHexString(poly.spriteColor(i, textureIndex)));
-                        }
                         poly.glow(i, b);
                     }
                 }
