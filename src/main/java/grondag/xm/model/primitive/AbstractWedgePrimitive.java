@@ -21,16 +21,60 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIE
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
+
+import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 
 public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
+    protected static final int KEY_COUNT = BlockEdgeSided.COUNT * 3;
+    
+    protected static int computeKey(int edgeIndex, boolean isCorner, boolean isInside) {
+        return edgeIndex * 3 + (isCorner ? (isInside ? 1 : 2) : 0);
+    }
+
+    protected final ReadOnlyPolyStream[] CACHE = new ReadOnlyPolyStream[KEY_COUNT];
+    
     public AbstractWedgePrimitive(String idString) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION,
                 SimpleModelStateImpl.FACTORY);
     }
+    
+    // mainly for run-time testing
+    @Override
+    public void invalidateCache() { 
+        Arrays.fill(CACHE, null);
+    }
 
+    @Override
+    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
+        final int edgeIndex = modelState.orientationIndex();
+        final boolean isCorner = isCorner(modelState);
+        final boolean isInside = isInsideCorner(modelState);
+        final int key = computeKey(edgeIndex, isCorner, isInside);
+        
+        ReadOnlyPolyStream stream = CACHE[key];
+        if(stream == null) {
+            stream = buildPolyStream(edgeIndex, isCorner, isInside);
+            CACHE[key] = stream;
+        }
+        
+        if (stream.origin()) {
+            Polygon reader = stream.reader();
+
+            do
+                target.accept(reader);
+            while (stream.next());
+        }
+    }
+
+    protected abstract ReadOnlyPolyStream buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside);
+    
     @Override
     public BlockOrientationType orientationType(SimpleModelState modelState) {
         return BlockOrientationType.EDGE_SIDED;

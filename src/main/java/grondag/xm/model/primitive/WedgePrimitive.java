@@ -16,20 +16,18 @@
 
 package grondag.xm.model.primitive;
 
-import java.util.function.Consumer;
-
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.FaceVertex;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
-import grondag.xm.mesh.stream.PolyStreams;
 import net.minecraft.util.math.Direction;
 
 public class WedgePrimitive extends AbstractWedgePrimitive {
@@ -54,68 +52,160 @@ public class WedgePrimitive extends AbstractWedgePrimitive {
     }
 
     @Override
-    public void invalidateCache() { 
-        //TODO: caching
-    }
-    
-    @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
-        // Axis for this shape is through the face of the sloping surface
-        // Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
-        // Default geometry is Y axis with full sides against north/down faces.
-
-        // PERF: caching
+    protected ReadOnlyPolyStream buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside) {
+        // Default geometry bottom/back against down/south faces. Corner is on right.
+      
         final WritablePolyStream stream = PolyStreams.claimWritable();
-        final MutablePolygon writer = stream.writer();
-
-        PolyTransform transform = PolyTransform.get(modelState);
-
-        writer.rotation(0, Rotation.ROTATE_NONE);
-        writer.lockUV(0, true);
+        final MutablePolygon quad = stream.writer();
+        final PolyTransform transform = PolyTransform.edgeSidedTransform(edgeIndex);
+        
+        quad.rotation(0, Rotation.ROTATE_NONE);
+        quad.lockUV(0, true);
         stream.saveDefaults();
 
-        writer.surface(SURFACE_BOTTOM);
-        writer.nominalFace(Direction.NORTH);
-        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        // bottom is always the same
+        quad.surface(SURFACE_BOTTOM);
+        quad.nominalFace(Direction.DOWN);
+        quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
+        transform.apply(quad);
         stream.append();
-
-        writer.surface(SURFACE_BOTTOM);
-        writer.nominalFace(Direction.DOWN);
-        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
-        stream.append();
-
-        stream.setVertexCount(3);
-        writer.surface(SURFACE_SIDES);
-        writer.nominalFace(Direction.EAST);
-        writer.setupFaceQuad(Direction.EAST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(1, 1, 0), Direction.UP);
-        writer.assignLockedUVCoordinates(0);
-        transform.apply(writer);
-        stream.append();
-
-        stream.setVertexCount(3);
-        writer.surface(SURFACE_SIDES);
-        writer.nominalFace(Direction.WEST);
-        writer.setupFaceQuad(Direction.WEST, new FaceVertex(0, 0, 0), new FaceVertex(1, 0, 0), new FaceVertex(0, 1, 0), Direction.UP);
-        writer.assignLockedUVCoordinates(0);
-        transform.apply(writer);
-        stream.append();
-
-        stream.setVertexCount(4);
-        writer.surface(SURFACE_TOP);
-        writer.nominalFace(Direction.UP);
-        writer.setupFaceQuad(Direction.UP, new FaceVertex(0, 0, 1), new FaceVertex(1, 0, 1), new FaceVertex(1, 1, 0), new FaceVertex(0, 1, 0), Direction.NORTH);
-        transform.apply(writer);
-        stream.append();
-
-        if (stream.origin()) {
-            Polygon reader = stream.reader();
-
-            do
-                target.accept(reader);
-            while (stream.next());
+        
+        // back is full except for outside corners
+        quad.surface(SURFACE_BACK);
+        quad.nominalFace(Direction.SOUTH);
+        if(isCorner && !isInside) {
+            quad.setupFaceQuad(Direction.SOUTH, 
+                    new FaceVertex(0, 0, 0), 
+                    new FaceVertex(1, 0, 0), 
+                    new FaceVertex(0.5f, 0.5f, 0),
+                    new FaceVertex(0, 1, 0),
+                    Direction.UP);
+            quad.assignLockedUVCoordinates(0);
+        } else {
+            quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         }
-        stream.release();
+        transform.apply(quad);
+        stream.append();
+        
+        if(!isCorner || isInside) {
+            quad.surface(SURFACE_SIDES);
+            quad.nominalFace(Direction.EAST);
+            quad.setupFaceQuad(Direction.EAST, 
+                    new FaceVertex(0, 0, 0), 
+                    new FaceVertex(1, 0, 0), 
+                    new FaceVertex(0.5f, 0.5f, 0),
+                    new FaceVertex(0, 1, 0),
+                    Direction.UP);
+            quad.assignLockedUVCoordinates(0);
+            transform.apply(quad);
+            stream.append();
+        }
+//        } else {
+//            quad.setupFaceQuad(Direction.EAST, 
+//                    new FaceVertex(0, 0, 0), 
+//                    new FaceVertex(1, 0, 0), 
+//                    new FaceVertex(0.5f, 0.5f, 0.5f),
+//                    new FaceVertex(0, 1, 1.0f),
+//                    Direction.UP);
+//        }
+        
+        quad.surface(SURFACE_SIDES);
+        quad.nominalFace(Direction.WEST);
+        if(!isCorner || !isInside) {
+            quad.setupFaceQuad(Direction.WEST, 
+                    new FaceVertex(0, 0, 0), 
+                    new FaceVertex(1, 0, 0), 
+                    new FaceVertex(1, 1, 0),
+                    new FaceVertex(0.5f, 0.5f, 0),
+                    Direction.UP);
+
+        } else {
+            quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
+        }
+        quad.assignLockedUVCoordinates(0);
+        transform.apply(quad);
+        stream.append();
+        
+        // front/top
+        if(isCorner) {
+            if(isInside) {
+                quad.surface(SURFACE_TOP);
+                quad.nominalFace(Direction.UP);
+                quad.setupFaceQuad(Direction.UP, 
+                        new FaceVertex(0, 0, 1),
+                        new FaceVertex(0.5f, 0.5f, 0.5f),
+                        new FaceVertex(1, 1, 0),
+                        new FaceVertex(0, 1, 0),
+                        Direction.SOUTH);
+                quad.assignLockedUVCoordinates(0);
+                transform.apply(quad);
+                stream.append();
+                
+                quad.surface(SURFACE_TOP);
+                quad.nominalFace(Direction.UP);
+                quad.setupFaceQuad(Direction.UP, 
+                        new FaceVertex(0, 0, 1),
+                        new FaceVertex(1, 0, 0),
+                        new FaceVertex(1, 1, 0),
+                        new FaceVertex(0.5f, 0.5f, 0.5f),
+                        Direction.SOUTH);
+                quad.assignLockedUVCoordinates(0);
+                transform.apply(quad);
+                stream.append();
+                
+                // inside has an extra side face on the front
+                quad.surface(SURFACE_SIDES);
+                quad.nominalFace(Direction.NORTH);
+                quad.setupFaceQuad(Direction.NORTH, 
+                        new FaceVertex(0, 0, 0),
+                        new FaceVertex(1, 0, 0),
+                        new FaceVertex(1, 1, 0),
+                        new FaceVertex(0.5f, 0.5f, 0),
+                        Direction.UP);
+                quad.assignLockedUVCoordinates(0);
+                transform.apply(quad);
+                stream.append();
+                
+            } else {
+                // outside
+                quad.surface(SURFACE_TOP);
+                quad.nominalFace(Direction.UP);
+                quad.setupFaceQuad(Direction.UP, 
+                        new FaceVertex(0, 0, 1),
+                        new FaceVertex(0.5f, 0.5f, 0.5f),
+                        new FaceVertex(1, 1, 0),
+                        new FaceVertex(0, 1, 1),
+                        Direction.SOUTH);
+                quad.assignLockedUVCoordinates(0);
+                transform.apply(quad);
+                stream.append();
+                
+                quad.surface(SURFACE_TOP);
+                quad.nominalFace(Direction.UP);
+                quad.setupFaceQuad(Direction.UP, 
+                        new FaceVertex(0, 0, 1),
+                        new FaceVertex(1, 0, 1),
+                        new FaceVertex(1, 1, 0),
+                        new FaceVertex(0.5f, 0.5f, 0.5f),
+                        Direction.SOUTH);
+                quad.assignLockedUVCoordinates(0);
+                transform.apply(quad);
+                stream.append();
+            }
+        } else {
+            quad.surface(SURFACE_TOP);
+            quad.nominalFace(Direction.UP);
+            quad.setupFaceQuad(Direction.UP, 
+                    new FaceVertex(0, 0, 1),
+                    new FaceVertex(1, 0, 1),
+                    new FaceVertex(1, 1, 0),
+                    new FaceVertex(0, 1, 0),
+                    Direction.SOUTH);
+            quad.assignLockedUVCoordinates(0);
+            transform.apply(quad);
+            stream.append();
+        }
+
+        return stream.releaseAndConvertToReader();
     }
 }

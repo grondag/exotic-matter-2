@@ -16,20 +16,15 @@
 
 package grondag.xm.model.primitive;
 
-import java.util.Arrays;
-import java.util.function.Consumer;
-
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
-import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import net.minecraft.util.math.Direction;
 
 public class StairPrimitive extends AbstractWedgePrimitive {
@@ -49,10 +44,6 @@ public class StairPrimitive extends AbstractWedgePrimitive {
     public static final XmSurfaceImpl SURFACE_LEFT = CubePrimitive.SURFACE_LEFT;
     public static final XmSurfaceImpl SURFACE_RIGHT = CubePrimitive.SURFACE_RIGHT;
     
-    private static final int KEY_COUNT = BlockEdgeSided.COUNT * 3;
-    
-    private final ReadOnlyPolyStream[] CACHE = new ReadOnlyPolyStream[KEY_COUNT];
-    
     public StairPrimitive(String idString) {
         super(idString);
     }
@@ -61,47 +52,11 @@ public class StairPrimitive extends AbstractWedgePrimitive {
     public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
-
-    // mainly for run-time testing
-    @Override
-    public void invalidateCache() { 
-        Arrays.fill(CACHE, null);
-    }
     
-    static int computeKey(int edgeIndex, boolean isCorner, boolean isInside) {
-        return edgeIndex * 3 + (isCorner ? (isInside ? 1 : 2) : 0);
-    }
-
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
-        final int edgeIndex = modelState.orientationIndex();
-        final boolean isCorner = isCorner(modelState);
-        final boolean isInside = isInsideCorner(modelState);
-        final int key = computeKey(edgeIndex, isCorner, isInside);
-        
-        ReadOnlyPolyStream stream = CACHE[key];
-        if(stream == null) {
-            stream = produceQuadsInner(edgeIndex, isCorner, isInside);
-            CACHE[key] = stream;
-        }
-        
-        if (stream.origin()) {
-            Polygon reader = stream.reader();
+    protected ReadOnlyPolyStream buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside) {
+        // Default geometry bottom/back against down/south faces. Corner is on right.
 
-            do
-                target.accept(reader);
-            while (stream.next());
-        }
-    }
-    
-    private static ReadOnlyPolyStream produceQuadsInner(int edgeIndex, boolean isCorner, boolean isInside) {
-        // Axis for this shape is along the face of the sloping surface
-        // Four rotations x 3 axes gives 12 orientations - one for each edge of a cube.
-        // Default geometry is X orthogonalAxis with full sides against north/down faces.
-
-        // For corners the default orientation has the extra octant on the right (east)
-        // side against the back (north) face. 
-        
         // Sides are split into three quadrants vs one long strip plus one long quadrant
         // is necessary to avoid AO lighting artifacts. AO is done by vertex, and having
         // a T-junction tends to mess about with the results.
@@ -212,7 +167,6 @@ public class StairPrimitive extends AbstractWedgePrimitive {
             stream.append();
         }
 
-
         // front 
         if(isCorner) {
             if(isInside) {
@@ -321,6 +275,7 @@ public class StairPrimitive extends AbstractWedgePrimitive {
             transform.apply(quad);
             stream.append();
         }
+        
         return stream.releaseAndConvertToReader();
     }
 }
