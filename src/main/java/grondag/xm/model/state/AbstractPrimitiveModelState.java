@@ -19,6 +19,7 @@ package grondag.xm.model.state;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -31,7 +32,6 @@ import com.google.common.collect.ImmutableList;
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.varia.Useful;
 import grondag.xm.Xm;
-import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.modelstate.ModelState;
@@ -82,18 +82,18 @@ public abstract class AbstractPrimitiveModelState
     private static final BitPacker32<AbstractPrimitiveModelState>.IntElement SPECIES = WORLD_ENCODER.createIntElement(16);
     
     
-    public static final int PRIMITIVE_BIT_COUNT = 6;
+    public static final int PRIMITIVE_BIT_COUNT;
     private static final BitPacker32<AbstractPrimitiveModelState> SHAPE_ENCODER = new BitPacker32<AbstractPrimitiveModelState>(m -> m.shapeBits,(m, b) -> m.shapeBits = b);
-    private static final BitPacker32<AbstractPrimitiveModelState>.EnumElement<Direction.Axis> AXIS = SHAPE_ENCODER.createEnumElement(Direction.Axis.class);
-    private static final BitPacker32<AbstractPrimitiveModelState>.BooleanElement AXIS_INVERTED = SHAPE_ENCODER.createBooleanElement();
-    private static final BitPacker32<AbstractPrimitiveModelState>.EnumElement<ClockwiseRotation> AXIS_ROTATION = SHAPE_ENCODER.createEnumElement(ClockwiseRotation.class);
+    private static final BitPacker32<AbstractPrimitiveModelState>.IntElement ORIENTATION = SHAPE_ENCODER.createIntElement(32);
     private static final BitPacker32<AbstractPrimitiveModelState>.IntElement BLOCK_JOIN = SHAPE_ENCODER.createIntElement(CornerJoinState.STATE_COUNT);
     private static final BitPacker32<AbstractPrimitiveModelState>.IntElement MASONRY_JOIN = SHAPE_ENCODER.createIntElement(SimpleJoinState.STATE_COUNT);
-    private static final BitPacker32<AbstractPrimitiveModelState>.IntElement PRIMITIVE_BITS = SHAPE_ENCODER.createIntElement(1 << PRIMITIVE_BIT_COUNT);
+    private static final BitPacker32<AbstractPrimitiveModelState>.IntElement PRIMITIVE_BITS;
 
     static {
         assert WORLD_ENCODER.bitLength() <= 32;
         assert SHAPE_ENCODER.bitLength() <= 32;
+        PRIMITIVE_BIT_COUNT = 32 - SHAPE_ENCODER.bitLength();
+        PRIMITIVE_BITS = SHAPE_ENCODER.createIntElement(1 << PRIMITIVE_BIT_COUNT);
     }
     
     ////////////////////////////////////////// FACTORY //////////////////////////////////////////
@@ -114,9 +114,11 @@ public abstract class AbstractPrimitiveModelState
             if (result == null) {
                 result = factory.get();
                 result.isImmutable = false;
+            } else {
+                result.clear();
             }
-            result.retain();
             result.primitive = primitive;
+            result.retain();
             return result;
         }
         
@@ -251,6 +253,12 @@ public abstract class AbstractPrimitiveModelState
         System.arraycopy(template.paints, 0, this.paints, 0, this.surfaceCount());
         worldBits = other.worldBits;
         shapeBits = other.shapeBits;
+    }
+    
+    protected void clear() {
+        Arrays.fill(paints, 0);
+        worldBits = 0;
+        shapeBits = 0;
     }
     
     @Override
@@ -433,37 +441,12 @@ public abstract class AbstractPrimitiveModelState
     }
     
     @Override
-    public final boolean hasAxisOrientation() {
-      return primitive.hasAxisOrientation((R)this);
-    }
-    
-    @Override
-    public final boolean hasAxisRotation() {
-      return primitive.hasAxisRotation((R)this);
-    }
-    
-    @Override
-    public final boolean hasAxis() {
-      return primitive.hasAxis((R)this);
-    }
-    
-    @Override
     public final BlockOrientationType orientationType() {
       return primitive.orientationType((R)this);
     }
     
     protected final int surfaceCount() {
         return primitive.surfaces((R)this).size();
-    }
-    
-    @Override
-    public final boolean isAxisOrthogonalToPlacementFace() {
-        return primitive.isAxisOrthogonalToPlacementFace();
-    }
-    
-    @Override
-    public Direction rotateFace(Direction face) {
-        return PolyTransform.rotateFace((R)this, face);
     }
     
     ////////////////////////////////////////// WORLD REFRESH CONTROL //////////////////////////////////////////
@@ -645,29 +628,16 @@ public abstract class AbstractPrimitiveModelState
     protected int shapeBits;
 
     @Override
-    public final Direction.Axis axis() {
-        return AXIS.getValue(this);
+    public int orientationIndex() {
+        return ORIENTATION.getValue(this);
     }
 
     @Override
-    public final W axis(Direction.Axis axis) {
-        AXIS.setValue(axis, this);
-        invalidateHashCode();
-        return (W)this;
+    public W orientationIndex(int index) {
+        ORIENTATION.setValue(index, this);
+        return (W) this;
     }
-
-    @Override
-    public boolean isAxisInverted() {
-        return AXIS_INVERTED.getValue(this);
-    }
-
-    @Override
-    public final W setAxisInverted(boolean isInverted) {
-        AXIS_INVERTED.setValue(isInverted, this);
-        invalidateHashCode();
-        return (W)this;
-    }
-
+    
     @Override
     public CornerJoinState cornerJoin() {
         return CornerJoinStateSelector.fromOrdinal(MathHelper.clamp(BLOCK_JOIN.getValue(this), 0, CornerJoinState.STATE_COUNT - 1));
@@ -703,22 +673,6 @@ public abstract class AbstractPrimitiveModelState
     @Override
     public final W masonryJoin(SimpleJoinState join) {
         MASONRY_JOIN.setValue(join.ordinal(), this);
-        invalidateHashCode();
-        return (W)this;
-    }
-
-    /**
-     * For machines and other blocks with a privileged horizontal face, North is
-     * considered the zero rotation.
-     */
-    @Override
-    public ClockwiseRotation axisRotation() {
-        return AXIS_ROTATION.getValue(this);
-    }
-
-    @Override
-    public final W axisRotation(ClockwiseRotation rotation) {
-        AXIS_ROTATION.setValue(rotation, this);
         invalidateHashCode();
         return (W)this;
     }

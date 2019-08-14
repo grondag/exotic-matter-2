@@ -37,15 +37,22 @@ import net.minecraft.util.math.Vec3i;
 
 /**
  * Defines the twelve edges of a block and the relative position of neighboring
- * blocks diagonally adjacent to those edges.
+ * blocks diagonally adjacent to those edges. Use when shape is symmetrical with
+ * respect to that edge.
  */
 @API(status = STABLE)
 public enum BlockEdge implements StringIdentifiable {
-    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
-    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE), DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90),
-    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), UP_EAST(Direction.UP, Direction.EAST, ROTATE_90), UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE),
-    UP_WEST(Direction.UP, Direction.WEST, ROTATE_270), NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90),
-    NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270), SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_270),
+    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), 
+    DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
+    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE), 
+    DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90),
+    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), 
+    UP_EAST(Direction.UP, Direction.EAST, ROTATE_90), 
+    UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE),
+    UP_WEST(Direction.UP, Direction.WEST, ROTATE_270), 
+    NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90),
+    NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270), 
+    SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_270),
     SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_90);
 
     public final Direction face1;

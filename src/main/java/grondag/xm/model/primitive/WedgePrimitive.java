@@ -20,19 +20,44 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.FaceVertex;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.WritablePolyStream;
+import grondag.xm.painting.SurfaceTopology;
+import grondag.xm.surface.XmSurfaceImpl;
+import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import grondag.xm.mesh.stream.PolyStreams;
 import net.minecraft.util.math.Direction;
 
 public class WedgePrimitive extends AbstractWedgePrimitive {
+    private static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+            .add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+            .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+
+    public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(0);
+    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(1);
+    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(2);
+    public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
+    
     public WedgePrimitive(String idString) {
         super(idString);
     }
+    
+    @Override
+    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
+        return SURFACES;
+    }
 
+    @Override
+    public void invalidateCache() { 
+        //TODO: caching
+    }
+    
     @Override
     public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         // Axis for this shape is through the face of the sloping surface

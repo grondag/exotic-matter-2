@@ -35,9 +35,28 @@ import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class CubePrimitive extends AbstractBasePrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
+    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+            .add("down", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("up", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("north", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("south", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("west", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("east", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .build();
 
-    public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
+    public static final XmSurfaceImpl SURFACE_DOWN = SURFACES.get(0);
+    public static final XmSurfaceImpl SURFACE_UP = SURFACES.get(1);
+    public static final XmSurfaceImpl SURFACE_NORTH = SURFACES.get(2);
+    public static final XmSurfaceImpl SURFACE_SOUTH = SURFACES.get(3);
+    public static final XmSurfaceImpl SURFACE_WEST = SURFACES.get(4);
+    public static final XmSurfaceImpl SURFACE_EAST = SURFACES.get(5);
+    
+    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);
+    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
+    public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(2);
+    public static final XmSurfaceImpl SURFACE_FRONT = SURFACES.get(3);
+    public static final XmSurfaceImpl SURFACE_LEFT = SURFACES.get(4);
+    public static final XmSurfaceImpl SURFACE_RIGHT = SURFACES.get(5);
 
     /** never changes so may as well save it */
     private final PolyStream cachedQuads;
@@ -67,14 +86,24 @@ public class CubePrimitive extends AbstractBasePrimitive {
         cube.u1 = 1;
         cube.v1 = 1;
         cube.isOverlay = false;
-        cube.surface = SURFACE_ALL;
 
         WritablePolyStream stream = PolyStreams.claimWritable();
+        cube.surface = SURFACE_DOWN;
         cube.appendFace(stream, Direction.DOWN);
+        
+        cube.surface = SURFACE_UP;
         cube.appendFace(stream, Direction.UP);
+        
+        cube.surface = SURFACE_EAST;
         cube.appendFace(stream, Direction.EAST);
+        
+        cube.surface = SURFACE_WEST;
         cube.appendFace(stream, Direction.WEST);
+        
+        cube.surface = SURFACE_NORTH;
         cube.appendFace(stream, Direction.NORTH);
+        
+        cube.surface = SURFACE_SOUTH;
         cube.appendFace(stream, Direction.SOUTH);
 
         PolyStream result = stream.releaseAndConvertToReader();

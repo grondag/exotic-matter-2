@@ -42,6 +42,7 @@ import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
 public class SquareColumnPrimitive extends AbstractBasePrimitive {
@@ -128,6 +129,8 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
     public BlockOrientationType orientationType(SimpleModelState modelState) {
         return BlockOrientationType.AXIS;
     }
+    
+    private static final Axis[] AXIS = Direction.Axis.values();
 
     private void makeFaceQuads(SimpleModelState state, Direction face, FaceSpec spec, Consumer<Polygon> target) {
         if (face == null)
@@ -138,7 +141,7 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
         // Why create a stream just to pipe it to the consumer? Or cache the result.
 
         CornerJoinState bjs = state.cornerJoin();
-        Direction.Axis axis = state.axis();
+        Direction.Axis axis = AXIS[state.orientationIndex() % 3];
         WritablePolyStream stream = PolyStreams.claimWritable();
 
         stream.setVertexCount(4);
@@ -560,20 +563,18 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
         return modelState.paint(SURFACE_LAMP).emissive(0);
     }
 
-    // PERF: consolidate states if there is more then one for glowing vs not glowing
     @Override
     public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
         final SimpleModelState.Mutable result = this.newState();
-        result.axis(fromState.axis());
-        result.primitiveBits(fromState.primitiveBits());
-        result.cornerJoin(fromState.cornerJoin());
         return result;
     }
 
     @Override
     public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
         
-        return from.primitive() == to.primitive() && from.axis() == to.axis() && from.cornerJoin() == to.cornerJoin()
+        return from.primitive() == to.primitive() 
+                && from.orientationIndex() == to.orientationIndex()
+                && from.cornerJoin() == to.cornerJoin()
                 && from.primitiveBits() == to.primitiveBits();
     }
 }

@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package grondag.xm.api.modelstate;
 
 import java.util.List;
@@ -5,7 +20,6 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.paint.XmPaint;
@@ -84,17 +98,9 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
     @Override
     W geometricState();
 
-    boolean hasAxisOrientation();
-
-    boolean hasAxisRotation();
-
-    boolean hasAxis();
+    int orientationIndex();
 
     BlockOrientationType orientationType();
-
-    boolean isAxisOrthogonalToPlacementFace();
-
-    Direction rotateFace(Direction face);
 
     @Override
     boolean isStatic();
@@ -127,22 +133,12 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
      */
     int species();
 
-    Direction.Axis axis();
-
-    boolean isAxisInverted();
-    
     CornerJoinState cornerJoin();
     
     SimpleJoinState simpleJoin();
     
     SimpleJoinState masonryJoin();
 
-
-    /**
-     * For machines and other blocks with a privileged horizontal face, North is
-     * considered the zero rotation.
-     */
-    ClockwiseRotation axisRotation();
 
     int primitiveBits();
 
@@ -188,9 +184,7 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
         
         W species(int species);
 
-        W axis(Direction.Axis axis);
-
-        W setAxisInverted(boolean isInverted);
+        W orientationIndex(int index);
 
         W cornerJoin(CornerJoinState join);
 
@@ -198,8 +192,6 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
 
         W masonryJoin(SimpleJoinState join);
         
-        W axisRotation(ClockwiseRotation rotation);
-
         W primitiveBits(int bits);
 
         <T> T applyAndRelease(Function<ModelState, T> func);

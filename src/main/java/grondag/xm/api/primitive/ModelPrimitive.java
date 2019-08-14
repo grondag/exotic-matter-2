@@ -16,10 +16,6 @@
 
 package grondag.xm.api.primitive;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
-
 import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
@@ -92,26 +88,6 @@ public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends P
      */
     default boolean isAdditive() {
         return false;
-    }
-
-    /**
-     * Override to true for blocks like stairs and wedges. CubicPlacementHandler
-     * will know they need to be placed in a corner instead of a face.
-     */
-    default boolean isAxisOrthogonalToPlacementFace() {
-        return false;
-    }
-
-    default boolean hasAxis(R modelState) {
-        return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS) == STATE_FLAG_HAS_AXIS;
-    }
-
-    default boolean hasAxisOrientation(R modelState) {
-        return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ORIENTATION) == STATE_FLAG_HAS_AXIS_ORIENTATION;
-    }
-
-    default boolean hasAxisRotation(R modelState) {
-        return (stateFlags(modelState) & STATE_FLAG_HAS_AXIS_ROTATION) == STATE_FLAG_HAS_AXIS_ROTATION;
     }
 
     boolean doesShapeMatch(R from, R to);

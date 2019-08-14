@@ -23,19 +23,23 @@ import javax.annotation.Nullable;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.placement.BlockOrientationHandler;
+import grondag.xm.api.connect.model.BlockEdge;
+import grondag.xm.api.connect.model.BlockEdgeSided;
+import grondag.xm.api.connect.model.BlockCorner;
+import net.minecraft.util.math.Direction;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.property.EnumProperty;
 
 @SuppressWarnings("rawtypes")
 public enum BlockOrientationType {
-    NONE(null, (s, c) -> s, (b, m) -> {
-    }), AXIS(BlockOrientationHandler.AXIS_PROP, BlockOrientationHandler::axisBlockState, BlockOrientationHandler::axisModelState),
-    FACE(BlockOrientationHandler.FACE_PROP, BlockOrientationHandler::faceBlockState, BlockOrientationHandler::faceModelState),
-    EDGE(BlockOrientationHandler.EDGE_PROP, BlockOrientationHandler::edgeBlockState, BlockOrientationHandler::edgeModelState),
-    CORNER(BlockOrientationHandler.CORNER_PROP, BlockOrientationHandler::cornerBlockState, BlockOrientationHandler::cornerModelState);
+    NONE(null, (s, c) -> s, (b, m) -> {}),
+    AXIS(Direction.Axis.class, BlockOrientationHandler::axisBlockState, BlockOrientationHandler::axisModelState),
+    FACE(Direction.class, BlockOrientationHandler::faceBlockState, BlockOrientationHandler::faceModelState),
+    EDGE(BlockEdge.class, BlockOrientationHandler::edgeBlockState, BlockOrientationHandler::edgeModelState),
+    EDGE_SIDED(BlockEdgeSided.class, BlockOrientationHandler::edgeBlockState, BlockOrientationHandler::edgeModelState),
+    CORNER(BlockCorner.class, BlockOrientationHandler::cornerBlockState, BlockOrientationHandler::cornerModelState);
 
-    public final @Nullable EnumProperty<?> property;
+    public final @Nullable Class<? extends Enum> enumClass;
 
     public final BiFunction<BlockState, ItemPlacementContext, BlockState> placementFunc;
 
@@ -44,9 +48,9 @@ public enum BlockOrientationType {
      */
     public final BiConsumer<BlockState, PrimitiveModelState.Mutable> stateFunc;
 
-    private BlockOrientationType(EnumProperty<?> property, BiFunction<BlockState, ItemPlacementContext, BlockState> placementFunc,
+    private BlockOrientationType(Class<? extends Enum> enumClass, BiFunction<BlockState, ItemPlacementContext, BlockState> placementFunc,
             BiConsumer<BlockState, PrimitiveModelState.Mutable> stateFunc) {
-        this.property = property;
+        this.enumClass = enumClass;
         this.placementFunc = placementFunc;
         this.stateFunc = stateFunc;
     }

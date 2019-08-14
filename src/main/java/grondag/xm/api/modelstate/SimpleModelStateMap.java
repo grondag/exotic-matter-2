@@ -23,16 +23,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 @FunctionalInterface
-public interface ModelStateOperation<T extends ModelState.Mutable> {
-    void accept(T modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
+public interface SimpleModelStateMap extends ModelStateMap <BlockState, SimpleModelState.Mutable> {
+    @Override
+    SimpleModelState.Mutable apply(BlockState blockState);
     
-    default T apply(T modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
-        accept(modelState, blockState, world, pos, neighbors, refreshFromWorld);
-        return modelState;
-    }
-    
-    default T apply(T modelState, BlockState blockState) {
-        accept(modelState, blockState, null, null, null, false);
-        return modelState;
+    @FunctionalInterface
+    public static interface Modifier extends ModelStateMap.Modifier<BlockState, SimpleModelState.Mutable>, SimpleModelStateOperation {
+        @Override
+        SimpleModelState.Mutable apply(SimpleModelState.Mutable modelState, BlockState blockState);
+        
+        @Override
+        default void accept(SimpleModelState.Mutable modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
+            apply(modelState, blockState);
+        }
     }
 }

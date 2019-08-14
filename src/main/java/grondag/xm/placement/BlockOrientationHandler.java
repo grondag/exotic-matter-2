@@ -20,7 +20,6 @@ import grondag.fermion.world.WorldHelper;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.connect.model.BlockCorner;
 import grondag.xm.api.connect.model.BlockEdge;
-import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.block.XmStackHelper;
 import net.minecraft.block.BlockState;
@@ -31,7 +30,6 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -66,23 +64,23 @@ public class BlockOrientationHandler {
     private static void applyFixedOrientation(ItemStack stack) {
         if (!PlacementItem.isPlacementItem(stack))
             return;
+//TODO: remove or reimplement
+//        PlacementItem item = (PlacementItem) stack.getItem();
+//
+//        PrimitiveModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
 
-        PlacementItem item = (PlacementItem) stack.getItem();
+//        if (modelState.hasAxis()) {
+//            modelState.axis(item.getBlockPlacementAxis(stack));
+//
+//            if (modelState.hasAxisOrientation()) {
+//                modelState.setAxisInverted(item.getBlockPlacementAxisIsInverted(stack));
+//            }
+//        }
+//        if (modelState.hasAxisRotation()) {
+//            modelState.axisRotation(item.getBlockPlacementRotation(stack));
+//        }
 
-        PrimitiveModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
-
-        if (modelState.hasAxis()) {
-            modelState.axis(item.getBlockPlacementAxis(stack));
-
-            if (modelState.hasAxisOrientation()) {
-                modelState.setAxisInverted(item.getBlockPlacementAxisIsInverted(stack));
-            }
-        }
-        if (modelState.hasAxisRotation()) {
-            modelState.axisRotation(item.getBlockPlacementRotation(stack));
-        }
-
-        XmStackHelper.setStackModelState(stack, modelState);
+//        XmStackHelper.setStackModelState(stack, modelState);
     }
 
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
@@ -128,22 +126,23 @@ public class BlockOrientationHandler {
             }
         }
 
+      //TODO: remove or reimplement
         // if didn't find any matching shapes nearby, fall back to dyanmic orientation
-        if (closestModelState == null) {
-            applyDynamicOrientation(stack, player, pPos);
-        } else {
-            if (outputModelState.hasAxis()) {
-                outputModelState.axis(closestModelState.axis());
-
-                if (outputModelState.hasAxisOrientation()) {
-                    outputModelState.setAxisInverted(closestModelState.isAxisInverted());
-                }
-            }
-            if (outputModelState.hasAxisRotation()) {
-                outputModelState.axisRotation(closestModelState.axisRotation());
-            }
-            closestModelState.release();
-        }
+//        if (closestModelState == null) {
+//            applyDynamicOrientation(stack, player, pPos);
+//        } else {
+//            if (outputModelState.hasAxis()) {
+//                outputModelState.axis(closestModelState.axis());
+//
+//                if (outputModelState.hasAxisOrientation()) {
+//                    outputModelState.setAxisInverted(closestModelState.isAxisInverted());
+//                }
+//            }
+//            if (outputModelState.hasAxisRotation()) {
+//                outputModelState.axisRotation(closestModelState.axisRotation());
+//            }
+//            closestModelState.release();
+//        }
 
         XmStackHelper.setStackModelState(stack, outputModelState);
         outputModelState.release();
@@ -154,29 +153,30 @@ public class BlockOrientationHandler {
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         PrimitiveModelState.Mutable outputModelState = XmStackHelper.getStackModelState(stack);
 
-        boolean isRotationDone = false;
-
-        if (outputModelState.isAxisOrthogonalToPlacementFace()) {
-            Direction adjacentFace = WorldHelper.closestAdjacentFace(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY, (float) pPos.hitZ);
-
-            BlockEdge edge = BlockEdge.find(pPos.onFace.getOpposite(), adjacentFace);
-
-            outputModelState.axis(edge.face1.getAxis());
-
-            if (outputModelState.hasAxisRotation()) {
-                outputModelState.axisRotation(edge.rotation);
-                isRotationDone = true;
-            }
-        } else {
-            outputModelState.axis(pPos.onFace.getAxis());
-            if (outputModelState.hasAxisOrientation()) {
-                outputModelState.setAxisInverted(pPos.onFace.getDirection() == AxisDirection.NEGATIVE);
-            }
-        }
-
-        if (!isRotationDone && outputModelState.hasAxisRotation()) {
-            outputModelState.axisRotation(ClockwiseRotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
-        }
+        //TODO: remove or reimplement
+//        boolean isRotationDone = false;
+//
+//        if (outputModelState.isAxisOrthogonalToPlacementFace()) {
+//            Direction adjacentFace = WorldHelper.closestAdjacentFace(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY, (float) pPos.hitZ);
+//
+//            BlockEdge edge = BlockEdge.find(pPos.onFace.getOpposite(), adjacentFace);
+//
+//            outputModelState.axis(edge.face1.getAxis());
+//
+//            if (outputModelState.hasAxisRotation()) {
+//                outputModelState.axisRotation(edge.rotation);
+//                isRotationDone = true;
+//            }
+//        } else {
+//            outputModelState.axis(pPos.onFace.getAxis());
+//            if (outputModelState.hasAxisOrientation()) {
+//                outputModelState.setAxisInverted(pPos.onFace.getDirection() == AxisDirection.NEGATIVE);
+//            }
+//        }
+//
+//        if (!isRotationDone && outputModelState.hasAxisRotation()) {
+//            outputModelState.axisRotation(ClockwiseRotation.fromHorizontalFacing(player.getHorizontalFacing().getOpposite()));
+//        }
 
         XmStackHelper.setStackModelState(stack, outputModelState);
         outputModelState.release();
@@ -239,9 +239,10 @@ public class BlockOrientationHandler {
     public static void edgeModelState(BlockState stateIn, PrimitiveModelState.Mutable modelState) {
         final BlockEdge edge = (BlockEdge) stateIn.getEntries().get(EDGE_PROP);
         if (edge != null) {
-            modelState.axis(edge.face1.getAxis());
-            modelState.setAxisInverted(edge.face1.getDirection() != AxisDirection.NEGATIVE);
-            modelState.axisRotation(edge.rotation);
+          //TODO: remove or reimplement
+//            modelState.axis(edge.face1.getAxis());
+//            modelState.setAxisInverted(edge.face1.getDirection() != AxisDirection.NEGATIVE);
+//            modelState.axisRotation(edge.rotation);
         }
     }
 

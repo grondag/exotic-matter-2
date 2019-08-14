@@ -25,7 +25,7 @@ import net.minecraft.util.math.Direction;
 
 @API(status = STABLE)
 public enum ClockwiseRotation implements StringIdentifiable {
-    ROTATE_NONE(0, Direction.NORTH), ROTATE_90(90, Direction.EAST), ROTATE_180(180, Direction.SOUTH), ROTATE_270(270, Direction.WEST);
+    ROTATE_NONE(0, Direction.SOUTH), ROTATE_90(90, Direction.WEST), ROTATE_180(180, Direction.NORTH), ROTATE_270(270, Direction.EAST);
 
     public final String name;
 
@@ -49,12 +49,12 @@ public enum ClockwiseRotation implements StringIdentifiable {
     private static ClockwiseRotation[] FROM_HORIZONTAL_FACING = new ClockwiseRotation[6];
 
     static {
-        FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
-        FROM_HORIZONTAL_FACING[Direction.EAST.ordinal()] = ROTATE_90;
-        FROM_HORIZONTAL_FACING[Direction.SOUTH.ordinal()] = ROTATE_180;
-        FROM_HORIZONTAL_FACING[Direction.WEST.ordinal()] = ROTATE_270;
-        FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
-        FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_NONE;
+        FROM_HORIZONTAL_FACING[Direction.NORTH.ordinal()] = ROTATE_180;
+        FROM_HORIZONTAL_FACING[Direction.EAST.ordinal()] = ROTATE_270;
+        FROM_HORIZONTAL_FACING[Direction.SOUTH.ordinal()] = ROTATE_NONE;
+        FROM_HORIZONTAL_FACING[Direction.WEST.ordinal()] = ROTATE_90;
+        FROM_HORIZONTAL_FACING[Direction.UP.ordinal()] = ROTATE_NONE;
+        FROM_HORIZONTAL_FACING[Direction.DOWN.ordinal()] = ROTATE_NONE;
     }
 
     private ClockwiseRotation(int degrees, Direction horizontalFace) {

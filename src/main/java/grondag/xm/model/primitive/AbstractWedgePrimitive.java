@@ -22,69 +22,65 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTA
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 
 import grondag.xm.api.modelstate.SimpleModelState;
-import grondag.xm.api.surface.XmSurface;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
-import grondag.xm.painting.SurfaceTopology;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 
 public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
-    private static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-            .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
-
-    public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(0);
-    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(1);
-    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(2);
-    public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
-
     public AbstractWedgePrimitive(String idString) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION,
                 SimpleModelStateImpl.FACTORY);
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
-        return SURFACES;
-    }
-
-    @Override
     public BlockOrientationType orientationType(SimpleModelState modelState) {
-        return isCorner(modelState) ? BlockOrientationType.CORNER : BlockOrientationType.EDGE;
+        return BlockOrientationType.EDGE_SIDED;
     }
 
-    @Override
-    public boolean isAxisOrthogonalToPlacementFace() {
-        return true;
-    }
-
-    // PERF: should be an owned model state
     @Override
     public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
         SimpleModelState.Mutable result = this.newState();
-        result.axis(fromState.axis());
-        result.setAxisInverted(fromState.isAxisInverted());
-        result.axisRotation(fromState.axisRotation());
-        result.primitiveBits(fromState.primitiveBits());
+        if(fromState.primitive().orientationType(fromState) == BlockOrientationType.EDGE_SIDED) {
+            result.orientationIndex(fromState.orientationIndex());
+            result.primitiveBits(fromState.primitiveBits());
+        }
         return result;
     }
 
     @Override
     public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
-        return from.primitive() == to.primitive() && from.axis() == to.axis() && from.isAxisInverted() == to.isAxisInverted()
-                && from.axisRotation() == to.axisRotation() && from.primitiveBits() == to.primitiveBits();
+        return from.primitive() == to.primitive()
+                && from.orientationIndex() == to.orientationIndex()
+                && from.primitiveBits() == to.primitiveBits();
     }
 
+    private static final int CORNER_FLAG = 1;
+    private static final int INSIDE_FLAG = 2;
+    
     public static boolean isCorner(SimpleModelState modelState) {
-        return modelState.primitiveBits() == 1;
+        return (modelState.primitiveBits() & CORNER_FLAG) == CORNER_FLAG;
+    }
+
+    public static void setCorner(boolean isCorner, SimpleModelState.Mutable modelState) {
+        final int oldBits = modelState.primitiveBits();
+        modelState.primitiveBits(isCorner ? oldBits | CORNER_FLAG : oldBits & ~CORNER_FLAG);
+    }
+    
+    /** 
+     * Only applies when {@link #isCorner(SimpleModelState)} == (@code true}.
+     * @param modelState  State of this primitive.
+     * @return {@code true} when inside corner, {@code false} when outside corner.
+     */
+    public static boolean isInsideCorner(SimpleModelState modelState) {
+        return (modelState.primitiveBits() & INSIDE_FLAG) == INSIDE_FLAG;
     }
 
     /**
-     * If true, cuts in shape are on the block boundary. Saves value in static shape
-     * bits in model state
+     * See {@link #isInsideCorner(SimpleModelState)}
+     * @param isCorner
+     * @param modelState
      */
-    public static void setCorner(boolean isCorner, SimpleModelState.Mutable modelState) {
-        modelState.primitiveBits(isCorner ? 1 : 0);
+    public static void setInsideCorner(boolean isCorner, SimpleModelState.Mutable modelState) {
+        final int oldBits = modelState.primitiveBits();
+        modelState.primitiveBits(isCorner ? oldBits | INSIDE_FLAG : oldBits & ~INSIDE_FLAG);
     }
 }

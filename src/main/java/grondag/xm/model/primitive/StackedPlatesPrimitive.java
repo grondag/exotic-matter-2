@@ -115,15 +115,18 @@ public class StackedPlatesPrimitive extends AbstractBasePrimitive {
 
     @Override
     public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
-        return this.newState()
-                .axis(fromState.axis())
-                .setAxisInverted(fromState.isAxisInverted())
-                .primitiveBits(fromState.primitiveBits());
+        SimpleModelState.Mutable result = this.newState();
+        if(fromState.primitive() instanceof StackedPlatesPrimitive) {
+            result.orientationIndex(fromState.orientationIndex());
+            result.primitiveBits(fromState.primitiveBits());
+        }
+        return result;
     }
 
     @Override
     public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
-        return from.primitive() == to.primitive() && from.axis() == to.axis() && from.isAxisInverted() == to.isAxisInverted()
+        return from.primitive() == to.primitive() 
+                && from.orientationIndex() == to.orientationIndex()
                 && from.primitiveBits() == to.primitiveBits();
     }
 }
