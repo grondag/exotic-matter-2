@@ -20,7 +20,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import grondag.xm.api.connect.model.BlockEdgeSided;
-import grondag.xm.api.connect.model.ClockwiseRotation;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.model.varia.BlockOrientationType;
@@ -67,8 +66,14 @@ public class PolyTransform {
 
     private static final ThreadLocal<Vector3f> VEC3 = ThreadLocal.withInitial(Vector3f::new);
 
-    private final static PolyTransform[][] LOOKUP;
+    private final static PolyTransform[][] LOOKUP = new PolyTransform[BlockOrientationType.values().length][];
+    private final static PolyTransform[] EDGE_SIDED = new PolyTransform[BlockEdgeSided.COUNT];
 
+    // mainly for run-time testing
+    public static void invalidateCache() { 
+        populateLookups();
+    }
+    
 //    private final static Direction[][] FACING_MAP = new Direction[32][6];
 //    private final static Direction[][] FACING_MAP_INVERSE = new Direction[32][6];
 //
@@ -80,8 +85,15 @@ public class PolyTransform {
 //    public static final FaceMap IDENTITY_FACEMAP;
 
     static {
-        LOOKUP = new PolyTransform[BlockOrientationType.values().length][];
+        populateLookups();
+    }
+    
+    private static void populateLookups() {
+        BlockEdgeSided.forEach(e -> {
+            EDGE_SIDED[e.ordinal()] = createEdgeSidedTransform(e);
+        });
         
+        LOOKUP[BlockOrientationType.EDGE_SIDED.ordinal()] = EDGE_SIDED;
         //TODO: populate
         
 //        final Axis[] avals = { Axis.X, Axis.Y, Axis.Z, null };
@@ -130,43 +142,16 @@ public class PolyTransform {
     }
 
     private static PolyTransform computeLookup(BlockOrientationType type, int orientationIndex) {
-        
-        Matrix4f matrix = new Matrix4f().identity();
-        if(type != null) {
-//            //TODO: put back pre-population of lookups
-//            return LOOKUP[type.ordinal()][orientationIndex];
-            
-            
-            switch (type) {
-            case AXIS:
-              //TODO - can probably map to edge_sided
-                break;
-            case CORNER:
-              //TODO - can probably map to edge_sided
-                break;
-            case EDGE:
-              //TODO - can probably map to edge_sided
-                break;
-            case EDGE_SIDED:
-                edgeSidedMatrix(matrix, orientationIndex);
-                break;
-            case FACE:
-              //TODO - can probably map to edge_sided
-                break;
-            case NONE:
-            default:
-                
-                break;
-            
-            }
-        }
-        
-        return new PolyTransform(matrix);
+        return LOOKUP[type.ordinal()][orientationIndex];
     }
-
     
-    private static void edgeSidedMatrix(Matrix4f matrix, int index) {
-        BlockEdgeSided edge = BlockEdgeSided.fromOrdinal(index);
+    public static PolyTransform edgeSidedTransform(int index) {
+        return EDGE_SIDED[index];
+    }
+    
+    
+    private static PolyTransform createEdgeSidedTransform(BlockEdgeSided edge) {
+        Matrix4f matrix = new Matrix4f().identity();
         
         switch(edge) {
         case DOWN_EAST:
@@ -234,54 +219,55 @@ public class PolyTransform {
             break;
         
         };
+        return new PolyTransform(matrix);
     }
     
-    private static Matrix4f getMatrixForAxis(Direction.Axis axis, boolean isAxisInverted) {
-        switch (axis) {
-        case X:
-            // may not be right - not tested since last change
-            return isAxisInverted ? 
-                    new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(90), 0, 1, 0)
-                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
+//    private static Matrix4f getMatrixForAxis(Direction.Axis axis, boolean isAxisInverted) {
+//        switch (axis) {
+//        case X:
+//            // may not be right - not tested since last change
+//            return isAxisInverted ? 
+//                    new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(90), 0, 1, 0)
+//                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
+//
+//        case Y:
+//            return isAxisInverted ? new Matrix4f().identity().scale(1f, -1f, 1f)
+//                    : new Matrix4f().identity();
+//
+//
+//        case Z:
+//            // may not be right - not tested since last change
+//            return isAxisInverted ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0) 
+//                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0);
+//
+//        default:
+//            return new Matrix4f().identity();
+//
+//        }
+//    }
 
-        case Y:
-            return isAxisInverted ? new Matrix4f().identity().scale(1f, -1f, 1f)
-                    : new Matrix4f().identity();
+//    private static Matrix4f getMatrixForRotation(ClockwiseRotation rotation) {
+//        switch (rotation) {
+//        default:
+//        case ROTATE_NONE:
+//            return new Matrix4f().identity();
+//
+//        case ROTATE_90:
+//            // inverse because JOML is counter-clockwise right-handed
+//            return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
+//
+//        case ROTATE_180:
+//            return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
+//
+//        case ROTATE_270:
+//            // inverse because JOML is counter-clockwise right-handed
+//            return new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0);
+//        }
+//    }
 
-
-        case Z:
-            // may not be right - not tested since last change
-            return isAxisInverted ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0) 
-                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0);
-
-        default:
-            return new Matrix4f().identity();
-
-        }
-    }
-
-    private static Matrix4f getMatrixForRotation(ClockwiseRotation rotation) {
-        switch (rotation) {
-        default:
-        case ROTATE_NONE:
-            return new Matrix4f().identity();
-
-        case ROTATE_90:
-            // inverse because JOML is counter-clockwise right-handed
-            return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
-
-        case ROTATE_180:
-            return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
-
-        case ROTATE_270:
-            // inverse because JOML is counter-clockwise right-handed
-            return new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0);
-        }
-    }
-
-    private static Matrix4f getMatrixForAxisAndRotation(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
-        Matrix4f result = getMatrixForAxis(axis, isAxisInverted);
-        result.mul(getMatrixForRotation(rotation));
-        return result;
-    }
+//    private static Matrix4f getMatrixForAxisAndRotation(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
+//        Matrix4f result = getMatrixForAxis(axis, isAxisInverted);
+//        result.mul(getMatrixForRotation(rotation));
+//        return result;
+//    }
 }
