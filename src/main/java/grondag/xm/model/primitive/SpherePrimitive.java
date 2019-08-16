@@ -24,8 +24,8 @@ import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
@@ -38,14 +38,19 @@ public class SpherePrimitive extends AbstractBasePrimitive {
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 
-    /** never changes so may as well save it */
-    private final PolyStream cachedQuads;
+    private PolyStream cachedQuads = null;
 
     public SpherePrimitive(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
         this.cachedQuads = generateQuads();
     }
 
+    // mainly for run-time testing
+    @Override
+    public void invalidateCache() { 
+        cachedQuads = generateQuads();
+    }
+    
     @Override
     public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
         return SURFACES;
@@ -53,11 +58,17 @@ public class SpherePrimitive extends AbstractBasePrimitive {
 
     @Override
     public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
+        PolyStream cachedQuads = this.cachedQuads;
+        if(cachedQuads == null) {
+            cachedQuads = generateQuads();
+            this.cachedQuads = cachedQuads;
+
+        }
         if (cachedQuads.isEmpty())
             return;
 
         cachedQuads.origin();
-        Polygon reader = cachedQuads.reader();
+        final Polygon reader = cachedQuads.reader();
 
         do
             target.accept(reader);

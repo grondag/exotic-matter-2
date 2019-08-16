@@ -37,7 +37,9 @@ import net.minecraft.util.math.Vec3i;
  * matters - giving a total of twenty four total orientations.<p>
  * 
  * This can also be used to represent oriented corners by keying off on
- * edge relative to the corner being modeled.
+ * edge relative to the corner being modeled.<p>
+ * 
+ * Components of the name are bottom and back face.
  */
 @API(status = STABLE)
 public enum BlockEdgeSided implements StringIdentifiable {

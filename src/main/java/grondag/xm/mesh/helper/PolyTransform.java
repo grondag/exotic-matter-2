@@ -24,6 +24,8 @@ import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.model.varia.BlockOrientationType;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
 @SuppressWarnings("rawtypes")
@@ -68,6 +70,7 @@ public class PolyTransform {
 
     private final static PolyTransform[][] LOOKUP = new PolyTransform[BlockOrientationType.values().length][];
     private final static PolyTransform[] EDGE_SIDED = new PolyTransform[BlockEdgeSided.COUNT];
+    private final static PolyTransform[] AXIS = new PolyTransform[3];
 
     // mainly for run-time testing
     public static void invalidateCache() { 
@@ -85,6 +88,8 @@ public class PolyTransform {
 //    public static final FaceMap IDENTITY_FACEMAP;
 
     static {
+        LOOKUP[BlockOrientationType.EDGE_SIDED.ordinal()] = EDGE_SIDED;
+        LOOKUP[BlockOrientationType.AXIS.ordinal()] = AXIS;
         populateLookups();
     }
     
@@ -93,7 +98,10 @@ public class PolyTransform {
             EDGE_SIDED[e.ordinal()] = createEdgeSidedTransform(e);
         });
         
-        LOOKUP[BlockOrientationType.EDGE_SIDED.ordinal()] = EDGE_SIDED;
+        AXIS[Axis.Y.ordinal()] = EDGE_SIDED[BlockEdgeSided.DOWN_SOUTH.ordinal()];
+        AXIS[Axis.X.ordinal()] = EDGE_SIDED[BlockEdgeSided.WEST_UP.ordinal()];
+        AXIS[Axis.Z.ordinal()] = EDGE_SIDED[BlockEdgeSided.SOUTH_UP.ordinal()];
+        
         //TODO: populate
         
 //        final Axis[] avals = { Axis.X, Axis.Y, Axis.Z, null };
@@ -137,18 +145,16 @@ public class PolyTransform {
      * of specific faces.
      */
     public static PolyTransform get(PrimitiveModelState modelState) {
-        
-        return computeLookup(modelState.orientationType(), modelState.orientationIndex());
+        return LOOKUP[modelState.orientationType().ordinal()][modelState.orientationIndex()];
     }
 
-    private static PolyTransform computeLookup(BlockOrientationType type, int orientationIndex) {
-        return LOOKUP[type.ordinal()][orientationIndex];
-    }
-    
     public static PolyTransform edgeSidedTransform(int index) {
         return EDGE_SIDED[index];
     }
     
+    public static PolyTransform edgeSidedTransform(BlockEdgeSided corner) {
+        return EDGE_SIDED[corner.ordinal()];
+    }
     
     private static PolyTransform createEdgeSidedTransform(BlockEdgeSided edge) {
         Matrix4f matrix = new Matrix4f().identity();
@@ -161,11 +167,11 @@ public class PolyTransform {
             matrix.rotate((float) Math.toRadians(180), 0, 1, 0);
             break;
         case DOWN_SOUTH:
+            // default state
             break;
         case DOWN_WEST:
             matrix.rotate((float) Math.toRadians(270), 0, 1, 0);
             break;
-            
         case UP_EAST:
             matrix.rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(180), 0, 0, 1);
             break;
@@ -178,48 +184,68 @@ public class PolyTransform {
         case UP_WEST:
             matrix.rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(180), 1, 0, 0);
             break;
-            
-            
-            // TODO: finish all these once have a block to test them
-            
         case EAST_DOWN:
+            matrix.rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
             break;
         case EAST_NORTH:
+            matrix.rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(180), 0, 1, 0);
             break;
         case EAST_SOUTH:
+            matrix.rotate((float) Math.toRadians(90), 0, 0, 1);
             break;
         case EAST_UP:
+            matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 0, 1);
             break;
-        case NORTH_DOWN:
-            break;
-        case NORTH_EAST:
-            break;
-        case NORTH_UP:
-            break;
-        case NORTH_WEST:
-            break;
-        case SOUTH_DOWN:
-            break;
-        case SOUTH_EAST:
-            break;
-        case SOUTH_UP:
-            break;
-        case SOUTH_WEST:
-            break;
-
         case WEST_DOWN:
+            matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(90), 0, 1, 0);
             break;
         case WEST_NORTH:
+            matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(180), 0, 1, 0);
             break;
         case WEST_SOUTH:
+            matrix.rotate((float) Math.toRadians(270), 0, 0, 1);
             break;
         case WEST_UP:
+            matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
             break;
+        case NORTH_DOWN:
+            matrix.rotate((float) Math.toRadians(90), 1, 0, 0);
+            break;
+        case NORTH_EAST:
+            matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 1, 0);
+            break;
+        case NORTH_UP:
+            matrix.rotate((float) Math.toRadians(180), 0, 0, 1).rotate((float) Math.toRadians(90), 1, 0, 0);
+            break;
+        case NORTH_WEST:
+            matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 1, 0);
+            break;
+        case SOUTH_DOWN:
+            matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(180), 0, 1, 0);
+            break;
+        case SOUTH_EAST:
+            matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 1, 0);
+            break;
+        case SOUTH_UP:
+            matrix.rotate((float) Math.toRadians(270), 1, 0, 0);
+            break;
+        case SOUTH_WEST:
+            matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 1, 0);
+            break;
+
         default:
             break;
         
         };
         return new PolyTransform(matrix);
+    }
+    
+    public static PolyTransform axisTransform(int ordinal) {
+        return AXIS[MathHelper.clamp(ordinal, 0, 2)];
+    }
+    
+    public static PolyTransform axisTransform(Axis axis) {
+        return AXIS[axis.ordinal()];
     }
     
 //    private static Matrix4f getMatrixForAxis(Direction.Axis axis, boolean isAxisInverted) {

@@ -22,6 +22,8 @@ import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.surface.XmSurfaceImpl;
 import net.minecraft.util.math.Direction;
 
+//TODO: remove
+@Deprecated
 public class CubeInputs {
     public float u0;
     public float v0;

@@ -34,6 +34,7 @@ import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 
+//TODO: expose as interface
 public class CollisionBoxDispatcher {
     static final BlockingQueue<Runnable> QUEUE = new LinkedBlockingQueue<Runnable>();
     private static final ExecutorService EXEC = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, QUEUE, new ThreadFactory() {

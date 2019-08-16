@@ -73,9 +73,10 @@ public class OptimizingBoxList implements Runnable {
         if (trueVolume == 0)
             assert oldSize == 0 : "Fast collision box non-empty but detailed is empty";
         else if (trueVolume != -1) {
-            if (oldSize > XmConfig.BLOCKS.collisionBoxBudget || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2)
+            if (oldSize > XmConfig.BLOCKS.collisionBoxBudget || Math.abs(trueVolume - oldVolume) > OptimalBoxGenerator.VOXEL_VOLUME * 2) {
                 wrapped = generator.build();
-            shape = makeShapeFromBoxes(wrapped);
+                shape = makeShapeFromBoxes(wrapped);
+            }
         }
 //        if((CollisionBoxDispatcher.QUEUE.size() & 0xFF) == 0)
 //            System.out.println("Queue depth = " + CollisionBoxDispatcher.QUEUE.size());

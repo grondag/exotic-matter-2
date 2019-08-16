@@ -67,12 +67,15 @@ public class WedgePrimitive extends AbstractWedgePrimitive {
         quad.surface(SURFACE_BOTTOM);
         quad.nominalFace(Direction.DOWN);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
+        //TODO: remove
+        quad.colorAll(0, 0xFF303030);
         transform.apply(quad);
         stream.append();
         
         // back is full except for outside corners
         quad.surface(SURFACE_BACK);
         quad.nominalFace(Direction.SOUTH);
+
         if(isCorner && !isInside) {
             quad.setupFaceQuad(Direction.SOUTH, 
                     new FaceVertex(0, 0, 0), 
@@ -84,6 +87,8 @@ public class WedgePrimitive extends AbstractWedgePrimitive {
         } else {
             quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         }
+        //TODO: remove
+        quad.colorAll(0, 0xFFFF3030);
         transform.apply(quad);
         stream.append();
         

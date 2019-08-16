@@ -21,57 +21,44 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
 
-public class CubePrimitive extends AbstractBasePrimitive {
+public class AxisCubePrimitive extends AbstractBasePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
-            .add("down", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("up", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("north", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("south", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("west", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("east", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .build();
 
-    public static final XmSurfaceImpl SURFACE_DOWN = SURFACES.get(0);
-    public static final XmSurfaceImpl SURFACE_UP = SURFACES.get(1);
-    public static final XmSurfaceImpl SURFACE_NORTH = SURFACES.get(2);
-    public static final XmSurfaceImpl SURFACE_SOUTH = SURFACES.get(3);
-    public static final XmSurfaceImpl SURFACE_WEST = SURFACES.get(4);
-    public static final XmSurfaceImpl SURFACE_EAST = SURFACES.get(5);
-    
-    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);
-    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
-    public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(2);
-    public static final XmSurfaceImpl SURFACE_FRONT = SURFACES.get(3);
-    public static final XmSurfaceImpl SURFACE_LEFT = SURFACES.get(4);
-    public static final XmSurfaceImpl SURFACE_RIGHT = SURFACES.get(5);
+    public static final XmSurfaceImpl SURFACE_ENDS = SURFACES.get(0);
+    public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(1);
 
     /** never changes so may as well save it */
-    private final PolyStream[] cachedQuads = new PolyStream[BlockEdgeSided.COUNT];
+    private final PolyStream[] cachedQuads = new PolyStream[3];
 
-    public CubePrimitive(String idString) {
+    public AxisCubePrimitive(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
         invalidateCache();
     }
 
     @Override
     public void invalidateCache() {
-        BlockEdgeSided.forEach( o -> cachedQuads[o.ordinal()] = getCubeQuads(o));
+        cachedQuads[Axis.X.ordinal()] = getCubeQuads(Axis.X);
+        cachedQuads[Axis.Y.ordinal()] = getCubeQuads(Axis.Y);
+        cachedQuads[Axis.Z.ordinal()] = getCubeQuads(Axis.Z);
     }
 
     @Override
@@ -81,7 +68,7 @@ public class CubePrimitive extends AbstractBasePrimitive {
 
     @Override
     public BlockOrientationType orientationType(SimpleModelState modelState) {
-        return BlockOrientationType.EDGE_SIDED;
+        return BlockOrientationType.AXIS;
     }
     
     @Override
@@ -89,8 +76,8 @@ public class CubePrimitive extends AbstractBasePrimitive {
         cachedQuads[modelState.orientationIndex()].forEach(target);
     }
 
-    private PolyStream getCubeQuads(BlockEdgeSided orientation) {
-        PolyTransform transform = PolyTransform.edgeSidedTransform(orientation.ordinal());
+    private PolyStream getCubeQuads(Axis orientation) {
+        PolyTransform transform = PolyTransform.axisTransform(orientation.ordinal());
 
         WritablePolyStream stream = PolyStreams.claimWritable();
         MutablePolygon writer = stream.writer();
@@ -100,32 +87,32 @@ public class CubePrimitive extends AbstractBasePrimitive {
         writer.sprite(0, "");
         stream.saveDefaults();
 
-        writer.surface(SURFACE_DOWN);
+        writer.surface(SURFACE_ENDS);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_UP);
+        writer.surface(SURFACE_ENDS);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_EAST);
+        writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_WEST);
+        writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_NORTH);
+        writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_SOUTH);
+        writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
         stream.append();
