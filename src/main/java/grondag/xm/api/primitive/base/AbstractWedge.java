@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.base;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
@@ -31,7 +31,7 @@ import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 
-public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
+public abstract class AbstractWedge extends AbstractSimplePrimitive {
     protected static final int KEY_COUNT = BlockEdgeSided.COUNT * 3;
     
     protected static int computeKey(int edgeIndex, boolean isCorner, boolean isInside) {
@@ -40,7 +40,7 @@ public abstract class AbstractWedgePrimitive extends AbstractBasePrimitive {
 
     protected final ReadOnlyPolyStream[] CACHE = new ReadOnlyPolyStream[KEY_COUNT];
     
-    public AbstractWedgePrimitive(String idString) {
+    public AbstractWedge(String idString) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION,
                 SimpleModelStateImpl.FACTORY);
     }

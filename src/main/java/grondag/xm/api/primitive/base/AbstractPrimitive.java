@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.base;
 
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.PrimitiveModelState;
@@ -25,7 +25,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
-public abstract class AbstractModelPrimitive<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> implements ModelPrimitive<R, W> {
+public abstract class AbstractPrimitive<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> implements ModelPrimitive<R, W> {
     private final R defaultState;
 
     private final ModelStateFactory<R, W> factory;
@@ -38,7 +38,7 @@ public abstract class AbstractModelPrimitive<R extends PrimitiveModelState<R, W>
      */
     private final int stateFlags;
 
-    protected AbstractModelPrimitive(Identifier id, int stateFlags, ModelStateFactory<R, W> factory) {
+    protected AbstractPrimitive(Identifier id, int stateFlags, ModelStateFactory<R, W> factory) {
         this.stateFlags = stateFlags;
         this.id = id;
         this.factory = factory;
@@ -54,7 +54,7 @@ public abstract class AbstractModelPrimitive<R extends PrimitiveModelState<R, W>
         this.defaultState = state.releaseToImmutable();
     }
 
-    protected AbstractModelPrimitive(String idString, int stateFlags, ModelStateFactory<R, W> factory) {
+    protected AbstractPrimitive(String idString, int stateFlags, ModelStateFactory<R, W> factory) {
         this(new Identifier(idString), stateFlags, factory);
     }
 

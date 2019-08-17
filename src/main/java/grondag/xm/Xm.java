@@ -24,6 +24,7 @@ import grondag.xm.network.Packets;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
+import net.minecraft.util.Identifier;
 
 public class Xm implements ModInitializer {
 
@@ -37,4 +38,12 @@ public class Xm implements ModInitializer {
     public static Logger LOG = LogManager.getLogger("Exotic Matter");
 
     public static final String MODID = "exotic-matter";
+    
+    public static String idString(String path) {
+        return MODID + ":" + path;
+    }
+    
+    public static Identifier id(String path) {
+        return new Identifier(MODID, path);
+    }
 }

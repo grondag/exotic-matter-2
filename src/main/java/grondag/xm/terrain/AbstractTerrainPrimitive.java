@@ -17,12 +17,12 @@
 package grondag.xm.terrain;
 
 import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
+import grondag.xm.api.primitive.base.AbstractPrimitive;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.api.terrain.TerrainPrimitive;
-import grondag.xm.model.primitive.AbstractModelPrimitive;
 import net.minecraft.util.Identifier;
 
-public abstract class AbstractTerrainPrimitive extends AbstractModelPrimitive<TerrainModelState, TerrainModelState.Mutable> implements TerrainPrimitive {
+public abstract class AbstractTerrainPrimitive extends AbstractPrimitive<TerrainModelState, TerrainModelState.Mutable> implements TerrainPrimitive {
     protected AbstractTerrainPrimitive(Identifier id, int stateFlags, ModelStateFactory<TerrainModelState, TerrainModelState.Mutable> factory) {
         super(id, stateFlags, factory);
     }

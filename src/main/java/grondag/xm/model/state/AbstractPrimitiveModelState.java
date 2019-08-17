@@ -43,7 +43,6 @@ import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
-import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.QuadPaintHandler;

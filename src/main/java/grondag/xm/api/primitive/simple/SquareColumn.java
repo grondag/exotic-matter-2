@@ -14,26 +14,28 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.simple;
 
 import java.util.function.Consumer;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.color.Color;
+import grondag.xm.Xm;
 import grondag.xm.api.connect.model.FaceEdge;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.dispatch.SimpleQuadBounds;
 import grondag.xm.mesh.helper.FaceVertex;
 import grondag.xm.mesh.helper.QuadHelper;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.AbstractPrimitiveModelState;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
@@ -45,7 +47,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
-public class SquareColumnPrimitive extends AbstractBasePrimitive {
+public class SquareColumn extends AbstractSimplePrimitive {
     private static final XmSurfaceListImpl SURFACES_DARK = XmSurfaceImpl.builder()
             .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
@@ -62,10 +64,12 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
 
     public static final int MIN_CUTS = 1;
     public static final int MAX_CUTS = 3;
+    
+    public static final SquareColumn INSTANCE = new SquareColumn(Xm.idString("column_square"));
 
-    private static final BitPacker32<SquareColumnPrimitive> STATE_PACKER = new BitPacker32<SquareColumnPrimitive>(null, null);
-    private static final BitPacker32<SquareColumnPrimitive>.BooleanElement STATE_ARE_CUTS_ON_EDGE = STATE_PACKER.createBooleanElement();
-    private static final BitPacker32<SquareColumnPrimitive>.IntElement STATE_CUT_COUNT = STATE_PACKER.createIntElement(MIN_CUTS, MAX_CUTS);
+    private static final BitPacker32<SquareColumn> STATE_PACKER = new BitPacker32<SquareColumn>(null, null);
+    private static final BitPacker32<SquareColumn>.BooleanElement STATE_ARE_CUTS_ON_EDGE = STATE_PACKER.createBooleanElement();
+    private static final BitPacker32<SquareColumn>.IntElement STATE_CUT_COUNT = STATE_PACKER.createIntElement(MIN_CUTS, MAX_CUTS);
 
     static {
         assert STATE_PACKER.bitLength() <= AbstractPrimitiveModelState.PRIMITIVE_BIT_COUNT;
@@ -103,7 +107,7 @@ public class SquareColumnPrimitive extends AbstractBasePrimitive {
         setCutsOnEdge(true, modelState);
     }
 
-    public SquareColumnPrimitive(String idString) {
+    protected SquareColumn(String idString) {
         super(idString, ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS, SimpleModelStateImpl.FACTORY);
     }
 

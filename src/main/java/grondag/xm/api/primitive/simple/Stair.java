@@ -14,10 +14,12 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.simple;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.stream.PolyStreams;
@@ -27,24 +29,26 @@ import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class StairPrimitive extends AbstractWedgePrimitive {
-    public static final XmSurfaceListImpl SURFACES = CubePrimitive.SURFACES;
+public class Stair extends AbstractWedge {
+    public static final XmSurfaceListImpl SURFACES = CubeWithAxisAndFace.SURFACES;
 
-    public static final XmSurfaceImpl SURFACE_DOWN = CubePrimitive.SURFACE_DOWN;
-    public static final XmSurfaceImpl SURFACE_UP = CubePrimitive.SURFACE_UP;
-    public static final XmSurfaceImpl SURFACE_NORTH = CubePrimitive.SURFACE_NORTH;
-    public static final XmSurfaceImpl SURFACE_SOUTH = CubePrimitive.SURFACE_SOUTH;
-    public static final XmSurfaceImpl SURFACE_WEST = CubePrimitive.SURFACE_WEST;
-    public static final XmSurfaceImpl SURFACE_EAST = CubePrimitive.SURFACE_EAST;
+    public static final XmSurfaceImpl SURFACE_DOWN = CubeWithAxisAndFace.SURFACE_DOWN;
+    public static final XmSurfaceImpl SURFACE_UP = CubeWithAxisAndFace.SURFACE_UP;
+    public static final XmSurfaceImpl SURFACE_NORTH = CubeWithAxisAndFace.SURFACE_NORTH;
+    public static final XmSurfaceImpl SURFACE_SOUTH = CubeWithAxisAndFace.SURFACE_SOUTH;
+    public static final XmSurfaceImpl SURFACE_WEST = CubeWithAxisAndFace.SURFACE_WEST;
+    public static final XmSurfaceImpl SURFACE_EAST = CubeWithAxisAndFace.SURFACE_EAST;
     
-    public static final XmSurfaceImpl SURFACE_BOTTOM = CubePrimitive.SURFACE_BOTTOM;
-    public static final XmSurfaceImpl SURFACE_TOP = CubePrimitive.SURFACE_TOP;
-    public static final XmSurfaceImpl SURFACE_BACK = CubePrimitive.SURFACE_BACK;
-    public static final XmSurfaceImpl SURFACE_FRONT = CubePrimitive.SURFACE_FRONT;
-    public static final XmSurfaceImpl SURFACE_LEFT = CubePrimitive.SURFACE_LEFT;
-    public static final XmSurfaceImpl SURFACE_RIGHT = CubePrimitive.SURFACE_RIGHT;
+    public static final XmSurfaceImpl SURFACE_BOTTOM = CubeWithAxisAndFace.SURFACE_BOTTOM;
+    public static final XmSurfaceImpl SURFACE_TOP = CubeWithAxisAndFace.SURFACE_TOP;
+    public static final XmSurfaceImpl SURFACE_BACK = CubeWithAxisAndFace.SURFACE_BACK;
+    public static final XmSurfaceImpl SURFACE_FRONT = CubeWithAxisAndFace.SURFACE_FRONT;
+    public static final XmSurfaceImpl SURFACE_LEFT = CubeWithAxisAndFace.SURFACE_LEFT;
+    public static final XmSurfaceImpl SURFACE_RIGHT = CubeWithAxisAndFace.SURFACE_RIGHT;
+
+    public static final Stair INSTANCE = new Stair(Xm.idString("stair"));
     
-    public StairPrimitive(String idString) {
+    protected Stair(String idString) {
         super(idString);
     }
     

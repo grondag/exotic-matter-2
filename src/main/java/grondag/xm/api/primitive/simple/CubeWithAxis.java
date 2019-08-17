@@ -14,14 +14,16 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.simple;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
@@ -37,7 +39,7 @@ import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
-public class AxisCubePrimitive extends AbstractBasePrimitive {
+public class CubeWithAxis extends AbstractSimplePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
             .add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
@@ -49,7 +51,9 @@ public class AxisCubePrimitive extends AbstractBasePrimitive {
     /** never changes so may as well save it */
     private final PolyStream[] cachedQuads = new PolyStream[3];
 
-    public AxisCubePrimitive(String idString) {
+    public static final CubeWithAxis INSTANCE = new CubeWithAxis(Xm.idString("cube_axis"));
+
+    protected CubeWithAxis(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
         invalidateCache();
     }

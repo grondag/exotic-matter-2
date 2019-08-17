@@ -9,10 +9,10 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 import grondag.xm.collision.CollisionBoxDispatcher;
-import grondag.xm.model.primitive.StairPrimitive;
 import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelStateMap;
+import grondag.xm.api.primitive.simple.Stair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -369,8 +369,8 @@ public abstract class StairLike extends Block implements Waterloggable {
                     }
                 }
             }
-            StairPrimitive.setCorner(corner, modelState);
-            StairPrimitive.setInsideCorner(corner && inside, modelState);
+            Stair.setCorner(corner, modelState);
+            Stair.setInsideCorner(corner && inside, modelState);
             
             modelState.orientationIndex(BlockEdgeSided.find(Direction.from(axis, bottom ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE), face).ordinal());
         }

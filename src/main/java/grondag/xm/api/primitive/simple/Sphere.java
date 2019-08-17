@@ -14,13 +14,15 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.simple;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
+import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStream;
@@ -33,14 +35,16 @@ import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
-public class SpherePrimitive extends AbstractBasePrimitive {
+public class Sphere extends AbstractSimplePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 
     private PolyStream cachedQuads = null;
 
-    public SpherePrimitive(String idString) {
+    public static final Sphere INSTANCE = new Sphere(Xm.idString("sphere"));
+
+    protected Sphere(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
         this.cachedQuads = generateQuads();
     }

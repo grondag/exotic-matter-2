@@ -14,19 +14,20 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.simple;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.CsgPolyStream;
 import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.CSG;
 import grondag.xm.model.varia.MeshHelper;
@@ -35,13 +36,16 @@ import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Box;
 
-public class CSGTestPrimitive extends AbstractBasePrimitive {
+//TODO: remove
+public class CSGTestPrimitive extends AbstractSimplePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
             .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
     public static final XmSurfaceImpl SURFACE_A = SURFACES.get(0);
     public static final XmSurfaceImpl SURFACE_B = SURFACES.get(1);
 
+    public static final CSGTestPrimitive INSTANCE = new CSGTestPrimitive("xm2:csgtest");
+    
     /** never changes so may as well save it */
     private final PolyStream cachedQuads;
 

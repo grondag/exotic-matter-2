@@ -21,6 +21,7 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.Xm;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.mesh.helper.CubeInputs;
@@ -38,10 +39,12 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 
     public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
 
+    public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.idString("terrain_cube"));
+    
     /** never changes so may as well save it */
     private final PolyStream cachedQuads;
 
-    public TerrainCubePrimitive(String idString) {
+    protected TerrainCubePrimitive(String idString) {
         super(idString, STATE_FLAG_NONE, TerrainModelStateImpl.FACTORY);
         this.cachedQuads = getCubeQuads();
     }

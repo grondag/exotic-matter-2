@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.simple;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
@@ -23,13 +23,15 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES
 import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
@@ -37,7 +39,7 @@ import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class StackedPlatesPrimitive extends AbstractBasePrimitive {
+public class StackedPlates extends AbstractSimplePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
@@ -47,7 +49,9 @@ public class StackedPlatesPrimitive extends AbstractBasePrimitive {
 
     private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH };
 
-    public StackedPlatesPrimitive(String idString) {
+    public static final StackedPlates INSTANCE = new StackedPlates(Xm.idString("stacked_plates"));
+
+    public StackedPlates(String idString) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION, SimpleModelStateImpl.FACTORY);
     }
 
@@ -116,7 +120,7 @@ public class StackedPlatesPrimitive extends AbstractBasePrimitive {
     @Override
     public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
         SimpleModelState.Mutable result = this.newState();
-        if(fromState.primitive() instanceof StackedPlatesPrimitive) {
+        if(fromState.primitive() instanceof StackedPlates) {
             result.orientationIndex(fromState.orientationIndex());
             result.primitiveBits(fromState.primitiveBits());
         }

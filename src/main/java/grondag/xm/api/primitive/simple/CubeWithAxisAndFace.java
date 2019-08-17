@@ -14,22 +14,24 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.primitive;
+package grondag.xm.api.primitive.simple;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.Xm;
 import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.surface.XmSurface;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
@@ -37,7 +39,7 @@ import grondag.xm.surface.XmSurfaceImpl;
 import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
-public class CubePrimitive extends AbstractBasePrimitive {
+public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
     public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
             .add("down", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("up", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
@@ -64,7 +66,9 @@ public class CubePrimitive extends AbstractBasePrimitive {
     /** never changes so may as well save it */
     private final PolyStream[] cachedQuads = new PolyStream[BlockEdgeSided.COUNT];
 
-    public CubePrimitive(String idString) {
+    public static final CubeWithAxisAndFace INSTANCE = new CubeWithAxisAndFace(Xm.idString("cube_axis_face"));
+
+    protected CubeWithAxisAndFace(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
         invalidateCache();
     }

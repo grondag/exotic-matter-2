@@ -16,8 +16,11 @@
 
 package grondag.xm.terrain;
 
+import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
+import grondag.xm.api.terrain.TerrainModelState;
+import grondag.xm.api.terrain.TerrainModelState.Mutable;
+
 //TODO: restore
-//package grondag.brocade.terrain;
 //
 //import java.util.ArrayList;
 //import java.util.Collection;
@@ -61,7 +64,15 @@ package grondag.xm.terrain;
 // * no effort to set useful UV values because all quads are expected to be UV
 // * locked.
 // */
-//public abstract class TerrainMeshFactory extends ShapeMeshGenerator {
+public abstract class TerrainSurface extends AbstractTerrainPrimitive {
+    
+    protected TerrainSurface(String idString, int stateFlags, ModelStateFactory<TerrainModelState, Mutable> factory) {
+        super(idString, stateFlags, factory);
+        // TODO Auto-generated constructor stub
+    }
+    
+    public static final TerrainSurface FILLER = null; // ModelShapes.create("terrain_filler",
+    public static final TerrainSurface HEIGHT = null; // ModelShapes.create("terrain_height",
 //    private static final Surface SURFACE_TOP = Surface.builder(SurfaceTopology.CUBIC)
 //            .withIgnoreDepthForRandomization(true)
 //            .withEnabledLayers(PaintLayer.BASE, PaintLayer.LAMP, PaintLayer.MIDDLE).build();
@@ -878,4 +889,4 @@ package grondag.xm.terrain;
 //    public boolean hasLampSurface(ISuperModelState modelState) {
 //        return false;
 //    }
-//}
+}
