@@ -28,8 +28,8 @@ import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
-import grondag.xm.api.surface.XmSurface;
-import grondag.xm.dispatch.SimpleQuadBounds;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.helper.FaceVertex;
 import grondag.xm.mesh.helper.QuadHelper;
 import grondag.xm.mesh.polygon.MutablePolygon;
@@ -40,20 +40,18 @@ import grondag.xm.model.state.AbstractPrimitiveModelState;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
 public class SquareColumn extends AbstractSimplePrimitive {
-    private static final XmSurfaceListImpl SURFACES_DARK = XmSurfaceImpl.builder()
+    private static final XmSurfaceList SURFACES_DARK = XmSurfaceList.builder()
             .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
             .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
-    private static final XmSurfaceListImpl SURFACES_LIT = XmSurfaceImpl.builder()
+    private static final XmSurfaceList SURFACES_LIT = XmSurfaceList.builder()
             .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
             .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP).build();
@@ -65,7 +63,6 @@ public class SquareColumn extends AbstractSimplePrimitive {
     public static final int MIN_CUTS = 1;
     public static final int MAX_CUTS = 3;
     
-    public static final SquareColumn INSTANCE = new SquareColumn(Xm.idString("column_square"));
 
     private static final BitPacker32<SquareColumn> STATE_PACKER = new BitPacker32<SquareColumn>(null, null);
     private static final BitPacker32<SquareColumn>.BooleanElement STATE_ARE_CUTS_ON_EDGE = STATE_PACKER.createBooleanElement();
@@ -100,6 +97,8 @@ public class SquareColumn extends AbstractSimplePrimitive {
             }
         }
     }
+    
+    public static final SquareColumn INSTANCE = new SquareColumn(Xm.idString("column_square"));
 
     @Override
     protected void updateDefaultState(SimpleModelState.Mutable modelState) {
@@ -117,7 +116,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
     
     @Override
-    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
+    public XmSurfaceList surfaces(SimpleModelState modelState) {
         return isLit(modelState) ? SURFACES_LIT : SURFACES_DARK;
     }
 
@@ -153,7 +152,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
         stream.writer().lockUV(0, true); //.cullFace(face);
         stream.saveDefaults();
 
-        XmSurfaceListImpl surfaces = surfaces(state);
+        XmSurfaceList surfaces = surfaces(state);
 
         if (face.getAxis() == axis) {
             makeCapFace(face, stream, bjs.faceState(face), spec, axis, surfaces);
@@ -171,7 +170,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     private void makeSideFace(Direction face, WritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
-            XmSurfaceListImpl surfaces) {
+            XmSurfaceList surfaces) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
@@ -350,7 +349,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     private void makeCapFace(Direction face, WritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
-            XmSurfaceListImpl surfaces) {
+            XmSurfaceList surfaces) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
@@ -580,5 +579,27 @@ public class SquareColumn extends AbstractSimplePrimitive {
                 && from.orientationIndex() == to.orientationIndex()
                 && from.cornerJoin() == to.cornerJoin()
                 && from.primitiveBits() == to.primitiveBits();
+    }
+    
+    /** a relic from simpler times */
+    @Deprecated
+    private static class SimpleQuadBounds {
+        public Direction face;
+        public float x0;
+        public float y0;
+        public float x1;
+        public float y1;
+        public float depth;
+        public Direction topFace;
+
+        public SimpleQuadBounds(Direction face, float x0, float y0, float x1, float y1, float depth, Direction topFace) {
+            this.face = face;
+            this.x0 = x0;
+            this.y0 = y0;
+            this.x1 = x1;
+            this.y1 = y1;
+            this.depth = depth;
+            this.topFace = topFace;
+        }
     }
 }

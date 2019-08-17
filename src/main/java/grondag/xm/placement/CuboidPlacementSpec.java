@@ -32,7 +32,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import grondag.fermion.position.BlockRegion;
 import grondag.fermion.position.CubicBlockRegion;
 import grondag.fermion.world.WorldHelper;
-import grondag.xm.dispatch.RenderUtil;
+import grondag.xm.render.RenderUtil;
 import grondag.xm.render.XmRenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

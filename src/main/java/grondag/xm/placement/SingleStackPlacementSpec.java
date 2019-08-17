@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.placement;
 
+import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.block.XmStackHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -34,6 +34,6 @@ public abstract class SingleStackPlacementSpec extends AbstractPlacementSpec {
 
     @Override
     protected ModelState previewModelState() {
-        return this.outputStack == null ? super.previewModelState() : XmStackHelper.getStackModelState(this.outputStack);
+        return this.outputStack == null ? super.previewModelState() : XmItem.modelState(this.outputStack);
     }
 }

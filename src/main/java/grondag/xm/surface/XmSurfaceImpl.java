@@ -16,19 +16,16 @@
 
 package grondag.xm.surface;
 
-import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
-import grondag.xm.api.surface.XmSurface;
-import grondag.xm.api.surface.XmSurfaceList;
-import grondag.xm.api.surface.XmSurfaceListBuilder;
+import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.painting.SurfaceTopology;
 
-public class XmSurfaceImpl implements XmSurface {
-    public final int ordinal;
-    public final String nameKey;
-    public final SurfaceTopology topology;
-    public final int flags;
+class XmSurfaceImpl implements XmSurface {
+    final int ordinal;
+    final String nameKey;
+    final SurfaceTopology topology;
+    final int flags;
 
-    private XmSurfaceImpl(int ordinal, String nameKey, SurfaceTopology topology, int flags) {
+    XmSurfaceImpl(int ordinal, String nameKey, SurfaceTopology topology, int flags) {
         this.ordinal = ordinal;
         this.nameKey = nameKey;
         this.topology = topology;
@@ -53,53 +50,5 @@ public class XmSurfaceImpl implements XmSurface {
     @Override
     public int flags() {
         return flags;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder implements XmSurfaceListBuilder {
-        private final SimpleUnorderedArrayList<XmSurfaceImpl> surfaces = new SimpleUnorderedArrayList<>();
-
-        private Builder() {
-        }
-
-        @Override
-        public Builder add(String nameKey, SurfaceTopology topology, int flags) {
-            surfaces.add(new XmSurfaceImpl(surfaces.size(), nameKey, topology, flags));
-            return this;
-        }
-
-        @Override
-        public XmSurfaceListImpl build() {
-            final int size = surfaces.size();
-            XmSurfaceImpl[] output = new XmSurfaceImpl[size];
-            for (int i = 0; i < size; i++) {
-                output[i] = surfaces.get(i);
-            }
-            surfaces.clear();
-            return new XmSurfaceListImpl(output);
-        }
-    }
-
-    public static class XmSurfaceListImpl implements XmSurfaceList {
-        private final int size;
-        private final XmSurfaceImpl[] surfaces;
-
-        private XmSurfaceListImpl(XmSurfaceImpl[] surfaces) {
-            this.surfaces = surfaces;
-            this.size = surfaces.length;
-        }
-
-        @Override
-        public XmSurfaceImpl get(int index) {
-            return surfaces[index];
-        }
-
-        @Override
-        public int size() {
-            return size;
-        }
     }
 }

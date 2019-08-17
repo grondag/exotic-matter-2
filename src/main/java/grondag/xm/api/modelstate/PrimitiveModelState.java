@@ -24,7 +24,7 @@ import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.model.varia.BlockOrientationType;
 import net.fabricmc.api.EnvType;

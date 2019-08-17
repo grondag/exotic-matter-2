@@ -20,31 +20,31 @@ import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractWedge;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.mesh.stream.WritablePolyStream;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class Stair extends AbstractWedge {
-    public static final XmSurfaceListImpl SURFACES = CubeWithAxisAndFace.SURFACES;
+    public static final XmSurfaceList SURFACES = CubeWithAxisAndFace.SURFACES;
 
-    public static final XmSurfaceImpl SURFACE_DOWN = CubeWithAxisAndFace.SURFACE_DOWN;
-    public static final XmSurfaceImpl SURFACE_UP = CubeWithAxisAndFace.SURFACE_UP;
-    public static final XmSurfaceImpl SURFACE_NORTH = CubeWithAxisAndFace.SURFACE_NORTH;
-    public static final XmSurfaceImpl SURFACE_SOUTH = CubeWithAxisAndFace.SURFACE_SOUTH;
-    public static final XmSurfaceImpl SURFACE_WEST = CubeWithAxisAndFace.SURFACE_WEST;
-    public static final XmSurfaceImpl SURFACE_EAST = CubeWithAxisAndFace.SURFACE_EAST;
+    public static final XmSurface SURFACE_DOWN = CubeWithAxisAndFace.SURFACE_DOWN;
+    public static final XmSurface SURFACE_UP = CubeWithAxisAndFace.SURFACE_UP;
+    public static final XmSurface SURFACE_NORTH = CubeWithAxisAndFace.SURFACE_NORTH;
+    public static final XmSurface SURFACE_SOUTH = CubeWithAxisAndFace.SURFACE_SOUTH;
+    public static final XmSurface SURFACE_WEST = CubeWithAxisAndFace.SURFACE_WEST;
+    public static final XmSurface SURFACE_EAST = CubeWithAxisAndFace.SURFACE_EAST;
     
-    public static final XmSurfaceImpl SURFACE_BOTTOM = CubeWithAxisAndFace.SURFACE_BOTTOM;
-    public static final XmSurfaceImpl SURFACE_TOP = CubeWithAxisAndFace.SURFACE_TOP;
-    public static final XmSurfaceImpl SURFACE_BACK = CubeWithAxisAndFace.SURFACE_BACK;
-    public static final XmSurfaceImpl SURFACE_FRONT = CubeWithAxisAndFace.SURFACE_FRONT;
-    public static final XmSurfaceImpl SURFACE_LEFT = CubeWithAxisAndFace.SURFACE_LEFT;
-    public static final XmSurfaceImpl SURFACE_RIGHT = CubeWithAxisAndFace.SURFACE_RIGHT;
+    public static final XmSurface SURFACE_BOTTOM = CubeWithAxisAndFace.SURFACE_BOTTOM;
+    public static final XmSurface SURFACE_TOP = CubeWithAxisAndFace.SURFACE_TOP;
+    public static final XmSurface SURFACE_BACK = CubeWithAxisAndFace.SURFACE_BACK;
+    public static final XmSurface SURFACE_FRONT = CubeWithAxisAndFace.SURFACE_FRONT;
+    public static final XmSurface SURFACE_LEFT = CubeWithAxisAndFace.SURFACE_LEFT;
+    public static final XmSurface SURFACE_RIGHT = CubeWithAxisAndFace.SURFACE_RIGHT;
 
     public static final Stair INSTANCE = new Stair(Xm.idString("stair"));
     
@@ -53,7 +53,7 @@ public class Stair extends AbstractWedge {
     }
     
     @Override
-    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
+    public XmSurfaceList surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
     

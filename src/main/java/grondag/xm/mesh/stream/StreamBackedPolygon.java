@@ -20,9 +20,9 @@ import java.util.function.IntUnaryOperator;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vec3f;
-import grondag.xm.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
@@ -232,7 +232,7 @@ public class StreamBackedPolygon implements Polygon {
     }
     
     @Override
-    public final XmSurfaceImpl surface() {
+    public final XmSurface surface() {
         return StaticEncoder.surface(stream, baseAddress);
     }
 

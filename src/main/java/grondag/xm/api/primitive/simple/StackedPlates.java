@@ -26,7 +26,8 @@ import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
@@ -35,17 +36,15 @@ import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class StackedPlates extends AbstractSimplePrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+    public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
-    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);
-    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
-    public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(2);
+    public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
+    public static final XmSurface SURFACE_TOP = SURFACES.get(1);
+    public static final XmSurface SURFACE_SIDES = SURFACES.get(2);
 
     private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH };
 
@@ -56,7 +55,7 @@ public class StackedPlates extends AbstractSimplePrimitive {
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
+    public XmSurfaceList surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
 

@@ -17,7 +17,6 @@
 package grondag.xm.dispatch;
 
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.model.XmModelProxy;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelProviderException;

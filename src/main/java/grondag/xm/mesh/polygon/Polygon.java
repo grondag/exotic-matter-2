@@ -17,7 +17,7 @@
 package grondag.xm.mesh.polygon;
 
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.helper.QuadHelper;
 import grondag.xm.mesh.vertex.Vec3f;
 import grondag.xm.mesh.vertex.Vertex3f;

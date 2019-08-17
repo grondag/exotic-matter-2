@@ -23,7 +23,8 @@ import java.util.function.Consumer;
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
@@ -31,14 +32,12 @@ import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Vec3d;
 
 public class Sphere extends AbstractSimplePrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
+    public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
 
-    public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
+    public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
     private PolyStream cachedQuads = null;
 
@@ -56,7 +55,7 @@ public class Sphere extends AbstractSimplePrimitive {
     }
     
     @Override
-    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
+    public XmSurfaceList surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
 

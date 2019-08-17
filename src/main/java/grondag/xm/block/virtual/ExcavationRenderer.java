@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
-import grondag.xm.dispatch.RenderUtil;
+import grondag.xm.render.RenderUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BufferBuilder;

@@ -21,7 +21,7 @@ import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.stream.MutablePolyStream;

@@ -20,8 +20,9 @@ import grondag.fermion.world.WorldHelper;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.connect.model.BlockCorner;
 import grondag.xm.api.connect.model.BlockEdge;
+import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.block.XmStackHelper;
+import grondag.xm.relics.XmStackHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -85,7 +86,7 @@ public class BlockOrientationHandler {
 
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // find closest instance, starting with block placed on
-        PrimitiveModelState.Mutable outputModelState = XmStackHelper.getStackModelState(stack);
+        PrimitiveModelState.Mutable outputModelState = XmItem.modelState(stack);
         PrimitiveModelState.Mutable closestModelState = null;
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
@@ -151,7 +152,7 @@ public class BlockOrientationHandler {
     // FIX: pretty sure this doesn't work now
     /** handle hit-sensitive placement for stairs, wedges */
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
-        PrimitiveModelState.Mutable outputModelState = XmStackHelper.getStackModelState(stack);
+        PrimitiveModelState.Mutable outputModelState = XmItem.modelState(stack);
 
         //TODO: remove or reimplement
 //        boolean isRotationDone = false;

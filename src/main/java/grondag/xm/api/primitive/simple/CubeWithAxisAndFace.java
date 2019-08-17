@@ -25,7 +25,8 @@ import grondag.xm.Xm;
 import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
@@ -35,12 +36,10 @@ import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+    public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("down", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("up", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("north", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
@@ -49,19 +48,19 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
             .add("east", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .build();
 
-    public static final XmSurfaceImpl SURFACE_DOWN = SURFACES.get(0);
-    public static final XmSurfaceImpl SURFACE_UP = SURFACES.get(1);
-    public static final XmSurfaceImpl SURFACE_NORTH = SURFACES.get(2);
-    public static final XmSurfaceImpl SURFACE_SOUTH = SURFACES.get(3);
-    public static final XmSurfaceImpl SURFACE_WEST = SURFACES.get(4);
-    public static final XmSurfaceImpl SURFACE_EAST = SURFACES.get(5);
+    public static final XmSurface SURFACE_DOWN = SURFACES.get(0);
+    public static final XmSurface SURFACE_UP = SURFACES.get(1);
+    public static final XmSurface SURFACE_NORTH = SURFACES.get(2);
+    public static final XmSurface SURFACE_SOUTH = SURFACES.get(3);
+    public static final XmSurface SURFACE_WEST = SURFACES.get(4);
+    public static final XmSurface SURFACE_EAST = SURFACES.get(5);
     
-    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(0);
-    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(1);
-    public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(2);
-    public static final XmSurfaceImpl SURFACE_FRONT = SURFACES.get(3);
-    public static final XmSurfaceImpl SURFACE_LEFT = SURFACES.get(4);
-    public static final XmSurfaceImpl SURFACE_RIGHT = SURFACES.get(5);
+    public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
+    public static final XmSurface SURFACE_TOP = SURFACES.get(1);
+    public static final XmSurface SURFACE_BACK = SURFACES.get(2);
+    public static final XmSurface SURFACE_FRONT = SURFACES.get(3);
+    public static final XmSurface SURFACE_LEFT = SURFACES.get(4);
+    public static final XmSurface SURFACE_RIGHT = SURFACES.get(5);
 
     /** never changes so may as well save it */
     private final PolyStream[] cachedQuads = new PolyStream[BlockEdgeSided.COUNT];
@@ -79,7 +78,7 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
+    public XmSurfaceList surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
 

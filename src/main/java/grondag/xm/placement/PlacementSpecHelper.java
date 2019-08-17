@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.placement;
 
+import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.block.XmStackHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -59,7 +59,7 @@ public class PlacementSpecHelper {
         case FILL_REGION:
         case HOLLOW_REGION:
             @SuppressWarnings("rawtypes")
-            PrimitiveModelState modelState = XmStackHelper.getStackModelState(placedStack);
+            PrimitiveModelState modelState = XmItem.modelState(placedStack);
             if (modelState != null && modelState.primitive().isMultiBlock()) {
                 return new CSGPlacementSpec(placedStack, player, pPos);
             } else {

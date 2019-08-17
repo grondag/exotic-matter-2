@@ -19,7 +19,7 @@ package grondag.xm.api.block;
 import javax.annotation.Nullable;
 
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.block.XmBlockStateAccess;
+import grondag.xm.dispatch.XmBlockStateAccess;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
@@ -46,7 +46,7 @@ public interface XmBlockState {
     }
     
     static @Nullable XmBlockState get(BlockState fromState) {
-        return ((XmBlockStateAccess)fromState).xm2_toXmBlockState();
+        return ((XmBlockStateAccess)fromState).xm_toXmBlockState();
     }
 
     static @Nullable XmBlockState get(BlockItem fromItem) {

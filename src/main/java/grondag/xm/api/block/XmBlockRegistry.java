@@ -18,21 +18,48 @@ package grondag.xm.api.block;
 
 import java.util.function.Function;
 
-import grondag.xm.block.XmBlockRegistryImpl;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.dispatch.XmRegistryImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemStack;
 
 public class XmBlockRegistry {
     private XmBlockRegistry() {}
     
     public static void addBlockStates(
             Block block, 
-            Function<BlockState, ? extends WorldToModelStateFunction<?>> modelFunctionMap) {
+            Function<BlockState, ? extends WorldToModelStateFunction<?>> modelFunctionMap,
+            Function<ItemStack, ModelState.Mutable> itemModelFunction)
+    {
         
-        XmBlockRegistryImpl.register(block, modelFunctionMap);
+        XmRegistryImpl.register(block, modelFunctionMap, itemModelFunction);
     }
     
+    public static void addBlockStates(
+            Block block, 
+            Function<BlockState, ? extends WorldToModelStateFunction<?>> modelFunctionMap) {
+        
+        XmRegistryImpl.register(block, modelFunctionMap, DEFAULT_ITEM_MODEL_FUNCTION);
+    }
+
     public static <F extends WorldToModelStateFunction<?>> void addBlock(Block block, F modelFunction) {
         addBlockStates(block, (BlockState bs) -> modelFunction);
     }
+    
+    public static <F extends WorldToModelStateFunction<?>> void addBlock(Block block, F blockModelFunction, Function<ItemStack, ModelState.Mutable> itemModelFunction) {
+        addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
+    }
+    
+    public static final Function<ItemStack, ModelState.Mutable> DEFAULT_ITEM_MODEL_FUNCTION  = s -> {
+        if (s.getItem() instanceof BlockItem) {
+            final BlockItem item = (BlockItem) s.getItem();
+            XmBlockState xmState = XmBlockState.get(item);
+            if (xmState != null) {
+                return xmState.defaultModelState();
+            }
+        }
+        return null;
+    };
 }

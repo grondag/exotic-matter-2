@@ -18,8 +18,8 @@ package grondag.xm.block.virtual;
 import java.util.function.Function;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.block.XmStackHelper;
 import grondag.xm.placement.FilterMode;
 import grondag.xm.placement.PlacementItem;
 import grondag.xm.placement.PlacementItemFeature;
@@ -87,7 +87,7 @@ public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
         Item item = stack.getItem();
         if (item instanceof VirtualItemBlock) {
             @SuppressWarnings("rawtypes")
-            final PrimitiveModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
+            final PrimitiveModelState.Mutable modelState = XmItem.modelState(stack);
             if (modelState == null) {
                 return null;
             } else {

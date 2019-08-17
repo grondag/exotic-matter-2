@@ -17,11 +17,10 @@
 package grondag.xm.mesh.stream;
 
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vec3f;
-import grondag.xm.surface.XmSurfaceImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
@@ -233,14 +232,10 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         return this;
     }
     
-    public final MutablePolygon surface(XmSurfaceImpl surface) {
+    @Override
+    public final MutablePolygon surface(XmSurface surface) {
         StaticEncoder.surface(stream, baseAddress, surface);
         return this;
-    }
-
-    @Override
-    public MutablePolygon surface(XmSurface surface) {
-        return surface((XmSurfaceImpl) surface);
     }
 
     @Override

@@ -19,8 +19,7 @@ package grondag.xm.dispatch;
 import grondag.fermion.sc.cache.KeyInterningCache;
 import grondag.xm.api.modelstate.ModelState;
 
-// custom loading cache is at least 2X faster than guava LoadingCache for our
-// use case
+// custom loading cache is at least 2X faster than guava LoadingCache for our use case
 public class XmDispatcher extends KeyInterningCache<ModelState> {
 
     public static final XmDispatcher INSTANCE = new XmDispatcher(0xFFFF);

@@ -20,11 +20,12 @@ import javax.annotation.Nullable;
 import grondag.fermion.modkeys.api.ModKeys;
 import grondag.fermion.varia.Useful;
 import grondag.xm.XmConfig;
-import grondag.xm.api.block.XmBlockHelper;
 import grondag.xm.api.connect.model.HorizontalFace;
+import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.block.XmStackHelper;
+import grondag.xm.api.placement.SpeciesHelper;
 import grondag.xm.block.virtual.VirtualBlock;
+import grondag.xm.relics.XmStackHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -176,7 +177,7 @@ public abstract class PlacementHandler {
         final ItemStack stack = specBuilder.placedStack().copy();
         final PlacementPosition pPos = specBuilder.placementPosition();
         @SuppressWarnings("rawtypes")
-        final PrimitiveModelState.Mutable modelState = XmStackHelper.getStackModelState(stack);
+        final PrimitiveModelState.Mutable modelState = XmItem.modelState(stack);
         if (modelState != null && modelState.hasSpecies()) {
             final int species = speciesForPlacement(specBuilder.player(), pPos.onPos, pPos.onFace, stack, specBuilder.region());
             if (species >= 0) {
@@ -209,7 +210,7 @@ public abstract class PlacementHandler {
         boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
 
         @SuppressWarnings("rawtypes")
-        PrimitiveModelState.Mutable withModelState = XmStackHelper.getStackModelState(stack);
+        PrimitiveModelState.Mutable withModelState = XmItem.modelState(stack);
         if (withModelState == null || !withModelState.hasSpecies())
             return 0;
 
@@ -223,7 +224,7 @@ public abstract class PlacementHandler {
         // if no region provided or species mode used clicked block then
         // result is based on the clicked face
         if (region == null || ((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
-            int clickedSpecies = XmBlockHelper.getJoinableSpecies(world, onPos, withBlockState, withModelState);
+            int clickedSpecies = SpeciesHelper.getJoinableSpecies(world, onPos, withBlockState, withModelState);
 
             // if no region, then return something different than what is clicked,
             // unless didn't get a species - will return 0 in that case.
@@ -241,7 +242,7 @@ public abstract class PlacementHandler {
         int checkCount = 0;
 
         for (BlockPos pos : region.adjacentPositions()) {
-            int adjacentSpecies = XmBlockHelper.getJoinableSpecies(world, pos, withBlockState, withModelState);
+            int adjacentSpecies = SpeciesHelper.getJoinableSpecies(world, pos, withBlockState, withModelState);
             if (adjacentSpecies >= 0 && adjacentSpecies <= 15)
                 adjacentCount[adjacentSpecies]++;
             if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
@@ -249,7 +250,7 @@ public abstract class PlacementHandler {
         }
 
         for (BlockPos pos : region.surfacePositions()) {
-            int interiorSpecies = XmBlockHelper.getJoinableSpecies(world, pos, withBlockState, withModelState);
+            int interiorSpecies = SpeciesHelper.getJoinableSpecies(world, pos, withBlockState, withModelState);
             if (interiorSpecies >= 0 && interiorSpecies <= 15)
                 surfaceCount[interiorSpecies]++;
             if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)

@@ -23,9 +23,8 @@ import grondag.fermion.position.PackedBlockPos;
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.connect.model.ClockwiseRotation;
+import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.block.XmSimpleBlock;
-import grondag.xm.block.XmStackHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -133,7 +132,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return Direction.Axis.Y;
 
-        PrimitiveModelState modelState = XmStackHelper.getStackModelState(stack);
+        PrimitiveModelState modelState = XmItem.modelState(stack);
         if (modelState == null)
             return Direction.Axis.Y;
 
@@ -163,7 +162,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (((PrimitiveModelState)XmStackHelper.getStackModelState(stack)).orientationType()) {
+        switch (((PrimitiveModelState)XmItem.modelState(stack)).orientationType()) {
         case AXIS:
             return false;
 
@@ -187,7 +186,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return ClockwiseRotation.ROTATE_NONE;
 
-        switch (((PrimitiveModelState)XmStackHelper.getStackModelState(stack)).orientationType()) {
+        switch (((PrimitiveModelState)XmItem.modelState(stack)).orientationType()) {
         case EDGE:
             return this.getBlockOrientationEdge(stack).edge.rotation;
 
@@ -209,7 +208,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (((PrimitiveModelState)XmStackHelper.getStackModelState(stack)).orientationType()) {
+        switch (((PrimitiveModelState)XmItem.modelState(stack)).orientationType()) {
         case AXIS:
             return getBlockOrientationAxis(stack) == BlockOrientationAxis.DYNAMIC;
 
@@ -235,7 +234,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (((PrimitiveModelState)XmStackHelper.getStackModelState(stack)).orientationType()) {
+        switch (((PrimitiveModelState)XmItem.modelState(stack)).orientationType()) {
         case AXIS:
             return getBlockOrientationAxis(stack).isFixed();
 
@@ -261,7 +260,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (((PrimitiveModelState)XmStackHelper.getStackModelState(stack)).orientationType()) {
+        switch (((PrimitiveModelState)XmItem.modelState(stack)).orientationType()) {
         case AXIS:
             return getBlockOrientationAxis(stack) == BlockOrientationAxis.MATCH_CLOSEST;
 
@@ -369,7 +368,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return false;
 
-        switch (((PrimitiveModelState)XmStackHelper.getStackModelState(stack)).orientationType()) {
+        switch (((PrimitiveModelState)XmItem.modelState(stack)).orientationType()) {
         case AXIS:
             cycleBlockOrientationAxis(stack, reverse);
             break;
@@ -400,7 +399,7 @@ public interface PlacementItem {
         if (!isBlockOrientationSupported(stack))
             return "NOT SUPPORTED";
 
-        switch (((PrimitiveModelState)XmStackHelper.getStackModelState(stack)).orientationType()) {
+        switch (((PrimitiveModelState)XmItem.modelState(stack)).orientationType()) {
         case AXIS:
             return getBlockOrientationAxis(stack).localizedName();
 
@@ -540,7 +539,7 @@ public interface PlacementItem {
         Item item = stack.getItem();
 
         if (item instanceof PlacementItem) {
-            PrimitiveModelState modelState = XmStackHelper.getStackModelState(stack);
+            PrimitiveModelState modelState = XmItem.modelState(stack);
             if (modelState == null)
                 return null;
 
@@ -557,7 +556,7 @@ public interface PlacementItem {
             // TODO: may need to handle other properties/make dynamic somehow
             BlockState result = targetBlock.getDefaultState();
             if (modelState.hasSpecies()) {
-                result = result.with(XmSimpleBlock.SPECIES, modelState.species());
+//                result = result.with(XmSimpleBlock.SPECIES, modelState.species());
             }
 
             return result;

@@ -19,7 +19,7 @@ package grondag.xm.api.primitive;
 import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.model.ModelPrimitiveRegistryImpl;
+import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;

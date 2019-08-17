@@ -22,22 +22,21 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
-import grondag.xm.mesh.helper.CubeInputs;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.painting.SurfaceTopology;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
+import grondag.xm.relics.CubeInputs;
 import net.minecraft.util.math.Direction;
 
 public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
+    public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
 
-    public static final XmSurfaceImpl SURFACE_ALL = SURFACES.get(0);
+    public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
     public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.idString("terrain_cube"));
     
@@ -50,7 +49,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(TerrainModelState modelState) {
+    public XmSurfaceList surfaces(TerrainModelState modelState) {
         return SURFACES;
     }
 

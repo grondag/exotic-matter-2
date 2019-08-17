@@ -19,8 +19,8 @@ package grondag.xm.api.primitive;
 import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.api.surface.XmSurface;
-import grondag.xm.api.surface.XmSurfaceList;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.model.varia.BlockOrientationType;
 import net.minecraft.nbt.CompoundTag;

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.helper.FaceVertex;
 import grondag.xm.mesh.helper.QuadHelper;
 import grondag.xm.mesh.polygon.MutablePolygon.Helper.UVLocker;

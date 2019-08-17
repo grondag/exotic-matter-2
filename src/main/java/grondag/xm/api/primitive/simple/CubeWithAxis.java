@@ -24,7 +24,8 @@ import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
@@ -34,19 +35,17 @@ import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
 public class CubeWithAxis extends AbstractSimplePrimitive {
-    public static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+    public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .build();
 
-    public static final XmSurfaceImpl SURFACE_ENDS = SURFACES.get(0);
-    public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(1);
+    public static final XmSurface SURFACE_ENDS = SURFACES.get(0);
+    public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
 
     /** never changes so may as well save it */
     private final PolyStream[] cachedQuads = new PolyStream[3];
@@ -66,7 +65,7 @@ public class CubeWithAxis extends AbstractSimplePrimitive {
     }
 
     @Override
-    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
+    public XmSurfaceList surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
 

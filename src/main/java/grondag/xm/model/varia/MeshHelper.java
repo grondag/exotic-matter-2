@@ -16,7 +16,7 @@
 
 package grondag.xm.model.varia;
 
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.painting.SurfaceTopology;

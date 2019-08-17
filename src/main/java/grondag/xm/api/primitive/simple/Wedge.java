@@ -20,7 +20,8 @@ import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractWedge;
-import grondag.xm.api.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.helper.FaceVertex;
 import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
@@ -28,21 +29,19 @@ import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.painting.SurfaceTopology;
-import grondag.xm.surface.XmSurfaceImpl;
-import grondag.xm.surface.XmSurfaceImpl.XmSurfaceListImpl;
 import net.minecraft.util.math.Direction;
 
 public class Wedge extends AbstractWedge {
-    private static final XmSurfaceListImpl SURFACES = XmSurfaceImpl.builder()
+    private static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
             .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
-    public static final XmSurfaceImpl SURFACE_BACK = SURFACES.get(0);
-    public static final XmSurfaceImpl SURFACE_BOTTOM = SURFACES.get(1);
-    public static final XmSurfaceImpl SURFACE_TOP = SURFACES.get(2);
-    public static final XmSurfaceImpl SURFACE_SIDES = SURFACES.get(3);
+    public static final XmSurface SURFACE_BACK = SURFACES.get(0);
+    public static final XmSurface SURFACE_BOTTOM = SURFACES.get(1);
+    public static final XmSurface SURFACE_TOP = SURFACES.get(2);
+    public static final XmSurface SURFACE_SIDES = SURFACES.get(3);
 
     public static final Wedge INSTANCE = new Wedge(Xm.idString("wedge"));
     
@@ -51,7 +50,7 @@ public class Wedge extends AbstractWedge {
     }
     
     @Override
-    public XmSurfaceListImpl surfaces(SimpleModelState modelState) {
+    public XmSurfaceList surfaces(SimpleModelState modelState) {
         return SURFACES;
     }
 
@@ -71,8 +70,6 @@ public class Wedge extends AbstractWedge {
         quad.surface(SURFACE_BOTTOM);
         quad.nominalFace(Direction.DOWN);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
-        //TODO: remove
-        quad.colorAll(0, 0xFF303030);
         transform.apply(quad);
         stream.append();
         
@@ -91,8 +88,6 @@ public class Wedge extends AbstractWedge {
         } else {
             quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         }
-        //TODO: remove
-        quad.colorAll(0, 0xFFFF3030);
         transform.apply(quad);
         stream.append();
         

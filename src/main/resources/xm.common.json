@@ -3,7 +3,8 @@
   "package": "grondag.xm.mixin.common",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinBlockState"
+    "MixinBlockState",
+    "MixinItem"
       ],
   "injectors": {
     "defaultRequire": 1
