@@ -16,10 +16,9 @@
 
 package grondag.xm.texture;
 
-import java.util.HashMap;
+import java.util.function.Consumer;
 
-import org.apache.commons.lang3.ObjectUtils;
-
+import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
@@ -28,51 +27,54 @@ import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetRegistry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.DefaultedRegistry;
+import net.minecraft.util.registry.MutableRegistry;
+import net.minecraft.util.registry.Registry;
 
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class TextureSetRegistryImpl implements TextureSetRegistry {
-    public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
     public static final TextureSetImpl DEFAULT_TEXTURE_SET;
+    
+    private static final MutableRegistry<TextureSetImpl> REGISTRY;
+    
+    public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
 
     public static TextureSet noTexture() {
         return INSTANCE.getByIndex(0);
     }
 
-    private final TextureSetImpl[] array = new TextureSetImpl[MAX_TEXTURE_SETS];
-    private final HashMap<Identifier, TextureSetImpl> map = new HashMap<>();
-    private int nextIndex = 0;
-
-    synchronized void add(TextureSetImpl newSet) {
-        if (array[newSet.index] == null && !map.containsKey(newSet.id)) {
-            array[newSet.index] = newSet;
-            map.put(newSet.id, newSet);
-        }
-        ;
-    }
-
-    synchronized int claimIndex() {
-        return nextIndex++;
-    }
-
     @Override
     public TextureSetImpl getById(Identifier id) {
-        return ObjectUtils.defaultIfNull(map.get(id), DEFAULT_TEXTURE_SET);
+        return REGISTRY.get(id);
     }
 
     @Override
     public TextureSetImpl getByIndex(int index) {
-        return index < 0 || index >= nextIndex ? DEFAULT_TEXTURE_SET : array[index];
+        return index < 0 ? DEFAULT_TEXTURE_SET : REGISTRY.get(index);
     }
-
+    
     @Override
-    public int size() {
-        return nextIndex;
+    public void forEach(Consumer<TextureSet> consumer) {
+        REGISTRY.forEach(consumer);
     }
 
+    public boolean contains(Identifier id) {
+        return REGISTRY != null && REGISTRY.containsId(id);
+    }
+    
     static {
+        REGISTRY = (MutableRegistry<TextureSetImpl>) Registry.REGISTRIES.add(Xm.id("texture_sets"), 
+                (MutableRegistry<?>) new DefaultedRegistry(NONE_ID.toString()));
+        
         DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:blocks/noise_moderate").versionCount(4)
                 .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(TextureRotation.ROTATE_RANDOM)
                 .renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
 
         DEFAULT_TEXTURE_SET.use();
+    }
+
+    void add(TextureSetImpl set) {
+        REGISTRY.add(set.id, set);
+        set.index = REGISTRY.getRawId(set);
     }
 }

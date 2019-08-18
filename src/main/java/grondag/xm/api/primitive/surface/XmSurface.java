@@ -16,7 +16,7 @@
 
 package grondag.xm.api.primitive.surface;
 
-import grondag.xm.painting.SurfaceTopology;
+import grondag.xm.api.paint.SurfaceTopology;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;

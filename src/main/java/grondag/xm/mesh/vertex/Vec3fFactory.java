@@ -17,6 +17,8 @@ public class Vec3fFactory {
         FACES[Direction.NORTH.ordinal()] = create(Direction.NORTH.getVector());
         FACES[Direction.SOUTH.ordinal()] = create(Direction.SOUTH.getVector());
     }
+    
+    public static final Vec3f ZERO = Vec3fImpl.ZERO;
 
     public static Vec3f forFace(Direction face) {
         return FACES[face.ordinal()];

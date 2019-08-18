@@ -17,8 +17,8 @@
 package grondag.xm.api.mesh;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 

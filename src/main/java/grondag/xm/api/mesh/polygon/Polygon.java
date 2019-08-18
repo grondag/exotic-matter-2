@@ -17,8 +17,8 @@
 package grondag.xm.api.mesh.polygon;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -114,19 +114,22 @@ public interface Polygon {
             float dy = v.y() - first.y();
             float dz = v.z() - first.z();
 
-            if (Math.abs(faceX * dx + faceY * dy + faceZ * dz) > PolyHelper.EPSILON)
+            if (Math.abs(faceX * dx + faceY * dy + faceZ * dz) > PolyHelper.EPSILON) {
                 return false;
+            }
         }
 
         return true;
     }
 
     default boolean isOnFace(Direction face, float tolerance) {
-        if (face == null)
+        if (face == null) {
             return false;
+        }
         for (int i = 0; i < this.vertexCount(); i++) {
-            if (!getPos(i).isOnFacePlane(face, tolerance))
+            if (!getPos(i).isOnFacePlane(face, tolerance)) {
                 return false;
+            }
         }
         return true;
     }

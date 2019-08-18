@@ -59,7 +59,7 @@ public class Vec3fCache {
         // Zero value normally indicates an unused spot in key array
         // so requires privileged handling to prevent search weirdness.
         if (x == 0f && y == 0f && z == 0f)
-            return Vec3f.ZERO;
+            return Vec3fImpl.ZERO;
 
         final long hash = ((long) Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16) ^ (((long) Float.floatToIntBits(z)) << 32);
 

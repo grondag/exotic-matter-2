@@ -37,7 +37,7 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
         return result;
     }
 
-    public final int index;
+    int index;
     public final Identifier id;
     public final int versionMask;
     public final int stateFlags;
@@ -47,7 +47,6 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     TextureSetImpl(Identifier id, AbstractTextureSet template) {
         this.id = id;
         this.baseTextureName = template.rawBaseTextureName;
-        this.index = TextureSetRegistryImpl.INSTANCE.claimIndex();
         copyFrom(template);
         this.versionMask = Math.max(0, template.versionCount - 1);
         this.layoutMap = template.layoutMap;

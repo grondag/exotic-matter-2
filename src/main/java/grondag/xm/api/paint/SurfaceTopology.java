@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.api.paint;
 
 /**
  * Used by painters to know how to UV map a surface for painting.

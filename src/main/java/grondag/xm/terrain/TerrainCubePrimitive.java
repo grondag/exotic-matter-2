@@ -26,10 +26,10 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
-import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.relics.CubeInputs;
 import net.minecraft.util.math.Direction;
 

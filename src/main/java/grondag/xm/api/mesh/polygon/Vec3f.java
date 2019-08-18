@@ -17,6 +17,7 @@
 package grondag.xm.api.mesh.polygon;
 
 import grondag.fermion.varia.Useful;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
@@ -147,18 +148,17 @@ public interface Vec3f {
         data[2] = z();
     }
     
-    static final Vec3f ZERO = create(0, 0, 0);
-
-
+    static final Vec3f ZERO = Vec3fFactory.ZERO;
+    
     static Vec3f forFace(Direction face) {
-        return Vec3f.forFace(face);
+        return Vec3fFactory.forFace(face);
     }
 
     public static Vec3f create(Vec3i vec) {
-        return Vec3f.create(vec);
+        return Vec3fFactory.create(vec);
     }
 
     public static Vec3f create(float x, float y, float z) {
-        return Vec3f.create(x, y, z);
+        return Vec3fFactory.create(x, y, z);
     }
 }

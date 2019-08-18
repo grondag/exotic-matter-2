@@ -16,8 +16,8 @@
 
 package grondag.xm.surface;
 
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.painting.SurfaceTopology;
 
 class XmSurfaceImpl implements XmSurface {
     final int ordinal;

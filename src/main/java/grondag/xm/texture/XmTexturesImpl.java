@@ -53,14 +53,11 @@ public class XmTexturesImpl {
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlas, registry) -> {
             if (atlas == MinecraftClient.getInstance().getSpriteAtlas()) {
                 TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
-                final int limit = texReg.size();
-                for (int i = 0; i < limit; i++) {
-                    TextureSetImpl set = texReg.getByIndex(i);
-                    assert set != null;
+                texReg.forEach(set -> {
                     if (set.used()) {
                         set.prestitch(id -> registry.register(id));
                     }
-                }
+                });
             }
         });
     }

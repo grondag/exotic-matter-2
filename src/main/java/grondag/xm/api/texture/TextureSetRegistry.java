@@ -16,6 +16,8 @@
 
 package grondag.xm.api.texture;
 
+import java.util.function.Consumer;
+
 import grondag.xm.Xm;
 import grondag.xm.texture.TextureSetRegistryImpl;
 import net.minecraft.util.Identifier;
@@ -41,5 +43,5 @@ public interface TextureSetRegistry {
 
     TextureSet getByIndex(int index);
 
-    int size();
+    void forEach(Consumer<TextureSet> consumer);
 }

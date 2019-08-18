@@ -30,11 +30,11 @@ import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.model.state.SimpleModelStateImpl;
-import grondag.xm.painting.SurfaceTopology;
 
 //TODO: remove
 public class CSGTestPrimitive extends AbstractSimplePrimitive {

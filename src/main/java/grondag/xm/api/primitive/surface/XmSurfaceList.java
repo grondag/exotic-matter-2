@@ -16,7 +16,7 @@
 
 package grondag.xm.api.primitive.surface;
 
-import grondag.xm.painting.SurfaceTopology;
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceListBuilderImpl;
 
 public interface XmSurfaceList {

@@ -17,9 +17,9 @@
 package grondag.xm.surface;
 
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.primitive.surface.XmSurfaceListBuilder;
-import grondag.xm.painting.SurfaceTopology;
 
 public class XmSurfaceListBuilderImpl implements XmSurfaceListBuilder {
     private final SimpleUnorderedArrayList<XmSurfaceImpl> surfaces = new SimpleUnorderedArrayList<>();

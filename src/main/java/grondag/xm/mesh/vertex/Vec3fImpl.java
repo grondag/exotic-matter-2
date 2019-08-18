@@ -21,6 +21,8 @@ import it.unimi.dsi.fastutil.HashCommon;
 
 class Vec3fImpl implements Vec3f {
 
+    static final Vec3fImpl ZERO = new Vec3fImpl(0, 0, 0);
+    
     protected float x;
     protected float y;
     protected float z;

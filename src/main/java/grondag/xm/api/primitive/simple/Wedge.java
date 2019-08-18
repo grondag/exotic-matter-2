@@ -24,10 +24,10 @@ import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.FaceVertex;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
 
 public class Wedge extends AbstractWedge {

@@ -25,6 +25,7 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
