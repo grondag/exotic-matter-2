@@ -25,10 +25,10 @@ import net.minecraft.util.math.Box;
  * Caches AABB instances that share the same packed key. Mods can use many
  * collision boxes, so this helps reduce memory use and garbage.
  */
-public class CollisionBoxStore {
+class CollisionBoxStore {
     private static final IntSimpleLoadingCache<Box> boxCache = new IntSimpleLoadingCache<Box>(new BoxLoader(), 0xFFF);
 
-    public static Box getBox(int boxKey) {
+    static Box getBox(int boxKey) {
         return boxCache.get(boxKey);
     }
 

@@ -20,12 +20,12 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 import grondag.fermion.varia.Useful;
+import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.mesh.helper.QuadHelper;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.polygon.StreamPolygon;

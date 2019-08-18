@@ -65,7 +65,6 @@ public interface ModelState {
      * Output polygons must be quads or tris. Consumer MUST NOT hold references to
      * any of the polys received.
      */
-    @Environment(EnvType.CLIENT)
     void produceQuads(Consumer<Polygon> target);
 
     @Environment(EnvType.CLIENT)

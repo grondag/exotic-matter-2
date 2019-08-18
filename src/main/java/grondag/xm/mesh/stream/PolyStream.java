@@ -288,4 +288,6 @@ public interface PolyStream {
             while (next());
         }
     }
+    
+    static PolyStream EMPTY = PolyStreams.claimWritable().releaseToReader();
 }

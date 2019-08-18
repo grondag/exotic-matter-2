@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.mesh.helper;
+package grondag.xm.collision;
 
 import grondag.xm.mesh.vertex.Vertex3f;
 
@@ -25,9 +25,9 @@ import grondag.xm.mesh.vertex.Vertex3f;
  * voxelization of block models.
  */
 
-public class TriangleBoxTest {
+class TriangleBoxTest {
 
-    public static boolean planeBoxOverlap(final float normX, final float normY, final float normZ, final float vX, final float vY, final float vZ,
+    static boolean planeBoxOverlap(final float normX, final float normY, final float normZ, final float vX, final float vY, final float vZ,
             float boxHalfSize) {
         float minX, minY, minZ, maxX, maxY, maxZ;
 

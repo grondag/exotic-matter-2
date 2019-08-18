@@ -101,12 +101,12 @@ public class CollisionDispatcherImpl {
         return result;
     }
 
-    public static final Box FULL_BLOCK_BOX = new Box(0, 0, 0, 1, 1, 1);
+    static final Box FULL_BLOCK_BOX = new Box(0, 0, 0, 1, 1, 1);
 
     /**
      * Creates an AABB with the bounds and rotation provided.
      */
-    public static Box makeRotatedAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Matrix4f rotation) {
+    static Box makeRotatedAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Matrix4f rotation) {
         Vector3f minPos = new Vector3f(minX, minY, minZ);
         Vector3f maxPos = new Vector3f(maxX, maxY, maxZ);
         rotation.transformPosition(minPos);
@@ -114,7 +114,7 @@ public class CollisionDispatcherImpl {
         return new Box(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z);
     }
 
-    public static Box makeRotatedAABB(Box fromAABB, Matrix4f rotation) {
+    static Box makeRotatedAABB(Box fromAABB, Matrix4f rotation) {
         return makeRotatedAABB((float) fromAABB.minX, (float) fromAABB.minY, (float) fromAABB.minZ, (float) fromAABB.maxX, (float) fromAABB.maxY,
                 (float) fromAABB.maxZ, rotation);
     }

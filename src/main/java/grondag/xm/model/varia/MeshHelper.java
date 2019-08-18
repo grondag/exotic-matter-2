@@ -251,83 +251,37 @@ public class MeshHelper {
         stream.append();
     }
 
-    // TODO: Fix or remove
-//    /**
-//     * Collection version of
-//     * {@link #makePaintableBox(BoundingBox, IPolygon, Consumer)} TODO: remove
-//     */
-//    @Deprecated // use the consumer version
-//    public static List<IMutablePolygon> makePaintableBox(BoundingBox box, IMutablePolygon template) {
-//        SimpleUnorderedArrayList<IMutablePolygon> result = new SimpleUnorderedArrayList<>(6);
-//        makePaintableBox(box, template, result);
-//        return result;
-//    }
-
-    // TODO: remove
-//    @Deprecated
-//    public static void makePaintableBox(BoundingBox box, IMutablePolygon template, Consumer<IMutablePolygon> target) {
-//        IMutablePolygon quad = template.claimCopy(4);
-//        quad.setupFaceQuad(Direction.UP, 1 - box.maxX, box.minZ, 1 - box.minX, box.maxZ, 1 - box.maxY,
-//                Direction.SOUTH);
-//        target.accept(quad);
-//
-//        quad = template.claimCopy(4);
-//        quad.setupFaceQuad(Direction.DOWN, box.minX, box.minZ, box.maxX, box.maxZ, box.minY, Direction.SOUTH);
-//        target.accept(quad);
-//
-//        // -X
-//        quad = template.claimCopy(4);
-//        quad.setupFaceQuad(Direction.WEST, box.minZ, box.minY, box.maxZ, box.maxY, box.minX, Direction.UP);
-//        target.accept(quad);
-//
-//        // +X
-//        quad = template.claimCopy(4);
-//        quad.setupFaceQuad(Direction.EAST, 1 - box.maxZ, box.minY, 1 - box.minZ, box.maxY, 1 - box.maxX,
-//                Direction.UP);
-//        target.accept(quad);
-//
-//        // -Z
-//        quad = template.claimCopy(4);
-//        quad.setupFaceQuad(Direction.NORTH, 1 - box.maxX, box.minY, 1 - box.minX, box.maxY, box.minZ, Direction.UP);
-//        target.accept(quad);
-//
-//        // +Z
-//        quad = template.claimCopy(4);
-//        quad.setupFaceQuad(Direction.SOUTH, box.minX, box.minY, box.maxX, box.maxY, 1 - box.maxZ, Direction.UP);
-//        target.accept(quad);
-//    }
-
     /**
      * Adds box to stream using current stream defaults.
      */
     public static void makePaintableBox(Box box, WritablePolyStream stream) {
         MutablePolygon quad = stream.writer();
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.UP, 1 - box.maxX, box.minZ, 1 - box.minX, box.maxZ, 1 - box.maxY, Direction.SOUTH);
+        quad.setupFaceQuad(Direction.UP, 1 - (float)box.maxX, (float)box.minZ, 1 - (float)box.minX, (float)box.maxZ, 1 - (float)box.maxY, Direction.SOUTH);
         stream.append();
 
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.DOWN, box.minX, box.minZ, box.maxX, box.maxZ, box.minY, Direction.SOUTH);
+        quad.setupFaceQuad(Direction.DOWN, (float)box.minX, (float)box.minZ, (float)box.maxX, (float)box.maxZ, (float)box.minY, Direction.SOUTH);
         stream.append();
 
         // -X
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.WEST, box.minZ, box.minY, box.maxZ, box.maxY, box.minX, Direction.UP);
+        quad.setupFaceQuad(Direction.WEST, (float)box.minZ, (float)box.minY, (float)box.maxZ, (float)box.maxY, (float)box.minX, Direction.UP);
         stream.append();
 
         // +X
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.EAST, 1 - box.maxZ, box.minY, 1 - box.minZ, box.maxY, 1 - box.maxX, Direction.UP);
+        quad.setupFaceQuad(Direction.EAST, 1 - (float)box.maxZ, (float)box.minY, 1 - (float)box.minZ, (float)box.maxY, 1 - (float)box.maxX, Direction.UP);
         stream.append();
 
         // -Z
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.NORTH, 1 - box.maxX, box.minY, 1 - box.minX, box.maxY, box.minZ, Direction.UP);
+        quad.setupFaceQuad(Direction.NORTH, 1 - (float)box.maxX, (float)box.minY, 1 - (float)box.minX, (float)box.maxY, (float)box.minZ, Direction.UP);
         stream.append();
 
         // +Z
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.SOUTH, box.minX, box.minY, box.maxX, box.maxY, 1 - box.maxZ, Direction.UP);
+        quad.setupFaceQuad(Direction.SOUTH, (float)box.minX, (float)box.minY, (float)box.maxX, (float)box.maxY, 1 - (float)box.maxZ, Direction.UP);
         stream.append();
     }
 
@@ -385,19 +339,6 @@ public class MeshHelper {
 ////        builder.add(quad);
 //
 //        return builder.build();
-//    }
-
-    // TODO: fix or remove
-//    /**
-//     * Same as
-//     * {@link #addTextureToAllFaces(String, float, float, float, double, int, boolean, float, Rotation, List)}
-//     * but with uvFraction = 1.
-//     */
-//    public static <T extends IPolygon> void addTextureToAllFaces(boolean createMutable, String rawTextureName,
-//            float left, float top, float size, float scaleFactor, int color, boolean contractUVs,
-//            Rotation texturRotation, List<T> list) {
-//        MeshHelper.addTextureToAllFaces(createMutable, rawTextureName, left, top, size, scaleFactor, color, contractUVs,
-//                1, texturRotation, list);
 //    }
 
     // TODO: fix or remove

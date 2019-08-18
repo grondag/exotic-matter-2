@@ -90,7 +90,7 @@ public class JoiningBoxListBuilder implements CollisionBoxListBuilder {
 
     private final IntOpenHashSet boxSet = new IntOpenHashSet();
 
-    public JoiningBoxListBuilder() {
+    JoiningBoxListBuilder() {
         System.arraycopy(EMPTY_FACE_BOX_MAP, 0, faceBoxMap, 0, MAX_FACE_KEYS);
     }
 
@@ -112,36 +112,6 @@ public class JoiningBoxListBuilder implements CollisionBoxListBuilder {
         boxSet.add(boxKey);
         forEachFaceKey(boxKey, k -> faceBoxMap[k] = boxKey);
     }
-
-    // TODO: remove
-//    private class FaceAccumulator implements IntConsumer
-//    {
-//        int bestKey = NOT_FOUND;
-//        int bestVolume = NOT_FOUND;
-//        
-//        void prepare()
-//        {
-//            bestKey = NOT_FOUND;
-//            bestVolume = NOT_FOUND;
-//        }
-//
-//        @Override
-//        public void accept(int k)
-//        {
-//            int testKey = faceToBoxMap.get(k);
-//            if(testKey != NOT_FOUND )
-//            {
-//                int v = CollisionBoxEncoder.boxVolume(testKey);
-//                if(v > bestVolume)
-//                {
-//                    bestKey = testKey;
-//                    bestVolume = v;
-//                }
-//            }            
-//        }
-//    }
-//    
-//    private final FaceAccumulator faceAccumulator = new FaceAccumulator();
 
     @Override
     public void add(final int boxKey) {

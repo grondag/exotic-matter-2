@@ -16,7 +16,10 @@
 
 package grondag.xm.terrain;
 
+import java.util.function.Function;
+
 import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.api.terrain.TerrainModelState.Mutable;
 
@@ -66,8 +69,8 @@ import grondag.xm.api.terrain.TerrainModelState.Mutable;
 // */
 public abstract class TerrainSurface extends AbstractTerrainPrimitive {
     
-    protected TerrainSurface(String idString, int stateFlags, ModelStateFactory<TerrainModelState, Mutable> factory) {
-        super(idString, stateFlags, factory);
+    protected TerrainSurface(String idString, int stateFlags, ModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
+        super(idString, stateFlags, factory, surfaceFunc);
         // TODO Auto-generated constructor stub
     }
     

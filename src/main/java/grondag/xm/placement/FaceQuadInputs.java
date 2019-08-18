@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.mesh.helper;
+package grondag.xm.placement;
 
 import grondag.fermion.spatial.Rotation;
 

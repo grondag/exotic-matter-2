@@ -19,7 +19,7 @@ package grondag.xm;
 import grondag.xm.collision.CollisionDispatcherImpl;
 import grondag.xm.dispatch.XmDispatcher;
 import grondag.xm.dispatch.XmVariantProvider;
-import grondag.xm.mesh.helper.PolyTransform;
+import grondag.xm.mesh.helper.PolyTransformImpl;
 import grondag.xm.network.Packets;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import grondag.xm.texture.XmTexturesImpl;
@@ -37,7 +37,7 @@ public class XmClient implements ClientModInitializer {
     }
 
     public static void invalidate() {
-        PolyTransform.invalidateCache();
+        PolyTransformImpl.invalidateCache();
         XmDispatcher.INSTANCE.clear();
         CollisionDispatcherImpl.clear();
         ModelPrimitiveRegistryImpl.INSTANCE.invalidateCache();

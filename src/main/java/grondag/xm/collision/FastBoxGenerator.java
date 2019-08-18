@@ -16,15 +16,12 @@
 
 package grondag.xm.collision;
 
-import static grondag.xm.collision.octree.OctreeCoordinates.ALL_EMPTY;
+import static grondag.xm.collision.OctreeCoordinates.ALL_EMPTY;
 
 import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.xm.collision.octree.OctreeCoordinates;
-import grondag.xm.collision.octree.VoxelVolume8;
-import grondag.xm.mesh.helper.TriangleBoxTest;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vertex3f;
 import net.minecraft.util.math.Box;
@@ -51,7 +48,7 @@ import net.minecraft.util.math.Box;
  * representation is better (or at least as good) for the subsequent
  * simplification, fill and output operations.
  */
-public class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
+class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
     private static void div1(final float[] polyData, final long[] voxelBits) {
         if (TriangleBoxTest.triBoxOverlap(CLOW1, CLOW1, CLOW1, R1, polyData))
             div2(0000, 0.0f, 0.0f, 0.0f, polyData, voxelBits);
@@ -165,7 +162,7 @@ public class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<P
         div1(polyData, voxelBits);
     }
 
-    public final ImmutableList<Box> build() {
+    final ImmutableList<Box> build() {
         builder.clear();
         final long[] data = this.voxelBits;
         VoxelVolume8.fillVolume(data);

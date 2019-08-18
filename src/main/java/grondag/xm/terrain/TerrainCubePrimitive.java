@@ -44,13 +44,8 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     private final PolyStream cachedQuads;
 
     protected TerrainCubePrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, TerrainModelStateImpl.FACTORY);
+        super(idString, STATE_FLAG_NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
         this.cachedQuads = getCubeQuads();
-    }
-
-    @Override
-    public XmSurfaceList surfaces(TerrainModelState modelState) {
-        return SURFACES;
     }
 
     @Override
@@ -78,7 +73,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
         cube.appendFace(stream, Direction.NORTH);
         cube.appendFace(stream, Direction.SOUTH);
 
-        PolyStream result = stream.releaseAndConvertToReader();
+        PolyStream result = stream.releaseToReader();
 
         result.origin();
         assert result.reader().vertexCount() == 4;

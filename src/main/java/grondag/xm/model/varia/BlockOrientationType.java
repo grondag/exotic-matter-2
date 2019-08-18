@@ -19,27 +19,26 @@ package grondag.xm.model.varia;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-import javax.annotation.Nullable;
-
-import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.placement.BlockOrientationHandler;
+import grondag.xm.api.connect.model.BlockCorner;
 import grondag.xm.api.connect.model.BlockEdge;
 import grondag.xm.api.connect.model.BlockEdgeSided;
-import grondag.xm.api.connect.model.BlockCorner;
-import net.minecraft.util.math.Direction;
+import grondag.xm.api.connect.model.NoOrientation;
+import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.placement.BlockOrientationHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.util.math.Direction;
 
 @SuppressWarnings("rawtypes")
 public enum BlockOrientationType {
-    NONE(null, (s, c) -> s, (b, m) -> {}),
+    NONE(NoOrientation.class, (s, c) -> s, (b, m) -> {}),
     AXIS(Direction.Axis.class, BlockOrientationHandler::axisBlockState, BlockOrientationHandler::axisModelState),
     FACE(Direction.class, BlockOrientationHandler::faceBlockState, BlockOrientationHandler::faceModelState),
     EDGE(BlockEdge.class, BlockOrientationHandler::edgeBlockState, BlockOrientationHandler::edgeModelState),
     EDGE_SIDED(BlockEdgeSided.class, BlockOrientationHandler::edgeBlockState, BlockOrientationHandler::edgeModelState),
     CORNER(BlockCorner.class, BlockOrientationHandler::cornerBlockState, BlockOrientationHandler::cornerModelState);
 
-    public final @Nullable Class<? extends Enum> enumClass;
+    public final Class<? extends Enum> enumClass;
 
     public final BiFunction<BlockState, ItemPlacementContext, BlockState> placementFunc;
 

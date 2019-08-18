@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.collision.octree;
+package grondag.xm.collision;
 
 import java.util.Arrays;
 
@@ -23,10 +23,10 @@ import grondag.xm.collision.Functions.Float3Consumer;
 import grondag.xm.collision.Functions.Float3Test;
 import grondag.xm.collision.Functions.Int3Consumer;
 
-public class OctreeCoordinates {
-    public static final long FULL_BITS = 0xFFFFFFFFFFFFFFFFL;
-    public static final long[] ALL_FULL = new long[64];
-    public static final long[] ALL_EMPTY = new long[64];
+class OctreeCoordinates {
+    static final long FULL_BITS = 0xFFFFFFFFFFFFFFFFL;
+    static final long[] ALL_FULL = new long[64];
+    static final long[] ALL_EMPTY = new long[64];
 
     /**
      * Indexes to face voxels in division level 4
@@ -183,7 +183,7 @@ public class OctreeCoordinates {
      * Gives packed 3-bit Cartesian coordinates from octree index w/ division level
      * 3
      */
-    public static int indexToXYZ3(final int i3) {
+    static int indexToXYZ3(final int i3) {
         // coordinate values are 3 bits each: xxx, yyy, zzz
         // voxel coordinates are interleaved: zyx zyx zyx
 
@@ -192,7 +192,7 @@ public class OctreeCoordinates {
         return ((i3 & 1) | (j & 2) | (k & 4)) | (((i3 & 2) | (j & 4) | (k & 8)) << 2) | (((i3 & 4) | (j & 8) | (k & 16)) << 4);
     }
 
-    public static void forXYZ3(final int i3, Int3Consumer consumer) {
+    static void forXYZ3(final int i3, Int3Consumer consumer) {
         final int j = i3 >> 2;
         final int k = i3 >> 4;
         consumer.accept((i3 & 1) | (j & 2) | (k & 4), ((i3 & 2) | (j & 4) | (k & 8)) >> 1, ((i3 & 4) | (j & 8) | (k & 16)) >> 2);
@@ -239,7 +239,7 @@ public class OctreeCoordinates {
      * Gives packed 4-bit Cartesian coordinates from octree index w/ division level
      * 4
      */
-    public static int indexToXYZ4(final int i4) {
+    static int indexToXYZ4(final int i4) {
         // coordinate values are 4 bits each: xxxx, yyyy, zzzz
         // voxel coordinates are interleaved: zyx zyx zyx zyx
 
@@ -257,29 +257,29 @@ public class OctreeCoordinates {
         return x | (y << 4) | (z << 8);
     }
 
-    public static float voxelSize(int divisionLevel) {
+    static float voxelSize(int divisionLevel) {
         return 1f / (1 << divisionLevel);
     }
 
-    public static float voxelRadius(int divisionLevel) {
+    static float voxelRadius(int divisionLevel) {
         return 0.5f / (1 << divisionLevel);
     }
 
-    public static void withCenter(final int index, final int divisionLevel, Float3Consumer consumer) {
+    static void withCenter(final int index, final int divisionLevel, Float3Consumer consumer) {
         final int xyz = indexToXYZ(index, divisionLevel);
         final float d = OctreeCoordinates.voxelSize(divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
         consumer.accept(((xyz & mask) + 0.5f) * d, (((xyz >> divisionLevel) & mask) + 0.5f) * d, (((xyz >> (divisionLevel * 2)) & mask) + 0.5f) * d);
     }
 
-    public static boolean testCenter(final int index, final int divisionLevel, Float3Test test) {
+    static boolean testCenter(final int index, final int divisionLevel, Float3Test test) {
         final int xyz = indexToXYZ(index, divisionLevel);
         final float d = OctreeCoordinates.voxelSize(divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
         return test.apply(((xyz & mask) + 0.5f) * d, (((xyz >> divisionLevel) & mask) + 0.5f) * d, (((xyz >> (divisionLevel * 2)) & mask) + 0.5f) * d);
     }
     
-    public static void withXYZ(final int index, final int divisionLevel, Int3Consumer consumer) {
+    static void withXYZ(final int index, final int divisionLevel, Int3Consumer consumer) {
         final int xyz = indexToXYZ(index, divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
         consumer.accept(xyz & mask, (xyz >> divisionLevel) & mask, (xyz >> (divisionLevel * 2)) & mask);
@@ -289,7 +289,7 @@ public class OctreeCoordinates {
      * Gives numerators of AABB coordinates aligned to 1/8 divisions. Meant only for
      * division levels 0-3. (Level 4 is 1/16)
      */
-    public static void withBounds8(final int index, final int divisionLevel, BoxBoundsIntConsumer consumer) {
+    static void withBounds8(final int index, final int divisionLevel, BoxBoundsIntConsumer consumer) {
         final int xyz = indexToXYZ(index, divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
         final int x = xyz & mask;

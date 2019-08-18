@@ -44,7 +44,7 @@ public class Sphere extends AbstractSimplePrimitive {
     public static final Sphere INSTANCE = new Sphere(Xm.idString("sphere"));
 
     protected Sphere(String idString) {
-        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
+        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, s -> SURFACES);
         this.cachedQuads = generateQuads();
     }
 
@@ -54,11 +54,6 @@ public class Sphere extends AbstractSimplePrimitive {
         cachedQuads = generateQuads();
     }
     
-    @Override
-    public XmSurfaceList surfaces(SimpleModelState modelState) {
-        return SURFACES;
-    }
-
     @Override
     public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         PolyStream cachedQuads = this.cachedQuads;
@@ -85,7 +80,7 @@ public class Sphere extends AbstractSimplePrimitive {
         stream.saveDefaults();
 
         MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
-        return stream.releaseAndConvertToReader();
+        return stream.releaseToReader();
     }
 
     @Override

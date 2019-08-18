@@ -90,7 +90,7 @@ public class PolyStreams {
             } while (input.next());
         }
 
-        return result.releaseAndConvertToReader();
+        return result.releaseToReader();
     }
 
     static void release(ReadOnlyPolyStreamImpl freeStream) {

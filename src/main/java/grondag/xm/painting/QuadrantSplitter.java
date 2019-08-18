@@ -17,7 +17,7 @@
 package grondag.xm.painting;
 
 import grondag.xm.api.connect.model.FaceCorner;
-import grondag.xm.mesh.helper.QuadHelper;
+import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.MutablePolyStream;

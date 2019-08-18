@@ -20,6 +20,7 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
+import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
@@ -30,6 +31,7 @@ import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
+import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.model.varia.CSG;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
@@ -43,21 +45,26 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
     public static final XmSurface SURFACE_A = SURFACES.get(0);
     public static final XmSurface SURFACE_B = SURFACES.get(1);
 
-    public static final CSGTestPrimitive INSTANCE = new CSGTestPrimitive("xm2:csgtest");
+    public static final CSGTestPrimitive INSTANCE = new CSGTestPrimitive(Xm.idString("csgtest"));
     
     /** never changes so may as well save it */
-    private final PolyStream cachedQuads;
+    private PolyStream cachedQuads;
 
     public CSGTestPrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
-        this.cachedQuads = getTestQuads();
+        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, s -> SURFACES);
+        cachedQuads = getTestQuads();
     }
 
     @Override
-    public XmSurfaceList surfaces(SimpleModelState modelState) {
-        return SURFACES;
+    public void invalidateCache() {
+        cachedQuads = getTestQuads();
     }
-
+    
+    @Override
+    public BlockOrientationType orientationType(SimpleModelState modelState) {
+        return BlockOrientationType.NONE;
+    }
+    
     @Override
     public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         cachedQuads.forEach(target);
@@ -92,18 +99,21 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
         quadsB.writer().lockUV(0, true);
         quadsB.writer().surface(SURFACE_B);
         quadsB.saveDefaults();
-        MeshHelper.makePaintableBox(new Box(0.2, 0, 0.4, 0.6, 1.0, 0.8), quadsB);
+        MeshHelper.makePaintableBox(new Box(0.2, 0, 0.3, 0.6, 1.0, 0.8), quadsB);
 
         WritablePolyStream output = PolyStreams.claimWritable();
-        CSG.union(quadsA, quadsB, output);
-
+//        CSG.difference(quadsA, quadsB, output);
+        CSG.difference(quadsB, quadsA, output);
+//        CSG.union(quadsA, quadsB, output);
+//        CSG.intersect(quadsA, quadsB, output);
+        
         quadsA.release();
         quadsB.release();
 
 //      IPolyStream result = PolyStreams.claimRecoloredCopy(output);
 //      output.release();
 //      return result;
-        return output.releaseAndConvertToReader();
+        return output.releaseToReader();
 
 //      quadsB = new CSGShape(QuadFactory.makeBox(new BoundingBox(0, 0, 0.3, 1, 1, .7), template));
 //      result = result.difference(quadsB);

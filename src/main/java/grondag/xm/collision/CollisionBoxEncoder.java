@@ -27,7 +27,7 @@ import net.minecraft.util.math.Direction;
  * into/from primitive values. These are used to reduce garbage and improve LOR
  * in implementation.
  */
-public class CollisionBoxEncoder {
+class CollisionBoxEncoder {
     static final int MIN_X_SHIFT = 0;
     static final int MIN_Y_SHIFT = 4;
     static final int MIN_Z_SHIFT = 8;

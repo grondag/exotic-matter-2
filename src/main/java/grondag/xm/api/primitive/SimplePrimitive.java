@@ -16,8 +16,29 @@
 
 package grondag.xm.api.primitive;
 
+import java.util.function.Function;
+
+import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
+import grondag.xm.mesh.stream.PolyStream;
+import grondag.xm.model.varia.BlockOrientationType;
+import grondag.xm.primitive.SimplePrimitiveBuilderImpl;
 
 public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, SimpleModelState.Mutable>{
+    static Builder builder() {
+        return SimplePrimitiveBuilderImpl.builder();
+    }
+    
+    public interface Builder {
+        
+        SimplePrimitive build(String idString);
 
+        Builder surfaceList(XmSurfaceList list);
+
+        Builder orientationType(BlockOrientationType orientationType);
+
+        Builder polyFactory(Function<PolyTransform, PolyStream> polyFactory);
+
+    }
 }

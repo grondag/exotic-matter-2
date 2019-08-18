@@ -23,11 +23,11 @@ import java.util.function.Consumer;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.model.BlockEdgeSided;
+import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStream;
@@ -68,7 +68,7 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
     public static final CubeWithAxisAndFace INSTANCE = new CubeWithAxisAndFace(Xm.idString("cube_axis_face"));
 
     protected CubeWithAxisAndFace(String idString) {
-        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY);
+        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, s -> SURFACES);
         invalidateCache();
     }
 
@@ -77,10 +77,6 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
         BlockEdgeSided.forEach( o -> cachedQuads[o.ordinal()] = getCubeQuads(o));
     }
 
-    @Override
-    public XmSurfaceList surfaces(SimpleModelState modelState) {
-        return SURFACES;
-    }
 
     @Override
     public BlockOrientationType orientationType(SimpleModelState modelState) {
@@ -93,7 +89,7 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
     }
 
     private PolyStream getCubeQuads(BlockEdgeSided orientation) {
-        PolyTransform transform = PolyTransform.edgeSidedTransform(orientation.ordinal());
+        PolyTransform transform = PolyTransform.forEdge(orientation.ordinal());
 
         WritablePolyStream stream = PolyStreams.claimWritable();
         MutablePolygon writer = stream.writer();
@@ -133,7 +129,7 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
         transform.apply(writer);
         stream.append();
 
-        PolyStream result = stream.releaseAndConvertToReader();
+        PolyStream result = stream.releaseToReader();
 
         result.origin();
         assert result.reader().vertexCount() == 4;

@@ -25,13 +25,13 @@ import grondag.xm.api.connect.model.FaceEdge;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.connect.state.CornerJoinState;
+import grondag.xm.api.mesh.FaceVertex;
+import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.helper.FaceVertex;
-import grondag.xm.mesh.helper.QuadHelper;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStreams;
@@ -40,7 +40,6 @@ import grondag.xm.model.state.AbstractPrimitiveModelState;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
-import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
@@ -107,24 +106,20 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     protected SquareColumn(String idString) {
-        super(idString, ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS, SimpleModelStateImpl.FACTORY);
+        super(idString, ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN | ModelStateFlags.STATE_FLAG_HAS_AXIS, SimpleModelStateImpl.FACTORY,
+                s -> isLit(s) ? SURFACES_LIT : SURFACES_DARK);
     }
 
     @Override
     public XmSurface lampSurface(SimpleModelState modelState) {
         return isLit(modelState) ? SURFACES_LIT.get(SURFACE_LAMP) : null;
     }
-    
-    @Override
-    public XmSurfaceList surfaces(SimpleModelState modelState) {
-        return isLit(modelState) ? SURFACES_LIT : SURFACES_DARK;
-    }
 
     @Override
     public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
         FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
         for (int i = 0; i < 6; i++) {
-            this.makeFaceQuads(modelState, ModelHelper.faceFromIndex(i), spec, target);
+            this.makeFaceQuads(modelState, Direction.byId(i), spec, target);
         }
     }
 
@@ -157,7 +152,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
         if (face.getAxis() == axis) {
             makeCapFace(face, stream, bjs.faceState(face), spec, axis, surfaces);
         } else {
-            makeSideFace(face, stream, bjs.faceState(face), spec, axis, surfaces);
+            positiveDirection(face, stream, bjs.faceState(face), spec, axis, surfaces);
         }
 
         if (stream.origin()) {
@@ -169,14 +164,14 @@ public class SquareColumn extends AbstractSimplePrimitive {
         stream.release();
     }
 
-    private void makeSideFace(Direction face, WritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
+    private void positiveDirection(Direction face, WritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
             XmSurfaceList surfaces) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
         final MutablePolygon writer = stream.writer();
 
-        Direction topFace = QuadHelper.getAxisTop(axis);
+        Direction topFace = QuadHelper.positiveDirection(axis);
         Direction bottomFace = topFace.getOpposite();
         Direction leftFace = QuadHelper.leftOf(face, topFace);
         Direction rightFace = QuadHelper.rightOf(face, topFace);

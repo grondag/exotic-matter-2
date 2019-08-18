@@ -16,6 +16,7 @@
 
 package grondag.xm.mesh.stream;
 
+import grondag.fermion.color.ColorHelper;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.MutablePolygon;
@@ -23,6 +24,7 @@ import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vec3f;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 
 public class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutablePolygon {
     @Override
@@ -76,6 +78,17 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         return this;
     }
 
+    @Override
+    public final MutablePolygon assignLockedUVCoordinates(int layerIndex) {
+        UVLocker locker = UVLOCKERS[nominalFace().ordinal()];
+
+        final int vertexCount = vertexCount();
+        for (int i = 0; i < vertexCount; i++)
+            locker.apply(i, layerIndex, this);
+
+        return this;
+    }
+    
     @Override
     public final MutablePolygon sprite(int layerIndex, String textureName) {
         polyEncoder.setTextureName(stream, baseAddress, layerIndex, textureName);
@@ -262,18 +275,68 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         if (layerCount > 1) {
             spriteColor(targetIndex, 1, source.spriteColor(sourceIndex, 1));
 
-            if (layerCount == 3)
+            if (layerCount == 3) {
                 spriteColor(targetIndex, 2, source.spriteColor(sourceIndex, 2));
+            }
         }
 
         sprite(targetIndex, 0, source.spriteU(sourceIndex, 0), source.spriteV(sourceIndex, 0));
         if (vertexEncoder.multiUV() && layerCount > 1) {
             sprite(targetIndex, 1, source.spriteU(sourceIndex, 1), source.spriteV(sourceIndex, 1));
 
-            if (layerCount == 3)
+            if (layerCount == 3) {
                 sprite(targetIndex, 2, source.spriteU(sourceIndex, 2), source.spriteV(sourceIndex, 2));
+            }
         }
 
+        return this;
+    }
+    
+    @Override
+    public MutablePolygon copyInterpolatedVertexFrom(int targetIndex, Polygon from, int fromIndex, Polygon to, int toIndex, float toWeight) {
+        final int layerCount = from.spriteDepth();
+        assert layerCount == to.spriteDepth();
+        if(this.spriteDepth() < layerCount) {
+            this.spriteDepth(layerCount);
+        }
+        
+        this.pos(targetIndex, 
+                MathHelper.lerp(toWeight, from.x(fromIndex), to.x(toIndex)),
+                MathHelper.lerp(toWeight, from.y(fromIndex), to.y(toIndex)),
+                MathHelper.lerp(toWeight, from.z(fromIndex), to.z(toIndex)));
+
+        final int fromGlow = from.glow(fromIndex);
+        this.glow(targetIndex, (int)(fromGlow + (to.glow(toIndex) - fromGlow) * toWeight));
+
+        if (from.hasNormal(fromIndex) && to.hasNormal(toIndex)) {
+            final float normX = MathHelper.lerp(toWeight, from.normalX(fromIndex), to.normalX(toIndex));
+            final float normY = MathHelper.lerp(toWeight, from.normalY(fromIndex), to.normalY(toIndex));
+            final float normZ = MathHelper.lerp(toWeight, from.normalZ(fromIndex), to.normalZ(toIndex));
+            final float normScale = 1f / (float) Math.sqrt(normX * normX + normY * normY + normZ * normZ);
+            this.normal(targetIndex, normX * normScale, normY * normScale, normZ * normScale);
+        } else {
+            this.normal(targetIndex, null);
+        }
+        
+        this.spriteColor(targetIndex, 0, ColorHelper.interpolate(from.spriteColor(fromIndex, 0), to.spriteColor(toIndex, 0), toWeight));
+        this.sprite(targetIndex, 0, 
+                MathHelper.lerp(toWeight, from.spriteU(fromIndex, 0), to.spriteU(toIndex, 0)),
+                MathHelper.lerp(toWeight, from.spriteV(fromIndex, 0), to.spriteV(toIndex, 0)));
+
+        if (layerCount > 1) {
+            this.spriteColor(targetIndex, 1, ColorHelper.interpolate(from.spriteColor(fromIndex, 1), to.spriteColor(toIndex, 1), toWeight));
+            this.sprite(targetIndex, 1, 
+                    MathHelper.lerp(toWeight, from.spriteU(fromIndex, 1), to.spriteU(toIndex, 1)),
+                    MathHelper.lerp(toWeight, from.spriteV(fromIndex, 1), to.spriteV(toIndex, 1)));
+
+            if (layerCount == 3) {
+                this.spriteColor(targetIndex, 2, ColorHelper.interpolate(from.spriteColor(fromIndex, 2), to.spriteColor(toIndex, 2), toWeight));
+                this.sprite(targetIndex, 2, 
+                        MathHelper.lerp(toWeight, from.spriteU(fromIndex, 2), to.spriteU(toIndex, 2)),
+                        MathHelper.lerp(toWeight, from.spriteV(fromIndex, 2), to.spriteV(toIndex, 2)));
+            }
+        }
+        
         return this;
     }
 
@@ -294,6 +357,7 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
 
         textureSalt(polyIn.textureSalt());
         surface(polyIn.surface());
+        
         uvWrapDistance(polyIn.uvWrapDistance());
         tag(polyIn.tag());
 
@@ -331,6 +395,89 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
         setMark(polyIn.isMarked());
     }
 
+    @Override
+    public MutablePolygon flip() {
+        final int vCount = this.vertexCount();
+        final int midPoint = (vCount + 1) / 2;
+        nominalFace(nominalFace().getOpposite());
+        
+        for(int low = 0; low < midPoint; low++) {
+            final int high = vCount - low - 1;
+
+            // flip low vertex normal, or mid-point on odd-numbered polys
+            if(hasNormal(low)) {
+                normal(low, -normalX(low), -normalY(low), -normalZ(low));
+            }
+            
+            if(low != high) {
+                // flip high vertex normal
+                if(hasNormal(high)) {
+                    normal(high, -normalX(high), -normalY(high), -normalZ(high));
+                }
+            
+                // swap low with high
+                final float x = x(low);
+                final float y = y(low);
+                final float z = z(low);
+                final boolean hasNormal = hasNormal(low);
+                float normX = 0, normY = 0, normZ = 0;
+                if(hasNormal) {
+                    normX = normalX(low);
+                    normY = normalY(low);
+                    normZ = normalZ(low);
+                }
+                final boolean doGlow = glowEncoder.glowFormat() == PolyStreamFormat.VERTEX_GLOW_PER_VERTEX;
+                int glow = 0;
+                if(doGlow) {
+                    glow = glow(low);
+                }
+                final int color0 = spriteColor(low, 0);
+                final float u0 = spriteU(low, 0);
+                final float v0 = spriteU(low, 0);
+                
+                int color1 = 0, color2 = 0;
+                float u1 = 0, u2 = 0, v1 = 0, v2 = 0;
+                final int depth = spriteDepth();
+                if(depth > 1) {
+                    color1 = spriteColor(low, 1);
+                    u1 = spriteU(low, 1);
+                    v1 = spriteU(low, 1);
+                    if(depth == 3) {
+                        color2 = spriteColor(low, 2);
+                        u2 = spriteU(low, 2);
+                        v2 = spriteU(low, 2);
+                    }
+                }
+                copyVertexFrom(low, this, high);
+                
+                pos(high, x, y, z);
+                if(hasNormal) {
+                    normal(high, normX, normY, normZ);
+                } else {
+                    normal(high, null);
+                }
+                if(doGlow) {
+                    glow(high, glow);
+                }
+                sprite(high, 0, u0, v0);
+                spriteColor(high, 0, color0);
+                
+                if(depth > 1) {
+                    sprite(high, 1, u1, v1);
+                    spriteColor(high, 1, color1);
+                    if(depth == 3) {
+                        sprite(high, 2, u2, v2);
+                        spriteColor(high, 2, color2);
+                    }
+                }
+            }
+        }
+        
+        clearFaceNormal();
+
+        return this;
+    }
+
     public void loadStandardDefaults() {
         maxU(0, 1f);
         maxU(1, 1f);
@@ -347,5 +494,28 @@ public class StreamBackedMutablePolygon extends StreamBackedPolygon implements M
     public MutablePolygon tag(int tag) {
         polyEncoder.setTag(stream, baseAddress, tag);
         return this;
+    }
+    
+    @FunctionalInterface
+    interface UVLocker {
+        void apply(int vertexIndex, int layerIndex, MutablePolygon poly);
+    }
+
+    private static final UVLocker[] UVLOCKERS = new UVLocker[6];
+
+    static {
+        UVLOCKERS[Direction.EAST.ordinal()] = (v, l, p) -> p.sprite(v, l, 1 - p.z(v), 1 - p.y(v));
+
+        UVLOCKERS[Direction.WEST.ordinal()] = (v, l, p) -> p.sprite(v, l, p.z(v), 1 - p.y(v));
+
+        UVLOCKERS[Direction.NORTH.ordinal()] = (v, l, p) -> p.sprite(v, l, 1 - p.x(v), 1 - p.y(v));
+
+        UVLOCKERS[Direction.SOUTH.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v), 1 - p.y(v));
+
+        UVLOCKERS[Direction.DOWN.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v), 1 - p.z(v));
+
+        // our default semantic for UP is different than MC
+        // "top" is north instead of south
+        UVLOCKERS[Direction.UP.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v), p.z(v));
     }
 }

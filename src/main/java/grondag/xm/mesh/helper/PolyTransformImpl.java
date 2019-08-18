@@ -20,23 +20,26 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import grondag.xm.api.connect.model.BlockEdgeSided;
+import grondag.xm.api.mesh.PolyTransform;
+import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.model.varia.BlockOrientationType;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
 @SuppressWarnings("rawtypes")
-public class PolyTransform {
+public class PolyTransformImpl implements PolyTransform {
 
     private final Matrix4f matrix;
 
-    public PolyTransform(Matrix4f matrix) {
+    private PolyTransformImpl(Matrix4f matrix) {
         this.matrix = matrix;
     }
 
+    @Override
     public void apply(MutablePolygon poly) {
         final Matrix4f matrix = this.matrix;
         final int vertexCount = poly.vertexCount();
@@ -57,20 +60,20 @@ public class PolyTransform {
         // transform nominal face
         Vec3i oldVec = poly.nominalFace().getVector();
         matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
-        poly.nominalFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
+        poly.nominalFace(QuadHelper.faceForNormal(vec.x, vec.y, vec.z));
         final Direction cullFace = poly.cullFace();
         if(cullFace != null) {
             oldVec = cullFace.getVector();
             matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
-            poly.cullFace(QuadHelper.computeFaceForNormal(vec.x, vec.y, vec.z));
+            poly.cullFace(QuadHelper.faceForNormal(vec.x, vec.y, vec.z));
         }
     }
 
     private static final ThreadLocal<Vector3f> VEC3 = ThreadLocal.withInitial(Vector3f::new);
 
-    private final static PolyTransform[][] LOOKUP = new PolyTransform[BlockOrientationType.values().length][];
-    private final static PolyTransform[] EDGE_SIDED = new PolyTransform[BlockEdgeSided.COUNT];
-    private final static PolyTransform[] AXIS = new PolyTransform[3];
+    private final static PolyTransformImpl[][] LOOKUP = new PolyTransformImpl[BlockOrientationType.values().length][];
+    private final static PolyTransformImpl[] EDGE_SIDED = new PolyTransformImpl[BlockEdgeSided.COUNT];
+    private final static PolyTransformImpl[] AXIS = new PolyTransformImpl[3];
 
     // mainly for run-time testing
     public static void invalidateCache() { 
@@ -90,6 +93,7 @@ public class PolyTransform {
     static {
         LOOKUP[BlockOrientationType.EDGE_SIDED.ordinal()] = EDGE_SIDED;
         LOOKUP[BlockOrientationType.AXIS.ordinal()] = AXIS;
+        LOOKUP[BlockOrientationType.NONE.ordinal()] = new PolyTransformImpl[1];
         populateLookups();
     }
     
@@ -101,6 +105,8 @@ public class PolyTransform {
         AXIS[Axis.Y.ordinal()] = EDGE_SIDED[BlockEdgeSided.DOWN_SOUTH.ordinal()];
         AXIS[Axis.X.ordinal()] = EDGE_SIDED[BlockEdgeSided.WEST_UP.ordinal()];
         AXIS[Axis.Z.ordinal()] = EDGE_SIDED[BlockEdgeSided.SOUTH_UP.ordinal()];
+        
+        LOOKUP[BlockOrientationType.NONE.ordinal()][0] = EDGE_SIDED[BlockEdgeSided.DOWN_SOUTH.ordinal()];
         
         //TODO: populate
         
@@ -133,30 +139,19 @@ public class PolyTransform {
 //        FACE_MAPS[key] = new FaceMap(key);
 //    }
 
-    /**
-     * Find appropriate transformation assuming base model is oriented with as follows:
-     * Axis = Y with positive orientation if orientation applies.<p>
-     * 
-     * For the default rotation, generally, {@code DOWN} is considered the "bottom"
-     * and {@code SOUTH} is the "back" when facing the "front" of the primitive.<p>
-     * 
-     * For primitives oriented to a corner, the default corner is "bottom, right, back"
-     * in the frame just described, or {@code DOWN}, {@code SOUTH}, {@code EAST} in terms
-     * of specific faces.
-     */
     public static PolyTransform get(PrimitiveModelState modelState) {
         return LOOKUP[modelState.orientationType().ordinal()][modelState.orientationIndex()];
     }
 
-    public static PolyTransform edgeSidedTransform(int index) {
-        return EDGE_SIDED[index];
+    public static PolyTransform forEdge(int ordinal) {
+        return EDGE_SIDED[ordinal];
     }
     
-    public static PolyTransform edgeSidedTransform(BlockEdgeSided corner) {
+    public static PolyTransform forEdge(BlockEdgeSided corner) {
         return EDGE_SIDED[corner.ordinal()];
     }
     
-    private static PolyTransform createEdgeSidedTransform(BlockEdgeSided edge) {
+    private static PolyTransformImpl createEdgeSidedTransform(BlockEdgeSided edge) {
         Matrix4f matrix = new Matrix4f().identity();
         
         switch(edge) {
@@ -237,14 +232,14 @@ public class PolyTransform {
             break;
         
         };
-        return new PolyTransform(matrix);
+        return new PolyTransformImpl(matrix);
     }
     
-    public static PolyTransform axisTransform(int ordinal) {
+    public static PolyTransform forAxis(int ordinal) {
         return AXIS[MathHelper.clamp(ordinal, 0, 2)];
     }
     
-    public static PolyTransform axisTransform(Axis axis) {
+    public static PolyTransform forAxis(Axis axis) {
         return AXIS[axis.ordinal()];
     }
     

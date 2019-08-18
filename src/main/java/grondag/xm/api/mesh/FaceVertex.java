@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.mesh.helper;
+package grondag.xm.api.mesh;
 
 /**
  * Used to express quads on a face (2D). By default u,v map directly to x, y on

@@ -51,8 +51,8 @@ package grondag.xm.model.varia;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.CsgPolyStream;
 import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
+import grondag.xm.mesh.stream.WritablePolyStream;
 
 /**
  * Access point for CSG operations.<br>

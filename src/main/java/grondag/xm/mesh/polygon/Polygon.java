@@ -17,13 +17,12 @@
 package grondag.xm.mesh.polygon;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.mesh.helper.QuadHelper;
 import grondag.xm.mesh.vertex.Vec3f;
 import grondag.xm.mesh.vertex.Vertex3f;
 import grondag.xm.mesh.vertex.VertexCollection;
 import grondag.xm.painting.SurfaceTopology;
-import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -237,7 +236,7 @@ public interface Polygon extends VertexCollection, StreamPolygon {
      * Face to use for shading testing. Based on which way face points. Never null
      */
     public default Direction lightFace() {
-        return QuadHelper.computeFaceForNormal(this.faceNormal());
+        return QuadHelper.faceForNormal(this.faceNormal());
     }
 
     Direction nominalFace();
@@ -256,7 +255,7 @@ public interface Polygon extends VertexCollection, StreamPolygon {
             return nominalFace;
 
         for (int i = 0; i < 6; i++) {
-            final Direction f = ModelHelper.faceFromIndex(i);
+            final Direction f = Direction.byId(i);
             if (f != nominalFace && this.isOnFace(f, QuadHelper.EPSILON))
                 return f;
         }
@@ -342,66 +341,6 @@ public interface Polygon extends VertexCollection, StreamPolygon {
 //    default IRenderPipeline getPipeline()
 //    {
 //        return ClientProxy.acuityPipeline(getPipelineIndex());
-//    }
-
-    // TODO: convert to Fabric Renderer API
-//    @Override
-//    public default void produceVertices(IPipelinedVertexConsumer vertexLighter)
-//    {
-//        float[][][] uvData = AcuityHelper.getUVData(this);
-//        int lastGlow = 0;
-//        final int layerCount = layerCount();
-//        
-//        vertexLighter.setEmissive(0, isEmissive(0));
-//        if(layerCount > 1)
-//        {
-//            vertexLighter.setEmissive(1, isEmissive(1));
-//            if(layerCount == 3)
-//                vertexLighter.setEmissive(2, isEmissive(2));
-//        }
-//        
-//        for(int i = 0; i < 4; i++)
-//        {
-//            // passing layer 0 glow as an extra data point (for lava)
-//            int currentGlow = this.getVertexGlow(i);
-//            if(currentGlow != lastGlow)
-//            {
-//                final int g = currentGlow * 17;
-//                
-//                vertexLighter.setBlockLightMap(g, g, g, 255);
-//                lastGlow = currentGlow;
-//            }
-//            
-//            switch(layerCount)
-//            {
-//            case 1:
-//                vertexLighter.acceptVertex(
-//                        getVertexX(i), getVertexY(i), getVertexZ(i), 
-//                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
-//                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1]);
-//                break;
-//                
-//            case 2:
-//                vertexLighter.acceptVertex(
-//                        getVertexX(i), getVertexY(i), getVertexZ(i), 
-//                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
-//                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1],
-//                        getVertexColor(1, i), uvData[1][i][0], uvData[1][i][1]);
-//                break;
-//            
-//            case 3:
-//                vertexLighter.acceptVertex(
-//                        getVertexX(i), getVertexY(i), getVertexZ(i), 
-//                        getVertexNormalX(i), getVertexNormalY(i), getVertexNormalZ(i),
-//                        getVertexColor(0, i), uvData[0][i][0], uvData[0][i][1],
-//                        getVertexColor(1, i), uvData[1][i][0], uvData[1][i][1],
-//                        getVertexColor(2, i), uvData[2][i][0], uvData[2][i][1]);
-//                break;
-//            
-//            default:
-//                throw new ArrayIndexOutOfBoundsException();
-//            }
-//        }
 //    }
 
     /**

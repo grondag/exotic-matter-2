@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vertex3f;
 
-public abstract class AbstractBoxGenerator implements Consumer<Polygon> {
+abstract class AbstractBoxGenerator implements Consumer<Polygon> {
     // diameters
     static final float D1 = 0.5f;
     static final float D2 = D1 * 0.5f;

@@ -28,7 +28,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
 
-//TODO:  make this no-alloc.  XM has an uncommitted start
+//PERF:  make this no-alloc.  
 public class CsgPolyRecombinator {
     private static final ThreadLocal<CsgPolyRecombinator> INSTANCES = new ThreadLocal<CsgPolyRecombinator>() {
         @Override
@@ -63,6 +63,7 @@ public class CsgPolyRecombinator {
      */
     private void handleOutput(CsgPolyStream input, int polyAddress, WritablePolyStream output) {
         Polygon polyA = input.polyA(polyAddress);
+        
         final int vCount = polyA.vertexCount();
         final boolean isFlipped = input.isInverted();
         boolean needsSplit = vCount > 4 || (vCount == 4 && !polyA.isConvex());

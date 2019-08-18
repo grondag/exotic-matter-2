@@ -16,7 +16,7 @@
 
 package grondag.xm.collision;
 
-public interface Functions {
+interface Functions {
 
     @FunctionalInterface
     public static interface AreaBoundsIntFunction {

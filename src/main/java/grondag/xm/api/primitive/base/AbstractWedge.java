@@ -23,9 +23,11 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES
 
 import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
@@ -40,9 +42,9 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 
     protected final ReadOnlyPolyStream[] CACHE = new ReadOnlyPolyStream[KEY_COUNT];
     
-    public AbstractWedge(String idString) {
+    public AbstractWedge(String idString, Function<SimpleModelState, XmSurfaceList> surfaceFunc) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION,
-                SimpleModelStateImpl.FACTORY);
+                SimpleModelStateImpl.FACTORY, surfaceFunc);
     }
     
     // mainly for run-time testing

@@ -14,9 +14,9 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.collision.octree;
+package grondag.xm.collision;
 
-public class VoxelVolumeHelper {
+class VoxelVolumeHelper {
 
     static void setBit(int index, long[] target) {
         target[index >> 6] |= (1L << (index & 63));

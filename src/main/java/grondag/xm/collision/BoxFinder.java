@@ -36,7 +36,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
  * fast bit-wise comparisons.
  * <p>
  */
-public class BoxFinder {
+class BoxFinder {
     private long[] voxels = new long[8];
 
     private long[] combined = new long[BoxFinderUtils.SLICE_COUNT];
@@ -65,7 +65,7 @@ public class BoxFinder {
         System.arraycopy(EMPTY, 0, voxels, 0, 8);
     }
 
-    public boolean isEmpty() {
+    boolean isEmpty() {
         return voxels[0] == 0 && voxels[1] == 0 && voxels[2] == 0 && voxels[3] == 0 && voxels[4] == 0 && voxels[5] == 0 && voxels[6] == 0 && voxels[7] == 0;
     }
 
@@ -73,32 +73,32 @@ public class BoxFinder {
      * Saves voxel data to given array. Array must be >= 8 in length. Load with
      * {@link #restoreFrom(long[])}.
      */
-    public void saveTo(long[] data) {
+    void saveTo(long[] data) {
         System.arraycopy(voxels, 0, data, 0, 8);
     }
 
     /**
      * Loads data from an earlier call to {@link #saveTo(long[])}
      */
-    public void restoreFrom(long[] data) {
+    void restoreFrom(long[] data) {
         System.arraycopy(data, 0, voxels, 0, 8);
     }
 
     /**
      * Coordinates must be 0 - 8
      */
-    public void setFilled(int x, int y, int z) {
+    void setFilled(int x, int y, int z) {
         voxels[z] |= (1L << BoxFinderUtils.areaBitIndex(x, y));
     }
 
     /**
      * Coordinates must be 0 - 8
      */
-    public boolean isFilled(int x, int y, int z) {
+    boolean isFilled(int x, int y, int z) {
         return (voxels[z] & (1L << BoxFinderUtils.areaBitIndex(x, y))) != 0;
     }
 
-    public void setFilled(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    void setFilled(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
@@ -108,11 +108,11 @@ public class BoxFinder {
         }
     }
 
-    public void setEmpty(int x, int y, int z) {
+    void setEmpty(int x, int y, int z) {
         voxels[z] &= ~(1L << BoxFinderUtils.areaBitIndex(x, y));
     }
 
-    public void setEmpty(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+    void setEmpty(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
                 for (int z = minZ; z <= maxZ; z++) {
@@ -225,7 +225,7 @@ public class BoxFinder {
         return (voxelScore << 16) | boxScore;
     }
 
-    public void outputBoxes(CollisionBoxListBuilder builder) {
+    void outputBoxes(CollisionBoxListBuilder builder) {
         while (outputBest(builder)) {
         }
         ;

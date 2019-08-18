@@ -1,14 +1,17 @@
 package grondag.xm.api.block.base;
 
+import static grondag.xm.api.block.XmProperties.HORIZONTAL_FACING;
+import static grondag.xm.api.block.XmProperties.VERTICAL_FACING_XORTHO;
+import static grondag.xm.api.block.XmProperties.VERTICAL_FACING_ZORTHO;
 import static net.minecraft.block.StairsBlock.HALF;
 import static net.minecraft.block.StairsBlock.SHAPE;
 import static net.minecraft.block.StairsBlock.WATERLOGGED;
-import static grondag.xm.api.block.XmProperties.*;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
-import grondag.xm.collision.CollisionDispatcherImpl;
+import grondag.fermion.spatial.DirectionHelper;
+import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelStateMap;
@@ -93,7 +96,7 @@ public abstract class StairLike extends Block implements Waterloggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos pos, EntityContext entityContext) {
-        return CollisionDispatcherImpl.shapeFor(MODELSTATE_FROM_BLOCKSTATE.apply(modelStateFactory.get(), blockState));
+        return CollisionDispatcher.shapeFor(MODELSTATE_FROM_BLOCKSTATE.apply(modelStateFactory.get(), blockState));
     }
 
     @Override
@@ -262,8 +265,7 @@ public abstract class StairLike extends Block implements Waterloggable {
         if (isMatchingStairs(onState) && placedState.get(HALF) == onState.get(HALF)) {
             final Direction onBackFace = onState.get(faceProp);
             if (onBackFace.getAxis() != (placedState.get(faceProp)).getAxis() && computeShapeInner(placedState, world, inPos, onBackFace.getOpposite(), faceProp)) {
-                // opposite + clockwise(axis) because counterClockwise only available for Y axis
-                if (onBackFace == backFace.getOpposite().rotateClockwise(axis)) {
+                if (onBackFace == DirectionHelper.counterClockwise(backFace, axis)) {
                     return StairShape.OUTER_LEFT;
                 }
 
@@ -275,7 +277,7 @@ public abstract class StairLike extends Block implements Waterloggable {
         if (isMatchingStairs(frontState) && placedState.get(HALF) == frontState.get(HALF)) {
             final Direction frontBackFace = frontState.get(faceProp);
             if (frontBackFace.getAxis() != (placedState.get(faceProp)).getAxis() && computeShapeInner(placedState, world, inPos, frontBackFace, faceProp)) {
-                if (frontBackFace == backFace.getOpposite().rotateClockwise(axis)) {
+                if (frontBackFace == DirectionHelper.counterClockwise(backFace, axis)) {
                     return StairShape.INNER_LEFT;
                 }
 
@@ -361,11 +363,11 @@ public abstract class StairLike extends Block implements Waterloggable {
             if(corner) {
                 if(bottom) {
                     if(left) {
-                        face = face.getOpposite().rotateClockwise(axis);
+                        face = DirectionHelper.counterClockwise(face, axis);
                     }
                 } else {
                     if(!left) {
-                        face = face.rotateClockwise(axis);
+                        face = DirectionHelper.clockwise(face, axis);
                     }
                 }
             }

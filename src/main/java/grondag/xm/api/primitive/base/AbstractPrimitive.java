@@ -16,11 +16,14 @@
 
 package grondag.xm.api.primitive.base;
 
+import java.util.function.Function;
+
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -32,17 +35,20 @@ public abstract class AbstractPrimitive<R extends PrimitiveModelState<R, W>, W e
     
     private final Identifier id;
     
+    private final Function<R, XmSurfaceList> surfaceFunc;
+    
     /**
      * bits flags used by ModelState to know which optional state elements are
      * needed by this shape
      */
     private final int stateFlags;
 
-    protected AbstractPrimitive(Identifier id, int stateFlags, ModelStateFactory<R, W> factory) {
+    protected AbstractPrimitive(Identifier id, int stateFlags, ModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
         this.stateFlags = stateFlags;
         this.id = id;
         this.factory = factory;
-
+        this.surfaceFunc = surfaceFunc;
+        
         // we handle registration here because model state currently relies on it for
         // serialization
         if (!ModelPrimitiveRegistry.INSTANCE.register(this)) {
@@ -54,10 +60,15 @@ public abstract class AbstractPrimitive<R extends PrimitiveModelState<R, W>, W e
         this.defaultState = state.releaseToImmutable();
     }
 
-    protected AbstractPrimitive(String idString, int stateFlags, ModelStateFactory<R, W> factory) {
-        this(new Identifier(idString), stateFlags, factory);
+    protected AbstractPrimitive(String idString, int stateFlags, ModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
+        this(new Identifier(idString), stateFlags, factory, surfaceFunc);
     }
 
+    @Override
+    public final XmSurfaceList surfaces(R modelState) {
+        return surfaceFunc.apply(modelState);
+    }
+    
     @Override
     public R defaultState() {
         return defaultState;

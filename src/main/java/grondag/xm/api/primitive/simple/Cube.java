@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
-import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
@@ -36,46 +35,40 @@ import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
 
-public class CubeWithAxis extends AbstractSimplePrimitive {
+public class Cube extends AbstractSimplePrimitive {
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-            .add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .build();
 
-    public static final XmSurface SURFACE_ENDS = SURFACES.get(0);
-    public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
+    public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
     /** never changes so may as well save it */
-    private final PolyStream[] cachedQuads = new PolyStream[3];
+    private PolyStream cachedQuads;
 
-    public static final CubeWithAxis INSTANCE = new CubeWithAxis(Xm.idString("cube_axis"));
+    public static final Cube INSTANCE = new Cube(Xm.idString("cube"));
 
-    protected CubeWithAxis(String idString) {
+    protected Cube(String idString) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, s -> SURFACES);
         invalidateCache();
     }
 
     @Override
     public void invalidateCache() {
-        cachedQuads[Axis.X.ordinal()] = getCubeQuads(Axis.X);
-        cachedQuads[Axis.Y.ordinal()] = getCubeQuads(Axis.Y);
-        cachedQuads[Axis.Z.ordinal()] = getCubeQuads(Axis.Z);
+        cachedQuads = getCubeQuads();
     }
 
     @Override
     public BlockOrientationType orientationType(SimpleModelState modelState) {
-        return BlockOrientationType.AXIS;
+        return BlockOrientationType.NONE;
     }
     
     @Override
     public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
-        cachedQuads[modelState.orientationIndex()].forEach(target);
+        cachedQuads.forEach(target);
     }
 
-    private PolyStream getCubeQuads(Axis orientation) {
-        PolyTransform transform = PolyTransform.forAxis(orientation.ordinal());
+    private PolyStream getCubeQuads() {
 
         WritablePolyStream stream = PolyStreams.claimWritable();
         MutablePolygon writer = stream.writer();
@@ -85,34 +78,28 @@ public class CubeWithAxis extends AbstractSimplePrimitive {
         writer.sprite(0, "");
         stream.saveDefaults();
 
-        writer.surface(SURFACE_ENDS);
+        writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_ENDS);
+        writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_SIDES);
+        writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_SIDES);
+        writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_SIDES);
+        writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
         stream.append();
         
-        writer.surface(SURFACE_SIDES);
+        writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
         stream.append();
 
         PolyStream result = stream.releaseToReader();

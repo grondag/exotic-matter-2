@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.collision.octree;
+package grondag.xm.collision;
 
 import grondag.xm.collision.Functions.Int3Consumer;
 
@@ -23,7 +23,7 @@ import grondag.xm.collision.Functions.Int3Consumer;
  * happen more efficiently that way. (Filling, mostly)
  *
  */
-public class VoxelVolume8 {
+class VoxelVolume8 {
     public static void forEachSimpleVoxel(long[] data, final int minVoxelCount, Int3Consumer consumer) {
         for (int x = 0; x < 8; x += 2) {
             for (int y = 0; y < 8; y += 2) {
@@ -49,7 +49,7 @@ public class VoxelVolume8 {
      * To ensure low garbage, requires array be sized to hold two sets of results.
      * Expects source data in lower half. Output is in upper half.
      */
-    public static void fillVolume(long[] data) {
+    static void fillVolume(long[] data) {
         // during processing, 1 bits in high words represent open voxels
 
         // open voxels in Z end slices are definitely open

@@ -24,11 +24,11 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
+import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStreams;
@@ -51,12 +51,7 @@ public class StackedPlates extends AbstractSimplePrimitive {
     public static final StackedPlates INSTANCE = new StackedPlates(Xm.idString("stacked_plates"));
 
     public StackedPlates(String idString) {
-        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION, SimpleModelStateImpl.FACTORY);
-    }
-
-    @Override
-    public XmSurfaceList surfaces(SimpleModelState modelState) {
-        return SURFACES;
+        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION, SimpleModelStateImpl.FACTORY, s -> SURFACES);
     }
 
     @Override

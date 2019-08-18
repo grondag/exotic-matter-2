@@ -16,6 +16,7 @@
 
 package grondag.xm.api.primitive.surface;
 
+import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceListBuilderImpl;
 
 public interface XmSurfaceList {
@@ -26,4 +27,6 @@ public interface XmSurfaceList {
     int size();
 
     XmSurface get(int index);
+    
+    static XmSurfaceList ALL = builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 }

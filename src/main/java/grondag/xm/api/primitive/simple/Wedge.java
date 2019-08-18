@@ -18,12 +18,11 @@ package grondag.xm.api.primitive.simple;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.mesh.FaceVertex;
+import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.helper.FaceVertex;
-import grondag.xm.mesh.helper.PolyTransform;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.ReadOnlyPolyStream;
@@ -46,21 +45,16 @@ public class Wedge extends AbstractWedge {
     public static final Wedge INSTANCE = new Wedge(Xm.idString("wedge"));
     
     protected Wedge(String idString) {
-        super(idString);
+        super(idString, s -> SURFACES);
     }
     
-    @Override
-    public XmSurfaceList surfaces(SimpleModelState modelState) {
-        return SURFACES;
-    }
-
     @Override
     protected ReadOnlyPolyStream buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside) {
         // Default geometry bottom/back against down/south faces. Corner is on right.
       
         final WritablePolyStream stream = PolyStreams.claimWritable();
         final MutablePolygon quad = stream.writer();
-        final PolyTransform transform = PolyTransform.edgeSidedTransform(edgeIndex);
+        final PolyTransform transform = PolyTransform.forEdge(edgeIndex);
         
         quad.rotation(0, Rotation.ROTATE_NONE);
         quad.lockUV(0, true);
@@ -210,6 +204,6 @@ public class Wedge extends AbstractWedge {
             stream.append();
         }
 
-        return stream.releaseAndConvertToReader();
+        return stream.releaseToReader();
     }
 }

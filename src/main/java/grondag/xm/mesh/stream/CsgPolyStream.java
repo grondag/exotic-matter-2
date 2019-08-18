@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.intstream.IntStreams;
-import grondag.xm.mesh.helper.QuadHelper;
+import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vec3f;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -115,6 +115,12 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
     protected void prepare() {
         super.prepare(0);
         nodeStream = IntStreams.claim();
+        clear();
+    }
+    
+    @Override
+    public void clear() {
+        super.clear();
         nextNodeAddress = 0;
         isComplete = false;
         isInverted = false;
@@ -197,7 +203,7 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
      */
     void appendRaw() {
         appendRawCopy(writer, formatFlags);
-        loadDefaults();
+        //loadDefaults(); <- was causing problems with surface being lost?
     }
 
     /**
@@ -210,8 +216,10 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
         setVertexCount(vertexCount);
         writer.copyFromCSG(template);
         writer.tag(template.tag());
+        
         appendRawCopy(writer, formatFlags);
-        loadDefaults();
+        //loadDefaults(); <- was causing problems with surface being lost?
+        
         return newAddress;
     }
 
@@ -445,13 +453,13 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
          */
         final int limitAddress = targetStream.writerAddress();
 
-        if (targetStream.origin())
-            do
+        if (targetStream.origin()) {
+            do {
                 clipPoly(targetStream, clippingStream, reader.baseAddress);
-            while (targetStream.next() && reader.baseAddress < limitAddress);
-
+            } while (targetStream.next() && reader.baseAddress < limitAddress);
+        }
+        
         reader.moveTo(saveReadAddress);
-
     }
 
     /**
@@ -525,24 +533,25 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
                         // this is a leaf node, so we are in back of all nodes - poly is clipped
                         polyB.setDeleted();
                         return;
-                    } else
+                    } else {
                         // loop at back node
                         nodeAddress = backNodeAddress;
+                    }
                 }
             } else // frontcount > 0
             {
                 if ((combinedCount & BACK_MASK) == 0) // front
                 {
                     final int frontNodeAddress = clippingStream.getFrontNode(nodeAddress);
-                    if (frontNodeAddress == NO_NODE_ADDRESS)
+                    if (frontNodeAddress == NO_NODE_ADDRESS) {
                         // this is a leaf node, so we are in front of all tree nodes so we are done - no
                         // clip
                         return;
-                    else
+                    } else {
                         // loop at front node
                         nodeAddress = frontNodeAddress;
-                } else // spanning
-                {
+                    }
+                } else { // spanning
                     // split, push to stack if needed, and exit
                     final int frontAddress = targetStream.appendEmptySplit(polyB, (combinedCount & FRONT_MASK) + 2);
                     int iFront = 0;
@@ -565,8 +574,9 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
                         case 1: // I COPLANAR - J FRONT
                         case 2: // I COPLANAR - J BACK
                             targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                            if (backAddress != Polygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG) {
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                            }
                             break;
 
                         case 3: // I FRONT - J COPLANAR
@@ -576,14 +586,15 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
 
                         case 6: // I BACK- J COPLANAR
                         case 8: // I BACK - J BACK
-                            if (backAddress != Polygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG) {
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                            }
                             break;
 
                         case 5: {
                             // I FRONT - J BACK
                             targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-
+                            
                             // Line for interpolated vertex depends on what the next vertex is for this side
                             // (front/back).
                             // If the next vertex will be included in this side, we are starting the line
@@ -605,8 +616,9 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
                             float t = (dist - iDot) / tDot;
 
                             targetStream.editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
-                            if (backAddress != Polygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG) {
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, targetStream.polyA(frontAddress), iFront);
+                            }
                             iFront++;
 
                             break;
@@ -614,9 +626,9 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
 
                         case 7: {
                             // I BACK - J FRONT
-                            if (backAddress != Polygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG) {
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, polyB, i);
-
+                            }
                             // see notes for 5
                             final float ix = polyB.x(i);
                             final float iy = polyB.y(i);
@@ -631,8 +643,9 @@ public class CsgPolyStream extends MutablePolyStreamImpl {
                             float t = (dist - iDot) / tDot;
 
                             targetStream.editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
-                            if (backAddress != Polygon.NO_LINK_OR_TAG)
+                            if (backAddress != Polygon.NO_LINK_OR_TAG) {
                                 targetStream.editor(backAddress).copyVertexFrom(iBack++, targetStream.polyA(frontAddress), iFront);
+                            }
                             iFront++;
                             break;
                         }

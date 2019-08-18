@@ -16,75 +16,17 @@
 
 package grondag.xm.mesh.polygon;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.mesh.FaceVertex;
+import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.mesh.helper.FaceVertex;
-import grondag.xm.mesh.helper.QuadHelper;
-import grondag.xm.mesh.polygon.MutablePolygon.Helper.UVLocker;
-import grondag.xm.mesh.vertex.MutableVertex;
-import grondag.xm.mesh.vertex.Vertex3f;
-import grondag.xm.mesh.vertex.UnpackedVertex3;
 import grondag.xm.mesh.vertex.Vec3f;
+import grondag.xm.mesh.vertex.Vertex3f;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 public interface MutablePolygon extends Polygon {
-    class Helper {
-        @FunctionalInterface
-        interface UVLocker {
-            void apply(int vertexIndex, int layerIndex, MutablePolygon poly);
-        }
-
-        private static final UVLocker[] UVLOCKERS = new UVLocker[6];
-
-        static {
-            UVLOCKERS[Direction.EAST.ordinal()] = (v, l, p) -> p.sprite(v, l, 1 - p.z(v), 1 - p.y(v));
-
-            UVLOCKERS[Direction.WEST.ordinal()] = (v, l, p) -> p.sprite(v, l, p.z(v), 1 - p.y(v));
-
-            UVLOCKERS[Direction.NORTH.ordinal()] = (v, l, p) -> p.sprite(v, l, 1 - p.x(v), 1 - p.y(v));
-
-            UVLOCKERS[Direction.SOUTH.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v), 1 - p.y(v));
-
-            UVLOCKERS[Direction.DOWN.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v), 1 - p.z(v));
-
-            // our default semantic for UP is different than MC
-            // "top" is north instead of south
-            UVLOCKERS[Direction.UP.ordinal()] = (v, l, p) -> p.sprite(v, l, p.x(v), p.z(v));
-        }
-
-        static class ListAdapter implements Consumer<MutablePolygon> {
-            List<MutablePolygon> wrapped;
-
-            ListAdapter prepare(List<MutablePolygon> list) {
-                wrapped = list;
-                return this;
-            }
-
-            @Override
-            public void accept(MutablePolygon t) {
-                wrapped.add(t);
-            }
-        }
-
-        private static ThreadLocal<Helper> helper = new ThreadLocal<Helper>() {
-            @Override
-            protected Helper initialValue() {
-                return new Helper();
-            }
-        };
-
-        static Helper get() {
-            return helper.get();
-        }
-
-        final ListAdapter listAdapter = new ListAdapter();
-        final MutableVertex swapVertex = new UnpackedVertex3();
-    }
 
     MutablePolygon spriteVertex(int layerIndex, int vertexIndex, float u, float v, int color, int glow);
 
@@ -319,7 +261,6 @@ public interface MutablePolygon extends Polygon {
             break;
         }
 
-        //TODO: put back
         if(cullFace() == null) {
             cullFace(computeCullFace());
         }
@@ -357,12 +298,6 @@ public interface MutablePolygon extends Polygon {
         return setupFaceQuad(x0, y0, x1, y1, depth, topFace);
     }
 
-    // PERF use float version
-    @Deprecated
-    public default MutablePolygon setupFaceQuad(Direction face, double x0, double y0, double x1, double y1, double depth, Direction topFace) {
-        return this.setupFaceQuad(face, (float) x0, (float) y0, (float) x1, (float) y1, (float) depth, topFace);
-    }
-
     /**
      * Triangular version of
      * {@link #setupFaceQuad(Direction, FaceVertex, FaceVertex, FaceVertex, Direction)}
@@ -388,42 +323,9 @@ public interface MutablePolygon extends Polygon {
     
     /**
      * Reverses winding order, clears face normal and flips vertex normals if
-     * present. Used by CSG. TODO: Do this with streams
+     * present. Used by CSG.
      */
-    default MutablePolygon flip() {
-
-//        final Helper help = Helper.get();
-//        final IMutableVertex swapVertex = help.swapVertex;
-//      //  final VertexAdapter.Mutable adapter = help.mutableAdapter;
-//        
-//        final int vCount = this.vertexCount();
-//        final int midPoint = (vCount + 1) / 2;
-//        for(int low = 0; low < midPoint; low++)
-//        {
-//            final int high = vCount - low - 1;
-//
-//            // flip low vertex normal, or mid-point on odd-numbered polys
-//            if(hasVertexNormal(low))
-//                setVertexNormal(low, -getVertexNormalX(low), -getVertexNormalY(low), -getVertexNormalZ(low));
-//            
-//            if(low != high)
-//            {
-//                // flip high vertex normal, or mid-point on odd-numbered polys
-//                if(hasVertexNormal(high))
-//                    setVertexNormal(high, -getVertexNormalX(high), -getVertexNormalY(high), -getVertexNormalZ(high));
-//                
-//                // swap low with high
-//                adapter.prepare(this, low);
-//                swapVertex.copyFrom(adapter);
-//                copyVertexFrom(low, this, high);
-//                copyVertexFrom(high, swapVertex);
-//            }
-//        }
-//        
-//        clearFaceNormal();
-
-        return this;
-    }
+    MutablePolygon flip();
 
     MutablePolygon surface(XmSurface surface);
 
@@ -449,35 +351,14 @@ public interface MutablePolygon extends Polygon {
      * Copies all attributes that are available in the source poly. DOES NOT retain
      * a reference to the input poly.
      */
-    public MutablePolygon copyVertexFrom(int targetIndex, Polygon source, int sourceIndex);
+    MutablePolygon copyVertexFrom(int targetIndex, Polygon source, int sourceIndex);
 
     /**
      * Interpolates all attributes that are available in the source poly. Weight = 0
      * gives source 0, weight = 1 gives source 1, with values in between giving
      * blended results. DOES NOT retain a reference to either input poly.
      */
-    public default MutablePolygon copyInterpolatedVertexFrom(int targetIndex, Polygon from, int fromIndex, Polygon to, int toIndex, float toWeight) {
-        // TODO: convert to streams or remove
-
-//        Helper help = Helper.get();
-//        
-//        help.fromAdapter.prepare(from, fromIndex).interpolate(
-//                help.toAdapter.prepare(to, toIndex), 
-//                toWeight, 
-//                help.mutableAdapter.prepare(this, targetIndex));
-
-        return this;
-    }
-
-    /**
-     * Sets all attributes that are available in the source vertex. DOES NOT retain
-     * a reference to the input vertex.
-     */
-    public default MutablePolygon copyVertexFrom(int vertexIndex, MutableVertex source) {
-        // TODO: convert to streams or remove
-//        Helper.get().mutableAdapter.prepare(this, vertexIndex).copyFrom(source);
-        return this;
-    }
+    MutablePolygon copyInterpolatedVertexFrom(int targetIndex, Polygon from, int fromIndex, Polygon to, int toIndex, float toWeight);
 
     public default MutablePolygon scaleFromBlockCenter(float scale) {
         float c = 0.5f * (1 - scale);
@@ -493,15 +374,7 @@ public interface MutablePolygon extends Polygon {
      * if lockUV is on, derive UV coords by projection of vertex coordinates on the
      * plane of the quad's face
      */
-    public default MutablePolygon assignLockedUVCoordinates(int layerIndex) {
-        UVLocker locker = Helper.UVLOCKERS[nominalFace().ordinal()];
-
-        final int vertexCount = vertexCount();
-        for (int i = 0; i < vertexCount; i++)
-            locker.apply(i, layerIndex, this);
-
-        return this;
-    }
+    MutablePolygon assignLockedUVCoordinates(int layerIndex);
 
     /**
      * Will copy all poly and poly layer attributes. Layer counts must match. Will

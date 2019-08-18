@@ -99,7 +99,7 @@ public interface WritablePolyStream extends PolyStream {
     /**
      * Version of {@link #releaseAndConvertToReader(int)} that strips all metadata.
      */
-    default ReadOnlyPolyStream releaseAndConvertToReader() {
+    default ReadOnlyPolyStream releaseToReader() {
         return releaseAndConvertToReader(0);
     }
 

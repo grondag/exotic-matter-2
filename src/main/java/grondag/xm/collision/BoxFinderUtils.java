@@ -28,7 +28,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 /**
  * Static utility methods for BoxFinder
  */
-public class BoxFinderUtils {
+class BoxFinderUtils {
     static final long[] AREAS;
     static final int[] VOLUME_KEYS;
     static final int VOLUME_COUNT;
@@ -47,7 +47,7 @@ public class BoxFinderUtils {
     /**
      * Max is inclusive and equal to max attribute of slice.
      */
-    public static Slice sliceByMinMax(int minZ, int maxZ) {
+    static Slice sliceByMinMax(int minZ, int maxZ) {
         return lookupMinMax[minZ][maxZ];
     }
 
@@ -64,18 +64,18 @@ public class BoxFinderUtils {
         D2_4(2, 4), D2_5(2, 5), D2_6(2, 6), D3_0(3, 0), D3_1(3, 1), D3_2(3, 2), D3_3(3, 3), D3_4(3, 4), D3_5(3, 5), D4_0(4, 0), D4_1(4, 1), D4_2(4, 2),
         D4_3(4, 3), D4_4(4, 4), D5_0(5, 0), D5_1(5, 1), D5_2(5, 2), D5_3(5, 3), D6_0(6, 0), D6_1(6, 1), D6_2(6, 2), D7_0(7, 0), D7_1(7, 1), D8_0(8, 0);
 
-        public final int depth;
-        public final int min;
+        final int depth;
+        final int min;
 
         /**
          * INCLUSIVE
          */
-        public final int max;
+        final int max;
 
         /**
          * Bits are set if Z layer is included. Used for fast intersection testing.
          */
-        public final int layerBits;
+        final int layerBits;
 
         private Slice(int depth, int min) {
             this.depth = depth;
@@ -92,7 +92,7 @@ public class BoxFinderUtils {
     }
 
     private static final Slice[] SLICES = Slice.values();
-    public static final int SLICE_COUNT = SLICES.length;
+    static final int SLICE_COUNT = SLICES.length;
 
     static {
         for (Slice slice : SLICES) {

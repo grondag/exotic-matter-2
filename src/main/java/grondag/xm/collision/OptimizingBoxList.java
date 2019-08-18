@@ -25,7 +25,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
-public class OptimizingBoxList implements Runnable {
+class OptimizingBoxList implements Runnable {
     // singleton is fine because called from a single thread
     private static final OptimalBoxGenerator boxGen = new OptimalBoxGenerator();
 

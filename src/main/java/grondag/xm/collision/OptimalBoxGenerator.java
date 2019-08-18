@@ -16,21 +16,18 @@
 
 package grondag.xm.collision;
 
-import static grondag.xm.collision.octree.OctreeCoordinates.ALL_EMPTY;
+import static grondag.xm.collision.OctreeCoordinates.ALL_EMPTY;
 
 import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 
 import grondag.xm.XmConfig;
-import grondag.xm.collision.octree.OctreeCoordinates;
-import grondag.xm.collision.octree.VoxelVolume16;
-import grondag.xm.mesh.helper.TriangleBoxTest;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.vertex.Vertex3f;
 import net.minecraft.util.math.Box;
 
-public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
+class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
     private static void div1(final float[] polyData, final long[] voxelBits) {
         if (TriangleBoxTest.triBoxOverlap(CLOW1, CLOW1, CLOW1, R1, polyData))
             div2(00000, 0.0f, 0.0f, 0.0f, polyData, voxelBits);
@@ -170,7 +167,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
         voxelBits[xyz >> 6] |= (1L << (xyz & 63));
     }
 
-    public static final double VOXEL_VOLUME = 1.0 / 8 / 8 / 8;
+    static final double VOXEL_VOLUME = 1.0 / 8 / 8 / 8;
 
     private final long[] voxelBits = new long[128];
     private final float[] polyData = new float[36];
@@ -196,7 +193,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
      * 
      * Returns -1 if mesh isn't appropriate for optimization.
      */
-    public final double prepare() {
+    final double prepare() {
         final long[] data = this.voxelBits;
         VoxelVolume16.fillVolume(data);
         bf.clear();
@@ -236,7 +233,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
 //     * Call after prepare but before build.
 //     * Only for use in dev environment.
 //     */
-//    public final void generateCalibrationOutput()
+//    final void generateCalibrationOutput()
 //    {
 //        final long[] data = this.voxelBits;
 //        final long[] savedData = new long[128];
@@ -305,7 +302,7 @@ public class OptimalBoxGenerator extends AbstractBoxGenerator implements Consume
 //        builder.clear();
 //    }
 
-    public final ImmutableList<Box> build() {
+    final ImmutableList<Box> build() {
         builder.clear();
         bf.outputBoxes(builder);
         return builder.build();

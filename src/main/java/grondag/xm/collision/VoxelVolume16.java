@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.collision.octree;
+package grondag.xm.collision;
 
 import grondag.xm.collision.Functions.Int3Consumer;
 
@@ -22,7 +22,7 @@ import grondag.xm.collision.Functions.Int3Consumer;
  * Operations on Cartesian representation of 16x16x16 voxels in unit cube that
  * can happen more efficiently that way. (Filling, mostly)
  */
-public class VoxelVolume16 {
+class VoxelVolume16 {
     public static void forEachSimpleVoxel(long[] data, final int minVoxelCount, Int3Consumer consumer) {
         for (int x = 0; x < 16; x += 2) {
             for (int y = 0; y < 16; y += 2) {

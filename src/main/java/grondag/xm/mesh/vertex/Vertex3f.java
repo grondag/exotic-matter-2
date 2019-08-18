@@ -17,7 +17,7 @@
 package grondag.xm.mesh.vertex;
 
 import grondag.fermion.varia.Useful;
-import grondag.xm.mesh.helper.QuadHelper;
+import grondag.xm.api.mesh.QuadHelper;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 

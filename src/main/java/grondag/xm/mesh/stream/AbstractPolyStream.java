@@ -57,8 +57,9 @@ public abstract class AbstractPolyStream implements PolyStream {
     }
 
     protected final void validateAddress(int address) {
-        if (!isValidAddress(address))
+        if (!isValidAddress(address)) {
             throw new IndexOutOfBoundsException();
+        }
     }
 
     @Override
@@ -78,27 +79,29 @@ public abstract class AbstractPolyStream implements PolyStream {
             return false;
         } else {
             reader.moveTo(originAddress);
-            if (reader.isDeleted())
+            if (reader.isDeleted()) {
                 next();
+            }
             return hasValue();
         }
     }
 
     protected boolean moveReaderToNext(StreamBackedPolygon targetReader) {
         int currentAddress = targetReader.baseAddress;
-        if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS)
+        if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS) {
             return false;
+        }
 
-        int nextAddress = currentAddress + targetReader.stride();
-        if (nextAddress >= writeAddress)
+        currentAddress += targetReader.stride();
+        if (currentAddress >= writeAddress) {
             return false;
-
-        targetReader.moveTo(nextAddress);
-
+        }
+        
+        targetReader.moveTo(currentAddress);
+        
         while (targetReader.isDeleted() && currentAddress < writeAddress) {
-            nextAddress = currentAddress + targetReader.stride();
-            targetReader.moveTo(nextAddress);
-            currentAddress = nextAddress;
+            currentAddress += targetReader.stride();
+            targetReader.moveTo(currentAddress);
         }
 
         return currentAddress < writeAddress;
@@ -346,6 +349,7 @@ public abstract class AbstractPolyStream implements PolyStream {
         stream.set(writeAddress, newFormat);
         internal.moveTo(writeAddress);
         internal.copyFrom(polyIn, true);
+        
         writeAddress += PolyStreamFormat.polyStride(newFormat, true);
 
         if (needReaderLoad) {
