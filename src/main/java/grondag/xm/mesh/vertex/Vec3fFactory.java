@@ -1,6 +1,6 @@
 package grondag.xm.mesh.vertex;
 
-import grondag.xm.api.mesh.Vec3f;
+import grondag.xm.api.mesh.polygon.Vec3f;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 

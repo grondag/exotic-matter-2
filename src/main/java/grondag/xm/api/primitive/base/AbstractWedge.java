@@ -25,12 +25,12 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import grondag.xm.api.mesh.ReadOnlyMesh;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.ExactEdge;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 
 public abstract class AbstractWedge extends AbstractSimplePrimitive {
@@ -40,7 +40,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         return edgeIndex * 3 + (isCorner ? (isInside ? 1 : 2) : 0);
     }
 
-    protected final ReadOnlyPolyStream[] CACHE = new ReadOnlyPolyStream[KEY_COUNT];
+    protected final ReadOnlyMesh[] CACHE = new ReadOnlyMesh[KEY_COUNT];
     
     public AbstractWedge(String idString, Function<SimpleModelState, XmSurfaceList> surfaceFunc) {
         super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION,
@@ -60,7 +60,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         final boolean isInside = isInsideCorner(modelState);
         final int key = computeKey(edgeIndex, isCorner, isInside);
         
-        ReadOnlyPolyStream stream = CACHE[key];
+        ReadOnlyMesh stream = CACHE[key];
         if(stream == null) {
             stream = buildPolyStream(edgeIndex, isCorner, isInside);
             CACHE[key] = stream;
@@ -75,7 +75,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         }
     }
 
-    protected abstract ReadOnlyPolyStream buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside);
+    protected abstract ReadOnlyMesh buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside);
     
     @Override
     public OrientationType orientationType(SimpleModelState modelState) {

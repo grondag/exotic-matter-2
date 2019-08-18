@@ -22,18 +22,18 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
-import grondag.xm.api.mesh.PolyTransform;
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.PolyTransform;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.ExactEdge;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
@@ -63,7 +63,7 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
     public static final XmSurface SURFACE_RIGHT = SURFACES.get(5);
 
     /** never changes so may as well save it */
-    private final PolyStream[] cachedQuads = new PolyStream[ExactEdge.COUNT];
+    private final XmMesh[] cachedQuads = new XmMesh[ExactEdge.COUNT];
 
     public static final CubeWithAxisAndFace INSTANCE = new CubeWithAxisAndFace(Xm.idString("cube_axis_face"));
 
@@ -88,10 +88,10 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
         cachedQuads[modelState.orientationIndex()].forEach(target);
     }
 
-    private PolyStream getCubeQuads(ExactEdge orientation) {
+    private XmMesh getCubeQuads(ExactEdge orientation) {
         PolyTransform transform = PolyTransform.forEdge(orientation.ordinal());
 
-        WritablePolyStream stream = PolyStreams.claimWritable();
+        WritableMesh stream = XmMeshes.claimWritable();
         MutablePolygon writer = stream.writer();
         writer.colorAll(0, 0xFFFFFFFF);
         writer.lockUV(0, true);
@@ -129,7 +129,7 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
         transform.apply(writer);
         stream.append();
 
-        PolyStream result = stream.releaseToReader();
+        XmMesh result = stream.releaseToReader();
 
         result.origin();
         assert result.reader().vertexCount() == 4;

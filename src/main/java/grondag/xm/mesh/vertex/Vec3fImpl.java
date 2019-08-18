@@ -16,7 +16,7 @@
 
 package grondag.xm.mesh.vertex;
 
-import grondag.xm.api.mesh.Vec3f;
+import grondag.xm.api.mesh.polygon.Vec3f;
 import it.unimi.dsi.fastutil.HashCommon;
 
 class Vec3fImpl implements Vec3f {

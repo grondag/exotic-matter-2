@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
-import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.api.mesh.polygon.Polygon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;

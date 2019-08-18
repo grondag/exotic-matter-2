@@ -5,7 +5,9 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import grondag.xm.api.mesh.PolyTransform;
+import grondag.xm.api.mesh.XmMesh;
+import grondag.xm.api.mesh.polygon.PolyTransform;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState.Mutable;
 import grondag.xm.api.orientation.OrientationType;
@@ -13,15 +15,13 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.SimplePrimitive.Builder;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 
 public class SimplePrimitiveBuilderImpl {
     protected static class BuilderImpl implements Builder {
         private OrientationType orientationType = OrientationType.NONE;
         private XmSurfaceList list = XmSurfaceList.ALL;
-        private Function<PolyTransform, PolyStream> polyFactory;
+        private Function<PolyTransform, XmMesh> polyFactory;
         
         @Override
         public SimplePrimitive build(String idString) {
@@ -41,17 +41,17 @@ public class SimplePrimitiveBuilderImpl {
         }
         
         @Override
-        public Builder polyFactory(Function<PolyTransform, PolyStream> polyFactory) {
-            this.polyFactory = polyFactory == null ? t -> PolyStream.EMPTY : polyFactory;
+        public Builder polyFactory(Function<PolyTransform, XmMesh> polyFactory) {
+            this.polyFactory = polyFactory == null ? t -> XmMesh.EMPTY : polyFactory;
             return this;
         }
     }
     protected static class Primitive extends AbstractSimplePrimitive {
-        private final PolyStream[] cachedQuads;
+        private final XmMesh[] cachedQuads;
         
         private final OrientationType orientationType;
         
-        private final Function<PolyTransform, PolyStream> polyFactory;
+        private final Function<PolyTransform, XmMesh> polyFactory;
         
         static Function<SimpleModelState, XmSurfaceList> listWrapper(XmSurfaceList list) {
             return s -> list;
@@ -61,7 +61,7 @@ public class SimplePrimitiveBuilderImpl {
             super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
             orientationType = builder.orientationType;
             polyFactory = builder.polyFactory;
-            cachedQuads = new PolyStream[orientationType.enumClass.getEnumConstants().length];
+            cachedQuads = new XmMesh[orientationType.enumClass.getEnumConstants().length];
             invalidateCache();
         }
         

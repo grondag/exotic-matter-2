@@ -19,13 +19,13 @@ package grondag.xm.painting;
 import java.util.function.Consumer;
 
 import grondag.frex.Frex;
+import grondag.xm.api.mesh.MutableMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.MutablePolyStream;
-import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.painting.QuadPainter.PaintMethod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -53,7 +53,7 @@ public class QuadPaintHandler implements Consumer<Polygon> {
     }
 
     private final MeshBuilder builder = RENDERER.meshBuilder();
-    private final MutablePolyStream work = PolyStreams.claimMutable(0);
+    private final MutableMesh work = XmMeshes.claimMutable();
     private final QuadEmitter emitter = builder.getEmitter();
     private PrimitiveModelState modelState;
     private MaterialFinder finder = RENDERER.materialFinder();
@@ -68,7 +68,7 @@ public class QuadPaintHandler implements Consumer<Polygon> {
     public void accept(Polygon poly) {
         final PrimitiveModelState modelState = this.modelState;
         final QuadEmitter emitter = this.emitter;
-        final MutablePolyStream stream = this.work;
+        final MutableMesh stream = this.work;
         MutablePolygon editor = stream.editor();
 
         XmSurface surface = poly.surface();

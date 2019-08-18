@@ -34,12 +34,12 @@ import static grondag.xm.api.texture.TextureNameFunction.BORDER_SIDE_TOP;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.connect.state.CornerJoinState;
+import grondag.xm.api.mesh.MutableMesh;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.stream.MutablePolyStream;
 import grondag.xm.placement.FaceQuadInputs;
 import net.minecraft.util.math.Direction;
 
@@ -167,7 +167,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(MutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    public static void paintQuads(MutableMesh stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         MutablePolygon editor = stream.editor();
         do {
 

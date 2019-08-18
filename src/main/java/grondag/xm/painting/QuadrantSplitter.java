@@ -16,11 +16,11 @@
 
 package grondag.xm.painting;
 
-import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.mesh.MutableMesh;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.orientation.FaceCorner;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.MutablePolyStream;
 
 /**
  * Helper class to splits UV-locked quads into four quadrants at the u,v = 0.5,
@@ -95,7 +95,7 @@ public class QuadrantSplitter {
      * 
      * May also move reader, and does not restore reader position if it does so.
      */
-    public static final void split(MutablePolyStream stream, int layerIndex) {
+    public static final void split(MutableMesh stream, int layerIndex) {
         final int editorAddress = stream.editorAddress();
         final Polygon reader = stream.reader(editorAddress);
 
@@ -179,7 +179,7 @@ public class QuadrantSplitter {
         }
     }
 
-    private static final void splitV(MutablePolyStream stream, int polyAddress, boolean isHighU, int layerIndex) {
+    private static final void splitV(MutableMesh stream, int polyAddress, boolean isHighU, int layerIndex) {
         final Polygon reader = stream.reader(polyAddress);
 
         int lowCount = 0;
@@ -260,8 +260,8 @@ public class QuadrantSplitter {
     private static final int LOW = 2;
 
     private final static int vertexType(float uvCoord) {
-        if (uvCoord >= 0.5f - QuadHelper.EPSILON) {
-            if (uvCoord <= 0.5f + QuadHelper.EPSILON)
+        if (uvCoord >= 0.5f - PolyHelper.EPSILON) {
+            if (uvCoord <= 0.5f + PolyHelper.EPSILON)
                 return EDGE;
             else
                 return HIGH;

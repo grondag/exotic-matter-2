@@ -18,11 +18,11 @@ package grondag.xm.api.primitive;
 
 import java.util.function.Function;
 
-import grondag.xm.api.mesh.PolyTransform;
+import grondag.xm.api.mesh.XmMesh;
+import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.primitive.SimplePrimitiveBuilderImpl;
 
 public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, SimpleModelState.Mutable>{
@@ -38,7 +38,7 @@ public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, Simple
 
         Builder orientationType(OrientationType orientationType);
 
-        Builder polyFactory(Function<PolyTransform, PolyStream> polyFactory);
+        Builder polyFactory(Function<PolyTransform, XmMesh> polyFactory);
 
     }
 }

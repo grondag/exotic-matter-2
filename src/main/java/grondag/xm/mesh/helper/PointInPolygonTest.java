@@ -18,8 +18,8 @@ package grondag.xm.mesh.helper;
 
 import org.joml.Vector2f;
 
-import grondag.xm.api.mesh.Vec3f;
-import grondag.xm.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.Vec3f;
 
 /**
  * Adapted from code that bears the notice reproduced below and which can be

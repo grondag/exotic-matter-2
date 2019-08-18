@@ -24,16 +24,16 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
-import grondag.xm.api.mesh.PolyTransform;
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.PolyTransform;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
@@ -64,7 +64,7 @@ public class StackedPlates extends AbstractSimplePrimitive {
         // PERF: if have a consumer and doing this dynamically - should consumer simply
         // be a stream?
         // Why create a stream just to pipe it to the consumer? Or cache the result.
-        final WritablePolyStream stream = PolyStreams.claimWritable();
+        final WritableMesh stream = XmMeshes.claimWritable();
         final MutablePolygon writer = stream.writer();
 
         writer.rotation(0, Rotation.ROTATE_NONE);

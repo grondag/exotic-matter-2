@@ -18,7 +18,7 @@ package grondag.xm.terrain;
 
 import grondag.fermion.bits.BitPacker64;
 import grondag.fermion.position.PackedBlockPos;
-import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
 import it.unimi.dsi.fastutil.HashCommon;
@@ -389,7 +389,7 @@ public class TerrainState {
      */
     public boolean isFullCube() {
         refreshVertexCalculationsIfNeeded();
-        double top = 1.0 + yOffset + QuadHelper.EPSILON;
+        double top = 1.0 + yOffset + PolyHelper.EPSILON;
 
         // center vertex does not matter if top is simplified to a single quad
         if (!isTopSimple()) {
@@ -532,7 +532,7 @@ public class TerrainState {
                 float avg = midCornerHeight[HorizontalEdge.find(side, side.left()).ordinal()];
                 avg += midCornerHeight[HorizontalEdge.find(side, side.right()).ordinal()];
                 avg /= 2;
-                boolean sideIsSimple = Math.abs(avg - midSideHeight[side.ordinal()]) < QuadHelper.EPSILON;
+                boolean sideIsSimple = Math.abs(avg - midSideHeight[side.ordinal()]) < PolyHelper.EPSILON;
                 if (sideIsSimple) {
                     this.simpleFlags |= SIMPLE_FLAG[side.ordinal()];
                     simpleSideCount++;

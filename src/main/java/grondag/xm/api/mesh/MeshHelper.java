@@ -16,9 +16,8 @@
 
 package grondag.xm.api.mesh;
 
+import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -123,7 +122,7 @@ public class MeshHelper {
      * 
      * PERF: use primitives instead of Vec3d
      */
-    public static void makeIcosahedron(Vec3d center, double radius, WritablePolyStream stream, boolean smoothNormals) {
+    public static void makeIcosahedron(Vec3d center, double radius, WritableMesh stream, boolean smoothNormals) {
         /** vertex scale */
         final double s = radius / (2 * Math.sin(2 * Math.PI / 5));
 
@@ -224,7 +223,7 @@ public class MeshHelper {
 
     }
 
-    private static void makeIcosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3d[] points, Vec3d[] normals, WritablePolyStream stream) {
+    private static void makeIcosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3d[] points, Vec3d[] normals, WritableMesh stream) {
         MutablePolygon writer = stream.writer();
         if (normals == null) {
             if (topHalf) {
@@ -255,7 +254,7 @@ public class MeshHelper {
     /**
      * Adds box to stream using current stream defaults.
      */
-    public static void makePaintableBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, WritablePolyStream stream) {
+    public static void makePaintableBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, WritableMesh stream) {
         MutablePolygon quad = stream.writer();
         stream.setVertexCount(4);
         quad.setupFaceQuad(Direction.UP, 1 - maxX, minZ, 1 - minX, maxZ, 1 - maxY, Direction.SOUTH);

@@ -18,11 +18,11 @@ package grondag.xm.api.primitive;
 
 import java.util.function.Consumer;
 
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.Polygon;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;

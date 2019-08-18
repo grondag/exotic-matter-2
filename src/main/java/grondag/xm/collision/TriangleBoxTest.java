@@ -16,7 +16,7 @@
 
 package grondag.xm.collision;
 
-import grondag.xm.api.mesh.Vec3f;
+import grondag.xm.api.mesh.polygon.Vec3f;
 
 /**
  * Ported to Java from Tomas Akenine-Möller

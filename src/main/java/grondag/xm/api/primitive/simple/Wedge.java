@@ -18,15 +18,15 @@ package grondag.xm.api.primitive.simple;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
-import grondag.xm.api.mesh.FaceVertex;
-import grondag.xm.api.mesh.PolyTransform;
+import grondag.xm.api.mesh.ReadOnlyMesh;
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.FaceVertex;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.mesh.stream.ReadOnlyPolyStream;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
 
@@ -49,10 +49,10 @@ public class Wedge extends AbstractWedge {
     }
     
     @Override
-    protected ReadOnlyPolyStream buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside) {
+    protected ReadOnlyMesh buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside) {
         // Default geometry bottom/back against down/south faces. Corner is on right.
       
-        final WritablePolyStream stream = PolyStreams.claimWritable();
+        final WritableMesh stream = XmMeshes.claimWritable();
         final MutablePolygon quad = stream.writer();
         final PolyTransform transform = PolyTransform.forEdge(edgeIndex);
         

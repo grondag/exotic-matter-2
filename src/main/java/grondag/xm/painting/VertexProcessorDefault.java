@@ -17,10 +17,10 @@
 package grondag.xm.painting;
 
 import grondag.fermion.color.ColorHelper;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.mesh.polygon.MutablePolygon;
 
 public class VertexProcessorDefault extends VertexProcessor {
     public final static VertexProcessor INSTANCE = new VertexProcessorDefault();

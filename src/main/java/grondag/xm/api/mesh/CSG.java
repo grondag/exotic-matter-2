@@ -48,11 +48,7 @@ package grondag.xm.api.mesh;
  * <info@michaelhoffer.de>.
  */
 
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.CsgPolyStream;
-import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.mesh.stream.WritablePolyStream;
+import grondag.xm.api.mesh.polygon.Polygon;
 
 /**
  * Access point for CSG operations.<br>
@@ -80,9 +76,9 @@ public abstract class CSG {
      * 
      * </blockquote>
      */
-    public static void difference(PolyStream a, PolyStream b, WritablePolyStream output) {
-        CsgPolyStream aCSG = PolyStreams.claimCSG(a);
-        CsgPolyStream bCSG = PolyStreams.claimCSG(b);
+    public static void difference(XmMesh a, XmMesh b, WritableMesh output) {
+        CsgMesh aCSG = XmMeshes.claimCsg(a);
+        CsgMesh bCSG = XmMeshes.claimCsg(b);
 
         difference(aCSG, bCSG, output);
 
@@ -91,11 +87,11 @@ public abstract class CSG {
     }
 
     /**
-     * Version of {@link #difference(PolyStream, PolyStream, WritablePolyStream)}
+     * Version of {@link #difference(XmMesh, XmMesh, WritableMesh)}
      * to use when you've already built CSG streams. Marks the streams complete but
      * does not release them. Both input streams are modified.
      */
-    public static void difference(CsgPolyStream a, CsgPolyStream b, WritablePolyStream output) {
+    public static void difference(CsgMesh a, CsgMesh b, WritableMesh output) {
         a.complete();
         b.complete();
 
@@ -136,9 +132,9 @@ public abstract class CSG {
      * 
      * </blockquote>
      */
-    public static void intersect(PolyStream a, PolyStream b, WritablePolyStream output) {
-        CsgPolyStream aCSG = PolyStreams.claimCSG(a);
-        CsgPolyStream bCSG = PolyStreams.claimCSG(b);
+    public static void intersect(XmMesh a, XmMesh b, WritableMesh output) {
+        CsgMesh aCSG = XmMeshes.claimCsg(a);
+        CsgMesh bCSG = XmMeshes.claimCsg(b);
 
         intersect(aCSG, bCSG, output);
 
@@ -147,11 +143,11 @@ public abstract class CSG {
     }
 
     /**
-     * Version of {@link #intersect(PolyStream, PolyStream, WritablePolyStream)}
+     * Version of {@link #intersect(XmMesh, XmMesh, WritableMesh)}
      * to use when you've already built CSG streams. Marks the streams complete but
      * does not release them. Both input streams are modified.
      */
-    public static void intersect(CsgPolyStream a, CsgPolyStream b, WritablePolyStream output) {
+    public static void intersect(CsgMesh a, CsgMesh b, WritableMesh output) {
         a.complete();
         b.complete();
 
@@ -192,9 +188,9 @@ public abstract class CSG {
      * </blockquote>
      *
      */
-    public static void union(PolyStream a, PolyStream b, WritablePolyStream output) {
-        CsgPolyStream aCSG = PolyStreams.claimCSG(a);
-        CsgPolyStream bCSG = PolyStreams.claimCSG(b);
+    public static void union(XmMesh a, XmMesh b, WritableMesh output) {
+        CsgMesh aCSG = XmMeshes.claimCsg(a);
+        CsgMesh bCSG = XmMeshes.claimCsg(b);
 
         union(aCSG, bCSG, output);
 
@@ -203,11 +199,11 @@ public abstract class CSG {
     }
 
     /**
-     * Version of {@link #union(PolyStream, PolyStream, WritablePolyStream)} to
+     * Version of {@link #union(XmMesh, XmMesh, WritableMesh)} to
      * use when you've already built CSG streams. Marks the streams complete but
      * does not release them. Both input streams are modified.
      */
-    public static void union(CsgPolyStream a, CsgPolyStream b, WritablePolyStream output) {
+    public static void union(CsgMesh a, CsgMesh b, WritableMesh output) {
         a.complete();
         b.complete();
 
@@ -235,7 +231,7 @@ public abstract class CSG {
      * deleted. Returns true if A is empty, either because it was empty at the
      * start, or because all A polygons have been deleted.
      */
-    private static boolean outputDisjointA(CsgPolyStream a, CsgPolyStream b, WritablePolyStream output) {
+    private static boolean outputDisjointA(CsgMesh a, CsgMesh b, WritableMesh output) {
         if (a.origin()) {
             if (b.origin())
                 // nominal case
@@ -258,7 +254,7 @@ public abstract class CSG {
      * Handles nominal case when both A and B are non-empty. Assumes A and B are at
      * origin.
      */
-    private static boolean outputDisjointAInner(CsgPolyStream a, CsgPolyStream b, WritablePolyStream output) {
+    private static boolean outputDisjointAInner(CsgMesh a, CsgMesh b, WritableMesh output) {
         boolean aIsEmpty = true;
 
         // compute B mesh bounds

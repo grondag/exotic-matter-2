@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.xm.api.mesh.Vec3f;
-import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.mesh.polygon.Vec3f;
 import net.minecraft.util.math.Box;
 
 /**

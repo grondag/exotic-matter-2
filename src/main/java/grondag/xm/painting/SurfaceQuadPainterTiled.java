@@ -20,16 +20,15 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.mesh.MutableMesh;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.polygon.StreamPolygon;
-import grondag.xm.mesh.stream.MutablePolyStream;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -47,7 +46,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
      */
     private static float tilingDistance(float uvWrapDistance, int textureScale) {
         // if wrap disabled use texture scale and paint at 1:1
-        if (uvWrapDistance <= QuadHelper.EPSILON)
+        if (uvWrapDistance <= PolyHelper.EPSILON)
             return textureScale;
 
         // if texture is larger than wrap distance, must scale down to the wrap distance
@@ -61,14 +60,14 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
 
         // subtract epsilon because want to favor rounding down at midpoint - fewer
         // polygons
-        return uvWrapDistance / Math.round((uvWrapDistance / textureScale) - QuadHelper.EPSILON);
+        return uvWrapDistance / Math.round((uvWrapDistance / textureScale) - PolyHelper.EPSILON);
     }
 
     /**
      * 
      * If quad at the target address is within the given u bounds, does nothing to
      * it and passes address to consumer, and then returns
-     * {@link StreamPolygon#NO_ADDRESS};
+     * {@link Polygon#NO_ADDRESS};
      * 
      * Otherwise, slices off a quad from the poly at the target address, with u
      * value between low bound + span, with the assumption no vertices are below the
@@ -90,9 +89,9 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
      * 
      * EXCEPT, if all remainder vertices are within the given split bounds, will
      * instead apply offset and scaled as if it had been sliced, and pass it to the
-     * consumer. Will then return {@link StreamPolygon#NO_ADDRESS}.
+     * consumer. Will then return {@link Polygon#NO_ADDRESS}.
      */
-    private static int splitU(MutablePolyStream stream, int targetAddress, int layerIndex, final float uSplitLow, final float uSpan, IntConsumer vSplitter) {
+    private static int splitU(MutableMesh stream, int targetAddress, int layerIndex, final float uSplitLow, final float uSpan, IntConsumer vSplitter) {
         Polygon reader = stream.reader(targetAddress);
         final float uMin = reader.minU(layerIndex);
         final float uMax = reader.maxU(layerIndex);
@@ -222,8 +221,8 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
     private static final int SLICE = 2;
 
     private static final int vertexType(float uvCoord) {
-        if (uvCoord >= 1 - QuadHelper.EPSILON) {
-            if (uvCoord <= 1 + QuadHelper.EPSILON)
+        if (uvCoord >= 1 - PolyHelper.EPSILON) {
+            if (uvCoord <= 1 + PolyHelper.EPSILON)
                 return EDGE;
             else
                 return REMAINDER;
@@ -237,7 +236,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
      * Just like {@link #splitU(MutablePolygon, float, float, Consumer)} but for
      * the v dimension.
      */
-    private static int splitV(MutablePolyStream stream, int targetAddress, int layerIndex, float vSplitLow, float vSpan, IntConsumer output) {
+    private static int splitV(MutableMesh stream, int targetAddress, int layerIndex, float vSplitLow, float vSpan, IntConsumer output) {
         Polygon reader = stream.reader(targetAddress);
         final float vMin = reader.minV(layerIndex);
         final float vMax = reader.maxV(layerIndex);
@@ -362,7 +361,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(MutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    public static void paintQuads(MutableMesh stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         /**
          * We add new polys, none of which need to be repainted by this routine. So,
          * when we get to this address we know we are done.

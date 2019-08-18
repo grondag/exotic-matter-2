@@ -18,14 +18,14 @@ package grondag.xm.painting;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
+import grondag.xm.api.mesh.MutableMesh;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.stream.MutablePolyStream;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -55,7 +55,7 @@ public abstract class QuadPainter {
          * <p>
          * 
          */
-        void paintQuads(MutablePolyStream stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
+        void paintQuads(MutableMesh stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
     }
 
     /**

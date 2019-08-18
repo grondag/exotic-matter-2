@@ -23,8 +23,8 @@ import java.util.function.Consumer;
 import com.google.common.collect.ImmutableList;
 
 import grondag.xm.XmConfig;
-import grondag.xm.api.mesh.Vec3f;
-import grondag.xm.mesh.polygon.Polygon;
+import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.mesh.polygon.Vec3f;
 import net.minecraft.util.math.Box;
 
 class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
@@ -186,7 +186,7 @@ class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polyg
      * Returns voxel volume of loaded mesh after simplification. Simplification
      * level is estimated based on the count of maximal bounding volumes vs the
      * budget per mesh. Call after inputing mesh via
-     * {@link #accept(grondag.Polygon.primitives.IPolygon)} and before calling
+     * {@link #accept(grondag.xm.api.mesh.Polygon.primitives.IPolygon)} and before calling
      * {@link #build()}
      * <p>
      * .

@@ -24,19 +24,19 @@ import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.connect.state.CornerJoinState;
-import grondag.xm.api.mesh.FaceVertex;
-import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.FaceVertex;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.PolyHelper;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.modelstate.SimpleModelState;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.orientation.FaceEdge;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.AbstractPrimitiveModelState;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.painting.SurfaceTopology;
@@ -140,7 +140,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
         CornerJoinState bjs = state.cornerJoin();
         Direction.Axis axis = AXIS[state.orientationIndex() % 3];
-        WritablePolyStream stream = PolyStreams.claimWritable();
+        WritableMesh stream = XmMeshes.claimWritable();
 
         stream.setVertexCount(4);
         // PERF set cull face for unconnected faces - doesn't work if connected
@@ -164,17 +164,17 @@ public class SquareColumn extends AbstractSimplePrimitive {
         stream.release();
     }
 
-    private void positiveDirection(Direction face, WritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
+    private void positiveDirection(Direction face, WritableMesh stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
             XmSurfaceList surfaces) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
 
         final MutablePolygon writer = stream.writer();
 
-        Direction topFace = QuadHelper.positiveDirection(axis);
+        Direction topFace = PolyHelper.positiveDirection(axis);
         Direction bottomFace = topFace.getOpposite();
-        Direction leftFace = QuadHelper.leftOf(face, topFace);
-        Direction rightFace = QuadHelper.rightOf(face, topFace);
+        Direction leftFace = PolyHelper.leftOf(face, topFace);
+        Direction rightFace = PolyHelper.rightOf(face, topFace);
 
         int actualCutCount = spec.cutCount;
 
@@ -343,7 +343,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
         }
     }
 
-    private void makeCapFace(Direction face, WritablePolyStream stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
+    private void makeCapFace(Direction face, WritableMesh stream, CornerJoinFaceState fjs, FaceSpec spec, Direction.Axis axis,
             XmSurfaceList surfaces) {
         if (fjs == CornerJoinFaceStates.NO_FACE)
             return;
@@ -392,7 +392,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
                 {
                     writer.surface(surfaces.get(SURFACE_CUT));
                     writer.textureSalt(salt++);
-                    setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - spec.baseMarginWidth, 1 - spec.cutDepth, 1, 1,
+                    setupCutSideQuad(writer, new SimpleQuadBounds(PolyHelper.rightOf(face, side), 1 - spec.baseMarginWidth, 1 - spec.cutDepth, 1, 1,
                             1 - spec.baseMarginWidth, face), face);
                     stream.append();
                 }
@@ -400,7 +400,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
                     writer.surface(surfaces.get(SURFACE_CUT));
                     writer.textureSalt(salt++);
                     setupCutSideQuad(writer,
-                            new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0, 1 - spec.cutDepth, spec.baseMarginWidth, 1, 1 - spec.baseMarginWidth, face), face);
+                            new SimpleQuadBounds(PolyHelper.leftOf(face, side), 0, 1 - spec.cutDepth, spec.baseMarginWidth, 1, 1 - spec.baseMarginWidth, face), face);
                     stream.append();
                 }
 
@@ -430,13 +430,13 @@ public class SquareColumn extends AbstractSimplePrimitive {
                         {
                             writer.surface(surfaces.get(SURFACE_CUT));
                             writer.textureSalt(salt++);
-                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0, 1 - spec.cutDepth, xLeft, 1, xLeft, face), face);
+                            setupCutSideQuad(writer, new SimpleQuadBounds(PolyHelper.leftOf(face, side), 0, 1 - spec.cutDepth, xLeft, 1, xLeft, face), face);
                             stream.append();
                         }
                         {
                             writer.surface(surfaces.get(SURFACE_CUT));
                             writer.textureSalt(salt++);
-                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - xLeft, 1 - spec.cutDepth, 1, 1, xLeft, face), face);
+                            setupCutSideQuad(writer, new SimpleQuadBounds(PolyHelper.rightOf(face, side), 1 - xLeft, 1 - spec.cutDepth, 1, 1, xLeft, face), face);
                             stream.append();
                         }
                     }
@@ -445,13 +445,13 @@ public class SquareColumn extends AbstractSimplePrimitive {
                             writer.surface(surfaces.get(SURFACE_CUT));
                             writer.textureSalt(salt++);
                             setupCutSideQuad(writer,
-                                    new SimpleQuadBounds(QuadHelper.rightOf(face, side), 1 - xRight, 1 - spec.cutDepth, 1, 1, 1 - xRight, face), face);
+                                    new SimpleQuadBounds(PolyHelper.rightOf(face, side), 1 - xRight, 1 - spec.cutDepth, 1, 1, 1 - xRight, face), face);
                             stream.append();
                         }
                         {
                             writer.surface(surfaces.get(SURFACE_CUT));
                             writer.textureSalt(salt++);
-                            setupCutSideQuad(writer, new SimpleQuadBounds(QuadHelper.leftOf(face, side), 0, 1 - spec.cutDepth, xRight, 1, 1 - xRight, face), face);
+                            setupCutSideQuad(writer, new SimpleQuadBounds(PolyHelper.leftOf(face, side), 0, 1 - spec.cutDepth, xRight, 1, 1 - xRight, face), face);
                             stream.append();
                         }
                     }

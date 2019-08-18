@@ -22,13 +22,13 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.painting.SurfaceTopology;
 import grondag.xm.relics.CubeInputs;
 import net.minecraft.util.math.Direction;
@@ -41,7 +41,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.idString("terrain_cube"));
     
     /** never changes so may as well save it */
-    private final PolyStream cachedQuads;
+    private final XmMesh cachedQuads;
 
     protected TerrainCubePrimitive(String idString) {
         super(idString, STATE_FLAG_NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
@@ -53,7 +53,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
         cachedQuads.forEach(target);
     }
 
-    private PolyStream getCubeQuads() {
+    private XmMesh getCubeQuads() {
         CubeInputs cube = new CubeInputs();
         cube.color = 0xFFFFFFFF;
         cube.textureRotation = Rotation.ROTATE_NONE;
@@ -65,7 +65,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
         cube.isOverlay = false;
         cube.surface = SURFACE_ALL;
 
-        WritablePolyStream stream = PolyStreams.claimWritable();
+        WritableMesh stream = XmMeshes.claimWritable();
         cube.appendFace(stream, Direction.DOWN);
         cube.appendFace(stream, Direction.UP);
         cube.appendFace(stream, Direction.EAST);
@@ -73,7 +73,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
         cube.appendFace(stream, Direction.NORTH);
         cube.appendFace(stream, Direction.SOUTH);
 
-        PolyStream result = stream.releaseToReader();
+        XmMesh result = stream.releaseToReader();
 
         result.origin();
         assert result.reader().vertexCount() == 4;

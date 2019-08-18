@@ -22,14 +22,14 @@ import java.util.function.Consumer;
 
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.MeshHelper;
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.stream.PolyStream;
-import grondag.xm.mesh.stream.PolyStreams;
-import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Vec3d;
@@ -39,7 +39,7 @@ public class Sphere extends AbstractSimplePrimitive {
 
     public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
-    private PolyStream cachedQuads = null;
+    private XmMesh cachedQuads = null;
 
     public static final Sphere INSTANCE = new Sphere(Xm.idString("sphere"));
 
@@ -56,7 +56,7 @@ public class Sphere extends AbstractSimplePrimitive {
     
     @Override
     public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
-        PolyStream cachedQuads = this.cachedQuads;
+        XmMesh cachedQuads = this.cachedQuads;
         if(cachedQuads == null) {
             cachedQuads = generateQuads();
             this.cachedQuads = cachedQuads;
@@ -73,8 +73,8 @@ public class Sphere extends AbstractSimplePrimitive {
         while (cachedQuads.next());
     }
 
-    private PolyStream generateQuads() {
-        WritablePolyStream stream = PolyStreams.claimWritable();
+    private XmMesh generateQuads() {
+        WritableMesh stream = XmMeshes.claimWritable();
         stream.writer().lockUV(0, false);
         stream.writer().surface(SURFACE_ALL);
         stream.saveDefaults();

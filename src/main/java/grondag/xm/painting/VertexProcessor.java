@@ -16,10 +16,10 @@
 
 package grondag.xm.painting;
 
+import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.mesh.polygon.MutablePolygon;
 
 /**
  * Logic to apply color, brightness, glow and other attributes that depend on

@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import grondag.fermion.sc.cache.ISimpleLoadingCache;
-import grondag.xm.api.mesh.Vec3f;
+import grondag.xm.api.mesh.polygon.Vec3f;
 import it.unimi.dsi.fastutil.HashCommon;
 
 public class Vec3fCache {

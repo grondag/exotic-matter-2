@@ -17,9 +17,9 @@
 package grondag.xm.painting;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.orientation.FaceCorner;
 import grondag.xm.api.orientation.FaceEdge;
-import grondag.xm.mesh.polygon.MutablePolygon;
 
 /**
  * Identifies content of each quadrant within texture file, starting at top

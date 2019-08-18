@@ -19,12 +19,12 @@ package grondag.xm.mesh.helper;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import grondag.xm.api.mesh.PolyTransform;
-import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.PolyTransform;
+import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.orientation.ExactEdge;
 import grondag.xm.api.orientation.OrientationType;
-import grondag.xm.mesh.polygon.MutablePolygon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
@@ -60,12 +60,12 @@ public class PolyTransformImpl implements PolyTransform {
         // transform nominal face
         Vec3i oldVec = poly.nominalFace().getVector();
         matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
-        poly.nominalFace(QuadHelper.faceForNormal(vec.x, vec.y, vec.z));
+        poly.nominalFace(PolyHelper.faceForNormal(vec.x, vec.y, vec.z));
         final Direction cullFace = poly.cullFace();
         if(cullFace != null) {
             oldVec = cullFace.getVector();
             matrix.transformDirection(oldVec.getX(), oldVec.getY(), oldVec.getZ(), vec);
-            poly.cullFace(QuadHelper.faceForNormal(vec.x, vec.y, vec.z));
+            poly.cullFace(PolyHelper.faceForNormal(vec.x, vec.y, vec.z));
         }
     }
 
