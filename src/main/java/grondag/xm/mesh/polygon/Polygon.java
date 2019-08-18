@@ -18,10 +18,9 @@ package grondag.xm.mesh.polygon;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.mesh.vertex.Vec3f;
-import grondag.xm.mesh.vertex.Vertex3f;
-import grondag.xm.mesh.vertex.VertexCollection;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Box;
@@ -29,26 +28,39 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
-public interface Polygon extends VertexCollection, StreamPolygon {
-    public Vec3f faceNormal();
+public interface Polygon extends StreamPolygon {
+    int vertexCount();
 
-    public default float faceNormalX() {
+    // PERF: use value types instead
+    @Deprecated
+    Vec3f getPos(int index);
+
+    /**
+     * Wraps around if index out of range.
+     */
+    default Vec3f getPosModulo(int index) {
+        return getPos(index % vertexCount());
+    }
+    
+    Vec3f faceNormal();
+
+    default float faceNormalX() {
         return faceNormal().x();
     }
 
-    public default float faceNormalY() {
+    default float faceNormalY() {
         return faceNormal().y();
     }
 
-    public default float faceNormalZ() {
+    default float faceNormalZ() {
         return faceNormal().z();
     }
 
-    public default Box bounds() {
-        Vertex3f p0 = getPos(0);
-        Vertex3f p1 = getPos(1);
-        Vertex3f p2 = getPos(2);
-        Vertex3f p3 = getPos(3);
+    default Box bounds() {
+        Vec3f p0 = getPos(0);
+        Vec3f p1 = getPos(1);
+        Vec3f p2 = getPos(2);
+        Vec3f p3 = getPos(3);
 
         double minX = Math.min(Math.min(p0.x(), p1.x()), Math.min(p2.x(), p3.x()));
         double minY = Math.min(Math.min(p0.y(), p1.y()), Math.min(p2.y(), p3.y()));
@@ -61,13 +73,13 @@ public interface Polygon extends VertexCollection, StreamPolygon {
         return new Box(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    public static final int VERTEX_NOT_FOUND = -1;
+    static final int VERTEX_NOT_FOUND = -1;
 
     /**
      * Will return {@link #VERTEX_NOT_FOUND} (-1) if vertex is not found in this
      * polygon.
      */
-    public default int indexOf(Vec3f v) {
+    default int indexOf(Vec3f v) {
         final int limit = this.vertexCount();
         for (int i = 0; i < limit; i++) {
             if (v.equals(this.getPos(i)))
@@ -76,30 +88,30 @@ public interface Polygon extends VertexCollection, StreamPolygon {
         return VERTEX_NOT_FOUND;
     }
 
-    public default boolean isConvex() {
+    default boolean isConvex() {
         return QuadHelper.isConvex(this);
     }
 
-    public default boolean isOrthogonalTo(Direction face) {
+    default boolean isOrthogonalTo(Direction face) {
         Vec3i dv = face.getVector();
         float dot = this.faceNormal().dotProduct(dv.getX(), dv.getY(), dv.getZ());
         return Math.abs(dot) <= QuadHelper.EPSILON;
     }
 
-    public default boolean isOnSinglePlane() {
+    default boolean isOnSinglePlane() {
         if (this.vertexCount() == 3)
             return true;
 
-        Vertex3f fn = this.faceNormal();
+        Vec3f fn = this.faceNormal();
 
         float faceX = fn.x();
         float faceY = fn.y();
         float faceZ = fn.z();
 
-        Vertex3f first = this.getPos(0);
+        Vec3f first = this.getPos(0);
 
         for (int i = 3; i < this.vertexCount(); i++) {
-            Vertex3f v = this.getPos(i);
+            Vec3f v = this.getPos(i);
 
             float dx = v.x() - first.x();
             float dy = v.y() - first.y();
@@ -112,7 +124,7 @@ public interface Polygon extends VertexCollection, StreamPolygon {
         return true;
     }
 
-    public default boolean isOnFace(Direction face, float tolerance) {
+    default boolean isOnFace(Direction face, float tolerance) {
         if (face == null)
             return false;
         for (int i = 0; i < this.vertexCount(); i++) {
@@ -122,12 +134,12 @@ public interface Polygon extends VertexCollection, StreamPolygon {
         return true;
     }
 
-    public default Vec3f computeFaceNormal() {
+    default Vec3f computeFaceNormal() {
         try {
-            final Vertex3f v0 = getPos(0);
-            final Vertex3f v1 = getPos(1);
-            final Vertex3f v2 = getPos(2);
-            final Vertex3f v3 = getPos(3);
+            final Vec3f v0 = getPos(0);
+            final Vec3f v1 = getPos(1);
+            final Vec3f v2 = getPos(2);
+            final Vec3f v3 = getPos(3);
 
             final float x0 = v2.x() - v0.x();
             final float y0 = v2.y() - v0.y();
@@ -159,7 +171,7 @@ public interface Polygon extends VertexCollection, StreamPolygon {
     // iSurfer.org makes no warranty for this code, and cannot be held
     // liable for any real or imagined damage resulting from its use.
     // Users of this code must verify correctness for their application.
-    public default float area() {
+    default float area() {
         float area = 0;
         float an, ax, ay, az; // abs value of normal and its coords
         int coord; // coord to ignore: 1=x, 2=y, 3=z
@@ -225,17 +237,17 @@ public interface Polygon extends VertexCollection, StreamPolygon {
         return area;
     }
 
-    public XmSurface surface();
+    XmSurface surface();
 
     /**
      * Returns computed face normal if no explicit normal assigned.
      */
-    public Vec3f vertexNormal(int vertexIndex);
+    Vec3f vertexNormal(int vertexIndex);
 
     /**
      * Face to use for shading testing. Based on which way face points. Never null
      */
-    public default Direction lightFace() {
+    default Direction lightFace() {
         return QuadHelper.faceForNormal(this.faceNormal());
     }
 
@@ -245,9 +257,9 @@ public interface Polygon extends VertexCollection, StreamPolygon {
      * Face to use for occlusion testing. Null if not fully on one of the faces.
      * Fudges a bit because painted quads can be slightly offset from the plane.
      */
-    public Direction cullFace();
+    Direction cullFace();
 
-    public default Direction computeCullFace() {
+    default Direction computeCullFace() {
         Direction nominalFace = this.nominalFace();
 
         // semantic face will be right most of the time
@@ -318,7 +330,7 @@ public interface Polygon extends VertexCollection, StreamPolygon {
 
     boolean lockUV(int layerIndex);
 
-    public default boolean hasRenderLayer(BlockRenderLayer layer) {
+    default boolean hasRenderLayer(BlockRenderLayer layer) {
         if (blendMode(0) == layer)
             return true;
 

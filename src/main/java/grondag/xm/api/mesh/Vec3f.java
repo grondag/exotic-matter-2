@@ -14,26 +14,31 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.mesh.vertex;
+package grondag.xm.api.mesh;
 
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3i;
 
-public interface Vertex3f {
+public interface Vec3f {
+    static float dotProduct(final float x0, final float y0, final float z0, final float x1, final float y1, final float z1) {
+        return x0 * x1 + y0 * y1 + z0 * z1;
+    }
+    
     public default float dotProduct(float xIn, float yIn, float zIn) {
-        return Vec3Function.dotProduct(this.x(), this.y(), this.z(), xIn, yIn, zIn);
+        return dotProduct(this.x(), this.y(), this.z(), xIn, yIn, zIn);
     }
 
-    public default float dotProduct(Vertex3f vec) {
+    public default float dotProduct(Vec3f vec) {
         return dotProduct(vec.x(), vec.y(), vec.z());
     }
 
     /**
      * Returns a new vector with the result of this vector x the specified vector.
      */
-    public default Vertex3f crossProduct(Vertex3f vec) {
+    public default Vec3f crossProduct(Vec3f vec) {
         return Vec3f.create(this.y() * vec.z() - this.z() * vec.y(), this.z() * vec.x() - this.x() * vec.z(), this.x() * vec.y() - this.y() * vec.x());
     }
 
@@ -92,7 +97,7 @@ public interface Vertex3f {
     /**
      * True if both vertices are at the same point.
      */
-    public default boolean isCsgEqual(Vertex3f vertexIn) {
+    public default boolean isCsgEqual(Vec3f vertexIn) {
         final float x = vertexIn.x() - this.x();
         final float y = vertexIn.y() - this.y();
         final float z = vertexIn.z() - this.z();
@@ -130,7 +135,7 @@ public interface Vertex3f {
         return isPointOnLine(this.x(), this.y(), this.z(), x0, y0, z0, x1, y1, z1);
     }
 
-    public default boolean isOnLine(Vertex3f v0, Vertex3f v1) {
+    public default boolean isOnLine(Vec3f v0, Vec3f v1) {
         return this.isOnLine(v0.x(), v0.y(), v0.z(), v1.x(), v1.y(), v1.z());
     }
 
@@ -141,5 +146,20 @@ public interface Vertex3f {
         data[0] = x();
         data[1] = y();
         data[2] = z();
+    }
+    
+    static final Vec3f ZERO = create(0, 0, 0);
+
+
+    static Vec3f forFace(Direction face) {
+        return Vec3f.forFace(face);
+    }
+
+    public static Vec3f create(Vec3i vec) {
+        return Vec3f.create(vec);
+    }
+
+    public static Vec3f create(float x, float y, float z) {
+        return Vec3f.create(x, y, z);
     }
 }

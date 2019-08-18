@@ -19,9 +19,8 @@ package grondag.xm.mesh.polygon;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.FaceVertex;
 import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.mesh.vertex.Vec3f;
-import grondag.xm.mesh.vertex.Vertex3f;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -129,10 +128,6 @@ public interface MutablePolygon extends Polygon {
     MutablePolygon glow(int vertexIndex, int glow);
 
     MutablePolygon normal(int vertexIndex, Vec3f normal);
-
-    default MutablePolygon normal(int vertexIndex, Vertex3f normal) {
-        return normal(vertexIndex, normal.x(), normal.y(), normal.z());
-    }
 
     MutablePolygon normal(int vertexIndex, float x, float y, float z);
 

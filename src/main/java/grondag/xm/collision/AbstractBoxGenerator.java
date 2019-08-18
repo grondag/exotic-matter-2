@@ -18,8 +18,8 @@ package grondag.xm.collision;
 
 import java.util.function.Consumer;
 
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.vertex.Vertex3f;
 
 abstract class AbstractBoxGenerator implements Consumer<Polygon> {
     // diameters
@@ -55,5 +55,5 @@ abstract class AbstractBoxGenerator implements Consumer<Polygon> {
             acceptTriangle(poly.getPos(0), poly.getPos(2), poly.getPos(3));
     }
 
-    protected abstract void acceptTriangle(Vertex3f v0, Vertex3f v1, Vertex3f v2);
+    protected abstract void acceptTriangle(Vec3f v0, Vec3f v1, Vec3f v2);
 }

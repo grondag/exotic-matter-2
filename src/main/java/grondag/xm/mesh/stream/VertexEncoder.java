@@ -51,13 +51,14 @@ import static grondag.xm.mesh.stream.PolyStreamFormat.setVertexUVFormat;
 import static grondag.xm.mesh.stream.PolyStreamFormat.vertexFormatKey;
 
 import grondag.fermion.intstream.IntStream;
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatGetter;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatSetter;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatSetter2;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatSetter3;
 import grondag.xm.mesh.stream.EncoderFunctions.IntGetter;
 import grondag.xm.mesh.stream.EncoderFunctions.IntSetter;
-import grondag.xm.mesh.vertex.Vec3f;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 
 public class VertexEncoder {
     private static final VertexEncoder[] ENCODERS = new VertexEncoder[VERTEX_FORMAT_COUNT];

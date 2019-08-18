@@ -16,6 +16,9 @@
 
 package grondag.xm.relics;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.modelstate.ModelState;
@@ -26,6 +29,8 @@ import net.minecraft.nbt.CompoundTag;
 /**
  * Item stack serialization handlers
  */
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class XmStackHelper {
     public static String NBT_SUPERMODEL_LIGHT_VALUE = NBTDictionary.claim("smLight");
 

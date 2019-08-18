@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.varia;
+package grondag.xm.api.mesh;
 /**
  * Portions reproduced or adapted from JCSG.
  * Copyright 2014-2014 Michael Hoffer <info@michaelhoffer.de>. All rights

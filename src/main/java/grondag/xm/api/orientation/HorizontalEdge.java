@@ -29,13 +29,15 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Vec3i;
 
 /**
- * A subset of {@link BlockEdge}, includes only the edges in the horizontal
+ * A subset of {@link Edge}, includes only the edges in the horizontal
  * plane.
  */
 @API(status = STABLE)
 public enum HorizontalEdge implements StringIdentifiable {
-    NORTH_EAST(HorizontalFace.NORTH, HorizontalFace.EAST), NORTH_WEST(HorizontalFace.NORTH, HorizontalFace.WEST),
-    SOUTH_EAST(HorizontalFace.SOUTH, HorizontalFace.EAST), SOUTH_WEST(HorizontalFace.SOUTH, HorizontalFace.WEST);
+    NORTH_EAST(HorizontalFace.NORTH, HorizontalFace.EAST),
+    NORTH_WEST(HorizontalFace.NORTH, HorizontalFace.WEST),
+    SOUTH_EAST(HorizontalFace.SOUTH, HorizontalFace.EAST),
+    SOUTH_WEST(HorizontalFace.SOUTH, HorizontalFace.WEST);
 
     public final HorizontalFace face1;
     public final HorizontalFace face2;

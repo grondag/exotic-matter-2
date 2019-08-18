@@ -14,8 +14,10 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.varia;
+package grondag.xm.relics;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -27,6 +29,8 @@ import net.fabricmc.indigo.renderer.RenderMaterialImpl;
 import net.fabricmc.indigo.renderer.helper.ColorHelper;
 import net.fabricmc.indigo.renderer.helper.ColorHelper.ShadeableQuad;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class QuadRotation implements QuadTransform {
 
     public static Builder builder() {

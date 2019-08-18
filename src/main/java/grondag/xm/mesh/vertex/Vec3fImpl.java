@@ -16,56 +16,19 @@
 
 package grondag.xm.mesh.vertex;
 
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
+import grondag.xm.api.mesh.Vec3f;
+import it.unimi.dsi.fastutil.HashCommon;
 
-public class Vec3f implements Vertex3f {
-//    private static AtomicInteger createCount = new AtomicInteger();
-//    private static AtomicInteger initCount = new AtomicInteger();
-
-    public static final Vec3f ZERO = new Vec3f(0, 0, 0);
-
-    private static final Vec3f[] FACES = new Vec3f[6];
-
-    static {
-        FACES[Direction.UP.ordinal()] = create(Direction.UP.getVector());
-        FACES[Direction.DOWN.ordinal()] = create(Direction.DOWN.getVector());
-        FACES[Direction.EAST.ordinal()] = create(Direction.EAST.getVector());
-        FACES[Direction.WEST.ordinal()] = create(Direction.WEST.getVector());
-        FACES[Direction.NORTH.ordinal()] = create(Direction.NORTH.getVector());
-        FACES[Direction.SOUTH.ordinal()] = create(Direction.SOUTH.getVector());
-    }
-
-    public static Vec3f forFace(Direction face) {
-        return FACES[face.ordinal()];
-    }
-
-    public static Vec3f create(Vec3i vec) {
-        return create(vec.getX(), vec.getY(), vec.getZ());
-    }
-
-    public static Vec3f create(float x, float y, float z) {
-//        if((createCount.incrementAndGet() & 0xFFFFF) == 0xFFFFF)
-//        {
-//            int c = createCount.get();
-//            int i = initCount.get();
-//            System.out.println("Instance count = " + i);
-//            System.out.println("Create count = " + c);
-//            System.out.println("Miss rate = " + i * 100 / c);
-//            System.out.println("");
-//        }
-        return Vec3fSimpleLoadingCache.INSTANCE.get(x, y, z);
-    }
+class Vec3fImpl implements Vec3f {
 
     protected float x;
     protected float y;
     protected float z;
 
-    Vec3f(float x, float y, float z) {
+    Vec3fImpl(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
-//        initCount.incrementAndGet();
     }
 
     public boolean isMutable() {
@@ -91,24 +54,7 @@ public class Vec3f implements Vertex3f {
         return new Mutable(x, y, z);
     }
 
-    public static class Mutable extends Vec3f {
-//        private static final ArrayBlockingQueue<Mutable> POOL = new ArrayBlockingQueue<>(1024);
-//        
-//        public static Mutable claim()
-//        {
-//            Mutable result = POOL.poll();
-//            
-//            if(result == null)
-//                result = new Mutable(0, 0, 0);
-//            
-//            return result;
-//        }
-//        
-//        public static void release(Mutable vec)
-//        {
-//            POOL.offer(vec);
-//        }
-
+    public static class Mutable extends Vec3fImpl {
         public Mutable(float x, float y, float z) {
             super(x, y, z);
         }
@@ -120,7 +66,7 @@ public class Vec3f implements Vertex3f {
             return this;
         }
 
-        public final Mutable load(Vec3f fromVec) {
+        public final Mutable load(Vec3fImpl fromVec) {
             this.x = fromVec.x;
             this.y = fromVec.y;
             this.z = fromVec.z;
@@ -133,10 +79,10 @@ public class Vec3f implements Vertex3f {
         }
 
         public final Vec3f toImmutable() {
-            return create(x, y, z);
+            return Vec3f.create(x, y, z);
         }
 
-        public final Mutable subtract(Vec3f vec) {
+        public final Mutable subtract(Vec3fImpl vec) {
             return this.subtract(vec.x, vec.y, vec.z);
         }
 
@@ -144,7 +90,7 @@ public class Vec3f implements Vertex3f {
             return this.addVector(-x, -y, -z);
         }
 
-        public final Mutable add(Vec3f vec) {
+        public final Mutable add(Vec3fImpl vec) {
             return this.addVector(vec.x, vec.y, vec.z);
         }
 
@@ -192,10 +138,15 @@ public class Vec3f implements Vertex3f {
         if (obj == null)
             return false;
 
-        if (obj instanceof Vec3f) {
-            Vec3f v = (Vec3f) obj;
+        if (obj instanceof Vec3fImpl) {
+            Vec3fImpl v = (Vec3fImpl) obj;
             return v.x == x && v.y == y && v.z == z;
         } else
             return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) HashCommon.mix((Float.floatToRawIntBits(x) ^ Float.floatToRawIntBits(z)) | (long)Float.floatToRawIntBits(y) << 32);
     }
 }

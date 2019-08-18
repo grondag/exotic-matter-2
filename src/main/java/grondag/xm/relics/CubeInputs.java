@@ -16,13 +16,16 @@
 
 package grondag.xm.relics;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import net.minecraft.util.math.Direction;
 
-//TODO: remove
+@API(status = Status.DEPRECATED)
 @Deprecated
 public class CubeInputs {
     public float u0;

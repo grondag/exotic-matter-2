@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.model.varia;
+package grondag.xm.api.mesh;
 
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.MutablePolygon;

@@ -16,8 +16,13 @@
 
 package grondag.xm.relics;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import net.minecraft.entity.ai.pathing.PathNodeType;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class SubstanceConfig {
 //    @RequiresMcRestart
 //    @Comment("Material hardness. 2 is typical for things like rock, wood. Anything above 10 is extreme. -1 is unbreakable")

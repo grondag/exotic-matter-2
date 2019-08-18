@@ -33,6 +33,9 @@
 
 package grondag.xm.relics;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.varia.NBTDictionary;
 //import grondag.xm.api.modelstate.ModelState;
 //import grondag.xm.api.modelstate.MutableModelState;
@@ -48,6 +51,8 @@ import net.minecraft.nbt.Tag;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.world.BlockView;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class XmBlockEntity { //extends BlockEntity implements BlockEntityClientSerializable {
     ////////////////////////////////////////////////////////////////////////
     // STATIC MEMBERS

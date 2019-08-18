@@ -16,7 +16,7 @@
 
 package grondag.xm.mesh.polygon;
 
-import grondag.xm.mesh.vertex.Vec3f;
+import grondag.xm.api.mesh.Vec3f;
 
 public class PolygonAccessor {
     // UGLY: these interfaces are generic (ha ha) and should probably live somewhere

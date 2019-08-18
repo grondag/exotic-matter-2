@@ -16,7 +16,7 @@
 
 package grondag.xm.collision;
 
-import grondag.xm.mesh.vertex.Vertex3f;
+import grondag.xm.api.mesh.Vec3f;
 
 /**
  * Ported to Java from Tomas Akenine-Möller
@@ -109,7 +109,7 @@ class TriangleBoxTest {
      * way enables reuse over many tests, minimizes call overhead and improves LOR.
      * For low garbage, use a threadlocal array.
      */
-    public static void packPolyData(Vertex3f v0, Vertex3f v1, Vertex3f v2, float[] polyData) {
+    public static void packPolyData(Vec3f v0, Vec3f v1, Vec3f v2, float[] polyData) {
         final float x0 = v0.x();
         final float y0 = v0.y();
         final float z0 = v0.z();

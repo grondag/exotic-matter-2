@@ -20,9 +20,10 @@ import java.util.function.IntUnaryOperator;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.vertex.Vec3f;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
@@ -180,7 +181,7 @@ public class StreamBackedPolygon implements Polygon {
     @Override
     @Deprecated
     public final Vec3f getPos(int index) {
-        return Vec3f.create(x(index), y(index), z(index));
+        return Vec3fFactory.create(x(index), y(index), z(index));
     }
 
     /**

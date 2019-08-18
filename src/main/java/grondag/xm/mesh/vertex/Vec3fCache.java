@@ -20,10 +20,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import grondag.fermion.sc.cache.ISimpleLoadingCache;
+import grondag.xm.api.mesh.Vec3f;
 import it.unimi.dsi.fastutil.HashCommon;
 
-class Vec3fSimpleLoadingCache {
-    static final Vec3fSimpleLoadingCache INSTANCE = new Vec3fSimpleLoadingCache(0x80000);
+public class Vec3fCache {
+    static final Vec3fCache INSTANCE = new Vec3fCache(0x80000);
 
     public final int capacity;
     public final int maxFill;
@@ -36,7 +37,7 @@ class Vec3fSimpleLoadingCache {
 
     private final Object writeLock = new Object();
 
-    private Vec3fSimpleLoadingCache(int maxSize) {
+    private Vec3fCache(int maxSize) {
         this.capacity = 1 << (Integer.SIZE - Integer.numberOfLeadingZeros((int) (maxSize / ISimpleLoadingCache.LOAD_FACTOR)));
         this.maxFill = (int) (capacity * ISimpleLoadingCache.LOAD_FACTOR);
         this.positionMask = capacity - 1;
@@ -65,7 +66,7 @@ class Vec3fSimpleLoadingCache {
         int position = (int) (HashCommon.mix(hash) & positionMask);
 
         do {
-            Vec3f check = localState.values[position];
+            Vec3fImpl check = localState.values[position];
 
             if (check == null)
                 return load(localState, x, y, z, position);
@@ -78,9 +79,9 @@ class Vec3fSimpleLoadingCache {
         } while (true);
     }
 
-    protected Vec3f loadFromBackup(Vec3fCacheState backup, final float x, final float y, final float z, int position) {
+    protected Vec3fImpl loadFromBackup(Vec3fCacheState backup, final float x, final float y, final float z, int position) {
         do {
-            Vec3f v = backup.values[position];
+            Vec3fImpl v = backup.values[position];
             if (v != null && v.x() == x && v.y() == y && v.z() == z)
                 return v;
 
@@ -90,20 +91,20 @@ class Vec3fSimpleLoadingCache {
                         backupState.compareAndSet(backup, null);
                     }
                 }
-                return new Vec3f(x, y, z);
+                return new Vec3fImpl(x, y, z);
             }
             position = (position + 1) & positionMask;
         } while (true);
     }
 
-    protected Vec3f load(Vec3fCacheState localState, final float x, final float y, final float z, int position) {
+    protected Vec3fImpl load(Vec3fCacheState localState, final float x, final float y, final float z, int position) {
         // no need to handle zero key here - is handled as privileged case in get();
 
         Vec3fCacheState backupState = this.backupState.get();
 
-        final Vec3f result = backupState == null ? new Vec3f(x, y, z) : loadFromBackup(backupState, x, y, z, position);
+        final Vec3fImpl result = backupState == null ? new Vec3fImpl(x, y, z) : loadFromBackup(backupState, x, y, z, position);
         do {
-            Vec3f currentKey;
+            Vec3fImpl currentKey;
             synchronized (writeLock) {
                 currentKey = localState.values[position];
                 if (currentKey == null) {
@@ -130,5 +131,14 @@ class Vec3fSimpleLoadingCache {
         }
 
         return result;
+    }
+    
+    private static class Vec3fCacheState {
+        protected AtomicInteger size = new AtomicInteger(0);
+        protected final Vec3fImpl[] values;
+
+        public Vec3fCacheState(int capacityIn) {
+            this.values = new Vec3fImpl[capacityIn];
+        }
     }
 }

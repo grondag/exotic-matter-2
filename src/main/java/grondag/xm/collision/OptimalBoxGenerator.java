@@ -23,8 +23,8 @@ import java.util.function.Consumer;
 import com.google.common.collect.ImmutableList;
 
 import grondag.xm.XmConfig;
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.vertex.Vertex3f;
 import net.minecraft.util.math.Box;
 
 class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
@@ -176,7 +176,7 @@ class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polyg
     final BoxFinder bf = new BoxFinder();
 
     @Override
-    protected void acceptTriangle(Vertex3f v0, Vertex3f v1, Vertex3f v2) {
+    protected void acceptTriangle(Vec3f v0, Vec3f v1, Vec3f v2) {
         final float[] data = polyData;
         TriangleBoxTest.packPolyData(v0, v1, v2, data);
         div1(polyData, voxelBits);

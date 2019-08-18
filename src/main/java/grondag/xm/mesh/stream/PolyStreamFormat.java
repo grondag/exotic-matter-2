@@ -17,8 +17,9 @@
 package grondag.xm.mesh.stream;
 
 import grondag.fermion.bits.BitPacker32;
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.vertex.Vec3f;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 import net.minecraft.util.math.Direction;
 
 public class PolyStreamFormat {
@@ -360,7 +361,7 @@ public class PolyStreamFormat {
         result = setCullFace(result, polyIn.cullFace());
 
         Vec3f faceNormal = polyIn.faceNormal();
-        if (faceNormal.equals(Vec3f.forFace(nominalFace)))
+        if (faceNormal.equals(Vec3fFactory.forFace(nominalFace)))
             result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_NOMINAL);
         else
             result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_COMPUTED);

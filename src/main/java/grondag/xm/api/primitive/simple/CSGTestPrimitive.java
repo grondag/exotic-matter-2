@@ -21,6 +21,8 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 
 import grondag.xm.Xm;
+import grondag.xm.api.mesh.CSG;
+import grondag.xm.api.mesh.MeshHelper;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
@@ -32,8 +34,6 @@ import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
-import grondag.xm.model.varia.CSG;
-import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
 
 //TODO: remove

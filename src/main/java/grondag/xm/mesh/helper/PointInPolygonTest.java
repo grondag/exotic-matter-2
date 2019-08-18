@@ -18,8 +18,8 @@ package grondag.xm.mesh.helper;
 
 import org.joml.Vector2f;
 
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.mesh.vertex.Vertex3f;
 
 /**
  * Adapted from code that bears the notice reproduced below and which can be
@@ -125,7 +125,7 @@ public class PointInPolygonTest {
 
     // FIX: this appears to have a 6% false negative rate but isn't really used
     // right now
-    public static boolean isPointInPolygonAny(Vertex3f point, MutablePolygon quad) {
+    public static boolean isPointInPolygonAny(Vec3f point, MutablePolygon quad) {
         // faster to check in 2 dimensions, so throw away the orthogonalAxis
         // that is most orthogonal to our plane
         final DiscardAxis d = DiscardAxis.get(quad.faceNormal());
@@ -135,7 +135,7 @@ public class PointInPolygonTest {
 
         int wn = 0; // the winding number counter
 
-        Vertex3f v = quad.getPos(size - 1);
+        Vec3f v = quad.getPos(size - 1);
         float x0 = d.x(v);
         float y0 = d.y(v);
 
@@ -167,7 +167,7 @@ public class PointInPolygonTest {
         return 0;
     }
 
-    public static boolean isPointInPolygon(Vertex3f point, MutablePolygon quad) {
+    public static boolean isPointInPolygon(Vec3f point, MutablePolygon quad) {
         final int size = quad.vertexCount();
         if (size == 3)
             return isPointInPolygonTri(point, quad);
@@ -178,13 +178,13 @@ public class PointInPolygonTest {
 
     }
 
-    public static boolean isPointInPolygonQuad(Vertex3f point, MutablePolygon quad) {
+    public static boolean isPointInPolygonQuad(Vec3f point, MutablePolygon quad) {
         // faster to check in 2 dimensions, so throw away the axis
         // that is most orthogonal to our plane
         final DiscardAxis d = DiscardAxis.get(quad.faceNormal());
         final float x = d.x(point);
         final float y = d.y(point);
-        Vertex3f v = quad.getPos(0);
+        Vec3f v = quad.getPos(0);
         final float x0 = d.x(v);
         final float y0 = d.y(v);
         v = quad.getPos(1);
@@ -200,13 +200,13 @@ public class PointInPolygonTest {
         return isPointInPolygonTri(x, y, x0, y0, x1, y1, x2, y2) || isPointInPolygonTri(x, y, x0, y0, x2, y2, x3, y3);
     }
 
-    public static boolean isPointInPolygonTri(Vertex3f point, MutablePolygon quad) {
+    public static boolean isPointInPolygonTri(Vec3f point, MutablePolygon quad) {
         // faster to check in 2 dimensions, so throw away the axis
         // that is most orthogonal to our plane
         final DiscardAxis d = DiscardAxis.get(quad.faceNormal());
-        final Vertex3f v0 = quad.getPos(0);
-        final Vertex3f v1 = quad.getPos(1);
-        final Vertex3f v2 = quad.getPos(2);
+        final Vec3f v0 = quad.getPos(0);
+        final Vec3f v1 = quad.getPos(1);
+        final Vec3f v2 = quad.getPos(2);
 
         return isPointInPolygonTri(d.x(point), d.y(point), d.x(v0), d.y(v0), d.x(v1), d.y(v1), d.x(v2), d.y(v2));
 
@@ -220,36 +220,36 @@ public class PointInPolygonTest {
     static enum DiscardAxis {
         X() {
             @Override
-            protected final float x(Vertex3f pointIn) {
+            protected final float x(Vec3f pointIn) {
                 return pointIn.y();
             }
 
             @Override
-            protected final float y(Vertex3f pointIn) {
+            protected final float y(Vec3f pointIn) {
                 return pointIn.z();
             }
         },
 
         Y() {
             @Override
-            protected final float x(Vertex3f pointIn) {
+            protected final float x(Vec3f pointIn) {
                 return pointIn.x();
             }
 
             @Override
-            protected final float y(Vertex3f pointIn) {
+            protected final float y(Vec3f pointIn) {
                 return pointIn.z();
             }
         },
 
         Z() {
             @Override
-            protected final float x(Vertex3f pointIn) {
+            protected final float x(Vec3f pointIn) {
                 return pointIn.x();
             }
 
             @Override
-            protected final float y(Vertex3f pointIn) {
+            protected final float y(Vec3f pointIn) {
                 return pointIn.y();
             }
         };
@@ -258,7 +258,7 @@ public class PointInPolygonTest {
          * Returns the orthogonalAxis that is most orthogonal to the plane identified by
          * the given normal and thus should be ignored for PnP testing.
          */
-        static DiscardAxis get(Vertex3f normal) {
+        static DiscardAxis get(Vec3f normal) {
             final float absX = Math.abs(normal.x());
             final float absY = Math.abs(normal.y());
             if (absX > absY)
@@ -270,11 +270,11 @@ public class PointInPolygonTest {
         /**
          * Returns a 2d point with this orthogonalAxis discarded.
          */
-        protected float x(Vertex3f pointIn) {
+        protected float x(Vec3f pointIn) {
             return pointIn.x();
         }
 
-        protected float y(Vertex3f pointIn) {
+        protected float y(Vec3f pointIn) {
             return pointIn.y();
         }
     }

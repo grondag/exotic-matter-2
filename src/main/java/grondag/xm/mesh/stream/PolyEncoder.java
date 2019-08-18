@@ -55,13 +55,14 @@ import static grondag.xm.mesh.stream.PolyStreamFormat.polyFormatKey;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.varia.IndexedInterner;
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatGetter;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatSetter;
 import grondag.xm.mesh.stream.EncoderFunctions.FloatSetter3;
 import grondag.xm.mesh.stream.EncoderFunctions.IntGetter;
 import grondag.xm.mesh.stream.EncoderFunctions.IntSetter;
-import grondag.xm.mesh.vertex.Vec3f;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 
 public class PolyEncoder {
     private static final PolyEncoder[] ENCODERS = new PolyEncoder[POLY_FORMAT_COUNT];
@@ -350,7 +351,7 @@ public class PolyEncoder {
         final float x = getNormalX.get(stream, baseAddress + getNormalXOffset);
         if (Float.isNaN(x))
             return null;
-        return Vec3f.create(x, getNormalY.get(stream, baseAddress + getNormalYOffset), getNormalZ.get(stream, baseAddress + getNormalZOffset));
+        return Vec3fFactory.create(x, getNormalY.get(stream, baseAddress + getNormalYOffset), getNormalZ.get(stream, baseAddress + getNormalZOffset));
     }
 
     public final float getFaceNormalX(IntStream stream, int baseAddress) {

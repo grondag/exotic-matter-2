@@ -22,10 +22,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.vertex.Vec3f;
-import grondag.xm.mesh.vertex.Vertex3f;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
@@ -419,7 +418,7 @@ public class CsgPolyRecombinator {
 
             if (a == aFirstSharedIndex) {
                 // if vertex is on the same line as prev and next vertex, leave it out.
-                if (!Vertex3f.isPointOnLine(polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex), polyA.z(aFirstSharedIndex), polyA.x(aBeforeSharedIndex),
+                if (!Vec3f.isPointOnLine(polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex), polyA.z(aFirstSharedIndex), polyA.x(aBeforeSharedIndex),
                         polyA.y(aBeforeSharedIndex), polyA.z(aBeforeSharedIndex), polyB.x(bAfterSharedIndex), polyB.y(bAfterSharedIndex),
                         polyB.z(bAfterSharedIndex))) {
                     joinedVertex.add(a + 1);
@@ -435,7 +434,7 @@ public class CsgPolyRecombinator {
                 }
             } else if (a == aSecondSharedIndex) {
                 // if vertex is on the same line as prev and next vertex, leave it out
-                if (!Vertex3f.isPointOnLine(polyA.x(aSecondSharedIndex), polyA.y(aSecondSharedIndex), polyA.z(aSecondSharedIndex), polyA.x(aAfterSharedIndex),
+                if (!Vec3f.isPointOnLine(polyA.x(aSecondSharedIndex), polyA.y(aSecondSharedIndex), polyA.z(aSecondSharedIndex), polyA.x(aAfterSharedIndex),
                         polyA.y(aAfterSharedIndex), polyA.z(aAfterSharedIndex), polyB.x(bBeforeSharedIndex), polyB.y(bBeforeSharedIndex),
                         polyB.z(bBeforeSharedIndex))) {
                     joinedVertex.add(a + 1);

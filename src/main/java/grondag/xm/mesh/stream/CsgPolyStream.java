@@ -21,8 +21,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.intstream.IntStreams;
 import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.mesh.Vec3f;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.mesh.vertex.Vec3f;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**

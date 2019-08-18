@@ -22,10 +22,7 @@ import org.joml.Vector4f;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.xm.mesh.vertex.Vec3Function;
-import grondag.xm.mesh.vertex.Vec3f;
-import grondag.xm.mesh.vertex.Vertex3f;
-import grondag.xm.mesh.vertex.VertexCollection;
+import grondag.xm.mesh.polygon.Polygon;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -54,7 +51,7 @@ public class QuadHelper {
         for (int i = 0; i < 6; i++) {
             final Direction f = FACES[i];
             Vec3i faceNormal = f.getVector();
-            float diff = Vec3Function.dotProduct(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ(), x, y, z);
+            float diff = Vec3f.dotProduct(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ(), x, y, z);
 
             if (diff >= 0.0 && diff > minDiff) {
                 minDiff = diff;
@@ -186,8 +183,8 @@ public class QuadHelper {
         }
     }
 
-    public static boolean isConvex(VertexCollection vertices) {
-        final int vertexCount = vertices.vertexCount();
+    public static boolean isConvex(Polygon poly) {
+        final int vertexCount = poly.vertexCount();
         if (vertexCount == 3)
             return true;
 
@@ -196,11 +193,11 @@ public class QuadHelper {
         float testZ = 0;
         boolean needTest = true;
 
-        Vertex3f priorVertex = vertices.getPos(vertexCount - 2);
-        Vertex3f thisVertex = vertices.getPos(vertexCount - 1);
+        Vec3f priorVertex = poly.getPos(vertexCount - 2);
+        Vec3f thisVertex = poly.getPos(vertexCount - 1);
 
         for (int nextIndex = 0; nextIndex < vertexCount; nextIndex++) {
-            Vertex3f nextVertex = vertices.getPos(nextIndex);
+            Vec3f nextVertex = poly.getPos(nextIndex);
 
             final float ax = thisVertex.x() - priorVertex.x();
             final float ay = thisVertex.y() - priorVertex.y();
