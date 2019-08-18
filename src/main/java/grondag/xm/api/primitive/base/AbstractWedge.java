@@ -25,16 +25,16 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.orientation.ExactEdge;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.ReadOnlyPolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
-import grondag.xm.model.varia.BlockOrientationType;
 
 public abstract class AbstractWedge extends AbstractSimplePrimitive {
-    protected static final int KEY_COUNT = BlockEdgeSided.COUNT * 3;
+    protected static final int KEY_COUNT = ExactEdge.COUNT * 3;
     
     protected static int computeKey(int edgeIndex, boolean isCorner, boolean isInside) {
         return edgeIndex * 3 + (isCorner ? (isInside ? 1 : 2) : 0);
@@ -78,14 +78,14 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     protected abstract ReadOnlyPolyStream buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside);
     
     @Override
-    public BlockOrientationType orientationType(SimpleModelState modelState) {
-        return BlockOrientationType.EDGE_SIDED;
+    public OrientationType orientationType(SimpleModelState modelState) {
+        return OrientationType.EXACT_EDGE;
     }
 
     @Override
     public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
         SimpleModelState.Mutable result = this.newState();
-        if(fromState.primitive().orientationType(fromState) == BlockOrientationType.EDGE_SIDED) {
+        if(fromState.primitive().orientationType(fromState) == OrientationType.EXACT_EDGE) {
             result.orientationIndex(fromState.orientationIndex());
             result.primitiveBits(fromState.primitiveBits());
         }

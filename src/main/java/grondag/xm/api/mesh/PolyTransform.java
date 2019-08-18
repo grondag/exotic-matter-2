@@ -1,7 +1,7 @@
 package grondag.xm.api.mesh;
 
-import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.orientation.ExactEdge;
 import grondag.xm.mesh.helper.PolyTransformImpl;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import net.minecraft.util.math.Direction.Axis;
@@ -30,7 +30,7 @@ public interface PolyTransform {
         return PolyTransformImpl.forEdge(ordinal);
     }
     
-    static PolyTransform forEdge(BlockEdgeSided corner) {
+    static PolyTransform forEdge(ExactEdge corner) {
         return PolyTransformImpl.forEdge(corner);
     }
 

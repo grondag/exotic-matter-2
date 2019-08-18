@@ -8,6 +8,7 @@ import java.util.function.Function;
 import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState.Mutable;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.SimplePrimitive.Builder;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
@@ -15,11 +16,10 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.Polygon;
 import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
-import grondag.xm.model.varia.BlockOrientationType;
 
 public class SimplePrimitiveBuilderImpl {
     protected static class BuilderImpl implements Builder {
-        private BlockOrientationType orientationType = BlockOrientationType.NONE;
+        private OrientationType orientationType = OrientationType.NONE;
         private XmSurfaceList list = XmSurfaceList.ALL;
         private Function<PolyTransform, PolyStream> polyFactory;
         
@@ -35,8 +35,8 @@ public class SimplePrimitiveBuilderImpl {
         }
         
         @Override
-        public Builder orientationType(BlockOrientationType orientationType) {
-            this.orientationType = orientationType == null ? BlockOrientationType.NONE : orientationType;
+        public Builder orientationType(OrientationType orientationType) {
+            this.orientationType = orientationType == null ? OrientationType.NONE : orientationType;
             return this;
         }
         
@@ -49,7 +49,7 @@ public class SimplePrimitiveBuilderImpl {
     protected static class Primitive extends AbstractSimplePrimitive {
         private final PolyStream[] cachedQuads;
         
-        private final BlockOrientationType orientationType;
+        private final OrientationType orientationType;
         
         private final Function<PolyTransform, PolyStream> polyFactory;
         
@@ -78,7 +78,7 @@ public class SimplePrimitiveBuilderImpl {
         }
         
         @Override
-        public BlockOrientationType orientationType(SimpleModelState modelState) {
+        public OrientationType orientationType(SimpleModelState modelState) {
             return orientationType;
         }
         

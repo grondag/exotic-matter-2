@@ -22,9 +22,10 @@ import java.util.function.Consumer;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
-import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.orientation.ExactEdge;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -34,7 +35,6 @@ import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
-import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
 
@@ -63,7 +63,7 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
     public static final XmSurface SURFACE_RIGHT = SURFACES.get(5);
 
     /** never changes so may as well save it */
-    private final PolyStream[] cachedQuads = new PolyStream[BlockEdgeSided.COUNT];
+    private final PolyStream[] cachedQuads = new PolyStream[ExactEdge.COUNT];
 
     public static final CubeWithAxisAndFace INSTANCE = new CubeWithAxisAndFace(Xm.idString("cube_axis_face"));
 
@@ -74,13 +74,13 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
 
     @Override
     public void invalidateCache() {
-        BlockEdgeSided.forEach( o -> cachedQuads[o.ordinal()] = getCubeQuads(o));
+        ExactEdge.forEach( o -> cachedQuads[o.ordinal()] = getCubeQuads(o));
     }
 
 
     @Override
-    public BlockOrientationType orientationType(SimpleModelState modelState) {
-        return BlockOrientationType.EDGE_SIDED;
+    public OrientationType orientationType(SimpleModelState modelState) {
+        return OrientationType.EXACT_EDGE;
     }
     
     @Override
@@ -88,7 +88,7 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
         cachedQuads[modelState.orientationIndex()].forEach(target);
     }
 
-    private PolyStream getCubeQuads(BlockEdgeSided orientation) {
+    private PolyStream getCubeQuads(ExactEdge orientation) {
         PolyTransform transform = PolyTransform.forEdge(orientation.ordinal());
 
         WritablePolyStream stream = PolyStreams.claimWritable();

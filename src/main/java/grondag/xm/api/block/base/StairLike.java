@@ -12,9 +12,9 @@ import java.util.function.Supplier;
 
 import grondag.fermion.spatial.DirectionHelper;
 import grondag.xm.api.collision.CollisionDispatcher;
-import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelStateMap;
+import grondag.xm.api.orientation.ExactEdge;
 import grondag.xm.api.primitive.simple.Stair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -374,7 +374,7 @@ public abstract class StairLike extends Block implements Waterloggable {
             Stair.setCorner(corner, modelState);
             Stair.setInsideCorner(corner && inside, modelState);
             
-            modelState.orientationIndex(BlockEdgeSided.find(Direction.from(axis, bottom ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE), face).ordinal());
+            modelState.orientationIndex(ExactEdge.find(Direction.from(axis, bottom ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE), face).ordinal());
         }
         
         return modelState;

@@ -18,9 +18,9 @@ package grondag.xm.terrain;
 
 import grondag.fermion.bits.BitPacker64;
 import grondag.fermion.position.PackedBlockPos;
-import grondag.xm.api.connect.model.HorizontalEdge;
-import grondag.xm.api.connect.model.HorizontalFace;
 import grondag.xm.api.mesh.QuadHelper;
+import grondag.xm.api.orientation.HorizontalEdge;
+import grondag.xm.api.orientation.HorizontalFace;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

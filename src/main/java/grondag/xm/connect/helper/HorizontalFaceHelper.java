@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.model.HorizontalFace;
+import grondag.xm.api.orientation.HorizontalFace;
 import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)

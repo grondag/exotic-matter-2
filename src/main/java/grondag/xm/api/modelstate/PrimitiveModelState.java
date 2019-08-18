@@ -22,11 +22,11 @@ import java.util.function.Function;
 
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.model.varia.BlockOrientationType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -100,7 +100,7 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
 
     int orientationIndex();
 
-    BlockOrientationType orientationType();
+    OrientationType orientationType();
 
     @Override
     boolean isStatic();

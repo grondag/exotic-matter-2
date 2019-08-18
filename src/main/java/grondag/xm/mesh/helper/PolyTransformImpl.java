@@ -19,12 +19,12 @@ package grondag.xm.mesh.helper;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import grondag.xm.api.connect.model.BlockEdgeSided;
 import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.orientation.ExactEdge;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.mesh.polygon.MutablePolygon;
-import grondag.xm.model.varia.BlockOrientationType;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
@@ -71,8 +71,8 @@ public class PolyTransformImpl implements PolyTransform {
 
     private static final ThreadLocal<Vector3f> VEC3 = ThreadLocal.withInitial(Vector3f::new);
 
-    private final static PolyTransformImpl[][] LOOKUP = new PolyTransformImpl[BlockOrientationType.values().length][];
-    private final static PolyTransformImpl[] EDGE_SIDED = new PolyTransformImpl[BlockEdgeSided.COUNT];
+    private final static PolyTransformImpl[][] LOOKUP = new PolyTransformImpl[OrientationType.values().length][];
+    private final static PolyTransformImpl[] EDGE_SIDED = new PolyTransformImpl[ExactEdge.COUNT];
     private final static PolyTransformImpl[] AXIS = new PolyTransformImpl[3];
 
     // mainly for run-time testing
@@ -91,22 +91,22 @@ public class PolyTransformImpl implements PolyTransform {
 //    public static final FaceMap IDENTITY_FACEMAP;
 
     static {
-        LOOKUP[BlockOrientationType.EDGE_SIDED.ordinal()] = EDGE_SIDED;
-        LOOKUP[BlockOrientationType.AXIS.ordinal()] = AXIS;
-        LOOKUP[BlockOrientationType.NONE.ordinal()] = new PolyTransformImpl[1];
+        LOOKUP[OrientationType.EXACT_EDGE.ordinal()] = EDGE_SIDED;
+        LOOKUP[OrientationType.AXIS.ordinal()] = AXIS;
+        LOOKUP[OrientationType.NONE.ordinal()] = new PolyTransformImpl[1];
         populateLookups();
     }
     
     private static void populateLookups() {
-        BlockEdgeSided.forEach(e -> {
+        ExactEdge.forEach(e -> {
             EDGE_SIDED[e.ordinal()] = createEdgeSidedTransform(e);
         });
         
-        AXIS[Axis.Y.ordinal()] = EDGE_SIDED[BlockEdgeSided.DOWN_SOUTH.ordinal()];
-        AXIS[Axis.X.ordinal()] = EDGE_SIDED[BlockEdgeSided.WEST_UP.ordinal()];
-        AXIS[Axis.Z.ordinal()] = EDGE_SIDED[BlockEdgeSided.SOUTH_UP.ordinal()];
+        AXIS[Axis.Y.ordinal()] = EDGE_SIDED[ExactEdge.DOWN_SOUTH.ordinal()];
+        AXIS[Axis.X.ordinal()] = EDGE_SIDED[ExactEdge.WEST_UP.ordinal()];
+        AXIS[Axis.Z.ordinal()] = EDGE_SIDED[ExactEdge.SOUTH_UP.ordinal()];
         
-        LOOKUP[BlockOrientationType.NONE.ordinal()][0] = EDGE_SIDED[BlockEdgeSided.DOWN_SOUTH.ordinal()];
+        LOOKUP[OrientationType.NONE.ordinal()][0] = EDGE_SIDED[ExactEdge.DOWN_SOUTH.ordinal()];
         
         //TODO: populate
         
@@ -147,11 +147,11 @@ public class PolyTransformImpl implements PolyTransform {
         return EDGE_SIDED[ordinal];
     }
     
-    public static PolyTransform forEdge(BlockEdgeSided corner) {
+    public static PolyTransform forEdge(ExactEdge corner) {
         return EDGE_SIDED[corner.ordinal()];
     }
     
-    private static PolyTransformImpl createEdgeSidedTransform(BlockEdgeSided edge) {
+    private static PolyTransformImpl createEdgeSidedTransform(ExactEdge edge) {
         Matrix4f matrix = new Matrix4f().identity();
         
         switch(edge) {

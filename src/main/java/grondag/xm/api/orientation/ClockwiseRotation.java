@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.api.connect.model;
+package grondag.xm.api.orientation;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -25,7 +25,10 @@ import net.minecraft.util.math.Direction;
 
 @API(status = STABLE)
 public enum ClockwiseRotation implements StringIdentifiable {
-    ROTATE_NONE(0, Direction.SOUTH), ROTATE_90(90, Direction.WEST), ROTATE_180(180, Direction.NORTH), ROTATE_270(270, Direction.EAST);
+    ROTATE_NONE(0, Direction.SOUTH),
+    ROTATE_90(90, Direction.WEST),
+    ROTATE_180(180, Direction.NORTH),
+    ROTATE_270(270, Direction.EAST);
 
     public final String name;
 

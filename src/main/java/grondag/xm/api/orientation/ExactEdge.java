@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.api.connect.model;
+package grondag.xm.api.orientation;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -42,7 +42,7 @@ import net.minecraft.util.math.Vec3i;
  * Components of the name are bottom and back face.
  */
 @API(status = STABLE)
-public enum BlockEdgeSided implements StringIdentifiable {
+public enum ExactEdge implements StringIdentifiable {
     DOWN_SOUTH(Direction.DOWN, Direction.SOUTH), 
     DOWN_WEST(Direction.DOWN, Direction.WEST),
     DOWN_NORTH(Direction.DOWN, Direction.NORTH), 
@@ -90,7 +90,7 @@ public enum BlockEdgeSided implements StringIdentifiable {
     @Nullable
     public final HorizontalEdge horizontalEdge;
 
-    private BlockEdgeSided(Direction bottom, Direction back) {
+    private ExactEdge(Direction bottom, Direction back) {
         this.name = this.name().toLowerCase();
         this.bottom = bottom;
         this.back = back;
@@ -113,15 +113,15 @@ public enum BlockEdgeSided implements StringIdentifiable {
      * Will be null if the inputs do not specify an edge.
      */
     @Nullable
-    public static BlockEdgeSided find(Direction bottom, Direction back) {
+    public static ExactEdge find(Direction bottom, Direction back) {
         return BlockEdgeSidedHelper.find(bottom, back);
     }
 
-    public static final BlockEdgeSided fromOrdinal(int ordinal) {
+    public static final ExactEdge fromOrdinal(int ordinal) {
         return BlockEdgeSidedHelper.fromOrdinal(ordinal);
     }
 
-    public static void forEach(Consumer<BlockEdgeSided> consumer) {
+    public static void forEach(Consumer<ExactEdge> consumer) {
         BlockEdgeSidedHelper.forEach(consumer);
     }
 

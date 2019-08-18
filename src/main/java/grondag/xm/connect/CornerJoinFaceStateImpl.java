@@ -16,8 +16,8 @@
 
 package grondag.xm.connect;
 
-import static grondag.xm.api.connect.model.FaceCorner.*;
-import static grondag.xm.api.connect.model.FaceEdge.*;
+import static grondag.xm.api.orientation.FaceCorner.*;
+import static grondag.xm.api.orientation.FaceEdge.*;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
@@ -25,11 +25,11 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.model.BlockEdge;
-import grondag.xm.api.connect.model.FaceCorner;
-import grondag.xm.api.connect.model.FaceEdge;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.world.BlockNeighbors;
+import grondag.xm.api.orientation.Edge;
+import grondag.xm.api.orientation.FaceCorner;
+import grondag.xm.api.orientation.FaceEdge;
 import grondag.xm.connect.helper.FaceEdgeHelper;
 import net.minecraft.util.math.Direction;
 
@@ -211,7 +211,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
             for (int i = 0; i < FaceEdgeHelper.COUNT; i++) {
                 final FaceEdge fside = FaceEdgeHelper.fromOrdinal(i);
                 final Direction joinFace = fside.toWorld(face);
-                if (tests.result(joinFace) && !tests.result(BlockEdge.find(face, joinFace))) {
+                if (tests.result(joinFace) && !tests.result(Edge.find(face, joinFace))) {
                     faceFlags |= fside.ordinalBit;
                 }
             }

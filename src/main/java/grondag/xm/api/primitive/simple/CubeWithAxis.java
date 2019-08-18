@@ -24,6 +24,7 @@ import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -33,7 +34,6 @@ import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
-import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -65,8 +65,8 @@ public class CubeWithAxis extends AbstractSimplePrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(SimpleModelState modelState) {
-        return BlockOrientationType.AXIS;
+    public OrientationType orientationType(SimpleModelState modelState) {
+        return OrientationType.AXIS;
     }
     
     @Override

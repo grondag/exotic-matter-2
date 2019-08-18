@@ -19,10 +19,10 @@ package grondag.xm.api.primitive;
 import java.util.function.Consumer;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.model.varia.BlockOrientationType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
@@ -58,8 +58,8 @@ public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends P
     /**
      * Override if shape has an orientation to be selected during placement.
      */
-    default BlockOrientationType orientationType(R modelState) {
-        return BlockOrientationType.NONE;
+    default OrientationType orientationType(R modelState) {
+        return OrientationType.NONE;
     }
 
     int stateFlags(R modelState);

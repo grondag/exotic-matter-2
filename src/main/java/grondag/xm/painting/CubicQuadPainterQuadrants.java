@@ -16,10 +16,10 @@
 
 package grondag.xm.painting;
 
-import grondag.xm.api.connect.model.FaceCorner;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.orientation.FaceCorner;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;

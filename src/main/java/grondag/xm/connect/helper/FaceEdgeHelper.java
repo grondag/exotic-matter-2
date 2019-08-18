@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.model.FaceEdge;
+import grondag.xm.api.orientation.FaceEdge;
 import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)

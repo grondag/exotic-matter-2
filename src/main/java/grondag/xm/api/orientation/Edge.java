@@ -14,12 +14,12 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.api.connect.model;
+package grondag.xm.api.orientation;
 
-import static grondag.xm.api.connect.model.ClockwiseRotation.ROTATE_180;
-import static grondag.xm.api.connect.model.ClockwiseRotation.ROTATE_270;
-import static grondag.xm.api.connect.model.ClockwiseRotation.ROTATE_90;
-import static grondag.xm.api.connect.model.ClockwiseRotation.ROTATE_NONE;
+import static grondag.xm.api.orientation.ClockwiseRotation.ROTATE_180;
+import static grondag.xm.api.orientation.ClockwiseRotation.ROTATE_270;
+import static grondag.xm.api.orientation.ClockwiseRotation.ROTATE_90;
+import static grondag.xm.api.orientation.ClockwiseRotation.ROTATE_NONE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -41,7 +41,7 @@ import net.minecraft.util.math.Vec3i;
  * respect to that edge.
  */
 @API(status = STABLE)
-public enum BlockEdge implements StringIdentifiable {
+public enum Edge implements StringIdentifiable {
     DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), 
     DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
     DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE), 
@@ -86,7 +86,7 @@ public enum BlockEdge implements StringIdentifiable {
     @Nullable
     public final HorizontalEdge horizontalEdge;
 
-    private BlockEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
+    private Edge(Direction face1, Direction face2, ClockwiseRotation rotation) {
         this.name = this.name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
@@ -110,15 +110,15 @@ public enum BlockEdge implements StringIdentifiable {
      * Will be null if the inputs do not specify an edge.
      */
     @Nullable
-    public static BlockEdge find(Direction face1, Direction face2) {
+    public static Edge find(Direction face1, Direction face2) {
         return BlockEdgeHelper.find(face1, face2);
     }
 
-    public static final BlockEdge fromOrdinal(int ordinal) {
+    public static final Edge fromOrdinal(int ordinal) {
         return BlockEdgeHelper.fromOrdinal(ordinal);
     }
 
-    public static void forEach(Consumer<BlockEdge> consumer) {
+    public static void forEach(Consumer<Edge> consumer) {
         BlockEdgeHelper.forEach(consumer);
     }
 

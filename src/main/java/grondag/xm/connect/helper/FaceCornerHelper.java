@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.model.FaceCorner;
-import grondag.xm.api.connect.model.FaceEdge;
+import grondag.xm.api.orientation.FaceCorner;
+import grondag.xm.api.orientation.FaceEdge;
 
 @API(status = INTERNAL)
 public abstract class FaceCornerHelper {

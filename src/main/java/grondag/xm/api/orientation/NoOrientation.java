@@ -1,4 +1,4 @@
-package grondag.xm.api.connect.model;
+package grondag.xm.api.orientation;
 
 public enum NoOrientation {
     NONE

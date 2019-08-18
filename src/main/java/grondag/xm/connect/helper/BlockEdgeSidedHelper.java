@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.model.BlockEdgeSided;
+import grondag.xm.api.orientation.ExactEdge;
 import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
@@ -30,26 +30,26 @@ public abstract class BlockEdgeSidedHelper {
     private BlockEdgeSidedHelper() {
     }
 
-    private static final BlockEdgeSided[] VALUES = BlockEdgeSided.values();
+    private static final ExactEdge[] VALUES = ExactEdge.values();
     public static final int COUNT = VALUES.length;
-    private static final BlockEdgeSided[][] CORNER_LOOKUP = new BlockEdgeSided[6][6];
+    private static final ExactEdge[][] CORNER_LOOKUP = new ExactEdge[6][6];
 
     static {
-        for (BlockEdgeSided edge : VALUES) {
+        for (ExactEdge edge : VALUES) {
             CORNER_LOOKUP[edge.bottom.ordinal()][edge.back.ordinal()] = edge;
         }
     }
 
-    public static BlockEdgeSided find(Direction face1, Direction face2) {
+    public static ExactEdge find(Direction face1, Direction face2) {
         return CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
     }
 
-    public static final BlockEdgeSided fromOrdinal(int ordinal) {
+    public static final ExactEdge fromOrdinal(int ordinal) {
         return VALUES[ordinal];
     }
 
-    public static void forEach(Consumer<BlockEdgeSided> consumer) {
-        for (BlockEdgeSided val : VALUES) {
+    public static void forEach(Consumer<ExactEdge> consumer) {
+        for (ExactEdge val : VALUES) {
             consumer.accept(val);
         }
     }

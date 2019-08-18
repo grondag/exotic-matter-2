@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.model.HorizontalEdge;
-import grondag.xm.api.connect.model.HorizontalFace;
+import grondag.xm.api.orientation.HorizontalEdge;
+import grondag.xm.api.orientation.HorizontalFace;
 
 @API(status = INTERNAL)
 public abstract class HorizontalCornerHelper {

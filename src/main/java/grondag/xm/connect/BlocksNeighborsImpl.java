@@ -22,13 +22,13 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.model.BlockCorner;
-import grondag.xm.api.connect.model.BlockEdge;
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.connect.world.ModelStateFunction;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.orientation.Corner;
+import grondag.xm.api.orientation.Edge;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -131,12 +131,12 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
         pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
     }
 
-    private void setPos(BlockPos.Mutable pos, BlockEdge edge) {
+    private void setPos(BlockPos.Mutable pos, Edge edge) {
         final Vec3i vec = edge.vector;
         pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
     }
 
-    private void setPos(BlockPos.Mutable pos, BlockCorner corner) {
+    private void setPos(BlockPos.Mutable pos, Corner corner) {
         final Vec3i vec = corner.vector;
         pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
     }
@@ -167,7 +167,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public BlockState blockState(BlockEdge edge) {
+    public BlockState blockState(Edge edge) {
         BlockState result = blockStates[edge.superOrdinal];
         if (result == null) {
             setPos(mutablePos, edge);
@@ -178,7 +178,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public BlockState blockState(BlockCorner corner) {
+    public BlockState blockState(Corner corner) {
         BlockState result = blockStates[corner.superOrdinal];
         if (result == null) {
             setPos(mutablePos, corner);
@@ -223,7 +223,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public ModelState modelState(BlockEdge edge) {
+    public ModelState modelState(Edge edge) {
         if (this.stateFunc == null)
             return null;
 
@@ -238,7 +238,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public ModelState modelState(BlockCorner corner) {
+    public ModelState modelState(Corner corner) {
         if (this.stateFunc == null)
             return null;
 
@@ -273,7 +273,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean doTest(BlockEdge edge) {
+    private boolean doTest(Edge edge) {
         targetModelState = stateFunc == null ? null : modelState(edge);
         targetBlockState = blockState(edge);
         setPos(targetPos, edge);
@@ -281,7 +281,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean doTest(BlockCorner corner) {
+    private boolean doTest(Corner corner) {
         targetModelState = stateFunc == null ? null : modelState(corner);
         targetBlockState = blockState(corner);
         setPos(targetPos, corner);
@@ -320,7 +320,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public boolean result(BlockEdge edge) {
+    public boolean result(Edge edge) {
         if (edge == null) {
             return false;
         }
@@ -335,7 +335,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public boolean result(BlockCorner corner) {
+    public boolean result(Corner corner) {
         if (corner == null) {
             return false;
         }

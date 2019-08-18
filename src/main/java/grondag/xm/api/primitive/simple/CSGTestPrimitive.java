@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -31,7 +32,6 @@ import grondag.xm.mesh.stream.PolyStream;
 import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.SimpleModelStateImpl;
-import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.model.varia.CSG;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
@@ -60,8 +60,8 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
     }
     
     @Override
-    public BlockOrientationType orientationType(SimpleModelState modelState) {
-        return BlockOrientationType.NONE;
+    public OrientationType orientationType(SimpleModelState modelState) {
+        return OrientationType.NONE;
     }
     
     @Override

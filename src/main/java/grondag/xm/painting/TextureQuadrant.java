@@ -17,8 +17,8 @@
 package grondag.xm.painting;
 
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.api.connect.model.FaceCorner;
-import grondag.xm.api.connect.model.FaceEdge;
+import grondag.xm.api.orientation.FaceCorner;
+import grondag.xm.api.orientation.FaceEdge;
 import grondag.xm.mesh.polygon.MutablePolygon;
 
 /**

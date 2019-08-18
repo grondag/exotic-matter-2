@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.api.connect.model;
+package grondag.xm.api.orientation;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -35,7 +35,10 @@ import net.minecraft.util.math.Vec3i;
  */
 @API(status = STABLE)
 public enum HorizontalFace implements StringIdentifiable {
-    NORTH(Direction.NORTH), EAST(Direction.EAST), SOUTH(Direction.SOUTH), WEST(Direction.WEST);
+    NORTH(Direction.NORTH),
+    EAST(Direction.EAST),
+    SOUTH(Direction.SOUTH),
+    WEST(Direction.WEST);
 
     public final Direction face;
 

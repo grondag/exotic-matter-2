@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.api.connect.model;
+package grondag.xm.api.orientation;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -35,11 +35,15 @@ import net.minecraft.util.math.Vec3i;
  * neighboring blocks diagonally adjacent to those corners.
  */
 @API(status = STABLE)
-public enum BlockCorner implements StringIdentifiable {
-    UP_NORTH_EAST(Direction.UP, Direction.EAST, Direction.NORTH), UP_NORTH_WEST(Direction.UP, Direction.WEST, Direction.NORTH),
-    UP_SOUTH_EAST(Direction.UP, Direction.EAST, Direction.SOUTH), UP_SOUTH_WEST(Direction.UP, Direction.WEST, Direction.SOUTH),
-    DOWN_NORTH_EAST(Direction.DOWN, Direction.EAST, Direction.NORTH), DOWN_NORTH_WEST(Direction.DOWN, Direction.WEST, Direction.NORTH),
-    DOWN_SOUTH_EAST(Direction.DOWN, Direction.EAST, Direction.SOUTH), DOWN_SOUTH_WEST(Direction.DOWN, Direction.WEST, Direction.SOUTH);
+public enum Corner implements StringIdentifiable {
+    UP_NORTH_EAST(Direction.UP, Direction.EAST, Direction.NORTH),
+    UP_NORTH_WEST(Direction.UP, Direction.WEST, Direction.NORTH),
+    UP_SOUTH_EAST(Direction.UP, Direction.EAST, Direction.SOUTH),
+    UP_SOUTH_WEST(Direction.UP, Direction.WEST, Direction.SOUTH),
+    DOWN_NORTH_EAST(Direction.DOWN, Direction.EAST, Direction.NORTH),
+    DOWN_NORTH_WEST(Direction.DOWN, Direction.WEST, Direction.NORTH),
+    DOWN_SOUTH_EAST(Direction.DOWN, Direction.EAST, Direction.SOUTH),
+    DOWN_SOUTH_WEST(Direction.DOWN, Direction.WEST, Direction.SOUTH);
 
     public final Direction face1;
     public final Direction face2;
@@ -56,14 +60,14 @@ public enum BlockCorner implements StringIdentifiable {
     @API(status = INTERNAL)
     public final int superOrdinalBit;
 
-    private BlockCorner(Direction face1, Direction face2, Direction face3) {
+    private Corner(Direction face1, Direction face2, Direction face3) {
         this.name = this.name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
         this.face3 = face3;
 
         // 6 is number of possible faces
-        this.superOrdinal = 6 + this.ordinal() + BlockEdge.values().length;
+        this.superOrdinal = 6 + this.ordinal() + Edge.values().length;
         this.superOrdinalBit = 1 << superOrdinal;
 
         Vec3i v1 = face1.getVector();
@@ -79,15 +83,15 @@ public enum BlockCorner implements StringIdentifiable {
      * Will return null if the given inputs do not specify a corner.
      */
     @Nullable
-    public static BlockCorner find(Direction face1, Direction face2, Direction face3) {
+    public static Corner find(Direction face1, Direction face2, Direction face3) {
         return BlockCornerHelper.find(face1, face2, face3);
     }
 
-    public static final BlockCorner fromOrdinal(int ordinal) {
+    public static final Corner fromOrdinal(int ordinal) {
         return BlockCornerHelper.fromOrdinal(ordinal);
     }
 
-    public static void forEach(Consumer<BlockCorner> consumer) {
+    public static void forEach(Consumer<Corner> consumer) {
         BlockCornerHelper.forEach(consumer);
     }
 

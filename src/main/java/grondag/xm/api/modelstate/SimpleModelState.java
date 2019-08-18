@@ -16,7 +16,7 @@
 
 package grondag.xm.api.modelstate;
 
-import grondag.xm.api.connect.model.BlockEdgeSided;
+import grondag.xm.api.orientation.ExactEdge;
 import grondag.xm.api.primitive.simple.Stair;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.StairsBlock;
@@ -76,7 +76,7 @@ public interface SimpleModelState extends PrimitiveModelState<SimpleModelState, 
             }
             Stair.setCorner(corner, modelState);
             Stair.setInsideCorner(corner && inside, modelState);
-            modelState.orientationIndex(BlockEdgeSided.find(bottom ? Direction.DOWN : Direction.UP, face).ordinal());
+            modelState.orientationIndex(ExactEdge.find(bottom ? Direction.DOWN : Direction.UP, face).ordinal());
         }
         
         return modelState;

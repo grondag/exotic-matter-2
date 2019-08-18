@@ -37,6 +37,7 @@ import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.api.primitive.ModelPrimitive;
@@ -44,7 +45,6 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
 import grondag.xm.mesh.polygon.Polygon;
-import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.QuadPaintHandler;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.fabricmc.api.EnvType;
@@ -440,7 +440,7 @@ public abstract class AbstractPrimitiveModelState
     }
     
     @Override
-    public final BlockOrientationType orientationType() {
+    public final OrientationType orientationType() {
       return primitive.orientationType((R)this);
     }
     

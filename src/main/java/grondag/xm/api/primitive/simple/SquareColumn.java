@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.color.Color;
 import grondag.xm.Xm;
-import grondag.xm.api.connect.model.FaceEdge;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.connect.state.CornerJoinState;
@@ -29,6 +28,8 @@ import grondag.xm.api.mesh.FaceVertex;
 import grondag.xm.api.mesh.QuadHelper;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.orientation.OrientationType;
+import grondag.xm.api.orientation.FaceEdge;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -38,7 +39,6 @@ import grondag.xm.mesh.stream.PolyStreams;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.model.state.AbstractPrimitiveModelState;
 import grondag.xm.model.state.SimpleModelStateImpl;
-import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.painting.SurfaceTopology;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -124,8 +124,8 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     @Override
-    public BlockOrientationType orientationType(SimpleModelState modelState) {
-        return BlockOrientationType.AXIS;
+    public OrientationType orientationType(SimpleModelState modelState) {
+        return OrientationType.AXIS;
     }
     
     private static final Axis[] AXIS = Direction.Axis.values();
