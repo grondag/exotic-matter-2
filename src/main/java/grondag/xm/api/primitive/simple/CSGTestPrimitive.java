@@ -35,7 +35,6 @@ import grondag.xm.model.varia.BlockOrientationType;
 import grondag.xm.model.varia.CSG;
 import grondag.xm.model.varia.MeshHelper;
 import grondag.xm.painting.SurfaceTopology;
-import net.minecraft.util.math.Box;
 
 //TODO: remove
 public class CSGTestPrimitive extends AbstractSimplePrimitive {
@@ -89,17 +88,17 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
         // icosahedron (sphere) test
 //    result = new CSGShape(QuadFactory.makeIcosahedron(new Vec3d(.5, .5, .5), 0.5, template));
 
-        CsgPolyStream quadsA = PolyStreams.claimCSG();
+        CsgPolyStream quadsA = PolyStreams.claimCsg();
         quadsA.writer().lockUV(0, true);
         quadsA.writer().surface(SURFACE_A);
         quadsA.saveDefaults();
-        MeshHelper.makePaintableBox(new Box(0, 0.4, 0.4, 1.0, 0.6, 0.6), quadsA);
+        MeshHelper.makePaintableBox(0f, 0.4f, 0.4f, 1.0f, 0.6f, 0.6f, quadsA);
 
-        CsgPolyStream quadsB = PolyStreams.claimCSG();
+        CsgPolyStream quadsB = PolyStreams.claimCsg();
         quadsB.writer().lockUV(0, true);
         quadsB.writer().surface(SURFACE_B);
         quadsB.saveDefaults();
-        MeshHelper.makePaintableBox(new Box(0.2, 0, 0.3, 0.6, 1.0, 0.8), quadsB);
+        MeshHelper.makePaintableBox(0.2f, 0f, 0.3f, 0.6f, 1.0f, 0.8f, quadsB);
 
         WritablePolyStream output = PolyStreams.claimWritable();
 //        CSG.difference(quadsA, quadsB, output);

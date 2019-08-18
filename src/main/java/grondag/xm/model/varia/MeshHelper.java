@@ -20,7 +20,6 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.mesh.polygon.MutablePolygon;
 import grondag.xm.mesh.stream.WritablePolyStream;
 import grondag.xm.painting.SurfaceTopology;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
@@ -121,6 +120,8 @@ public class MeshHelper {
      * Makes a regular icosahedron, which is a very close approximation to a sphere
      * for most purposes. Loosely based on
      * http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
+     * 
+     * PERF: use primitives instead of Vec3d
      */
     public static void makeIcosahedron(Vec3d center, double radius, WritablePolyStream stream, boolean smoothNormals) {
         /** vertex scale */
@@ -254,34 +255,34 @@ public class MeshHelper {
     /**
      * Adds box to stream using current stream defaults.
      */
-    public static void makePaintableBox(Box box, WritablePolyStream stream) {
+    public static void makePaintableBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, WritablePolyStream stream) {
         MutablePolygon quad = stream.writer();
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.UP, 1 - (float)box.maxX, (float)box.minZ, 1 - (float)box.minX, (float)box.maxZ, 1 - (float)box.maxY, Direction.SOUTH);
+        quad.setupFaceQuad(Direction.UP, 1 - maxX, minZ, 1 - minX, maxZ, 1 - maxY, Direction.SOUTH);
         stream.append();
 
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.DOWN, (float)box.minX, (float)box.minZ, (float)box.maxX, (float)box.maxZ, (float)box.minY, Direction.SOUTH);
+        quad.setupFaceQuad(Direction.DOWN, minX, minZ, maxX, maxZ, minY, Direction.SOUTH);
         stream.append();
 
         // -X
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.WEST, (float)box.minZ, (float)box.minY, (float)box.maxZ, (float)box.maxY, (float)box.minX, Direction.UP);
+        quad.setupFaceQuad(Direction.WEST, minZ, minY, maxZ, maxY, minX, Direction.UP);
         stream.append();
 
         // +X
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.EAST, 1 - (float)box.maxZ, (float)box.minY, 1 - (float)box.minZ, (float)box.maxY, 1 - (float)box.maxX, Direction.UP);
+        quad.setupFaceQuad(Direction.EAST, 1 - maxZ, minY, 1 - minZ, maxY, 1 - maxX, Direction.UP);
         stream.append();
 
         // -Z
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.NORTH, 1 - (float)box.maxX, (float)box.minY, 1 - (float)box.minX, (float)box.maxY, (float)box.minZ, Direction.UP);
+        quad.setupFaceQuad(Direction.NORTH, 1 - maxX, minY, 1 - minX, maxY, minZ, Direction.UP);
         stream.append();
 
         // +Z
         stream.setVertexCount(4);
-        quad.setupFaceQuad(Direction.SOUTH, (float)box.minX, (float)box.minY, (float)box.maxX, (float)box.maxY, 1 - (float)box.maxZ, Direction.UP);
+        quad.setupFaceQuad(Direction.SOUTH, minX, minY, maxX, maxY, 1 - maxZ, Direction.UP);
         stream.append();
     }
 

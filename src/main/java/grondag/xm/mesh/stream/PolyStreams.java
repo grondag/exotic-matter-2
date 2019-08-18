@@ -97,7 +97,7 @@ public class PolyStreams {
         readables.offer(freeStream);
     }
 
-    public static CsgPolyStream claimCSG() {
+    public static CsgPolyStream claimCsg() {
         CsgPolyStream result = csgStreams.poll();
         if (result == null)
             result = new CsgPolyStream();
@@ -106,7 +106,7 @@ public class PolyStreams {
     }
 
     public static CsgPolyStream claimCSG(PolyStream stream) {
-        CsgPolyStream result = claimCSG();
+        CsgPolyStream result = claimCsg();
         result.appendAll(stream);
         return result;
     }

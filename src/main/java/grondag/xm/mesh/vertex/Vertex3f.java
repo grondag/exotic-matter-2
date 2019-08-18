@@ -93,8 +93,10 @@ public interface Vertex3f {
      * True if both vertices are at the same point.
      */
     public default boolean isCsgEqual(Vertex3f vertexIn) {
-        return Math.abs(vertexIn.x() - this.x()) < QuadHelper.EPSILON && Math.abs(vertexIn.y() - this.y()) < QuadHelper.EPSILON
-                && Math.abs(vertexIn.z() - this.z()) < QuadHelper.EPSILON;
+        final float x = vertexIn.x() - this.x();
+        final float y = vertexIn.y() - this.y();
+        final float z = vertexIn.z() - this.z();
+        return x * x + y * y + z * z < QuadHelper.EPSILON * QuadHelper.EPSILON;
     }
 
     /**
