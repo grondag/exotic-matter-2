@@ -16,9 +16,7 @@
 
 package grondag.xm.api.primitive.simple;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
-
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
@@ -27,18 +25,16 @@ import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
-import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.SimpleModelState;
-import grondag.xm.api.orientation.ExactEdge;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
-import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
+import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.model.state.SimpleModelStateImpl;
 import net.minecraft.util.math.Direction;
 
-public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
+public class CubeWithEdgeRotation {
+    private CubeWithEdgeRotation() {}
+    
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("down", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("up", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
@@ -57,93 +53,56 @@ public class CubeWithAxisAndFace extends AbstractSimplePrimitive {
     
     public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
     public static final XmSurface SURFACE_TOP = SURFACES.get(1);
-    public static final XmSurface SURFACE_BACK = SURFACES.get(2);
-    public static final XmSurface SURFACE_FRONT = SURFACES.get(3);
+    public static final XmSurface SURFACE_FRONT = SURFACES.get(2);
+    public static final XmSurface SURFACE_BACK = SURFACES.get(3);
     public static final XmSurface SURFACE_LEFT = SURFACES.get(4);
     public static final XmSurface SURFACE_RIGHT = SURFACES.get(5);
 
-    /** never changes so may as well save it */
-    private final XmMesh[] cachedQuads = new XmMesh[ExactEdge.COUNT];
-
-    public static final CubeWithAxisAndFace INSTANCE = new CubeWithAxisAndFace(Xm.idString("cube_axis_face"));
-
-    protected CubeWithAxisAndFace(String idString) {
-        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, s -> SURFACES);
-        invalidateCache();
-    }
-
-    @Override
-    public void invalidateCache() {
-        ExactEdge.forEach( o -> cachedQuads[o.ordinal()] = getCubeQuads(o));
-    }
-
-
-    @Override
-    public OrientationType orientationType(SimpleModelState modelState) {
-        return OrientationType.EXACT_EDGE;
-    }
-    
-    @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
-        cachedQuads[modelState.orientationIndex()].forEach(target);
-    }
-
-    private XmMesh getCubeQuads(ExactEdge orientation) {
-        PolyTransform transform = PolyTransform.forEdge(orientation.ordinal());
-
-        WritableMesh stream = XmMeshes.claimWritable();
-        MutablePolygon writer = stream.writer();
+    static final Function<PolyTransform, XmMesh> POLY_FACTORY = transform -> {
+        WritableMesh mesh = XmMeshes.claimWritable();
+        MutablePolygon writer = mesh.writer();
         writer.colorAll(0, 0xFFFFFFFF);
         writer.lockUV(0, true);
         writer.rotation(0, Rotation.ROTATE_NONE);
         writer.sprite(0, "");
-        stream.saveDefaults();
+        mesh.saveDefaults();
 
         writer.surface(SURFACE_DOWN);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_UP);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_EAST);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_WEST);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_NORTH);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_SOUTH);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
         transform.apply(writer);
-        stream.append();
+        mesh.append();
 
-        XmMesh result = stream.releaseToReader();
+        return mesh.releaseToReader();
+    };
 
-        result.origin();
-        assert result.reader().vertexCount() == 4;
-
-        return result;
-    }
-
-    @Override
-    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
-        return defaultState().mutableCopy();
-    }
-
-    @Override
-    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
-        return from.primitive() == to.primitive();
-    }
+    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+            .surfaceList(SURFACES)
+            .polyFactory(POLY_FACTORY)
+            .orientationType(OrientationType.ROTATION)
+            .build(Xm.idString("cube_with_rotation"));
 }

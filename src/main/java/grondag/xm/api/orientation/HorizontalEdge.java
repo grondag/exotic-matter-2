@@ -29,7 +29,7 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Vec3i;
 
 /**
- * A subset of {@link Edge}, includes only the edges in the horizontal
+ * A subset of {@link CubeEdge}, includes only the edges in the horizontal
  * plane.
  */
 @API(status = STABLE)

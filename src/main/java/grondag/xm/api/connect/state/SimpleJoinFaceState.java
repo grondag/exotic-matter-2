@@ -21,7 +21,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.connect.world.BlockNeighbors;
-import grondag.xm.api.orientation.Edge;
+import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.FaceEdge;
 import net.minecraft.util.math.Direction;
 
@@ -89,7 +89,7 @@ public enum SimpleJoinFaceState {
         } else {
             for (FaceEdge fside : EDGES) {
                 Direction joinFace = fside.toWorld(face);
-                if (tests.result(joinFace) && !tests.result(Edge.find(face, joinFace))) {
+                if (tests.result(joinFace) && !tests.result(CubeEdge.find(face, joinFace))) {
                     faceFlags |= fside.ordinalBit;
                 }
             }

@@ -22,10 +22,11 @@ import net.minecraft.util.math.Direction;
 public enum OrientationType {
     NONE(NoOrientation.class),
     AXIS(Direction.Axis.class),
+    HORIZONTAL_FACE(HorizontalFace.class),
     FACE(Direction.class),
-    EDGE(Edge.class),
-    EXACT_EDGE(ExactEdge.class),
-    CORNER(Corner.class);
+    EDGE(CubeEdge.class),
+    ROTATION(CubeRotation.class),
+    CORNER(CubeCorner.class);
 
     public final Class<? extends Enum> enumClass;
 

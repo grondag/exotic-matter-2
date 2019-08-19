@@ -1,8 +1,9 @@
 package grondag.xm.api.mesh.polygon;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.api.orientation.ExactEdge;
+import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.mesh.helper.PolyTransformImpl;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
 @FunctionalInterface
@@ -25,19 +26,19 @@ public interface PolyTransform {
         return PolyTransformImpl.get(modelState);
     }
 
-    static PolyTransform forEdge(int ordinal) {
-        return PolyTransformImpl.forEdge(ordinal);
+    static PolyTransform forEdgeRotation(int ordinal) {
+        return PolyTransformImpl.forEdgeRotation(ordinal);
     }
     
-    static PolyTransform forEdge(ExactEdge corner) {
-        return PolyTransformImpl.forEdge(corner);
-    }
-
-    public static PolyTransform forAxis(int ordinal) {
-        return PolyTransformImpl.forAxis(ordinal);
+    static PolyTransform get(CubeRotation corner) {
+        return PolyTransformImpl.get(corner);
     }
     
-    public static PolyTransform forAxis(Axis axis) {
-        return PolyTransformImpl.forAxis(axis);
+    public static PolyTransform get(Axis axis) {
+        return PolyTransformImpl.get(axis);
+    }
+    
+    public static PolyTransform get(Direction face) {
+        return PolyTransformImpl.get(face);
     }
 }

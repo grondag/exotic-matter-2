@@ -18,21 +18,21 @@ package grondag.xm.placement;
 
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.orientation.Edge;
+import grondag.xm.api.orientation.CubeEdge;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
 public enum BlockOrientationEdge {
-    DYNAMIC(null), MATCH_CLOSEST(null), UP_EAST(Edge.UP_EAST), UP_WEST(Edge.UP_WEST), UP_NORTH(Edge.UP_NORTH), UP_SOUTH(Edge.UP_SOUTH),
-    NORTH_EAST(Edge.NORTH_EAST), NORTH_WEST(Edge.NORTH_WEST), SOUTH_EAST(Edge.SOUTH_EAST), SOUTH_WEST(Edge.SOUTH_WEST),
-    DOWN_EAST(Edge.DOWN_EAST), DOWN_WEST(Edge.DOWN_WEST), DOWN_NORTH(Edge.DOWN_NORTH), DOWN_SOUTH(Edge.DOWN_SOUTH);
+    DYNAMIC(null), MATCH_CLOSEST(null), UP_EAST(CubeEdge.UP_EAST), UP_WEST(CubeEdge.UP_WEST), UP_NORTH(CubeEdge.UP_NORTH), UP_SOUTH(CubeEdge.UP_SOUTH),
+    NORTH_EAST(CubeEdge.NORTH_EAST), NORTH_WEST(CubeEdge.NORTH_WEST), SOUTH_EAST(CubeEdge.SOUTH_EAST), SOUTH_WEST(CubeEdge.SOUTH_WEST),
+    DOWN_EAST(CubeEdge.DOWN_EAST), DOWN_WEST(CubeEdge.DOWN_WEST), DOWN_NORTH(CubeEdge.DOWN_NORTH), DOWN_SOUTH(CubeEdge.DOWN_SOUTH);
 
-    public final Edge edge;
+    public final CubeEdge edge;
 
     private static final String TAG_NAME = NBTDictionary.claim("blockOrientEdge");
 
-    private BlockOrientationEdge(Edge edge) {
+    private BlockOrientationEdge(CubeEdge edge) {
         this.edge = edge;
     }
 

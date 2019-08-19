@@ -22,20 +22,20 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.orientation.Corner;
+import grondag.xm.api.orientation.CubeCorner;
 import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
-public abstract class BlockCornerHelper {
-    private BlockCornerHelper() {
+public abstract class CubeCornerHelper {
+    private CubeCornerHelper() {
     }
 
-    private static final Corner[] VALUES = Corner.values();
+    private static final CubeCorner[] VALUES = CubeCorner.values();
     public static final int COUNT = VALUES.length;
-    private static final Corner[][][] FAR_CORNER_LOOKUP = new Corner[6][6][6];
+    private static final CubeCorner[][][] FAR_CORNER_LOOKUP = new CubeCorner[6][6][6];
 
     static {
-        for (Corner corner : VALUES) {
+        for (CubeCorner corner : VALUES) {
             FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()][corner.face3.ordinal()] = corner;
             FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face3.ordinal()][corner.face2.ordinal()] = corner;
             FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()][corner.face3.ordinal()] = corner;
@@ -45,16 +45,16 @@ public abstract class BlockCornerHelper {
         }
     }
 
-    public static Corner find(Direction face1, Direction face2, Direction face3) {
+    public static CubeCorner find(Direction face1, Direction face2, Direction face3) {
         return FAR_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()][face3.ordinal()];
     }
 
-    public static final Corner fromOrdinal(int ordinal) {
+    public static final CubeCorner fromOrdinal(int ordinal) {
         return VALUES[ordinal];
     }
 
-    public static void forEach(Consumer<Corner> consumer) {
-        for (Corner val : VALUES) {
+    public static void forEach(Consumer<CubeCorner> consumer) {
+        for (CubeCorner val : VALUES) {
             consumer.accept(val);
         }
     }

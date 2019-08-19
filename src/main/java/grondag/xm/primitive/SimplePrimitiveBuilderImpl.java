@@ -5,6 +5,7 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -53,6 +54,8 @@ public class SimplePrimitiveBuilderImpl {
         
         private final Function<PolyTransform, XmMesh> polyFactory;
         
+        private boolean notifyException = true;
+        
         static Function<SimpleModelState, XmSurfaceList> listWrapper(XmSurfaceList list) {
             return s -> list;
         }
@@ -67,6 +70,7 @@ public class SimplePrimitiveBuilderImpl {
         
         @Override
         public void invalidateCache() {
+            notifyException = true;
             final int limit = cachedQuads.length;
             SimpleModelState.Mutable state = newState();
             for(int i = 0; i < limit; i++) {
@@ -84,7 +88,14 @@ public class SimplePrimitiveBuilderImpl {
         
         @Override
         public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
-            cachedQuads[modelState.orientationIndex()].forEach(target);
+            try {
+                cachedQuads[modelState.orientationIndex()].forEach(target);
+            } catch (Exception e) {
+                if(notifyException) {
+                    notifyException = false;
+                    Xm.LOG.error("Unexpected exception while rendering primitive '" + this.translationKey() + "'.  Subsequent errors will be supressed.", e);
+                }
+            }
         }
 
         @Override

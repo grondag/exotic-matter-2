@@ -29,21 +29,21 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 import net.minecraft.util.math.Direction;
 
 public class Stair extends AbstractWedge {
-    public static final XmSurfaceList SURFACES = CubeWithAxisAndFace.SURFACES;
+    public static final XmSurfaceList SURFACES = CubeWithEdgeRotation.SURFACES;
 
-    public static final XmSurface SURFACE_DOWN = CubeWithAxisAndFace.SURFACE_DOWN;
-    public static final XmSurface SURFACE_UP = CubeWithAxisAndFace.SURFACE_UP;
-    public static final XmSurface SURFACE_NORTH = CubeWithAxisAndFace.SURFACE_NORTH;
-    public static final XmSurface SURFACE_SOUTH = CubeWithAxisAndFace.SURFACE_SOUTH;
-    public static final XmSurface SURFACE_WEST = CubeWithAxisAndFace.SURFACE_WEST;
-    public static final XmSurface SURFACE_EAST = CubeWithAxisAndFace.SURFACE_EAST;
+    public static final XmSurface SURFACE_DOWN = CubeWithEdgeRotation.SURFACE_DOWN;
+    public static final XmSurface SURFACE_UP = CubeWithEdgeRotation.SURFACE_UP;
+    public static final XmSurface SURFACE_NORTH = CubeWithEdgeRotation.SURFACE_NORTH;
+    public static final XmSurface SURFACE_SOUTH = CubeWithEdgeRotation.SURFACE_SOUTH;
+    public static final XmSurface SURFACE_WEST = CubeWithEdgeRotation.SURFACE_WEST;
+    public static final XmSurface SURFACE_EAST = CubeWithEdgeRotation.SURFACE_EAST;
     
-    public static final XmSurface SURFACE_BOTTOM = CubeWithAxisAndFace.SURFACE_BOTTOM;
-    public static final XmSurface SURFACE_TOP = CubeWithAxisAndFace.SURFACE_TOP;
-    public static final XmSurface SURFACE_BACK = CubeWithAxisAndFace.SURFACE_BACK;
-    public static final XmSurface SURFACE_FRONT = CubeWithAxisAndFace.SURFACE_FRONT;
-    public static final XmSurface SURFACE_LEFT = CubeWithAxisAndFace.SURFACE_LEFT;
-    public static final XmSurface SURFACE_RIGHT = CubeWithAxisAndFace.SURFACE_RIGHT;
+    public static final XmSurface SURFACE_BOTTOM = CubeWithEdgeRotation.SURFACE_BOTTOM;
+    public static final XmSurface SURFACE_TOP = CubeWithEdgeRotation.SURFACE_TOP;
+    public static final XmSurface SURFACE_BACK = CubeWithEdgeRotation.SURFACE_BACK;
+    public static final XmSurface SURFACE_FRONT = CubeWithEdgeRotation.SURFACE_FRONT;
+    public static final XmSurface SURFACE_LEFT = CubeWithEdgeRotation.SURFACE_LEFT;
+    public static final XmSurface SURFACE_RIGHT = CubeWithEdgeRotation.SURFACE_RIGHT;
 
     public static final Stair INSTANCE = new Stair(Xm.idString("stair"));
     
@@ -61,7 +61,7 @@ public class Stair extends AbstractWedge {
         
         final WritableMesh stream = XmMeshes.claimWritable();
         final MutablePolygon quad = stream.writer();
-        final PolyTransform transform = PolyTransform.forEdge(edgeIndex);
+        final PolyTransform transform = PolyTransform.forEdgeRotation(edgeIndex);
         
         quad.rotation(0, Rotation.ROTATE_NONE);
         quad.lockUV(0, true);

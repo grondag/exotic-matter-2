@@ -28,7 +28,7 @@ import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.connect.world.ModelStateFunction;
-import grondag.xm.api.primitive.simple.CubeWithAxisAndFace;
+import grondag.xm.api.primitive.simple.CubeWithEdgeRotation;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -97,13 +97,13 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
     private static class BuilderImpl implements SimpleModelStateFunction.Builder {
         private BlockTest<SimpleModelState> joinTest = BlockTest.sameBlock();
         private ArrayList<SimpleModelStateOperation> updaters = new ArrayList<>();
-        private SimpleModelState defaultState = CubeWithAxisAndFace.INSTANCE.defaultState();
+        private SimpleModelState defaultState = CubeWithEdgeRotation.INSTANCE.defaultState();
         
         private BuilderImpl() {}
 
         @Override
         public Builder withDefaultState(SimpleModelState defaultState) {
-            this.defaultState = defaultState == null ? CubeWithAxisAndFace.INSTANCE.defaultState() : defaultState;
+            this.defaultState = defaultState == null ? CubeWithEdgeRotation.INSTANCE.defaultState() : defaultState;
             return this;
         }
         
@@ -124,7 +124,7 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
         @Override
         public Builder clear() {
             joinTest = BlockTest.sameBlock();
-            defaultState = CubeWithAxisAndFace.INSTANCE.defaultState();
+            defaultState = CubeWithEdgeRotation.INSTANCE.defaultState();
             updaters.clear();
             return this;
         }

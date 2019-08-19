@@ -1,8 +1,7 @@
 package grondag.xm.api.block.base;
 
-import static grondag.xm.api.block.XmProperties.HORIZONTAL_FACING;
-import static grondag.xm.api.block.XmProperties.VERTICAL_FACING_XORTHO;
-import static grondag.xm.api.block.XmProperties.VERTICAL_FACING_ZORTHO;
+import static grondag.xm.api.block.XmProperties.X_ORTHO_FACING;
+import static grondag.xm.api.block.XmProperties.Z_ORTHO_FACING;
 import static net.minecraft.block.StairsBlock.HALF;
 import static net.minecraft.block.StairsBlock.SHAPE;
 import static net.minecraft.block.StairsBlock.WATERLOGGED;
@@ -14,7 +13,7 @@ import grondag.fermion.spatial.DirectionHelper;
 import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelStateMap;
-import grondag.xm.api.orientation.ExactEdge;
+import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.primitive.simple.Stair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,6 +34,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
@@ -86,7 +86,7 @@ public abstract class StairLike extends Block implements Waterloggable {
     
     public final DirectionProperty faceProperty() {
         final Axis axis = axis();
-        return axis == Axis.Y ? HORIZONTAL_FACING : (axis == Axis.X ? VERTICAL_FACING_XORTHO : VERTICAL_FACING_ZORTHO);
+        return axis == Axis.Y ? Properties.HORIZONTAL_FACING : (axis == Axis.X ? X_ORTHO_FACING : Z_ORTHO_FACING);
     }
     
     @Override
@@ -374,7 +374,7 @@ public abstract class StairLike extends Block implements Waterloggable {
             Stair.setCorner(corner, modelState);
             Stair.setInsideCorner(corner && inside, modelState);
             
-            modelState.orientationIndex(ExactEdge.find(Direction.from(axis, bottom ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE), face).ordinal());
+            modelState.orientationIndex(CubeRotation.find(Direction.from(axis, bottom ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE), face).ordinal());
         }
         
         return modelState;

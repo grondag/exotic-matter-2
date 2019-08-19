@@ -20,8 +20,8 @@ import grondag.fermion.world.WorldHelper;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.api.orientation.Corner;
-import grondag.xm.api.orientation.Edge;
+import grondag.xm.api.orientation.CubeCorner;
+import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.relics.XmStackHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -185,8 +185,8 @@ public class BlockOrientationHandler {
 
     public static final EnumProperty<Axis> AXIS_PROP = EnumProperty.of("xm2_axis", Axis.class);
     public static final EnumProperty<Direction> FACE_PROP = EnumProperty.of("xm2_face", Direction.class);
-    public static final EnumProperty<Edge> EDGE_PROP = EnumProperty.of("xm2_edge", Edge.class);
-    public static final EnumProperty<Corner> CORNER_PROP = EnumProperty.of("xm2_corner", Corner.class);
+    public static final EnumProperty<CubeEdge> EDGE_PROP = EnumProperty.of("xm2_edge", CubeEdge.class);
+    public static final EnumProperty<CubeCorner> CORNER_PROP = EnumProperty.of("xm2_corner", CubeCorner.class);
 
     /** returns updated block state based on placement context */
     public static BlockState axisBlockState(BlockState stateIn, ItemPlacementContext context) {
@@ -215,7 +215,7 @@ public class BlockOrientationHandler {
             adjacentFace = WorldHelper.closestAdjacentFace(onFace, (float) (hit.x - pos.getX()), (float) (hit.y - pos.getY()), (float) (hit.z - pos.getZ()));
         }
 
-        final Edge edge = Edge.find(onFace.getOpposite(), adjacentFace);
+        final CubeEdge edge = CubeEdge.find(onFace.getOpposite(), adjacentFace);
 
         return edge == null ? stateIn : stateIn.with(EDGE_PROP, edge);
     }
@@ -238,7 +238,7 @@ public class BlockOrientationHandler {
 
     /** updates model state from block state */
     public static void edgeModelState(BlockState stateIn, PrimitiveModelState.Mutable modelState) {
-        final Edge edge = (Edge) stateIn.getEntries().get(EDGE_PROP);
+        final CubeEdge edge = (CubeEdge) stateIn.getEntries().get(EDGE_PROP);
         if (edge != null) {
           //TODO: remove or reimplement
 //            modelState.axis(edge.face1.getAxis());

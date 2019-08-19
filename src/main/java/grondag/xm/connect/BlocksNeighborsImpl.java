@@ -27,8 +27,8 @@ import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.connect.world.ModelStateFunction;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.orientation.Corner;
-import grondag.xm.api.orientation.Edge;
+import grondag.xm.api.orientation.CubeCorner;
+import grondag.xm.api.orientation.CubeEdge;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -131,12 +131,12 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
         pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
     }
 
-    private void setPos(BlockPos.Mutable pos, Edge edge) {
+    private void setPos(BlockPos.Mutable pos, CubeEdge edge) {
         final Vec3i vec = edge.vector;
         pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
     }
 
-    private void setPos(BlockPos.Mutable pos, Corner corner) {
+    private void setPos(BlockPos.Mutable pos, CubeCorner corner) {
         final Vec3i vec = corner.vector;
         pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
     }
@@ -167,7 +167,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public BlockState blockState(Edge edge) {
+    public BlockState blockState(CubeEdge edge) {
         BlockState result = blockStates[edge.superOrdinal];
         if (result == null) {
             setPos(mutablePos, edge);
@@ -178,7 +178,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public BlockState blockState(Corner corner) {
+    public BlockState blockState(CubeCorner corner) {
         BlockState result = blockStates[corner.superOrdinal];
         if (result == null) {
             setPos(mutablePos, corner);
@@ -223,7 +223,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public ModelState modelState(Edge edge) {
+    public ModelState modelState(CubeEdge edge) {
         if (this.stateFunc == null)
             return null;
 
@@ -238,7 +238,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public ModelState modelState(Corner corner) {
+    public ModelState modelState(CubeCorner corner) {
         if (this.stateFunc == null)
             return null;
 
@@ -273,7 +273,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean doTest(Edge edge) {
+    private boolean doTest(CubeEdge edge) {
         targetModelState = stateFunc == null ? null : modelState(edge);
         targetBlockState = blockState(edge);
         setPos(targetPos, edge);
@@ -281,7 +281,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @SuppressWarnings("unchecked")
-    private boolean doTest(Corner corner) {
+    private boolean doTest(CubeCorner corner) {
         targetModelState = stateFunc == null ? null : modelState(corner);
         targetBlockState = blockState(corner);
         setPos(targetPos, corner);
@@ -320,7 +320,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public boolean result(Edge edge) {
+    public boolean result(CubeEdge edge) {
         if (edge == null) {
             return false;
         }
@@ -335,7 +335,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
     }
 
     @Override
-    public boolean result(Corner corner) {
+    public boolean result(CubeCorner corner) {
         if (corner == null) {
             return false;
         }

@@ -28,13 +28,13 @@ import java.util.function.Function;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
-import grondag.xm.api.orientation.ExactEdge;
+import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.model.state.SimpleModelStateImpl;
 
 public abstract class AbstractWedge extends AbstractSimplePrimitive {
-    protected static final int KEY_COUNT = ExactEdge.COUNT * 3;
+    protected static final int KEY_COUNT = CubeRotation.COUNT * 3;
     
     protected static int computeKey(int edgeIndex, boolean isCorner, boolean isInside) {
         return edgeIndex * 3 + (isCorner ? (isInside ? 1 : 2) : 0);
@@ -79,13 +79,13 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     
     @Override
     public OrientationType orientationType(SimpleModelState modelState) {
-        return OrientationType.EXACT_EDGE;
+        return OrientationType.ROTATION;
     }
 
     @Override
     public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
         SimpleModelState.Mutable result = this.newState();
-        if(fromState.primitive().orientationType(fromState) == OrientationType.EXACT_EDGE) {
+        if(fromState.primitive().orientationType(fromState) == OrientationType.ROTATION) {
             result.orientationIndex(fromState.orientationIndex());
             result.primitiveBits(fromState.primitiveBits());
         }

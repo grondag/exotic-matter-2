@@ -27,7 +27,7 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.world.BlockNeighbors;
-import grondag.xm.api.orientation.Edge;
+import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.FaceCorner;
 import grondag.xm.api.orientation.FaceEdge;
 import grondag.xm.connect.helper.FaceEdgeHelper;
@@ -211,7 +211,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
             for (int i = 0; i < FaceEdgeHelper.COUNT; i++) {
                 final FaceEdge fside = FaceEdgeHelper.fromOrdinal(i);
                 final Direction joinFace = fside.toWorld(face);
-                if (tests.result(joinFace) && !tests.result(Edge.find(face, joinFace))) {
+                if (tests.result(joinFace) && !tests.result(CubeEdge.find(face, joinFace))) {
                     faceFlags |= fside.ordinalBit;
                 }
             }

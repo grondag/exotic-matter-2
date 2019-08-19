@@ -22,35 +22,35 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.orientation.Edge;
+import grondag.xm.api.orientation.CubeEdge;
 import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
-public abstract class BlockEdgeHelper {
-    private BlockEdgeHelper() {
+public abstract class CubeEdgeHelper {
+    private CubeEdgeHelper() {
     }
 
-    private static final Edge[] VALUES = Edge.values();
+    private static final CubeEdge[] VALUES = CubeEdge.values();
     public static final int COUNT = VALUES.length;
-    private static final Edge[][] CORNER_LOOKUP = new Edge[6][6];
+    private static final CubeEdge[][] CORNER_LOOKUP = new CubeEdge[6][6];
 
     static {
-        for (Edge corner : VALUES) {
+        for (CubeEdge corner : VALUES) {
             CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()] = corner;
             CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()] = corner;
         }
     }
 
-    public static Edge find(Direction face1, Direction face2) {
+    public static CubeEdge find(Direction face1, Direction face2) {
         return CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
     }
 
-    public static final Edge fromOrdinal(int ordinal) {
+    public static final CubeEdge fromOrdinal(int ordinal) {
         return VALUES[ordinal];
     }
 
-    public static void forEach(Consumer<Edge> consumer) {
-        for (Edge val : VALUES) {
+    public static void forEach(Consumer<CubeEdge> consumer) {
+        for (CubeEdge val : VALUES) {
             consumer.accept(val);
         }
     }

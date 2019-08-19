@@ -18,21 +18,21 @@ package grondag.xm.placement;
 
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.orientation.Corner;
+import grondag.xm.api.orientation.CubeCorner;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
 public enum BlockOrientationCorner {
-    DYNAMIC(null), MATCH_CLOSEST(null), UP_NORTH_EAST(Corner.UP_NORTH_EAST), UP_NORTH_WEST(Corner.UP_NORTH_WEST),
-    UP_SOUTH_EAST(Corner.UP_SOUTH_EAST), UP_SOUTH_WEST(Corner.UP_SOUTH_WEST), DOWN_NORTH_EAST(Corner.DOWN_NORTH_EAST),
-    DOWN_NORTH_WEST(Corner.DOWN_NORTH_WEST), DOWN_SOUTH_EAST(Corner.DOWN_SOUTH_EAST), DOWN_SOUTH_WEST(Corner.DOWN_SOUTH_WEST);
+    DYNAMIC(null), MATCH_CLOSEST(null), UP_NORTH_EAST(CubeCorner.UP_NORTH_EAST), UP_NORTH_WEST(CubeCorner.UP_NORTH_WEST),
+    UP_SOUTH_EAST(CubeCorner.UP_SOUTH_EAST), UP_SOUTH_WEST(CubeCorner.UP_SOUTH_WEST), DOWN_NORTH_EAST(CubeCorner.DOWN_NORTH_EAST),
+    DOWN_NORTH_WEST(CubeCorner.DOWN_NORTH_WEST), DOWN_SOUTH_EAST(CubeCorner.DOWN_SOUTH_EAST), DOWN_SOUTH_WEST(CubeCorner.DOWN_SOUTH_WEST);
 
-    public final Corner corner;
+    public final CubeCorner corner;
 
     private static final String TAG_NAME = NBTDictionary.claim("blockOrientCorner");
 
-    private BlockOrientationCorner(Corner corner) {
+    private BlockOrientationCorner(CubeCorner corner) {
         this.corner = corner;
     }
 

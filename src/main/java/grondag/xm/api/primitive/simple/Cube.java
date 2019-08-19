@@ -16,9 +16,7 @@
 
 package grondag.xm.api.primitive.simple;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
-
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
@@ -26,97 +24,62 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
-import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
+import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.model.state.SimpleModelStateImpl;
 import net.minecraft.util.math.Direction;
 
-public class Cube extends AbstractSimplePrimitive {
+public class Cube {
+    private Cube() {}
+    
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .build();
 
     public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
-    /** never changes so may as well save it */
-    private XmMesh cachedQuads;
-
-    public static final Cube INSTANCE = new Cube(Xm.idString("cube"));
-
-    protected Cube(String idString) {
-        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, s -> SURFACES);
-        invalidateCache();
-    }
-
-    @Override
-    public void invalidateCache() {
-        cachedQuads = getCubeQuads();
-    }
-
-    @Override
-    public OrientationType orientationType(SimpleModelState modelState) {
-        return OrientationType.NONE;
-    }
-    
-    @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
-        cachedQuads.forEach(target);
-    }
-
-    private XmMesh getCubeQuads() {
-
-        WritableMesh stream = XmMeshes.claimWritable();
-        MutablePolygon writer = stream.writer();
+    static final Function<PolyTransform, XmMesh> POLY_FACTORY = transform -> {
+        WritableMesh mesh = XmMeshes.claimWritable();
+        MutablePolygon writer = mesh.writer();
         writer.colorAll(0, 0xFFFFFFFF);
         writer.lockUV(0, true);
         writer.rotation(0, Rotation.ROTATE_NONE);
         writer.sprite(0, "");
-        stream.saveDefaults();
+        mesh.saveDefaults();
 
         writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
-        stream.append();
+        mesh.append();
         
         writer.surface(SURFACE_ALL);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
-        stream.append();
+        mesh.append();
 
-        XmMesh result = stream.releaseToReader();
-
-        result.origin();
-        assert result.reader().vertexCount() == 4;
-
-        return result;
-    }
-
-    @Override
-    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
-        return defaultState().mutableCopy();
-    }
-
-    @Override
-    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
-        return from.primitive() == to.primitive();
-    }
+        return mesh.releaseToReader();
+    };
+    
+    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+            .surfaceList(SURFACES)
+            .polyFactory(POLY_FACTORY)
+            .orientationType(OrientationType.NONE)
+            .build(Xm.idString("cube"));
 }

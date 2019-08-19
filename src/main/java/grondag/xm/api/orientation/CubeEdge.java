@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.BlockEdgeHelper;
+import grondag.xm.connect.helper.CubeEdgeHelper;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -41,7 +41,7 @@ import net.minecraft.util.math.Vec3i;
  * respect to that edge.
  */
 @API(status = STABLE)
-public enum Edge implements StringIdentifiable {
+public enum CubeEdge implements StringIdentifiable {
     DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), 
     DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
     DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE), 
@@ -86,7 +86,7 @@ public enum Edge implements StringIdentifiable {
     @Nullable
     public final HorizontalEdge horizontalEdge;
 
-    private Edge(Direction face1, Direction face2, ClockwiseRotation rotation) {
+    private CubeEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
         this.name = this.name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
@@ -104,22 +104,22 @@ public enum Edge implements StringIdentifiable {
             horizontalEdge = HorizontalEdge.find(HorizontalFace.find(face1), HorizontalFace.find(face2));
     }
 
-    public static final int COUNT = BlockEdgeHelper.COUNT;
+    public static final int COUNT = CubeEdgeHelper.COUNT;
 
     /**
      * Will be null if the inputs do not specify an edge.
      */
     @Nullable
-    public static Edge find(Direction face1, Direction face2) {
-        return BlockEdgeHelper.find(face1, face2);
+    public static CubeEdge find(Direction face1, Direction face2) {
+        return CubeEdgeHelper.find(face1, face2);
     }
 
-    public static final Edge fromOrdinal(int ordinal) {
-        return BlockEdgeHelper.fromOrdinal(ordinal);
+    public static final CubeEdge fromOrdinal(int ordinal) {
+        return CubeEdgeHelper.fromOrdinal(ordinal);
     }
 
-    public static void forEach(Consumer<Edge> consumer) {
-        BlockEdgeHelper.forEach(consumer);
+    public static void forEach(Consumer<CubeEdge> consumer) {
+        CubeEdgeHelper.forEach(consumer);
     }
 
     @Override

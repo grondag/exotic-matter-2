@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.BlockEdgeSidedHelper;
+import grondag.xm.connect.helper.CubeRotationHelper;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -42,7 +42,7 @@ import net.minecraft.util.math.Vec3i;
  * Components of the name are bottom and back face.
  */
 @API(status = STABLE)
-public enum ExactEdge implements StringIdentifiable {
+public enum CubeRotation implements StringIdentifiable {
     DOWN_SOUTH(Direction.DOWN, Direction.SOUTH), 
     DOWN_WEST(Direction.DOWN, Direction.WEST),
     DOWN_NORTH(Direction.DOWN, Direction.NORTH), 
@@ -90,7 +90,7 @@ public enum ExactEdge implements StringIdentifiable {
     @Nullable
     public final HorizontalEdge horizontalEdge;
 
-    private ExactEdge(Direction bottom, Direction back) {
+    private CubeRotation(Direction bottom, Direction back) {
         this.name = this.name().toLowerCase();
         this.bottom = bottom;
         this.back = back;
@@ -107,22 +107,22 @@ public enum ExactEdge implements StringIdentifiable {
             horizontalEdge = HorizontalEdge.find(HorizontalFace.find(bottom), HorizontalFace.find(back));
     }
 
-    public static final int COUNT = BlockEdgeSidedHelper.COUNT;
+    public static final int COUNT = CubeRotationHelper.COUNT;
 
     /**
      * Will be null if the inputs do not specify an edge.
      */
     @Nullable
-    public static ExactEdge find(Direction bottom, Direction back) {
-        return BlockEdgeSidedHelper.find(bottom, back);
+    public static CubeRotation find(Direction bottom, Direction back) {
+        return CubeRotationHelper.find(bottom, back);
     }
 
-    public static final ExactEdge fromOrdinal(int ordinal) {
-        return BlockEdgeSidedHelper.fromOrdinal(ordinal);
+    public static final CubeRotation fromOrdinal(int ordinal) {
+        return CubeRotationHelper.fromOrdinal(ordinal);
     }
 
-    public static void forEach(Consumer<ExactEdge> consumer) {
-        BlockEdgeSidedHelper.forEach(consumer);
+    public static void forEach(Consumer<CubeRotation> consumer) {
+        CubeRotationHelper.forEach(consumer);
     }
 
     @Override

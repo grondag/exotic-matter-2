@@ -22,34 +22,34 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.orientation.ExactEdge;
+import grondag.xm.api.orientation.CubeRotation;
 import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
-public abstract class BlockEdgeSidedHelper {
-    private BlockEdgeSidedHelper() {
+public abstract class CubeRotationHelper {
+    private CubeRotationHelper() {
     }
 
-    private static final ExactEdge[] VALUES = ExactEdge.values();
+    private static final CubeRotation[] VALUES = CubeRotation.values();
     public static final int COUNT = VALUES.length;
-    private static final ExactEdge[][] CORNER_LOOKUP = new ExactEdge[6][6];
+    private static final CubeRotation[][] CORNER_LOOKUP = new CubeRotation[6][6];
 
     static {
-        for (ExactEdge edge : VALUES) {
+        for (CubeRotation edge : VALUES) {
             CORNER_LOOKUP[edge.bottom.ordinal()][edge.back.ordinal()] = edge;
         }
     }
 
-    public static ExactEdge find(Direction face1, Direction face2) {
+    public static CubeRotation find(Direction face1, Direction face2) {
         return CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
     }
 
-    public static final ExactEdge fromOrdinal(int ordinal) {
+    public static final CubeRotation fromOrdinal(int ordinal) {
         return VALUES[ordinal];
     }
 
-    public static void forEach(Consumer<ExactEdge> consumer) {
-        for (ExactEdge val : VALUES) {
+    public static void forEach(Consumer<CubeRotation> consumer) {
+        for (CubeRotation val : VALUES) {
             consumer.accept(val);
         }
     }

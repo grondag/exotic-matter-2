@@ -19,6 +19,7 @@ package grondag.xm.painting;
 import java.util.function.Consumer;
 
 import grondag.frex.Frex;
+import grondag.xm.Xm;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -64,6 +65,7 @@ public class QuadPaintHandler implements Consumer<Polygon> {
         return builder.build();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void accept(Polygon poly) {
         final PrimitiveModelState modelState = this.modelState;
@@ -72,6 +74,11 @@ public class QuadPaintHandler implements Consumer<Polygon> {
         MutablePolygon editor = stream.editor();
 
         XmSurface surface = poly.surface();
+        if(surface == null) {
+            //TODO: remove
+            Xm.LOG.info("Encountered null surface during paint, using default surface");
+            surface = modelState.primitive().surfaces(modelState).get(0);
+        }
         XmPaint paint = modelState.paint(surface);
 
         stream.appendCopy(poly);

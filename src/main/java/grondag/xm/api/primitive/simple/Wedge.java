@@ -54,7 +54,7 @@ public class Wedge extends AbstractWedge {
       
         final WritableMesh stream = XmMeshes.claimWritable();
         final MutablePolygon quad = stream.writer();
-        final PolyTransform transform = PolyTransform.forEdge(edgeIndex);
+        final PolyTransform transform = PolyTransform.forEdgeRotation(edgeIndex);
         
         quad.rotation(0, Rotation.ROTATE_NONE);
         quad.lockUV(0, true);

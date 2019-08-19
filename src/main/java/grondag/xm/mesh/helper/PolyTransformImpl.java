@@ -20,14 +20,16 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.mesh.polygon.PolyHelper;
+import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.api.orientation.ExactEdge;
+import grondag.xm.api.orientation.CubeCorner;
+import grondag.xm.api.orientation.CubeEdge;
+import grondag.xm.api.orientation.CubeRotation;
+import grondag.xm.api.orientation.HorizontalFace;
 import grondag.xm.api.orientation.OrientationType;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
 @SuppressWarnings("rawtypes")
@@ -72,86 +74,98 @@ public class PolyTransformImpl implements PolyTransform {
     private static final ThreadLocal<Vector3f> VEC3 = ThreadLocal.withInitial(Vector3f::new);
 
     private final static PolyTransformImpl[][] LOOKUP = new PolyTransformImpl[OrientationType.values().length][];
-    private final static PolyTransformImpl[] EDGE_SIDED = new PolyTransformImpl[ExactEdge.COUNT];
+    private final static PolyTransformImpl[] EXACT = new PolyTransformImpl[CubeRotation.COUNT];
+    private final static PolyTransformImpl[] EDGE = new PolyTransformImpl[CubeEdge.COUNT];
+    private final static PolyTransformImpl[] CORNER = new PolyTransformImpl[CubeCorner.COUNT];
+    private final static PolyTransformImpl[] FACE = new PolyTransformImpl[6];
+    private final static PolyTransformImpl[] HORIZONTAL_FACE = new PolyTransformImpl[HorizontalFace.COUNT];
     private final static PolyTransformImpl[] AXIS = new PolyTransformImpl[3];
+    
 
     // mainly for run-time testing
     public static void invalidateCache() { 
         populateLookups();
     }
     
-//    private final static Direction[][] FACING_MAP = new Direction[32][6];
-//    private final static Direction[][] FACING_MAP_INVERSE = new Direction[32][6];
-//
-//    private final static FaceMap[] FACE_MAPS = new FaceMap[32];
-
-//    /**
-//     * Facemap that contains identity transform.
-//     */
-//    public static final FaceMap IDENTITY_FACEMAP;
-
     static {
-        LOOKUP[OrientationType.EXACT_EDGE.ordinal()] = EDGE_SIDED;
+        LOOKUP[OrientationType.ROTATION.ordinal()] = EXACT;
+        LOOKUP[OrientationType.EDGE.ordinal()] =  EDGE;
+        LOOKUP[OrientationType.CORNER.ordinal()] =  CORNER;
+        LOOKUP[OrientationType.FACE.ordinal()] =  FACE;
+        LOOKUP[OrientationType.HORIZONTAL_FACE.ordinal()] = HORIZONTAL_FACE;
         LOOKUP[OrientationType.AXIS.ordinal()] = AXIS;
         LOOKUP[OrientationType.NONE.ordinal()] = new PolyTransformImpl[1];
         populateLookups();
     }
     
     private static void populateLookups() {
-        ExactEdge.forEach(e -> {
-            EDGE_SIDED[e.ordinal()] = createEdgeSidedTransform(e);
+        CubeRotation.forEach(e -> {
+            EXACT[e.ordinal()] = createEdgeTransform(e);
         });
         
-        AXIS[Axis.Y.ordinal()] = EDGE_SIDED[ExactEdge.DOWN_SOUTH.ordinal()];
-        AXIS[Axis.X.ordinal()] = EDGE_SIDED[ExactEdge.WEST_UP.ordinal()];
-        AXIS[Axis.Z.ordinal()] = EDGE_SIDED[ExactEdge.SOUTH_UP.ordinal()];
-        
-        LOOKUP[OrientationType.NONE.ordinal()][0] = EDGE_SIDED[ExactEdge.DOWN_SOUTH.ordinal()];
-        
-        //TODO: populate
-        
-//        final Axis[] avals = { Axis.X, Axis.Y, Axis.Z, null };
-//        for (Axis axis : avals) {
-//            for (ClockwiseRotation rot : ClockwiseRotation.values()) {
-//                populateLookups(axis, false, rot);
-//                populateLookups(axis, true, rot);
-//            }
-//        }
+        LOOKUP[OrientationType.NONE.ordinal()][0] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
 
-//        IDENTITY_FACEMAP = getFaceMap(computeKey(null, false, ClockwiseRotation.ROTATE_NONE));
+        AXIS[Axis.Y.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
+        AXIS[Axis.X.ordinal()] = EXACT[CubeRotation.WEST_UP.ordinal()];
+        AXIS[Axis.Z.ordinal()] = EXACT[CubeRotation.SOUTH_UP.ordinal()];
+        
+        HORIZONTAL_FACE[HorizontalFace.NORTH.ordinal()] = EXACT[CubeRotation.NORTH_EAST.ordinal()];
+        HORIZONTAL_FACE[HorizontalFace.EAST.ordinal()] = EXACT[CubeRotation.EAST_SOUTH.ordinal()];
+        HORIZONTAL_FACE[HorizontalFace.SOUTH.ordinal()] = EXACT[CubeRotation.SOUTH_WEST.ordinal()];
+        HORIZONTAL_FACE[HorizontalFace.WEST.ordinal()] = EXACT[CubeRotation.WEST_SOUTH.ordinal()];
+        
+        FACE[Direction.DOWN.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
+        FACE[Direction.UP.ordinal()] = EXACT[CubeRotation.UP_SOUTH.ordinal()];
+        FACE[Direction.NORTH.ordinal()] = EXACT[CubeRotation.NORTH_EAST.ordinal()];
+        FACE[Direction.SOUTH.ordinal()] = EXACT[CubeRotation.SOUTH_WEST.ordinal()];
+        FACE[Direction.EAST.ordinal()] = EXACT[CubeRotation.EAST_SOUTH.ordinal()];
+        FACE[Direction.WEST.ordinal()] = EXACT[CubeRotation.WEST_SOUTH.ordinal()];
+        
+        CORNER[CubeCorner.UP_NORTH_EAST.ordinal()] = EXACT[CubeRotation.NORTH_UP.ordinal()];
+        CORNER[CubeCorner.UP_NORTH_WEST.ordinal()] = EXACT[CubeRotation.UP_NORTH.ordinal()];
+        CORNER[CubeCorner.UP_SOUTH_EAST.ordinal()] = EXACT[CubeRotation.UP_SOUTH.ordinal()];
+        CORNER[CubeCorner.UP_SOUTH_WEST.ordinal()] = EXACT[CubeRotation.SOUTH_UP.ordinal()];
+        CORNER[CubeCorner.DOWN_NORTH_EAST.ordinal()] = EXACT[CubeRotation.DOWN_NORTH.ordinal()];
+        CORNER[CubeCorner.DOWN_NORTH_WEST.ordinal()] = EXACT[CubeRotation.NORTH_DOWN.ordinal()];
+        CORNER[CubeCorner.DOWN_SOUTH_EAST.ordinal()] = EXACT[CubeRotation.DOWN_EAST.ordinal()];
+        CORNER[CubeCorner.DOWN_SOUTH_WEST.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
+        
+        EDGE[CubeEdge.DOWN_SOUTH.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
+        EDGE[CubeEdge.DOWN_WEST.ordinal()] = EXACT[CubeRotation.DOWN_WEST.ordinal()];
+        EDGE[CubeEdge.DOWN_NORTH.ordinal()] = EXACT[CubeRotation.DOWN_NORTH.ordinal()];
+        EDGE[CubeEdge.DOWN_EAST.ordinal()] = EXACT[CubeRotation.DOWN_EAST.ordinal()];
+        EDGE[CubeEdge.UP_NORTH.ordinal()] = EXACT[CubeRotation.UP_NORTH.ordinal()];
+        EDGE[CubeEdge.UP_EAST.ordinal()] = EXACT[CubeRotation.UP_EAST.ordinal()];
+        EDGE[CubeEdge.UP_SOUTH.ordinal()] = EXACT[CubeRotation.UP_SOUTH.ordinal()];
+        EDGE[CubeEdge.UP_WEST.ordinal()] = EXACT[CubeRotation.UP_WEST.ordinal()];
+        EDGE[CubeEdge.NORTH_EAST.ordinal()] = EXACT[CubeRotation.NORTH_EAST.ordinal()];
+        EDGE[CubeEdge.NORTH_WEST.ordinal()] = EXACT[CubeRotation.NORTH_WEST.ordinal()];
+        EDGE[CubeEdge.SOUTH_EAST.ordinal()] = EXACT[CubeRotation.SOUTH_EAST.ordinal()];
+        EDGE[CubeEdge.SOUTH_WEST.ordinal()] = EXACT[CubeRotation.SOUTH_WEST.ordinal()];
     }
 
-//    private static void populateLookups(Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
-//        int key = computeKey(axis, isAxisInverted, rotation);
-//        Matrix4f matrix = computeMatrix(axis, isAxisInverted, rotation);
-//        LOOKUP[key] = new PolyTransform(matrix);
-//
-//        for (int i = 0; i < 6; i++) {
-//            Direction face = ModelHelper.faceFromIndex(i);
-//            Vec3i dir = face.getVector();
-//            Vector4f vec = new Vector4f(dir.getX(), dir.getY(), dir.getZ(), 0);
-//            matrix.transform(vec);
-//            Direction mappedFace = Direction.getFacing(vec.x, vec.y, vec.z);
-//
-//            FACING_MAP[key][face.ordinal()] = mappedFace;
-//            FACING_MAP_INVERSE[key][mappedFace.ordinal()] = face;
-//        }
-//        FACE_MAPS[key] = new FaceMap(key);
-//    }
 
     public static PolyTransform get(PrimitiveModelState modelState) {
         return LOOKUP[modelState.orientationType().ordinal()][modelState.orientationIndex()];
     }
 
-    public static PolyTransform forEdge(int ordinal) {
-        return EDGE_SIDED[ordinal];
+    public static PolyTransform forEdgeRotation(int ordinal) {
+        return EXACT[ordinal];
     }
     
-    public static PolyTransform forEdge(ExactEdge corner) {
-        return EDGE_SIDED[corner.ordinal()];
+    public static PolyTransform get(CubeRotation corner) {
+        return EXACT[corner.ordinal()];
     }
     
-    private static PolyTransformImpl createEdgeSidedTransform(ExactEdge edge) {
+    public static PolyTransform get(Axis axis) {
+        return AXIS[axis.ordinal()];
+    }
+    
+    public static PolyTransform get(Direction face) {
+        return FACE[face.ordinal()];
+    }
+    
+    private static PolyTransformImpl createEdgeTransform(CubeRotation edge) {
         Matrix4f matrix = new Matrix4f().identity();
         
         switch(edge) {
@@ -207,13 +221,13 @@ public class PolyTransformImpl implements PolyTransform {
             matrix.rotate((float) Math.toRadians(90), 1, 0, 0);
             break;
         case NORTH_EAST:
-            matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 1, 0);
+            matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 1, 0);
             break;
         case NORTH_UP:
             matrix.rotate((float) Math.toRadians(180), 0, 0, 1).rotate((float) Math.toRadians(90), 1, 0, 0);
             break;
         case NORTH_WEST:
-            matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 1, 0);
+            matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 1, 0);
             break;
         case SOUTH_DOWN:
             matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(180), 0, 1, 0);
@@ -234,61 +248,4 @@ public class PolyTransformImpl implements PolyTransform {
         };
         return new PolyTransformImpl(matrix);
     }
-    
-    public static PolyTransform forAxis(int ordinal) {
-        return AXIS[MathHelper.clamp(ordinal, 0, 2)];
-    }
-    
-    public static PolyTransform forAxis(Axis axis) {
-        return AXIS[axis.ordinal()];
-    }
-    
-//    private static Matrix4f getMatrixForAxis(Direction.Axis axis, boolean isAxisInverted) {
-//        switch (axis) {
-//        case X:
-//            // may not be right - not tested since last change
-//            return isAxisInverted ? 
-//                    new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(90), 0, 1, 0)
-//                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
-//
-//        case Y:
-//            return isAxisInverted ? new Matrix4f().identity().scale(1f, -1f, 1f)
-//                    : new Matrix4f().identity();
-//
-//
-//        case Z:
-//            // may not be right - not tested since last change
-//            return isAxisInverted ? new Matrix4f().identity().rotate((float) Math.toRadians(270), 1, 0, 0) 
-//                    : new Matrix4f().identity().rotate((float) Math.toRadians(90), 1, 0, 0);
-//
-//        default:
-//            return new Matrix4f().identity();
-//
-//        }
-//    }
-
-//    private static Matrix4f getMatrixForRotation(ClockwiseRotation rotation) {
-//        switch (rotation) {
-//        default:
-//        case ROTATE_NONE:
-//            return new Matrix4f().identity();
-//
-//        case ROTATE_90:
-//            // inverse because JOML is counter-clockwise right-handed
-//            return new Matrix4f().identity().rotate((float) Math.toRadians(270), 0, 1, 0);
-//
-//        case ROTATE_180:
-//            return new Matrix4f().identity().rotate((float) Math.toRadians(180), 0, 1, 0);
-//
-//        case ROTATE_270:
-//            // inverse because JOML is counter-clockwise right-handed
-//            return new Matrix4f().identity().rotate((float) Math.toRadians(90), 0, 1, 0);
-//        }
-//    }
-
-//    private static Matrix4f getMatrixForAxisAndRotation(Direction.Axis axis, boolean isAxisInverted, ClockwiseRotation rotation) {
-//        Matrix4f result = getMatrixForAxis(axis, isAxisInverted);
-//        result.mul(getMatrixForRotation(rotation));
-//        return result;
-//    }
 }

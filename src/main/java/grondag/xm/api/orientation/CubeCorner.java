@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.BlockCornerHelper;
+import grondag.xm.connect.helper.CubeCornerHelper;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -35,7 +35,7 @@ import net.minecraft.util.math.Vec3i;
  * neighboring blocks diagonally adjacent to those corners.
  */
 @API(status = STABLE)
-public enum Corner implements StringIdentifiable {
+public enum CubeCorner implements StringIdentifiable {
     UP_NORTH_EAST(Direction.UP, Direction.EAST, Direction.NORTH),
     UP_NORTH_WEST(Direction.UP, Direction.WEST, Direction.NORTH),
     UP_SOUTH_EAST(Direction.UP, Direction.EAST, Direction.SOUTH),
@@ -60,14 +60,14 @@ public enum Corner implements StringIdentifiable {
     @API(status = INTERNAL)
     public final int superOrdinalBit;
 
-    private Corner(Direction face1, Direction face2, Direction face3) {
+    private CubeCorner(Direction face1, Direction face2, Direction face3) {
         this.name = this.name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
         this.face3 = face3;
 
         // 6 is number of possible faces
-        this.superOrdinal = 6 + this.ordinal() + Edge.values().length;
+        this.superOrdinal = 6 + this.ordinal() + CubeEdge.values().length;
         this.superOrdinalBit = 1 << superOrdinal;
 
         Vec3i v1 = face1.getVector();
@@ -77,22 +77,22 @@ public enum Corner implements StringIdentifiable {
 
     }
 
-    public static final int COUNT = BlockCornerHelper.COUNT;
+    public static final int COUNT = CubeCornerHelper.COUNT;
 
     /**
      * Will return null if the given inputs do not specify a corner.
      */
     @Nullable
-    public static Corner find(Direction face1, Direction face2, Direction face3) {
-        return BlockCornerHelper.find(face1, face2, face3);
+    public static CubeCorner find(Direction face1, Direction face2, Direction face3) {
+        return CubeCornerHelper.find(face1, face2, face3);
     }
 
-    public static final Corner fromOrdinal(int ordinal) {
-        return BlockCornerHelper.fromOrdinal(ordinal);
+    public static final CubeCorner fromOrdinal(int ordinal) {
+        return CubeCornerHelper.fromOrdinal(ordinal);
     }
 
-    public static void forEach(Consumer<Corner> consumer) {
-        BlockCornerHelper.forEach(consumer);
+    public static void forEach(Consumer<CubeCorner> consumer) {
+        CubeCornerHelper.forEach(consumer);
     }
 
     @Override
