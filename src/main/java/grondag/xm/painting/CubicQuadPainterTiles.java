@@ -52,7 +52,7 @@ public abstract class CubicQuadPainterTiles extends QuadPainter {
             editor.sprite(textureIndex, tex.textureName(textureVersion));
             editor.contractUV(textureIndex, true);
 
-            commonPostPaint(editor, textureIndex, modelState, surface, paint);
+            commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
         } while (stream.editorNext());
     }

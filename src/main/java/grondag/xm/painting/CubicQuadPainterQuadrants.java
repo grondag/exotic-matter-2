@@ -81,7 +81,7 @@ public abstract class CubicQuadPainterQuadrants extends QuadPainter {
 
             TEXTURE_MAP[quadrant.ordinal()][faceState.ordinal()].applyForQuadrant(editor, textureIndex, quadrant);
 
-            commonPostPaint(editor, textureIndex, modelState, surface, paint);
+            commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
         } while (stream.editorNext());
     }

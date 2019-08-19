@@ -14,28 +14,22 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.paint;
 
 import grondag.fermion.color.ColorHelper;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 
-public class VertexProcessorDefault extends VertexProcessor {
+public class VertexProcessorDefault implements VertexProcessor {
+    private VertexProcessorDefault() {}
     public final static VertexProcessor INSTANCE = new VertexProcessorDefault();
 
-    static {
-        VertexProcessors.register(VertexProcessorDefault.INSTANCE);
-    }
-
-    VertexProcessorDefault() {
-        super("default", 0);
-    }
-
-    @SuppressWarnings("rawtypes")
     @Override
-    public final void process(MutablePolygon poly, int textureIndex, PrimitiveModelState modelState, XmSurface surface, XmPaint paint) {
+    @SuppressWarnings("rawtypes")
+    public final void process(MutablePolygon poly, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         int color = paint.textureColor(textureIndex);
 
         // If surface is a lamp gradient then glow bits are used
@@ -71,5 +65,4 @@ public class VertexProcessorDefault extends VertexProcessor {
             }
         }
     }
-
 }

@@ -21,12 +21,11 @@ import static grondag.xm.api.paint.XmPaint.MAX_TEXTURE_DEPTH;
 import javax.annotation.Nullable;
 
 import grondag.fermion.bits.BitPacker64;
+import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetRegistry;
-import grondag.xm.painting.VertexProcessor;
-import grondag.xm.painting.VertexProcessorDefault;
 import grondag.xm.texture.TextureSetRegistryImpl;
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;

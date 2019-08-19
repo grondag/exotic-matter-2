@@ -16,44 +16,23 @@
 
 package grondag.xm.api.paint;
 
-import javax.annotation.Nullable;
-
-import grondag.xm.api.texture.TextureSet;
-import grondag.xm.paint.XmPaintImpl;
-import net.minecraft.block.BlockRenderLayer;
+import grondag.xm.Xm;
+import grondag.xm.paint.VertexProcessorRegistryImpl;
 import net.minecraft.util.Identifier;
 
-public interface XmPaint {
-    static XmPaintFinder finder() {
-        return XmPaintImpl.finder();
-    }
+public interface VertexProcessorRegistry {
+    public static VertexProcessorRegistry INSTANCE = VertexProcessorRegistryImpl.INSTANCE;
 
-    int MAX_TEXTURE_DEPTH = 3;
+    /**
+     * Will always be associated with index 0.
+     */
+    public static final Identifier NONE_ID = new Identifier(Xm.MODID, "none");
 
-    int index();
+    VertexProcessor get(Identifier id);
 
-    @Nullable
-    BlockRenderLayer blendMode(int textureIndex);
+    VertexProcessor get(int index);
 
-    boolean disableColorIndex(int textureIndex);
+    VertexProcessor add(Identifier id, VertexProcessor set);
 
-    TextureSet texture(int textureIndex);
-
-    int textureColor(int textureIndex);
-
-    int textureDepth();
-
-    boolean emissive(int textureIndex);
-
-    boolean disableDiffuse(int textureIndex);
-
-    boolean disableAo(int textureIndex);
-
-    @Nullable
-    Identifier shader();
-
-    @Nullable
-    Identifier condition();
-
-    VertexProcessor vertexProcessor(int textureIndex);
+    boolean containsId(Identifier id);
 }

@@ -461,7 +461,7 @@ public abstract class SurfaceQuadPainterTiled extends QuadPainter {
                                             : tex.rotation().rotation);
 
                             editor.lockUV(textureIndex, false);
-                            commonPostPaint(editor, textureIndex, modelState, surface, paint);
+                            commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
                             // earlier UV splits may have left us with something other than a convex quad or
                             // tri

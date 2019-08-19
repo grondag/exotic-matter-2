@@ -51,8 +51,8 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(MutableMesh stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        MutablePolygon editor = stream.editor();
+    public static void paintQuads(MutableMesh mesh, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+        MutablePolygon editor = mesh.editor();
         do {
             editor.lockUV(textureIndex, true);
             editor.assignLockedUVCoordinates(textureIndex);
@@ -128,8 +128,8 @@ public abstract class CubicQuadPainterBigTex extends QuadPainter {
                 editor.maxV(textureIndex, editor.minV(textureIndex) + sliceIncrement);
             }
 
-            commonPostPaint(editor, textureIndex, modelState, surface, paint);
+            commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
-        } while (stream.editorNext());
+        } while (mesh.editorNext());
     }
 }

@@ -62,13 +62,12 @@ public abstract class QuadPainter {
      * Call from paint quad in sub classes to return results. Handles item scaling,
      * then adds to the output list.
      */
-    // UGLY: change arg order to match others
-    protected static void commonPostPaint(MutablePolygon editor, int spriteIndex, PrimitiveModelState modelState, XmSurface surface, XmPaint paint) {
-        editor.blendMode(spriteIndex, paint.blendMode(spriteIndex));
-        editor.emissive(spriteIndex, paint.emissive(spriteIndex));
-        editor.disableAo(spriteIndex, paint.disableAo(spriteIndex));
-        editor.disableDiffuse(spriteIndex, paint.disableDiffuse(spriteIndex));
-        paint.vertexProcessor(spriteIndex).process(editor, spriteIndex, modelState, surface, paint);
+    protected static void commonPostPaint(MutablePolygon editor, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+        editor.blendMode(textureIndex, paint.blendMode(textureIndex));
+        editor.emissive(textureIndex, paint.emissive(textureIndex));
+        editor.disableAo(textureIndex, paint.disableAo(textureIndex));
+        editor.disableDiffuse(textureIndex, paint.disableDiffuse(textureIndex));
+        paint.vertexProcessor(textureIndex).process(editor, modelState, surface, paint, textureIndex);
     }
 
     /**

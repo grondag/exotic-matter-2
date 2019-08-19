@@ -17,7 +17,6 @@
 package grondag.xm.api.paint;
 
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.painting.VertexProcessor;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.Identifier;
 

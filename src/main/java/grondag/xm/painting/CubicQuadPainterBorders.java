@@ -196,7 +196,7 @@ public abstract class CubicQuadPainterBorders extends QuadPainter {
             editor.maxV(textureIndex, inputs.flipV ? 0 : 1);
             editor.sprite(textureIndex, tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
-            commonPostPaint(editor, textureIndex, modelState, surface, paint);
+            commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
         } while (stream.editorNext());
     }

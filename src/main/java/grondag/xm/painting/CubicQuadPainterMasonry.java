@@ -98,7 +98,7 @@ public abstract class CubicQuadPainterMasonry extends QuadPainter {
             final TextureSet tex = paint.texture(textureIndex);
             editor.sprite(textureIndex, tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
-            commonPostPaint(editor, textureIndex, modelState, surface, paint);
+            commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
         } while (stream.editorNext());
     }
