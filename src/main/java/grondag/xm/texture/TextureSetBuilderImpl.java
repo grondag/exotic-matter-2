@@ -84,7 +84,7 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
     public TextureSet build(Identifier id) {
         TextureSetImpl result;
         if(TextureSetRegistryImpl.INSTANCE.contains(id)) {
-            result = TextureSetRegistryImpl.INSTANCE.getById(id);
+            result = TextureSetRegistryImpl.INSTANCE.get(id);
         } else {
             result = new TextureSetImpl(id, this);
         }

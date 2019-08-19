@@ -172,7 +172,7 @@ public class XmPaintImpl {
         if (textureIndex < 0 || textureIndex >= MAX_TEXTURE_DEPTH) {
             throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
         }
-        return TextureSetRegistryImpl.INSTANCE.getByIndex(TEXTURES[textureIndex].getValue(this));
+        return TextureSetRegistryImpl.INSTANCE.get(TEXTURES[textureIndex].getValue(this));
     }
 
     public boolean emissive(int textureIndex) {

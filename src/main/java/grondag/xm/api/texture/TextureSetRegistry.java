@@ -39,9 +39,9 @@ public interface TextureSetRegistry {
      */
     public static final int MAX_TEXTURE_SETS = 4096;
 
-    TextureSet getById(Identifier id);
+    TextureSet get(Identifier id);
 
-    TextureSet getByIndex(int index);
+    TextureSet get(int index);
 
     void forEach(Consumer<TextureSet> consumer);
 }

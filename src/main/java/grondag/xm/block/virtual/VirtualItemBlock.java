@@ -18,12 +18,12 @@ package grondag.xm.block.virtual;
 import java.util.function.Function;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.relics.placement.FilterMode;
+import grondag.xm.relics.placement.PlacementItem;
+import grondag.xm.relics.placement.PlacementItemFeature;
+import grondag.xm.relics.placement.XmBlockItem;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.placement.FilterMode;
-import grondag.xm.placement.PlacementItem;
-import grondag.xm.placement.PlacementItemFeature;
-import grondag.xm.placement.XmBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

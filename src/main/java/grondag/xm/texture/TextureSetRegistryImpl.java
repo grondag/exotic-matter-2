@@ -40,16 +40,16 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
     public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
 
     public static TextureSet noTexture() {
-        return INSTANCE.getByIndex(0);
+        return INSTANCE.get(0);
     }
 
     @Override
-    public TextureSetImpl getById(Identifier id) {
+    public TextureSetImpl get(Identifier id) {
         return REGISTRY.get(id);
     }
 
     @Override
-    public TextureSetImpl getByIndex(int index) {
+    public TextureSetImpl get(int index) {
         return index < 0 ? DEFAULT_TEXTURE_SET : REGISTRY.get(index);
     }
     
