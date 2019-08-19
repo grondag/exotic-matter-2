@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
-import grondag.xm.block.virtual.ExcavationRenderManager;
+import grondag.xm.virtual.ExcavationRenderManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;

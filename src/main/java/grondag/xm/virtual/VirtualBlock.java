@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.block.virtual;
+package grondag.xm.virtual;
 
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.Block;

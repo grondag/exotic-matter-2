@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
-import grondag.xm.block.virtual.VirtualBlock;
+import grondag.xm.virtual.VirtualBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

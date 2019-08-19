@@ -18,7 +18,7 @@ package grondag.xm.relics.placement;
 
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
-import grondag.xm.block.virtual.VirtualBlock;
+import grondag.xm.virtual.VirtualBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resource.language.I18n;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.block.virtual;
+package grondag.xm.virtual;
 
 import java.util.Collections;
 import java.util.HashSet;
