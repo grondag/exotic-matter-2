@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.mesh.helper;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 import org.joml.Vector2f;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -32,6 +35,7 @@ import grondag.xm.api.mesh.polygon.Vec3f;
  * 
  * 
  */
+@API(status = INTERNAL)
 public class PointInPolygonTest {
 
     /**

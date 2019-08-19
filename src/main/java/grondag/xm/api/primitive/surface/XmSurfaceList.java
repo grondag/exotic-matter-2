@@ -15,9 +15,14 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.surface;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.surface.XmSurfaceListBuilderImpl;
 
+@API(status = EXPERIMENTAL)
 public interface XmSurfaceList {
     static XmSurfaceListBuilder builder() {
         return XmSurfaceListBuilderImpl.builder();

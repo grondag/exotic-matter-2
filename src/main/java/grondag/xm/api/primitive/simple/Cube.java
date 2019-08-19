@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
@@ -31,6 +35,7 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import net.minecraft.util.math.Direction;
 
+@API(status = EXPERIMENTAL)
 public class Cube {
     private Cube() {}
     

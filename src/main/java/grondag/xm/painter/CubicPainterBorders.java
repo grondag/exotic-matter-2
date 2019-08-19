@@ -29,6 +29,9 @@ import static grondag.xm.api.texture.TextureNameFunction.BORDER_SIDES_TOP_BOTTOM
 import static grondag.xm.api.texture.TextureNameFunction.BORDER_SIDES_TOP_LEFT_RIGHT;
 import static grondag.xm.api.texture.TextureNameFunction.BORDER_SIDES_TOP_RIGHT;
 import static grondag.xm.api.texture.TextureNameFunction.BORDER_SIDE_TOP;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
@@ -42,6 +45,7 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.relics.placement.FaceQuadInputs;
 import net.minecraft.util.math.Direction;
 
+@API(status = INTERNAL)
 public abstract class CubicPainterBorders extends AbstractQuadPainter {
     protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[6][CornerJoinFaceStates.COUNT];
     /**

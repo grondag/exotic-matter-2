@@ -17,6 +17,9 @@ package grondag.xm.relics.placement;
 
 import javax.annotation.Nullable;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.modkeys.api.ModKeys;
 import grondag.fermion.varia.Useful;
 import grondag.xm.XmConfig;
@@ -43,6 +46,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 @Environment(EnvType.CLIENT)
 public abstract class PlacementHandler {
     private PlacementHandler() {

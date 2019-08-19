@@ -17,6 +17,9 @@ package grondag.xm.relics.placement;
 
 import java.util.HashSet;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.position.CubicBlockRegion;
 import grondag.xm.XmConfig;
 import net.minecraft.block.BlockState;
@@ -25,6 +28,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 abstract class VolumetricPlacementSpec extends SingleStackPlacementSpec {
     protected final boolean isHollow;
     protected final BlockPos offsetPos;

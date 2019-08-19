@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import com.google.common.collect.ImmutableList;
 
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import net.minecraft.util.math.Box;
 
+@API(status = INTERNAL)
 interface CollisionBoxListBuilder {
     IntCollection boxes();
 

@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.varia.Useful;
 import grondag.xm.mesh.vertex.Vec3fFactory;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
+@API(status = EXPERIMENTAL)
 public interface Vec3f {
     static float dotProduct(final float x0, final float y0, final float z0, final float x1, final float y1, final float z1) {
         return x0 * x1 + y0 * y1 + z0 * z1;

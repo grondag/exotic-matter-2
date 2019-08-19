@@ -15,6 +15,8 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,6 +25,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -33,6 +36,7 @@ import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 
+@API(status = INTERNAL)
 public class CollisionDispatcherImpl {
     static final BlockingQueue<Runnable> QUEUE = new LinkedBlockingQueue<Runnable>();
     private static final ExecutorService EXEC = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, QUEUE, new ThreadFactory() {

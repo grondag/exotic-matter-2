@@ -15,8 +15,13 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.spatial.Rotation;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class FaceQuadInputs {
     public final int textureOffset;
     public final Rotation rotation;

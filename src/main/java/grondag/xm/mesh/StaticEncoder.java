@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.spatial.Rotation;
@@ -22,6 +26,7 @@ import grondag.fermion.varia.IndexedInterner;
 import grondag.xm.api.primitive.surface.XmSurface;
 import net.minecraft.block.BlockRenderLayer;
 
+@API(status = INTERNAL)
 class StaticEncoder {
     private static final BitPacker32<StaticEncoder> BITPACKER = new BitPacker32<StaticEncoder>(null, null);
     private static final BitPacker32<StaticEncoder> BITPACKER_2 = new BitPacker32<StaticEncoder>(null, null);

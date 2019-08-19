@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.frex.Frex;
 import grondag.xm.Xm;
@@ -41,6 +45,7 @@ import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("rawtypes")
+@API(status = INTERNAL)
 public class PaintManager implements Consumer<Polygon> {
     private static final ThreadLocal<PaintManager> POOL = ThreadLocal.withInitial(PaintManager::new);
 

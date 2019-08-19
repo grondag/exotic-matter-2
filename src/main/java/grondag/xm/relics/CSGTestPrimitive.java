@@ -19,6 +19,9 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 
 import java.util.function.Consumer;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.CSG;
 import grondag.xm.api.mesh.CsgMesh;
@@ -33,9 +36,10 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.model.state.SimpleModelStateImpl;
+import grondag.xm.modelstate.SimpleModelStateImpl;
 
-//TODO: remove
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class CSGTestPrimitive extends AbstractSimplePrimitive {
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
             .add("lamp", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
@@ -91,13 +95,13 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
         quadsA.writer().lockUV(0, true);
         quadsA.writer().surface(SURFACE_A);
         quadsA.saveDefaults();
-        MeshHelper.makePaintableBox(0f, 0.4f, 0.4f, 1.0f, 0.6f, 0.6f, quadsA);
+        MeshHelper.box(0f, 0.4f, 0.4f, 1.0f, 0.6f, 0.6f, quadsA);
 
         CsgMesh quadsB = XmMeshes.claimCsg();
         quadsB.writer().lockUV(0, true);
         quadsB.writer().surface(SURFACE_B);
         quadsB.saveDefaults();
-        MeshHelper.makePaintableBox(0.2f, 0f, 0.3f, 0.6f, 1.0f, 0.8f, quadsB);
+        MeshHelper.box(0.2f, 0f, 0.3f, 0.6f, 1.0f, 0.8f, quadsB);
 
         WritableMesh output = XmMeshes.claimWritable();
 //        CSG.difference(quadsA, quadsB, output);

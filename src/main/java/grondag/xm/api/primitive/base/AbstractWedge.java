@@ -19,10 +19,13 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -30,8 +33,9 @@ import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.model.state.SimpleModelStateImpl;
+import grondag.xm.modelstate.SimpleModelStateImpl;
 
+@API(status = EXPERIMENTAL)
 public abstract class AbstractWedge extends AbstractSimplePrimitive {
     protected static final int KEY_COUNT = CubeRotation.COUNT * 3;
     

@@ -16,6 +16,10 @@
 package grondag.xm.relics.placement;
 
 import net.minecraft.util.math.Direction;
+
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
@@ -37,6 +41,8 @@ import net.minecraft.util.math.Vec3d;
  * For excavations, inPos will be the same as onPos unless floating selection is
  * on.
  */
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class PlacementPosition {
     public final Direction onFace;
     public final BlockPos onPos;

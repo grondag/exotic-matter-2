@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.terrain.TerrainModelState;
@@ -24,6 +28,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+@API(status = INTERNAL)
 public class TerrainDynamicBlock extends TerrainBlock {
     public TerrainDynamicBlock(Settings blockSettings, ModelState defaultModelState, boolean isFiller) {
         super(blockSettings, adjustShape(defaultModelState, isFiller));

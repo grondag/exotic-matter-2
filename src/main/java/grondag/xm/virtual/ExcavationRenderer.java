@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import javax.annotation.Nullable;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
@@ -29,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
+@API(status = INTERNAL)
 public class ExcavationRenderer {
     public final int id;
 

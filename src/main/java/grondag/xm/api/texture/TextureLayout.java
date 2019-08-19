@@ -19,8 +19,12 @@ import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 
 //TODO: docs and remove references to layouts - that's part of layout map and name function now
+@API(status = EXPERIMENTAL)
 public enum TextureLayout {
     /**
      * Separate random tiles with naming convention base_j_i where i is 0-7 and j is

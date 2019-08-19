@@ -15,9 +15,13 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.position.PackedBlockPos;
 import grondag.xm.api.block.XmBlockState;
@@ -30,6 +34,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+@API(status = INTERNAL)
 public class TerrainBlockHelper {
     /**
      * Convenience method to check for flow block.

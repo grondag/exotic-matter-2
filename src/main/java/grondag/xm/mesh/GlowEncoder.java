@@ -16,9 +16,13 @@
 package grondag.xm.mesh;
 
 import static grondag.xm.mesh.MeshFormat.*;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
 
+@API(status = INTERNAL)
 abstract class GlowEncoder {
     private static final GlowEncoder NO_GLOW = new GlowEncoder() {
         @Override

@@ -15,10 +15,14 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -37,6 +41,7 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
+@API(status = EXPERIMENTAL)
 public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> extends ModelState {
     
     public static interface ModelStateFactory<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> {

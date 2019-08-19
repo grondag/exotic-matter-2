@@ -15,13 +15,18 @@
  ******************************************************************************/
 package grondag.xm.api.item;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.dispatch.XmRegistryImpl;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+@API(status = EXPERIMENTAL)
 public class XmItemRegistry {
     private XmItemRegistry() {}
 

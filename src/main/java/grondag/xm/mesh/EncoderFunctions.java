@@ -15,9 +15,14 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.mesh.helper.NormalQuantizer;
 
+@API(status = INTERNAL)
 abstract class EncoderFunctions {
     public static final int BAD_ADDRESS = Integer.MIN_VALUE;
 

@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.paint;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.Xm;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.VertexProcessorRegistry;
@@ -23,6 +27,7 @@ import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
 
+@API(status = INTERNAL)
 @SuppressWarnings("unchecked")
 public class VertexProcessorRegistryImpl extends DefaultedRegistry<VertexProcessor> implements VertexProcessorRegistry {
    

@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import net.minecraft.block.BlockRenderLayer;
 
 /**
  * Describes if/how this texture can be rendered in alpha or cutout modes. Used
  * to select the optimal (or least bad) block render layer for each paint layer.
  */
+@API(status = EXPERIMENTAL)
 public enum TextureRenderIntent {
 
     /**

@@ -15,14 +15,18 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.terrain.TerrainModelState;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
+import grondag.xm.modelstate.AbstractPrimitiveModelState;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-//TODO: move to terrain package
+@API(status = INTERNAL)
 public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> implements TerrainModelState.Mutable {
     public static final ModelStateFactoryImpl<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> FACTORY = new ModelStateFactoryImpl<>(TerrainModelStateImpl::new);
 

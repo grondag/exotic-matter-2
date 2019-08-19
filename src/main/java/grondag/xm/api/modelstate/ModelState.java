@@ -15,9 +15,13 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 import net.fabricmc.api.EnvType;
@@ -30,6 +34,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 
+@API(status = EXPERIMENTAL)
 public interface ModelState {
     Mutable mutableCopy();
 

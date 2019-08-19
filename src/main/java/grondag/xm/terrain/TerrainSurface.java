@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -66,6 +70,7 @@ import grondag.xm.api.terrain.TerrainModelState.Mutable;
 // * no effort to set useful UV values because all quads are expected to be UV
 // * locked.
 // */
+@API(status = INTERNAL)
 public abstract class TerrainSurface extends AbstractTerrainPrimitive {
     
     protected TerrainSurface(String idString, int stateFlags, ModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {

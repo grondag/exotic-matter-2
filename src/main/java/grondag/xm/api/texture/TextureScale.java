@@ -16,7 +16,11 @@
 package grondag.xm.api.texture;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.*;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import org.apiguardian.api.API;
+
+@API(status = EXPERIMENTAL)
 public enum TextureScale {
     /** 1x1 */
     SINGLE(0, STATE_FLAG_NONE),

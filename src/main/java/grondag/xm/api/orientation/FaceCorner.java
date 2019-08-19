@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.orientation;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.function.Consumer;
 
@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
 import grondag.xm.connect.helper.FaceCornerHelper;
 import net.minecraft.util.StringIdentifiable;
 
-@API(status = STABLE)
+@API(status = EXPERIMENTAL)
 public enum FaceCorner implements StringIdentifiable {
     TOP_LEFT(FaceEdge.LEFT_EDGE, FaceEdge.TOP_EDGE), TOP_RIGHT(FaceEdge.TOP_EDGE, FaceEdge.RIGHT_EDGE), BOTTOM_LEFT(FaceEdge.BOTTOM_EDGE, FaceEdge.LEFT_EDGE),
     BOTTOM_RIGHT(FaceEdge.RIGHT_EDGE, FaceEdge.BOTTOM_EDGE);

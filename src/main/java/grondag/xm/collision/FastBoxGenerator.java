@@ -16,8 +16,11 @@
 package grondag.xm.collision;
 
 import static grondag.xm.collision.OctreeCoordinates.ALL_EMPTY;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import com.google.common.collect.ImmutableList;
 
@@ -47,6 +50,7 @@ import net.minecraft.util.math.Box;
  * representation is better (or at least as good) for the subsequent
  * simplification, fill and output operations.
  */
+@API(status = INTERNAL)
 class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
     private static void div1(final float[] polyData, final long[] voxelBits) {
         if (TriangleBoxTest.triBoxOverlap(CLOW1, CLOW1, CLOW1, R1, polyData))

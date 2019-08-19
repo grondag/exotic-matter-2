@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.orientation;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.function.Consumer;
 
@@ -40,7 +40,7 @@ import net.minecraft.util.math.Vec3i;
  * 
  * Components of the name are bottom and back face.
  */
-@API(status = STABLE)
+@API(status = EXPERIMENTAL)
 public enum CubeRotation implements StringIdentifiable {
     DOWN_SOUTH(Direction.DOWN, Direction.SOUTH), 
     DOWN_WEST(Direction.DOWN, Direction.WEST),

@@ -15,8 +15,12 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.IdentityHashMap;
 import java.util.Map;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.fermion.simulator.domain.DomainManager;
@@ -31,6 +35,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 @SuppressWarnings("serial")
+@API(status = INTERNAL)
 public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<ExcavationRenderEntry>> {
 
     public static final ExcavationRenderTracker INSTANCE = new ExcavationRenderTracker();

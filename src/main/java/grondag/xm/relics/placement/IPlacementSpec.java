@@ -17,10 +17,15 @@ package grondag.xm.relics.placement;
 
 import java.util.function.BooleanSupplier;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.position.BlockRegion;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public interface IPlacementSpec {
 
     /**

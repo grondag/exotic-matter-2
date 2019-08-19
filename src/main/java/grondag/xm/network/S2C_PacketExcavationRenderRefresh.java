@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.network;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.Collection;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.position.IntegerBox;
 import grondag.xm.Xm;
@@ -35,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
  * Replaces all excavation render entries. Sent when players logs in, changes
  * dimension or changes active domain.
  */
+@API(status = INTERNAL)
 public abstract class S2C_PacketExcavationRenderRefresh {
     private S2C_PacketExcavationRenderRefresh() {
     }

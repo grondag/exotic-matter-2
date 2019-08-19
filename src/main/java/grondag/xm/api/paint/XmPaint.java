@@ -15,13 +15,18 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import javax.annotation.Nullable;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.paint.XmPaintImpl;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.Identifier;
 
+@API(status = EXPERIMENTAL)
 public interface XmPaint {
     static XmPaintFinder finder() {
         return XmPaintImpl.finder();

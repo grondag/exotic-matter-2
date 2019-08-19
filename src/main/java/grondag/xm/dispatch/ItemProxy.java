@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.Collections;
+
+import org.apiguardian.api.API;
 
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
@@ -23,6 +27,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+@API(status = INTERNAL)
 public class ItemProxy extends ModelItemPropertyOverrideList {
     private final BakedModel owner;
 

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.orientation;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.function.Consumer;
 
@@ -33,7 +33,7 @@ import net.minecraft.util.math.Vec3i;
  * Defines the eight corners of a block and the relative positions of the
  * neighboring blocks diagonally adjacent to those corners.
  */
-@API(status = STABLE)
+@API(status = EXPERIMENTAL)
 public enum CubeCorner implements StringIdentifiable {
     UP_NORTH_EAST(Direction.UP, Direction.EAST, Direction.NORTH),
     UP_NORTH_WEST(Direction.UP, Direction.WEST, Direction.NORTH),

@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.ModelState.Mutable;
 import net.minecraft.item.ItemStack;
 
+@API(status = INTERNAL)
 public interface XmItemAccess {
     @SuppressWarnings("unchecked")
     public static <T extends Mutable> T getModelState(ItemStack stack) {

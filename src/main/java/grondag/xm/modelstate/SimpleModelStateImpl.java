@@ -13,10 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.model.state;
+package grondag.xm.modelstate;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.SimpleModelState;
 
+@API(status = INTERNAL)
 public class SimpleModelStateImpl extends AbstractPrimitiveModelState<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> implements SimpleModelState.Mutable {
     public static final int MAX_SURFACES = 8;
     

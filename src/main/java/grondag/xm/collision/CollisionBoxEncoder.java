@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.IntConsumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.collision.Functions.BoxBoundsIntFunction;
 import grondag.xm.collision.Functions.BoxBoundsObjectFunction;
@@ -26,6 +30,7 @@ import net.minecraft.util.math.Direction;
  * into/from primitive values. These are used to reduce garbage and improve LOR
  * in implementation.
  */
+@API(status = INTERNAL)
 class CollisionBoxEncoder {
     static final int MIN_X_SHIFT = 0;
     static final int MIN_Y_SHIFT = 4;

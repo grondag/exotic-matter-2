@@ -27,7 +27,11 @@ import static grondag.xm.api.texture.TextureRotation.ROTATE_RANDOM;
 import static grondag.xm.api.texture.TextureScale.GIANT;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.texture.TextureSetHelper.addBorderRandom;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import org.apiguardian.api.API;
+
+@API(status = EXPERIMENTAL)
 public class XmTextures {
     private XmTextures() {}
     

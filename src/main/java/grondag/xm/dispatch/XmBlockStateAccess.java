@@ -15,15 +15,20 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import javax.annotation.Nullable;
 
-import grondag.xm.api.block.WorldToModelStateFunction;
+import org.apiguardian.api.API;
+
 import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.modelstate.WorldToModelState;
 
+@API(status = INTERNAL)
 public interface XmBlockStateAccess {
-    void xm_modelStateFunc(WorldToModelStateFunction<?> func);
+    void xm_modelStateFunc(WorldToModelState<?> func);
 
-    WorldToModelStateFunction<?> xm_modelStateFunc();
+    WorldToModelState<?> xm_modelStateFunc();
     
     @Nullable XmBlockState xm_toXmBlockState();
 }

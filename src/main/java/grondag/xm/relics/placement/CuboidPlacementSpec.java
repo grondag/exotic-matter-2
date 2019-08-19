@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.function.BooleanSupplier;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -52,6 +54,8 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 
     protected CubicBlockRegion region;

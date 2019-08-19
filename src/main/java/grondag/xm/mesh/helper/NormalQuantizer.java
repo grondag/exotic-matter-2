@@ -15,6 +15,11 @@
  ******************************************************************************/
 package grondag.xm.mesh.helper;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
+@API(status = INTERNAL)
 public class NormalQuantizer {
     private static int packComponent(float n) {
         return Math.round(n * 256) + 256;

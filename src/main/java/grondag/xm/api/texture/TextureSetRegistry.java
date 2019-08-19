@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.texture.TextureSetRegistryImpl;
 import net.minecraft.util.Identifier;
 
+@API(status = EXPERIMENTAL)
 public interface TextureSetRegistry {
     public static TextureSetRegistry instance() {
         return TextureSetRegistryImpl.INSTANCE;

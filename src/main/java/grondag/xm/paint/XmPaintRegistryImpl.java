@@ -15,11 +15,16 @@
  ******************************************************************************/
 package grondag.xm.paint;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.util.Identifier;
 
+@API(status = INTERNAL)
 public class XmPaintRegistryImpl implements XmPaintRegistry {
     public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
 

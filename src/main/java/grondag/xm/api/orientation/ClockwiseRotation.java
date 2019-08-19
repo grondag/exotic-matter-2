@@ -15,14 +15,14 @@
  ******************************************************************************/
 package grondag.xm.api.orientation;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 
-@API(status = STABLE)
+@API(status = EXPERIMENTAL)
 public enum ClockwiseRotation implements StringIdentifiable {
     ROTATE_NONE(0, Direction.SOUTH),
     ROTATE_90(90, Direction.WEST),

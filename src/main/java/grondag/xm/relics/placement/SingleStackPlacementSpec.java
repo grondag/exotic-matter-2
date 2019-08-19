@@ -15,12 +15,18 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.xm.api.item.XmItem;
+
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public abstract class SingleStackPlacementSpec extends AbstractPlacementSpec {
     /**
      * Stack that should be placed in the world. Populated during

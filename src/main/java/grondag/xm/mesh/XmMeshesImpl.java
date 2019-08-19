@@ -15,9 +15,13 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.CsgMesh;
 import grondag.xm.api.mesh.MutableMesh;
@@ -27,6 +31,7 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 
+@API(status = INTERNAL)
 public class XmMeshesImpl {
     static final int FORMAT_TAGS = MeshFormat.HAS_TAG_FLAG;
     static final int FORMAT_LINKS = MeshFormat.HAS_LINK_FLAG;

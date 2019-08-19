@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.color.ColorHelper;
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -25,6 +29,7 @@ import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
+@API(status = INTERNAL)
 class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutablePolygon {
     @Override
     public final MutablePolygon spriteVertex(int layerIndex, int vertexIndex, float u, float v, int color, int glow) {

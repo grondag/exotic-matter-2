@@ -15,9 +15,14 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 /**
  * Used by painters to know how to UV map a surface for painting.
  */
+@API(status = EXPERIMENTAL)
 public enum SurfaceTopology {
     /**
      * Surface represents six faces of a single block. This is the topology to use

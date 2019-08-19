@@ -22,6 +22,9 @@ import static grondag.xm.api.texture.TextureRenderIntent.OVERLAY_ONLY;
 import static grondag.xm.api.texture.TextureRotation.ROTATE_NONE;
 import static grondag.xm.api.texture.TextureRotation.ROTATE_RANDOM;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
@@ -30,6 +33,7 @@ import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 
+@API(status = INTERNAL)
 public abstract class TextureSetHelper {
     private TextureSetHelper() {}
 

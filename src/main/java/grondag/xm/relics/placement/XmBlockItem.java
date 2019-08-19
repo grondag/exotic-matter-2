@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,6 +32,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
 //TODO: still needed?
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class XmBlockItem extends BlockItem implements PlacementItem {
 
     public static final int FEATURE_FLAGS = PlacementItem.BENUMSET_FEATURES.getFlagsForIncludedValues(PlacementItemFeature.BLOCK_ORIENTATION,

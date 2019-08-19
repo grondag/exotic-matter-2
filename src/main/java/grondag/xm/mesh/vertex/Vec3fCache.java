@@ -15,13 +15,18 @@
  ******************************************************************************/
 package grondag.xm.mesh.vertex;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.sc.cache.ISimpleLoadingCache;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import it.unimi.dsi.fastutil.HashCommon;
 
+@API(status = INTERNAL)
 public class Vec3fCache {
     static final Vec3fCache INSTANCE = new Vec3fCache(0x80000);
 

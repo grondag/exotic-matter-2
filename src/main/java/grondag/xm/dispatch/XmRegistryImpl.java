@@ -15,23 +15,28 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Function;
 
+import org.apiguardian.api.API;
+
 import grondag.xm.Xm;
-import grondag.xm.api.block.WorldToModelStateFunction;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.WorldToModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+@API(status = INTERNAL)
 public class XmRegistryImpl {
     private XmRegistryImpl() {
     }
     
-    public static void register(Block block, Function<BlockState, ? extends WorldToModelStateFunction<?>> modelFunctionMap, Function<ItemStack, ModelState.Mutable> itemModelFunction) {
+    public static void register(Block block, Function<BlockState, ? extends WorldToModelState<?>> modelFunctionMap, Function<ItemStack, ModelState.Mutable> itemModelFunction) {
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
                 // TODO: localize

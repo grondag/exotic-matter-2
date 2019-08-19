@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 /**
  * Implementations that declare this interface guarantee that no
  * polygon in the mesh will be mutated.
@@ -24,6 +28,7 @@ package grondag.xm.api.mesh;
  * WritableMesh may be. Use to exclude mutable streams from use cases
  * where they would cause problems.
  */
+@API(status = EXPERIMENTAL)
 public interface ReadOnlyMesh extends XmMesh {
 
 }

@@ -15,6 +15,11 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
+@API(status = Status.DEPRECATED)
+@Deprecated
 public enum PlacementEvent {
     /**
      * Nothing happens, and click processing should continue.

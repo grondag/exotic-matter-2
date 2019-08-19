@@ -15,6 +15,11 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
+@API(status = INTERNAL)
 interface Functions {
 
     @FunctionalInterface

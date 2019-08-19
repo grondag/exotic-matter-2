@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
+@API(status = EXPERIMENTAL)
 public class MeshHelper {
 
     // TODO: fix or remove
@@ -121,7 +126,7 @@ public class MeshHelper {
      * 
      * PERF: use primitives instead of Vec3d
      */
-    public static void makeIcosahedron(Vec3d center, double radius, WritableMesh stream, boolean smoothNormals) {
+    public static void icosahedron(Vec3d center, double radius, WritableMesh stream, boolean smoothNormals) {
         /** vertex scale */
         final double s = radius / (2 * Math.sin(2 * Math.PI / 5));
 
@@ -172,57 +177,57 @@ public class MeshHelper {
         writer.textureSalt(salt++);
         stream.saveDefaults();
 
-        makeIcosahedronFace(true, 0, 11, 5, vertexes, normals, stream);
-        makeIcosahedronFace(false, 4, 5, 11, vertexes, normals, stream);
+        icosahedronFace(true, 0, 11, 5, vertexes, normals, stream);
+        icosahedronFace(false, 4, 5, 11, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 0, 5, 1, vertexes, normals, stream);
-        makeIcosahedronFace(false, 9, 1, 5, vertexes, normals, stream);
+        icosahedronFace(true, 0, 5, 1, vertexes, normals, stream);
+        icosahedronFace(false, 9, 1, 5, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 0, 1, 7, vertexes, normals, stream);
-        makeIcosahedronFace(false, 8, 7, 1, vertexes, normals, stream);
+        icosahedronFace(true, 0, 1, 7, vertexes, normals, stream);
+        icosahedronFace(false, 8, 7, 1, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 0, 7, 10, vertexes, normals, stream);
-        makeIcosahedronFace(false, 6, 10, 7, vertexes, normals, stream);
+        icosahedronFace(true, 0, 7, 10, vertexes, normals, stream);
+        icosahedronFace(false, 6, 10, 7, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 0, 10, 11, vertexes, normals, stream);
-        makeIcosahedronFace(false, 2, 11, 10, vertexes, normals, stream);
+        icosahedronFace(true, 0, 10, 11, vertexes, normals, stream);
+        icosahedronFace(false, 2, 11, 10, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 5, 4, 9, vertexes, normals, stream);
-        makeIcosahedronFace(false, 3, 9, 4, vertexes, normals, stream);
+        icosahedronFace(true, 5, 4, 9, vertexes, normals, stream);
+        icosahedronFace(false, 3, 9, 4, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 11, 2, 4, vertexes, normals, stream);
-        makeIcosahedronFace(false, 3, 4, 2, vertexes, normals, stream);
+        icosahedronFace(true, 11, 2, 4, vertexes, normals, stream);
+        icosahedronFace(false, 3, 4, 2, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 10, 6, 2, vertexes, normals, stream);
-        makeIcosahedronFace(false, 3, 2, 6, vertexes, normals, stream);
+        icosahedronFace(true, 10, 6, 2, vertexes, normals, stream);
+        icosahedronFace(false, 3, 2, 6, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 7, 8, 6, vertexes, normals, stream);
-        makeIcosahedronFace(false, 3, 6, 8, vertexes, normals, stream);
+        icosahedronFace(true, 7, 8, 6, vertexes, normals, stream);
+        icosahedronFace(false, 3, 6, 8, vertexes, normals, stream);
 
         writer.textureSalt(salt++);
         stream.saveDefaults();
-        makeIcosahedronFace(true, 1, 9, 8, vertexes, normals, stream);
-        makeIcosahedronFace(false, 3, 8, 9, vertexes, normals, stream);
+        icosahedronFace(true, 1, 9, 8, vertexes, normals, stream);
+        icosahedronFace(false, 3, 8, 9, vertexes, normals, stream);
 
     }
 
-    private static void makeIcosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3d[] points, Vec3d[] normals, WritableMesh stream) {
+    private static void icosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3d[] points, Vec3d[] normals, WritableMesh stream) {
         MutablePolygon writer = stream.writer();
         if (normals == null) {
             if (topHalf) {
@@ -253,7 +258,7 @@ public class MeshHelper {
     /**
      * Adds box to stream using current stream defaults.
      */
-    public static void makePaintableBox(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, WritableMesh stream) {
+    public static void box(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, WritableMesh stream) {
         MutablePolygon quad = stream.writer();
         stream.setVertexCount(4);
         quad.setupFaceQuad(Direction.UP, 1 - maxX, minZ, 1 - minX, maxZ, 1 - maxY, Direction.SOUTH);

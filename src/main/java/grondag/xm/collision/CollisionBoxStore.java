@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.sc.cache.IntSimpleCacheLoader;
 import grondag.fermion.sc.cache.IntSimpleLoadingCache;
 import grondag.xm.collision.Functions.BoxBoundsObjectFunction;
@@ -24,6 +28,7 @@ import net.minecraft.util.math.Box;
  * Caches AABB instances that share the same packed key. Mods can use many
  * collision boxes, so this helps reduce memory use and garbage.
  */
+@API(status = INTERNAL)
 class CollisionBoxStore {
     private static final IntSimpleLoadingCache<Box> boxCache = new IntSimpleLoadingCache<Box>(new BoxLoader(), 0xFFF);
 

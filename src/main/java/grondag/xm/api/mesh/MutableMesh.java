@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 
 /**
@@ -25,6 +29,7 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
  * The number of layers can be changed after appending, but number of vertices
  * cannot.
  */
+@API(status = EXPERIMENTAL)
 public interface MutableMesh extends WritableMesh {
     MutablePolygon editor();
 

@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.texture;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
 import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureScale;
 
+@API(status = INTERNAL)
 abstract class AbstractTextureSet {
     TextureLayoutMapImpl layoutMap = (TextureLayoutMapImpl) TextureLayoutMap.SINGLE;
     TextureRotation rotation = TextureRotation.ROTATE_NONE;

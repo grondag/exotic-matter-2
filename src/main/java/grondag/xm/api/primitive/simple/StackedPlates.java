@@ -18,8 +18,11 @@ package grondag.xm.api.primitive.simple;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
@@ -34,9 +37,10 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.model.state.SimpleModelStateImpl;
+import grondag.xm.modelstate.SimpleModelStateImpl;
 import net.minecraft.util.math.Direction;
 
+@API(status = EXPERIMENTAL)
 public class StackedPlates extends AbstractSimplePrimitive {
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();

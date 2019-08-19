@@ -15,11 +15,16 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.surface;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.paint.SurfaceTopology;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
 
+@API(status = EXPERIMENTAL)
 public interface XmSurface {
     int FLAG_NONE = 0;
 

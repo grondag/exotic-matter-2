@@ -15,6 +15,8 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +24,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.position.IntegerBox;
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
@@ -39,6 +43,7 @@ import net.minecraft.util.math.BlockPos;
  * Class exists on server but render methods do not. Server instantiates (and
  * generates IDs) and transmits to clients.
  */
+@API(status = INTERNAL)
 public class ExcavationRenderEntry {
     private static int nextID = 0;
 

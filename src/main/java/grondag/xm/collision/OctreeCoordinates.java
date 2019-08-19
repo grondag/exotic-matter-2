@@ -15,13 +15,18 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.Arrays;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.collision.Functions.BoxBoundsIntConsumer;
 import grondag.xm.collision.Functions.Float3Consumer;
 import grondag.xm.collision.Functions.Float3Test;
 import grondag.xm.collision.Functions.Int3Consumer;
 
+@API(status = INTERNAL)
 class OctreeCoordinates {
     static final long FULL_BITS = 0xFFFFFFFFFFFFFFFFL;
     static final long[] ALL_FULL = new long[64];

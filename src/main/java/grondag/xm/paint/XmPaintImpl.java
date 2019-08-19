@@ -16,8 +16,11 @@
 package grondag.xm.paint;
 
 import static grondag.xm.api.paint.XmPaint.MAX_TEXTURE_DEPTH;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import javax.annotation.Nullable;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.bits.BitPacker64;
 import grondag.xm.api.paint.VertexProcessor;
@@ -32,6 +35,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.Identifier;
 
+@API(status = INTERNAL)
 public class XmPaintImpl {
     private static final BitPacker64<XmPaintImpl> PAINT_BITS = new BitPacker64<XmPaintImpl>(p -> p.paintBits, (p, b) -> p.paintBits = b);
 

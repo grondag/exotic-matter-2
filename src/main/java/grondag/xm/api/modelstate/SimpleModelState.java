@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.primitive.simple.Stair;
 import net.minecraft.block.PillarBlock;
@@ -23,6 +27,7 @@ import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.util.math.Direction;
 
+@API(status = EXPERIMENTAL)
 public interface SimpleModelState extends PrimitiveModelState<SimpleModelState, SimpleModelState.Mutable>  {
     public static interface Mutable extends SimpleModelState, PrimitiveModelState.Mutable<SimpleModelState, SimpleModelState.Mutable> {
         

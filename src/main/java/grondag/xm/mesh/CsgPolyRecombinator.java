@@ -16,10 +16,13 @@
 package grondag.xm.mesh;
 
 import static grondag.xm.api.mesh.polygon.PolyHelper.epsilonEquals;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -30,6 +33,7 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
 
 //PERF:  make this no-alloc.  
+@API(status = INTERNAL)
 class CsgPolyRecombinator {
     private static final ThreadLocal<CsgPolyRecombinator> INSTANCES = new ThreadLocal<CsgPolyRecombinator>() {
         @Override

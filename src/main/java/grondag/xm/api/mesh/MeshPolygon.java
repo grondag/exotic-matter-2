@@ -13,8 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.modelstate;
+package grondag.xm.api.mesh;
 
-public interface SimpleModelStateOperation extends ModelStateOperation<SimpleModelState.Mutable>{
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import org.apiguardian.api.API;
+
+import grondag.xm.api.mesh.polygon.Polygon;
+
+/**
+ * For stream reader polygons that can be moved to an address within the stream.
+ */
+@API(status = EXPERIMENTAL)
+public interface MeshPolygon extends Polygon {
+    public void moveTo(int address);
+
+    public boolean hasValue();
+
+    public boolean next();
+
+    public boolean nextLink();
 }

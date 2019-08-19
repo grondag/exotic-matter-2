@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.color.Color;
@@ -37,12 +41,13 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.model.state.AbstractPrimitiveModelState;
-import grondag.xm.model.state.SimpleModelStateImpl;
+import grondag.xm.modelstate.AbstractPrimitiveModelState;
+import grondag.xm.modelstate.SimpleModelStateImpl;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
+@API(status = EXPERIMENTAL)
 public class SquareColumn extends AbstractSimplePrimitive {
     private static final XmSurfaceList SURFACES_DARK = XmSurfaceList.builder()
             .add("main", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)

@@ -15,20 +15,25 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import javax.annotation.Nullable;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.connect.world.BlockNeighbors;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
+@API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface SimpleModelStateMap extends ModelStateMap <BlockState, SimpleModelState.Mutable> {
     @Override
     SimpleModelState.Mutable apply(BlockState blockState);
     
     @FunctionalInterface
-    public static interface Modifier extends ModelStateMap.Modifier<BlockState, SimpleModelState.Mutable>, SimpleModelStateOperation {
+    public static interface Modifier extends ModelStateMap.Modifier<BlockState, SimpleModelState.Mutable>, SimpleModelStateUpdate {
         @Override
         SimpleModelState.Mutable apply(SimpleModelState.Mutable modelState, BlockState blockState);
         

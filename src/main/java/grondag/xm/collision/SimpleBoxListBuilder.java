@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 
@@ -22,6 +26,7 @@ import it.unimi.dsi.fastutil.ints.IntCollection;
  * Makes no attempt to combine boxes.<br>
  * Used when boxes are already known to be optimal.
  */
+@API(status = INTERNAL)
 class SimpleBoxListBuilder implements CollisionBoxListBuilder {
     final IntArrayList boxes = new IntArrayList();
 

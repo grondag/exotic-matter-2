@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.PrimitiveModelState.ModelStateFactory;
 import grondag.xm.api.primitive.base.AbstractPrimitive;
@@ -24,6 +28,7 @@ import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.api.terrain.TerrainPrimitive;
 import net.minecraft.util.Identifier;
 
+@API(status = INTERNAL)
 public abstract class AbstractTerrainPrimitive extends AbstractPrimitive<TerrainModelState, TerrainModelState.Mutable> implements TerrainPrimitive {
     protected AbstractTerrainPrimitive(Identifier id, int stateFlags, ModelStateFactory<TerrainModelState, TerrainModelState.Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
         super(id, stateFlags, factory, surfaceFunc);

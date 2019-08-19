@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.relics.placement.FilterMode;
@@ -33,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+@API(status = INTERNAL)
 public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
 
     @SuppressWarnings("hiding")

@@ -15,8 +15,13 @@
  ******************************************************************************/
 package grondag.xm.render;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import net.minecraft.client.render.VisibleRegion;
 
+@API(status = INTERNAL)
 public abstract class XmRenderHelper {
     private XmRenderHelper() {
     }

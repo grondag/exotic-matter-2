@@ -15,6 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.orientation;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
+@API(status = EXPERIMENTAL)
 public enum NoOrientation {
     NONE
 }

@@ -15,10 +15,15 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 /**
  * Implement to map XM2 texture indexes to custom content texture names
  */
 @FunctionalInterface
+@API(status = EXPERIMENTAL)
 public interface TextureNameFunction {
     String apply(String baseName, int versionIndex, int positionIndex);
 

@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import net.minecraft.client.resource.language.I18n;
@@ -22,6 +25,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public enum BlockOrientationAxis {
 
     DYNAMIC(null), MATCH_CLOSEST(null), X(Direction.Axis.X), Y(Direction.Axis.Y), Z(Direction.Axis.Z);

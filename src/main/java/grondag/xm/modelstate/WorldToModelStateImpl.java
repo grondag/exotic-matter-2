@@ -13,14 +13,17 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.modelstate;
+package grondag.xm.modelstate;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_POS;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.ArrayList;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -28,17 +31,21 @@ import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.connect.world.ModelStateFunction;
-import grondag.xm.api.primitive.simple.CubeWithEdgeRotation;
+import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.SimpleModelStateUpdate;
+import grondag.xm.api.modelstate.WorldToSimpleModelState;
+import grondag.xm.api.primitive.simple.CubeWithRotation;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
+@API(status = EXPERIMENTAL)
+public class WorldToModelStateImpl implements WorldToSimpleModelState {
     private final BlockTest<SimpleModelState> joinTest;
-    private final SimpleModelStateOperation updater;
+    private final SimpleModelStateUpdate updater;
     private final SimpleModelState defaultState;
     
-    private SimpleModelStateFunctionImpl(BuilderImpl builder) {
+    private WorldToModelStateImpl(BuilderImpl builder) {
         this.joinTest = builder.joinTest;
         this.defaultState = builder.defaultState;
         if(builder.updaters.isEmpty()) {
@@ -46,9 +53,9 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
         } else if(builder.updaters.size() == 1) {
             updater = builder.updaters.get(0);
         } else {
-            final SimpleModelStateOperation[] funcs = builder.updaters.toArray(new SimpleModelStateOperation[builder.updaters.size()]);
+            final SimpleModelStateUpdate[] funcs = builder.updaters.toArray(new SimpleModelStateUpdate[builder.updaters.size()]);
             updater = (modelState, xmBlockState, world, pos, neighbors, refreshFromWorld) -> {
-                for(SimpleModelStateOperation func : funcs) {
+                for(SimpleModelStateUpdate func : funcs) {
                     func.accept(modelState, xmBlockState, world, pos, neighbors, refreshFromWorld);
                 }
             };
@@ -94,16 +101,16 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
         return modelState;
     }
     
-    private static class BuilderImpl implements SimpleModelStateFunction.Builder {
+    private static class BuilderImpl implements WorldToSimpleModelState.Builder {
         private BlockTest<SimpleModelState> joinTest = BlockTest.sameBlock();
-        private ArrayList<SimpleModelStateOperation> updaters = new ArrayList<>();
-        private SimpleModelState defaultState = CubeWithEdgeRotation.INSTANCE.defaultState();
+        private ArrayList<SimpleModelStateUpdate> updaters = new ArrayList<>();
+        private SimpleModelState defaultState = CubeWithRotation.INSTANCE.defaultState();
         
         private BuilderImpl() {}
 
         @Override
         public Builder withDefaultState(SimpleModelState defaultState) {
-            this.defaultState = defaultState == null ? CubeWithEdgeRotation.INSTANCE.defaultState() : defaultState;
+            this.defaultState = defaultState == null ? CubeWithRotation.INSTANCE.defaultState() : defaultState;
             return this;
         }
         
@@ -114,7 +121,7 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
         }
         
         @Override
-        public Builder withUpdate(SimpleModelStateOperation function) {
+        public Builder withUpdate(SimpleModelStateUpdate function) {
             if(function != null) {
                 updaters.add(function);
             }
@@ -124,20 +131,20 @@ public class SimpleModelStateFunctionImpl implements SimpleModelStateFunction {
         @Override
         public Builder clear() {
             joinTest = BlockTest.sameBlock();
-            defaultState = CubeWithEdgeRotation.INSTANCE.defaultState();
+            defaultState = CubeWithRotation.INSTANCE.defaultState();
             updaters.clear();
             return this;
         }
         
         @Override
         public
-        SimpleModelStateFunction build() {
-            return new SimpleModelStateFunctionImpl(this);
+        WorldToSimpleModelState build() {
+            return new WorldToModelStateImpl(this);
         }
 
     }
 
-    static Builder builder() {
+    public static Builder builder() {
         return new BuilderImpl();
     }
 }

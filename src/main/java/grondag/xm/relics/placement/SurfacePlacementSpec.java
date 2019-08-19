@@ -17,6 +17,9 @@ package grondag.xm.relics.placement;
 
 import java.util.function.BooleanSupplier;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.position.BlockRegion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,6 +30,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class SurfacePlacementSpec extends SingleStackPlacementSpec {
     public SurfacePlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos) {
         super(placedStack, player, pPos);

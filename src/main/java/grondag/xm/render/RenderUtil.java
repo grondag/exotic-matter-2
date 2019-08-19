@@ -15,11 +15,16 @@
  ******************************************************************************/
 package grondag.xm.render;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
+@API(status = INTERNAL)
 public class RenderUtil {
     public static final BlockRenderLayer[] RENDER_LAYERS = BlockRenderLayer.values();
     public static final int RENDER_LAYER_COUNT = RENDER_LAYERS.length;

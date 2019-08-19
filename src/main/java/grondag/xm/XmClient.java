@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.collision.CollisionDispatcherImpl;
 import grondag.xm.dispatch.XmDispatcher;
 import grondag.xm.dispatch.XmVariantProvider;
@@ -26,6 +30,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.InvalidateRenderStateCallback;
 
+@API(status = INTERNAL)
 public class XmClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {

@@ -15,8 +15,13 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.mesh.polygon.Vec3f;
 
+@API(status = EXPERIMENTAL)
 public interface CsgMesh extends MutableMesh {
 
     float normalX(int nodeAddress);

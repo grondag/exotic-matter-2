@@ -15,10 +15,15 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 
+@API(status = EXPERIMENTAL)
 public interface XmMesh {
     boolean isEmpty();
 
@@ -44,7 +49,7 @@ public interface XmMesh {
      * Reader must be released after use or stream can never be recycled to the pool
      * when released.
      */
-    default MeshReaderPolygon claimThreadSafeReader() {
+    default MeshPolygon claimThreadSafeReader() {
         throw new UnsupportedOperationException();
     }
 

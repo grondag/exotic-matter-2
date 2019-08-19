@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.primitive;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
@@ -26,6 +30,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
+@API(status = EXPERIMENTAL)
 public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> {
     /**
      * Used for registration and serialization of model state.

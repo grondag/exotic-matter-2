@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,6 +27,8 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Knows how to get the appropriate placement builder for a given stack.
  */
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class PlacementSpecHelper {
     /**
      * Instantiates the appropriate placement builder object if the object in the

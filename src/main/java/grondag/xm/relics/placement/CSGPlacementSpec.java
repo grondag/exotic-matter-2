@@ -17,6 +17,9 @@ package grondag.xm.relics.placement;
 
 import java.util.function.BooleanSupplier;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.position.BlockRegion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,6 +29,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class CSGPlacementSpec extends VolumetricPlacementSpec {
     public CSGPlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos) {
         super(placedStack, player, pPos);

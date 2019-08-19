@@ -15,6 +15,11 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
+@API(status = Status.DEPRECATED)
+@Deprecated
 public enum PlacementItemFeature {
     BLOCK_ORIENTATION, REGION_ORIENTATION, TARGET_MODE, FILTER_MODE, SPECIES_MODE, FIXED_REGION, REGION_SIZE, SELECTION_RANGE;
 }

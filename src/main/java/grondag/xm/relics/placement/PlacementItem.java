@@ -16,6 +16,8 @@
 package grondag.xm.relics.placement;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 
 import grondag.fermion.bits.EnumBitSet;
 import grondag.fermion.position.PackedBlockPos;
@@ -41,6 +43,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 @SuppressWarnings("rawtypes")
+@API(status = Status.DEPRECATED)
+@Deprecated
 public interface PlacementItem {
     /////////////////////////////////////////////////////
     // STATIC MEMBERS

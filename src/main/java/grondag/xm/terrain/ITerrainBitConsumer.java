@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 /**
  * Terrain state is longer than 64 bits and we don't always want/need to
  * instantiate a TerrainState object to pass the raw bits around. Implement this
  * for objects that can consume the raw state directly. (Including terrain
  * state.)
  */
+@API(status = INTERNAL)
 @FunctionalInterface
 public interface ITerrainBitConsumer<T> {
     public T apply(long terrainBits, int hotnessBits);

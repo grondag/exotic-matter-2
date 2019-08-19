@@ -15,6 +15,11 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
+@API(status = Status.DEPRECATED)
+@Deprecated
 public enum PlacementPreviewRenderMode {
     SELECT(0x91BFBD), PLACE(0xA0FFFF), EXCAVATE(0xFC8D59), OBSTRUCTED(0xFFFFBF);
 

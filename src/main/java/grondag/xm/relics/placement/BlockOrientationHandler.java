@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.world.WorldHelper;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.item.XmItem;
@@ -38,6 +41,8 @@ import net.minecraft.world.World;
  * settings and placement context.
  */
 @SuppressWarnings("rawtypes")
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class BlockOrientationHandler {
     /**
      * Updates model state in provided stack if necessary based on other inputs.

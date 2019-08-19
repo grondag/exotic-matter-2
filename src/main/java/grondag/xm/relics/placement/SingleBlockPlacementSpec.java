@@ -17,6 +17,8 @@ package grondag.xm.relics.placement;
 
 import java.util.function.BooleanSupplier;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -37,6 +39,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
     public SingleBlockPlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos) {
         super(placedStack, player, pPos);

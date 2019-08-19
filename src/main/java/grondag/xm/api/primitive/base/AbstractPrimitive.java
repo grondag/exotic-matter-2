@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.base;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.PrimitiveModelState;
@@ -27,6 +31,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
+@API(status = EXPERIMENTAL)
 public abstract class AbstractPrimitive<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> implements ModelPrimitive<R, W> {
     private final R defaultState;
 

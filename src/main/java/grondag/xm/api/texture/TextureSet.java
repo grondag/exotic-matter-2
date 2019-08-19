@@ -15,13 +15,18 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.texture.TextureSetImpl;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 
+@API(status = EXPERIMENTAL)
 public interface TextureSet {
     public static TextureSetBuilder builder() {
         return TextureSetImpl.builder();

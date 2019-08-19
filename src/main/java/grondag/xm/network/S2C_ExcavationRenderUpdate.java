@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.network;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.position.IntegerBox;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
@@ -34,6 +38,7 @@ import net.minecraft.util.math.BlockPos;
  * Sent when a new excavation is added, the bounds change, or excavation is
  * removed.
  */
+@API(status = INTERNAL)
 public abstract class S2C_ExcavationRenderUpdate {
     private S2C_ExcavationRenderUpdate() {
     }

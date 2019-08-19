@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.mesh.helper;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -31,6 +34,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
+@API(status = INTERNAL)
 @SuppressWarnings("rawtypes")
 public class PolyTransformImpl implements PolyTransform {
 

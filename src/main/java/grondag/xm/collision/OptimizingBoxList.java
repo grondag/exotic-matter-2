@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import com.google.common.collect.ImmutableList;
 
 import grondag.fermion.varia.Useful;
@@ -24,6 +28,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
+@API(status = INTERNAL)
 class OptimizingBoxList implements Runnable {
     // singleton is fine because called from a single thread
     private static final OptimalBoxGenerator boxGen = new OptimalBoxGenerator();

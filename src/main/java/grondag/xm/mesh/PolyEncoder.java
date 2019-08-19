@@ -51,6 +51,9 @@ import static grondag.xm.mesh.MeshFormat.getVertexColorFormat;
 import static grondag.xm.mesh.MeshFormat.isLinked;
 import static grondag.xm.mesh.MeshFormat.isTagged;
 import static grondag.xm.mesh.MeshFormat.polyFormatKey;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.varia.IndexedInterner;
@@ -62,6 +65,7 @@ import grondag.xm.mesh.EncoderFunctions.FloatSetter3;
 import grondag.xm.mesh.EncoderFunctions.IntGetter;
 import grondag.xm.mesh.EncoderFunctions.IntSetter;
 
+@API(status = INTERNAL)
 class PolyEncoder {
     private static final PolyEncoder[] ENCODERS = new PolyEncoder[POLY_FORMAT_COUNT];
 

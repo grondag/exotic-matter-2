@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.mesh.helper.PolyTransformImpl;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
+@API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface PolyTransform {
     void apply(MutablePolygon poly);

@@ -15,8 +15,12 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
@@ -37,6 +41,7 @@ import net.minecraft.util.math.MathHelper;
  * 
  * See {@link SurfaceTopology#TILED}
  */
+@API(status = INTERNAL)
 public abstract class SurfacePainterTiled extends AbstractQuadPainter {
     /**
      * The smallest UV distance that can be tiled with single texture. Equivalently,

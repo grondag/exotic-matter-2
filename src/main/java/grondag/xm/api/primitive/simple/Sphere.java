@@ -16,8 +16,11 @@
 package grondag.xm.api.primitive.simple;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.MeshHelper;
@@ -30,9 +33,10 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.model.state.SimpleModelStateImpl;
+import grondag.xm.modelstate.SimpleModelStateImpl;
 import net.minecraft.util.math.Vec3d;
 
+@API(status = EXPERIMENTAL)
 public class Sphere extends AbstractSimplePrimitive {
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
 
@@ -78,7 +82,7 @@ public class Sphere extends AbstractSimplePrimitive {
         stream.writer().surface(SURFACE_ALL);
         stream.saveDefaults();
 
-        MeshHelper.makeIcosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
+        MeshHelper.icosahedron(new Vec3d(.5, .5, .5), 0.6, stream, false);
         return stream.releaseToReader();
     }
 

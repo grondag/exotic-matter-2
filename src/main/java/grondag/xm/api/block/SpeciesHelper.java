@@ -15,11 +15,16 @@
  ******************************************************************************/
 package grondag.xm.api.block;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
+@API(status = EXPERIMENTAL)
 @SuppressWarnings("rawtypes")
 public class SpeciesHelper {
     private  SpeciesHelper() {}

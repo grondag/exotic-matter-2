@@ -47,6 +47,10 @@ package grondag.xm.api.mesh;
  * <info@michaelhoffer.de>.
  */
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.mesh.polygon.Polygon;
 
 /**
@@ -54,6 +58,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
  * <em>Heavily</em> modified from original source.<br>
  * Uses polystreams and threadlocals to minimize garbage collection.
  */
+@API(status = EXPERIMENTAL)
 public abstract class CSG {
     /**
      * Output a new mesh solid representing the difference of the two input meshes.

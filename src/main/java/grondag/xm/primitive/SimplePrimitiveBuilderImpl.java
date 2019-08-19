@@ -16,9 +16,12 @@
 package grondag.xm.primitive;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
@@ -31,8 +34,9 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.SimplePrimitive.Builder;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.model.state.SimpleModelStateImpl;
+import grondag.xm.modelstate.SimpleModelStateImpl;
 
+@API(status = INTERNAL)
 public class SimplePrimitiveBuilderImpl {
     protected static class BuilderImpl implements Builder {
         private OrientationType orientationType = OrientationType.NONE;

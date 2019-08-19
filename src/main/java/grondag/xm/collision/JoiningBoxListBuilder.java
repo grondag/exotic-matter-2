@@ -16,9 +16,12 @@
 package grondag.xm.collision;
 
 import static grondag.xm.collision.CollisionBoxEncoder.*;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
 import java.util.function.IntConsumer;
+
+import org.apiguardian.api.API;
 
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -28,6 +31,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
  * automatically combines boxes that share a surface.
  * <p>
  */
+@API(status = INTERNAL)
 public class JoiningBoxListBuilder implements CollisionBoxListBuilder {
     @SuppressWarnings("unused")
     private static final int MIN_A_SHIFT = 0;

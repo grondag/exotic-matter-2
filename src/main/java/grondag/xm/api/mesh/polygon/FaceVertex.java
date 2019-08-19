@@ -15,10 +15,15 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 /**
  * Used to express quads on a face (2D). By default u,v map directly to x, y on
  * the given face
  */
+@API(status = EXPERIMENTAL)
 public class FaceVertex {
     public final float x;
     public final float y;

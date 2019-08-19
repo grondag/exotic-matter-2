@@ -48,6 +48,9 @@ import static grondag.xm.mesh.MeshFormat.setVertexColorFormat;
 import static grondag.xm.mesh.MeshFormat.setVertexNormalFormat;
 import static grondag.xm.mesh.MeshFormat.setVertexUVFormat;
 import static grondag.xm.mesh.MeshFormat.vertexFormatKey;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.api.mesh.polygon.Vec3f;
@@ -58,6 +61,7 @@ import grondag.xm.mesh.EncoderFunctions.FloatSetter3;
 import grondag.xm.mesh.EncoderFunctions.IntGetter;
 import grondag.xm.mesh.EncoderFunctions.IntSetter;
 
+@API(status = INTERNAL)
 class VertexEncoder {
     private static final VertexEncoder[] ENCODERS = new VertexEncoder[VERTEX_FORMAT_COUNT];
 

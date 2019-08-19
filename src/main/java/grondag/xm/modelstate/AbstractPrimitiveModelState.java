@@ -13,10 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.model.state;
+package grondag.xm.modelstate;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +26,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import org.apiguardian.api.API;
 
 import com.google.common.collect.ImmutableList;
 
@@ -64,6 +67,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
+@API(status = INTERNAL)
 public abstract class AbstractPrimitiveModelState
     <V extends AbstractPrimitiveModelState<V, R, W>, R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> 
     extends AbstractModelState 

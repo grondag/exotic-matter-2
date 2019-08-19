@@ -15,21 +15,27 @@
  ******************************************************************************/
 package grondag.xm.api.block;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Function;
 
+import org.apiguardian.api.API;
+
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.WorldToModelState;
 import grondag.xm.dispatch.XmRegistryImpl;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 
+@API(status = EXPERIMENTAL)
 public class XmBlockRegistry {
     private XmBlockRegistry() {}
     
     public static void addBlockStates(
             Block block, 
-            Function<BlockState, ? extends WorldToModelStateFunction<?>> modelFunctionMap,
+            Function<BlockState, ? extends WorldToModelState<?>> modelFunctionMap,
             Function<ItemStack, ModelState.Mutable> itemModelFunction)
     {
         
@@ -38,16 +44,16 @@ public class XmBlockRegistry {
     
     public static void addBlockStates(
             Block block, 
-            Function<BlockState, ? extends WorldToModelStateFunction<?>> modelFunctionMap) {
+            Function<BlockState, ? extends WorldToModelState<?>> modelFunctionMap) {
         
         XmRegistryImpl.register(block, modelFunctionMap, DEFAULT_ITEM_MODEL_FUNCTION);
     }
 
-    public static <F extends WorldToModelStateFunction<?>> void addBlock(Block block, F modelFunction) {
+    public static <F extends WorldToModelState<?>> void addBlock(Block block, F modelFunction) {
         addBlockStates(block, (BlockState bs) -> modelFunction);
     }
     
-    public static <F extends WorldToModelStateFunction<?>> void addBlock(Block block, F blockModelFunction, Function<ItemStack, ModelState.Mutable> itemModelFunction) {
+    public static <F extends WorldToModelState<?>> void addBlock(Block block, F blockModelFunction, Function<ItemStack, ModelState.Mutable> itemModelFunction) {
         addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
     }
     

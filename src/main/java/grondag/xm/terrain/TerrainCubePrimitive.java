@@ -16,8 +16,11 @@
 package grondag.xm.terrain;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
@@ -32,6 +35,7 @@ import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.relics.CubeInputs;
 import net.minecraft.util.math.Direction;
 
+@API(status = INTERNAL)
 public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
 

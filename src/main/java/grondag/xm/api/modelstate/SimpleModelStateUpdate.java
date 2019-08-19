@@ -15,28 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
-import grondag.xm.api.block.WorldToModelStateFunction;
-import grondag.xm.api.connect.world.BlockTest;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-@FunctionalInterface
-public interface SimpleModelStateFunction extends WorldToModelStateFunction<SimpleModelState.Mutable> {
-    static SimpleModelStateFunction ofDefaultState(SimpleModelState defaultState) {
-        return builder().withDefaultState(defaultState).build();
-    }
-    
-    static Builder builder() {
-        return SimpleModelStateFunctionImpl.builder();
-    }
-    
-    public interface Builder {
-        Builder withJoin(BlockTest<SimpleModelState> joinTest);
-        
-        Builder withUpdate(SimpleModelStateOperation update);
+import org.apiguardian.api.API;
 
-        SimpleModelStateFunction build();
+@API(status = EXPERIMENTAL)
+public interface SimpleModelStateUpdate extends ModelStateUpdate<SimpleModelState.Mutable>{
 
-        Builder clear();
-
-        Builder withDefaultState(SimpleModelState defaultState);
-    }
 }

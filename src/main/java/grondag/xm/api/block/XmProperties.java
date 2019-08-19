@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.block;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelStateMap;
 import grondag.xm.api.orientation.CubeCorner;
@@ -28,6 +32,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
+@API(status = EXPERIMENTAL)
 public class XmProperties {
     public static final DirectionProperty X_ORTHO_FACING = DirectionProperty.of("xm_x_facing", d -> d.getAxis() != Axis.X);
     public static final DirectionProperty Z_ORTHO_FACING = DirectionProperty.of("xm_y_facing", d -> d.getAxis() != Axis.Z);

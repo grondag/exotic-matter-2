@@ -15,10 +15,15 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 /**
  * Alternate offsets directions for block placement regions. Used to find
  * regsions that don't contain obstacles.
  */
+@API(status = Status.DEPRECATED)
+@Deprecated
 public enum OffsetPosition {
     FLIP_NONE(1, 1, 1), FLIP_WIDTH(-1, 1, 1), FLIP_DEPTH(1, -1, 1), FLIP_BOTH(-1, -1, 1), FLIP_HEIGHT(1, 1, -1);
 

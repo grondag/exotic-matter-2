@@ -16,8 +16,11 @@
 package grondag.xm.collision;
 
 import static grondag.xm.collision.BoxFinderUtils.EMPTY;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.IntConsumer;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.bits.BitHelper;
 import grondag.xm.Xm;
@@ -35,6 +38,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
  * fast bit-wise comparisons.
  * <p>
  */
+@API(status = INTERNAL)
 class BoxFinder {
     private long[] voxels = new long[8];
 

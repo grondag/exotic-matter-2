@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.IntUnaryOperator;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.spatial.Rotation;
@@ -25,6 +29,7 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
+@API(status = INTERNAL)
 class StreamBackedPolygon implements Polygon {
     protected static final int NO_ADDRESS = -1;
 

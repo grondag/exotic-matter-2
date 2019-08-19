@@ -19,6 +19,8 @@ import static grondag.xm.relics.placement.PlacementPreviewRenderMode.OBSTRUCTED;
 
 import javax.annotation.Nullable;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -38,6 +40,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 abstract class AbstractPlacementSpec implements IPlacementSpec {
     /**
      * Stack player is holding to do the placement.

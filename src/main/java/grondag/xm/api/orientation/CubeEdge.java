@@ -19,8 +19,8 @@ import static grondag.xm.api.orientation.ClockwiseRotation.ROTATE_180;
 import static grondag.xm.api.orientation.ClockwiseRotation.ROTATE_270;
 import static grondag.xm.api.orientation.ClockwiseRotation.ROTATE_90;
 import static grondag.xm.api.orientation.ClockwiseRotation.ROTATE_NONE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.function.Consumer;
 
@@ -39,7 +39,7 @@ import net.minecraft.util.math.Vec3i;
  * blocks diagonally adjacent to those edges. Use when shape is symmetrical with
  * respect to that edge.
  */
-@API(status = STABLE)
+@API(status = EXPERIMENTAL)
 public enum CubeEdge implements StringIdentifiable {
     DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), 
     DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),

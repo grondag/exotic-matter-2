@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.collision.Functions.Int3Consumer;
 
 /**
@@ -22,6 +26,7 @@ import grondag.xm.collision.Functions.Int3Consumer;
  * happen more efficiently that way. (Filling, mostly)
  *
  */
+@API(status = INTERNAL)
 class VoxelVolume8 {
     public static void forEachSimpleVoxel(long[] data, final int minVoxelCount, Int3Consumer consumer) {
         for (int x = 0; x < 8; x += 2) {

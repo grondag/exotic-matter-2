@@ -15,11 +15,16 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Consumer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+@API(status = INTERNAL)
 public interface ExcavationRenderTask {
 
     /**

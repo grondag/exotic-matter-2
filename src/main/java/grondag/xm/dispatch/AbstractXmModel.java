@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.client.render.model.BakedModel;
@@ -23,6 +27,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 
+@API(status = INTERNAL)
 public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
     protected ItemProxy itemProxy = null;
 

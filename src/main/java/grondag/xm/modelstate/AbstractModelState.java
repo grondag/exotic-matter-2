@@ -13,10 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.model.state;
+package grondag.xm.modelstate;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
+import org.apiguardian.api.API;
+
+@API(status = INTERNAL)
 abstract class AbstractModelState {
 
     /////// REFERENCE COUNTING /////////

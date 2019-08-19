@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.orientation.CubeCorner;
@@ -22,6 +25,8 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public enum BlockOrientationCorner {
     DYNAMIC(null), MATCH_CLOSEST(null), UP_NORTH_EAST(CubeCorner.UP_NORTH_EAST), UP_NORTH_WEST(CubeCorner.UP_NORTH_WEST),
     UP_SOUTH_EAST(CubeCorner.UP_SOUTH_EAST), UP_SOUTH_WEST(CubeCorner.UP_SOUTH_WEST), DOWN_NORTH_EAST(CubeCorner.DOWN_NORTH_EAST),

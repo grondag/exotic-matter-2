@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ExtendedBlockView;
 import net.minecraft.world.World;
 
+@API(status = INTERNAL)
 public class TerrainStaticBlock extends Block implements IHotBlock {
 
     public TerrainStaticBlock(Settings blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {

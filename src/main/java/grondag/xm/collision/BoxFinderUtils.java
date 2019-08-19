@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.bits.BitHelper;
 import grondag.xm.collision.Functions.AreaBoundsIntFunction;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -27,6 +31,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 /**
  * Static utility methods for BoxFinder
  */
+@API(status = INTERNAL)
 class BoxFinderUtils {
     static final long[] AREAS;
     static final int[] VOLUME_KEYS;

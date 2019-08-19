@@ -16,8 +16,11 @@
 package grondag.xm.terrain;
 
 import static it.unimi.dsi.fastutil.HashCommon.arraySize;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Supplier;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.position.PackedBlockPos;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -39,6 +42,7 @@ import net.minecraft.world.biome.Biome;
  * TODO: add caching for flow height - do with as part of SuperBlockState TODO:
  * reinstate usage or remove
  */
+@API(status = INTERNAL)
 public class TerrainWorldAdapter implements ExtendedBlockView {
     protected World world;
 

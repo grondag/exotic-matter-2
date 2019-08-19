@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.bits.BitPacker64;
 import grondag.fermion.position.PackedBlockPos;
 import grondag.xm.api.mesh.polygon.PolyHelper;
@@ -27,6 +31,7 @@ import net.minecraft.util.math.BlockPos.Mutable;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
+@API(status = INTERNAL)
 public class TerrainState {
 
     public final static long FULL_BLOCK_STATE_KEY = TerrainState.computeStateKey(12, new int[] { 12, 12, 12, 12 }, new int[] { 12, 12, 12, 12 }, 0);

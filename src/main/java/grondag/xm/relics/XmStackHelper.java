@@ -21,7 +21,7 @@ import org.apiguardian.api.API.Status;
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.model.state.ModelStateTagHelper;
+import grondag.xm.modelstate.ModelStateTagHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 

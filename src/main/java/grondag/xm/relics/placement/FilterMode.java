@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm.virtual.VirtualBlock;
@@ -31,6 +34,8 @@ import net.minecraft.world.World;
  * For selection modes that use a region, determines which blocks in the region
  * are affected.
  */
+@API(status = Status.DEPRECATED)
+@Deprecated
 public enum FilterMode {
     FILL_REPLACEABLE(false), REPLACE_SOLID(false), REPLACE_ALL(false), REPLACE_ONLY(true), REPLACE_ALL_EXCEPT(true);
 

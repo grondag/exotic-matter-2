@@ -15,8 +15,13 @@
  ******************************************************************************/
 package grondag.xm.api.orientation;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import net.minecraft.util.math.Direction;
 
+@API(status = EXPERIMENTAL)
 @SuppressWarnings("rawtypes")
 public enum OrientationType {
     NONE(NoOrientation.class),

@@ -17,12 +17,17 @@ package grondag.xm.relics.placement;
 
 import javax.annotation.Nullable;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.world.WorldTaskManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class PlacementResult {
     public static final PlacementResult EMPTY_RESULT_STOP = new PlacementResult(null, PlacementEvent.NO_OPERATION_CONTINUE, null);
     public static final PlacementResult EMPTY_RESULT_CONTINUE = new PlacementResult(null, PlacementEvent.NO_OPERATION_CONTINUE, null);

@@ -15,8 +15,11 @@
  ******************************************************************************/
 package grondag.xm;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apiguardian.api.API;
 
 import grondag.fermion.simulator.Simulator;
 import grondag.xm.network.Packets;
@@ -25,6 +28,7 @@ import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 import net.minecraft.util.Identifier;
 
+@API(status = INTERNAL)
 public class Xm implements ModInitializer {
 
     @Override

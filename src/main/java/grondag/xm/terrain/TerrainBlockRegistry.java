@@ -15,13 +15,18 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.HashMap;
+
+import org.apiguardian.api.API;
 
 import com.google.common.collect.HashBiMap;
 
 import net.minecraft.block.Block;
 
 /** tracks which terrain blocks can be frozen or thawed from each other */
+@API(status = INTERNAL)
 public class TerrainBlockRegistry {
     private HashBiMap<Block, Block> stateMap = HashBiMap.create(16);
     private HashBiMap<Block, Block> fillerMap = HashBiMap.create(16);

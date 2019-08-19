@@ -19,8 +19,8 @@ import javax.annotation.Nullable;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import grondag.xm.api.block.WorldToModelStateFunction;
 import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.modelstate.WorldToModelState;
 import grondag.xm.api.modelstate.ModelState.Mutable;
 import grondag.xm.dispatch.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
@@ -29,7 +29,7 @@ import net.minecraft.world.BlockView;
 
 @Mixin(BlockState.class)
 public class MixinBlockState implements XmBlockState, XmBlockStateAccess {
-    private WorldToModelStateFunction<?> modelStateFunc = null;
+    private WorldToModelState<?> modelStateFunc = null;
 
     @Override
     public BlockState blockState() {
@@ -39,17 +39,17 @@ public class MixinBlockState implements XmBlockState, XmBlockStateAccess {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Mutable> T getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
-        final WorldToModelStateFunction<?> func = modelStateFunc;
+        final WorldToModelState<?> func = modelStateFunc;
         return func == null ? null : (T) func.apply((BlockState)(Object)this, world, pos, refreshFromWorld);
     }
 
     @Override
-    public void xm_modelStateFunc(WorldToModelStateFunction<?> func) {
+    public void xm_modelStateFunc(WorldToModelState<?> func) {
         modelStateFunc = func;
     }
 
     @Override
-    public WorldToModelStateFunction<?> xm_modelStateFunc() {
+    public WorldToModelState<?> xm_modelStateFunc() {
         return modelStateFunc;
     }
     

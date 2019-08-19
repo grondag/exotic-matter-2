@@ -21,8 +21,8 @@ import static net.minecraft.util.math.Direction.NORTH;
 import static net.minecraft.util.math.Direction.SOUTH;
 import static net.minecraft.util.math.Direction.UP;
 import static net.minecraft.util.math.Direction.WEST;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.function.Consumer;
 
@@ -34,9 +34,11 @@ import grondag.xm.connect.helper.FaceEdgeHelper;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 
-@API(status = STABLE)
+@API(status = EXPERIMENTAL)
 public enum FaceEdge implements StringIdentifiable {
-    TOP_EDGE(SOUTH, SOUTH, UP, UP, UP, UP), BOTTOM_EDGE(NORTH, NORTH, DOWN, DOWN, DOWN, DOWN), LEFT_EDGE(WEST, EAST, EAST, WEST, NORTH, SOUTH),
+    TOP_EDGE(SOUTH, SOUTH, UP, UP, UP, UP),
+    BOTTOM_EDGE(NORTH, NORTH, DOWN, DOWN, DOWN, DOWN),
+    LEFT_EDGE(WEST, EAST, EAST, WEST, NORTH, SOUTH),
     RIGHT_EDGE(EAST, WEST, WEST, EAST, SOUTH, NORTH);
 
     // for a given face, which face is at the position identified by this enum?

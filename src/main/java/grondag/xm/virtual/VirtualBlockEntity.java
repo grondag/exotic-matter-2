@@ -15,12 +15,17 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 
+@API(status = INTERNAL)
 public class VirtualBlockEntity extends BlockEntity {
     public VirtualBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);

@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
@@ -23,6 +27,7 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
 
 @SuppressWarnings("rawtypes")
+@API(status = INTERNAL)
 public class PainterFactory {
     public static PaintMethod getPainter(PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureDepth) {
 

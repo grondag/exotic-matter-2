@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.orientation;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Consumer;
 
@@ -31,7 +31,7 @@ import net.minecraft.util.math.Vec3i;
  * A subset of {@link CubeEdge}, includes only the edges in the horizontal
  * plane.
  */
-@API(status = STABLE)
+@API(status = EXPERIMENTAL)
 public enum HorizontalEdge implements StringIdentifiable {
     NORTH_EAST(HorizontalFace.NORTH, HorizontalFace.EAST),
     NORTH_WEST(HorizontalFace.NORTH, HorizontalFace.WEST),

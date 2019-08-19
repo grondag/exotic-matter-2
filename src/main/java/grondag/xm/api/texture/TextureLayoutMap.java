@@ -15,8 +15,13 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.texture.TextureLayoutMapImpl;
 
+@API(status = EXPERIMENTAL)
 public interface TextureLayoutMap {
     static TextureLayoutMap create(TextureLayout layout, TextureNameFunction nameFunc) {
         return TextureLayoutMapImpl.create(layout, nameFunc);

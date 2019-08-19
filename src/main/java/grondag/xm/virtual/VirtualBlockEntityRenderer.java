@@ -15,11 +15,16 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 
 @Environment(EnvType.CLIENT)
+@API(status = INTERNAL)
 public class VirtualBlockEntityRenderer extends BlockEntityRenderer<VirtualBlockEntityWithRenderer> {
 
     public static final VirtualBlockEntityRenderer INSTANCE = new VirtualBlockEntityRenderer();

@@ -15,7 +15,12 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
-public abstract class ModelStateFlags {
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
+@API(status = EXPERIMENTAL)
+public class ModelStateFlags {
     private ModelStateFlags() {}
     /**
      * For readability.

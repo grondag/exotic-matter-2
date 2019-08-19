@@ -28,6 +28,9 @@ import static grondag.xm.api.texture.TextureScale.MEDIUM;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureScale.SMALL;
 import static grondag.xm.api.texture.TextureScale.TINY;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
@@ -38,6 +41,7 @@ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 
+@API(status = INTERNAL)
 public class XmTexturesImpl {
 
     /**

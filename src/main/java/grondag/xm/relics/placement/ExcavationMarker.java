@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.xm.virtual.VirtualBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,6 +38,8 @@ import net.minecraft.world.World;
  * several selection modes. All actions are immediately submitted as jobs.
  * Re-skin within mods to match theme of mod and add features if appropriate.
  */
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class ExcavationMarker extends Item implements PlacementItem {
     public static final int FEATURE_FLAGS = PlacementItem.BENUMSET_FEATURES.getFlagsForIncludedValues(PlacementItemFeature.FIXED_REGION,
             PlacementItemFeature.REGION_SIZE, PlacementItemFeature.FILTER_MODE);

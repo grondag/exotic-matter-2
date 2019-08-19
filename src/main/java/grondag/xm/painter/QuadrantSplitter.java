@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -26,6 +30,7 @@ import grondag.xm.api.orientation.FaceCorner;
  * 0.5 point (if needed) and to test if quads are already within a single
  * quadrant.
  */
+@API(status = INTERNAL)
 public class QuadrantSplitter {
 
     public final static FaceCorner uvQuadrant(MutablePolygon quad, int layerIndex) {

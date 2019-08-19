@@ -15,6 +15,11 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
+@API(status = INTERNAL)
 public interface IHotBlock {
     /**
      * Highest heat value that can be returned from {@link #heatLevel()}.

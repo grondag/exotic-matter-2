@@ -15,15 +15,20 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apiguardian.api.API;
+
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.api.mesh.XmMesh;
-import grondag.xm.api.mesh.MeshReaderPolygon;
+import grondag.xm.api.mesh.MeshPolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 
+@API(status = INTERNAL)
 abstract class AbstractXmMesh implements XmMesh {
     protected IntStream stream;
 
@@ -357,7 +362,7 @@ abstract class AbstractXmMesh implements XmMesh {
         }
     }
 
-    private static class ThreadSafeReader extends StreamBackedPolygon implements MeshReaderPolygon {
+    private static class ThreadSafeReader extends StreamBackedPolygon implements MeshPolygon {
         AbstractXmMesh polyStream;
 
         @Override
@@ -407,7 +412,7 @@ abstract class AbstractXmMesh implements XmMesh {
     /**
      * Should only be exposed for streams that are immutable.
      */
-    protected MeshReaderPolygon claimThreadSafeReaderImpl() {
+    protected MeshPolygon claimThreadSafeReaderImpl() {
         readerCount.incrementAndGet();
 
         if (this.didRelease.get()) {

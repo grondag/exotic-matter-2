@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.position.PackedBlockPos;
 import grondag.fermion.varia.NBTDictionary;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +29,8 @@ import net.minecraft.util.math.BlockPos;
  * don't have to be cubic - shape depends on interpretation by the placement
  * builder.
  */
+@API(status = Status.DEPRECATED)
+@Deprecated
 public class FixedRegionBounds {
     private static final String TAG_START = NBTDictionary.claim("fixedRegionStart");
     private static final String TAG_END = NBTDictionary.claim("fixedRegionEnd");

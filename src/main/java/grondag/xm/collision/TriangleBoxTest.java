@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.xm.api.mesh.polygon.Vec3f;
 
 /**
@@ -23,7 +27,7 @@ import grondag.xm.api.mesh.polygon.Vec3f;
  * Heavily modified for performance in this context. Used for high-performance
  * voxelization of block models.
  */
-
+@API(status = INTERNAL)
 class TriangleBoxTest {
 
     static boolean planeBoxOverlap(final float normX, final float normY, final float normZ, final float vX, final float vY, final float vZ,

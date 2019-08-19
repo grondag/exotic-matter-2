@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.texture;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.texture.TextureLayout;
 import grondag.xm.api.texture.TextureLayoutMap;
@@ -23,6 +27,7 @@ import grondag.xm.api.texture.TextureNameFunction;
 import grondag.xm.api.texture.TextureSet;
 import net.minecraft.util.Identifier;
 
+@API(status = INTERNAL)
 public class TextureLayoutMapImpl implements TextureLayoutMap {
     public static TextureLayoutMapImpl create(TextureLayout layout, TextureNameFunction nameFunc) {
         return new TextureLayoutMapImpl(layout, nameFunc);

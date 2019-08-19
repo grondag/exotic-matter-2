@@ -13,24 +13,35 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.texture;
+package grondag.xm.api.modelstate;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.connect.world.BlockTest;
+import grondag.xm.modelstate.WorldToModelStateImpl;
 
-// TODO: Restore RANDOM_CONSISTENT to distinguish multi-block textures that can and can't have rotations intermingled per-plane.
-// As is, have to assume can't, but 2x2 cobble would be an example that could.
 @API(status = EXPERIMENTAL)
-public enum TextureRotation {
-    ROTATE_NONE(Rotation.ROTATE_NONE), ROTATE_90(Rotation.ROTATE_90), ROTATE_180(Rotation.ROTATE_180), ROTATE_270(Rotation.ROTATE_270),
-    ROTATE_RANDOM(Rotation.ROTATE_NONE);
+@FunctionalInterface
+public interface WorldToSimpleModelState extends WorldToModelState<SimpleModelState.Mutable> {
+    static WorldToSimpleModelState ofDefaultState(SimpleModelState defaultState) {
+        return builder().withDefaultState(defaultState).build();
+    }
+    
+    static Builder builder() {
+        return WorldToModelStateImpl.builder();
+    }
+    
+    public interface Builder {
+        Builder withJoin(BlockTest<SimpleModelState> joinTest);
+        
+        Builder withUpdate(SimpleModelStateUpdate update);
 
-    public final Rotation rotation;
+        WorldToSimpleModelState build();
 
-    private TextureRotation(Rotation rotation) {
-        this.rotation = rotation;
+        Builder clear();
+
+        Builder withDefaultState(SimpleModelState defaultState);
     }
 }

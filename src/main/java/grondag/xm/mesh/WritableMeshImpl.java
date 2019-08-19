@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.intstream.IntStreams;
 import grondag.xm.api.mesh.ReadOnlyMesh;
@@ -22,6 +26,7 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 
+@API(status = INTERNAL)
 class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
     private static final int MAX_STRIDE;
 

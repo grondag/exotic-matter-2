@@ -15,11 +15,16 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.function.Consumer;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 
+@API(status = INTERNAL)
 abstract class AbstractBoxGenerator implements Consumer<Polygon> {
     // diameters
     static final float D1 = 0.5f;

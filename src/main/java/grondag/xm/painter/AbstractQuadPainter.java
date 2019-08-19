@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
@@ -29,6 +33,7 @@ import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
+@API(status = INTERNAL)
 @SuppressWarnings("rawtypes")
 public abstract class AbstractQuadPainter {
     @FunctionalInterface

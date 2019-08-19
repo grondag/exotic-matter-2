@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.intstream.IntStreams;
@@ -39,6 +43,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
  * optimize bounds testing for CSG operations.
  * <p>
  */
+@API(status = INTERNAL)
 class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
     /**
      * Ensures poly tags for recombination are globally unique. <br>

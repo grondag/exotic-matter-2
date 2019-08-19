@@ -15,6 +15,9 @@
  ******************************************************************************/
 package grondag.xm.relics.placement;
 
+import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
+
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import net.minecraft.client.resource.language.I18n;
@@ -24,6 +27,8 @@ import net.minecraft.util.PacketByteBuf;
 /**
  * Determines how blocks are to be selected for operation of the placement item.
  */
+@API(status = Status.DEPRECATED)
+@Deprecated
 public enum TargetMode {
     /** affect a single block - normal MC behavior */
     ON_CLICKED_FACE(false),

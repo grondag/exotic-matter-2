@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -28,6 +32,7 @@ import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
+@API(status = INTERNAL)
 public abstract class CubicPainterBigTex extends AbstractQuadPainter {
     // Determine what type of randomizations to apply so that we have a different
     // appearance based on depth and species.

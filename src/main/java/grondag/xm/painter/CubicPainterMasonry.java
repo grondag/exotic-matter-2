@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.state.SimpleJoinFaceState;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -27,6 +31,7 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.relics.placement.FaceQuadInputs;
 import net.minecraft.util.math.Direction;
 
+@API(status = INTERNAL)
 public abstract class CubicPainterMasonry extends AbstractQuadPainter {
     protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[6][SimpleJoinFaceState.values().length];
 

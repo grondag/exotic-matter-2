@@ -15,13 +15,18 @@
  ******************************************************************************/
 package grondag.xm.api.connect.world;
 
+import static org.apiguardian.api.API.Status.STABLE;
+
 import javax.annotation.Nullable;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
+@API(status = STABLE)
 public interface BlockTestContext<T extends ModelState> {
     BlockView world();
 

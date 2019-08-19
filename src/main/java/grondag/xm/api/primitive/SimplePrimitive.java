@@ -15,7 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.primitive;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.function.Function;
+
+import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.PolyTransform;
@@ -24,6 +28,7 @@ import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.primitive.SimplePrimitiveBuilderImpl;
 
+@API(status = EXPERIMENTAL)
 public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, SimpleModelState.Mutable>{
     static Builder builder() {
         return SimplePrimitiveBuilderImpl.builder();

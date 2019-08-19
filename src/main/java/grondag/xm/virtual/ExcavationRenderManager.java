@@ -15,8 +15,11 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.util.ArrayList;
 
+import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -33,6 +36,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.VisibleRegion;
 
+@API(status = INTERNAL)
 public class ExcavationRenderManager {
     private static final Int2ObjectOpenHashMap<ExcavationRenderer> excavations = new Int2ObjectOpenHashMap<ExcavationRenderer>();
 

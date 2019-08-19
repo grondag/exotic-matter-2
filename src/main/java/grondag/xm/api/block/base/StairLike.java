@@ -20,9 +20,12 @@ import static grondag.xm.api.block.XmProperties.Z_ORTHO_FACING;
 import static net.minecraft.block.StairsBlock.HALF;
 import static net.minecraft.block.StairsBlock.SHAPE;
 import static net.minecraft.block.StairsBlock.WATERLOGGED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Random;
 import java.util.function.Supplier;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.DirectionHelper;
 import grondag.xm.api.collision.CollisionDispatcher;
@@ -65,6 +68,7 @@ import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
+@API(status = EXPERIMENTAL)
 public abstract class StairLike extends Block implements Waterloggable {
     protected final Block baseBlock;
     protected final BlockState baseBlockState;

@@ -15,6 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
+
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.orientation.FaceCorner;
@@ -24,6 +28,7 @@ import grondag.xm.api.orientation.FaceEdge;
  * Identifies content of each quadrant within texture file, starting at top
  * left.
  */
+@API(status = EXPERIMENTAL)
 public enum TextureQuadrant {
     /**
      * Will position texture to display no border. Should not be used unless texture

@@ -13,11 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.model.state;
+package grondag.xm.modelstate;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.apiguardian.api.API;
 
 import grondag.fermion.varia.NBTDictionary;
 import net.minecraft.nbt.CompoundTag;
 
+@API(status = INTERNAL)
 public abstract class ModelStateTagHelper {
     private ModelStateTagHelper() {
     }
