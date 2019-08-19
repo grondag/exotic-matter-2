@@ -14,17 +14,17 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.painting.QuadPainter.PaintMethod;
+import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
 
 @SuppressWarnings("rawtypes")
-public class QuadPainterFactory {
+public class PainterFactory {
     public static PaintMethod getPainter(PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureDepth) {
 
         TextureSet texture = paint.texture(textureDepth);
@@ -36,7 +36,7 @@ public class QuadPainterFactory {
             case SIMPLE:
             case BIGTEX_ANIMATED:
             case SPLIT_X_8:
-                return SurfaceQuadPainterTiled::paintQuads;
+                return SurfacePainterTiled::paintQuads;
 
             case BORDER_13:
                 return null;
@@ -53,16 +53,16 @@ public class QuadPainterFactory {
             case SIMPLE:
             case BIGTEX_ANIMATED:
             case SPLIT_X_8:
-                return (texture.scale() == TextureScale.SINGLE) ? CubicQuadPainterTiles::paintQuads : CubicQuadPainterBigTex::paintQuads;
+                return (texture.scale() == TextureScale.SINGLE) ? CubicPainterTiles::paintQuads : CubicPainterBigTex::paintQuads;
 
             case BORDER_13:
-                return surface.allowBorders() ? CubicQuadPainterBorders::paintQuads : null;
+                return surface.allowBorders() ? CubicPainterBorders::paintQuads : null;
 
             case MASONRY_5:
-                return surface.allowBorders() ? CubicQuadPainterMasonry::paintQuads : null;
+                return surface.allowBorders() ? CubicPainterMasonry::paintQuads : null;
 
             case QUADRANT_CONNECTED:
-                return surface.allowBorders() ? CubicQuadPainterQuadrants::paintQuads : null;
+                return surface.allowBorders() ? CubicPainterQuadrants::paintQuads : null;
 
             default:
                 return null;

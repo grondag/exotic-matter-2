@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
@@ -22,6 +22,7 @@ import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.orientation.FaceCorner;
+import grondag.xm.api.paint.TextureQuadrant;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
@@ -31,7 +32,7 @@ import net.minecraft.util.math.Direction;
  * Applies quadrant-style border textures. Quads must have a nominal face. Will
  * split quads that span quadrants.
  */
-public abstract class CubicQuadPainterQuadrants extends QuadPainter {
+public abstract class CubicPainterQuadrants extends AbstractQuadPainter {
     private static final TextureQuadrant[][] TEXTURE_MAP = new TextureQuadrant[FaceCorner.values().length][CornerJoinFaceStates.COUNT];
 
     private static TextureQuadrant textureMap(FaceCorner corner, CornerJoinFaceState faceState) {

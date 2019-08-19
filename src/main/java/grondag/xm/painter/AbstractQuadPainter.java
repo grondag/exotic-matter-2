@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
@@ -31,7 +31,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
 @SuppressWarnings("rawtypes")
-public abstract class QuadPainter {
+public abstract class AbstractQuadPainter {
     @FunctionalInterface
     public static interface PaintMethod {
         /**

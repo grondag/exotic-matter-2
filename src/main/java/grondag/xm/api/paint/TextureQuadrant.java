@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.api.paint;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.polygon.MutablePolygon;

@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import java.util.function.Consumer;
 
@@ -27,7 +27,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.painting.QuadPainter.PaintMethod;
+import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
@@ -42,8 +42,8 @@ import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("rawtypes")
-public class QuadPaintHandler implements Consumer<Polygon> {
-    private static final ThreadLocal<QuadPaintHandler> POOL = ThreadLocal.withInitial(QuadPaintHandler::new);
+public class PaintManager implements Consumer<Polygon> {
+    private static final ThreadLocal<PaintManager> POOL = ThreadLocal.withInitial(PaintManager::new);
 
     private static final Renderer RENDERER = RendererAccess.INSTANCE.getRenderer();
 
@@ -121,7 +121,7 @@ public class QuadPaintHandler implements Consumer<Polygon> {
 
         for (int i = 0; i < depth; i++) {
             if (stream.editorOrigin()) {
-                final PaintMethod painter = QuadPainterFactory.getPainter(modelState, surface, paint, i);
+                final PaintMethod painter = PainterFactory.getPainter(modelState, surface, paint, i);
                 if(painter != null) {
                     painter.paintQuads(stream, modelState, surface, paint, i);
                 } else {

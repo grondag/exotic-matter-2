@@ -45,7 +45,7 @@ import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
-import grondag.xm.painting.QuadPaintHandler;
+import grondag.xm.painter.PaintManager;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -697,7 +697,7 @@ public abstract class AbstractPrimitiveModelState
     private Mesh mesh() {
         Mesh result = mesh;
         if (result == null) {
-            result = QuadPaintHandler.paint(this);
+            result = PaintManager.paint(this);
             mesh = result;
         }
         return result;

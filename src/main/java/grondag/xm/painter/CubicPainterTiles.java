@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
@@ -27,7 +27,7 @@ import grondag.xm.api.texture.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 
-public abstract class CubicQuadPainterTiles extends QuadPainter {
+public abstract class CubicPainterTiles extends AbstractQuadPainter {
     @SuppressWarnings("rawtypes")
     public static void paintQuads(MutableMesh stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         MutablePolygon editor = stream.editor();

@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
@@ -38,7 +38,7 @@ import net.minecraft.util.math.MathHelper;
  * 
  * See {@link SurfaceTopology#TILED}
  */
-public abstract class SurfaceQuadPainterTiled extends QuadPainter {
+public abstract class SurfacePainterTiled extends AbstractQuadPainter {
     /**
      * The smallest UV distance that can be tiled with single texture. Equivalently,
      * the size of each tile in the tiling grid. If no wrap, is simply the texture

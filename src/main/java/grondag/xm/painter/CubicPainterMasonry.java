@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.state.SimpleJoinFaceState;
@@ -28,7 +28,7 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.relics.placement.FaceQuadInputs;
 import net.minecraft.util.math.Direction;
 
-public abstract class CubicQuadPainterMasonry extends QuadPainter {
+public abstract class CubicPainterMasonry extends AbstractQuadPainter {
     protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[6][SimpleJoinFaceState.values().length];
 
     private static enum Textures {

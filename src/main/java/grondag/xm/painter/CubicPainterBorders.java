@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import static grondag.xm.api.texture.TextureNameFunction.BORDER_CORNERS_ALL;
 import static grondag.xm.api.texture.TextureNameFunction.BORDER_CORNERS_BL_TR;
@@ -43,7 +43,7 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.relics.placement.FaceQuadInputs;
 import net.minecraft.util.math.Direction;
 
-public abstract class CubicQuadPainterBorders extends QuadPainter {
+public abstract class CubicPainterBorders extends AbstractQuadPainter {
     protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[6][CornerJoinFaceStates.COUNT];
     /**
      * Used only when a border is rendered in the solid layer. Declared at module

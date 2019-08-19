@@ -448,6 +448,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
      * Does not create or remove any nodes in the BSP tree, but nodes can become
      * empty.
      */
+    @Override
     public void clipTo(CsgMesh clippingStream) {
         assert isComplete;
         clip(this, (CsgMeshhImpl)clippingStream);

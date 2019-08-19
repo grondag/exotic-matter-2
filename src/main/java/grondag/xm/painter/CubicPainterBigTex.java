@@ -14,7 +14,7 @@
  * the License.
  ******************************************************************************/
 
-package grondag.xm.painting;
+package grondag.xm.painter;
 
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
@@ -29,7 +29,7 @@ import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
-public abstract class CubicQuadPainterBigTex extends QuadPainter {
+public abstract class CubicPainterBigTex extends AbstractQuadPainter {
     // Determine what type of randomizations to apply so that we have a different
     // appearance based on depth and species.
     // If we are applying a single texture, then we alternate by translating,
