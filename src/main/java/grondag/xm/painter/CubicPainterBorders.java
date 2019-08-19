@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
 package grondag.xm.painter;
 
 import static grondag.xm.api.texture.TextureNameFunction.BORDER_CORNERS_ALL;

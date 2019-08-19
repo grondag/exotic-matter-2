@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
 package grondag.xm.dispatch;
 
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;

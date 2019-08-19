@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
 package grondag.xm.collision;
 
 import com.google.common.collect.ImmutableList;

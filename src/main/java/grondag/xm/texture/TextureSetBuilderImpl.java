@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
 package grondag.xm.texture;
 
 import grondag.xm.api.texture.TextureGroup;

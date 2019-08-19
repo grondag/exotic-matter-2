@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
 package grondag.xm.connect;
 
 import static grondag.xm.api.orientation.FaceCorner.*;

@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
 package grondag.xm.api.orientation;
 
 import static net.minecraft.util.math.Direction.DOWN;
