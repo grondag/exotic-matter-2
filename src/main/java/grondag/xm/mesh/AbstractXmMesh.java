@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.api.mesh.XmMesh;
-import grondag.xm.api.mesh.MeshPolygon;
+import grondag.xm.api.mesh.polygon.MeshPolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 
 @API(status = INTERNAL)

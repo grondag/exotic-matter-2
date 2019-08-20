@@ -13,13 +13,11 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.mesh;
+package grondag.xm.api.mesh.polygon;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
-
-import grondag.xm.api.mesh.polygon.Polygon;
 
 /**
  * For stream reader polygons that can be moved to an address within the stream.

@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.mesh.polygon.MeshPolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 
 @API(status = EXPERIMENTAL)
