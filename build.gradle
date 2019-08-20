@@ -131,7 +131,8 @@ dependencies {
 	// For dev env testing 
 	modRuntime "com.jamieswhiteshirt:developer-mode:${project.devmode_version}"
 	modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
-		
+	modRuntime "grondag:canvas:${project.canvas_version}+"
+
 	// dev env annotation support
 	compile "org.apiguardian:apiguardian-api:1.0.0"
 	compile "com.google.code.findbugs:jsr305:3.0.2"
