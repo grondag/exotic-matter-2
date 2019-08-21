@@ -110,6 +110,9 @@ dependencies {
     modImplementation "grondag:fermion-varia:${project.fermion_varia_version}+"
     include "grondag:fermion-varia:${project.fermion_varia_version}+"
     
+    modImplementation "grondag:fermion-simulator:${project.fermion_simulator_version}+"
+    include "grondag:fermion-simulator:${project.fermion_simulator_version}+"
+    
 	modImplementation "grondag:special-circumstances:${project.special_circumstances_version}+"
     include "grondag:special-circumstances:${project.special_circumstances_version}+"
         
