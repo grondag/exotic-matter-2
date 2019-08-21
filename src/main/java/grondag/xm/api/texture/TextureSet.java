@@ -36,6 +36,10 @@ public interface TextureSet {
         return TextureSetImpl.builder(template);
     }
 
+    static TextureSet none() {
+        return TextureSetRegistry.instance().get(TextureSetRegistry.NONE_ID);
+    }
+    
     /** Registration ID */
     Identifier id();
 

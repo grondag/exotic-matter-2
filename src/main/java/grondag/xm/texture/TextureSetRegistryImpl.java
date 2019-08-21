@@ -52,6 +52,10 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
         return index < 0 ? DEFAULT_TEXTURE_SET : REGISTRY.get(index);
     }
     
+    public int indexOf(TextureSetImpl set) {
+        return REGISTRY.getRawId(set);
+    }
+    
     @Override
     public void forEach(Consumer<TextureSet> consumer) {
         REGISTRY.forEach(consumer);
@@ -74,6 +78,5 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 
     void add(TextureSetImpl set) {
         REGISTRY.add(set.id, set);
-        set.index = REGISTRY.getRawId(set);
     }
 }

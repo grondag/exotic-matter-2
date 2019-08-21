@@ -41,7 +41,6 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
         return result;
     }
 
-    int index;
     public final Identifier id;
     public final int versionMask;
     public final int stateFlags;
@@ -79,7 +78,7 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 
     @Override
     public int index() {
-        return index;
+        return TextureSetRegistryImpl.INSTANCE.indexOf(this);
     }
 
     @Override

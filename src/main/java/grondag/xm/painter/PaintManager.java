@@ -124,7 +124,7 @@ public class PaintManager implements Consumer<Polygon> {
         }
 
         for (int i = 0; i < depth; i++) {
-            if (stream.editorOrigin()) {
+            do {
                 final PaintMethod painter = PainterFactory.getPainter(modelState, surface, paint, i);
                 if(painter != null) {
                     painter.paintQuads(stream, modelState, surface, paint, i);
@@ -132,19 +132,18 @@ public class PaintManager implements Consumer<Polygon> {
                     //TODO: put back
                     //assert false : "Missing paint method";
                 }
-            }
+            } while (stream.editorNext());
+            stream.editorOrigin();
         }
 
-        if (stream.editorOrigin()) {
-            do {
-                // omit layers that weren't textured by any painter
-                if (!editor.spriteName(0).isEmpty()) {
-                    final int layerCount = editor.spriteName(1).isEmpty() ? 1 : editor.spriteName(2).isEmpty() ? 2 : 3;
-                    editor.spriteDepth(layerCount);
-                    polyToMesh(editor, emitter);
-                }
-            } while (stream.editorNext());
-        }
+        do {
+            // omit layers that weren't textured by any painter
+            if (!editor.spriteName(0).isEmpty()) {
+                final int layerCount = editor.spriteName(1).isEmpty() ? 1 : editor.spriteName(2).isEmpty() ? 2 : 3;
+                editor.spriteDepth(layerCount);
+                polyToMesh(editor, emitter);
+            }
+        } while (stream.editorNext());
 
         stream.clear();
     }

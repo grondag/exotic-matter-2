@@ -22,13 +22,11 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.bits.BitPacker64;
+import grondag.fermion.bits.BitPacker32;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.api.texture.TextureSetRegistry;
-import grondag.xm.texture.TextureSetRegistryImpl;
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -37,7 +35,7 @@ import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public class XmPaintImpl {
-    private static final BitPacker64<XmPaintImpl> PAINT_BITS = new BitPacker64<XmPaintImpl>(p -> p.paintBits, (p, b) -> p.paintBits = b);
+    private static final BitPacker32<XmPaintImpl> PAINT_BITS = new BitPacker32<XmPaintImpl>(p -> p.paintBits, (p, b) -> p.paintBits = b);
 
     public static Finder finder() {
         return new Finder();
@@ -50,17 +48,14 @@ public class XmPaintImpl {
     private static final int COLOR_DISABLE_INDEX_START = AO_INDEX_START + MAX_TEXTURE_DEPTH;
 
     @SuppressWarnings("unchecked")
-    private static final BitPacker64<XmPaintImpl>.BooleanElement[] FLAGS = new BitPacker64.BooleanElement[COLOR_DISABLE_INDEX_START + MAX_TEXTURE_DEPTH];
+    private static final BitPacker32<XmPaintImpl>.BooleanElement[] FLAGS = new BitPacker32.BooleanElement[COLOR_DISABLE_INDEX_START + MAX_TEXTURE_DEPTH];
 
     @SuppressWarnings("unchecked")
-    private static final BitPacker64<XmPaintImpl>.IntElement[] TEXTURES = new BitPacker64.IntElement[MAX_TEXTURE_DEPTH];
+    private static final BitPacker32<XmPaintImpl>.NullableEnumElement<BlockRenderLayer> BLEND_MODES[] = new BitPacker32.NullableEnumElement[MAX_TEXTURE_DEPTH];
 
-    @SuppressWarnings("unchecked")
-    private static final BitPacker64<XmPaintImpl>.NullableEnumElement<BlockRenderLayer> BLEND_MODES[] = new BitPacker64.NullableEnumElement[MAX_TEXTURE_DEPTH];
+    private static final BitPacker32<XmPaintImpl>.IntElement TEXTURE_DEPTH;
 
-    private static final BitPacker64<XmPaintImpl>.IntElement TEXTURE_DEPTH;
-
-    private static final long DEFAULT_PAINT_BITS;
+    private static final int DEFAULT_PAINT_BITS;
 
     private static final ObjectArrayList<Value> LIST = new ObjectArrayList<>();
     private static final Object2ObjectOpenHashMap<XmPaintImpl, Value> MAP = new Object2ObjectOpenHashMap<>();
@@ -81,17 +76,13 @@ public class XmPaintImpl {
         FLAGS[COLOR_DISABLE_INDEX_START + 1] = PAINT_BITS.createBooleanElement();
         FLAGS[COLOR_DISABLE_INDEX_START + 2] = PAINT_BITS.createBooleanElement();
 
-        TEXTURES[0] = PAINT_BITS.createIntElement(TextureSetRegistry.MAX_TEXTURE_SETS);
-        TEXTURES[1] = PAINT_BITS.createIntElement(TextureSetRegistry.MAX_TEXTURE_SETS);
-        TEXTURES[2] = PAINT_BITS.createIntElement(TextureSetRegistry.MAX_TEXTURE_SETS);
-
         BLEND_MODES[0] = PAINT_BITS.createNullableEnumElement(BlockRenderLayer.class);
         BLEND_MODES[1] = PAINT_BITS.createNullableEnumElement(BlockRenderLayer.class);
         BLEND_MODES[2] = PAINT_BITS.createNullableEnumElement(BlockRenderLayer.class);
 
-        assert PAINT_BITS.bitLength() <= 64;
+        assert PAINT_BITS.bitLength() <= 32;
 
-        long defaultBits = 0;
+        int defaultBits = 0;
         BLEND_MODES[0].setValue(null, defaultBits);
         BLEND_MODES[1].setValue(null, defaultBits);
         BLEND_MODES[2].setValue(null, defaultBits);
@@ -102,7 +93,7 @@ public class XmPaintImpl {
         return LIST.get(index);
     }
 
-    protected long paintBits = DEFAULT_PAINT_BITS;
+    protected int paintBits = DEFAULT_PAINT_BITS;
     protected int color0 = 0xFFFFFFFF;
     protected int color1 = 0xFFFFFFFF;
     protected int color2 = 0xFFFFFFFF;
@@ -111,13 +102,24 @@ public class XmPaintImpl {
     protected VertexProcessor vertexProcessor0 = VertexProcessorDefault.INSTANCE;
     protected VertexProcessor vertexProcessor1 = VertexProcessorDefault.INSTANCE;
     protected VertexProcessor vertexProcessor2 = VertexProcessorDefault.INSTANCE;
+    protected TextureSet textureSet0 = TextureSet.none();
+    protected TextureSet textureSet1 = textureSet0;
+    protected TextureSet textureSet2 = textureSet0;
 
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof XmPaintImpl) {
             final XmPaintImpl other = (XmPaintImpl) obj;
-            return paintBits == other.paintBits && color0 == other.color0 && color1 == other.color1 && color2 == other.color2
-                    && vertexProcessor0 == other.vertexProcessor0 && vertexProcessor1 == other.vertexProcessor1 && vertexProcessor2 == other.vertexProcessor2;
+            return paintBits == other.paintBits
+                    && color0 == other.color0
+                    && color1 == other.color1
+                    && color2 == other.color2
+                    && textureSet0 == other.textureSet0
+                    && textureSet1 == other.textureSet1
+                    && textureSet2 == other.textureSet2
+                    && vertexProcessor0 == other.vertexProcessor0
+                    && vertexProcessor1 == other.vertexProcessor1
+                    && vertexProcessor2 == other.vertexProcessor2;
         } else {
             return false;
         }
@@ -125,16 +127,19 @@ public class XmPaintImpl {
 
     @Override
     public int hashCode() {
-        int result = (int) HashCommon.mix(paintBits);
+        int result = HashCommon.mix(paintBits);
         result ^= HashCommon.mix(color0);
         result ^= vertexProcessor0.hashCode();
+        result ^= textureSet0.hashCode();
         final int depth = textureDepth();
         if (depth > 1) {
             result ^= HashCommon.mix(color1);
             result ^= vertexProcessor1.hashCode();
+            result ^= textureSet1.hashCode();
             if (depth == 3) {
                 result ^= HashCommon.mix(color2);
                 result ^= vertexProcessor2.hashCode();
+                result ^= textureSet2.hashCode();
             }
         }
         if (shader != null) {
@@ -172,10 +177,16 @@ public class XmPaintImpl {
     }
 
     public TextureSet texture(int textureIndex) {
-        if (textureIndex < 0 || textureIndex >= MAX_TEXTURE_DEPTH) {
+        switch (textureIndex) {
+        case 0:
+            return textureSet0;
+        case 1:
+            return textureSet1;
+        case 2:
+            return textureSet2;
+        default:
             throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
         }
-        return TextureSetRegistryImpl.INSTANCE.get(TEXTURES[textureIndex].getValue(this));
     }
 
     public boolean emissive(int textureIndex) {
@@ -221,6 +232,12 @@ public class XmPaintImpl {
             this.color0 = template.color0;
             this.color1 = template.color1;
             this.color2 = template.color2;
+            this.vertexProcessor0 = template.vertexProcessor0;
+            this.vertexProcessor1 = template.vertexProcessor1;
+            this.vertexProcessor2 = template.vertexProcessor2;
+            this.textureSet0 = template.textureSet0;
+            this.textureSet1 = template.textureSet1;
+            this.textureSet2 = template.textureSet2;
             this.hashCode = template.hashCode();
         }
 
@@ -259,6 +276,12 @@ public class XmPaintImpl {
             color2 = 0xFFFFFFFF;
             shader = null;
             condition = null;
+            vertexProcessor0 = VertexProcessorDefault.INSTANCE;
+            vertexProcessor1 = VertexProcessorDefault.INSTANCE;
+            vertexProcessor2 = VertexProcessorDefault.INSTANCE;
+            textureSet0 = TextureSet.none();
+            textureSet1 = textureSet0;
+            textureSet2 = textureSet0;
             return this;
         }
 
@@ -291,10 +314,19 @@ public class XmPaintImpl {
 
         @Override
         public XmPaintFinder texture(int textureIndex, TextureSet texture) {
-            if (textureIndex < 0 || textureIndex >= MAX_TEXTURE_DEPTH) {
+            switch (textureIndex) {
+            case 0:
+                textureSet0 = texture;
+                break;
+            case 1:
+                textureSet1 = texture;
+                break;
+            case 2:
+                textureSet2 = texture;
+                break;
+            default:
                 throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
             }
-            TEXTURES[textureIndex].setValue(texture.index(), this);
             texture.use();
             return this;
         }
