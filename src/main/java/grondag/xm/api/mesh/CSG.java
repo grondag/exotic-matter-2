@@ -236,17 +236,18 @@ public abstract class CSG {
      * start, or because all A polygons have been deleted.
      */
     private static boolean outputDisjointA(CsgMesh a, CsgMesh b, WritableMesh output) {
-        if (a.origin()) {
-            if (b.origin())
+        final Polygon aReader = a.reader();
+        if (aReader.origin()) {
+            if (b.reader().origin())
                 // nominal case
                 return outputDisjointAInner(a, b, output);
             else {
                 // B is empty, A is not, therefore output all of A and return false
-                final Polygon p = a.reader();
+                
                 do {
-                    output.appendCopy(p);
-                    p.setDeleted();
-                } while (a.next());
+                    output.appendCopy(aReader);
+                    aReader.delete();
+                } while (aReader.next());
                 return false;
             }
         } else
@@ -271,32 +272,32 @@ public abstract class CSG {
 
         // scoping
         {
-            final Polygon p = b.reader();
+            final Polygon bReader = b.reader();
             do {
-                final int vCount = p.vertexCount();
+                final int vCount = bReader.vertexCount();
                 for (int i = 1; i < vCount; i++) {
-                    final float x = p.x(i);
+                    final float x = bReader.x(i);
                     if (x < bMinX)
                         bMinX = x;
                     else if (x > bMaxX)
                         bMaxX = x;
 
-                    final float y = p.y(i);
+                    final float y = bReader.y(i);
                     if (y < bMinY)
                         bMinY = y;
                     else if (y > bMaxY)
                         bMaxY = y;
 
-                    final float z = p.z(i);
+                    final float z = bReader.z(i);
                     if (z < bMinZ)
                         bMinZ = z;
                     else if (z > bMaxZ)
                         bMaxZ = z;
                 }
-            } while (b.next());
+            } while (bReader.next());
         }
 
-        final Polygon p = a.reader();
+        final Polygon aReader = a.reader();
         do {
             // Note we don't do a point-by-point test here
             // and instead compute a bounding box for the polygon.
@@ -305,28 +306,28 @@ public abstract class CSG {
             // Considered using SAT tests developed for collisions boxes
             // but those require tris and re-packing of vertex data. Not worth.
 
-            float pMinX = p.x(0);
-            float pMinY = p.y(0);
-            float pMinZ = p.z(0);
+            float pMinX = aReader.x(0);
+            float pMinY = aReader.y(0);
+            float pMinZ = aReader.z(0);
             float pMaxX = pMinX;
             float pMaxY = pMinY;
             float pMaxZ = pMinZ;
 
-            final int vCount = p.vertexCount();
+            final int vCount = aReader.vertexCount();
             for (int i = 1; i < vCount; i++) {
-                final float x = p.x(i);
+                final float x = aReader.x(i);
                 if (x < pMinX)
                     pMinX = x;
                 else if (x > pMaxX)
                     pMaxX = x;
 
-                final float y = p.y(i);
+                final float y = aReader.y(i);
                 if (y < pMinY)
                     pMinY = y;
                 else if (y > pMaxY)
                     pMaxY = y;
 
-                final float z = p.z(i);
+                final float z = aReader.z(i);
                 if (z < pMinZ)
                     pMinZ = z;
                 else if (z > pMaxZ)
@@ -339,10 +340,10 @@ public abstract class CSG {
                 aIsEmpty = false;
             else {
                 // disjoint
-                output.appendCopy(p);
-                p.setDeleted();
+                output.appendCopy(aReader);
+                aReader.delete();
             }
-        } while (a.next());
+        } while (aReader.next());
 
         return aIsEmpty;
     }

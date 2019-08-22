@@ -412,7 +412,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                     }
 
                     // mark the split poly deleted
-                    polyB.setDeleted();
+                    polyB.delete();
 
                     return;
                 }
@@ -467,10 +467,10 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
          */
         final int limitAddress = targetStream.writerAddress();
 
-        if (targetStream.origin()) {
+        if (reader.origin()) {
             do {
                 clipPoly(targetStream, clippingStream, reader.baseAddress);
-            } while (targetStream.next() && reader.baseAddress < limitAddress);
+            } while (reader.next() && reader.baseAddress < limitAddress);
         }
         
         reader.moveTo(saveReadAddress);
@@ -537,7 +537,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                     } else {
                         // coplanar back counts as back - remove
                         // no need to check front node because coplanar
-                        polyB.setDeleted();
+                        polyB.delete();
                         return;
                     }
                 } else // not front, not coplanar, therefore must be back
@@ -545,7 +545,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                     final int backNodeAddress = clippingStream.getBackNode(nodeAddress);
                     if (backNodeAddress == NO_NODE_ADDRESS) {
                         // this is a leaf node, so we are in back of all nodes - poly is clipped
-                        polyB.setDeleted();
+                        polyB.delete();
                         return;
                     } else {
                         // loop at back node
@@ -686,7 +686,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                     }
 
                     // delete original poly that was split
-                    polyB.setDeleted();
+                    polyB.delete();
                     return;
                 }
             }

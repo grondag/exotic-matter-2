@@ -123,12 +123,12 @@ public interface WritableMesh extends XmMesh {
     void appendCopy(Polygon poly);
 
     default void appendAll(XmMesh stream) {
-        if (stream.origin()) {
-            Polygon reader = stream.reader();
+        final Polygon reader = stream.reader();
+        if (reader.origin()) {
             do {
                 assert !reader.isDeleted();
                 this.appendCopy(reader);
-            } while (stream.next());
+            } while (reader.next());
         }
     }
 

@@ -29,11 +29,11 @@ class ReadOnlyMeshImpl extends AbstractXmMesh implements ReadOnlyMesh {
         prepare(IntStreams.claim(streamIn.stream.capacity()));
 
         if (!streamIn.isEmpty()) {
-            streamIn.origin();
-            Polygon reader = streamIn.reader();
+            final Polygon reader = streamIn.reader();
+            reader.origin();
             do
                 this.appendCopy(reader, formatFlags);
-            while (streamIn.next());
+            while (reader.next());
         }
 
         this.stream.compact();
@@ -47,5 +47,10 @@ class ReadOnlyMeshImpl extends AbstractXmMesh implements ReadOnlyMesh {
     @Override
     protected void returnToPool() {
         XmMeshesImpl.release(this);
+    }
+
+    @Override
+    public Polygon claimThreadSafeReader() {
+        return this.claimThreadSafeReaderImpl();
     }
 }

@@ -134,6 +134,6 @@ public abstract class CubicPainterBigTex extends AbstractQuadPainter {
 
             commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
-        } while (mesh.editorNext());
+        } while (editor.next());
     }
 }

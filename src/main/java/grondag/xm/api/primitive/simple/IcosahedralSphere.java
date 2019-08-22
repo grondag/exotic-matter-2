@@ -42,22 +42,15 @@ public class IcosahedralSphere {
     public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
     static final Function<PolyTransform, XmMesh> POLY_FACTORY = transform -> {
-        final WritableMesh icoMesh = XmMeshes.claimWritable();
-        icoMesh.writer().lockUV(0, false);
-        icoMesh.writer().surface(SURFACE_ALL);
-        icoMesh.saveDefaults();
-        Icosahedron.icosahedron(Vec3d.ZERO, 0.5, icoMesh, true);
+        WritableMesh mesh = XmMeshes.claimWritable();
+        mesh.writer().lockUV(0, false);
+        mesh.writer().surface(SURFACE_ALL);
+        mesh.saveDefaults();
+
+        sphere(mesh);
+        return mesh.releaseToReader();
         
-        icoMesh.origin();
-        final Polygon reader = icoMesh.reader();
-        final WritableMesh result = XmMeshes.claimWritable();
-        
-        do {
-            subdivideAndEmit(reader, result);
-        } while (icoMesh.next());
-        
-        icoMesh.release();
-        return result.releaseToReader();
+//        return XmMeshes.claimRecoloredCopy(mesh);
     };
     
     public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
@@ -66,8 +59,33 @@ public class IcosahedralSphere {
             .orientationType(OrientationType.NONE)
             .build(Xm.idString("ico_sphere"));
     
+    public static void sphere(WritableMesh mesh) {
+        final WritableMesh icoMesh = XmMeshes.claimWritable();
+        icoMesh.writer().lockUV(0, false);
+        icoMesh.writer().surface(SURFACE_ALL);
+        icoMesh.saveDefaults();
+        Icosahedron.icosahedron(Vec3d.ZERO, 0.5, icoMesh, true);
+        
+        final Polygon reader = icoMesh.reader();
+        reader.origin();
+        
+        do {
+            subdivideAndEmit(reader, mesh);
+        } while (reader.next());
+        
+        icoMesh.release();
+    }
+    
+    /** 
+     * Creates four quads in place of each triangle in the original icosahedron mesh.
+     * Each triangle edge is subdivided at midpoint and last vertex is always the
+     * triangle centroid.  Each point is then scaled to be 0.5 from origin.
+     */
     static void subdivideAndEmit(Polygon poly, WritableMesh output) {
         final MutablePolygon writer = output.writer();
+        writer.spriteDepth(1);
+        output.setVertexCount(3);
+        output.saveDefaults();
         
         final float xCenter = (poly.x(0) + poly.x(1) + poly.x(2)) / 3;
         final float yCenter = (poly.y(0) + poly.y(1) + poly.y(2)) / 3;
@@ -75,39 +93,43 @@ public class IcosahedralSphere {
         final float uCenter = (poly.u(0, 0) + poly.u(1, 0) + poly.u(2, 0)) / 3;
         final float vCenter = (poly.v(0, 0) + poly.v(1, 0) + poly.v(2, 0)) / 3;
         
-        output.setVertexCount(3);
+        subdiveFace(poly, output, 0, xCenter, yCenter, zCenter, uCenter, vCenter);
+        subdiveFace(poly, output, 1, xCenter, yCenter, zCenter, uCenter, vCenter);
+        subdiveFace(poly, output, 2, xCenter, yCenter, zCenter, uCenter, vCenter);
+    }
+    
+    static void subdiveFace(Polygon poly, WritableMesh output, int startVertex,
+            float xCenter, float yCenter, float zCenter, float uCenter, float vCenter) {
+        
+        final int endVertex = startVertex == 2 ? 0 : startVertex + 1;
+        final MutablePolygon writer = output.writer();
+        final float xMid = (poly.x(startVertex) + poly.x(endVertex)) / 2;
+        final float yMid = (poly.y(startVertex) + poly.y(endVertex)) / 2;
+        final float zMid = (poly.z(startVertex) + poly.z(endVertex)) / 2;
+        final float uMid = (poly.u(startVertex, 0) + poly.u(endVertex, 0)) / 2;
+        final float vMid = (poly.v(startVertex, 0) + poly.v(endVertex, 0)) / 2;
+        
         writer.copyFrom(poly, false);
-        writer.copyVertexFrom(0, poly, 0);
-        writer.copyVertexFrom(1, poly, 1);
+        writer.copyVertexFrom(0, poly, startVertex);
+        writer.pos(1, xMid, yMid, zMid);
+        writer.uv(1, 0, uMid, vMid);
+        writer.color(1, 0, 0xFFFFFFFF);
         writer.pos(2, xCenter, yCenter, zCenter);
         writer.uv(2, 0, uCenter, vCenter);
         writer.color(2, 0, 0xFFFFFFFF);
         scalePoly(writer);
-        writer.normal(2, writer.x(2) * 2, writer.y(2) * 2, writer.z(2) * 2);
         writer.translate(0.5f);
         output.append();
         
-        output.setVertexCount(3);
         writer.copyFrom(poly, false);
-        writer.copyVertexFrom(0, poly, 1);
-        writer.copyVertexFrom(1, poly, 2);
+        writer.pos(0, xMid, yMid, zMid);
+        writer.uv(0, 0, uMid, vMid);
+        writer.color(0, 0, 0xFFFFFFFF);
+        writer.copyVertexFrom(1, poly, endVertex);
         writer.pos(2, xCenter, yCenter, zCenter);
         writer.uv(2, 0, uCenter, vCenter);
         writer.color(2, 0, 0xFFFFFFFF);
         scalePoly(writer);
-        writer.normal(2, writer.x(2) * 2, writer.y(2) * 2, writer.z(2) * 2);
-        writer.translate(0.5f);
-        output.append();
-        
-        output.setVertexCount(3);
-        writer.copyFrom(poly, false);
-        writer.copyVertexFrom(0, poly, 2);
-        writer.copyVertexFrom(1, poly, 0);
-        writer.pos(2, xCenter, yCenter, zCenter);
-        writer.uv(2, 0, uCenter, vCenter);
-        writer.color(2, 0, 0xFFFFFFFF);
-        scalePoly(writer);
-        writer.normal(2, writer.x(2) * 2, writer.y(2) * 2, writer.z(2) * 2);
         writer.translate(0.5f);
         output.append();
     }
@@ -126,5 +148,8 @@ public class IcosahedralSphere {
         final float z = poly.z(i);
         final float scale = (float) (0.5 / Math.sqrt(x * x + y * y + z * z));
         poly.pos(i, x * scale, y * scale, z * scale);
+        
+        // because this is centered on origin and radius is 0.5, normal is simply position x 2
+        poly.normal(i, poly.x(i) * 2, poly.y(i) * 2, poly.z(i) * 2);
     }
 }

@@ -100,7 +100,8 @@ public class QuadrantSplitter {
      * May also move reader, and does not restore reader position if it does so.
      */
     public static final void split(MutableMesh stream, int layerIndex) {
-        final int editorAddress = stream.editorAddress();
+        final MutablePolygon editor = stream.editor();
+        final int editorAddress = editor.address();
         final Polygon reader = stream.reader(editorAddress);
 
         int lowCount = 0;
@@ -172,14 +173,15 @@ public class QuadrantSplitter {
                 thisType = nextType;
             }
 
-            reader.setDeleted();
+            reader.delete();
 
             splitV(stream, highAddress, true, layerIndex);
             splitV(stream, lowAddress, false, layerIndex);
 
             // restore editor position if we moved it
-            if (stream.editorAddress() != editorAddress)
-                stream.moveEditor(editorAddress);
+            if (editor.address() != editorAddress) {
+                editor.moveTo(editorAddress);
+            }
         }
     }
 
@@ -255,7 +257,7 @@ public class QuadrantSplitter {
                 thisType = nextType;
             }
 
-            reader.setDeleted();
+            reader.delete();
         }
     }
 

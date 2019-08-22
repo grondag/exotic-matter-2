@@ -334,14 +334,6 @@ public interface Polygon {
 
     boolean lockUV(int layerIndex);
 
-    default boolean hasRenderLayer(BlockRenderLayer layer) {
-        if (blendMode(0) == layer)
-            return true;
-
-        final int count = this.spriteDepth();
-        return (count > 1 && blendMode(1) == layer) || (count == 3 && blendMode(2) == layer);
-    }
-
     BlockRenderLayer blendMode(int layerIndex);
 
     boolean emissive(int layerIndex);
@@ -371,19 +363,6 @@ public interface Polygon {
 
     }
 
-    /**
-     * Should be called instead of {@link #release()} when this is the last held
-     * reference allocated by this objects factory. Will raise an assertion error
-     * (if enabled) if this is not the last retained instance in the factory pool.
-     * <p>
-     * 
-     * For use as a debugging aid - has no functional necessity otherwise. Also has
-     * no effect/meaning for unpooled instances.
-     */
-    default void releaseLast() {
-        release();
-    }
-
     default int tag() {
         return NO_LINK_OR_TAG;
     }
@@ -406,50 +385,57 @@ public interface Polygon {
 
     float normalZ(int vertexIndex);
     
-    /**
-     * Address of this poly within its stream.<br>
-     * Will throw exception if not a stream-back poly.
-     */
-    default int streamAddress() {
-        throw new UnsupportedOperationException();
-    }
+    boolean isDeleted();
 
-    // TODO: remove
-    @Deprecated
-    default boolean isMarked() {
-        return false;
-    }
-
-    // TODO: remove
-    @Deprecated
-    default void flipMark() {
-        this.setMark(!this.isMarked());
-    }
-
-    // TODO: remove
-    @Deprecated
-    default void setMark(boolean isMarked) {
-        throw new UnsupportedOperationException();
-    }
-
-    default boolean isDeleted() {
-        return false;
-    }
-
-    default void setDeleted() {
-        throw new UnsupportedOperationException();
-    }
+    void delete();
 
     /**
      * Improbable non-zero value that signifies no link set or link not supported.
      */
     static final int NO_LINK_OR_TAG = Integer.MIN_VALUE;
 
-    default int getLink() {
-        return NO_LINK_OR_TAG;
-    }
+    int link();
 
-    default void setLink(int link) {
-        throw new UnsupportedOperationException();
+    void link(int link);
+    
+    default boolean hasLink() {
+        return link() != Polygon.NO_LINK_OR_TAG;
     }
+    
+    void moveTo(int address);
+
+    /**
+     * False if reader at end of stream in build order. <br>
+     * By extension, also false if stream is empty.<br>
+     * Note that WIP is not considered part of stream.
+     */
+    boolean hasValue();
+
+    /**
+     * Moves reader to next poly in this stream. Returns false if already at
+     * end.<br>
+     * Note that WIP is not considered part of stream.
+     */
+    boolean next();
+
+    boolean nextLink();
+    
+    /**
+     * Moves reader to start of stream.<br>
+     * Note that WIP is not considered part of stream.
+     * <p>
+     * 
+     * Returns true if reader has a value, meaning stream not empty & not all polys
+     * are deleted.
+     */
+    boolean origin();
+
+    /**
+     * Address of current reader location. Can be used with {@link #moveTo(int)} to
+     * return. Addresses are immutable within this stream instance.
+     * <p>
+     */
+    int address();
+
+    void clearLink();
 }

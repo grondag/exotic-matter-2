@@ -32,7 +32,6 @@ import net.minecraft.util.math.Direction;
 @API(status = INTERNAL)
 class StreamBackedPolygon implements Polygon {
     protected static final int NO_ADDRESS = -1;
-
     protected static final IntUnaryOperator VERTEX_FUNC_TRIANGLE = (v) -> v == 3 ? 0 : v;
     protected static final IntUnaryOperator VERTEX_FUNC_STRAIGHT = (v) -> v;
     protected IntUnaryOperator vertexIndexer = VERTEX_FUNC_STRAIGHT;
@@ -42,7 +41,7 @@ class StreamBackedPolygon implements Polygon {
      * {@link #position(int)}
      */
     protected int baseAddress = NO_ADDRESS;
-
+    protected AbstractXmMesh mesh;
     protected PolyEncoder polyEncoder;
 
     /**
@@ -89,7 +88,8 @@ class StreamBackedPolygon implements Polygon {
      * Reads header from given stream address and all subsequent operations reflect
      * data at that position within the stream.
      */
-    protected void moveTo(int baseAddress) {
+    @Override
+    public void moveTo(int baseAddress) {
         this.baseAddress = baseAddress;
         loadFormat();
     }
@@ -132,27 +132,12 @@ class StreamBackedPolygon implements Polygon {
     }
 
     @Override
-    public final boolean isMarked() {
-        return MeshFormat.isMarked(format());
-    }
-
-    @Override
-    public final void flipMark() {
-        setMark(!isMarked());
-    }
-
-    @Override
-    public final void setMark(boolean isMarked) {
-        setFormat(MeshFormat.setMarked(format(), isMarked));
-    }
-
-    @Override
     public final boolean isDeleted() {
         return MeshFormat.isDeleted(format());
     }
 
     @Override
-    public final void setDeleted() {
+    public final void delete() {
         setFormat(MeshFormat.setDeleted(format(), true));
     }
 
@@ -167,13 +152,18 @@ class StreamBackedPolygon implements Polygon {
     }
 
     @Override
-    public final int getLink() {
+    public final int link() {
         return polyEncoder.getLink(stream, baseAddress);
     }
 
     @Override
-    public final void setLink(int link) {
+    public final void link(int link) {
         polyEncoder.setLink(stream, baseAddress, link);
+    }
+    
+    @Override
+    public void clearLink() {
+        link(Polygon.NO_LINK_OR_TAG);
     }
 
     @Override
@@ -384,9 +374,38 @@ class StreamBackedPolygon implements Polygon {
     public boolean disableDiffuse(int layerIndex) {
         return StaticEncoder.disableDiffuse(stream, baseAddress, layerIndex);
     }
+    
+    @Override
+    public final boolean next() {
+        return this.mesh.moveReaderToNext(this);
+    }
 
     @Override
-    public int streamAddress() {
+    public final boolean hasValue() {
+        return mesh.isValidAddress(baseAddress) && !this.isDeleted();
+    }
+
+    @Override
+    public final int address() {
         return baseAddress;
+    }
+
+    @Override
+    public final boolean nextLink() {
+        return mesh.moveReaderToNextLink(this);
+    }
+
+    @Override
+    public final boolean origin() {
+        if (mesh.isEmpty()) {
+            this.invalidate();
+            return false;
+        } else {
+            this.moveTo(mesh.originAddress);
+            if (this.isDeleted()) {
+                next();
+            }
+            return hasValue();
+        }
     }
 }

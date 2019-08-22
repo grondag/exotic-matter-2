@@ -94,12 +94,11 @@ public class StackedPlates extends AbstractSimplePrimitive {
         transform.apply(writer);
         stream.append();
 
-        if (stream.origin()) {
-            Polygon reader = stream.reader();
-
-            do
+        final Polygon reader = stream.reader();
+        if (reader.origin()) {
+            do {
                 target.accept(reader);
-            while (stream.next());
+            } while (reader.next());
         }
         stream.release();
     }

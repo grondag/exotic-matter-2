@@ -78,7 +78,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 
         XmMesh result = stream.releaseToReader();
 
-        result.origin();
+        result.reader().origin();
         assert result.reader().vertexCount() == 4;
 
         return result;

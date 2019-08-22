@@ -159,11 +159,11 @@ public class SquareColumn extends AbstractSimplePrimitive {
             positiveDirection(face, stream, bjs.faceState(face), spec, axis, surfaces);
         }
 
-        if (stream.origin()) {
-            Polygon reader = stream.reader();
+        final Polygon reader = stream.reader();
+        if (reader.origin()) {
             do {
                 target.accept(reader);
-            } while (stream.next());
+            } while (reader.next());
         }
         stream.release();
     }

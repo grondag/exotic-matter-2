@@ -108,7 +108,15 @@ public class SimplePrimitiveBuilderImpl {
         @Override
         public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
             try {
-                cachedQuads[modelState.orientationIndex()].forEach(target);
+                final XmMesh mesh =  cachedQuads[modelState.orientationIndex()];
+                final Polygon reader = mesh.claimThreadSafeReader();
+
+                do
+                    target.accept(reader);
+                while (reader.next());
+                
+                reader.release();
+                
             } catch (Exception e) {
                 if(notifyException) {
                     notifyException = false;

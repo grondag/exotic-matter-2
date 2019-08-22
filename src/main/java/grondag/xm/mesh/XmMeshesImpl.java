@@ -89,10 +89,10 @@ public class XmMeshesImpl {
      */
     public static ReadOnlyMesh claimRecoloredCopy(XmMesh input) {
         WritableMesh result = claimWritable();
-        if (input.origin()) {
+        final Polygon reader = input.reader();
+        if (reader.origin()) {
             Random r = ThreadLocalRandom.current();
 
-            Polygon reader = input.reader();
             MutablePolygon writer = result.writer();
             do {
                 result.setVertexCount(reader.vertexCount());
@@ -100,7 +100,7 @@ public class XmMeshesImpl {
                 writer.copyFrom(reader, true);
                 writer.colorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
                 result.append();
-            } while (input.next());
+            } while (reader.next());
         }
 
         return result.releaseToReader();

@@ -27,6 +27,11 @@ import grondag.xm.api.mesh.polygon.Polygon;
 class MutableMeshImpl extends WritableMeshImpl implements MutableMesh {
     protected final StreamBackedMutablePolygon editor = new StreamBackedMutablePolygon();
 
+    protected MutableMeshImpl() {
+        super();
+        editor.mesh = this;
+    }
+    
     @Override
     protected void prepare(int formatFlags) {
         super.prepare(formatFlags);
@@ -56,43 +61,10 @@ class MutableMeshImpl extends WritableMeshImpl implements MutableMesh {
     }
 
     @Override
-    public boolean editorOrigin() {
-        if (isEmpty()) {
-            editor.invalidate();
-            return false;
-        } else {
-            editor.moveTo(originAddress);
-            if (editor.isDeleted())
-                editorNext();
-            return editorHasValue();
-        }
-    }
-
-    @Override
-    public boolean editorNext() {
-        return moveReaderToNext(this.editor);
-    }
-
-    @Override
-    public boolean editorHasValue() {
-        return isValidAddress(editor.baseAddress) && !editor.isDeleted();
-    }
-
-    @Override
-    public void moveEditor(int address) {
+    public MutablePolygon editor(int address) {
         validateAddress(address);
         editor.moveTo(address);
-    }
-
-    @Override
-    public MutablePolygon editor(int address) {
-        moveEditor(address);
         return editor;
-    }
-
-    @Override
-    public int editorAddress() {
-        return editor.baseAddress;
     }
 
     @Override

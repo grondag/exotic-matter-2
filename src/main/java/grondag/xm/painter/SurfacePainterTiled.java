@@ -215,7 +215,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         }
 
         // input poly no longer valid so delete
-        reader.setDeleted();
+        reader.delete();
 
         vSplitter.accept(sliceAddress);
         return remainderAddress;
@@ -359,7 +359,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         }
 
         // input no longer valid so delete
-        reader.setDeleted();
+        reader.delete();
 
         output.accept(sliceAddress);
         return remainderAddress;
@@ -373,10 +373,10 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
          */
         final int limitAddress = stream.writerAddress();
 
-        MutablePolygon editor = stream.editor();
+        final MutablePolygon editor = stream.editor();
         do {
             // may move editor so save address and restore at end
-            final int editorAddress = stream.editorAddress();
+            final int editorAddress = editor.address();
 
             // if the poly was added after we started we are done
             if (editorAddress >= limitAddress)
@@ -485,8 +485,8 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
             }
 
             // restore editor position for iteration
-            stream.moveEditor(editorAddress);
+            editor.moveTo(editorAddress);
 
-        } while (stream.editorNext());
+        } while (editor.next());
     }
 }

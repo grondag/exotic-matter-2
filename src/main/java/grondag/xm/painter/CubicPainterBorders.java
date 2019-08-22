@@ -171,7 +171,7 @@ public abstract class CubicPainterBorders extends AbstractQuadPainter {
 
     @SuppressWarnings("rawtypes")
     public static void paintQuads(MutableMesh stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        MutablePolygon editor = stream.editor();
+        final MutablePolygon editor = stream.editor();
         do {
 
             CornerJoinState bjs = modelState.cornerJoin();
@@ -201,6 +201,6 @@ public abstract class CubicPainterBorders extends AbstractQuadPainter {
 
             commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
-        } while (stream.editorNext());
+        } while (editor.next());
     }
 }

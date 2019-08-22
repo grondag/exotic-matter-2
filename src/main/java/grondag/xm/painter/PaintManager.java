@@ -86,7 +86,7 @@ public class PaintManager implements Consumer<Polygon> {
         XmPaint paint = modelState.paint(surface);
 
         stream.appendCopy(poly);
-        stream.editorOrigin();
+        editor.origin();
 
         final int depth = paint.textureDepth();
         editor.spriteDepth(depth);
@@ -132,8 +132,8 @@ public class PaintManager implements Consumer<Polygon> {
                     //TODO: put back
                     //assert false : "Missing paint method";
                 }
-            } while (stream.editorNext());
-            stream.editorOrigin();
+            } while (editor.next());
+            editor.origin();
         }
 
         do {
@@ -143,7 +143,7 @@ public class PaintManager implements Consumer<Polygon> {
                 editor.spriteDepth(layerCount);
                 polyToMesh(editor, emitter);
             }
-        } while (stream.editorNext());
+        } while (editor.next());
 
         stream.clear();
     }

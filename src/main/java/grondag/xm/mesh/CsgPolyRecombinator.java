@@ -100,9 +100,8 @@ class CsgPolyRecombinator {
             input.appendRaw();
 
             // output recombined should be terminal op, but delete original for consistency
-            polyA.setDeleted();
-
-            input.movePolyA(polyAddress);
+            polyA.delete();
+            polyA.moveTo(polyAddress);
         }
 
         // Done unless split to quads or tris is needed
@@ -192,29 +191,29 @@ class CsgPolyRecombinator {
      * Concise pass-through handler.
      */
     private void handleOutput(CsgMeshhImpl input, WritableMesh output) {
-        if (input.origin()) {
+        final Polygon reader = input.reader();
+        if (reader.origin()) {
             // output routine can add polys, so need to stop when we get to current end
             final int limit = input.writerAddress();
-            Polygon reader = input.reader();
             do
-                handleOutput(input, reader.streamAddress(), output);
-            while (input.next() && reader.streamAddress() < limit);
+                handleOutput(input, reader.address(), output);
+            while (reader.next() && reader.address() < limit);
         }
     }
 
     private void doRecombine(CsgMeshhImpl input, WritableMesh output) {
-        if (!input.origin()) {
+        final Polygon reader = input.reader();
+        if (!reader.origin()) {
             return;
         }
         
         tagPolyPairs.clear();
-        Polygon reader = input.reader();
         do {
             long tag = reader.tag();
             assert tag > 0;
             assert !reader.isDeleted();
-            tagPolyPairs.add((tag << TAG_SHIFT) | reader.streamAddress());
-        } while (input.next());
+            tagPolyPairs.add((tag << TAG_SHIFT) | reader.address());
+        } while (reader.next());
 
         final int count = tagPolyPairs.size();
 
@@ -231,9 +230,6 @@ class CsgPolyRecombinator {
             long pair0 = tagPolyPairs.getLong(0);
             long pair1 = tagPolyPairs.getLong(1);
 
-            assert !input.isDeleted((int) (pair0 & POLY_MASK));
-            assert !input.isDeleted((int) (pair1 & POLY_MASK));
-
             if ((pair0 & TAG_MASK) == (pair1 & TAG_MASK))
                 combineTwoPolys(input, output, (int) (POLY_MASK & pair0), (int) (POLY_MASK & pair1));
             else
@@ -248,7 +244,6 @@ class CsgPolyRecombinator {
 
         long pair = tagPolyPairs.getLong(0);
         long lastTag = pair & TAG_MASK;
-        assert !input.isDeleted((int) (pair & POLY_MASK));
         polys.add((int) (pair & POLY_MASK));
 
         for (int i = 1; i < count; i++) {
@@ -261,7 +256,6 @@ class CsgPolyRecombinator {
                 lastTag = tag;
             }
 
-            assert !input.isDeleted((int) (pair & POLY_MASK));
             polys.add((int) (pair & POLY_MASK));
         }
 
@@ -473,8 +467,8 @@ class CsgPolyRecombinator {
         input.appendRaw();
 
         // mark inputs deleted
-        polyA.setDeleted();
-        polyB.setDeleted();
+        polyA.delete();
+        polyB.delete();
 
         return result;
     }
@@ -504,7 +498,7 @@ class CsgPolyRecombinator {
                 bucket = new IntArrayList();
                 vertexMap.put(v, bucket);
             }
-            bucket.add(poly.streamAddress());
+            bucket.add(poly.address());
         }
     }
 
@@ -519,7 +513,7 @@ class CsgPolyRecombinator {
             Vec3f v = poly.getPos(i);
             IntArrayList bucket = vertexMap.get(v);
             if (bucket != null)
-                bucket.add(poly.streamAddress());
+                bucket.add(poly.address());
         }
     }
 
@@ -535,7 +529,7 @@ class CsgPolyRecombinator {
             if (bucket == null)
                 continue;
 
-            boolean check = bucket.rem(poly.streamAddress());
+            boolean check = bucket.rem(poly.address());
             assert check;
         }
     }

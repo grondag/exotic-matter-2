@@ -63,19 +63,21 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         final boolean isInside = isInsideCorner(modelState);
         final int key = computeKey(edgeIndex, isCorner, isInside);
         
-        ReadOnlyMesh stream = CACHE[key];
-        if(stream == null) {
-            stream = buildPolyStream(edgeIndex, isCorner, isInside);
-            CACHE[key] = stream;
+        ReadOnlyMesh mesh = CACHE[key];
+        if(mesh == null) {
+            mesh = buildPolyStream(edgeIndex, isCorner, isInside);
+            CACHE[key] = mesh;
         }
         
-        if (stream.origin()) {
-            Polygon reader = stream.reader();
+        final Polygon reader = mesh.claimThreadSafeReader();
+        if (reader.origin()) {
 
-            do
+            do {
                 target.accept(reader);
-            while (stream.next());
+            } while (reader.next());
+            
         }
+        reader.release();
     }
 
     protected abstract ReadOnlyMesh buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside);

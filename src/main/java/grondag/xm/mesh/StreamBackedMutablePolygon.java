@@ -396,7 +396,6 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
     public void copyFromCSG(Polygon polyIn) {
         copyFrom(polyIn, false);
         tag(polyIn.tag());
-        setMark(polyIn.isMarked());
     }
 
     @Override

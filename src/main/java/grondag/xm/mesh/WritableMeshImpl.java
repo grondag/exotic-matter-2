@@ -49,10 +49,13 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
     protected int formatFlags = 0;
 
     public WritableMeshImpl() {
+        super();
         writer = new StreamBackedMutablePolygon();
         // note this never changes - writer stream is dedicated,
         // and we already write at the start of it
         writer.baseAddress = 0;
+        writer.mesh = this;
+        copyFrom.mesh = this;
     }
 
     @Override
@@ -212,7 +215,7 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
             }
             append();
         }
-        internal.setDeleted();
+        internal.delete();
         return firstSplitAddress;
     }
 }

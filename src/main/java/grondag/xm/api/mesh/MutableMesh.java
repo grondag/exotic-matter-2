@@ -34,29 +34,8 @@ public interface MutableMesh extends WritableMesh {
     MutablePolygon editor();
 
     /**
-     * Moves editor to the first polygon. Returns true if moved editor has a value.
-     * (Stream not empty and not all polys deleted.)
-     */
-    boolean editorOrigin();
-
-    /**
-     * True if moves editor to next non-deleted poly. False if at the end of the
-     * stream.
-     */
-    boolean editorNext();
-
-    /**
-     * Moves editor to given address.
-     */
-    void moveEditor(int address);
-
-    /**
      * Combo of {@link #moveEditor(int)} and {@link #editor()}.<br>
      * Moves editor to given address and returns the editor cursor for concision.
      */
     MutablePolygon editor(int address);
-
-    boolean editorHasValue();
-
-    int editorAddress();
 }

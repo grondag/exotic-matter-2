@@ -72,16 +72,6 @@ class MeshFormat {
         return CULL_FACE.setValue(face, formatIn);
     }
     
-    private static final BitPacker32<MeshFormat>.BooleanElement IS_MARKED = BITPACKER.createBooleanElement();
-
-    public static boolean isMarked(int formatIn) {
-        return IS_MARKED.getValue(formatIn);
-    }
-
-    public static int setMarked(int formatIn, boolean isMarked) {
-        return IS_MARKED.setValue(isMarked, formatIn);
-    }
-
     private static final BitPacker32<MeshFormat>.BooleanElement IS_DELETED = BITPACKER.createBooleanElement();
 
     public static boolean isDeleted(int formatIn) {

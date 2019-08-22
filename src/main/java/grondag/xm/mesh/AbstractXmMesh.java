@@ -25,7 +25,6 @@ import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.api.mesh.XmMesh;
-import grondag.xm.api.mesh.polygon.MeshPolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 
 @API(status = INTERNAL)
@@ -49,6 +48,13 @@ abstract class AbstractXmMesh implements XmMesh {
     protected final StreamBackedPolygon polyB = new StreamBackedPolygon();
     protected final StreamBackedMutablePolygon internal = new StreamBackedMutablePolygon();
 
+    protected AbstractXmMesh() {
+        reader.mesh = this;
+        polyA.mesh = this;
+        polyB.mesh = this;
+        internal.mesh = this;
+    }
+    
     /**
      * Value used to initialize origin and writer for new streams and on reset.
      * Override if stream needs to pack metadatq at front.
@@ -77,20 +83,6 @@ abstract class AbstractXmMesh implements XmMesh {
         return reader;
     }
 
-    @Override
-    public boolean origin() {
-        if (isEmpty()) {
-            reader.invalidate();
-            return false;
-        } else {
-            reader.moveTo(originAddress);
-            if (reader.isDeleted()) {
-                next();
-            }
-            return hasValue();
-        }
-    }
-
     protected boolean moveReaderToNext(StreamBackedPolygon targetReader) {
         int currentAddress = targetReader.baseAddress;
         if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS) {
@@ -113,30 +105,10 @@ abstract class AbstractXmMesh implements XmMesh {
     }
 
     @Override
-    public boolean next() {
-        return moveReaderToNext(this.reader);
-    }
-
-    @Override
-    public boolean hasValue() {
-        return isValidAddress(reader.baseAddress) && !reader.isDeleted();
-    }
-
-    @Override
-    public int getAddress() {
-        return reader.baseAddress;
-    }
-
-    @Override
-    public void moveTo(int address) {
+    public Polygon reader(int address) {
         validateAddress(address);
         reader.moveTo(address);
-    }
-
-    @Override
-    public Polygon reader(int address) {
-        moveTo(address);
-        return reader;
+        return polyB;
     }
 
     void prepare(IntStream stream) {
@@ -190,14 +162,9 @@ abstract class AbstractXmMesh implements XmMesh {
     }
 
     @Override
-    public void movePolyA(int address) {
+    public Polygon polyA(int address) {
         validateAddress(address);
         polyA.moveTo(address);
-    }
-
-    @Override
-    public Polygon polyA(int address) {
-        movePolyA(address);
         return polyA;
     }
 
@@ -207,100 +174,20 @@ abstract class AbstractXmMesh implements XmMesh {
     }
 
     @Override
-    public void movePolyB(int address) {
+    public Polygon polyB(int address) {
         validateAddress(address);
         polyB.moveTo(address);
-    }
-
-    @Override
-    public Polygon polyB(int address) {
-        movePolyB(address);
         return polyB;
     }
 
-    @Override
-    public void setTag(int tag) {
-        reader.tag(tag);
-    }
 
-    @Override
-    public void setTag(int address, int tag) {
-        validateAddress(address);
-        internal.moveTo(address);
-        internal.tag(tag);
-    }
-
-    @Override
-    public int getTag() {
-        return hasValue() ? reader.tag() : Polygon.NO_LINK_OR_TAG;
-    }
-
-    @Override
-    public int getTag(int address) {
-        validateAddress(address);
-        internal.moveTo(address);
-        return internal.tag();
-    }
-
-    @Override
-    public boolean isDeleted() {
-        return hasValue() ? reader.isDeleted() : false;
-    }
-
-    @Override
-    public void setDeleted() {
-        reader.setDeleted();
-    }
-
-    @Override
-    public boolean isDeleted(int address) {
-        validateAddress(address);
-        internal.moveTo(address);
-        return internal.isDeleted();
-    }
-
-    @Override
-    public void setDeleted(int address) {
-        validateAddress(address);
-        internal.moveTo(address);
-        internal.setDeleted();
-    }
-
-    @Override
-    public int getLink(int address) {
-        validateAddress(address);
-        internal.moveTo(address);
-        return internal.getLink();
-    }
-
-    @Override
-    public void setLink(int linkAddress) {
-        reader.setLink(linkAddress);
-    }
-
-    @Override
-    public void setLink(int targetAddress, int linkAddress) {
-        validateAddress(targetAddress);
-        internal.moveTo(targetAddress);
-        internal.setLink(linkAddress);
-    }
-
-    @Override
-    public boolean hasLink() {
-        return isValidAddress(reader.baseAddress) && reader.getLink() != Polygon.NO_LINK_OR_TAG;
-    }
-
-    @Override
-    public void clearLink() {
-        reader.setLink(Polygon.NO_LINK_OR_TAG);
-    }
 
     protected boolean moveReaderToNextLink(StreamBackedPolygon targetReader) {
         int currentAddress = targetReader.baseAddress;
         if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS)
             return false;
 
-        int nextAddress = targetReader.getLink();
+        int nextAddress = targetReader.link();
         if (nextAddress == Polygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
             return false;
 
@@ -308,7 +195,7 @@ abstract class AbstractXmMesh implements XmMesh {
         currentAddress = nextAddress;
 
         while (currentAddress < writeAddress && targetReader.isDeleted()) {
-            nextAddress = targetReader.getLink();
+            nextAddress = targetReader.link();
             if (nextAddress == Polygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
                 return false;
 
@@ -317,35 +204,6 @@ abstract class AbstractXmMesh implements XmMesh {
         }
 
         return currentAddress < writeAddress && !targetReader.isDeleted();
-    }
-
-    @Override
-    public boolean nextLink() {
-        return moveReaderToNextLink(this.reader);
-    }
-
-    @Override
-    public void setMark(boolean isMarked) {
-        reader.setMark(isMarked);
-    }
-
-    @Override
-    public void setMark(int address, boolean isMarked) {
-        validateAddress(address);
-        internal.moveTo(address);
-        internal.setMark(isMarked);
-    }
-
-    @Override
-    public boolean isMarked() {
-        return reader.isMarked();
-    }
-
-    @Override
-    public boolean isMarked(int address) {
-        validateAddress(address);
-        internal.moveTo(address);
-        return internal.isMarked();
     }
 
     protected void appendCopy(Polygon polyIn, int withFormat) {
@@ -362,42 +220,16 @@ abstract class AbstractXmMesh implements XmMesh {
         }
     }
 
-    private static class ThreadSafeReader extends StreamBackedPolygon implements MeshPolygon {
-        AbstractXmMesh polyStream;
+    private static class ThreadSafeReader extends StreamBackedPolygon {
 
         @Override
         public final void release() {
             super.release();
-            if (polyStream.readerCount.decrementAndGet() == 0 && polyStream.didRelease.get() == true)
-                polyStream.doRelease();
+            if (mesh.readerCount.decrementAndGet() == 0 && mesh.didRelease.get() == true)
+                mesh.doRelease();
             stream = null;
-            polyStream = null;
+            mesh = null;
             safeReaders.offer(this);
-        }
-
-        @Override
-        public final void releaseLast() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void moveTo(int address) {
-            super.moveTo(address);
-        }
-
-        @Override
-        public boolean hasValue() {
-            return polyStream.isValidAddress(baseAddress);
-        }
-
-        @Override
-        public boolean next() {
-            return polyStream.moveReaderToNext(this);
-        }
-
-        @Override
-        public boolean nextLink() {
-            return polyStream.moveReaderToNextLink(this);
         }
     }
 
@@ -412,7 +244,7 @@ abstract class AbstractXmMesh implements XmMesh {
     /**
      * Should only be exposed for streams that are immutable.
      */
-    protected MeshPolygon claimThreadSafeReaderImpl() {
+    protected Polygon claimThreadSafeReaderImpl() {
         readerCount.incrementAndGet();
 
         if (this.didRelease.get()) {
@@ -424,7 +256,7 @@ abstract class AbstractXmMesh implements XmMesh {
         if (reader == null)
             reader = new ThreadSafeReader();
 
-        reader.polyStream = this;
+        reader.mesh = this;
         reader.stream = this.stream;
         reader.moveTo(this.originAddress);
         return reader;
