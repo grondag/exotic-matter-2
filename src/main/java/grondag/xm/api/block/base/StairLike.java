@@ -97,12 +97,6 @@ public abstract class StairLike extends Block implements Waterloggable {
 
     public abstract Axis axis();
     
-//    //TODO: remove
-    @Override
-    public boolean hasDynamicBounds() {
-        return false;
-    }
-    
     public final DirectionProperty faceProperty() {
         final Axis axis = axis();
         return axis == Axis.Y ? Properties.HORIZONTAL_FACING : (axis == Axis.X ? X_ORTHO_FACING : Z_ORTHO_FACING);

@@ -374,9 +374,9 @@ class MeshFormat {
         boolean allSameGlow = true;
         boolean allSameUV = layerCount > 1;
 
-        int color0 = polyIn.spriteColor(0, 0);
-        int color1 = layerCount > 1 ? polyIn.spriteColor(0, 1) : 0;
-        int color2 = layerCount == 3 ? polyIn.spriteColor(0, 2) : 0;
+        int color0 = polyIn.color(0, 0);
+        int color1 = layerCount > 1 ? polyIn.color(0, 1) : 0;
+        int color2 = layerCount == 3 ? polyIn.color(0, 2) : 0;
         /**
          * True if all vertices in each layer are same color as each other. Does not
          * mean all layers are same color.
@@ -392,25 +392,25 @@ class MeshFormat {
             if (allFaceNormal && polyIn.hasNormal(v) && !polyIn.vertexNormal(v).equals(faceNormal))
                 allFaceNormal = false;
 
-            if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 0) != color0)
+            if (allVertexSameColor & v > 0 && polyIn.color(v, 0) != color0)
                 allVertexSameColor = false;
 
             if (layerCount > 1) {
                 // vertex uv format
-                if (allSameUV && (polyIn.spriteU(v, 0) != polyIn.spriteU(v, 1) || polyIn.spriteV(v, 0) != polyIn.spriteV(v, 1)))
+                if (allSameUV && (polyIn.u(v, 0) != polyIn.u(v, 1) || polyIn.v(v, 0) != polyIn.v(v, 1)))
                     allSameUV = false;
 
                 // vertex color
-                if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 1) != color1)
+                if (allVertexSameColor & v > 0 && polyIn.color(v, 1) != color1)
                     allVertexSameColor = false;
 
                 if (layerCount == 3) {
                     // vertex uv format
-                    if (allSameUV && (polyIn.spriteU(v, 0) != polyIn.spriteU(v, 2) || polyIn.spriteV(v, 0) != polyIn.spriteV(v, 2)))
+                    if (allSameUV && (polyIn.u(v, 0) != polyIn.u(v, 2) || polyIn.v(v, 0) != polyIn.v(v, 2)))
                         allSameUV = false;
 
                     // vertex color
-                    if (allVertexSameColor & v > 0 && polyIn.spriteColor(v, 2) != color2)
+                    if (allVertexSameColor & v > 0 && polyIn.color(v, 2) != color2)
                         allVertexSameColor = false;
                 }
             }

@@ -113,7 +113,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
         for (int i = 0; i < vCountIn; i++) {
             // vertex u where 0 corresponds to low split and 1 to high split
-            final float u = (uMin + reader.spriteU(i, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
+            final float u = (uMin + reader.u(i, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
             vertexU[i] = u;
 
             final int t = vertexType(u);
@@ -138,7 +138,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
             editor.maxU(layerIndex, flipped ? 0 : 1);
 
             for (int i = 0; i < vCountIn; i++) {
-                editor.spriteU(i, layerIndex, vertexU[i]);
+                editor.u(i, layerIndex, vertexU[i]);
             }
             vSplitter.accept(targetAddress);
             return Polygon.NO_LINK_OR_TAG;
@@ -175,20 +175,20 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
             final int nextType = vertexType(uNext);
 
             if (thisType == EDGE) {
-                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).spriteU(iSliceVertex, layerIndex, uThis);
+                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).u(iSliceVertex, layerIndex, uThis);
                 iSliceVertex++;
                 stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
                 iRemainderVertex++;
             } else if (thisType == SLICE) {
-                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).spriteU(iSliceVertex, layerIndex, uThis);
+                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).u(iSliceVertex, layerIndex, uThis);
                 iSliceVertex++;
                 if (nextType == REMAINDER) {
                     final float dist = (vertexSplitU - uThis) / (uNext - uThis);
                     stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
 
                     final Polygon remainder = stream.polyA(remainderAddress);
-                    final float uNew = (uMin + remainder.spriteU(iRemainderVertex, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
-                    stream.editor(sliceAddress).sprite(iSliceVertex, layerIndex, uNew, remainder.spriteV(iRemainderVertex, layerIndex));
+                    final float uNew = (uMin + remainder.u(iRemainderVertex, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
+                    stream.editor(sliceAddress).uv(iSliceVertex, layerIndex, uNew, remainder.v(iRemainderVertex, layerIndex));
 
                     iRemainderVertex++;
                     iSliceVertex++;
@@ -201,8 +201,8 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                     stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
 
                     final Polygon remainder = stream.polyA(remainderAddress);
-                    final float uNew = (uMin + remainder.spriteU(iRemainderVertex, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
-                    stream.editor(sliceAddress).sprite(iSliceVertex, layerIndex, uNew, remainder.spriteV(iRemainderVertex, layerIndex));
+                    final float uNew = (uMin + remainder.u(iRemainderVertex, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
+                    stream.editor(sliceAddress).uv(iSliceVertex, layerIndex, uNew, remainder.v(iRemainderVertex, layerIndex));
 
                     iRemainderVertex++;
                     iSliceVertex++;
@@ -257,7 +257,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
         for (int i = 0; i < vCountIn; i++) {
             // vertex u where 0 corresponds to low split and 1 to high split
-            final float v = (vMin + reader.spriteV(i, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
+            final float v = (vMin + reader.v(i, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
             vertexV[i] = v;
 
             final int t = vertexType(v);
@@ -282,7 +282,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
             editor.maxV(layerIndex, flipped ? 0 : 1);
 
             for (int i = 0; i < vCountIn; i++) {
-                editor.spriteV(i, layerIndex, vertexV[i]);
+                editor.v(i, layerIndex, vertexV[i]);
             }
             output.accept(targetAddress);
             return Polygon.NO_LINK_OR_TAG;
@@ -319,20 +319,20 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
             final int nextType = vertexType(vNext);
 
             if (thisType == EDGE) {
-                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).spriteV(iSliceVertex, layerIndex, vThis);
+                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).v(iSliceVertex, layerIndex, vThis);
                 iSliceVertex++;
                 stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
                 iRemainderVertex++;
             } else if (thisType == SLICE) {
-                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).spriteV(iSliceVertex, layerIndex, vThis);
+                stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).v(iSliceVertex, layerIndex, vThis);
                 iSliceVertex++;
                 if (nextType == REMAINDER) {
                     final float dist = (vertexSplitV - vThis) / (vNext - vThis);
                     stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
 
                     final Polygon remainder = stream.polyA(remainderAddress);
-                    final float vNew = (vMin + remainder.spriteV(iRemainderVertex, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
-                    stream.editor(sliceAddress).sprite(iSliceVertex, layerIndex, remainder.spriteU(iRemainderVertex, layerIndex), vNew);
+                    final float vNew = (vMin + remainder.v(iRemainderVertex, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
+                    stream.editor(sliceAddress).uv(iSliceVertex, layerIndex, remainder.u(iRemainderVertex, layerIndex), vNew);
 
                     iRemainderVertex++;
                     iSliceVertex++;
@@ -345,8 +345,8 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                     stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
 
                     final Polygon remainder = stream.polyA(remainderAddress);
-                    final float vNew = (vMin + remainder.spriteV(iRemainderVertex, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
-                    stream.editor(sliceAddress).sprite(iSliceVertex, layerIndex, remainder.spriteU(iRemainderVertex, layerIndex), vNew);
+                    final float vNew = (vMin + remainder.v(iRemainderVertex, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
+                    stream.editor(sliceAddress).uv(iSliceVertex, layerIndex, remainder.u(iRemainderVertex, layerIndex), vNew);
 
                     iRemainderVertex++;
                     iSliceVertex++;

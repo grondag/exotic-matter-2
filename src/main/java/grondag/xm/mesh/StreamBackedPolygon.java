@@ -335,7 +335,7 @@ class StreamBackedPolygon implements Polygon {
     }
 
     @Override
-    public final int spriteColor(int vertexIndex, int layerIndex) {
+    public final int color(int vertexIndex, int layerIndex) {
         return vertexEncoder.hasColor() ? vertexEncoder.getVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex))
                 : polyEncoder.getVertexColor(stream, baseAddress, layerIndex);
     }
@@ -346,12 +346,12 @@ class StreamBackedPolygon implements Polygon {
     }
 
     @Override
-    public final float spriteU(int vertexIndex, int layerIndex) {
+    public final float u(int vertexIndex, int layerIndex) {
         return vertexEncoder.getVertexU(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex));
     }
 
     @Override
-    public final float spriteV(int vertexIndex, int layerIndex) {
+    public final float v(int vertexIndex, int layerIndex) {
         return vertexEncoder.getVertexV(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex));
     }
 

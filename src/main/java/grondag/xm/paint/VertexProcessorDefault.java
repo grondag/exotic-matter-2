@@ -56,7 +56,7 @@ public class VertexProcessorDefault implements VertexProcessor {
                         final float w = poly.glow(i) / 255f;
                         int b = Math.round(lampBrightness * w);
                         int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
-                        poly.spriteColor(i, textureIndex, c | alpha);
+                        poly.color(i, textureIndex, c | alpha);
                         poly.glow(i, b);
                     }
                 }
@@ -64,8 +64,8 @@ public class VertexProcessorDefault implements VertexProcessor {
         } else {
             //normal shaded surface - tint existing colors, usually WHITE to start with
             for (int i = 0; i < poly.vertexCount(); i++) {
-                final int c = ColorHelper.multiplyColor(color, poly.spriteColor(i, textureIndex));
-                poly.spriteColor(i, textureIndex, c);
+                final int c = ColorHelper.multiplyColor(color, poly.color(i, textureIndex));
+                poly.color(i, textureIndex, c);
             }
         }
     }

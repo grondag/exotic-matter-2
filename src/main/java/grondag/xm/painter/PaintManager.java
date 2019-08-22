@@ -111,14 +111,14 @@ public class PaintManager implements Consumer<Polygon> {
 
             final int vertexCount = editor.vertexCount();
             for (int i = 0; i < vertexCount; i++) {
-                final int c = editor.spriteColor(i, 0);
-                final float u = editor.spriteU(i, 0);
-                final float v = editor.spriteV(i, 0);
-                editor.spriteColor(i, 1, c);
-                editor.sprite(i, 1, u, v);
+                final int c = editor.color(i, 0);
+                final float u = editor.u(i, 0);
+                final float v = editor.v(i, 0);
+                editor.color(i, 1, c);
+                editor.uv(i, 1, u, v);
                 if (depth == 3) {
-                    editor.spriteColor(i, 2, c);
-                    editor.sprite(i, 2, u, v);
+                    editor.color(i, 2, c);
+                    editor.uv(i, 2, u, v);
                 }
             }
         }
@@ -203,16 +203,16 @@ public class PaintManager implements Consumer<Polygon> {
                 emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
             }
 
-            emitter.sprite(v, 0, poly.spriteU(v, 0), poly.spriteV(v, 0));
-            emitter.spriteColor(v, 0, poly.spriteColor(v, 0));
+            emitter.sprite(v, 0, poly.u(v, 0), poly.v(v, 0));
+            emitter.spriteColor(v, 0, poly.color(v, 0));
 
             if (depth > 1) {
-                emitter.sprite(v, 1, poly.spriteU(v, 1), poly.spriteV(v, 1));
-                emitter.spriteColor(v, 1, poly.spriteColor(v, 1));
+                emitter.sprite(v, 1, poly.u(v, 1), poly.v(v, 1));
+                emitter.spriteColor(v, 1, poly.color(v, 1));
 
                 if (depth == 3) {
-                    emitter.sprite(v, 2, poly.spriteU(v, 2), poly.spriteV(v, 2));
-                    emitter.spriteColor(v, 2, poly.spriteColor(v, 2));
+                    emitter.sprite(v, 2, poly.u(v, 2), poly.v(v, 2));
+                    emitter.spriteColor(v, 2, poly.color(v, 2));
                 }
             }
         }
@@ -275,8 +275,8 @@ public class PaintManager implements Consumer<Polygon> {
                 emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
             }
 
-            emitter.sprite(v, 0, poly.spriteU(v, spriteIndex), poly.spriteV(v, spriteIndex));
-            emitter.spriteColor(v, 0, poly.spriteColor(v, spriteIndex));
+            emitter.sprite(v, 0, poly.u(v, spriteIndex), poly.v(v, spriteIndex));
+            emitter.spriteColor(v, 0, poly.color(v, spriteIndex));
         }
         emitter.emit();
     }
@@ -293,7 +293,7 @@ public class PaintManager implements Consumer<Polygon> {
         // scale UV coordinates to size of texture sub-region
         final int vCount = poly.vertexCount();
         for (int v = 0; v < vCount; v++) {
-            poly.sprite(v, spriteIndex, minU + spanU * poly.spriteU(v, spriteIndex), minV + spanV * poly.spriteV(v, spriteIndex));
+            poly.uv(v, spriteIndex, minU + spanU * poly.u(v, spriteIndex), minV + spanV * poly.v(v, spriteIndex));
         }
 
         final Sprite sprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(poly.spriteName(spriteIndex));
@@ -310,7 +310,7 @@ public class PaintManager implements Consumer<Polygon> {
         // doing interpolation here vs using sprite methods to avoid wasteful multiply
         // and divide by 16
         for (int v = 0; v < vCount; v++) {
-            poly.sprite(v, spriteIndex, spriteMinU + spriteSpanU * poly.spriteU(v, spriteIndex), spriteMinV + spriteSpanV * poly.spriteV(v, spriteIndex));
+            poly.uv(v, spriteIndex, spriteMinU + spriteSpanU * poly.u(v, spriteIndex), spriteMinV + spriteSpanV * poly.v(v, spriteIndex));
         }
     }
 
@@ -324,23 +324,23 @@ public class PaintManager implements Consumer<Polygon> {
         final float vPixels = (float) sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV());
         final float nudge = 4.0f / Math.max(vPixels, uPixels);
 
-        final float u0 = poly.spriteU(0, spriteIndex);
-        final float u1 = poly.spriteU(1, spriteIndex);
-        final float u2 = poly.spriteU(2, spriteIndex);
-        final float u3 = poly.spriteU(3, spriteIndex);
+        final float u0 = poly.u(0, spriteIndex);
+        final float u1 = poly.u(1, spriteIndex);
+        final float u2 = poly.u(2, spriteIndex);
+        final float u3 = poly.u(3, spriteIndex);
 
-        final float v0 = poly.spriteV(0, spriteIndex);
-        final float v1 = poly.spriteV(1, spriteIndex);
-        final float v2 = poly.spriteV(2, spriteIndex);
-        final float v3 = poly.spriteV(3, spriteIndex);
+        final float v0 = poly.v(0, spriteIndex);
+        final float v1 = poly.v(1, spriteIndex);
+        final float v2 = poly.v(2, spriteIndex);
+        final float v3 = poly.v(3, spriteIndex);
 
         final float uCenter = (u0 + u1 + u2 + u3) * 0.25F;
         final float vCenter = (v0 + v1 + v2 + v3) * 0.25F;
 
-        poly.sprite(0, spriteIndex, MathHelper.lerp(nudge, u0, uCenter), MathHelper.lerp(nudge, v0, vCenter));
-        poly.sprite(1, spriteIndex, MathHelper.lerp(nudge, u1, uCenter), MathHelper.lerp(nudge, v1, vCenter));
-        poly.sprite(2, spriteIndex, MathHelper.lerp(nudge, u2, uCenter), MathHelper.lerp(nudge, v2, vCenter));
-        poly.sprite(3, spriteIndex, MathHelper.lerp(nudge, u3, uCenter), MathHelper.lerp(nudge, v3, vCenter));
+        poly.uv(0, spriteIndex, MathHelper.lerp(nudge, u0, uCenter), MathHelper.lerp(nudge, v0, vCenter));
+        poly.uv(1, spriteIndex, MathHelper.lerp(nudge, u1, uCenter), MathHelper.lerp(nudge, v1, vCenter));
+        poly.uv(2, spriteIndex, MathHelper.lerp(nudge, u2, uCenter), MathHelper.lerp(nudge, v2, vCenter));
+        poly.uv(3, spriteIndex, MathHelper.lerp(nudge, u3, uCenter), MathHelper.lerp(nudge, v3, vCenter));
     }
 
     private void applyTextureRotation(int spriteIndex, MutablePolygon poly) {
@@ -352,25 +352,25 @@ public class PaintManager implements Consumer<Polygon> {
 
         case ROTATE_90:
             for (int i = 0; i < vCount; i++) {
-                final float uOld = poly.spriteU(i, spriteIndex);
-                final float vOld = poly.spriteV(i, spriteIndex);
-                poly.sprite(i, spriteIndex, vOld, 1 - uOld);
+                final float uOld = poly.u(i, spriteIndex);
+                final float vOld = poly.v(i, spriteIndex);
+                poly.uv(i, spriteIndex, vOld, 1 - uOld);
             }
             break;
 
         case ROTATE_180:
             for (int i = 0; i < vCount; i++) {
-                final float uOld = poly.spriteU(i, spriteIndex);
-                final float vOld = poly.spriteV(i, spriteIndex);
-                poly.sprite(i, spriteIndex, 1 - uOld, 1 - vOld);
+                final float uOld = poly.u(i, spriteIndex);
+                final float vOld = poly.v(i, spriteIndex);
+                poly.uv(i, spriteIndex, 1 - uOld, 1 - vOld);
             }
             break;
 
         case ROTATE_270:
             for (int i = 0; i < vCount; i++) {
-                final float uOld = poly.spriteU(i, spriteIndex);
-                final float vOld = poly.spriteV(i, spriteIndex);
-                poly.sprite(i, spriteIndex, 1 - vOld, uOld);
+                final float uOld = poly.u(i, spriteIndex);
+                final float vOld = poly.v(i, spriteIndex);
+                poly.uv(i, spriteIndex, 1 - vOld, uOld);
             }
             break;
 

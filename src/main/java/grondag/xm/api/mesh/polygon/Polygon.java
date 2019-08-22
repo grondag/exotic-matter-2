@@ -323,7 +323,7 @@ public interface Polygon {
     /**
      * Will return quad color if vertex color not set.
      */
-    int spriteColor(int vertexIndex, int layerIndex);
+    int color(int vertexIndex, int layerIndex);
 
     /**
      * Will return zero if vertex color not set.
@@ -394,9 +394,9 @@ public interface Polygon {
 
     float z(int vertexIndex);
 
-    float spriteU(int vertexIndex, int layerIndex);
+    float u(int vertexIndex, int layerIndex);
 
-    float spriteV(int vertexIndex, int layerIndex);
+    float v(int vertexIndex, int layerIndex);
 
     boolean hasNormal(int vertexIndex);
 

@@ -46,7 +46,7 @@ public interface MutablePolygon extends Polygon {
     default MutablePolygon colorAll(int layerIndex, int color) {
         final int limit = vertexCount();
         for (int i = 0; i < limit; i++) {
-            spriteColor(i, layerIndex, color);
+            color(i, layerIndex, color);
         }
         return this;
     }
@@ -111,16 +111,16 @@ public interface MutablePolygon extends Polygon {
 
     MutablePolygon pos(int vertexIndex, Vec3f pos);
 
-    MutablePolygon spriteColor(int vertexIndex, int layerIndex, int color);
+    MutablePolygon color(int vertexIndex, int layerIndex, int color);
 
-    MutablePolygon sprite(int vertexIndex, int layerIndex, float u, float v);
+    MutablePolygon uv(int vertexIndex, int layerIndex, float u, float v);
 
-    default MutablePolygon spriteU(int vertexIndex, int layerIndex, float u) {
-        return this.sprite(vertexIndex, layerIndex, u, this.spriteV(vertexIndex, layerIndex));
+    default MutablePolygon u(int vertexIndex, int layerIndex, float u) {
+        return this.uv(vertexIndex, layerIndex, u, this.v(vertexIndex, layerIndex));
     }
 
-    default MutablePolygon spriteV(int vertexIndex, int layerIndex, float v) {
-        return this.sprite(vertexIndex, layerIndex, this.spriteU(vertexIndex, layerIndex), v);
+    default MutablePolygon v(int vertexIndex, int layerIndex, float v) {
+        return this.uv(vertexIndex, layerIndex, this.u(vertexIndex, layerIndex), v);
     }
 
     /**
@@ -330,15 +330,15 @@ public interface MutablePolygon extends Polygon {
      */
     default MutablePolygon offsetVertexUV(int layerIndex, float uShift, float vShift) {
         for (int i = 0; i < this.vertexCount(); i++) {
-            final float u = this.spriteU(i, layerIndex) + uShift;
-            final float v = this.spriteV(i, layerIndex) + vShift;
+            final float u = this.u(i, layerIndex) + uShift;
+            final float v = this.v(i, layerIndex) + vShift;
 
             assert u > -PolyHelper.EPSILON : "vertex uv offset out of bounds";
             assert u < 1 + PolyHelper.EPSILON : "vertex uv offset out of bounds";
             assert v > -PolyHelper.EPSILON : "vertex uv offset out of bounds";
             assert v < 1 + PolyHelper.EPSILON : "vertex uv offset out of bounds";
 
-            this.sprite(i, layerIndex, u, v);
+            this.uv(i, layerIndex, u, v);
         }
         return this;
     }
@@ -384,5 +384,17 @@ public interface MutablePolygon extends Polygon {
 
     default MutablePolygon tag(int tag) {
         throw new UnsupportedOperationException();
+    }
+    
+    default MutablePolygon translate(float x, float y, float z) {
+        final int limit = this.vertexCount();
+        for(int i = 0; i < limit; i++) {
+            pos(i, x(i) + x, y(i) + y, z(i) + z);
+        }
+        return this;
+    }
+    
+    default MutablePolygon translate(float d) {
+        return translate(d, d, d);
     }
 }
