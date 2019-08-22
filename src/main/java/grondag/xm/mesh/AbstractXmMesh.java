@@ -244,7 +244,7 @@ abstract class AbstractXmMesh implements XmMesh {
     /**
      * Should only be exposed for streams that are immutable.
      */
-    protected Polygon claimThreadSafeReaderImpl() {
+    protected Polygon threadSafeReaderImpl() {
         readerCount.incrementAndGet();
 
         if (this.didRelease.get()) {

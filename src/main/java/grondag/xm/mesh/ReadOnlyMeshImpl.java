@@ -40,17 +40,12 @@ class ReadOnlyMeshImpl extends AbstractXmMesh implements ReadOnlyMesh {
     }
 
     @Override
-    protected void doRelease() {
-        super.doRelease();
-    }
-
-    @Override
     protected void returnToPool() {
         XmMeshesImpl.release(this);
     }
 
     @Override
-    public Polygon claimThreadSafeReader() {
-        return this.claimThreadSafeReaderImpl();
+    public Polygon threadSafeReader() {
+        return this.threadSafeReaderImpl();
     }
 }

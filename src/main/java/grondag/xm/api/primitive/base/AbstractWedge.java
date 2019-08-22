@@ -69,7 +69,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
             CACHE[key] = mesh;
         }
         
-        final Polygon reader = mesh.claimThreadSafeReader();
+        final Polygon reader = mesh.threadSafeReader();
         if (reader.origin()) {
 
             do {

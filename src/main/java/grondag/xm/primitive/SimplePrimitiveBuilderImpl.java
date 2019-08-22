@@ -109,7 +109,7 @@ public class SimplePrimitiveBuilderImpl {
         public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
             try {
                 final XmMesh mesh =  cachedQuads[modelState.orientationIndex()];
-                final Polygon reader = mesh.claimThreadSafeReader();
+                final Polygon reader = mesh.threadSafeReader();
 
                 do
                     target.accept(reader);

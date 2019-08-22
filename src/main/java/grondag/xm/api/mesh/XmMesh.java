@@ -49,7 +49,7 @@ public interface XmMesh {
      * Reader must be released after use or stream can never be recycled to the pool
      * when released.
      */
-    default Polygon claimThreadSafeReader() {
+    default Polygon threadSafeReader() {
         throw new UnsupportedOperationException();
     }
 
