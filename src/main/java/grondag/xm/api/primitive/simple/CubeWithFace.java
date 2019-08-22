@@ -24,6 +24,7 @@ import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
+import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
@@ -33,15 +34,18 @@ import net.minecraft.util.math.Direction;
 
 public class CubeWithFace  {
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-            .add("front", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .build();
 
-    public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
+    public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
     public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
-
+    public static final XmSurface SURFACE_TOP = SURFACES.get(2);
     
-    static final Function<PolyTransform, XmMesh> POLY_FACTORY = transform -> {
+    static final Function<SimpleModelState, XmMesh> POLY_FACTORY = modelState -> {
+        final PolyTransform transform = PolyTransform.get(modelState);
+        
         WritableMesh mesh = XmMeshes.claimWritable();
         MutablePolygon writer = mesh.writer();
         writer.colorAll(0, 0xFFFFFFFF);
@@ -50,12 +54,12 @@ public class CubeWithFace  {
         writer.sprite(0, "");
         mesh.saveDefaults();
 
-        writer.surface(SURFACE_FRONT);
+        writer.surface(SURFACE_BOTTOM);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
         mesh.append();
         
-        writer.surface(SURFACE_SIDES);
+        writer.surface(SURFACE_TOP);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
         mesh.append();

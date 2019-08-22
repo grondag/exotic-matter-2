@@ -26,8 +26,8 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
@@ -41,7 +41,8 @@ public class IcosahedralSphere {
 
     public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
-    static final Function<PolyTransform, XmMesh> POLY_FACTORY = transform -> {
+    static final Function<SimpleModelState, XmMesh> POLY_FACTORY = modelState -> {
+        
         WritableMesh mesh = XmMeshes.claimWritable();
         mesh.writer().lockUV(0, false);
         mesh.writer().surface(SURFACE_ALL);

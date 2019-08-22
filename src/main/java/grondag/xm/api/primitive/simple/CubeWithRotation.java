@@ -28,6 +28,7 @@ import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
+import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
@@ -62,7 +63,9 @@ public class CubeWithRotation {
     public static final XmSurface SURFACE_LEFT = SURFACES.get(4);
     public static final XmSurface SURFACE_RIGHT = SURFACES.get(5);
 
-    static final Function<PolyTransform, XmMesh> POLY_FACTORY = transform -> {
+    static final Function<SimpleModelState, XmMesh> POLY_FACTORY = modelState -> {
+        final PolyTransform transform = PolyTransform.get(modelState);
+        
         WritableMesh mesh = XmMeshes.claimWritable();
         MutablePolygon writer = mesh.writer();
         writer.colorAll(0, 0xFFFFFFFF);

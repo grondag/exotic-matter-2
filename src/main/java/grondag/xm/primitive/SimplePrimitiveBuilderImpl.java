@@ -18,6 +18,7 @@ package grondag.xm.primitive;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -25,7 +26,6 @@ import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
-import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState.Mutable;
@@ -41,7 +41,8 @@ public class SimplePrimitiveBuilderImpl {
     protected static class BuilderImpl implements Builder {
         private OrientationType orientationType = OrientationType.NONE;
         private XmSurfaceList list = XmSurfaceList.ALL;
-        private Function<PolyTransform, XmMesh> polyFactory;
+        private Function<SimpleModelState, XmMesh> polyFactory;
+        private int bitCount = 0;
         
         @Override
         public SimplePrimitive build(String idString) {
@@ -61,8 +62,14 @@ public class SimplePrimitiveBuilderImpl {
         }
         
         @Override
-        public Builder polyFactory(Function<PolyTransform, XmMesh> polyFactory) {
+        public Builder polyFactory(Function<SimpleModelState, XmMesh> polyFactory) {
             this.polyFactory = polyFactory == null ? t -> XmMesh.EMPTY : polyFactory;
+            return this;
+        }
+
+        @Override
+        public Builder primitiveBitCount(int bitCount) {
+            this.bitCount = bitCount;
             return this;
         }
     }
@@ -71,9 +78,11 @@ public class SimplePrimitiveBuilderImpl {
         
         private final OrientationType orientationType;
         
-        private final Function<PolyTransform, XmMesh> polyFactory;
+        private final Function<SimpleModelState, XmMesh> polyFactory;
         
         private boolean notifyException = true;
+        
+        private final int bitShift;
         
         static Function<SimpleModelState, XmSurfaceList> listWrapper(XmSurfaceList list) {
             return s -> list;
@@ -83,21 +92,15 @@ public class SimplePrimitiveBuilderImpl {
             super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
             orientationType = builder.orientationType;
             polyFactory = builder.polyFactory;
-            cachedQuads = new XmMesh[orientationType.enumClass.getEnumConstants().length];
+            bitShift = builder.bitCount;
+            cachedQuads = new XmMesh[orientationType.enumClass.getEnumConstants().length << bitShift];
             invalidateCache();
         }
         
         @Override
         public void invalidateCache() {
             notifyException = true;
-            final int limit = cachedQuads.length;
-            SimpleModelState.Mutable state = newState();
-            for(int i = 0; i < limit; i++) {
-                state.orientationIndex(i);
-                PolyTransform transform = PolyTransform.get(state);
-                cachedQuads[i] = polyFactory.apply(transform);
-            }
-            state.release();
+            Arrays.fill(cachedQuads, null);
         }
         
         @Override
@@ -108,7 +111,14 @@ public class SimplePrimitiveBuilderImpl {
         @Override
         public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
             try {
-                final XmMesh mesh =  cachedQuads[modelState.orientationIndex()];
+                final int index = (modelState.orientationIndex() << bitShift) | modelState.primitiveBits();
+                XmMesh mesh =  cachedQuads[index];
+                
+                if(mesh == null) {
+                    mesh = polyFactory.apply(modelState);
+                    cachedQuads[index] = mesh;
+                }
+                
                 final Polygon reader = mesh.threadSafeReader();
 
                 do
@@ -127,12 +137,16 @@ public class SimplePrimitiveBuilderImpl {
 
         @Override
         public Mutable geometricState(SimpleModelState fromState) {
-            return newState().orientationIndex(fromState.orientationIndex());
+            return newState()
+                    .orientationIndex(fromState.orientationIndex())
+                    .primitiveBits(fromState.primitiveBits());
         }
 
         @Override
         public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
-            return from.primitive() == to.primitive() && from.orientationIndex() == to.orientationIndex();
+            return from.primitive() == to.primitive()
+                    && from.orientationIndex() == to.orientationIndex()
+                    && from.primitiveBits() == to.primitiveBits();
         }
     }
     

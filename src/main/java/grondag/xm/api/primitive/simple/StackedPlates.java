@@ -15,31 +15,32 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
-import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
-import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
+import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.modelstate.SimpleModelStateImpl;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 
 @API(status = EXPERIMENTAL)
-public class StackedPlates extends AbstractSimplePrimitive {
+public class StackedPlates {
+    private StackedPlates() {}
+    
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
@@ -49,84 +50,69 @@ public class StackedPlates extends AbstractSimplePrimitive {
     public static final XmSurface SURFACE_TOP = SURFACES.get(1);
     public static final XmSurface SURFACE_SIDES = SURFACES.get(2);
 
-    private static final Direction[] HORIZONTAL_FACES = { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH };
-
-    public static final StackedPlates INSTANCE = new StackedPlates(Xm.idString("stacked_plates"));
-
-    public StackedPlates(String idString) {
-        super(idString, STATE_FLAG_NEEDS_SPECIES, SimpleModelStateImpl.FACTORY, s -> SURFACES);
-    }
-
-    @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
-        // FIX: Add height to block/model state once model state refactor is complete
-        final int meta = 0; // modelState.getMetaData();
+    static final Function<SimpleModelState, XmMesh> POLY_FACTORY = modelState -> {
         final PolyTransform transform = PolyTransform.get(modelState);
-        final float height = (meta + 1) / 16;
-
-        // PERF: if have a consumer and doing this dynamically - should consumer simply
-        // be a stream?
-        // Why create a stream just to pipe it to the consumer? Or cache the result.
-        final WritableMesh stream = XmMeshes.claimWritable();
-        final MutablePolygon writer = stream.writer();
-
-        writer.rotation(0, Rotation.ROTATE_NONE);
+        
+        WritableMesh mesh = XmMeshes.claimWritable();
+        MutablePolygon writer = mesh.writer();
+        writer.colorAll(0, 0xFFFFFFFF);
         writer.lockUV(0, true);
-        stream.saveDefaults();
+        writer.rotation(0, Rotation.ROTATE_NONE);
+        writer.sprite(0, "");
+        mesh.saveDefaults();
 
-        writer.surface(SURFACE_TOP);
-        writer.nominalFace(Direction.UP);
-        writer.setupFaceQuad(0, 0, 1, 1, 1 - height, Direction.NORTH);
-        transform.apply(writer);
-        stream.append();
-
-        for (Direction face : HORIZONTAL_FACES) {
-            writer.surface(SURFACE_SIDES);
-            writer.nominalFace(face);
-            writer.setupFaceQuad(0, 0, 1, height, 0, Direction.UP);
-            transform.apply(writer);
-            stream.append();
-        }
-
+        final float height = getHeight(modelState) / 16;
+        
         writer.surface(SURFACE_BOTTOM);
-        writer.nominalFace(Direction.DOWN);
-        writer.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
+        writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.apply(writer);
-        stream.append();
+        mesh.append();
+        
+        writer.surface(SURFACE_TOP);
+        writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 1 - height, Direction.NORTH);
+        transform.apply(writer);
+        mesh.append();
+        
+        writer.surface(SURFACE_SIDES);
+        writer.setupFaceQuad(Direction.EAST, 0, 0, 1, height, 0, Direction.UP);
+        transform.apply(writer);
+        mesh.append();
+        
+        writer.surface(SURFACE_SIDES);
+        writer.setupFaceQuad(Direction.WEST, 0, 0, 1, height, 0, Direction.UP);
+        transform.apply(writer);
+        mesh.append();
+        
+        writer.surface(SURFACE_SIDES);
+        writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, height, 0, Direction.UP);
+        transform.apply(writer);
+        mesh.append();
+        
+        writer.surface(SURFACE_SIDES);
+        writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, height, 0, Direction.UP);
+        transform.apply(writer);
+        mesh.append();
 
-        final Polygon reader = stream.reader();
-        if (reader.origin()) {
-            do {
-                target.accept(reader);
-            } while (reader.next());
-        }
-        stream.release();
+        return mesh.releaseToReader();
+    };
+
+    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+            .surfaceList(SURFACES)
+            .polyFactory(POLY_FACTORY)
+            .orientationType(OrientationType.FACE)
+            .primitiveBitCount(4)
+            .build(Xm.idString("stacked_plates"));
+
+   /**
+    * 
+    * @param height  1-16
+    * @param modelState
+    */
+    public static void setHeight(int height, SimpleModelState.Mutable modelState) {
+        modelState.primitiveBits(MathHelper.clamp(height, 1, 16) - 1);
     }
 
-    @Override
-    public boolean isAdditive() {
-        return true;
-    }
-
-    @Override
-    public OrientationType orientationType(SimpleModelState modelState) {
-        return OrientationType.FACE;
-    }
-
-    @Override
-    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
-        SimpleModelState.Mutable result = this.newState();
-        if(fromState.primitive() instanceof StackedPlates) {
-            result.orientationIndex(fromState.orientationIndex());
-            result.primitiveBits(fromState.primitiveBits());
-        }
-        return result;
-    }
-
-    @Override
-    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
-        return from.primitive() == to.primitive() 
-                && from.orientationIndex() == to.orientationIndex()
-                && from.primitiveBits() == to.primitiveBits();
+    public static int getHeight(SimpleModelState modelState) {
+        return modelState.primitiveBits() + 1;
     }
 }

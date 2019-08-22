@@ -87,13 +87,6 @@ public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends P
 
     W fromTag(CompoundTag tag);
     
-    /**
-     * If true, shape can be placed on itself to become bigger.
-     */
-    default boolean isAdditive() {
-        return false;
-    }
-
     boolean doesShapeMatch(R from, R to);
 
     default boolean isMultiBlock() {

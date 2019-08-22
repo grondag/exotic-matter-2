@@ -22,7 +22,6 @@ import java.util.function.Function;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.XmMesh;
-import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -39,10 +38,12 @@ public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, Simple
         SimplePrimitive build(String idString);
 
         Builder surfaceList(XmSurfaceList list);
+        
+        Builder primitiveBitCount(int bitCount);
 
         Builder orientationType(OrientationType orientationType);
 
-        Builder polyFactory(Function<PolyTransform, XmMesh> polyFactory);
+        Builder polyFactory(Function<SimpleModelState, XmMesh> polyFactory);
 
     }
 }
