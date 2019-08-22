@@ -15,8 +15,6 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -42,8 +40,10 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class StackedPlates extends AbstractSimplePrimitive {
-    public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+    public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
+            .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+            .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+            .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
     public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
     public static final XmSurface SURFACE_TOP = SURFACES.get(1);
@@ -54,7 +54,7 @@ public class StackedPlates extends AbstractSimplePrimitive {
     public static final StackedPlates INSTANCE = new StackedPlates(Xm.idString("stacked_plates"));
 
     public StackedPlates(String idString) {
-        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ORIENTATION, SimpleModelStateImpl.FACTORY, s -> SURFACES);
+        super(idString, STATE_FLAG_NEEDS_SPECIES, SimpleModelStateImpl.FACTORY, s -> SURFACES);
     }
 
     @Override

@@ -59,15 +59,6 @@ public class ModelStateFlags {
 
     public static final int STATE_FLAG_NEEDS_SPECIES = STATE_FLAG_NEEDS_POS << 1;
 
-    public static final int STATE_FLAG_HAS_AXIS = STATE_FLAG_NEEDS_SPECIES << 1;
+    public static final int STATE_FLAG_NEEDS_TEXTURE_ROTATION = STATE_FLAG_NEEDS_SPECIES << 1;
 
-    public static final int STATE_FLAG_NEEDS_TEXTURE_ROTATION = STATE_FLAG_HAS_AXIS << 1;
-
-    public static final int STATE_FLAG_HAS_AXIS_ORIENTATION = STATE_FLAG_NEEDS_TEXTURE_ROTATION << 1;
-
-    /**
-     * Set if shape can be rotated around an axis. Only applies to block models;
-     * multiblock models manage this situationally.
-     */
-    public static final int STATE_FLAG_HAS_AXIS_ROTATION = STATE_FLAG_HAS_AXIS_ORIENTATION << 1;
 }

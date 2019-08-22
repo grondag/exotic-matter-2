@@ -15,10 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.base;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ORIENTATION;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_HAS_AXIS_ROTATION;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Arrays;
@@ -46,8 +43,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     protected final ReadOnlyMesh[] CACHE = new ReadOnlyMesh[KEY_COUNT];
     
     public AbstractWedge(String idString, Function<SimpleModelState, XmSurfaceList> surfaceFunc) {
-        super(idString, STATE_FLAG_NEEDS_SPECIES | STATE_FLAG_HAS_AXIS | STATE_FLAG_HAS_AXIS_ROTATION | STATE_FLAG_HAS_AXIS_ORIENTATION,
-                SimpleModelStateImpl.FACTORY, surfaceFunc);
+        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, surfaceFunc);
     }
     
     // mainly for run-time testing
