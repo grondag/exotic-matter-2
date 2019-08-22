@@ -80,4 +80,10 @@ public class XmProperties {
         modelState.orientationIndex(edge.ordinal());
         return modelState;
     };
+    
+    public static SimpleModelStateMap.Modifier SPECIES_MODIFIER = (modelState, blockState) -> {
+        final int species = blockState.get(SPECIES);
+        modelState.species(species);
+        return modelState;
+    };
 }
