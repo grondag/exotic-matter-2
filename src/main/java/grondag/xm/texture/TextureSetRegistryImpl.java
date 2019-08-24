@@ -62,7 +62,7 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
     }
 
     public boolean contains(Identifier id) {
-        return REGISTRY != null && REGISTRY.containsId(id);
+        return REGISTRY != null && REGISTRY.getIds().contains(id);
     }
     
     static {

@@ -225,7 +225,6 @@ public class PaintManager implements Consumer<Polygon> {
         final MaterialFinder finder = this.finder;
 
         finder.clear()
-            .spriteDepth(depth)
             .blendMode(0, poly.blendMode(0))
             .emissive(0, poly.emissive(0))
             .disableAo(0, poly.disableAo(0))
@@ -239,7 +238,6 @@ public class PaintManager implements Consumer<Polygon> {
             bakeSprite(1, poly);
 
             finder.clear()
-                .spriteDepth(depth)
                 .blendMode(0, poly.blendMode(1))
                 .emissive(0, poly.emissive(1))
                 .disableAo(0, poly.disableAo(1))
@@ -252,7 +250,6 @@ public class PaintManager implements Consumer<Polygon> {
                 bakeSprite(2, poly);
                
                 finder.clear()
-                    .spriteDepth(depth)
                     .blendMode(0, poly.blendMode(2))
                     .emissive(0, poly.emissive(2))
                     .disableAo(0, poly.disableAo(2))
