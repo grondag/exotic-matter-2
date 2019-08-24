@@ -24,6 +24,7 @@ import grondag.fermion.modkeys.api.ModKeys;
 import grondag.fermion.varia.Useful;
 import grondag.xm.XmConfig;
 import grondag.xm.api.block.SpeciesHelper;
+import grondag.xm.api.block.SpeciesMode;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.orientation.HorizontalFace;
@@ -224,12 +225,13 @@ public abstract class PlacementHandler {
 
         World world = player.world;
 
+        @SuppressWarnings("unused")
         BlockState withBlockState = item.getPlacementBlockStateFromStack(stack);
 
         // if no region provided or species mode used clicked block then
         // result is based on the clicked face
         if (region == null || ((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
-            int clickedSpecies = SpeciesHelper.getJoinableSpecies(world, onPos, withBlockState, withModelState);
+            int clickedSpecies = SpeciesHelper.getJoinableSpecies(world, onPos, null); //withBlockState, withModelState);
 
             // if no region, then return something different than what is clicked,
             // unless didn't get a species - will return 0 in that case.
@@ -247,7 +249,7 @@ public abstract class PlacementHandler {
         int checkCount = 0;
 
         for (BlockPos pos : region.adjacentPositions()) {
-            int adjacentSpecies = SpeciesHelper.getJoinableSpecies(world, pos, withBlockState, withModelState);
+            int adjacentSpecies = SpeciesHelper.getJoinableSpecies(world, pos, null); //withBlockState, withModelState);
             if (adjacentSpecies >= 0 && adjacentSpecies <= 15)
                 adjacentCount[adjacentSpecies]++;
             if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
@@ -255,7 +257,7 @@ public abstract class PlacementHandler {
         }
 
         for (BlockPos pos : region.surfacePositions()) {
-            int interiorSpecies = SpeciesHelper.getJoinableSpecies(world, pos, withBlockState, withModelState);
+            int interiorSpecies = SpeciesHelper.getJoinableSpecies(world, pos, null); //withBlockState, withModelState);
             if (interiorSpecies >= 0 && interiorSpecies <= 15)
                 surfaceCount[interiorSpecies]++;
             if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)

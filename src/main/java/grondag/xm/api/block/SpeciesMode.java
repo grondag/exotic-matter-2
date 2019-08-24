@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.relics.placement;
+package grondag.xm.api.block;
 
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
@@ -24,10 +24,11 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 
-@API(status = Status.DEPRECATED)
-@Deprecated
+@API(status = Status.EXPERIMENTAL)
 public enum SpeciesMode {
-    MATCH_CLICKED, MATCH_MOST, COUNTER_MOST;
+    MATCH_CLICKED, 
+    MATCH_MOST, 
+    COUNTER_MOST;
 
     private static final String TAG_NAME = NBTDictionary.claim("speciesMode");
 
@@ -51,7 +52,7 @@ public enum SpeciesMode {
         return I18n.translate("placement.species_mode." + this.name().toLowerCase());
     }
 
-    /** mode to use if player holding alt key */
+    /** mode to use if player holding modifier key */
     public SpeciesMode alternate() {
         switch (this) {
         case COUNTER_MOST:

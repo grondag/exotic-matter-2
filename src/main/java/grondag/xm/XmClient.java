@@ -23,6 +23,7 @@ import grondag.xm.collision.CollisionDispatcherImpl;
 import grondag.xm.dispatch.XmDispatcher;
 import grondag.xm.dispatch.XmVariantProvider;
 import grondag.xm.mesh.helper.PolyTransformImpl;
+import grondag.xm.modelstate.AbstractPrimitiveModelState;
 import grondag.xm.network.Packets;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import grondag.xm.texture.XmTexturesImpl;
@@ -38,6 +39,7 @@ public class XmClient implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
         InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
         Packets.initializeClient();
+        AbstractPrimitiveModelState.useClientHandler();
     }
 
     public static void invalidate() {

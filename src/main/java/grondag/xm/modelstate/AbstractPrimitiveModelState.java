@@ -98,6 +98,12 @@ public abstract class AbstractPrimitiveModelState
         PRIMITIVE_BITS = SHAPE_ENCODER.createIntElement(1 << PRIMITIVE_BIT_COUNT);
     }
     
+    static Consumer<AbstractPrimitiveModelState> clientClearHandler = s -> {};
+    
+    public static void useClientHandler() {
+        clientClearHandler = s -> s.clearRendering();
+    }
+    
     ////////////////////////////////////////// FACTORY //////////////////////////////////////////
     
     public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> 
@@ -129,6 +135,8 @@ public abstract class AbstractPrimitiveModelState
             if (result == null) {
                 result = factory.get();
                 result.isImmutable = false;
+            } else {
+                result.clear();
             }
             result.retain();
             result.primitive = template.primitive;
@@ -261,6 +269,8 @@ public abstract class AbstractPrimitiveModelState
         Arrays.fill(paints, 0);
         worldBits = 0;
         shapeBits = 0;
+        clearStateFlags();
+        clientClearHandler.accept(this);
     }
     
     @Override
@@ -692,6 +702,14 @@ public abstract class AbstractPrimitiveModelState
 
 
     ////////////////////////////////////////// RENDERING //////////////////////////////////////////
+    
+    @Environment(EnvType.CLIENT)
+    void clearRendering() {
+        mesh = null;
+        particleSprite = null;
+        particleColorARBG = 0;
+        quadLists = null;
+    }
     
     @Environment(EnvType.CLIENT)
     private Mesh mesh = null;

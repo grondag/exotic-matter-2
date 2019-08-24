@@ -120,11 +120,11 @@ public class SimplePrimitiveBuilderImpl {
                 }
                 
                 final Polygon reader = mesh.threadSafeReader();
-
-                do
-                    target.accept(reader);
-                while (reader.next());
-                
+                if(reader.origin()) {
+                    do {
+                        target.accept(reader);
+                    } while (reader.next());
+                }
                 reader.release();
                 
             } catch (Exception e) {

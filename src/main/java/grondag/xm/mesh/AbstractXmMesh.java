@@ -108,7 +108,7 @@ abstract class AbstractXmMesh implements XmMesh {
     public Polygon reader(int address) {
         validateAddress(address);
         reader.moveTo(address);
-        return polyB;
+        return reader;
     }
 
     void prepare(IntStream stream) {
@@ -253,9 +253,10 @@ abstract class AbstractXmMesh implements XmMesh {
         }
 
         ThreadSafeReader reader = safeReaders.poll();
-        if (reader == null)
+        if (reader == null) {
             reader = new ThreadSafeReader();
-
+        }
+        
         reader.mesh = this;
         reader.stream = this.stream;
         reader.moveTo(this.originAddress);

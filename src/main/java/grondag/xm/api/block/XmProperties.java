@@ -19,7 +19,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.Xm;
 import grondag.xm.api.modelstate.SimpleModelStateMap;
 import grondag.xm.api.orientation.CubeCorner;
 import grondag.xm.api.orientation.CubeEdge;
@@ -36,7 +35,7 @@ import net.minecraft.util.math.Direction.Axis;
 public class XmProperties {
     public static final DirectionProperty X_ORTHO_FACING = DirectionProperty.of("xm_x_facing", d -> d.getAxis() != Axis.X);
     public static final DirectionProperty Z_ORTHO_FACING = DirectionProperty.of("xm_y_facing", d -> d.getAxis() != Axis.Z);
-    public static final IntProperty SPECIES = IntProperty.of(Xm.idString("xm_species"), 0, 15);
+    public static final IntProperty SPECIES = IntProperty.of("xm_species", 0, 15);
     
     public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
     public static final EnumProperty<HorizontalFace> HORIZONTAL_FACE = EnumProperty.of("xm_horiz_face", HorizontalFace.class);

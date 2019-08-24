@@ -62,8 +62,8 @@ public class IcosahedralSphere {
     
     public static void sphere(WritableMesh mesh) {
         final WritableMesh icoMesh = XmMeshes.claimWritable();
+        icoMesh.writer().surface(mesh.writer().surface());
         icoMesh.writer().lockUV(0, false);
-        icoMesh.writer().surface(SURFACE_ALL);
         icoMesh.saveDefaults();
         Icosahedron.icosahedron(Vec3d.ZERO, 0.5, icoMesh, true);
         
