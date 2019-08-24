@@ -6,6 +6,8 @@ For the (now defunct) Exotic Matter library for forge, go [here](https://github.
 # Using
 Exotic Matter (XM) is intended to be used as a non-nested dependency.  For information on features and API, consult the [XM Wiki](https://github.com/grondag/exotic-matter-2/wiki).
 
+You can also ask questions in the [discord server for my mods](https://discord.gg/7NaqR2e).
+
 # Restrictions on Textures
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />Textures and other non-code portions of this work are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
 
