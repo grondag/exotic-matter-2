@@ -8,20 +8,13 @@ Exotic Matter (XM) is intended to be used as a non-nested dependency and is avai
 
 You can also ask questions in the [discord server for my mods](https://discord.gg/7NaqR2e).
 
-
-
-# Restrictions on Textures
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />Textures and other non-code portions of this work are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
-
-You may not distribute any modified version of this mod that includes altered or derived textures. Omission or replacement of textures is permitted.
-
-You may not charge money for this mod or any version of the mod if that version includes the original textures. This is not meant to exclude commercial services that derive revenue from advertising and distribution of mods and modpacks.
-
-## Mod Authors
-You may make mods that depend on and use the textures in this mod, provided the textures are distributed via an unmodified copy of this mod.
-
-## Resource Pack Authors
-You may not distribute textures derived from the texture assets in this mod.
-
-# License
+# Code License
 Code in this mod is [licensed under the Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0). This means no warranty is provided.
+
+# Texture License
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />Most textures in this work are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />A small number of textures in this work are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
+
+The list of textures covered by this more restrictive license is included in the LICENSE file.
+
