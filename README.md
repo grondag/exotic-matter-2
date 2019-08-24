@@ -16,5 +16,5 @@ Code in this mod is [licensed under the Apache 2.0 License](http://www.apache.or
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/88x31.png" /></a><br />A small number of textures in this work are licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/4.0/">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License</a>.
 
-The list of textures covered by this more restrictive license is included in the LICENSE file.
+The list of textures covered by this more restrictive license is included in the [LICENSE](https://github.com/grondag/exotic-matter-2/blob/master/LICENSE) file.
 
