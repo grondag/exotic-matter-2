@@ -25,8 +25,8 @@ import grondag.fermion.intstream.IntStream;
 import grondag.fermion.intstream.IntStreams;
 import grondag.xm.api.mesh.CsgMesh;
 import grondag.xm.api.mesh.WritableMesh;
-import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -123,7 +123,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
         nodeStream = IntStreams.claim();
         clear();
     }
-    
+
     @Override
     public void clear() {
         super.clear();
@@ -226,10 +226,10 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
         setVertexCount(vertexCount);
         writer.copyFromCSG(template);
         writer.tag(template.tag());
-        
+
         appendRawCopy(writer, formatFlags);
         //loadDefaults(); <- was causing problems with surface being lost?
-        
+
         return newAddress;
     }
 
@@ -273,11 +273,41 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
             // Put the polygon in the correct list, splitting it when necessary.
             if ((combinedCount & FRONT_MASK) == 0) {
                 if (combinedCount == 0) {
-                    // coplanar - node already exists
-                    // note that front/back testing not needed for build - assuming polys
-                    // are facing same way within the same tree - otherwise is a bad mesh
-                    return;
+                    // coplanar
+                    float faceNormX = polyB.faceNormalX();
+                    float faceNormY = polyB.faceNormalY();
+                    float faceNormZ = polyB.faceNormalZ();
+                    if (this.isInverted()) {
+                        faceNormX = -faceNormX;
+                        faceNormY = -faceNormY;
+                        faceNormZ = -faceNormZ;
+                    }
+                    final float t = faceNormX * normalX + faceNormY * normalY + faceNormZ * normalZ;
+
+                    if (t > 0) {
+                        // coplanar front counts as front 
+                        final int frontNodeAddress = getFrontNode(nodeAddress);
+                        if (frontNodeAddress == NO_NODE_ADDRESS) {
+                            // no front node, so this poly starts it
+                            setFrontNode(nodeAddress, createNode(polyAddress));
+                            return;
+                        } else {
+                            // loop at front node
+                            nodeAddress = frontNodeAddress;
+                        }
+                    } else {
+                        final int backNodeAddress = getBackNode(nodeAddress);
+                        if (backNodeAddress == NO_NODE_ADDRESS) {
+                            // no back node, so this poly starts it
+                            setBackNode(nodeAddress, createNode(polyAddress));
+                            return;
+                        } else {
+                            // found a back node, so move to that node and loop
+                            nodeAddress = backNodeAddress;
+                        }
+                    }
                 } else {
+                    // must be a back node
                     final int backNodeAddress = getBackNode(nodeAddress);
                     if (backNodeAddress == NO_NODE_ADDRESS) {
                         // no back node, so this poly starts it
@@ -288,8 +318,8 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                         nodeAddress = backNodeAddress;
                     }
                 }
-            } else // frontcount > 0
-            {
+            } else {
+                // frontcount > 0
                 if ((combinedCount & BACK_MASK) == 0) {
                     final int frontNodeAddress = getFrontNode(nodeAddress);
                     if (frontNodeAddress == NO_NODE_ADDRESS) {
@@ -297,7 +327,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                         setFrontNode(nodeAddress, createNode(polyAddress));
                         return;
                     } else {
-                        // found a back node, so move to that node and loop
+                        // part of front node - move there and loop
                         nodeAddress = frontNodeAddress;
                     }
                 } else {
@@ -315,74 +345,74 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                         final int jType = vertexType(polyB, j, normalX, normalY, normalZ, dist);
 
                         switch (iType * 3 + jType) {
-                        case 0: // I COPLANAR - J COPLANAR
-                        case 1: // I COPLANAR - J FRONT
-                        case 2: // I COPLANAR - J BACK
-                            editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                            editor(backAddress).copyVertexFrom(iBack++, polyB, i);
-                            break;
-
-                        case 3: // I FRONT - J COPLANAR
-                        case 4: // I FRONT - J FRONT
-                            editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                            break;
-
-                        case 6: // I BACK- J COPLANAR
-                        case 8: // I BACK - J BACK
-                            editor(backAddress).copyVertexFrom(iBack++, polyB, i);
-                            break;
-
-                        case 5: {
-                            // I FRONT - J BACK
-                            editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-
-                            // Line for interpolated vertex depends on what the next vertex is for this side
-                            // (front/back).
-                            // If the next vertex will be included in this side, we are starting the line
-                            // connecting
-                            // next vertex with previous vertex and should use line from prev. vertex
-                            // If the next vertex will NOT be included in this side, we are starting the
-                            // split line.
-
-                            final float ix = polyB.x(i);
-                            final float iy = polyB.y(i);
-                            final float iz = polyB.z(i);
-
-                            final float tx = polyB.x(j) - ix;
-                            final float ty = polyB.y(j) - iy;
-                            final float tz = polyB.z(j) - iz;
-
-                            final float iDot = ix * normalX + iy * normalY + iz * normalZ;
-                            final float tDot = tx * normalX + ty * normalY + tz * normalZ;
-                            float t = (dist - iDot) / tDot;
-
-                            editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
-                            editor(backAddress).copyVertexFrom(iBack++, polyA(frontAddress), iFront++);
-
-                            break;
-                        }
-
-                        case 7: {
-                            // I BACK - J FRONT
-                            editor(backAddress).copyVertexFrom(iBack++, polyB, i);
-
-                            // see notes for 5
-                            final float ix = polyB.x(i);
-                            final float iy = polyB.y(i);
-                            final float iz = polyB.z(i);
-
-                            final float tx = polyB.x(j) - ix;
-                            final float ty = polyB.y(j) - iy;
-                            final float tz = polyB.z(j) - iz;
-
-                            final float iDot = ix * normalX + iy * normalY + iz * normalZ;
-                            final float tDot = tx * normalX + ty * normalY + tz * normalZ;
-                            float t = (dist - iDot) / tDot;
-
-                            editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
-                            editor(backAddress).copyVertexFrom(iBack++, polyA(frontAddress), iFront++);
-                            break;
-                        }
+                            case 0: // I COPLANAR - J COPLANAR
+                            case 1: // I COPLANAR - J FRONT
+                            case 2: // I COPLANAR - J BACK
+                                editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+                                editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                                break;
+    
+                            case 3: // I FRONT - J COPLANAR
+                            case 4: // I FRONT - J FRONT
+                                editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+                                break;
+    
+                            case 6: // I BACK- J COPLANAR
+                            case 8: // I BACK - J BACK
+                                editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+                                break;
+    
+                            case 5: {
+                                // I FRONT - J BACK
+                                editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
+    
+                                // Line for interpolated vertex depends on what the next vertex is for this side
+                                // (front/back).
+                                // If the next vertex will be included in this side, we are starting the line
+                                // connecting
+                                // next vertex with previous vertex and should use line from prev. vertex
+                                // If the next vertex will NOT be included in this side, we are starting the
+                                // split line.
+    
+                                final float ix = polyB.x(i);
+                                final float iy = polyB.y(i);
+                                final float iz = polyB.z(i);
+    
+                                final float tx = polyB.x(j) - ix;
+                                final float ty = polyB.y(j) - iy;
+                                final float tz = polyB.z(j) - iz;
+    
+                                final float iDot = ix * normalX + iy * normalY + iz * normalZ;
+                                final float tDot = tx * normalX + ty * normalY + tz * normalZ;
+                                float t = (dist - iDot) / tDot;
+    
+                                editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
+                                editor(backAddress).copyVertexFrom(iBack++, polyA(frontAddress), iFront++);
+    
+                                break;
+                            }
+    
+                            case 7: {
+                                // I BACK - J FRONT
+                                editor(backAddress).copyVertexFrom(iBack++, polyB, i);
+    
+                                // see notes for 5
+                                final float ix = polyB.x(i);
+                                final float iy = polyB.y(i);
+                                final float iz = polyB.z(i);
+    
+                                final float tx = polyB.x(j) - ix;
+                                final float ty = polyB.y(j) - iy;
+                                final float tz = polyB.z(j) - iz;
+    
+                                final float iDot = ix * normalX + iy * normalY + iz * normalZ;
+                                final float tDot = tx * normalX + ty * normalY + tz * normalZ;
+                                float t = (dist - iDot) / tDot;
+    
+                                editor(frontAddress).copyInterpolatedVertexFrom(iFront, polyB, i, polyB, j, t);
+                                editor(backAddress).copyVertexFrom(iBack++, polyA(frontAddress), iFront++);
+                                break;
+                            }
                         }
 
                         i = j;
@@ -391,10 +421,10 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
 
                     // put front node in BSP tree
                     final int frontNodeAddress = getFrontNode(nodeAddress);
-                    if (frontNodeAddress == NO_NODE_ADDRESS)
+                    if (frontNodeAddress == NO_NODE_ADDRESS) {
                         // no back node, so this poly starts it
                         setFrontNode(nodeAddress, createNode(frontAddress));
-                    else {
+                    } else {
                         // put new poly on stack with back node and come back to it
                         stack.push(frontAddress);
                         stack.push(frontNodeAddress);
@@ -402,10 +432,10 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
 
                     // put back node in BSP tree
                     final int backNodeAddress = getBackNode(nodeAddress);
-                    if (backNodeAddress == NO_NODE_ADDRESS)
+                    if (backNodeAddress == NO_NODE_ADDRESS) {
                         // no back node, so this poly starts it
                         setBackNode(nodeAddress, createNode(backAddress));
-                    else {
+                    } else {
                         // put new poly on stack with back node and come back to it
                         stack.push(backAddress);
                         stack.push(backNodeAddress);
@@ -472,7 +502,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                 clipPoly(targetStream, clippingStream, reader.baseAddress);
             } while (reader.next() && reader.baseAddress < limitAddress);
         }
-        
+
         reader.moveTo(saveReadAddress);
     }
 
@@ -531,17 +561,29 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                     final float t = faceNormX * normalX + faceNormY * normalY + faceNormZ * normalZ;
 
                     if (t > 0) {
-                        // coplanar front counts as front - leave be
-                        // no need to check front node because coplanar
-                        return;
+                        // coplanar front counts as front 
+                        final int frontNodeAddress = clippingStream.getFrontNode(nodeAddress);
+                        if (frontNodeAddress == NO_NODE_ADDRESS) {
+                            // this is a leaf node, so we are in front of all tree nodes so we are done - no clip
+                            return;
+                        } else {
+                            // loop at front node
+                            nodeAddress = frontNodeAddress;
+                        }
                     } else {
-                        // coplanar back counts as back - remove
-                        // no need to check front node because coplanar
-                        polyB.delete();
-                        return;
+                        // coplanar back counts as back
+                        final int backNodeAddress = clippingStream.getBackNode(nodeAddress);
+                        if (backNodeAddress == NO_NODE_ADDRESS) {
+                            // this is a leaf node, so we are in back of all nodes - poly is clipped
+                            polyB.delete();
+                            return;
+                        } else {
+                            // loop at back node
+                            nodeAddress = backNodeAddress;
+                        }
                     }
-                } else // not front, not coplanar, therefore must be back
-                {
+                } else {
+                    // not front, not coplanar, therefore must be back
                     final int backNodeAddress = clippingStream.getBackNode(nodeAddress);
                     if (backNodeAddress == NO_NODE_ADDRESS) {
                         // this is a leaf node, so we are in back of all nodes - poly is clipped
@@ -552,10 +594,10 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                         nodeAddress = backNodeAddress;
                     }
                 }
-            } else // frontcount > 0
-            {
-                if ((combinedCount & BACK_MASK) == 0) // front
-                {
+            } else {
+                // frontcount > 0
+                if ((combinedCount & BACK_MASK) == 0) {
+                    // front
                     final int frontNodeAddress = clippingStream.getFrontNode(nodeAddress);
                     if (frontNodeAddress == NO_NODE_ADDRESS) {
                         // this is a leaf node, so we are in front of all tree nodes so we are done - no
@@ -565,7 +607,8 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                         // loop at front node
                         nodeAddress = frontNodeAddress;
                     }
-                } else { // spanning
+                } else { 
+                    // spanning
                     // split, push to stack if needed, and exit
                     final int frontAddress = targetStream.appendEmptySplit(polyB, (combinedCount & FRONT_MASK) + 2);
                     int iFront = 0;
@@ -608,7 +651,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
                         case 5: {
                             // I FRONT - J BACK
                             targetStream.editor(frontAddress).copyVertexFrom(iFront++, polyB, i);
-                            
+
                             // Line for interpolated vertex depends on what the next vertex is for this side
                             // (front/back).
                             // If the next vertex will be included in this side, we are starting the line

@@ -45,5 +45,7 @@ public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, Simple
 
         Builder polyFactory(Function<SimpleModelState, XmMesh> polyFactory);
 
+        Builder simpleJoin(boolean needsJoin);
+
     }
 }

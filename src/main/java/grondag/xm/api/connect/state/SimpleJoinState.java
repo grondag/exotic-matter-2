@@ -22,6 +22,7 @@ import org.apiguardian.api.API;
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.connect.SimpleJoinStateImpl;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
 
 /**
  * Describes the state of a block model with connected textures/shapes that
@@ -31,9 +32,13 @@ import net.minecraft.util.math.Direction;
 @API(status = STABLE)
 public interface SimpleJoinState {
     int STATE_COUNT = 64; // 2^6
-
+    SimpleJoinState NO_JOINS = SimpleJoinStateImpl.NO_JOINS;
+    SimpleJoinState ALL_JOINS = SimpleJoinStateImpl.ALL_JOINS;
+    
     boolean isJoined(Direction face);
 
+    boolean hasJoins(Axis axis);
+    
     int ordinal();
 
     public static SimpleJoinState fromOrdinal(int ordinal) {

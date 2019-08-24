@@ -16,6 +16,7 @@
 package grondag.xm.primitive;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
+import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
@@ -43,6 +44,7 @@ public class SimplePrimitiveBuilderImpl {
         private XmSurfaceList list = XmSurfaceList.ALL;
         private Function<SimpleModelState, XmMesh> polyFactory;
         private int bitCount = 0;
+        private boolean simpleJoin;
         
         @Override
         public SimplePrimitive build(String idString) {
@@ -72,6 +74,12 @@ public class SimplePrimitiveBuilderImpl {
             this.bitCount = bitCount;
             return this;
         }
+
+        @Override
+        public Builder simpleJoin(boolean needsJoin) {
+            this.simpleJoin = needsJoin;
+            return this;
+        }
     }
     protected static class Primitive extends AbstractSimplePrimitive {
         private final XmMesh[] cachedQuads;
@@ -84,16 +92,23 @@ public class SimplePrimitiveBuilderImpl {
         
         private final int bitShift;
         
+        private final boolean simpleJoin;
+        
         static Function<SimpleModelState, XmSurfaceList> listWrapper(XmSurfaceList list) {
             return s -> list;
         }
         
         public Primitive(String idString, BuilderImpl builder) {
-            super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
+            super(idString, builder.simpleJoin ? STATE_FLAG_NEEDS_SIMPLE_JOIN : STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
+            simpleJoin = builder.simpleJoin;
             orientationType = builder.orientationType;
             polyFactory = builder.polyFactory;
             bitShift = builder.bitCount;
-            cachedQuads = new XmMesh[orientationType.enumClass.getEnumConstants().length << bitShift];
+            int count = orientationType.enumClass.getEnumConstants().length << bitShift;
+            if(simpleJoin) {
+                count <<= 6;
+            }
+            cachedQuads = new XmMesh[count];
             invalidateCache();
         }
         
@@ -111,7 +126,10 @@ public class SimplePrimitiveBuilderImpl {
         @Override
         public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
             try {
-                final int index = (modelState.orientationIndex() << bitShift) | modelState.primitiveBits();
+                int index = (modelState.orientationIndex() << bitShift) | modelState.primitiveBits();
+                if(simpleJoin) {
+                    index = (index << 6) | modelState.simpleJoin().ordinal();
+                }
                 XmMesh mesh =  cachedQuads[index];
                 
                 if(mesh == null) {
@@ -137,16 +155,23 @@ public class SimplePrimitiveBuilderImpl {
 
         @Override
         public Mutable geometricState(SimpleModelState fromState) {
-            return newState()
+            Mutable result = newState()
                     .orientationIndex(fromState.orientationIndex())
                     .primitiveBits(fromState.primitiveBits());
+            
+            if(simpleJoin) {
+                result.simpleJoin(fromState.simpleJoin());
+            }
+            
+            return result;
         }
 
         @Override
         public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
             return from.primitive() == to.primitive()
                     && from.orientationIndex() == to.orientationIndex()
-                    && from.primitiveBits() == to.primitiveBits();
+                    && from.primitiveBits() == to.primitiveBits()
+                    && (!simpleJoin || from.simpleJoin() == to.simpleJoin());
         }
     }
     

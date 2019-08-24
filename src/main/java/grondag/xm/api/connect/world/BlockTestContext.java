@@ -23,6 +23,7 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
@@ -35,12 +36,18 @@ public interface BlockTestContext<T extends ModelState> {
     BlockState fromBlockState();
 
     @Nullable
+    BlockEntity fromBlockEntity();
+
+    @Nullable
     T fromModelState();
 
     BlockPos toPos();
 
     BlockState toBlockState();
 
+    @Nullable
+    BlockEntity toBlockEntity();
+    
     @Nullable
     T toModelState();
 }

@@ -25,6 +25,7 @@ import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
 import grondag.xm.connect.BlocksNeighborsImpl;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -98,6 +99,30 @@ public interface BlockNeighbors {
         return blockState(CubeCorner.find(face1, face2, face3));
     }
 
+    BlockEntity blockEntity();
+
+    BlockEntity blockEntity(Direction face);
+
+    BlockEntity blockEntity(CubeEdge corner);
+
+    BlockEntity blockEntity(CubeCorner corner);
+
+    default BlockEntity blockEntity(HorizontalFace face) {
+        return blockEntity(face.face);
+    }
+
+    default BlockEntity blockEntity(Direction face1, Direction face2) {
+        return blockEntity(CubeEdge.find(face1, face2));
+    }
+
+    default BlockEntity blockEntity(HorizontalEdge corner) {
+        return blockEntity(corner.face1.face, corner.face2.face);
+    }
+
+    default BlockEntity blockEntity(Direction face1, Direction face2, Direction face3) {
+        return blockEntity(CubeCorner.find(face1, face2, face3));
+    }
+    
     Object modelState();
 
     Object modelState(Direction face);
