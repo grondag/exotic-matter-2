@@ -20,6 +20,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.Xm;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import net.minecraft.block.BlockRenderLayer;
@@ -438,4 +439,12 @@ public interface Polygon {
     int address();
 
     void clearLink();
+    
+    default void toLog() {
+        Xm.LOG.debug("Polygon @ mesh address " + this.address());
+        final int limit = this.vertexCount();
+        for(int i = 0; i < limit ; i++) {
+            Xm.LOG.info(String.format("   %d = %f  %f  %f", i, x(i), y(i), z(i)));
+        }
+    }
 }
