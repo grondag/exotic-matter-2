@@ -17,106 +17,103 @@ package grondag.xm.api.mesh;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.function.Consumer;
+
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.primitive.surface.XmSurface;
 import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class MeshHelper {
+   
+    /**
+     * 
+     * @param mesh
+     * @param sliceCount Should be a multiple of 4, and at least 8;
+     * @param transform
+     * @param sideSurface
+     * @param topSurface
+     * @param bottomSurface
+     */
+    public static void unitCylinder(WritableMesh mesh, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, XmSurface topSurface, XmSurface bottomSurface) {
+        sliceCount = Math.max(8, ((sliceCount + 3) / 4) * 4);
+        final MutablePolygon writer = mesh.writer();
+        final double sliceRadians = Math.PI * 2 / sliceCount;
+        
+        for(int i = 0; i < sliceCount; i++) {
+            cylSide(i, sliceRadians, writer, transform, sideSurface);
+            if((i & 1) == 0) {
+                cylEnd(i, sliceRadians, writer, transform, topSurface, Direction.UP);
+                cylEnd(i, sliceRadians, writer, transform, bottomSurface, Direction.DOWN);
+            }
+        }
+    }
+    
+    private static void cylSide(int slice, double sliceRadians, MutablePolygon writer, Consumer<MutablePolygon> transform, XmSurface sideSurface) {
+        final double fromRad = sliceRadians * slice;
+        final double toRad = fromRad + sliceRadians;
+        final float nx0 = (float) Math.sin(fromRad);
+        final float nz0 = (float) Math.cos(fromRad);
+        final float nx1 = (float) Math.sin(toRad);
+        final float nz1 = (float) Math.cos(toRad);
+        final float x0 = (float) (0.5 + 0.5 * nx0);
+        final float x1 = (float) (0.5 + 0.5 * nx1);
+        final float z0 = (float) (0.5 + 0.5 * nz0);
+        final float z1 = (float) (0.5 + 0.5 * nz1);
+        final float uMin = (float) (fromRad / Math.PI / 2);
+        final float uMax = (float) (toRad / Math.PI / 2);
 
-    // TODO: fix or remove
-    // NOTE: this is a prototype implementation
-    // It's fine for smaller objects, but would likely generate excess polys for big
-    // shapes after CSG operations.
-    // Also needs better/different texture handling for top and bottom when face
-    // diameter is > 1.
-    // Will probably need separate version for creating orthogonalAxis-aligned
-    // cylinders and cones.
-    // Also needs a parameter for minimum slices to reduce poly count on small model
-    // parts when appropriate.
-    // Right now minimum is fixed at 12.
-//    public static List<IPolygon> makeCylinder(Vec3d start, Vec3d end, double startRadius, double endRadius,
-//            IMutablePolygon template) {
-//        double circumference = Math.PI * Math.max(startRadius, endRadius) * 2;
-//        int textureSlices = (int) Math.max(1, Math.round(circumference));
-//        int polysPerTextureSlice = 1;
-//        while (textureSlices * polysPerTextureSlice < 12)
-//            polysPerTextureSlice++;
-//        int polySlices = textureSlices * polysPerTextureSlice;
-//
-//        double length = start.distanceTo(end);
-//        int raySlices = (int) Math.ceil(length);
-//
-//        final Vec3d axisZ = end.subtract(start).normalize();
-//        boolean isY = (Math.abs(axisZ.y) > 0.5);
-//        final Vec3d axisX = new Vec3d(isY ? 1 : 0, !isY ? 1 : 0, 0).crossProduct(axisZ).normalize();
-//        final Vec3d axisY = axisX.crossProduct(axisZ).normalize();
-//        IMutablePolygon top = template.claimCopy(polySlices);
-//        IMutablePolygon bottom = template.claimCopy(polySlices);
-//        IMutablePolygon side = template.claimCopy(4);
-//
-//        List<IPolygon> results = new ArrayList<>(48);
-//
-//        for (int i = 0; i < polySlices; i++) {
-//            double t0 = i / (double) polySlices, t1 = (i + 1) / (double) polySlices;
-//
-//            for (int j = 0; j < raySlices; j++) {
-//                double rayLength = Math.min(1, length - j);
-//                Vec3d centerStart = start.add(axisZ.scale(j));
-//                Vec3d centerEnd = start.add(axisZ.scale(j + rayLength));
-//
-//                double quadStartRadius = Useful.linearInterpolate(startRadius, endRadius, (double) j / raySlices);
-//                double quadEndRadius = Useful.linearInterpolate(startRadius, endRadius,
-//                        Math.min(1, (double) (j + 1) / raySlices));
-//
-//                double uStart = ((double) (i % polysPerTextureSlice) / polysPerTextureSlice);
-//                double u0 = uStart;
-//                double u1 = uStart + 1.0 / polysPerTextureSlice;
-//                double v0 = 0;
-//                double v1 = rayLength;
-//
-//                Vec3d n0 = cylNormal(axisX, axisY, t1);
-//                Vec3d n1 = cylNormal(axisX, axisY, t0);
-//
-//                side.setVertex(0, centerStart.add(n0.scale(quadStartRadius)), u0, v0, 0xFFFFFFFF, n0);
-//                side.setVertex(1, centerStart.add(n1.scale(quadStartRadius)), u1, v0, 0xFFFFFFFF, n1);
-//                side.setVertex(2, centerEnd.add(n1.scale(quadEndRadius)), u1, v1, 0xFFFFFFFF, n1);
-//                side.setVertex(3, centerEnd.add(n0.scale(quadEndRadius)), u0, v1, 0xFFFFFFFF, n0);
-//                results.add(side.toPainted());
-//
-//                if (j == 0 || j == raySlices - 1) {
-//                    double angle = t0 * Math.PI * 2;
-//                    double u = 8.0 + Math.cos(angle) * 8.0;
-//                    double v = 8.0 + Math.sin(angle) * 8.0;
-//
-//                    if (j == 0) {
-//                        bottom.setVertex(i, centerStart.add(n0.scale(quadStartRadius)), u, v, 0xFFFFFFFF, null);
-//                    }
-//                    if (j == raySlices - 1) {
-//                        top.setVertex(polySlices - i - 1, centerEnd.add(n0.scale(quadEndRadius)), u, v, 0xFFFFFFFF,
-//                                null);
-//                    }
-//                }
-//            }
-//
-//        }
-//
-//        results.add(top.toPainted());
-//        results.add(bottom.toPainted());
-//
-//        top.release();
-//        bottom.release();
-//        side.release();
-//        return results;
-//    }
-//
-//    private static Vec3d cylNormal(Vec3d axisX, Vec3d axisY, double slice) {
-//        double angle = slice * Math.PI * 2;
-//        return axisX.scale(Math.cos(angle)).add(axisY.scale(Math.sin(angle)));
-//    }
-
-
+        writer.surface(sideSurface)
+            .vertex(0, x0, 0f, z0, uMin, 0f, 0xFFFFFFFF)
+            .normal(0, nx0, 0, nz0)
+            
+            .vertex(1, x1, 0f, z1, uMax, 0f, 0xFFFFFFFF)
+            .normal(1, nx1, 0, nz1)
+            
+            .vertex(2, x1, 1f, z1, uMax, 1f, 0xFFFFFFFF)
+            .normal(2, nx1, 0, nz1)
+            
+            .vertex(3, x0, 1f, z0, uMin, 1f, 0xFFFFFFFF)
+            .normal(3, nx0, 0, nz0)
+            
+            .nominalFace(writer.lightFace())
+            .apply(transform)
+            .append();
+    }
+    
+    private static void cylEnd(int slice, double sliceRadians, MutablePolygon writer, Consumer<MutablePolygon> transform, XmSurface surface, Direction face) {
+        final double fromRad =slice * sliceRadians;
+        final double midRad = fromRad + sliceRadians;
+        final double toRad = midRad + sliceRadians;
+        final float x0 = (float) (0.5 + 0.5 * Math.sin(fromRad));
+        final float x1 = (float) (0.5 + 0.5 * Math.sin(midRad));
+        final float x2 = (float) (0.5 + 0.5 * Math.sin(toRad));
+        final float z0 = (float) (0.5 + 0.5 * Math.cos(fromRad));
+        final float z1 = (float) (0.5 + 0.5 * Math.cos(midRad));
+        final float z2 = (float) (0.5 + 0.5 * Math.cos(toRad));
+        
+        if(face == Direction.UP) {
+            writer
+                .vertex(0, x0, 1f, z0, x0, z0, 0xFFFFFFFF)
+                .vertex(1, x1, 1f, z1, x1, z1, 0xFFFFFFFF)
+                .vertex(2, x2, 1f, z2, x2, z2, 0xFFFFFFFF)
+                .vertex(3, 0.5f, 1f, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
+        } else {
+            writer
+                .vertex(0, x0, 0f, z0, x0, z0, 0xFFFFFFFF)
+                .vertex(1, 0.5f, 0f, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
+                .vertex(2, x2, 0f, z2, x2, z2, 0xFFFFFFFF)
+                .vertex(3, x1, 0f, z1, x1, z1, 0xFFFFFFFF);
+        }
+        
+        writer.surface(surface)
+            .clearFaceNormal()
+            .nominalFace(face)
+            .apply(transform)
+            .append();
+    }
 
     /**
      * Adds box to stream using current stream defaults.
