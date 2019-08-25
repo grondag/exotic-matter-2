@@ -30,6 +30,10 @@ public class PolyHelper {
     public static boolean epsilonEquals(float first, float second) {
         return Math.abs(first - second) < EPSILON;
     }
+    
+    public static boolean epsilonZero(float value) {
+        return Math.abs(value) < EPSILON;
+    }
 
     private static final Direction[] FACES = Direction.values();
     
