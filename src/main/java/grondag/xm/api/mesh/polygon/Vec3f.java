@@ -18,6 +18,7 @@ package grondag.xm.api.mesh.polygon;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 
 import grondag.fermion.varia.Useful;
 import grondag.xm.mesh.vertex.Vec3fFactory;
@@ -116,15 +117,56 @@ public interface Vec3f {
      * there essentially isn't enough resolution to make a firm determination of
      * what the line is.
      */
-    public static boolean isPointOnLine(float i, float j, float k, float x0, float y0, float z0, float x1, float y1, float z1) {
+    static boolean isPointOnLine(float cx, float cy, float cz, float ax, float ay, float az, float bx, float by, float bz) {
         // points have to be far enough apart to form a line
-        float ab = Useful.distance(x0, y0, z0, x1, y1, z1);
-        if (ab < PolyHelper.EPSILON * 5)
+        float ab = Useful.distance(ax, ay, az, bx, by, bz);
+        if (ab < PolyHelper.EPSILON * 5) {
             return false;
-
-        float bThis = Useful.distance(i, j, k, x1, y1, z1);
-        float aThis = Useful.distance(x0, y0, z0, i, j, k);
-        return (Math.abs(ab - bThis - aThis) < PolyHelper.EPSILON);
+        } else {
+            float bThis = Useful.distance(cx, cy, cz, bx, by, bz);
+            float aThis = Useful.distance(ax, ay, az, cx, cy, cz);
+            return Math.abs(ab - bThis - aThis) < PolyHelper.EPSILON;
+        }
+    }
+    
+    // PERF: is this way faster?
+    @API(status = Status.INTERNAL)
+    static boolean isPointOnLine2(float cx, float cy, float cz, float ax, float ay, float az, float bx, float by, float bz) {
+        
+        //AB and AC must have same normal
+        final float abx = bx - ax;
+        final float aby = by - ay;
+        final float abz = bz - az;
+        
+        final float acx = cx - ax;
+        final float acy = cy - ay;
+        final float acz = cz - az;
+        
+        // check cross product
+        final float xx = aby * acz - abz * acy;
+        final float xy = abz * acx - abx * acz;
+        final float xz = abx * acy - aby * acx;
+        
+        
+        if(PolyHelper.epsilonZero(xx) && PolyHelper.epsilonZero(xy) && PolyHelper.epsilonZero(xz)) {
+            // on the line, check if in segment
+            
+            // must be on same side
+            final float dot = dotProduct(abx, aby, abz, acx, acy, acz);
+            if(dot < -PolyHelper.EPSILON) {
+                return false;
+            } else {
+                final float abm = abx * abx + aby * aby + abz * abz;
+                final float acm = acx * acx + acy * acy + acz * acz;
+                if(acm - abm > PolyHelper.EPSILON) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
