@@ -18,6 +18,7 @@ package grondag.xm.api.mesh;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
+import org.apiguardian.api.API.Status;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -70,7 +71,11 @@ public interface WritableMesh extends XmMesh {
     /**
      * Appends WIP as new poly and resets WIP to default values. Increases size of
      * stream by 1.
+     * @deprecated Use append on poly instead.
      */
+    //TODO: deprecated
+    @Deprecated
+    @API(status = Status.DEPRECATED)
     void append();
 
     /**
@@ -98,15 +103,11 @@ public interface WritableMesh extends XmMesh {
      * The reader stream will not include deleted polygons, and will only include
      * tag, link or bounds metadata if those flags are specified.
      */
-    ReadOnlyMesh releaseAndConvertToReader(int formatFlags);
+    ReadOnlyMesh releaseToReader();
 
-    /**
-     * Version of {@link #releaseAndConvertToReader(int)} that strips all metadata.
-     */
-    default ReadOnlyMesh releaseToReader() {
-        return releaseAndConvertToReader(0);
-    }
-
+    /** Creates a read-only copy without releasing allocation */
+    ReadOnlyMesh toReader();
+    
     /**
      * Sets vertex count for current writer. Value can be saved as part of defaults.
      */
@@ -139,9 +140,13 @@ public interface WritableMesh extends XmMesh {
      * 
      * If the poly is a concave quad or higher-order polygon, appends new polys
      * split from this one at end of the stream, marks the poly at the given address
-     * as deleted, and returns the address of the first split output.
-     * <p>
+     * as deleted, and returns the address of the first split output.<p>
+     * 
+     * @deprecated Handled during render output - can only cause trouble before
      */
+    //TODO: deprecated
+    @Deprecated
+    @API(status = Status.DEPRECATED)
     public int splitIfNeeded(int targetAddress);
 
     public void clear();

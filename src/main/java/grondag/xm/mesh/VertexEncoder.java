@@ -99,9 +99,8 @@ class VertexEncoder {
     private final boolean hasNormals;
     private final boolean hasColor;
 
-    private final FloatGetter getPosX;
-    private final FloatGetter getPosY;
-    private final FloatGetter getPosZ;
+    private final FloatGetter getPos;
+    private final FloatSetter setPos;
     private final FloatSetter3 setPosXYZ;
     private final int offsetPosX;
     private final int offsetPosY;
@@ -158,9 +157,8 @@ class VertexEncoder {
         offsetPosX = offset++;
         offsetPosY = offset++;
         offsetPosZ = offset++;
-        getPosX = GET_FLOAT;
-        getPosY = GET_FLOAT;
-        getPosZ = GET_FLOAT;
+        getPos = GET_FLOAT;
+        setPos = SET_FLOAT;
         setPosXYZ = SET_FLOAT3;
 
         switch (getVertexNormalFormat(format)) {
@@ -309,21 +307,33 @@ class VertexEncoder {
     }
 
     public float getVertexX(IntStream stream, int vertexAddress, int vertexIndex) {
-        return getPosX.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosX);
+        return getPos.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosX);
     }
 
     public float getVertexY(IntStream stream, int vertexAddress, int vertexIndex) {
-        return getPosY.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosY);
+        return getPos.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosY);
     }
 
     public float getVertexZ(IntStream stream, int vertexAddress, int vertexIndex) {
-        return getPosZ.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosZ);
+        return getPos.get(stream, vertexAddress + vertexIndex * vertexStride + offsetPosZ);
     }
 
     public void setVertexPos(IntStream stream, int vertexAddress, int vertexIndex, float x, float y, float z) {
         setPosXYZ.set(stream, vertexAddress + vertexIndex * vertexStride + offsetPosX, x, y, z);
     }
 
+    public void setVertexX(IntStream stream, int vertexAddress, int vertexIndex, float x) {
+        setPos.set(stream, vertexAddress + vertexIndex * vertexStride + offsetPosX, x);
+    }
+
+    public void setVertexY(IntStream stream, int vertexAddress, int vertexIndex, float y) {
+        setPos.set(stream, vertexAddress + vertexIndex * vertexStride + offsetPosY, y);
+    }
+
+    public void setVertexZ(IntStream stream, int vertexAddress, int vertexIndex, float z) {
+        setPos.set(stream, vertexAddress + vertexIndex * vertexStride + offsetPosZ, z);
+    }
+    
     public boolean hasColor() {
         return hasColor;
     }

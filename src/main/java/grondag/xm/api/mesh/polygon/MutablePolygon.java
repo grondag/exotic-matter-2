@@ -17,6 +17,8 @@ package grondag.xm.api.mesh.polygon;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.function.Consumer;
+
 import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.Rotation;
@@ -111,6 +113,12 @@ public interface MutablePolygon extends Polygon {
 
     MutablePolygon pos(int vertexIndex, Vec3f pos);
 
+    MutablePolygon x(int vertexIndex, float x);
+    
+    MutablePolygon y(int vertexIndex, float y);
+    
+    MutablePolygon z(int vertexIndex, float z);
+    
     MutablePolygon color(int vertexIndex, int layerIndex, int color);
 
     MutablePolygon uv(int vertexIndex, int layerIndex, float u, float v);
@@ -357,11 +365,23 @@ public interface MutablePolygon extends Polygon {
     MutablePolygon copyInterpolatedVertexFrom(int targetIndex, Polygon from, int fromIndex, Polygon to, int toIndex, float toWeight);
 
     public default MutablePolygon scaleFromBlockCenter(float scale) {
-        float c = 0.5f * (1 - scale);
+        final float c = 0.5f * (1 - scale);
 
         final int limit = this.vertexCount();
         for (int i = 0; i < limit; i++)
             pos(i, x(i) * scale + c, y(i) * scale + c, z(i) * scale + c);
+
+        return this;
+    }
+    
+    public default MutablePolygon scaleFromBlockCenter(float scaleX, float scaleY, float scaleZ) {
+        final float cx = 0.5f * (1 - scaleX);
+        final float cy = 0.5f * (1 - scaleY);
+        final float cz = 0.5f * (1 - scaleZ);
+        
+        final int limit = this.vertexCount();
+        for (int i = 0; i < limit; i++)
+            pos(i, x(i) * scaleX + cx, y(i) * scaleY + cy, z(i) * scaleZ + cz);
 
         return this;
     }
@@ -397,4 +417,11 @@ public interface MutablePolygon extends Polygon {
     default MutablePolygon translate(float d) {
         return translate(d, d, d);
     }
+    
+    default MutablePolygon apply(Consumer<MutablePolygon> consumer) {
+        consumer.accept(this);
+        return this;
+    }
+    
+    MutablePolygon append();
 }

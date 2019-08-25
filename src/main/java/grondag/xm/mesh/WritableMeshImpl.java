@@ -151,10 +151,15 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
     }
 
     @Override
-    public ReadOnlyMesh releaseAndConvertToReader(int formatFlags) {
-        ReadOnlyMesh result = XmMeshesImpl.claimReadOnly(this, formatFlags);
+    public ReadOnlyMesh releaseToReader() {
+        ReadOnlyMesh result = toReader();
         release();
         return result;
+    }
+    
+    @Override
+    public ReadOnlyMesh toReader() {
+        return XmMeshesImpl.claimReadOnly(this, 0);
     }
 
     @Override
@@ -173,6 +178,7 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
     }
 
     @Override
+    @Deprecated
     public int splitIfNeeded(int targetAddress) {
         internal.moveTo(targetAddress);
         final int inCount = internal.vertexCount();

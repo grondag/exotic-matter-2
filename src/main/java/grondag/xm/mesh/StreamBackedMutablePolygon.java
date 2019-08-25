@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
 
 import grondag.fermion.color.ColorHelper;
 import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
@@ -178,6 +179,24 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         return this;
     }
 
+    @Override
+    public final MutablePolygon x(int vertexIndex, float x) {
+        vertexEncoder.setVertexX(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), x);
+        return this;
+    }
+
+    @Override
+    public final MutablePolygon y(int vertexIndex, float y) {
+        vertexEncoder.setVertexY(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), y);
+        return this;
+    }
+    
+    @Override
+    public final MutablePolygon z(int vertexIndex, float z) {
+        vertexEncoder.setVertexZ(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), z);
+        return this;
+    }
+    
     @Override
     public final MutablePolygon u(int vertexIndex, int layerIndex, float u) {
         vertexEncoder.setVertexU(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), u);
@@ -520,5 +539,11 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         // our default semantic for UP is different than MC
         // "top" is north instead of south
         UVLOCKERS[Direction.UP.ordinal()] = (v, l, p) -> p.uv(v, l, p.x(v), p.z(v));
+    }
+
+    @Override
+    public MutablePolygon append() {
+        ((WritableMesh)this.mesh).append();
+        return this;
     }
 }

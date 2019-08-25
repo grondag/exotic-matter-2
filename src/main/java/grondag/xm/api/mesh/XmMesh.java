@@ -19,6 +19,8 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -53,7 +55,8 @@ public interface XmMesh {
         throw new UnsupportedOperationException();
     }
 
-    void release();
+    /** always returns null as convenience */
+    @Nullable <T> T release();
 
     /**
      * Virtual read-only reference to an existing poly in this stream. Use for

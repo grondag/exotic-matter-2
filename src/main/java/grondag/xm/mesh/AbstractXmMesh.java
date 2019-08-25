@@ -129,11 +129,12 @@ abstract class AbstractXmMesh implements XmMesh {
     }
 
     @Override
-    public final void release() {
+    public final <T> T release() {
         if (didRelease.compareAndSet(false, true) && readerCount.get() == 0) {
             doRelease();
             returnToPool();
         }
+        return null;
     }
 
     /**
