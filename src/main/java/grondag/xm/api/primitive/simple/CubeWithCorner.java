@@ -59,32 +59,32 @@ public class CubeWithCorner  {
 
         writer.surface(SURFACE_BACK);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_FRONT);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_FRONT);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_BACK);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_FRONT);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_BACK);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
 
         return mesh.releaseToReader();

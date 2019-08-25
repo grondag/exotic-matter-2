@@ -75,7 +75,7 @@ public class Stair extends AbstractWedge {
         quad.surface(SURFACE_BOTTOM);
         quad.nominalFace(Direction.DOWN);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(quad);
+        transform.accept(quad);
         stream.append();
 
         
@@ -83,23 +83,23 @@ public class Stair extends AbstractWedge {
         if(isCorner && !isInside) {
             quad.surface(SURFACE_BACK);
             quad.setupFaceQuad(Direction.SOUTH, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
 
             quad.surface(SURFACE_BACK);
             quad.setupFaceQuad(Direction.SOUTH, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
 
             quad.surface(SURFACE_BACK);
             quad.setupFaceQuad(Direction.SOUTH, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
         } else {
             quad.surface(SURFACE_BACK);
             quad.nominalFace(Direction.SOUTH);
             quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
         }
 
@@ -107,7 +107,7 @@ public class Stair extends AbstractWedge {
             if(isInside) {
                 quad.surface(SURFACE_LEFT);
                 quad.setupFaceQuad(Direction.EAST, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 // Extra, inset top quadrant on inside corner
@@ -116,7 +116,7 @@ public class Stair extends AbstractWedge {
                 quad.textureSalt(1); 
                 quad.surface(SURFACE_LEFT);
                 quad.setupFaceQuad(Direction.EAST, 0.5f, 0.5f, 1.0f, 1.0f, 0.5f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
             } else {
@@ -124,25 +124,25 @@ public class Stair extends AbstractWedge {
                 quad.textureSalt(1); 
                 quad.surface(SURFACE_LEFT);
                 quad.setupFaceQuad(Direction.EAST, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
             }
 
         } else {
             quad.surface(SURFACE_LEFT);
             quad.setupFaceQuad(Direction.EAST, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
         }
         
         quad.surface(SURFACE_LEFT);
         quad.setupFaceQuad(Direction.EAST, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, Direction.UP);
-        transform.apply(quad);
+        transform.accept(quad);
         stream.append();
 
         quad.surface(SURFACE_LEFT);
         quad.setupFaceQuad(Direction.EAST, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
-        transform.apply(quad);
+        transform.accept(quad);
         stream.append();
 
         
@@ -150,22 +150,22 @@ public class Stair extends AbstractWedge {
         if(isCorner && isInside) {
             quad.surface(SURFACE_RIGHT);
             quad.setupFaceQuad(Direction.WEST, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
         } else {
             quad.surface(SURFACE_RIGHT);
             quad.setupFaceQuad(Direction.WEST, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
 
             quad.surface(SURFACE_RIGHT);
             quad.setupFaceQuad(Direction.WEST, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
 
             quad.surface(SURFACE_RIGHT);
             quad.setupFaceQuad(Direction.WEST, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
         }
 
@@ -174,47 +174,47 @@ public class Stair extends AbstractWedge {
             if(isInside) {
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 quad.textureSalt(1); 
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
             } else {
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 quad.textureSalt(1); 
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.5f, 0.5f, 1.0f, 1.0f, 0.5f, Direction.UP);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
             }
 
         } else {
             quad.surface(SURFACE_FRONT);
             quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
             
             quad.textureSalt(1);
             quad.surface(SURFACE_FRONT);
             quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.5f, 1.0f, 1.0f, 0.5f, Direction.UP);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
         }
 
@@ -223,58 +223,58 @@ public class Stair extends AbstractWedge {
             if(isInside) {
                 quad.surface(SURFACE_TOP);
                 quad.setupFaceQuad(Direction.UP, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.SOUTH);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 quad.surface(SURFACE_TOP);
                 quad.setupFaceQuad(Direction.UP, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, Direction.SOUTH);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
 
                 quad.surface(SURFACE_TOP);
                 quad.setupFaceQuad(Direction.UP, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.SOUTH);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 quad.surface(SURFACE_TOP);
                 quad.textureSalt(1);
                 quad.setupFaceQuad(Direction.UP, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, Direction.SOUTH);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
             } else {
                 quad.surface(SURFACE_TOP);
                 quad.setupFaceQuad(Direction.UP, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, Direction.SOUTH);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
 
                 quad.surface(SURFACE_TOP);
                 quad.textureSalt(1);
                 quad.setupFaceQuad(Direction.UP, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, Direction.SOUTH);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 quad.surface(SURFACE_TOP);
                 quad.textureSalt(1);
                 quad.setupFaceQuad(Direction.UP, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f, Direction.SOUTH);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
                 
                 quad.surface(SURFACE_TOP);
                 quad.textureSalt(1);
                 quad.setupFaceQuad(Direction.UP, 0.5f, 0.0f, 1.0f, 0.5f, 0.5f, Direction.SOUTH);
-                transform.apply(quad);
+                transform.accept(quad);
                 stream.append();
             }
         } else {
             quad.surface(SURFACE_TOP);
             quad.setupFaceQuad(Direction.UP, 0.0f, 0.5f, 1.0f, 1.0f, 0.0f, Direction.SOUTH);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
 
             quad.surface(SURFACE_TOP);
             quad.textureSalt(1);
             quad.setupFaceQuad(Direction.UP, 0.0f, 0.0f, 1.0f, 0.5f, 0.5f, Direction.SOUTH);
-            transform.apply(quad);
+            transform.accept(quad);
             stream.append();
         }
         

@@ -76,32 +76,32 @@ public class CubeWithRotation {
 
         writer.surface(SURFACE_DOWN);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_UP);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_EAST);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_WEST);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_NORTH);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
         
         writer.surface(SURFACE_SOUTH);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.apply(writer);
+        transform.accept(writer);
         mesh.append();
 
         return mesh.releaseToReader();

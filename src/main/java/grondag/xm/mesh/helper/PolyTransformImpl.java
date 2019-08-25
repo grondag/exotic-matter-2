@@ -45,7 +45,7 @@ public class PolyTransformImpl implements PolyTransform {
     }
 
     @Override
-    public void apply(MutablePolygon poly) {
+    public void accept(MutablePolygon poly) {
         final Matrix4f matrix = this.matrix;
         final int vertexCount = poly.vertexCount();
         final Vector3f vec = VEC3.get();
@@ -109,8 +109,8 @@ public class PolyTransformImpl implements PolyTransform {
         LOOKUP[OrientationType.NONE.ordinal()][0] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
 
         AXIS[Axis.Y.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
-        AXIS[Axis.X.ordinal()] = EXACT[CubeRotation.WEST_UP.ordinal()];
-        AXIS[Axis.Z.ordinal()] = EXACT[CubeRotation.SOUTH_UP.ordinal()];
+        AXIS[Axis.X.ordinal()] = EXACT[CubeRotation.EAST_UP.ordinal()];
+        AXIS[Axis.Z.ordinal()] = EXACT[CubeRotation.NORTH_UP.ordinal()];
         
         HORIZONTAL_FACE[HorizontalFace.NORTH.ordinal()] = EXACT[CubeRotation.NORTH_EAST.ordinal()];
         HORIZONTAL_FACE[HorizontalFace.EAST.ordinal()] = EXACT[CubeRotation.EAST_SOUTH.ordinal()];

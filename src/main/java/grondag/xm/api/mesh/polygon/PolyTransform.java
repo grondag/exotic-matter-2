@@ -17,6 +17,8 @@ package grondag.xm.api.mesh.polygon;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.function.Consumer;
+
 import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.PrimitiveModelState;
@@ -27,8 +29,9 @@ import net.minecraft.util.math.Direction.Axis;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface PolyTransform {
-    void apply(MutablePolygon poly);
+public interface PolyTransform extends Consumer<MutablePolygon> {
+    @Override
+    void accept(MutablePolygon poly);
     
     /**
      * Find appropriate transformation assuming base model is oriented with as follows:
