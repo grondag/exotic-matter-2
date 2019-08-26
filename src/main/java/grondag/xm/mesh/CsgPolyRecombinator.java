@@ -35,19 +35,14 @@ import it.unimi.dsi.fastutil.longs.LongComparators;
 //PERF:  make this no-alloc.  
 @API(status = INTERNAL)
 class CsgPolyRecombinator {
-    private static final ThreadLocal<CsgPolyRecombinator> INSTANCES = new ThreadLocal<CsgPolyRecombinator>() {
-        @Override
-        protected CsgPolyRecombinator initialValue() {
-            return new CsgPolyRecombinator();
-        }
-    };
+    private static final ThreadLocal<CsgPolyRecombinator> POOL = ThreadLocal.withInitial(CsgPolyRecombinator::new);
 
     /**
      * Implementation of
      * {@link CsgMeshhImpl#outputRecombinedQuads(WritableMesh)}
      */
     public static void outputRecombinedQuads(CsgMeshhImpl input, WritableMesh output) {
-        INSTANCES.get().doRecombine(input, output);
+        POOL.get().doRecombine(input, output);
     }
 
     private static final int TAG_SHIFT = 32;
@@ -57,7 +52,7 @@ class CsgPolyRecombinator {
     private final LongArrayList tagPolyPairs = new LongArrayList();
     private final IntArrayList polys = new IntArrayList();
     private final IntArrayList joinedVertex = new IntArrayList();
-
+    
     private CsgPolyRecombinator() {}
 
     /**
@@ -146,6 +141,8 @@ class CsgPolyRecombinator {
 
     private void doRecombine(CsgMeshhImpl input, WritableMesh output) {
         final Polygon reader = input.reader();
+        final LongArrayList tagPolyPairs = this.tagPolyPairs;
+        
         if (!reader.origin()) {
             return;
         }
@@ -185,6 +182,8 @@ class CsgPolyRecombinator {
         // determine if any have the same tags and try to combine if so
         tagPolyPairs.sort(LongComparators.NATURAL_COMPARATOR);
 
+        final IntArrayList polys = this.polys;
+        
         long pair = tagPolyPairs.getLong(0);
         long lastTag = pair & TAG_MASK;
         polys.add((int) (pair & POLY_MASK));
@@ -348,7 +347,9 @@ class CsgPolyRecombinator {
         } else {
             return Polygon.NO_LINK_OR_TAG;
         }
-
+        
+        final IntArrayList joinedVertex = this.joinedVertex;
+        
         /**
          * positive values are A poly vertex index + 1 negative values are negative (B
          * poly vertex index + 1) zero values have not been populated
@@ -422,6 +423,8 @@ class CsgPolyRecombinator {
      * Assumes polys in list all have same tag.
      */
     private void combinePolys(CsgMeshhImpl input, WritableMesh output) {
+        final IntArrayList polys = this.polys;
+        
         assert !polys.isEmpty();
 
         final int count = polys.size();
@@ -485,6 +488,7 @@ class CsgPolyRecombinator {
      * PERF: consider making polysIn a set in the caller
      */
     private void combinePolysInner(CsgMeshhImpl input, WritableMesh output) {
+        final IntArrayList polys = this.polys;
         /**
          * Index of all polys by vertex
          */
