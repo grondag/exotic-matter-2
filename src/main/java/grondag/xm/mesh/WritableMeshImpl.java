@@ -178,19 +178,38 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
     }
 
     @Override
-    @Deprecated
+    public void splitAsNeeded() {
+        final Polygon reader = reader();
+        if (reader.origin()) {
+            final int limit = this.writerAddress();
+            do {
+                final int readAddress = reader.address();
+                // TODO: remove
+                if(reader.vertexCount() > 5) {
+                    System.out.println(reader.vertexCount());
+                }
+                splitIfNeeded(readAddress);
+                if(reader.address() != readAddress) {
+                    reader.moveTo(readAddress);
+                }
+            } while(reader.next() && reader.address() < limit);
+        }
+    }
+    
+    @Override
     public int splitIfNeeded(int targetAddress) {
         internal.moveTo(targetAddress);
         final int inCount = internal.vertexCount();
-        if (inCount == 3 || (inCount == 4 && internal.isConvex()))
+        if (inCount == 3 || (inCount == 4 && internal.isConvex())) {
             return Polygon.NO_LINK_OR_TAG;
-
+        }
+        
         int firstSplitAddress = this.writerAddress();
 
         int head = inCount - 1;
         int tail = 2;
-        setVertexCount(4);
         writer.copyFrom(internal, false);
+        setVertexCount(4);
         writer.copyVertexFrom(0, internal, head);
         writer.copyVertexFrom(1, internal, 0);
         writer.copyVertexFrom(2, internal, 1);
@@ -199,8 +218,9 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
 
         while (head - tail > 1) {
             final int vCount = head - tail == 2 ? 3 : 4;
-            setVertexCount(vCount);
+            internal.moveTo(targetAddress);
             writer.copyFrom(internal, false);
+            setVertexCount(vCount);
             writer.copyVertexFrom(0, internal, head);
             writer.copyVertexFrom(1, internal, tail);
             writer.copyVertexFrom(2, internal, ++tail);
@@ -212,8 +232,8 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
                 if (!writer.isConvex()) {
                     head++;
                     tail--;
-                    setVertexCount(3);
                     writer.copyFrom(internal, false);
+                    setVertexCount(3);
                     writer.copyVertexFrom(0, internal, head);
                     writer.copyVertexFrom(1, internal, tail);
                     writer.copyVertexFrom(2, internal, ++tail);
@@ -221,7 +241,7 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
             }
             append();
         }
-        internal.delete();
+        reader(targetAddress).delete();
         return firstSplitAddress;
     }
 }

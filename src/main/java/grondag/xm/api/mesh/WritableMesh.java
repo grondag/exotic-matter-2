@@ -147,7 +147,10 @@ public interface WritableMesh extends XmMesh {
     //TODO: deprecated
     @Deprecated
     @API(status = Status.DEPRECATED)
-    public int splitIfNeeded(int targetAddress);
+    int splitIfNeeded(int targetAddress);
 
-    public void clear();
+    void clear();
+    
+    void splitAsNeeded();
+    
 }

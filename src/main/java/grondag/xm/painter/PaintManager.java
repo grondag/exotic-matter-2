@@ -74,8 +74,8 @@ public class PaintManager implements Consumer<Polygon> {
     public void accept(Polygon poly) {
         final PrimitiveModelState modelState = this.modelState;
         final QuadEmitter emitter = this.emitter;
-        final MutableMesh stream = this.work;
-        MutablePolygon editor = stream.editor();
+        final MutableMesh mesh = this.work;
+        MutablePolygon editor = mesh.editor();
 
         XmSurface surface = poly.surface();
         if(surface == null) {
@@ -85,8 +85,10 @@ public class PaintManager implements Consumer<Polygon> {
         }
         XmPaint paint = modelState.paint(surface);
 
-        stream.appendCopy(poly);
+        mesh.appendCopy(poly);
         editor.origin();
+        
+        assert editor.vertexCount() <= 4;
 
         final int depth = paint.textureDepth();
         editor.spriteDepth(depth);
@@ -127,7 +129,7 @@ public class PaintManager implements Consumer<Polygon> {
             do {
                 final PaintMethod painter = PainterFactory.getPainter(modelState, surface, paint, i);
                 if(painter != null) {
-                    painter.paintQuads(stream, modelState, surface, paint, i);
+                    painter.paintQuads(mesh, modelState, surface, paint, i);
                 } else {
                     //TODO: put back
                     //assert false : "Missing paint method";
@@ -145,7 +147,7 @@ public class PaintManager implements Consumer<Polygon> {
             }
         } while (editor.next());
 
-        stream.clear();
+        mesh.clear();
     }
 
     private void polyToMesh(MutablePolygon poly, QuadEmitter emitter) {
