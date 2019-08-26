@@ -67,124 +67,67 @@ class CsgPolyRecombinator {
     private void handleOutput(CsgMeshhImpl input, int polyAddress, WritableMesh output) {
         Polygon polyA = input.polyA(polyAddress);
         
-        final int vCount = polyA.vertexCount();
-        
-        // debug colors
-//        int color = (ThreadLocalRandom.current().nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000;
-//        for(int i = 0; i < vCount; i++) {
-//            input.editor(polyAddress).spriteColor(i, 0, color);
-//        }
-            
-        // check for adjacent vertices
-//        for(int i = 0; i < vCount - 1; i++) {
-//            if(polyA.getPos(i).isCsgEqual(polyA.getPos(i + 1))) {
-//                System.out.println("boop");
-//            }
-//        }
-        
-        final boolean isFlipped = input.isInverted();
-        boolean needsSplit = vCount > 4 || (vCount == 4 && !polyA.isConvex());
-
-        if (!(isFlipped || needsSplit)) {
-            output.appendCopy(polyA);
-            return;
-        }
-
         // invert if needed
-        if (isFlipped) {
+        if (input.isInverted()) {
             polyAddress = input.writerAddress();
             input.setVertexCount(polyA.vertexCount());
             final MutablePolygon writer = input.writer();
             writer.copyFrom(polyA, true);
             writer.flip();
+            
             input.appendRaw();
-
+            
             // output recombined should be terminal op, but delete original for consistency
             polyA.delete();
             polyA.moveTo(polyAddress);
         }
 
-        // Done unless split to quads or tris is needed
-        if (!needsSplit) {
+        if (polyA.isConvex()) {
             output.appendCopy(polyA);
-            return;
-        }
-
-        // if need split and 4 vertices, implies convex, thus need to split to tris
-        if (vCount == 4) {
-            handleConvex(polyA, output);
-            return;
-        }
-
-        // higher order poly - split to quads or tris
-        int head = vCount - 1;
-        int tail = 2;
-        MutablePolygon writer = output.writer();
-        output.setVertexCount(4);
-        writer.copyFrom(polyA, false);
-        writer.copyVertexFrom(0, polyA, head);
-        writer.copyVertexFrom(1, polyA, 0);
-        writer.copyVertexFrom(2, polyA, 1);
-        writer.copyVertexFrom(3, polyA, tail);
-        output.append();
-
-        while (head - tail > 1) {
-            int size = head - tail == 2 ? 3 : 4;
-            output.setVertexCount(size);
-            writer.copyFrom(polyA, false);
-            writer.copyVertexFrom(0, polyA, head);
-            writer.copyVertexFrom(1, polyA, tail);
-            writer.copyVertexFrom(2, polyA, ++tail);
+        } else {
+            // concave - split to quads or tris
+            final int vCount = polyA.vertexCount();
             
-            if (size == 3) {
-                output.append();
-            } else {
-                writer.copyVertexFrom(3, polyA, --head);
-                if (writer.isConvex()) {
+            int head = vCount - 1;
+            int tail = 0;
+            final MutablePolygon writer = output.writer();
+            while (head - tail > 1) {
+                int size = head - tail == 2 ? 3 : 4;
+                output.setVertexCount(size);
+                writer.copyFrom(polyA, false);
+                writer.copyVertexFrom(0, polyA, head);
+                writer.copyVertexFrom(1, polyA, tail);
+                writer.copyVertexFrom(2, polyA, ++tail);
+                
+                if (size == 3) {
                     output.append();
                 } else {
-                    // Oops - output is convex so backtrack and do two tris instead.
-                    // Can't call handleConvex because already using writer
-                    tail--;
-                    head++;
+                    writer.copyVertexFrom(3, polyA, --head);
+                    if (writer.isConvex()) {
+                        output.append();
+                    } else {
+                        // Oops - output is convex so backtrack and do two tris instead.
+                        // Can't call handleConvex because already using writer
+                        tail--;
+                        head++;
 
-                    output.setVertexCount(3);
-                    writer.copyFrom(polyA, false);
-                    writer.copyVertexFrom(0, polyA, head);
-                    writer.copyVertexFrom(1, polyA, tail);
-                    writer.copyVertexFrom(2, polyA, ++tail);
-                    output.append();
+                        output.setVertexCount(3);
+                        writer.copyFrom(polyA, false);
+                        writer.copyVertexFrom(0, polyA, head);
+                        writer.copyVertexFrom(1, polyA, tail);
+                        writer.copyVertexFrom(2, polyA, ++tail);
+                        output.append();
 
-                    output.setVertexCount(3);
-                    writer.copyFrom(polyA, false);
-                    writer.copyVertexFrom(0, polyA, head);
-                    writer.copyVertexFrom(1, polyA, tail);
-                    writer.copyVertexFrom(2, polyA, --head);
-                    output.append();
+                        output.setVertexCount(3);
+                        writer.copyFrom(polyA, false);
+                        writer.copyVertexFrom(0, polyA, head);
+                        writer.copyVertexFrom(1, polyA, tail);
+                        writer.copyVertexFrom(2, polyA, --head);
+                        output.append();
+                    }
                 }
             }
         }
-    }
-
-    private void handleConvex(Polygon quad, WritableMesh output) {
-        assert quad.vertexCount() == 4;
-
-        assert !quad.isConvex();
-
-        MutablePolygon writer = output.writer();
-        output.setVertexCount(3);
-        writer.copyFrom(quad, false);
-        writer.copyVertexFrom(0, quad, 3);
-        writer.copyVertexFrom(1, quad, 0);
-        writer.copyVertexFrom(2, quad, 1);
-        output.append();
-
-        output.setVertexCount(3);
-        writer.copyFrom(quad, false);
-        writer.copyVertexFrom(0, quad, 3);
-        writer.copyVertexFrom(1, quad, 1);
-        writer.copyVertexFrom(2, quad, 2);
-        output.append();
     }
 
     /**
@@ -415,10 +358,11 @@ class CsgPolyRecombinator {
         for (int a = 0; a < aSize; a++) {
 
             if (a == aFirstSharedIndex) {
-                // if vertex is on the same line as prev and next vertex, leave it out.
-                if (!Vec3f.isPointOnLine(polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex), polyA.z(aFirstSharedIndex), polyA.x(aBeforeSharedIndex),
-                        polyA.y(aBeforeSharedIndex), polyA.z(aBeforeSharedIndex), polyB.x(bAfterSharedIndex), polyB.y(bAfterSharedIndex),
-                        polyB.z(bAfterSharedIndex))) {
+                //  if vertex is on the same line as prev and next vertex, leave it out.
+                if (!Vec3f.isPointOnLine(
+                        polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex), polyA.z(aFirstSharedIndex), 
+                        polyA.x(aBeforeSharedIndex), polyA.y(aBeforeSharedIndex), polyA.z(aBeforeSharedIndex),
+                        polyB.x(bAfterSharedIndex), polyB.y(bAfterSharedIndex), polyB.z(bAfterSharedIndex))) {
                     joinedVertex.add(a + 1);
                 }
 
@@ -432,9 +376,10 @@ class CsgPolyRecombinator {
                 }
             } else if (a == aSecondSharedIndex) {
                 // if vertex is on the same line as prev and next vertex, leave it out
-                if (!Vec3f.isPointOnLine(polyA.x(aSecondSharedIndex), polyA.y(aSecondSharedIndex), polyA.z(aSecondSharedIndex), polyA.x(aAfterSharedIndex),
-                        polyA.y(aAfterSharedIndex), polyA.z(aAfterSharedIndex), polyB.x(bBeforeSharedIndex), polyB.y(bBeforeSharedIndex),
-                        polyB.z(bBeforeSharedIndex))) {
+                if (!Vec3f.isPointOnLine(
+                        polyA.x(aSecondSharedIndex), polyA.y(aSecondSharedIndex), polyA.z(aSecondSharedIndex),
+                        polyA.x(aAfterSharedIndex), polyA.y(aAfterSharedIndex), polyA.z(aAfterSharedIndex),
+                        polyB.x(bBeforeSharedIndex), polyB.y(bBeforeSharedIndex), polyB.z(bBeforeSharedIndex))) {
                     joinedVertex.add(a + 1);
                 }
             } else {
@@ -602,7 +547,8 @@ class CsgPolyRecombinator {
         }
 
         final int limit = polys.size();
-        for (int i = 0; i < limit; i++)
+        for (int i = 0; i < limit; i++) {
             handleOutput(input, polys.getInt(i), output);
+        }
     }
 }
