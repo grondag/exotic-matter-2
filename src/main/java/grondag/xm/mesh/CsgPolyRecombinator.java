@@ -149,7 +149,7 @@ class CsgPolyRecombinator {
             return;
         }
         
-        // TODO: debug option to disable face recombination
+//        // TODO: debug option to disable face recombination
 //        if(true) {
 //            handleOutput(input, output);
 //            return;

@@ -7,6 +7,7 @@ Thumbs.db
 
 # eclipse
 bin
+doc
 *.launch
 .settings
 .metadata
