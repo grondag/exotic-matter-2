@@ -88,9 +88,16 @@ public class CsgHelper {
 //            } while (editor.next());
 //        }
         
-        output.splitAsNeeded();
-        XmMesh result = output.toReader();
+        // PERF: defer each operation until we know if it is the last operation
+        // this would save the step of building a BSP tree on the output mesh
+        // only to recombine it for terminal operation
+        WritableMesh target = XmMeshes.claimWritable();
+        
+        output.outputRecombinedQuads(target);
         output.clear();
+        
+        target.splitAsNeeded();
+        XmMesh result = target.releaseToReader();
         hasOutput = false;
         return result;
     }

@@ -44,7 +44,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
  * <p>
  */
 @API(status = INTERNAL)
-class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
+class CsgMeshImpl extends MutableMeshImpl implements CsgMesh {
     /**
      * Ensures poly tags for recombination are globally unique. <br>
      * Could probably use stream address, but to be certain would have to
@@ -485,10 +485,10 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
     @Override
     public void clipTo(CsgMesh clippingStream) {
         assert isComplete;
-        clip(this, (CsgMeshhImpl)clippingStream);
+        clip(this, (CsgMeshImpl)clippingStream);
     }
 
-    private static void clip(CsgMeshhImpl targetStream, CsgMeshhImpl clippingStream) {
+    private static void clip(CsgMeshImpl targetStream, CsgMeshImpl clippingStream) {
         final StreamBackedPolygon reader = targetStream.reader;
         final int saveReadAddress = reader.baseAddress;
 
@@ -514,7 +514,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
      * 
      * Static to avoid ambiguity/confusion on which stream is being used for what.
      */
-    private static void clipPoly(CsgMeshhImpl targetStream, CsgMeshhImpl clippingStream, int polyAddress) {
+    private static void clipPoly(CsgMeshImpl targetStream, CsgMeshImpl clippingStream, int polyAddress) {
         IntArrayList stack = STACK.get();
         assert stack.isEmpty();
         int nodeAddress = 0;
@@ -529,7 +529,7 @@ class CsgMeshhImpl extends MutableMeshImpl implements CsgMesh {
 
     }
 
-    private static void clipPolyInner(IntArrayList stack, CsgMeshhImpl targetStream, final CsgMeshhImpl clippingStream, final int polyAddress,
+    private static void clipPolyInner(IntArrayList stack, CsgMeshImpl targetStream, final CsgMeshImpl clippingStream, final int polyAddress,
             int nodeAddress) {
         final StreamBackedPolygon polyB = targetStream.polyB;
         polyB.moveTo(polyAddress);

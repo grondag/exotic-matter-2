@@ -38,7 +38,7 @@ public class XmMeshesImpl {
 
     private static final ArrayBlockingQueue<WritableMeshImpl> writables = new ArrayBlockingQueue<>(256);
     private static final ArrayBlockingQueue<MutableMeshImpl> mutables = new ArrayBlockingQueue<>(128);
-    private static final ArrayBlockingQueue<CsgMeshhImpl> csgStreams = new ArrayBlockingQueue<>(128);
+    private static final ArrayBlockingQueue<CsgMeshImpl> csgStreams = new ArrayBlockingQueue<>(128);
     private static final ArrayBlockingQueue<ReadOnlyMeshImpl> readables = new ArrayBlockingQueue<>(256);
 
     public static WritableMesh claimWritable() {
@@ -110,21 +110,21 @@ public class XmMeshesImpl {
         readables.offer(freeStream);
     }
 
-    public static CsgMeshhImpl claimCsg() {
-        CsgMeshhImpl result = csgStreams.poll();
+    public static CsgMeshImpl claimCsg() {
+        CsgMeshImpl result = csgStreams.poll();
         if (result == null)
-            result = new CsgMeshhImpl();
+            result = new CsgMeshImpl();
         result.prepare();
         return result;
     }
 
     public static CsgMesh claimCsg(XmMesh stream) {
-        CsgMeshhImpl result = claimCsg();
+        CsgMeshImpl result = claimCsg();
         result.appendAll(stream);
         return result;
     }
 
-    static void release(CsgMeshhImpl freeStream) {
+    static void release(CsgMeshImpl freeStream) {
         csgStreams.offer(freeStream);
     }
 }

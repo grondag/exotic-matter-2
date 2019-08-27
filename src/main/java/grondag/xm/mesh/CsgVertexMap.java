@@ -217,11 +217,23 @@ class CsgVertexMap {
     }
     
     /**
-     * Moves cursor to first potential match.
+     * Finds matches and moves cursor to first potential match.
      * @return true if any potential matches remain
      */
     boolean first() {
         sortClusterMap();
+        clusterSearchIndex = 0;
+        matchIndex = NONE;
+        populateMatches();
+        return hasValue();
+    }
+    
+    /**
+     * Returns cursor to first position per last call to {@link #first()}. 
+     * CAUTION: only call after {@link #first()} returns true
+     * and if no changes have been made since. Otherwise will fail unpredictably.
+     */
+    boolean unsafeRetryFirst() {
         clusterSearchIndex = 0;
         matchIndex = NONE;
         populateMatches();
