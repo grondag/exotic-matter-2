@@ -23,8 +23,7 @@ import org.apiguardian.api.API.Status;
 import grondag.fermion.modkeys.api.ModKeys;
 import grondag.fermion.varia.Useful;
 import grondag.xm.XmConfig;
-import grondag.xm.api.block.SpeciesHelper;
-import grondag.xm.api.block.SpeciesMode;
+import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.orientation.HorizontalFace;
@@ -179,13 +178,15 @@ public abstract class PlacementHandler {
      * {@link BlockOrientationHandler#configureStackForPlacement(ItemStack, PlayerEntity, PlacementPosition)}
      * when spec was constructed.
      */
+    @SuppressWarnings("unused")
     public static ItemStack cubicPlacementStack(SingleStackPlacementSpec specBuilder) {
         final ItemStack stack = specBuilder.placedStack().copy();
         final PlacementPosition pPos = specBuilder.placementPosition();
         @SuppressWarnings("rawtypes")
         final PrimitiveModelState.Mutable modelState = XmItem.modelState(stack);
         if (modelState != null && modelState.hasSpecies()) {
-            final int species = speciesForPlacement(specBuilder.player(), pPos.onPos, pPos.onFace, stack, specBuilder.region());
+            //NOTE: stubbed out
+            final int species = 0; //speciesForPlacement(specBuilder.player(), pPos.onPos, pPos.onFace, stack, specBuilder.region());
             if (species >= 0) {
                 modelState.species(species);
                 XmStackHelper.setStackModelState(stack, modelState);
@@ -199,6 +200,7 @@ public abstract class PlacementHandler {
      * Determines species that should be used for placing a region according to
      * current stack settings.
      */
+    @SuppressWarnings("unused")
     public static int speciesForPlacement(PlayerEntity player, BlockPos onPos, Direction onFace, ItemStack stack, grondag.fermion.position.BlockRegion region) {
         // ways this can happen:
         // have a species we want to match because we clicked on a face
@@ -225,13 +227,13 @@ public abstract class PlacementHandler {
 
         World world = player.world;
 
-        @SuppressWarnings("unused")
         BlockState withBlockState = item.getPlacementBlockStateFromStack(stack);
 
         // if no region provided or species mode used clicked block then
         // result is based on the clicked face
         if (region == null || ((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
-            int clickedSpecies = SpeciesHelper.getJoinableSpecies(world, onPos, null); //withBlockState, withModelState);
+            // NOTE: stubbed out
+            int clickedSpecies = 0; //SpeciesHelper.joinableSpecies(world, onPos, null); //withBlockState, withModelState);
 
             // if no region, then return something different than what is clicked,
             // unless didn't get a species - will return 0 in that case.
@@ -249,7 +251,8 @@ public abstract class PlacementHandler {
         int checkCount = 0;
 
         for (BlockPos pos : region.adjacentPositions()) {
-            int adjacentSpecies = SpeciesHelper.getJoinableSpecies(world, pos, null); //withBlockState, withModelState);
+            //NOTE: stubbed out
+            int adjacentSpecies = 0; //SpeciesHelper.joinableSpecies(world, pos, null); //withBlockState, withModelState);
             if (adjacentSpecies >= 0 && adjacentSpecies <= 15)
                 adjacentCount[adjacentSpecies]++;
             if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
@@ -257,7 +260,8 @@ public abstract class PlacementHandler {
         }
 
         for (BlockPos pos : region.surfacePositions()) {
-            int interiorSpecies = SpeciesHelper.getJoinableSpecies(world, pos, null); //withBlockState, withModelState);
+            // NOTE: stubbed out
+            int interiorSpecies = 0;//SpeciesHelper.joinableSpecies(world, pos, null); //withBlockState, withModelState);
             if (interiorSpecies >= 0 && interiorSpecies <= 15)
                 surfaceCount[interiorSpecies]++;
             if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)

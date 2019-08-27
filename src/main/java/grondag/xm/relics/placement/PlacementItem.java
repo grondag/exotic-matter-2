@@ -23,7 +23,7 @@ import grondag.fermion.bits.EnumBitSet;
 import grondag.fermion.position.PackedBlockPos;
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
-import grondag.xm.api.block.SpeciesMode;
+import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.orientation.ClockwiseRotation;

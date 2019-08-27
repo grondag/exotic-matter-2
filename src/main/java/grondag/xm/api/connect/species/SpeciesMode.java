@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.block;
+package grondag.xm.api.connect.species;
 
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;

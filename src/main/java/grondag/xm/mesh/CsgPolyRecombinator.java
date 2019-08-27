@@ -18,8 +18,6 @@ package grondag.xm.mesh;
 import static grondag.xm.api.mesh.polygon.PolyHelper.epsilonEquals;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.WritableMesh;

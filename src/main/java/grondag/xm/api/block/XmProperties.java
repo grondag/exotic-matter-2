@@ -26,7 +26,6 @@ import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.orientation.HorizontalFace;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -35,8 +34,6 @@ import net.minecraft.util.math.Direction.Axis;
 public class XmProperties {
     public static final DirectionProperty X_ORTHO_FACING = DirectionProperty.of("xm_x_facing", d -> d.getAxis() != Axis.X);
     public static final DirectionProperty Z_ORTHO_FACING = DirectionProperty.of("xm_y_facing", d -> d.getAxis() != Axis.Z);
-    public static final IntProperty SPECIES = IntProperty.of("xm_species", 0, 15);
-    
     public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
     public static final EnumProperty<HorizontalFace> HORIZONTAL_FACE = EnumProperty.of("xm_horiz_face", HorizontalFace.class);
     public static final DirectionProperty FACE = Properties.FACING;
@@ -77,12 +74,6 @@ public class XmProperties {
     public static SimpleModelStateMap.Modifier ROTATION_MODIFIER = (modelState, blockState) -> {
         final CubeRotation edge = blockState.get(ROTATION);
         modelState.orientationIndex(edge.ordinal());
-        return modelState;
-    };
-    
-    public static SimpleModelStateMap.Modifier SPECIES_MODIFIER = (modelState, blockState) -> {
-        final int species = blockState.get(SPECIES);
-        modelState.species(species);
         return modelState;
     };
 }

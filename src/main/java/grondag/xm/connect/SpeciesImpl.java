@@ -13,46 +13,30 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.block;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+package grondag.xm.connect;
 
-import java.util.function.Predicate;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
 import grondag.fermion.position.BlockRegion;
 import grondag.xm.XmConfig;
+import grondag.xm.api.connect.species.SpeciesFunction;
+import grondag.xm.api.connect.species.SpeciesMode;
+import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.modelstate.ModelState;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-@API(status = EXPERIMENTAL)
-public class SpeciesHelper {
-    private  SpeciesHelper() {}
+@API(status = INTERNAL)
+public class SpeciesImpl {
+    private SpeciesImpl() {}
     
-    /**
-     * Returns species at position if it could join with the given block/modelState
-     * Returns -1 if no XM block at position or if join not possible.
-     */
-    public static int getJoinableSpecies(BlockView world, BlockPos pos, Predicate<BlockState> joinTest) {
-        BlockState state = world.getBlockState(pos);
-        if(joinTest.test(state)) {
-            return state.get(XmProperties.SPECIES);
-        } else {
-            return -1;
-        }
-    }
-    
-    public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, Predicate<BlockState> joinTest) {
-        return speciesForPlacement(world, onPos, onFace, mode, joinTest, null);
-    }
-    
-    public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, Predicate<BlockState> joinTest, BlockRegion region) {
+    public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
         // ways this can happen:
         // have a species we want to match because we clicked on a face
         // break with everything - need to know adjacent species
@@ -63,7 +47,7 @@ public class SpeciesHelper {
         // if no region provided or species mode used clicked block then
         // result is based on the clicked face
         if (((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
-            int clickedSpecies = getJoinableSpecies(world, onPos, joinTest);
+            int clickedSpecies = func.species(world, onPos);
 
             if (clickedSpecies >= 0)
                 return clickedSpecies;
@@ -80,7 +64,7 @@ public class SpeciesHelper {
         int checkCount = 0;
 
         for (BlockPos pos : region.adjacentPositions()) {
-            int adjacentSpecies = SpeciesHelper.getJoinableSpecies(world, pos, joinTest);
+            int adjacentSpecies = func.species(world, pos);
             if (adjacentSpecies >= 0 && adjacentSpecies <= 15)
                 adjacentCount[adjacentSpecies]++;
             if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
@@ -88,7 +72,7 @@ public class SpeciesHelper {
         }
 
         for (BlockPos pos : region.surfacePositions()) {
-            int interiorSpecies = SpeciesHelper.getJoinableSpecies(world, pos, joinTest);
+            int interiorSpecies = func.species(world, pos);
             if (interiorSpecies >= 0 && interiorSpecies <= 15)
                 surfaceCount[interiorSpecies]++;
             if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
@@ -136,14 +120,12 @@ public class SpeciesHelper {
     @SuppressWarnings("rawtypes")
     private static boolean blockAndSpeciesTest(BlockTestContext ctx) {
         return ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock()
-                && ctx.fromBlockState().get(XmProperties.SPECIES) == ctx.toBlockState().get(XmProperties.SPECIES);
+                && ctx.fromBlockState().get(SpeciesProperty.SPECIES) == ctx.toBlockState().get(SpeciesProperty.SPECIES);
     }
     
     @SuppressWarnings("rawtypes")
-    public static BlockTest SAME_BLOCK_AND_SPECIES = SpeciesHelper::blockAndSpeciesTest;
-        
+    private static final BlockTest SAME_BLOCK_AND_SPECIES = SpeciesImpl::blockAndSpeciesTest;
     
-    /** True when blocks are same block and same species property */
     @SuppressWarnings("unchecked")
     public static <T extends ModelState> BlockTest<T> sameBlockAndSpecies() {
         return SAME_BLOCK_AND_SPECIES;
