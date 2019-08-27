@@ -20,6 +20,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 @API(status = EXPERIMENTAL)
-public interface SimpleModelStateUpdate extends ModelStateUpdate<SimpleModelState.Mutable>{
+public interface SimpleModelStateUpdate extends ModelStateUpdate<MutableSimpleModelState>{
 
 }

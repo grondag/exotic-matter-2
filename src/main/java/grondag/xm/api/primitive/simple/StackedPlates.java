@@ -28,6 +28,7 @@ import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
+import grondag.xm.api.modelstate.MutableSimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
@@ -108,7 +109,7 @@ public class StackedPlates {
     * @param height  1-16
     * @param modelState
     */
-    public static void setHeight(int height, SimpleModelState.Mutable modelState) {
+    public static void setHeight(int height, MutableSimpleModelState modelState) {
         modelState.primitiveBits(MathHelper.clamp(height, 1, 16) - 1);
     }
 

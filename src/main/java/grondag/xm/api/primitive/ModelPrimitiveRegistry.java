@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.modelstate.MutablePrimitiveModelState;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import net.minecraft.nbt.CompoundTag;
@@ -31,15 +32,15 @@ import net.minecraft.util.PacketByteBuf;
 public interface ModelPrimitiveRegistry {
     static ModelPrimitiveRegistry INSTANCE = ModelPrimitiveRegistryImpl.INSTANCE;
 
-    <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> boolean register(ModelPrimitive<R, W> primitive);
+    <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> boolean register(ModelPrimitive<R, W> primitive);
 
-    <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> ModelPrimitive<R, W> get(int primitiveIndex);
+    <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> ModelPrimitive<R, W> get(int primitiveIndex);
 
-    default <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> ModelPrimitive<R, W> get(Identifier primitiveId) {
+    default <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> ModelPrimitive<R, W> get(Identifier primitiveId) {
         return get(primitiveId.toString());
     }
 
-    <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> ModelPrimitive<R, W> get(String idString);
+    <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> ModelPrimitive<R, W> get(String idString);
 
     @SuppressWarnings("rawtypes")
     void forEach(Consumer<ModelPrimitive> consumer);
@@ -52,11 +53,11 @@ public interface ModelPrimitiveRegistry {
         return indexOf(primitiveId.toString());
     }
 
-    default <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> int indexOf(ModelPrimitive<R, W> primitive) {
+    default <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> int indexOf(ModelPrimitive<R, W> primitive) {
         return indexOf(primitive.id());
     }
     
-    <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> W fromTag(CompoundTag tag);
+    <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> W fromTag(CompoundTag tag);
     
-    <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> W fromBuffer(PacketByteBuf buf);
+    <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> W fromBuffer(PacketByteBuf buf);
 }

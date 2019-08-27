@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.modelstate.MutablePrimitiveModelState;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
@@ -44,7 +45,7 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
     }
 
     @Override
-    public synchronized <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> boolean register(ModelPrimitive<R, W> primitive) {
+    public synchronized <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> boolean register(ModelPrimitive<R, W> primitive) {
         boolean result = map.putIfAbsent(primitive.id().toString(), primitive) == null;
         if (result) {
             final int index = list.size();
@@ -56,13 +57,13 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> ModelPrimitive<R, W> get(int primitiveIndex) {
+    public <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> ModelPrimitive<R, W> get(int primitiveIndex) {
         return list.get(primitiveIndex);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>>  ModelPrimitive<R, W> get(String idString) {
+    public <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>>  ModelPrimitive<R, W> get(String idString) {
         return map.get(idString);
     }
 
@@ -82,7 +83,7 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
     }
 
     @Override
-    public <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> W fromTag(CompoundTag tag) {
+    public <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> W fromTag(CompoundTag tag) {
         ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
         if (shape == null) {
             return null;
@@ -91,7 +92,7 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
     }
 
     @Override
-    public <R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> W fromBuffer(PacketByteBuf buf) {
+    public <R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> W fromBuffer(PacketByteBuf buf) {
         ModelPrimitive<R, W> shape = get(buf.readVarInt());
         if (shape == null) {
             return null;

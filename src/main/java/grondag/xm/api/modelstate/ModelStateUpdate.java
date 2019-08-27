@@ -28,7 +28,7 @@ import net.minecraft.world.BlockView;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface ModelStateUpdate<T extends ModelState.Mutable> {
+public interface ModelStateUpdate<T extends MutableModelState> {
     void accept(T modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
     
     default T apply(T modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {

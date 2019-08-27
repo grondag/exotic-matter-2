@@ -19,7 +19,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.SimpleModelStateMap;
+import grondag.xm.api.modelstate.SimpleModelStateModifier;
 import grondag.xm.api.orientation.CubeCorner;
 import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.CubeRotation;
@@ -41,37 +41,37 @@ public class XmProperties {
     public static final EnumProperty<CubeEdge> EDGE = EnumProperty.of("xm_edge", CubeEdge.class);
     public static final EnumProperty<CubeRotation> ROTATION = EnumProperty.of("xm_rotation", CubeRotation.class);
     
-    public static SimpleModelStateMap.Modifier AXIS_MODIFIER = (modelState, blockState) -> {
+    public static SimpleModelStateModifier AXIS_MODIFIER = (modelState, blockState) -> {
         final Direction.Axis axis = blockState.get(AXIS);
         modelState.orientationIndex(axis.ordinal());
         return modelState;
     };
     
-    public static SimpleModelStateMap.Modifier HORIZONTAL_FACE_MODIFIER = (modelState, blockState) -> {
+    public static SimpleModelStateModifier HORIZONTAL_FACE_MODIFIER = (modelState, blockState) -> {
         final HorizontalFace face = blockState.get(HORIZONTAL_FACE);
         modelState.orientationIndex(face.ordinal());
         return modelState;
     };
     
-    public static SimpleModelStateMap.Modifier FACE_MODIFIER = (modelState, blockState) -> {
+    public static SimpleModelStateModifier FACE_MODIFIER = (modelState, blockState) -> {
         final Direction face = blockState.get(FACE);
         modelState.orientationIndex(face.ordinal());
         return modelState;
     };
     
-    public static SimpleModelStateMap.Modifier CORNER_MODIFIER = (modelState, blockState) -> {
+    public static SimpleModelStateModifier CORNER_MODIFIER = (modelState, blockState) -> {
         final CubeCorner corner = blockState.get(CORNER);
         modelState.orientationIndex(corner.ordinal());
         return modelState;
     };
     
-    public static SimpleModelStateMap.Modifier EDGE_MODIFIER = (modelState, blockState) -> {
+    public static SimpleModelStateModifier EDGE_MODIFIER = (modelState, blockState) -> {
         final CubeEdge edge = blockState.get(EDGE);
         modelState.orientationIndex(edge.ordinal());
         return modelState;
     };
     
-    public static SimpleModelStateMap.Modifier ROTATION_MODIFIER = (modelState, blockState) -> {
+    public static SimpleModelStateModifier ROTATION_MODIFIER = (modelState, blockState) -> {
         final CubeRotation edge = blockState.get(ROTATION);
         modelState.orientationIndex(edge.ordinal());
         return modelState;

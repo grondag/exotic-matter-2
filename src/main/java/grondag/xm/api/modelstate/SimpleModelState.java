@@ -28,12 +28,8 @@ import net.minecraft.block.enums.StairShape;
 import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
-public interface SimpleModelState extends PrimitiveModelState<SimpleModelState, SimpleModelState.Mutable>  {
-    public static interface Mutable extends SimpleModelState, PrimitiveModelState.Mutable<SimpleModelState, SimpleModelState.Mutable> {
-        
-    }
-    
-    SimpleModelStateMap.Modifier AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
+public interface SimpleModelState extends PrimitiveModelState<SimpleModelState, MutableSimpleModelState>  {
+    SimpleModelStateModifier AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
         Comparable<?> axis = blockState.getEntries().get(PillarBlock.AXIS);
         if (axis != null) {
             modelState.orientationIndex(PillarBlock.AXIS.getValueType().cast(axis).ordinal());
@@ -41,7 +37,7 @@ public interface SimpleModelState extends PrimitiveModelState<SimpleModelState, 
         return modelState;
     };
     
-    SimpleModelStateMap.Modifier STAIRS_FROM_BLOCKSTATE = (modelState, blockState) -> {
+    SimpleModelStateModifier STAIRS_FROM_BLOCKSTATE = (modelState, blockState) -> {
         final Comparable<?> faceProp = blockState.getEntries().get(StairsBlock.FACING);
         final Comparable<?> half = blockState.getEntries().get(StairsBlock.HALF);
         final Comparable<?> shapeProp = blockState.getEntries().get(StairsBlock.SHAPE);

@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmBlockStateAccess;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -43,9 +43,9 @@ public interface XmBlockState {
      * recursion when need to reference some static state ) information in order to
      * determine dynamic world state. Block tests are main use case for false.
      */
-    <T extends ModelState.Mutable> T getModelState(@Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
+    <T extends MutableModelState> T getModelState(@Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
     
-    default <T extends ModelState.Mutable> T defaultModelState() {
+    default <T extends MutableModelState> T defaultModelState() {
         return getModelState(null, null, false);
     }
     
@@ -62,7 +62,7 @@ public interface XmBlockState {
     }
 
     @SuppressWarnings("unchecked")
-    static @Nullable <T extends ModelState.Mutable> T modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
+    static @Nullable <T extends MutableModelState> T modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
         final XmBlockState xmState = get(fromState);
         return xmState == null ? null : (T) xmState.getModelState(blockView, pos, refresh);
     }

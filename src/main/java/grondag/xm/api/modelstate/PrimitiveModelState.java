@@ -20,7 +20,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
@@ -38,21 +37,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
-public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> extends ModelState {
-    
-    public static interface ModelStateFactory<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> {
-
-        W claim(ModelPrimitive<R, W> primitive);
-
-        W fromBuffer(ModelPrimitive<R, W> primitive, PacketByteBuf buf);
-
-        W fromTag(ModelPrimitive<R, W> primitive, CompoundTag tag);
-
-    }
+public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> extends ModelState {
     
     ModelStateFactory<R, W> factory();
 
@@ -70,9 +58,6 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
     @Override
     boolean equals(Object obj);
 
-    @Override
-    boolean equalsIncludeStatic(Object obj);
-
     /**
      * Returns true if visual elements and geometry match. Does not consider species
      * in matching.
@@ -86,7 +71,7 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
     boolean doesAppearanceMatch(ModelState other);
 
     @Override
-    void serializeNBT(CompoundTag tag);
+    void toTag(CompoundTag tag);
 
     void fromBytes(PacketByteBuf pBuff);
 
@@ -98,7 +83,7 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
     ModelPrimitive<R, W> primitive();
 
     @Override
-    void produceQuads(Consumer<Polygon> target);
+    void emitPolygons(Consumer<Polygon> target);
 
     @Override
     W geometricState();
@@ -151,56 +136,9 @@ public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W exte
     
     @Override
     @Environment(EnvType.CLIENT)
-    List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);
+    List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
 
     @Override
     @Environment(EnvType.CLIENT)
     void emitQuads(RenderContext context);
-    
-    public static interface Mutable<R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R, W>> extends PrimitiveModelState<R, W>, ModelState.Mutable {
-        @Override
-        W copyFrom(ModelState template);
-
-        @Override
-        R releaseToImmutable();
-        
-        @Override
-        W setStatic(boolean isStatic);
-
-        W paint(int surfaceIndex, int paintIndex);
-
-        W paint(int surfaceIndex, XmPaint paint);
-        
-        W paint(XmSurface surface, XmPaint paint);
-
-        W paint(XmSurface surface, int paintIndex);
-
-        W paintAll(XmPaint paint);
-
-        W paintAll(int paintIndex);
-
-        W posX(int index);
-
-        W posY(int index);
-
-        W posZ(int index);
-
-        W pos(BlockPos pos);
-        
-        W species(int species);
-
-        W orientationIndex(int index);
-
-        W cornerJoin(CornerJoinState join);
-
-        W simpleJoin(SimpleJoinState join);
-
-        W masonryJoin(SimpleJoinState join);
-        
-        W primitiveBits(int bits);
-
-        <T> T applyAndRelease(Function<ModelState, T> func);
-        
-        W apply(Consumer<W> consumer);
-    }
 }

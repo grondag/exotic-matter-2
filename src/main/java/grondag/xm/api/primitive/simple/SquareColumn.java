@@ -34,6 +34,7 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.ModelStateFlags;
+import grondag.xm.api.modelstate.MutableSimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.FaceEdge;
 import grondag.xm.api.orientation.OrientationType;
@@ -104,7 +105,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
     public static final SquareColumn INSTANCE = new SquareColumn(Xm.idString("column_square"));
 
     @Override
-    protected void updateDefaultState(SimpleModelState.Mutable modelState) {
+    protected void updateDefaultState(MutableSimpleModelState modelState) {
         setCutCount(3, modelState);
         setCutsOnEdge(true, modelState);
     }
@@ -541,7 +542,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
      * If true, cuts in shape are on the block boundary. Saves value in static shape
      * bits in model state
      */
-    public static void setCutsOnEdge(boolean areCutsOnEdge, SimpleModelState.Mutable modelState) {
+    public static void setCutsOnEdge(boolean areCutsOnEdge, MutableSimpleModelState modelState) {
         modelState.primitiveBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, modelState.primitiveBits()));
     }
 
@@ -557,7 +558,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
      * Number of cuts that appear on each face of model. Saves value in static shape
      * bits in model state
      */
-    public static void setCutCount(int cutCount, SimpleModelState.Mutable modelState) {
+    public static void setCutCount(int cutCount, MutableSimpleModelState modelState) {
         modelState.primitiveBits(STATE_CUT_COUNT.setValue(cutCount, modelState.primitiveBits()));
     }
 
@@ -566,8 +567,8 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     @Override
-    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
-        final SimpleModelState.Mutable result = this.newState();
+    public MutableSimpleModelState geometricState(SimpleModelState fromState) {
+        final MutableSimpleModelState result = this.newState();
         return result;
     }
 

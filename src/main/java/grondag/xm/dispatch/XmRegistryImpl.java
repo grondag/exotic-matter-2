@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.modelstate.WorldToModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -36,7 +36,7 @@ public class XmRegistryImpl {
     private XmRegistryImpl() {
     }
     
-    public static void register(Block block, Function<BlockState, ? extends WorldToModelState<?>> modelFunctionMap, Function<ItemStack, ModelState.Mutable> itemModelFunction) {
+    public static void register(Block block, Function<BlockState, ? extends WorldToModelState<?>> modelFunctionMap, Function<ItemStack, MutableModelState> itemModelFunction) {
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
                 // TODO: localize
@@ -54,9 +54,9 @@ public class XmRegistryImpl {
         }
     }
     
-    public static void register(Item item, Function<ItemStack, ModelState.Mutable> modelFunction) {
+    public static void register(Item item, Function<ItemStack, MutableModelState> modelFunction) {
         final XmItemAccess access = (XmItemAccess)item;
-        final Function<ItemStack, ModelState.Mutable> oldFunc = access.xm_modelStateFunc();
+        final Function<ItemStack, MutableModelState> oldFunc = access.xm_modelStateFunc();
         if(oldFunc != null) {
             if(oldFunc != modelFunction) {
                 Xm.LOG.warn(String.format("[%s] Item %s already associated with a model function. Skipping.", Xm.MODID, item.toString()));

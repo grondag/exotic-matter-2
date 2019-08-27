@@ -29,8 +29,8 @@ import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.DirectionHelper;
 import grondag.xm.api.collision.CollisionDispatcher;
-import grondag.xm.api.modelstate.SimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelStateMap;
+import grondag.xm.api.modelstate.MutableSimpleModelState;
+import grondag.xm.api.modelstate.SimpleModelStateModifier;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.primitive.simple.Stair;
 import net.fabricmc.api.EnvType;
@@ -76,10 +76,10 @@ public abstract class StairLike extends Block implements Waterloggable {
     protected final Direction downDirection;
     protected final Axis leftRightAxis;
     protected final Axis frontBackAxis;
-    protected final Supplier<SimpleModelState.Mutable> modelStateFactory;
+    protected final Supplier<MutableSimpleModelState> modelStateFactory;
     
     
-    public StairLike(BlockState blockState, Settings settings, Supplier<SimpleModelState.Mutable> modelStateFactory) {
+    public StairLike(BlockState blockState, Settings settings, Supplier<MutableSimpleModelState> modelStateFactory) {
         super(settings);
         
         final Axis axis = axis();
@@ -311,7 +311,7 @@ public abstract class StairLike extends Block implements Waterloggable {
         return block instanceof StairLike && ((StairLike)block).axis() == axis();
     }
 
-    public static StairLike ofAxisY(BlockState blockState, Settings settings, Supplier<SimpleModelState.Mutable> modelStateFactory) {
+    public static StairLike ofAxisY(BlockState blockState, Settings settings, Supplier<MutableSimpleModelState> modelStateFactory) {
         return new StairLike(blockState, settings, modelStateFactory) {
             @Override
             public Axis axis() {
@@ -320,7 +320,7 @@ public abstract class StairLike extends Block implements Waterloggable {
         };
     }
     
-    public static StairLike ofAxisX(BlockState blockState, Settings settings, Supplier<SimpleModelState.Mutable> modelStateFactory) {
+    public static StairLike ofAxisX(BlockState blockState, Settings settings, Supplier<MutableSimpleModelState> modelStateFactory) {
         return new StairLike(blockState, settings, modelStateFactory) {
             @Override
             public Axis axis() {
@@ -329,7 +329,7 @@ public abstract class StairLike extends Block implements Waterloggable {
         };
     }
     
-    public static StairLike ofAxisZ(BlockState blockState, Settings settings, Supplier<SimpleModelState.Mutable> modelStateFactory) {
+    public static StairLike ofAxisZ(BlockState blockState, Settings settings, Supplier<MutableSimpleModelState> modelStateFactory) {
         return new StairLike(blockState, settings, modelStateFactory) {
             @Override
             public Axis axis() {
@@ -338,7 +338,7 @@ public abstract class StairLike extends Block implements Waterloggable {
         };
     }
     
-    public static SimpleModelStateMap.Modifier MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
+    public static SimpleModelStateModifier MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
         final Block rawBlock = blockState.getBlock();
         if(!(rawBlock instanceof StairLike)) {
             return modelState;

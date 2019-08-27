@@ -30,6 +30,7 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.modelstate.MutableSimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
@@ -132,7 +133,7 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
     }
 
     @Override
-    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
+    public MutableSimpleModelState geometricState(SimpleModelState fromState) {
         return defaultState().mutableCopy();
     }
 

@@ -26,6 +26,7 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.modelstate.MutableSimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.orientation.OrientationType;
@@ -84,8 +85,8 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     }
 
     @Override
-    public SimpleModelState.Mutable geometricState(SimpleModelState fromState) {
-        SimpleModelState.Mutable result = this.newState();
+    public MutableSimpleModelState geometricState(SimpleModelState fromState) {
+        MutableSimpleModelState result = this.newState();
         if(fromState.primitive().orientationType(fromState) == OrientationType.ROTATION) {
             result.orientationIndex(fromState.orientationIndex());
             result.primitiveBits(fromState.primitiveBits());
@@ -107,7 +108,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         return (modelState.primitiveBits() & CORNER_FLAG) == CORNER_FLAG;
     }
 
-    public static void setCorner(boolean isCorner, SimpleModelState.Mutable modelState) {
+    public static void setCorner(boolean isCorner, MutableSimpleModelState modelState) {
         final int oldBits = modelState.primitiveBits();
         modelState.primitiveBits(isCorner ? oldBits | CORNER_FLAG : oldBits & ~CORNER_FLAG);
     }
@@ -126,7 +127,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
      * @param isCorner
      * @param modelState
      */
-    public static void setInsideCorner(boolean isCorner, SimpleModelState.Mutable modelState) {
+    public static void setInsideCorner(boolean isCorner, MutableSimpleModelState modelState) {
         final int oldBits = modelState.primitiveBits();
         modelState.primitiveBits(isCorner ? oldBits | INSIDE_FLAG : oldBits & ~INSIDE_FLAG);
     }

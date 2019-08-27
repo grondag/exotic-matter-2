@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.terrain.TerrainModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -51,7 +52,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
         if (staticVersion == null || state.getBlock() != this)
             return;
 
-        ModelState.Mutable myModelState = XmBlockState.modelState(state, world, pos, true);
+        MutableModelState myModelState = XmBlockState.modelState(state, world, pos, true);
         myModelState.setStatic(true);
         // TODO: transfer heat block state?
         world.setBlockState(pos, staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)), 7);

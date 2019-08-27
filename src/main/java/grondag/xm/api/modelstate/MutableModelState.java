@@ -13,28 +13,29 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.terrain;
+
+package grondag.xm.api.modelstate;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.MutablePrimitiveModelState;
-import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.terrain.TerrainState;
+import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
-public interface TerrainModelState extends PrimitiveModelState<TerrainModelState, TerrainModelState.Mutable>  {
+public interface MutableModelState extends ModelState {
+    void release();
+    
+    void retain();
+    
+    /**
+     * Copies what it can, excluding the primitive, and returns self.
+     */
+    MutableModelState copyFrom(ModelState template);
 
-    public static interface Mutable extends TerrainModelState, MutablePrimitiveModelState<TerrainModelState, TerrainModelState.Mutable> {
-        TerrainModelState.Mutable setTerrainStateKey(long terrainStateKey);
-        
-        TerrainModelState.Mutable setTerrainState(TerrainState flowState);
-    }
+    MutableModelState setStatic(boolean isStatic);
 
-    long getTerrainStateKey();
+    ModelState releaseToImmutable();
 
-    int getTerrainHotness();
-
-    TerrainState getTerrainState();
+    void fromBytes(PacketByteBuf pBuff);
 }

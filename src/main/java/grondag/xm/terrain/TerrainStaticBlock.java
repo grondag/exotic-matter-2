@@ -20,6 +20,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -39,8 +40,8 @@ public class TerrainStaticBlock extends Block implements IHotBlock {
 
     // PERF: sucks
     @SuppressWarnings("unused")
-    private static ModelState.Mutable adjustShape(ModelState stateIn, boolean isFiller) {
-        ModelState.Mutable result = isFiller ? TerrainSurface.FILLER.newState() : TerrainSurface.HEIGHT.newState();
+    private static MutableModelState adjustShape(ModelState stateIn, boolean isFiller) {
+        MutableModelState result = isFiller ? TerrainSurface.FILLER.newState() : TerrainSurface.HEIGHT.newState();
         result.copyFrom(stateIn);
         result.setStatic(true);
         return result;
@@ -98,7 +99,7 @@ public class TerrainStaticBlock extends Block implements IHotBlock {
         return dynamicVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE));
     }
 
-    public void setModelState(World world, BlockPos pos, ModelState.Mutable myModelState) {
+    public void setModelState(World world, BlockPos pos, MutableModelState myModelState) {
         // TODO Auto-generated method stub
         
     }

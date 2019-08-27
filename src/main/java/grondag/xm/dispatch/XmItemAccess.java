@@ -21,19 +21,18 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.ModelState.Mutable;
+import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.item.ItemStack;
 
 @API(status = INTERNAL)
 public interface XmItemAccess {
     @SuppressWarnings("unchecked")
-    public static <T extends Mutable> T getModelState(ItemStack stack) {
-        final Function<ItemStack, ModelState.Mutable> func = ((XmItemAccess)stack.getItem()).xm_modelStateFunc();
+    public static <T extends MutableModelState> T getModelState(ItemStack stack) {
+        final Function<ItemStack, MutableModelState> func = ((XmItemAccess)stack.getItem()).xm_modelStateFunc();
         return func == null ? null : (T) func.apply(stack);
     }
 
-    Function<ItemStack, Mutable> xm_modelStateFunc();
+    Function<ItemStack, MutableModelState> xm_modelStateFunc();
 
-    void xm_modelStateFunc(Function<ItemStack, Mutable> func);
+    void xm_modelStateFunc(Function<ItemStack, MutableModelState> func);
 }

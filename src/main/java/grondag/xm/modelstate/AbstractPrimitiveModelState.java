@@ -38,7 +38,10 @@ import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.ModelStateFactory;
 import grondag.xm.api.modelstate.ModelStateFlags;
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.modelstate.MutablePrimitiveModelState;
 import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.XmPaint;
@@ -69,9 +72,9 @@ import net.minecraft.util.math.MathHelper;
 @SuppressWarnings({"rawtypes", "unchecked"})
 @API(status = INTERNAL)
 public abstract class AbstractPrimitiveModelState
-    <V extends AbstractPrimitiveModelState<V, R, W>, R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> 
+    <V extends AbstractPrimitiveModelState<V, R, W>, R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> 
     extends AbstractModelState 
-    implements ModelState.Mutable, PrimitiveModelState<R, W>, PrimitiveModelState.Mutable<R, W>
+    implements MutableModelState, PrimitiveModelState<R, W>, MutablePrimitiveModelState<R, W>
 {
     
     ////////////////////////////////////////// BIT-WISE ENCODING //////////////////////////////////////////
@@ -106,7 +109,7 @@ public abstract class AbstractPrimitiveModelState
     
     ////////////////////////////////////////// FACTORY //////////////////////////////////////////
     
-    public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends PrimitiveModelState<R, W>, W extends PrimitiveModelState.Mutable<R,W>> 
+    public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> 
         implements ModelStateFactory<R, W> 
     {
         private final ArrayBlockingQueue<T> POOL = new ArrayBlockingQueue<>(4096);
@@ -311,18 +314,18 @@ public abstract class AbstractPrimitiveModelState
                 && doPaintsMatchNative(other);
     }
 
-    @Override
-    public final boolean equalsIncludeStatic(Object obj) {
-        if (this == obj)
-            return true;
-
-        if (obj instanceof AbstractPrimitiveModelState) {
-            AbstractPrimitiveModelState other = (AbstractPrimitiveModelState) obj;
-            return this.isStatic == other.isStatic && equalsInner(other);
-        } else {
-            return false;
-        }
-    }
+//    @Override
+//    public final boolean equalsIncludeStatic(Object obj) {
+//        if (this == obj)
+//            return true;
+//
+//        if (obj instanceof AbstractPrimitiveModelState) {
+//            AbstractPrimitiveModelState other = (AbstractPrimitiveModelState) obj;
+//            return this.isStatic == other.isStatic && equalsInner(other);
+//        } else {
+//            return false;
+//        }
+//    }
     
     /**
      * Returns true if visual elements and geometry match. Does not consider species
@@ -367,7 +370,7 @@ public abstract class AbstractPrimitiveModelState
     }
     
     @Override
-    public void serializeNBT(CompoundTag tag) {
+    public void toTag(CompoundTag tag) {
         tag.putIntArray(ModelStateTagHelper.NBT_MODEL_BITS, this.serializeToInts());
 
         // shape is serialized by name because registered shapes can change if
@@ -443,7 +446,7 @@ public abstract class AbstractPrimitiveModelState
     }
     
     @Override
-    public final void produceQuads(Consumer<Polygon> target) {
+    public final void emitPolygons(Consumer<Polygon> target) {
         primitive.produceQuads((R)this, target);
     }
     
@@ -773,7 +776,7 @@ public abstract class AbstractPrimitiveModelState
 
     @Override
     @Environment(EnvType.CLIENT)
-    public final List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand) {
+    public final List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand) {
         List<BakedQuad>[] lists = quadLists;
         if (lists == null) {
             lists = ModelHelper.toQuadLists(mesh());

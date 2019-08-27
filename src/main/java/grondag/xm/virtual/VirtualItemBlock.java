@@ -21,13 +21,13 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.PrimitiveModelState;
 import grondag.xm.relics.placement.FilterMode;
 import grondag.xm.relics.placement.PlacementItem;
 import grondag.xm.relics.placement.PlacementItemFeature;
 import grondag.xm.relics.placement.XmBlockItem;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutablePrimitiveModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -92,7 +92,7 @@ public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
         Item item = stack.getItem();
         if (item instanceof VirtualItemBlock) {
             @SuppressWarnings("rawtypes")
-            final PrimitiveModelState.Mutable modelState = XmItem.modelState(stack);
+            final MutablePrimitiveModelState modelState = XmItem.modelState(stack);
             if (modelState == null) {
                 return null;
             } else {

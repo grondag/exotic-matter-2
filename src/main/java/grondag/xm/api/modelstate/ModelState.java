@@ -36,15 +36,13 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public interface ModelState {
-    Mutable mutableCopy();
+    MutableModelState mutableCopy();
 
     /**
      * Persisted but not part of hash nor included in equals comparison. If true,
      * refreshFromWorldState does nothing.
      */
     boolean isStatic();
-
-    boolean equalsIncludeStatic(Object obj);
 
     boolean isImmutable();
 
@@ -56,13 +54,13 @@ public interface ModelState {
      */
     ModelState geometricState();
     
-    void serializeNBT(CompoundTag tag);
+    void toTag(CompoundTag tag);
 
     void toBytes(PacketByteBuf pBuff);
 
     default CompoundTag toTag() {
         CompoundTag result = new CompoundTag();
-        serializeNBT(result);
+        toTag(result);
         return result;
     }
 
@@ -70,10 +68,10 @@ public interface ModelState {
      * Output polygons must be quads or tris. Consumer MUST NOT hold references to
      * any of the polys received.
      */
-    void produceQuads(Consumer<Polygon> target);
+    void emitPolygons(Consumer<Polygon> target);
 
     @Environment(EnvType.CLIENT)
-    List<BakedQuad> getBakedQuads(BlockState state, Direction face, Random rand);
+    List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
 
     @Environment(EnvType.CLIENT)
     void emitQuads(RenderContext context);
@@ -83,27 +81,4 @@ public interface ModelState {
 
     @Environment(EnvType.CLIENT)
     int particleColorARBG();
-    
-    public static interface Mutable extends ModelState {
-        void release();
-        
-        void retain();
-        
-        /**
-         * Copies what it can, excluding the primitive, and returns self.
-         */
-        Mutable copyFrom(ModelState template);
-
-        Mutable setStatic(boolean isStatic);
-
-    //
-//        /**
-//         * See {@link PolyTransform#rotateFace(MutableModelState, Direction)}
-//         */
-//        Direction rotateFace(Direction face);
-
-        ModelState releaseToImmutable();
-
-        void fromBytes(PacketByteBuf pBuff);
-    }
 }

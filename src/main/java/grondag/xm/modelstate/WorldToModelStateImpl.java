@@ -31,6 +31,7 @@ import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.connect.world.ModelStateFunction;
+import grondag.xm.api.modelstate.MutableSimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelStateUpdate;
 import grondag.xm.api.modelstate.WorldToSimpleModelState;
@@ -63,8 +64,8 @@ public class WorldToModelStateImpl implements WorldToSimpleModelState {
     };
     
     @Override
-    public SimpleModelState.Mutable apply(BlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
-        SimpleModelState.Mutable modelState = defaultState.mutableCopy();
+    public MutableSimpleModelState apply(BlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        MutableSimpleModelState modelState = defaultState.mutableCopy();
         if(!modelState.isStatic() && refreshFromWorld) {
             
             BlockNeighbors neighbors = null;

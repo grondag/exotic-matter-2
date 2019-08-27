@@ -19,16 +19,17 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.modelstate.MutableSimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState;
 
 @API(status = INTERNAL)
-public class SimpleModelStateImpl extends AbstractPrimitiveModelState<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> implements SimpleModelState.Mutable {
+public class SimpleModelStateImpl extends AbstractPrimitiveModelState<SimpleModelStateImpl, SimpleModelState, MutableSimpleModelState> implements MutableSimpleModelState {
     public static final int MAX_SURFACES = 8;
     
-    public static final ModelStateFactoryImpl<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> FACTORY = new ModelStateFactoryImpl<>(SimpleModelStateImpl::new);
+    public static final ModelStateFactoryImpl<SimpleModelStateImpl, SimpleModelState, MutableSimpleModelState> FACTORY = new ModelStateFactoryImpl<>(SimpleModelStateImpl::new);
 
     @Override
-    public final ModelStateFactoryImpl<SimpleModelStateImpl, SimpleModelState, SimpleModelState.Mutable> factoryImpl() {
+    public final ModelStateFactoryImpl<SimpleModelStateImpl, SimpleModelState, MutableSimpleModelState> factoryImpl() {
         return FACTORY;
     }
 

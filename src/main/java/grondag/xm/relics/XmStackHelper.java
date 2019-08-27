@@ -60,6 +60,6 @@ public class XmStackHelper {
             ModelStateTagHelper.clearNBTValues(tag);
             return;
         }
-        modelState.serializeNBT(tag);
+        modelState.toTag(tag);
     }
 }

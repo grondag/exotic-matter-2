@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmRegistryImpl;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,7 +30,7 @@ import net.minecraft.item.ItemStack;
 public class XmItemRegistry {
     private XmItemRegistry() {}
 
-    public static void addItem(Item item, Function<ItemStack, ModelState.Mutable> modelFunction) {
+    public static void addItem(Item item, Function<ItemStack, MutableModelState> modelFunction) {
         XmRegistryImpl.register(item, modelFunction);
     }
 }

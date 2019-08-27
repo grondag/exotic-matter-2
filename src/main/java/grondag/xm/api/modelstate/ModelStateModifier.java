@@ -13,28 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.terrain;
+
+package grondag.xm.api.modelstate;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import javax.annotation.Nullable;
+
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.MutablePrimitiveModelState;
-import grondag.xm.api.modelstate.PrimitiveModelState;
-import grondag.xm.terrain.TerrainState;
+import grondag.xm.api.connect.world.BlockNeighbors;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 
 @API(status = EXPERIMENTAL)
-public interface TerrainModelState extends PrimitiveModelState<TerrainModelState, TerrainModelState.Mutable>  {
-
-    public static interface Mutable extends TerrainModelState, MutablePrimitiveModelState<TerrainModelState, TerrainModelState.Mutable> {
-        TerrainModelState.Mutable setTerrainStateKey(long terrainStateKey);
-        
-        TerrainModelState.Mutable setTerrainState(TerrainState flowState);
+@FunctionalInterface
+public interface ModelStateModifier<T, V extends MutableModelState> extends ModelStateUpdate<V> {
+    V apply(V modelState, T blockState);
+    
+    @Override
+    default void accept(V modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
+        apply(modelState, blockState);
     }
-
-    long getTerrainStateKey();
-
-    int getTerrainHotness();
-
-    TerrainState getTerrainState();
 }

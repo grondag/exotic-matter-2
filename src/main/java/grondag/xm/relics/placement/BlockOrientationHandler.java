@@ -21,7 +21,7 @@ import org.apiguardian.api.API.Status;
 import grondag.fermion.world.WorldHelper;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.MutablePrimitiveModelState;
 import grondag.xm.api.orientation.CubeCorner;
 import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.relics.XmStackHelper;
@@ -90,8 +90,8 @@ public class BlockOrientationHandler {
 
     private static void applyClosestOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
         // find closest instance, starting with block placed on
-        PrimitiveModelState.Mutable outputModelState = XmItem.modelState(stack);
-        PrimitiveModelState.Mutable closestModelState = null;
+        MutablePrimitiveModelState outputModelState = XmItem.modelState(stack);
+        MutablePrimitiveModelState closestModelState = null;
         World world = player.world;
         BlockState onBlockState = world.getBlockState(pPos.onPos);
 
@@ -116,7 +116,7 @@ public class BlockOrientationHandler {
                                 double distSq = location.squaredDistanceTo(pPos.onPos.getX() + 0.5 + x, pPos.onPos.getY() + 0.5 + y,
                                         pPos.onPos.getZ() + 0.5 + z);
                                 if (distSq < closestDistSq) {
-                                    PrimitiveModelState.Mutable testModelState = testBlockState.getModelState(world, testPos, true);
+                                    MutablePrimitiveModelState testModelState = testBlockState.getModelState(world, testPos, true);
                                     if (testModelState.primitive() == outputModelState.primitive()) {
                                         closestDistSq = distSq;
                                         closestModelState = testModelState;
@@ -156,7 +156,7 @@ public class BlockOrientationHandler {
     // FIX: pretty sure this doesn't work now
     /** handle hit-sensitive placement for stairs, wedges */
     public static void applyDynamicOrientation(ItemStack stack, PlayerEntity player, PlacementPosition pPos) {
-        PrimitiveModelState.Mutable outputModelState = XmItem.modelState(stack);
+        MutablePrimitiveModelState outputModelState = XmItem.modelState(stack);
 
         //TODO: remove or reimplement
 //        boolean isRotationDone = false;
@@ -231,17 +231,17 @@ public class BlockOrientationHandler {
     }
 
     /** updates model state from block state */
-    public static void axisModelState(BlockState stateIn, PrimitiveModelState.Mutable modelState) {
+    public static void axisModelState(BlockState stateIn, MutablePrimitiveModelState modelState) {
         // TODO: implement
     }
 
     /** updates model state from block state */
-    public static void faceModelState(BlockState stateIn, PrimitiveModelState.Mutable modelState) {
+    public static void faceModelState(BlockState stateIn, MutablePrimitiveModelState modelState) {
         // TODO: implement
     }
 
     /** updates model state from block state */
-    public static void edgeModelState(BlockState stateIn, PrimitiveModelState.Mutable modelState) {
+    public static void edgeModelState(BlockState stateIn, MutablePrimitiveModelState modelState) {
         final CubeEdge edge = (CubeEdge) stateIn.getEntries().get(EDGE_PROP);
         if (edge != null) {
           //TODO: remove or reimplement
@@ -252,7 +252,7 @@ public class BlockOrientationHandler {
     }
 
     /** updates model state from block state */
-    public static void cornerModelState(BlockState stateIn, PrimitiveModelState.Mutable modelState) {
+    public static void cornerModelState(BlockState stateIn, MutablePrimitiveModelState modelState) {
         // TODO: implement
     }
 }

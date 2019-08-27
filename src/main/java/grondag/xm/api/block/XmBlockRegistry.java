@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.modelstate.WorldToModelState;
 import grondag.xm.dispatch.XmRegistryImpl;
 import net.minecraft.block.Block;
@@ -36,7 +36,7 @@ public class XmBlockRegistry {
     public static void addBlockStates(
             Block block, 
             Function<BlockState, ? extends WorldToModelState<?>> modelFunctionMap,
-            Function<ItemStack, ModelState.Mutable> itemModelFunction)
+            Function<ItemStack, MutableModelState> itemModelFunction)
     {
         
         XmRegistryImpl.register(block, modelFunctionMap, itemModelFunction);
@@ -53,11 +53,11 @@ public class XmBlockRegistry {
         addBlockStates(block, (BlockState bs) -> modelFunction);
     }
     
-    public static <F extends WorldToModelState<?>> void addBlock(Block block, F blockModelFunction, Function<ItemStack, ModelState.Mutable> itemModelFunction) {
+    public static <F extends WorldToModelState<?>> void addBlock(Block block, F blockModelFunction, Function<ItemStack, MutableModelState> itemModelFunction) {
         addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
     }
     
-    public static final Function<ItemStack, ModelState.Mutable> DEFAULT_ITEM_MODEL_FUNCTION  = s -> {
+    public static final Function<ItemStack, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION  = s -> {
         if (s.getItem() instanceof BlockItem) {
             final BlockItem item = (BlockItem) s.getItem();
             XmBlockState xmState = XmBlockState.get(item);

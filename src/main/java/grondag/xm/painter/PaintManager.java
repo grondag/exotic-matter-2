@@ -65,7 +65,7 @@ public class PaintManager implements Consumer<Polygon> {
 
     private Mesh handlePaint(PrimitiveModelState modelState) {
         this.modelState = modelState;
-        modelState.produceQuads(this);
+        modelState.emitPolygons(this);
         return builder.build();
     }
 

@@ -28,8 +28,8 @@ import org.apiguardian.api.API;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.modelstate.MutableSimpleModelState;
 import grondag.xm.api.modelstate.SimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState.Mutable;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.SimplePrimitive.Builder;
@@ -154,8 +154,8 @@ public class SimplePrimitiveBuilderImpl {
         }
 
         @Override
-        public Mutable geometricState(SimpleModelState fromState) {
-            Mutable result = newState()
+        public MutableSimpleModelState geometricState(SimpleModelState fromState) {
+            MutableSimpleModelState result = newState()
                     .orientationIndex(fromState.orientationIndex())
                     .primitiveBits(fromState.primitiveBits());
             

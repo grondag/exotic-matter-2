@@ -67,7 +67,7 @@ class OptimizingBoxList implements Runnable {
     @Override
     public void run() {
         final OptimalBoxGenerator generator = boxGen;
-        modelState.produceQuads(generator);
+        modelState.emitPolygons(generator);
 
 //        generator.generateCalibrationOutput();
 

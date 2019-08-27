@@ -24,7 +24,7 @@ import grondag.xm.modelstate.WorldToModelStateImpl;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface WorldToSimpleModelState extends WorldToModelState<SimpleModelState.Mutable> {
+public interface WorldToSimpleModelState extends WorldToModelState<MutableSimpleModelState> {
     static WorldToSimpleModelState ofDefaultState(SimpleModelState defaultState) {
         return builder().withDefaultState(defaultState).build();
     }

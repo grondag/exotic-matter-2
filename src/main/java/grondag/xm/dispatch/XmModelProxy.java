@@ -29,7 +29,7 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -57,12 +57,12 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
     @Override
     public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand) {
         final XmBlockState xmState = XmBlockState.get(state);
-        return xmState == null ? Collections.emptyList() : XmDispatcher.INSTANCE.get(xmState.defaultModelState()).getBakedQuads(state, face, rand);
+        return xmState == null ? Collections.emptyList() : XmDispatcher.INSTANCE.get(xmState.defaultModelState()).bakedQuads(state, face, rand);
     }
 
     @Override
     public void emitBlockQuads(ExtendedBlockView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        final ModelState.Mutable modelState = XmBlockState.modelState(state, blockView, pos, true);
+        final MutableModelState modelState = XmBlockState.modelState(state, blockView, pos, true);
         if (modelState != null) {
             XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
         }
@@ -71,7 +71,7 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        final ModelState.Mutable modelState = XmItem.modelState(stack);
+        final MutableModelState modelState = XmItem.modelState(stack);
         if (modelState != null) {
             XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
         }

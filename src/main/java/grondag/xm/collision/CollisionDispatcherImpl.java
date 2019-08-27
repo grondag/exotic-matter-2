@@ -87,7 +87,7 @@ public class CollisionDispatcherImpl {
 //            final long start = System.nanoTime();
 
         final FastBoxGenerator generator = fastBoxGen.get();
-        key.produceQuads(generator);
+        key.emitPolygons(generator);
 
         // note that build clears for next use
         OptimizingBoxList result = new OptimizingBoxList(generator, key);
