@@ -211,11 +211,14 @@ public abstract class CSG {
         a.complete();
         b.complete();
 
+        //PERF: look at restoring - problem with former implementation
+        // is that it happens without face recombination
+        
         // A outside of B bounds can be passed directly to output
-        if (outputDisjointA(a, b, output)) {
-            // A and B bounds don't overlap, so output all of original b
-            output.appendAll(b);
-        } else {
+//        if (outputDisjointA(a, b, output)) {
+//            // A and B bounds don't overlap, so output all of original b
+//            b.outputRecombinedQuads(output);
+//        } else {
             // some potential overlap
             // add union of the overlapping bits,
             // which will include any parts of B that need to be included
@@ -227,7 +230,7 @@ public abstract class CSG {
 
             a.outputRecombinedQuads(output);
             b.outputRecombinedQuads(output);
-        }
+//        }
     }
 
     /**

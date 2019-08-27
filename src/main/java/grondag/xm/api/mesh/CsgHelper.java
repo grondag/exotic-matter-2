@@ -78,6 +78,17 @@ public class CsgHelper {
         }
         input.clear();
         temp.clear();
+        
+        // TODO: make config option?
+//        final Random r = ThreadLocalRandom.current();
+//        MutablePolygon editor = output.editor();
+//        if(editor.origin()) {
+//            do {
+//                editor.colorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
+//            } while (editor.next());
+//        }
+        
+        output.splitAsNeeded();
         XmMesh result = output.toReader();
         output.clear();
         hasOutput = false;

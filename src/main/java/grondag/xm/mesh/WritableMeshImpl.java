@@ -184,10 +184,6 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
             final int limit = this.writerAddress();
             do {
                 final int readAddress = reader.address();
-                // TODO: remove
-                if(reader.vertexCount() > 5) {
-                    System.out.println(reader.vertexCount());
-                }
                 splitIfNeeded(readAddress);
                 if(reader.address() != readAddress) {
                     reader.moveTo(readAddress);

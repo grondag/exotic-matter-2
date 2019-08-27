@@ -18,10 +18,6 @@ package grondag.xm.mesh;
 import static grondag.xm.api.mesh.polygon.PolyHelper.epsilonEquals;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.WritableMesh;
@@ -32,7 +28,6 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
 
-//PERF:  make this no-alloc.  
 @API(status = INTERNAL)
 class CsgPolyRecombinator {
     private static final ThreadLocal<CsgPolyRecombinator> POOL = ThreadLocal.withInitial(CsgPolyRecombinator::new);
@@ -52,6 +47,7 @@ class CsgPolyRecombinator {
     private final LongArrayList tagPolyPairs = new LongArrayList();
     private final IntArrayList polys = new IntArrayList();
     private final IntArrayList joinedVertex = new IntArrayList();
+    private final CsgVertexMap vertexMap = new CsgVertexMap();
     
     private CsgPolyRecombinator() {}
 
@@ -60,7 +56,10 @@ class CsgPolyRecombinator {
      * output.
      */
     private void handleOutput(CsgMeshhImpl input, int polyAddress, WritableMesh output) {
-        Polygon polyA = input.polyA(polyAddress);
+        final Polygon polyA = input.polyA(polyAddress);
+        if(polyA.isDeleted()) {
+            return;
+        }
         
         // invert if needed
         if (input.isInverted()) {
@@ -69,7 +68,6 @@ class CsgPolyRecombinator {
             final MutablePolygon writer = input.writer();
             writer.copyFrom(polyA, true);
             writer.flip();
-            
             input.appendRaw();
             
             // output recombined should be terminal op, but delete original for consistency
@@ -157,8 +155,7 @@ class CsgPolyRecombinator {
 
         final int count = tagPolyPairs.size();
 
-        // if no poly or a single poly at this node, nothing to combine
-        // so simply pass the input to the output
+        // if no poly or a single poly, nothing to combine, so pass the input to the output
         if (count < 2) {
             handleOutput(input, output);
             return;
@@ -258,29 +255,21 @@ class CsgPolyRecombinator {
 
     }
 
-    private int joinAtVertex(CsgMeshhImpl input, int addressA, int addressB, Vec3f v) {
-        Polygon polyA = input.polyA(addressA);
-        Polygon polyB = input.polyB(addressB);
-
-        final int aTargetIndex = polyA.indexOf(v);
-        // shouldn't happen, but won't work if does
-        if (aTargetIndex == Polygon.VERTEX_NOT_FOUND) {
+    private int joinAtVertex(CsgMeshhImpl input, int addressA, int indexA, int addressB, int indexB) {
+        final Polygon polyA = input.polyA(addressA);
+        final Polygon polyB = input.polyB(addressB);
+        if(polyA.isDeleted() || polyB.isDeleted()) {
             return Polygon.NO_LINK_OR_TAG;
         }
-
-        final int bTargetIndex = polyB.indexOf(v);
-        // shouldn't happen, but won't work if does
-        if (bTargetIndex == Polygon.VERTEX_NOT_FOUND) {
-            return Polygon.NO_LINK_OR_TAG;
-        }
-        
-        return joinAtVertex(input, polyA, aTargetIndex, polyB, bTargetIndex);
+        return joinAtVertex(input, polyA, indexA, polyB, indexB);
     }
 
     private int joinAtVertex(CsgMeshhImpl input, Polygon polyA, int aTargetIndex, Polygon polyB, int bTargetIndex) {
-        assert epsilonEquals(polyA.x(aTargetIndex), polyB.x(bTargetIndex));
-        assert epsilonEquals(polyA.y(aTargetIndex), polyB.y(bTargetIndex));
-        assert epsilonEquals(polyA.z(aTargetIndex), polyB.z(bTargetIndex));
+        if(! (epsilonEquals(polyA.x(aTargetIndex), polyB.x(bTargetIndex))
+               && epsilonEquals(polyA.y(aTargetIndex), polyB.y(bTargetIndex))
+               && epsilonEquals(polyA.z(aTargetIndex), polyB.z(bTargetIndex)))) {
+            return Polygon.NO_LINK_OR_TAG;
+        }
 
         final int aSize = polyA.vertexCount();
         final int bSize = polyB.vertexCount();
@@ -429,78 +418,37 @@ class CsgPolyRecombinator {
 
         final int count = polys.size();
 
-        if (count == 1)
+        if (count == 1) {
             handleOutput(input, polys.getInt(0), output);
-        else if (count == 2)
+        } else if (count == 2) {
             combineTwoPolys(input, output, polys.getInt(0), polys.getInt(1));
-        else
+        } else {
             combinePolysInner(input, output);
+        }
     }
 
-    private static void addPolyToVertexMap(HashMap<Vec3f, IntArrayList> vertexMap, Polygon poly) {
-        final int limit = poly.vertexCount();
-        for (int i = 0; i < limit; i++) {
-            Vec3f v = poly.getPos(i);
-            IntArrayList bucket = vertexMap.get(v);
-            if (bucket == null) {
-                bucket = new IntArrayList();
-                vertexMap.put(v, bucket);
+    private void populateVertexMap(CsgMeshhImpl input) {
+        final IntArrayList polys = this.polys;
+        final CsgVertexMap vertexMap = this.vertexMap;
+        vertexMap.clear();
+        final int polyLimit = polys.size();
+        for (int i = 0; i < polyLimit; i++) {
+            final int address = polys.getInt(i);
+            final Polygon polyA = input.polyA(address);
+            if(!polyA.isDeleted()) {
+                vertexMap.add(address, polyA);
             }
-            bucket.add(poly.address());
-        }
-    }
-
-    /**
-     * For use during second phase of combined - will not create buckets that are
-     * not found. Assumes these have been deleted because only had a single poly in
-     * them.
-     */
-    private static void addPolyToVertexMapGently(HashMap<Vec3f, IntArrayList> vertexMap, Polygon poly) {
-        final int limit = poly.vertexCount();
-        for (int i = 0; i < limit; i++) {
-            Vec3f v = poly.getPos(i);
-            IntArrayList bucket = vertexMap.get(v);
-            if (bucket != null)
-                bucket.add(poly.address());
-        }
-    }
-
-    private static void removePolyFromVertexMap(HashMap<Vec3f, IntArrayList> vertexMap, Polygon poly, Vec3f excludingVertex) {
-        final int limit = poly.vertexCount();
-        for (int i = 0; i < limit; i++) {
-            Vec3f v = poly.getPos(i);
-            if (excludingVertex.equals(v))
-                continue;
-
-            IntArrayList bucket = vertexMap.get(v);
-
-            if (bucket == null)
-                continue;
-
-            boolean check = bucket.rem(poly.address());
-            assert check;
         }
     }
 
     /**
      * For three or more polys with same tag.
-     *
-     * PERF: consider making polysIn a set in the caller
      */
     private void combinePolysInner(CsgMeshhImpl input, WritableMesh output) {
         final IntArrayList polys = this.polys;
-        /**
-         * Index of all polys by vertex
-         */
-        HashMap<Vec3f, IntArrayList> vertexMap = new HashMap<>();
-
-        {
-            final int limit = polys.size();
-            for (int i = 0; i < limit; i++) {
-                addPolyToVertexMap(vertexMap, input.polyA(polys.getInt(i)));
-            }
-        }
-
+        populateVertexMap(input);
+        final CsgVertexMap vertexMap = this.vertexMap;
+        
         /**
          * Cleared at top of each loop and set to true if and only if new polys are
          * created due to joins AND the line/quad/vertex map has at least one new value
@@ -516,37 +464,22 @@ class CsgPolyRecombinator {
         while (potentialMatchesRemain) {
             potentialMatchesRemain = false;
 
-            Iterator<Entry<Vec3f, IntArrayList>> it = vertexMap.entrySet().iterator();
-            while (it.hasNext()) {
-                Entry<Vec3f, IntArrayList> entry = it.next();
-                IntArrayList bucket = entry.getValue();
-                if (bucket.size() < 2) {
-                    // nothing to simplify here
-                    it.remove();
-                } else if (bucket.size() == 2) {
-                    // eliminate T junctions
-                    Vec3f v = entry.getKey();
-                    int first = bucket.getInt(0);
-                    int second = bucket.getInt(1);
-                    int newPoly = joinAtVertex(input, first, second, v);
-                    if (newPoly != Polygon.NO_LINK_OR_TAG) {
-                        potentialMatchesRemain = true;
-                        // we won't see a CME because not removing any vertices at this point except via
-                        // the iterator
-                        it.remove();
-
-                        boolean check = polys.rem(first);
-                        assert check;
-                        removePolyFromVertexMap(vertexMap, input.polyA(first), v);
-
-                        check = polys.rem(second);
-                        assert check;
-                        removePolyFromVertexMap(vertexMap, input.polyA(second), v);
-
-                        polys.add(newPoly);
-                        addPolyToVertexMapGently(vertexMap, input.polyA(newPoly));
-                    }
+            vertexMap.first();
+            while (vertexMap.hasValue()) {
+                assert vertexMap.bucketSize() > 1 : "CsgVertexMap has value with single unmatched vertex";
+                
+                final int newPoly = joinAtVertex(input, 
+                        vertexMap.idA(), vertexMap.vertexA(), 
+                        vertexMap.idB(), vertexMap.vertexB());
+                
+                if (newPoly != Polygon.NO_LINK_OR_TAG) {
+                    potentialMatchesRemain = true;
+                    vertexMap.remove();
+                    polys.add(newPoly);
+                    vertexMap.add(newPoly, input.polyA(newPoly));
                 }
+                
+                vertexMap.next();
             }
         }
 
