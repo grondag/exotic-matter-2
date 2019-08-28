@@ -15,10 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_MASONRY_JOIN;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
+import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.MASONRY_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.BLOCK_SPECIES;
+import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
@@ -35,19 +35,19 @@ public enum TextureLayout {
      * TODO: convert to layout map, remove
      */
     @Deprecated
-    SPLIT_X_8(STATE_FLAG_NONE),
+    SPLIT_X_8(NONE),
 
     /**
      * Single square file with optional versions. If more than one version, file
      * names should have a 0-based _x suffix.
      */
-    SIMPLE(STATE_FLAG_NONE),
+    SIMPLE(NONE),
 
     /**
      * Separate files with naming convention same as SPLIT_X_8 except only the first
      * 13 textures out of every 16 are used for borders.
      */
-    BORDER_13(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 13),
+    BORDER_13(CORNER_JOIN | BLOCK_SPECIES, 13),
 
     /**
      * Like BORDER_13 but with an extra texture 14 that to should be rendered if the
@@ -55,13 +55,13 @@ public enum TextureLayout {
      * have a solid alpha channel - otherwise mipmap generation will be borked. The
      * solid face won't be used at all if rendering in a non-solid layer.
      */
-    BORDER_14(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES, 14),
+    BORDER_14(CORNER_JOIN | BLOCK_SPECIES, 14),
 
     /**
      * Separate files with naming convention same as SPLIT_X_8 except only the start
      * 5 textures out of every 8. Files won't exist or will be blank for 5-7.
      */
-    MASONRY_5(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_MASONRY_JOIN | STATE_FLAG_NEEDS_SPECIES, 5),
+    MASONRY_5(CORNER_JOIN | MASONRY_JOIN | BLOCK_SPECIES, 5),
 
     /**
      * Animated big textures stored as series of .jpg files.
@@ -69,7 +69,7 @@ public enum TextureLayout {
      * Holdover from 1.12 - not yet clear if will be implemented or removed.
      */
     @Deprecated
-    BIGTEX_ANIMATED(STATE_FLAG_NONE),
+    BIGTEX_ANIMATED(NONE),
 
     /**
      * Compact connected texture format, optionally with multiple variants. Each
@@ -78,7 +78,7 @@ public enum TextureLayout {
      * connect with other quadrants in any (connecting) rotation or texture
      * variation.
      */
-    QUADRANT_CONNECTED(STATE_FLAG_NEEDS_CORNER_JOIN | STATE_FLAG_NEEDS_SPECIES);
+    QUADRANT_CONNECTED(CORNER_JOIN | BLOCK_SPECIES);
 
     private TextureLayout(int stateFlags) {
         this(stateFlags, 1);

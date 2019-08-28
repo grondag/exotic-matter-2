@@ -111,7 +111,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     protected SquareColumn(String idString) {
-        super(idString, ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN, SimpleModelStateImpl.FACTORY,
+        super(idString, ModelStateFlags.CORNER_JOIN, SimpleModelStateImpl.FACTORY,
                 s -> isLit(s) ? SURFACES_LIT : SURFACES_DARK);
     }
 

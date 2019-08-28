@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.primitive;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SIMPLE_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
+import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
@@ -99,7 +99,7 @@ public class SimplePrimitiveBuilderImpl {
         }
         
         public Primitive(String idString, BuilderImpl builder) {
-            super(idString, builder.simpleJoin ? STATE_FLAG_NEEDS_SIMPLE_JOIN : STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
+            super(idString, builder.simpleJoin ? SIMPLE_JOIN : NONE, SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
             simpleJoin = builder.simpleJoin;
             orientationType = builder.orientationType;
             polyFactory = builder.polyFactory;

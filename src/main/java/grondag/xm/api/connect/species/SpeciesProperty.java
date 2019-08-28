@@ -21,7 +21,7 @@ import org.apiguardian.api.API.Status;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.primitive.BlockStateToPrimitiveStateMutator;
+import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.connect.SpeciesImpl;
 import net.minecraft.block.Block;
 import net.minecraft.state.property.IntProperty;
@@ -32,7 +32,7 @@ public class SpeciesProperty {
     
     public static final IntProperty SPECIES = IntProperty.of("xm_species", 0, 15);
     
-    public static BlockStateToPrimitiveStateMutator SPECIES_MODIFIER = (modelState, blockState) -> {
+    public static SimplePrimitiveStateMutator SPECIES_MODIFIER = (modelState, blockState) -> {
         final int species = blockState.get(SPECIES);
         modelState.species(species);
         return modelState;

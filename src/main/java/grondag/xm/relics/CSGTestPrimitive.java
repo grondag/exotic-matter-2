@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.relics;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
+import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 
 import java.util.function.Consumer;
 
@@ -54,7 +54,7 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
     private XmMesh cachedQuads;
 
     public CSGTestPrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, s -> SURFACES);
+        super(idString, NONE, SimpleModelStateImpl.FACTORY, s -> SURFACES);
         cachedQuads = getTestQuads();
     }
 

@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.modelstate;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_CORNER_JOIN;
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NEEDS_SPECIES;
+import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.BLOCK_SPECIES;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
@@ -417,7 +417,7 @@ public abstract class AbstractPrimitiveModelState
         int result = stateFlags;
         if (result == 0) {
 
-            result = ModelStateFlags.STATE_FLAG_IS_POPULATED | primitive.stateFlags((R)this);
+            result = ModelStateFlags.IS_POPULATED | primitive.stateFlags((R)this);
 
             final int surfCount = primitive.surfaces((R)this).size();
             for (int i = 0; i < surfCount; i++) {
@@ -617,7 +617,7 @@ public abstract class AbstractPrimitiveModelState
     @Override
     public final boolean hasSpecies() {
         final int stateFlags = stateFlags();
-        return ((stateFlags & STATE_FLAG_NEEDS_SPECIES) == STATE_FLAG_NEEDS_SPECIES);
+        return ((stateFlags & BLOCK_SPECIES) == BLOCK_SPECIES);
     }
 
     /**
@@ -670,7 +670,7 @@ public abstract class AbstractPrimitiveModelState
         // If this state is using corner join, join index is for a corner join
         // and so need to derive simple join from the corner join
         final int stateFlags = stateFlags();
-        return ((stateFlags & STATE_FLAG_NEEDS_CORNER_JOIN) == 0) ? SimpleJoinState.fromOrdinal(BLOCK_JOIN.getValue(this)) : cornerJoin().simpleJoin();
+        return ((stateFlags & CORNER_JOIN) == 0) ? SimpleJoinState.fromOrdinal(BLOCK_JOIN.getValue(this)) : cornerJoin().simpleJoin();
     }
 
     @Override

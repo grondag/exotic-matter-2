@@ -25,40 +25,40 @@ public class ModelStateFlags {
     /**
      * For readability.
      */
-    public static final int STATE_FLAG_NONE = 0;
+    public static final int NONE = 0;
 
     /*
      * Enables lazy derivation - set after derivation is complete. NB - check logic
      * assumes that ALL bits are zero for simplicity.
      */
-    public static final int STATE_FLAG_IS_POPULATED = 1;
+    public static final int IS_POPULATED = 1;
 
     /**
      * Applies to block-type states. True if is a block type state and requires full
      * join state.
      */
-    public static final int STATE_FLAG_NEEDS_CORNER_JOIN = STATE_FLAG_IS_POPULATED << 1;
+    public static final int CORNER_JOIN = IS_POPULATED << 1;
 
     /**
      * Applies to block-type states. True if is a block type state and requires full
      * join state.
      */
-    public static final int STATE_FLAG_NEEDS_SIMPLE_JOIN = STATE_FLAG_NEEDS_CORNER_JOIN << 1;
+    public static final int SIMPLE_JOIN = CORNER_JOIN << 1;
 
     /**
      * Applies to block-type states. True if is a block type state and requires
      * masonry join info.
      */
-    public static final int STATE_FLAG_NEEDS_MASONRY_JOIN = STATE_FLAG_NEEDS_SIMPLE_JOIN << 1;
+    public static final int MASONRY_JOIN = SIMPLE_JOIN << 1;
 
     /**
      * True if position (big-tex) world state is needed. Applies for block and flow
      * state formats.
      */
-    public static final int STATE_FLAG_NEEDS_POS = STATE_FLAG_NEEDS_MASONRY_JOIN << 1;
+    public static final int POSITION = MASONRY_JOIN << 1;
 
-    public static final int STATE_FLAG_NEEDS_SPECIES = STATE_FLAG_NEEDS_POS << 1;
+    public static final int BLOCK_SPECIES = POSITION << 1;
 
-    public static final int STATE_FLAG_NEEDS_TEXTURE_ROTATION = STATE_FLAG_NEEDS_SPECIES << 1;
+    public static final int TEXTURE_ROTATION = BLOCK_SPECIES << 1;
 
 }

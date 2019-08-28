@@ -59,11 +59,11 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
         // textures with randomization options also require position information
 
         if (template.rotation == TextureRotation.ROTATE_RANDOM) {
-            flags |= (ModelStateFlags.STATE_FLAG_NEEDS_TEXTURE_ROTATION | ModelStateFlags.STATE_FLAG_NEEDS_POS);
+            flags |= (ModelStateFlags.TEXTURE_ROTATION | ModelStateFlags.POSITION);
         }
 
         if (template.versionCount > 1) {
-            flags |= ModelStateFlags.STATE_FLAG_NEEDS_POS;
+            flags |= ModelStateFlags.POSITION;
         }
 
         this.stateFlags = flags;

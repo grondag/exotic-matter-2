@@ -23,22 +23,22 @@ import org.apiguardian.api.API;
 @API(status = EXPERIMENTAL)
 public enum TextureScale {
     /** 1x1 */
-    SINGLE(0, STATE_FLAG_NONE),
+    SINGLE(0, NONE),
 
     /** 2x2 */
-    TINY(1, STATE_FLAG_NEEDS_POS),
+    TINY(1, POSITION),
 
     /** 4x4 */
-    SMALL(2, STATE_FLAG_NEEDS_POS),
+    SMALL(2, POSITION),
 
     /** 8x8 */
-    MEDIUM(3, STATE_FLAG_NEEDS_POS),
+    MEDIUM(3, POSITION),
 
     /** 16x16 */
-    LARGE(4, STATE_FLAG_NEEDS_POS),
+    LARGE(4, POSITION),
 
     /** 32x32 */
-    GIANT(5, STATE_FLAG_NEEDS_POS);
+    GIANT(5, POSITION);
 
     /**
      * UV length for each subdivision of the texture. Used by BigTex painter. Is

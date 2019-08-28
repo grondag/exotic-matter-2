@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.STATE_FLAG_NONE;
+import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Consumer;
@@ -47,7 +47,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     private final XmMesh cachedQuads;
 
     protected TerrainCubePrimitive(String idString) {
-        super(idString, STATE_FLAG_NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
+        super(idString, NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
         this.cachedQuads = getCubeQuads();
     }
 

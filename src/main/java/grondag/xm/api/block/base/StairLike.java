@@ -30,7 +30,7 @@ import org.apiguardian.api.API;
 import grondag.fermion.spatial.DirectionHelper;
 import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
-import grondag.xm.api.modelstate.primitive.BlockStateToPrimitiveStateMutator;
+import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.primitive.simple.Stair;
 import net.fabricmc.api.EnvType;
@@ -109,7 +109,7 @@ public abstract class StairLike extends Block implements Waterloggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos pos, EntityContext entityContext) {
-        return CollisionDispatcher.shapeFor(MODELSTATE_FROM_BLOCKSTATE.apply(modelStateFactory.get(), blockState));
+        return CollisionDispatcher.shapeFor(MODELSTATE_FROM_BLOCKSTATE.mutate(modelStateFactory.get(), blockState));
     }
 
     @Override
@@ -338,7 +338,7 @@ public abstract class StairLike extends Block implements Waterloggable {
         };
     }
     
-    public static BlockStateToPrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
+    public static SimplePrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
         final Block rawBlock = blockState.getBlock();
         if(!(rawBlock instanceof StairLike)) {
             return modelState;
