@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.mesh.helper.PolyTransformImpl;
 import net.minecraft.util.math.Direction;
@@ -45,7 +45,7 @@ public interface PolyTransform extends Consumer<MutablePolygon> {
      * of specific faces.
      */
     @SuppressWarnings("rawtypes")
-    static PolyTransform get(PrimitiveModelState modelState) {
+    static PolyTransform get(BaseModelState modelState) {
         return PolyTransformImpl.get(modelState);
     }
 

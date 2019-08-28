@@ -23,7 +23,7 @@ import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
@@ -59,14 +59,14 @@ public abstract class AbstractQuadPainter {
          * <p>
          * 
          */
-        void paintQuads(MutableMesh stream, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
+        void paintQuads(MutableMesh stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
     }
 
     /**
      * Call from paint quad in sub classes to return results. Handles item scaling,
      * then adds to the output list.
      */
-    protected static void commonPostPaint(MutablePolygon editor, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    protected static void commonPostPaint(MutablePolygon editor, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         editor.blendMode(textureIndex, paint.blendMode(textureIndex));
         editor.emissive(textureIndex, paint.emissive(textureIndex));
         editor.disableAo(textureIndex, paint.disableAo(textureIndex));
@@ -146,13 +146,13 @@ public abstract class AbstractQuadPainter {
         }
     }
 
-    protected static int textureVersionForFace(Direction face, TextureSet tex, PrimitiveModelState modelState) {
+    protected static int textureVersionForFace(Direction face, TextureSet tex, BaseModelState modelState) {
         if (tex.versionCount() == 0)
             return 0;
         return textureHashForFace(face, tex, modelState) & tex.versionMask();
     }
 
-    protected static int textureHashForFace(Direction face, TextureSet tex, PrimitiveModelState modelState) {
+    protected static int textureHashForFace(Direction face, TextureSet tex, BaseModelState modelState) {
         final int species = modelState.hasSpecies() ? modelState.species() : 0;
         final int speciesBits = species << 16;
         final int shift = tex.scale().power;
@@ -188,7 +188,7 @@ public abstract class AbstractQuadPainter {
      * rotation type is RANDOM, is based on position (chunked by texture size) and
      * species (if applies).
      */
-    protected static Rotation textureRotationForFace(Direction face, TextureSet tex, PrimitiveModelState modelState) {
+    protected static Rotation textureRotationForFace(Direction face, TextureSet tex, BaseModelState modelState) {
         final int species = modelState.hasSpecies() ? modelState.species() : 0;
         if (tex.rotation() == TextureRotation.ROTATE_RANDOM) {
             if (tex.scale() == TextureScale.SINGLE) {

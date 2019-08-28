@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureRotation;
@@ -55,7 +55,7 @@ public abstract class CubicPainterBigTex extends AbstractQuadPainter {
     // This depth-based variation can be disabled with a setting in the surface
     // instance.
     @SuppressWarnings("rawtypes")
-    public static void paintQuads(MutableMesh mesh, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    public static void paintQuads(MutableMesh mesh, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         MutablePolygon editor = mesh.editor();
         do {
             editor.lockUV(textureIndex, true);

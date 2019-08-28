@@ -21,23 +21,17 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.world.BlockNeighbors;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
+/**
+ * Produces model state instance from world state, refreshing if necessary.
+ */
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface ModelStateUpdate<T extends MutableModelState> {
-    void accept(T modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
+public interface WorldToModelStateMap<T extends MutableModelState> {
+    @Nullable T apply(BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
     
-    default T apply(T modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
-        accept(modelState, blockState, world, pos, neighbors, refreshFromWorld);
-        return modelState;
-    }
-    
-    default T apply(T modelState, BlockState blockState) {
-        accept(modelState, blockState, null, null, null, false);
-        return modelState;
-    }
+    static WorldToModelStateMap<?> NULL = (s, w, p, r) -> null;
 }

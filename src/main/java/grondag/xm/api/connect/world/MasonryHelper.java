@@ -19,28 +19,28 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
 // For masonry, true result means border IS present
 @API(status = EXPERIMENTAL)
-public class MasonryHelper implements BlockTest<SimpleModelState> {
+public class MasonryHelper implements BlockTest<PrimitiveState> {
     private MasonryHelper() {
     }
 
     private static final ThreadLocal<MasonryHelper> POOL = ThreadLocal.withInitial(MasonryHelper::new);
 
-    public static BlockTest<SimpleModelState> wrap(BlockTest<SimpleModelState> test) {
+    public static BlockTest<PrimitiveState> wrap(BlockTest<PrimitiveState> test) {
         MasonryHelper result = POOL.get();
         result.test = test;
         return result;
     }
     
-    private BlockTest<SimpleModelState> test;
+    private BlockTest<PrimitiveState> test;
     
     @Override
-    public boolean apply(BlockTestContext<SimpleModelState> context) {
+    public boolean apply(BlockTestContext<PrimitiveState> context) {
 
         if (context.fromModelState() == null) {
             return false;

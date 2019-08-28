@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.modelstate.WorldToModelState;
+import grondag.xm.api.modelstate.WorldToModelStateMap;
 import grondag.xm.dispatch.XmBlockStateAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +29,7 @@ import net.minecraft.world.BlockView;
 
 @Mixin(BlockState.class)
 public class MixinBlockState implements XmBlockState, XmBlockStateAccess {
-    private WorldToModelState<?> modelStateFunc = null;
+    private WorldToModelStateMap<?> modelStateFunc = null;
 
     @Override
     public BlockState blockState() {
@@ -38,18 +38,18 @@ public class MixinBlockState implements XmBlockState, XmBlockStateAccess {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends MutableModelState> T getModelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
-        final WorldToModelState<?> func = modelStateFunc;
+    public <T extends MutableModelState> T modelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        final WorldToModelStateMap<?> func = modelStateFunc;
         return func == null ? null : (T) func.apply((BlockState)(Object)this, world, pos, refreshFromWorld);
     }
 
     @Override
-    public void xm_modelStateFunc(WorldToModelState<?> func) {
+    public void xm_modelStateFunc(WorldToModelStateMap<?> func) {
         modelStateFunc = func;
     }
 
     @Override
-    public WorldToModelState<?> xm_modelStateFunc() {
+    public WorldToModelStateMap<?> xm_modelStateFunc() {
         return modelStateFunc;
     }
     

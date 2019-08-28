@@ -34,8 +34,8 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.ModelStateFlags;
-import grondag.xm.api.modelstate.MutableSimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.orientation.FaceEdge;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
@@ -105,7 +105,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
     public static final SquareColumn INSTANCE = new SquareColumn(Xm.idString("column_square"));
 
     @Override
-    protected void updateDefaultState(MutableSimpleModelState modelState) {
+    protected void updateDefaultState(MutablePrimitiveState modelState) {
         setCutCount(3, modelState);
         setCutsOnEdge(true, modelState);
     }
@@ -116,12 +116,12 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     @Override
-    public XmSurface lampSurface(SimpleModelState modelState) {
+    public XmSurface lampSurface(PrimitiveState modelState) {
         return isLit(modelState) ? SURFACES_LIT.get(SURFACE_LAMP) : null;
     }
 
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
+    public void produceQuads(PrimitiveState modelState, Consumer<Polygon> target) {
         FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
         for (int i = 0; i < 6; i++) {
             this.makeFaceQuads(modelState, Direction.byId(i), spec, target);
@@ -129,13 +129,13 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     @Override
-    public OrientationType orientationType(SimpleModelState modelState) {
+    public OrientationType orientationType(PrimitiveState modelState) {
         return OrientationType.AXIS;
     }
     
     private static final Axis[] AXIS = Direction.Axis.values();
 
-    private void makeFaceQuads(SimpleModelState state, Direction face, FaceSpec spec, Consumer<Polygon> target) {
+    private void makeFaceQuads(PrimitiveState state, Direction face, FaceSpec spec, Consumer<Polygon> target) {
         if (face == null)
             return;
 
@@ -534,7 +534,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
      * If true, cuts in shape are on the block boundary. Reads value from static
      * shape bits in model state
      */
-    public static boolean areCutsOnEdge(SimpleModelState modelState) {
+    public static boolean areCutsOnEdge(PrimitiveState modelState) {
         return STATE_ARE_CUTS_ON_EDGE.getValue(modelState.primitiveBits());
     }
 
@@ -542,7 +542,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
      * If true, cuts in shape are on the block boundary. Saves value in static shape
      * bits in model state
      */
-    public static void setCutsOnEdge(boolean areCutsOnEdge, MutableSimpleModelState modelState) {
+    public static void setCutsOnEdge(boolean areCutsOnEdge, MutablePrimitiveState modelState) {
         modelState.primitiveBits(STATE_ARE_CUTS_ON_EDGE.setValue(areCutsOnEdge, modelState.primitiveBits()));
     }
 
@@ -550,7 +550,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
      * Number of cuts that appear on each face of model. Reads value from static
      * shape bits in model state
      */
-    public static int getCutCount(SimpleModelState modelState) {
+    public static int getCutCount(PrimitiveState modelState) {
         return STATE_CUT_COUNT.getValue(modelState.primitiveBits());
     }
 
@@ -558,22 +558,22 @@ public class SquareColumn extends AbstractSimplePrimitive {
      * Number of cuts that appear on each face of model. Saves value in static shape
      * bits in model state
      */
-    public static void setCutCount(int cutCount, MutableSimpleModelState modelState) {
+    public static void setCutCount(int cutCount, MutablePrimitiveState modelState) {
         modelState.primitiveBits(STATE_CUT_COUNT.setValue(cutCount, modelState.primitiveBits()));
     }
 
-    public static boolean isLit(SimpleModelState modelState) {
+    public static boolean isLit(PrimitiveState modelState) {
         return modelState.paint(SURFACE_LAMP).emissive(0);
     }
 
     @Override
-    public MutableSimpleModelState geometricState(SimpleModelState fromState) {
-        final MutableSimpleModelState result = this.newState();
+    public MutablePrimitiveState geometricState(PrimitiveState fromState) {
+        final MutablePrimitiveState result = this.newState();
         return result;
     }
 
     @Override
-    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
+    public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
         
         return from.primitive() == to.primitive() 
                 && from.orientationIndex() == to.orientationIndex()

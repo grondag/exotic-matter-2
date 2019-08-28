@@ -22,14 +22,14 @@ import java.util.function.Function;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.XmMesh;
-import grondag.xm.api.modelstate.MutableSimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.primitive.SimplePrimitiveBuilderImpl;
 
 @API(status = EXPERIMENTAL)
-public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, MutableSimpleModelState>{
+public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutablePrimitiveState>{
     static Builder builder() {
         return SimplePrimitiveBuilderImpl.builder();
     }
@@ -44,7 +44,7 @@ public interface SimplePrimitive extends ModelPrimitive<SimpleModelState, Mutabl
 
         Builder orientationType(OrientationType orientationType);
 
-        Builder polyFactory(Function<SimpleModelState, XmMesh> polyFactory);
+        Builder polyFactory(Function<PrimitiveState, XmMesh> polyFactory);
 
         Builder simpleJoin(boolean needsJoin);
 

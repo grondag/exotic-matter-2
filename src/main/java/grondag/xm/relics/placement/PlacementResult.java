@@ -56,7 +56,7 @@ public class PlacementResult {
     /**
      * If true, the user input event (mouse click, usually) that caused this result
      * should continue to be processed by other event handlers. True also implies
-     * that {@link #apply(ItemStack, EntityPlayer)} will have no effect.
+     * that {@link #mutate(ItemStack, EntityPlayer)} will have no effect.
      */
     public boolean shouldInputEventsContinue() {
         return this.event == PlacementEvent.NO_OPERATION_CONTINUE;

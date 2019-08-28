@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.modelstate;
+package grondag.xm.api.modelstate.base;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -26,6 +26,7 @@ import org.apiguardian.api.API;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
@@ -40,9 +41,9 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
-public interface PrimitiveModelState<R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> extends ModelState {
+public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> extends ModelState {
     
-    ModelStateFactory<R, W> factory();
+    BaseModelStateFactory<R, W> factory();
 
     @Override
     R toImmutable();

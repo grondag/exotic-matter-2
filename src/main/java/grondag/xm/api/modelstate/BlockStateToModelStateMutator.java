@@ -13,35 +13,27 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
+
 package grondag.xm.api.modelstate;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import javax.annotation.Nullable;
+
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.world.BlockTest;
-import grondag.xm.modelstate.WorldToModelStateImpl;
+import grondag.xm.api.connect.world.BlockNeighbors;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface WorldToSimpleModelState extends WorldToModelState<MutableSimpleModelState> {
-    static WorldToSimpleModelState ofDefaultState(SimpleModelState defaultState) {
-        return builder().withDefaultState(defaultState).build();
-    }
+public interface BlockStateToModelStateMutator<T, V extends MutableModelState> extends WorldToModelStateMutator<V> {
+    V apply(V modelState, T blockState);
     
-    static Builder builder() {
-        return WorldToModelStateImpl.builder();
-    }
-    
-    public interface Builder {
-        Builder withJoin(BlockTest<SimpleModelState> joinTest);
-        
-        Builder withUpdate(SimpleModelStateUpdate update);
-
-        WorldToSimpleModelState build();
-
-        Builder clear();
-
-        Builder withDefaultState(SimpleModelState defaultState);
+    @Override
+    default void accept(V modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
+        apply(modelState, blockState);
     }
 }

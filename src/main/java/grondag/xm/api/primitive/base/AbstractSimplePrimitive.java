@@ -21,20 +21,20 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelStateFactory;
-import grondag.xm.api.modelstate.MutableSimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.base.BaseModelStateFactory;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
-public abstract class AbstractSimplePrimitive extends AbstractPrimitive<SimpleModelState, MutableSimpleModelState> implements SimplePrimitive {
-    protected AbstractSimplePrimitive(Identifier id, int stateFlags, ModelStateFactory<SimpleModelState, MutableSimpleModelState> factory, Function<SimpleModelState, XmSurfaceList> surfaceFunc) {
+public abstract class AbstractSimplePrimitive extends AbstractPrimitive<PrimitiveState, MutablePrimitiveState> implements SimplePrimitive {
+    protected AbstractSimplePrimitive(Identifier id, int stateFlags, BaseModelStateFactory<PrimitiveState, MutablePrimitiveState> factory, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
         super(id, stateFlags, factory, surfaceFunc);
     }
     
-    protected AbstractSimplePrimitive(String idString, int stateFlags, ModelStateFactory<SimpleModelState, MutableSimpleModelState> factory, Function<SimpleModelState, XmSurfaceList> surfaceFunc) {
+    protected AbstractSimplePrimitive(String idString, int stateFlags, BaseModelStateFactory<PrimitiveState, MutablePrimitiveState> factory, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
         super(idString, stateFlags, factory, surfaceFunc);
     }
 }

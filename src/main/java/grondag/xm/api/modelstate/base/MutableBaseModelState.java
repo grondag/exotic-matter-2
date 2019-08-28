@@ -1,4 +1,4 @@
-package grondag.xm.api.modelstate;
+package grondag.xm.api.modelstate.base;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -9,12 +9,14 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import net.minecraft.util.math.BlockPos;
 
 @API(status = EXPERIMENTAL)
-public interface MutablePrimitiveModelState<R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R, W>> extends PrimitiveModelState<R, W>, MutableModelState {
+public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> extends BaseModelState<R, W>, MutableModelState {
     @Override
     W copyFrom(ModelState template);
 

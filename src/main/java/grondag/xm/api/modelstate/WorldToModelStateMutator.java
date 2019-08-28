@@ -13,7 +13,6 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-
 package grondag.xm.api.modelstate;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
@@ -29,11 +28,16 @@ import net.minecraft.world.BlockView;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface ModelStateModifier<T, V extends MutableModelState> extends ModelStateUpdate<V> {
-    V apply(V modelState, T blockState);
+public interface WorldToModelStateMutator<T extends MutableModelState> {
+    void accept(T modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
     
-    @Override
-    default void accept(V modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
-        apply(modelState, blockState);
+    default T apply(T modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
+        accept(modelState, blockState, world, pos, neighbors, refreshFromWorld);
+        return modelState;
+    }
+    
+    default T apply(T modelState, BlockState blockState) {
+        accept(modelState, blockState, null, null, null, false);
+        return modelState;
     }
 }

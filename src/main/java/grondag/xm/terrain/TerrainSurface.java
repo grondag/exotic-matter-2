@@ -21,7 +21,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelStateFactory;
+import grondag.xm.api.modelstate.base.BaseModelStateFactory;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.api.terrain.TerrainModelState.Mutable;
@@ -73,7 +73,7 @@ import grondag.xm.api.terrain.TerrainModelState.Mutable;
 @API(status = INTERNAL)
 public abstract class TerrainSurface extends AbstractTerrainPrimitive {
     
-    protected TerrainSurface(String idString, int stateFlags, ModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
+    protected TerrainSurface(String idString, int stateFlags, BaseModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
         super(idString, stateFlags, factory, surfaceFunc);
         // TODO Auto-generated constructor stub
     }

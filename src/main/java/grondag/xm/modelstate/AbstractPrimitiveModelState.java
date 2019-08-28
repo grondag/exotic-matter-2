@@ -38,11 +38,11 @@ import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.ModelStateFactory;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.modelstate.MutablePrimitiveModelState;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.modelstate.base.BaseModelStateFactory;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintRegistry;
@@ -72,9 +72,9 @@ import net.minecraft.util.math.MathHelper;
 @SuppressWarnings({"rawtypes", "unchecked"})
 @API(status = INTERNAL)
 public abstract class AbstractPrimitiveModelState
-    <V extends AbstractPrimitiveModelState<V, R, W>, R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> 
+    <V extends AbstractPrimitiveModelState<V, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> 
     extends AbstractModelState 
-    implements MutableModelState, PrimitiveModelState<R, W>, MutablePrimitiveModelState<R, W>
+    implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 {
     
     ////////////////////////////////////////// BIT-WISE ENCODING //////////////////////////////////////////
@@ -109,8 +109,8 @@ public abstract class AbstractPrimitiveModelState
     
     ////////////////////////////////////////// FACTORY //////////////////////////////////////////
     
-    public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> 
-        implements ModelStateFactory<R, W> 
+    public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> 
+        implements BaseModelStateFactory<R, W> 
     {
         private final ArrayBlockingQueue<T> POOL = new ArrayBlockingQueue<>(4096);
         
@@ -227,7 +227,7 @@ public abstract class AbstractPrimitiveModelState
     protected abstract ModelStateFactoryImpl<V, R, W> factoryImpl();
     
     @Override
-    public final ModelStateFactory<R, W> factory() {
+    public final BaseModelStateFactory<R, W> factory() {
         return factoryImpl();
     }
     

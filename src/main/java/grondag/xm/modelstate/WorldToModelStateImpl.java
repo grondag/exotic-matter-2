@@ -31,20 +31,20 @@ import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.connect.world.ModelStateFunction;
-import grondag.xm.api.modelstate.MutableSimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelStateUpdate;
-import grondag.xm.api.modelstate.WorldToSimpleModelState;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
+import grondag.xm.api.modelstate.primitive.WorldToPrimitiveStateMutator;
+import grondag.xm.api.modelstate.primitive.WorldToPrimitiveStateMap;
 import grondag.xm.api.primitive.simple.CubeWithRotation;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 @API(status = EXPERIMENTAL)
-public class WorldToModelStateImpl implements WorldToSimpleModelState {
-    private final BlockTest<SimpleModelState> joinTest;
-    private final SimpleModelStateUpdate updater;
-    private final SimpleModelState defaultState;
+public class WorldToModelStateImpl implements WorldToPrimitiveStateMap {
+    private final BlockTest<PrimitiveState> joinTest;
+    private final WorldToPrimitiveStateMutator updater;
+    private final PrimitiveState defaultState;
     
     private WorldToModelStateImpl(BuilderImpl builder) {
         this.joinTest = builder.joinTest;
@@ -54,9 +54,9 @@ public class WorldToModelStateImpl implements WorldToSimpleModelState {
         } else if(builder.updaters.size() == 1) {
             updater = builder.updaters.get(0);
         } else {
-            final SimpleModelStateUpdate[] funcs = builder.updaters.toArray(new SimpleModelStateUpdate[builder.updaters.size()]);
+            final WorldToPrimitiveStateMutator[] funcs = builder.updaters.toArray(new WorldToPrimitiveStateMutator[builder.updaters.size()]);
             updater = (modelState, xmBlockState, world, pos, neighbors, refreshFromWorld) -> {
-                for(SimpleModelStateUpdate func : funcs) {
+                for(WorldToPrimitiveStateMutator func : funcs) {
                     func.accept(modelState, xmBlockState, world, pos, neighbors, refreshFromWorld);
                 }
             };
@@ -64,8 +64,8 @@ public class WorldToModelStateImpl implements WorldToSimpleModelState {
     };
     
     @Override
-    public MutableSimpleModelState apply(BlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
-        MutableSimpleModelState modelState = defaultState.mutableCopy();
+    public MutablePrimitiveState apply(BlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
+        MutablePrimitiveState modelState = defaultState.mutableCopy();
         if(!modelState.isStatic() && refreshFromWorld) {
             
             BlockNeighbors neighbors = null;
@@ -102,27 +102,27 @@ public class WorldToModelStateImpl implements WorldToSimpleModelState {
         return modelState;
     }
     
-    private static class BuilderImpl implements WorldToSimpleModelState.Builder {
-        private BlockTest<SimpleModelState> joinTest = BlockTest.sameBlock();
-        private ArrayList<SimpleModelStateUpdate> updaters = new ArrayList<>();
-        private SimpleModelState defaultState = CubeWithRotation.INSTANCE.defaultState();
+    private static class BuilderImpl implements WorldToPrimitiveStateMap.Builder {
+        private BlockTest<PrimitiveState> joinTest = BlockTest.sameBlock();
+        private ArrayList<WorldToPrimitiveStateMutator> updaters = new ArrayList<>();
+        private PrimitiveState defaultState = CubeWithRotation.INSTANCE.defaultState();
         
         private BuilderImpl() {}
 
         @Override
-        public Builder withDefaultState(SimpleModelState defaultState) {
+        public Builder withDefaultState(PrimitiveState defaultState) {
             this.defaultState = defaultState == null ? CubeWithRotation.INSTANCE.defaultState() : defaultState;
             return this;
         }
         
         @Override
-        public Builder withJoin(BlockTest<SimpleModelState> joinTest) {
+        public Builder withJoin(BlockTest<PrimitiveState> joinTest) {
             this.joinTest = joinTest == null ? BlockTest.sameBlock() : joinTest;
             return this;
         }
         
         @Override
-        public Builder withUpdate(SimpleModelStateUpdate function) {
+        public Builder withUpdate(WorldToPrimitiveStateMutator function) {
             if(function != null) {
                 updaters.add(function);
             }
@@ -139,7 +139,7 @@ public class WorldToModelStateImpl implements WorldToSimpleModelState {
         
         @Override
         public
-        WorldToSimpleModelState build() {
+        WorldToPrimitiveStateMap build() {
             return new WorldToModelStateImpl(this);
         }
 

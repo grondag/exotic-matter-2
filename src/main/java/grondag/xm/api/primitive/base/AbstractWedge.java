@@ -26,8 +26,8 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.MutableSimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -43,7 +43,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 
     protected final ReadOnlyMesh[] CACHE = new ReadOnlyMesh[KEY_COUNT];
     
-    public AbstractWedge(String idString, Function<SimpleModelState, XmSurfaceList> surfaceFunc) {
+    public AbstractWedge(String idString, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
         super(idString, STATE_FLAG_NONE, SimpleModelStateImpl.FACTORY, surfaceFunc);
     }
     
@@ -54,7 +54,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     }
 
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
+    public void produceQuads(PrimitiveState modelState, Consumer<Polygon> target) {
         final int edgeIndex = modelState.orientationIndex();
         final boolean isCorner = isCorner(modelState);
         final boolean isInside = isInsideCorner(modelState);
@@ -80,13 +80,13 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     protected abstract ReadOnlyMesh buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside);
     
     @Override
-    public OrientationType orientationType(SimpleModelState modelState) {
+    public OrientationType orientationType(PrimitiveState modelState) {
         return OrientationType.ROTATION;
     }
 
     @Override
-    public MutableSimpleModelState geometricState(SimpleModelState fromState) {
-        MutableSimpleModelState result = this.newState();
+    public MutablePrimitiveState geometricState(PrimitiveState fromState) {
+        MutablePrimitiveState result = this.newState();
         if(fromState.primitive().orientationType(fromState) == OrientationType.ROTATION) {
             result.orientationIndex(fromState.orientationIndex());
             result.primitiveBits(fromState.primitiveBits());
@@ -95,7 +95,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     }
 
     @Override
-    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
+    public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
         return from.primitive() == to.primitive()
                 && from.orientationIndex() == to.orientationIndex()
                 && from.primitiveBits() == to.primitiveBits();
@@ -104,30 +104,30 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     private static final int CORNER_FLAG = 1;
     private static final int INSIDE_FLAG = 2;
     
-    public static boolean isCorner(SimpleModelState modelState) {
+    public static boolean isCorner(PrimitiveState modelState) {
         return (modelState.primitiveBits() & CORNER_FLAG) == CORNER_FLAG;
     }
 
-    public static void setCorner(boolean isCorner, MutableSimpleModelState modelState) {
+    public static void setCorner(boolean isCorner, MutablePrimitiveState modelState) {
         final int oldBits = modelState.primitiveBits();
         modelState.primitiveBits(isCorner ? oldBits | CORNER_FLAG : oldBits & ~CORNER_FLAG);
     }
     
     /** 
-     * Only applies when {@link #isCorner(SimpleModelState)} == (@code true}.
+     * Only applies when {@link #isCorner(PrimitiveState)} == (@code true}.
      * @param modelState  State of this primitive.
      * @return {@code true} when inside corner, {@code false} when outside corner.
      */
-    public static boolean isInsideCorner(SimpleModelState modelState) {
+    public static boolean isInsideCorner(PrimitiveState modelState) {
         return (modelState.primitiveBits() & INSIDE_FLAG) == INSIDE_FLAG;
     }
 
     /**
-     * See {@link #isInsideCorner(SimpleModelState)}
+     * See {@link #isInsideCorner(PrimitiveState)}
      * @param isCorner
      * @param modelState
      */
-    public static void setInsideCorner(boolean isCorner, MutableSimpleModelState modelState) {
+    public static void setInsideCorner(boolean isCorner, MutablePrimitiveState modelState) {
         final int oldBits = modelState.primitiveBits();
         modelState.primitiveBits(isCorner ? oldBits | INSIDE_FLAG : oldBits & ~INSIDE_FLAG);
     }

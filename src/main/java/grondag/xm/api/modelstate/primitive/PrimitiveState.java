@@ -13,12 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.modelstate;
+package grondag.xm.api.modelstate.primitive;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.primitive.simple.Stair;
 import net.minecraft.block.PillarBlock;
@@ -28,8 +29,8 @@ import net.minecraft.block.enums.StairShape;
 import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
-public interface SimpleModelState extends PrimitiveModelState<SimpleModelState, MutableSimpleModelState>  {
-    SimpleModelStateModifier AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
+public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePrimitiveState>  {
+    BlockStateToPrimitiveStateMutator AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
         Comparable<?> axis = blockState.getEntries().get(PillarBlock.AXIS);
         if (axis != null) {
             modelState.orientationIndex(PillarBlock.AXIS.getValueType().cast(axis).ordinal());
@@ -37,7 +38,7 @@ public interface SimpleModelState extends PrimitiveModelState<SimpleModelState, 
         return modelState;
     };
     
-    SimpleModelStateModifier STAIRS_FROM_BLOCKSTATE = (modelState, blockState) -> {
+    BlockStateToPrimitiveStateMutator STAIRS_FROM_BLOCKSTATE = (modelState, blockState) -> {
         final Comparable<?> faceProp = blockState.getEntries().get(StairsBlock.FACING);
         final Comparable<?> half = blockState.getEntries().get(StairsBlock.HALF);
         final Comparable<?> shapeProp = blockState.getEntries().get(StairsBlock.SHAPE);

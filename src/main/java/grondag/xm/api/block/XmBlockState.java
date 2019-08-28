@@ -43,10 +43,10 @@ public interface XmBlockState {
      * recursion when need to reference some static state ) information in order to
      * determine dynamic world state. Block tests are main use case for false.
      */
-    <T extends MutableModelState> T getModelState(@Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
+    <T extends MutableModelState> T modelState(@Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
     
     default <T extends MutableModelState> T defaultModelState() {
-        return getModelState(null, null, false);
+        return modelState(null, null, false);
     }
     
     static @Nullable XmBlockState get(BlockState fromState) {
@@ -62,8 +62,8 @@ public interface XmBlockState {
     }
 
     @SuppressWarnings("unchecked")
-    static @Nullable <T extends MutableModelState> T modelState(BlockState fromState, BlockView blockView, BlockPos pos, boolean refresh) {
+    static @Nullable <T extends MutableModelState> T modelState(BlockState fromState, @Nullable BlockView blockView, @Nullable BlockPos pos, boolean refresh) {
         final XmBlockState xmState = get(fromState);
-        return xmState == null ? null : (T) xmState.getModelState(blockView, pos, refresh);
+        return xmState == null ? null : (T) xmState.modelState(blockView, pos, refresh);
     }
 }

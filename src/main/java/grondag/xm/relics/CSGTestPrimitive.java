@@ -30,8 +30,8 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.MutableSimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
@@ -64,12 +64,12 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
     }
     
     @Override
-    public OrientationType orientationType(SimpleModelState modelState) {
+    public OrientationType orientationType(PrimitiveState modelState) {
         return OrientationType.NONE;
     }
     
     @Override
-    public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
+    public void produceQuads(PrimitiveState modelState, Consumer<Polygon> target) {
         cachedQuads.forEach(target);
     }
 
@@ -133,12 +133,12 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
     }
 
     @Override
-    public MutableSimpleModelState geometricState(SimpleModelState fromState) {
+    public MutablePrimitiveState geometricState(PrimitiveState fromState) {
         return defaultState().mutableCopy();
     }
 
     @Override
-    public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
+    public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
         return from.primitive() == to.primitive();
     }
 }

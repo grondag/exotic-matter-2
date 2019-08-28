@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.MutablePrimitiveModelState;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -32,7 +32,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
-public interface ModelPrimitive<R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> {
+public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {
     /**
      * Used for registration and serialization of model state.
      */

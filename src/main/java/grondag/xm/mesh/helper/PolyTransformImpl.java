@@ -24,7 +24,7 @@ import org.joml.Vector3f;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.PolyTransform;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.orientation.CubeCorner;
 import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.CubeRotation;
@@ -148,7 +148,7 @@ public class PolyTransformImpl implements PolyTransform {
     }
 
 
-    public static PolyTransform get(PrimitiveModelState modelState) {
+    public static PolyTransform get(BaseModelState modelState) {
         return LOOKUP[modelState.orientationType().ordinal()][modelState.orientationIndex()];
     }
 

@@ -22,9 +22,9 @@ import java.util.function.Function;
 import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
-import grondag.xm.api.modelstate.ModelStateFactory;
-import grondag.xm.api.modelstate.MutablePrimitiveModelState;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.modelstate.base.BaseModelStateFactory;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
@@ -33,10 +33,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
-public abstract class AbstractPrimitive<R extends PrimitiveModelState<R, W>, W extends MutablePrimitiveModelState<R,W>> implements ModelPrimitive<R, W> {
+public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> implements ModelPrimitive<R, W> {
     private final R defaultState;
 
-    private final ModelStateFactory<R, W> factory;
+    private final BaseModelStateFactory<R, W> factory;
     
     private final Identifier id;
     
@@ -48,7 +48,7 @@ public abstract class AbstractPrimitive<R extends PrimitiveModelState<R, W>, W e
      */
     private final int stateFlags;
 
-    protected AbstractPrimitive(Identifier id, int stateFlags, ModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
+    protected AbstractPrimitive(Identifier id, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
         this.stateFlags = stateFlags;
         this.id = id;
         this.factory = factory;
@@ -65,7 +65,7 @@ public abstract class AbstractPrimitive<R extends PrimitiveModelState<R, W>, W e
         this.defaultState = state.releaseToImmutable();
     }
 
-    protected AbstractPrimitive(String idString, int stateFlags, ModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
+    protected AbstractPrimitive(String idString, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
         this(new Identifier(idString), stateFlags, factory, surfaceFunc);
     }
 

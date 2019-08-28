@@ -13,17 +13,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.modelstate;
+package grondag.xm.api.modelstate.primitive;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import net.minecraft.block.BlockState;
+import grondag.xm.api.connect.world.BlockTest;
+import grondag.xm.api.modelstate.WorldToModelStateMap;
+import grondag.xm.modelstate.WorldToModelStateImpl;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface SimpleModelStateMap extends ModelStateMap <BlockState, MutableSimpleModelState> {
-    @Override
-    MutableSimpleModelState apply(BlockState blockState);
+public interface WorldToPrimitiveStateMap extends WorldToModelStateMap<MutablePrimitiveState> {
+    static WorldToPrimitiveStateMap ofDefaultState(PrimitiveState defaultState) {
+        return builder().withDefaultState(defaultState).build();
+    }
+    
+    static Builder builder() {
+        return WorldToModelStateImpl.builder();
+    }
+    
+    public interface Builder {
+        Builder withJoin(BlockTest<PrimitiveState> joinTest);
+        
+        Builder withUpdate(WorldToPrimitiveStateMutator update);
+
+        WorldToPrimitiveStateMap build();
+
+        Builder clear();
+
+        Builder withDefaultState(PrimitiveState defaultState);
+    }
 }

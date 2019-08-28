@@ -20,7 +20,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.paint.VertexProcessorRegistryImpl;
 
@@ -37,7 +37,7 @@ import grondag.xm.paint.VertexProcessorRegistryImpl;
 @FunctionalInterface
 public interface VertexProcessor {
     @SuppressWarnings("rawtypes")
-    void process(MutablePolygon result, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex);
+    void process(MutablePolygon result, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex);
     
     static VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorRegistryImpl.DEFAULT_VERTEX_PROCESSOR;
 }

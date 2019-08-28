@@ -28,8 +28,8 @@ import org.apiguardian.api.API;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.MutableSimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.SimplePrimitive.Builder;
@@ -42,7 +42,7 @@ public class SimplePrimitiveBuilderImpl {
     protected static class BuilderImpl implements Builder {
         private OrientationType orientationType = OrientationType.NONE;
         private XmSurfaceList list = XmSurfaceList.ALL;
-        private Function<SimpleModelState, XmMesh> polyFactory;
+        private Function<PrimitiveState, XmMesh> polyFactory;
         private int bitCount = 0;
         private boolean simpleJoin;
         
@@ -64,7 +64,7 @@ public class SimplePrimitiveBuilderImpl {
         }
         
         @Override
-        public Builder polyFactory(Function<SimpleModelState, XmMesh> polyFactory) {
+        public Builder polyFactory(Function<PrimitiveState, XmMesh> polyFactory) {
             this.polyFactory = polyFactory == null ? t -> XmMesh.EMPTY : polyFactory;
             return this;
         }
@@ -86,7 +86,7 @@ public class SimplePrimitiveBuilderImpl {
         
         private final OrientationType orientationType;
         
-        private final Function<SimpleModelState, XmMesh> polyFactory;
+        private final Function<PrimitiveState, XmMesh> polyFactory;
         
         private boolean notifyException = true;
         
@@ -94,7 +94,7 @@ public class SimplePrimitiveBuilderImpl {
         
         private final boolean simpleJoin;
         
-        static Function<SimpleModelState, XmSurfaceList> listWrapper(XmSurfaceList list) {
+        static Function<PrimitiveState, XmSurfaceList> listWrapper(XmSurfaceList list) {
             return s -> list;
         }
         
@@ -119,12 +119,12 @@ public class SimplePrimitiveBuilderImpl {
         }
         
         @Override
-        public OrientationType orientationType(SimpleModelState modelState) {
+        public OrientationType orientationType(PrimitiveState modelState) {
             return orientationType;
         }
         
         @Override
-        public void produceQuads(SimpleModelState modelState, Consumer<Polygon> target) {
+        public void produceQuads(PrimitiveState modelState, Consumer<Polygon> target) {
             try {
                 int index = (modelState.orientationIndex() << bitShift) | modelState.primitiveBits();
                 if(simpleJoin) {
@@ -154,8 +154,8 @@ public class SimplePrimitiveBuilderImpl {
         }
 
         @Override
-        public MutableSimpleModelState geometricState(SimpleModelState fromState) {
-            MutableSimpleModelState result = newState()
+        public MutablePrimitiveState geometricState(PrimitiveState fromState) {
+            MutablePrimitiveState result = newState()
                     .orientationIndex(fromState.orientationIndex())
                     .primitiveBits(fromState.primitiveBits());
             
@@ -167,7 +167,7 @@ public class SimplePrimitiveBuilderImpl {
         }
 
         @Override
-        public boolean doesShapeMatch(SimpleModelState from, SimpleModelState to) {
+        public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
             return from.primitive() == to.primitive()
                     && from.orientationIndex() == to.orientationIndex()
                     && from.primitiveBits() == to.primitiveBits()

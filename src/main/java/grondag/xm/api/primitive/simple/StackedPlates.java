@@ -28,8 +28,8 @@ import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
-import grondag.xm.api.modelstate.MutableSimpleModelState;
-import grondag.xm.api.modelstate.SimpleModelState;
+import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
@@ -51,7 +51,7 @@ public class StackedPlates {
     public static final XmSurface SURFACE_TOP = SURFACES.get(1);
     public static final XmSurface SURFACE_SIDES = SURFACES.get(2);
 
-    static final Function<SimpleModelState, XmMesh> POLY_FACTORY = modelState -> {
+    static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
         final PolyTransform transform = PolyTransform.get(modelState);
         
         WritableMesh mesh = XmMeshes.claimWritable();
@@ -109,11 +109,11 @@ public class StackedPlates {
     * @param height  1-16
     * @param modelState
     */
-    public static void setHeight(int height, MutableSimpleModelState modelState) {
+    public static void setHeight(int height, MutablePrimitiveState modelState) {
         modelState.primitiveBits(MathHelper.clamp(height, 1, 16) - 1);
     }
 
-    public static int getHeight(SimpleModelState modelState) {
+    public static int getHeight(PrimitiveState modelState) {
         return modelState.primitiveBits() + 1;
     }
 }

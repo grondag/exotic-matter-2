@@ -27,7 +27,7 @@ import grondag.xm.relics.placement.PlacementItemFeature;
 import grondag.xm.relics.placement.XmBlockItem;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutablePrimitiveModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -92,7 +92,7 @@ public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
         Item item = stack.getItem();
         if (item instanceof VirtualItemBlock) {
             @SuppressWarnings("rawtypes")
-            final MutablePrimitiveModelState modelState = XmItem.modelState(stack);
+            final MutableBaseModelState modelState = XmItem.modelState(stack);
             if (modelState == null) {
                 return null;
             } else {

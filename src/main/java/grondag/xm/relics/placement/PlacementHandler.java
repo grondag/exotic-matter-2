@@ -25,7 +25,7 @@ import grondag.fermion.varia.Useful;
 import grondag.xm.XmConfig;
 import grondag.xm.api.connect.species.SpeciesMode;
 import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.MutablePrimitiveModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.orientation.HorizontalFace;
 import grondag.xm.relics.XmStackHelper;
 import grondag.xm.virtual.VirtualBlock;
@@ -183,7 +183,7 @@ public abstract class PlacementHandler {
         final ItemStack stack = specBuilder.placedStack().copy();
         final PlacementPosition pPos = specBuilder.placementPosition();
         @SuppressWarnings("rawtypes")
-        final MutablePrimitiveModelState modelState = XmItem.modelState(stack);
+        final MutableBaseModelState modelState = XmItem.modelState(stack);
         if (modelState != null && modelState.hasSpecies()) {
             //NOTE: stubbed out
             final int species = 0; //speciesForPlacement(specBuilder.player(), pPos.onPos, pPos.onFace, stack, specBuilder.region());
@@ -218,7 +218,7 @@ public abstract class PlacementHandler {
         boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
 
         @SuppressWarnings("rawtypes")
-        MutablePrimitiveModelState withModelState = XmItem.modelState(stack);
+        MutableBaseModelState withModelState = XmItem.modelState(stack);
         if (withModelState == null || !withModelState.hasSpecies())
             return 0;
 

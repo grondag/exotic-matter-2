@@ -13,14 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.modelstate;
+package grondag.xm.api.modelstate.primitive;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.modelstate.BlockStateToModelStateMap;
+import net.minecraft.block.BlockState;
+
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface ModelStateMap<T, V extends MutableModelState> {
-    V apply(T blockState);
+public interface BlockStateToPrimitiveStateMap extends BlockStateToModelStateMap <BlockState, MutablePrimitiveState> {
+    @Override
+    MutablePrimitiveState apply(BlockState blockState);
 }

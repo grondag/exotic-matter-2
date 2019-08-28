@@ -13,25 +13,16 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.modelstate;
+package grondag.xm.api.modelstate.primitive;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import javax.annotation.Nullable;
-
 import org.apiguardian.api.API;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import grondag.xm.api.modelstate.WorldToModelStateMutator;
 
-/**
- * Produces model state instance from world state, refreshing if necessary.
- */
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface WorldToModelState<T extends MutableModelState> {
-    @Nullable T apply(BlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorld);
-    
-    static WorldToModelState<?> NULL = (s, w, p, r) -> null;
+public interface WorldToPrimitiveStateMutator extends WorldToModelStateMutator<MutablePrimitiveState>{
+
 }

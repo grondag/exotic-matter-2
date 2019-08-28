@@ -19,14 +19,14 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.MutablePrimitiveModelState;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.terrain.TerrainState;
 
 @API(status = EXPERIMENTAL)
-public interface TerrainModelState extends PrimitiveModelState<TerrainModelState, TerrainModelState.Mutable>  {
+public interface TerrainModelState extends BaseModelState<TerrainModelState, TerrainModelState.Mutable>  {
 
-    public static interface Mutable extends TerrainModelState, MutablePrimitiveModelState<TerrainModelState, TerrainModelState.Mutable> {
+    public static interface Mutable extends TerrainModelState, MutableBaseModelState<TerrainModelState, TerrainModelState.Mutable> {
         TerrainModelState.Mutable setTerrainStateKey(long terrainStateKey);
         
         TerrainModelState.Mutable setTerrainState(TerrainState flowState);

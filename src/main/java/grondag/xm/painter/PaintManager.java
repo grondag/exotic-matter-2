@@ -27,7 +27,7 @@ import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
@@ -53,17 +53,17 @@ public class PaintManager implements Consumer<Polygon> {
 
     private static final boolean FREX_ACTIVE = Frex.isAvailable();
 
-    public static Mesh paint(PrimitiveModelState meshState) {
+    public static Mesh paint(BaseModelState meshState) {
         return POOL.get().handlePaint(meshState);
     }
 
     private final MeshBuilder builder = RENDERER.meshBuilder();
     private final MutableMesh work = XmMeshes.claimMutable();
     private final QuadEmitter emitter = builder.getEmitter();
-    private PrimitiveModelState modelState;
+    private BaseModelState modelState;
     private MaterialFinder finder = RENDERER.materialFinder();
 
-    private Mesh handlePaint(PrimitiveModelState modelState) {
+    private Mesh handlePaint(BaseModelState modelState) {
         this.modelState = modelState;
         modelState.emitPolygons(this);
         return builder.build();
@@ -72,7 +72,7 @@ public class PaintManager implements Consumer<Polygon> {
     @SuppressWarnings("unchecked")
     @Override
     public void accept(Polygon poly) {
-        final PrimitiveModelState modelState = this.modelState;
+        final BaseModelState modelState = this.modelState;
         final QuadEmitter emitter = this.emitter;
         final MutableMesh mesh = this.work;
         MutablePolygon editor = mesh.editor();

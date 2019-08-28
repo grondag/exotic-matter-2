@@ -21,7 +21,7 @@ import org.apiguardian.api.API;
 
 import grondag.fermion.color.ColorHelper;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.modelstate.PrimitiveModelState;
+import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
@@ -33,7 +33,7 @@ public class VertexProcessorDefault implements VertexProcessor {
 
     @Override
     @SuppressWarnings("rawtypes")
-    public final void process(MutablePolygon poly, PrimitiveModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+    public final void process(MutablePolygon poly, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
         int color = paint.textureColor(textureIndex);
 
         // If surface is a lamp gradient then glow bits are used

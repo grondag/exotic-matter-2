@@ -24,7 +24,7 @@ import org.apiguardian.api.API;
 import grondag.xm.Xm;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.modelstate.WorldToModelState;
+import grondag.xm.api.modelstate.WorldToModelStateMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
@@ -36,7 +36,7 @@ public class XmRegistryImpl {
     private XmRegistryImpl() {
     }
     
-    public static void register(Block block, Function<BlockState, ? extends WorldToModelState<?>> modelFunctionMap, Function<ItemStack, MutableModelState> itemModelFunction) {
+    public static void register(Block block, Function<BlockState, ? extends WorldToModelStateMap<?>> modelFunctionMap, Function<ItemStack, MutableModelState> itemModelFunction) {
         for (BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
                 // TODO: localize
