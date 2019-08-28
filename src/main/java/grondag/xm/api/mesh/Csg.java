@@ -59,7 +59,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
  * Uses polystreams and threadlocals to minimize garbage collection.
  */
 @API(status = EXPERIMENTAL)
-public abstract class CSG {
+public abstract class Csg {
     /**
      * Output a new mesh solid representing the difference of the two input meshes.
      *
@@ -81,13 +81,13 @@ public abstract class CSG {
      * </blockquote>
      */
     public static void difference(XmMesh a, XmMesh b, WritableMesh output) {
-        CsgMesh aCSG = XmMeshes.claimCsg(a);
-        CsgMesh bCSG = XmMeshes.claimCsg(b);
+        CsgMesh aCsg = XmMeshes.claimCsg(a);
+        CsgMesh bCsg = XmMeshes.claimCsg(b);
 
-        difference(aCSG, bCSG, output);
+        difference(aCsg, bCsg, output);
 
-        aCSG.release();
-        bCSG.release();
+        aCsg.release();
+        bCsg.release();
     }
 
     /**
@@ -137,13 +137,13 @@ public abstract class CSG {
      * </blockquote>
      */
     public static void intersect(XmMesh a, XmMesh b, WritableMesh output) {
-        CsgMesh aCSG = XmMeshes.claimCsg(a);
-        CsgMesh bCSG = XmMeshes.claimCsg(b);
+        CsgMesh aCsg = XmMeshes.claimCsg(a);
+        CsgMesh bCsg = XmMeshes.claimCsg(b);
 
-        intersect(aCSG, bCSG, output);
+        intersect(aCsg, bCsg, output);
 
-        aCSG.release();
-        bCSG.release();
+        aCsg.release();
+        bCsg.release();
     }
 
     /**
@@ -193,13 +193,13 @@ public abstract class CSG {
      *
      */
     public static void union(XmMesh a, XmMesh b, WritableMesh output) {
-        CsgMesh aCSG = XmMeshes.claimCsg(a);
-        CsgMesh bCSG = XmMeshes.claimCsg(b);
+        CsgMesh aCsg = XmMeshes.claimCsg(a);
+        CsgMesh bCsg = XmMeshes.claimCsg(b);
 
-        union(aCSG, bCSG, output);
+        union(aCsg, bCsg, output);
 
-        aCSG.release();
-        bCSG.release();
+        aCsg.release();
+        bCsg.release();
     }
 
     /**

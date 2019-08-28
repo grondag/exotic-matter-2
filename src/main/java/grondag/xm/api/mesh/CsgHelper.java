@@ -105,7 +105,7 @@ public class CsgHelper {
     /** must be the first operation */
     public void union() {
         if(hasOutput) {
-            CSG.union(input, output, temp);
+            Csg.union(input, output, temp);
             postOp();
         } else {
             hasOutput = true;
@@ -114,7 +114,7 @@ public class CsgHelper {
     
     public void intersect() {
         if(hasOutput) {
-            CSG.intersect(input, output, temp);
+            Csg.intersect(input, output, temp);
             postOp();
         } else {
             throw new UnsupportedOperationException("First operation must be union.");
@@ -123,7 +123,7 @@ public class CsgHelper {
     
     public void difference() {
         if(hasOutput) {
-            CSG.difference(input, output, temp);
+            Csg.difference(input, output, temp);
             postOp();
         } else {
             throw new UnsupportedOperationException("First operation must be union.");

@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 import grondag.xm.Xm;
-import grondag.xm.api.mesh.CSG;
+import grondag.xm.api.mesh.Csg;
 import grondag.xm.api.mesh.CsgMesh;
 import grondag.xm.api.mesh.MeshHelper;
 import grondag.xm.api.mesh.WritableMesh;
@@ -106,7 +106,7 @@ public class CSGTestPrimitive extends AbstractSimplePrimitive {
 
         WritableMesh output = XmMeshes.claimWritable();
 //        CSG.difference(quadsA, quadsB, output);
-        CSG.difference(quadsB, quadsA, output);
+        Csg.difference(quadsB, quadsA, output);
 //        CSG.union(quadsA, quadsB, output);
 //        CSG.intersect(quadsA, quadsB, output);
         
