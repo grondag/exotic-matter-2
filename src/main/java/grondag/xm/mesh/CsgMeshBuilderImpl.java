@@ -14,19 +14,25 @@
  * the License.
  ******************************************************************************/
  
- package grondag.xm.api.mesh;
+ package grondag.xm.mesh;
 
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 import grondag.xm.Xm;
+import grondag.xm.api.mesh.Csg;
+import grondag.xm.api.mesh.CsgMeshBuilder;
+import grondag.xm.api.mesh.CsgMesh;
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMesh;
+import grondag.xm.api.mesh.XmMeshes;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 @API(status = Status.EXPERIMENTAL)
-public class CsgHelper {
-    private static ThreadLocal<CsgHelper> THREADLOCAL = ThreadLocal.withInitial(CsgHelper::new);
+public class CsgMeshBuilderImpl implements CsgMeshBuilder {
+    private static ThreadLocal<CsgMeshBuilderImpl> THREADLOCAL = ThreadLocal.withInitial(CsgMeshBuilderImpl::new);
     
-    public static CsgHelper threadLocal() {
+    public static CsgMeshBuilder threadLocal() {
         return THREADLOCAL.get();
     }
     
@@ -36,6 +42,7 @@ public class CsgHelper {
     private CsgMesh output = XmMeshes.claimCsg();
     private boolean hasOutput = false;
     
+    @Override
     public void push() {
         if(hasOutput) {
             outputStack.push(output);
@@ -48,6 +55,7 @@ public class CsgHelper {
         }
     }
     
+    @Override
     public void pop() {
         if(outputStack.isEmpty()) {
             throw new IllegalStateException("Output stack is empty");
@@ -61,15 +69,18 @@ public class CsgHelper {
         }
     }
     
+    @Override
     public boolean hasOutputStack() {
         return !outputStack.isEmpty();
     }
     
+    @Override
     public CsgMesh input() {
         return hasOutput ? input : output;
     }
     
-    public XmMesh clearToReader() {
+    @Override
+    public XmMesh build() {
         if(!outputStack.isEmpty()) {
             Xm.LOG.warn("CsgHelper clear with non-empty stack.  This is unexpected and probably incorrect usage.");
             while (!outputStack.isEmpty()) {
@@ -103,6 +114,7 @@ public class CsgHelper {
     }
     
     /** must be the first operation */
+    @Override
     public void union() {
         if(hasOutput) {
             Csg.union(input, output, temp);
@@ -112,6 +124,7 @@ public class CsgHelper {
         }
     }
     
+    @Override
     public void intersect() {
         if(hasOutput) {
             Csg.intersect(input, output, temp);
@@ -121,6 +134,7 @@ public class CsgHelper {
         }
     }
     
+    @Override
     public void difference() {
         if(hasOutput) {
             Csg.difference(input, output, temp);
