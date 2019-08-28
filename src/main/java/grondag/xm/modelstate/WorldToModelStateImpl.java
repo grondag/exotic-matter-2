@@ -34,14 +34,14 @@ import grondag.xm.api.connect.world.ModelStateFunction;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.WorldToPrimitiveStateMutator;
-import grondag.xm.api.modelstate.primitive.WorldToPrimitiveStateMap;
+import grondag.xm.api.modelstate.primitive.PrimitiveStateFunction;
 import grondag.xm.api.primitive.simple.CubeWithRotation;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 @API(status = EXPERIMENTAL)
-public class WorldToModelStateImpl implements WorldToPrimitiveStateMap {
+public class WorldToModelStateImpl implements PrimitiveStateFunction {
     private final BlockTest<PrimitiveState> joinTest;
     private final WorldToPrimitiveStateMutator updater;
     private final PrimitiveState defaultState;
@@ -102,7 +102,7 @@ public class WorldToModelStateImpl implements WorldToPrimitiveStateMap {
         return modelState;
     }
     
-    private static class BuilderImpl implements WorldToPrimitiveStateMap.Builder {
+    private static class BuilderImpl implements PrimitiveStateFunction.Builder {
         private BlockTest<PrimitiveState> joinTest = BlockTest.sameBlock();
         private ArrayList<WorldToPrimitiveStateMutator> updaters = new ArrayList<>();
         private PrimitiveState defaultState = CubeWithRotation.INSTANCE.defaultState();
@@ -139,7 +139,7 @@ public class WorldToModelStateImpl implements WorldToPrimitiveStateMap {
         
         @Override
         public
-        WorldToPrimitiveStateMap build() {
+        PrimitiveStateFunction build() {
             return new WorldToModelStateImpl(this);
         }
 

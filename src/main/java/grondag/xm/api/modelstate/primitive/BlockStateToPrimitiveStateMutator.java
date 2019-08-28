@@ -7,14 +7,13 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.connect.world.BlockNeighbors;
-import grondag.xm.api.modelstate.BlockStateToModelStateMutator;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface BlockStateToPrimitiveStateMutator extends BlockStateToModelStateMutator<BlockState, MutablePrimitiveState>, WorldToPrimitiveStateMutator {
+public interface BlockStateToPrimitiveStateMutator extends WorldToPrimitiveStateMutator {
     @Override
     MutablePrimitiveState apply(MutablePrimitiveState modelState, BlockState blockState);
     

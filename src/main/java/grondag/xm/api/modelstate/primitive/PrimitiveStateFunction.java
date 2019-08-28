@@ -13,14 +13,36 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.modelstate;
+package grondag.xm.api.modelstate.primitive;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.connect.world.BlockTest;
+import grondag.xm.api.modelstate.ModelStateFunction;
+import grondag.xm.modelstate.WorldToModelStateImpl;
+
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
-public interface BlockStateToModelStateMap<T, V extends MutableModelState> {
-    V apply(T blockState);
+public interface PrimitiveStateFunction extends ModelStateFunction<MutablePrimitiveState> {
+    static PrimitiveStateFunction ofDefaultState(PrimitiveState defaultState) {
+        return builder().withDefaultState(defaultState).build();
+    }
+    
+    static Builder builder() {
+        return WorldToModelStateImpl.builder();
+    }
+    
+    public interface Builder {
+        Builder withJoin(BlockTest<PrimitiveState> joinTest);
+        
+        Builder withUpdate(WorldToPrimitiveStateMutator update);
+
+        PrimitiveStateFunction build();
+
+        Builder clear();
+
+        Builder withDefaultState(PrimitiveState defaultState);
+    }
 }

@@ -22,13 +22,13 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.WorldToModelStateMap;
+import grondag.xm.api.modelstate.ModelStateFunction;
 
 @API(status = INTERNAL)
 public interface XmBlockStateAccess {
-    void xm_modelStateFunc(WorldToModelStateMap<?> func);
+    void xm_modelStateFunc(ModelStateFunction<?> func);
 
-    WorldToModelStateMap<?> xm_modelStateFunc();
+    ModelStateFunction<?> xm_modelStateFunc();
     
     @Nullable XmBlockState xm_toXmBlockState();
 }
