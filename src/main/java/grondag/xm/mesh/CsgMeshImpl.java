@@ -288,9 +288,17 @@ class CsgMeshImpl extends MutableMeshImpl implements CsgMesh {
                         // coplanar front counts as front 
                         final int frontNodeAddress = getFrontNode(nodeAddress);
                         if (frontNodeAddress == NO_NODE_ADDRESS) {
-                            // no front node, so this poly starts it
-                            setFrontNode(nodeAddress, createNode(polyAddress));
+                            // done
                             return;
+//                            final int backNodeAddress = getBackNode(nodeAddress);
+//                            if (backNodeAddress == NO_NODE_ADDRESS) {
+//                                // no front node, so this poly starts it
+//                                setFrontNode(nodeAddress, createNode(polyAddress));
+//                                return;
+//                            }  else {
+//                                // loop at back node
+//                                nodeAddress = backNodeAddress;
+//                            }
                         } else {
                             // loop at front node
                             nodeAddress = frontNodeAddress;
@@ -298,9 +306,17 @@ class CsgMeshImpl extends MutableMeshImpl implements CsgMesh {
                     } else {
                         final int backNodeAddress = getBackNode(nodeAddress);
                         if (backNodeAddress == NO_NODE_ADDRESS) {
-                            // no back node, so this poly starts it
-                            setBackNode(nodeAddress, createNode(polyAddress));
+                            //done
                             return;
+//                            final int frontNodeAddress = getFrontNode(nodeAddress);
+//                            if (frontNodeAddress == NO_NODE_ADDRESS) {
+//                                // no back node, so this poly starts it
+//                                setBackNode(nodeAddress, createNode(polyAddress));
+//                                return;
+//                            } else {
+//                                // loop at front node
+//                                nodeAddress = frontNodeAddress;
+//                            }
                         } else {
                             // found a back node, so move to that node and loop
                             nodeAddress = backNodeAddress;

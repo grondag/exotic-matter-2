@@ -201,7 +201,7 @@ public abstract class Csg {
         aCsg.release();
         bCsg.release();
     }
-
+    
     /**
      * Version of {@link #union(XmMesh, XmMesh, WritableMesh)} to
      * use when you've already built CSG streams. Marks the streams complete but
@@ -222,12 +222,13 @@ public abstract class Csg {
             // some potential overlap
             // add union of the overlapping bits,
             // which will include any parts of B that need to be included
+        
             a.clipTo(b);
             b.clipTo(a);
             b.invert();
             b.clipTo(a);
             b.invert();
-
+            
             a.outputRecombinedQuads(output);
             b.outputRecombinedQuads(output);
 //        }
