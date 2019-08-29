@@ -32,6 +32,11 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     private static ThreadLocal<CsgMeshBuilderImpl> THREADLOCAL = ThreadLocal.withInitial(CsgMeshBuilderImpl::new);
     
+    private static final int NO_OP = 0;
+    private static final int UNION = 1;
+    private static final int DIFFERENCE = 2;
+    private static final int INTERSECT = 3;
+    
     public static CsgMeshBuilder threadLocal() {
         return THREADLOCAL.get();
     }
@@ -41,10 +46,12 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     private CsgMesh temp = XmMeshes.claimCsg();
     private CsgMesh output = XmMeshes.claimCsg();
     private boolean hasOutput = false;
+    private int pendingOp = NO_OP;
     
     @Override
     public void push() {
         if(hasOutput) {
+            applyPendingOp(temp);
             outputStack.push(output);
             output = XmMeshes.claimCsg();
             input.clear();
@@ -60,7 +67,8 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
         if(outputStack.isEmpty()) {
             throw new IllegalStateException("Output stack is empty");
         }
-        if(hasOutput) {
+        if (hasOutput) {
+            applyPendingOp(temp);
             input.release();
             input = outputStack.pop();
         } else {
@@ -76,36 +84,35 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     
     @Override
     public CsgMesh input() {
-        return hasOutput ? input : output;
+        if (hasOutput) {
+            applyPendingOp(temp);
+            return input;
+        } else {
+            return output;
+        }
     }
     
     @Override
     public XmMesh build() {
         if(!outputStack.isEmpty()) {
-            Xm.LOG.warn("CsgHelper clear with non-empty stack.  This is unexpected and probably incorrect usage.");
+            Xm.LOG.warn("CsgMeshBuilder build with non-empty stack.  This is unexpected and probably incorrect usage.");
             while (!outputStack.isEmpty()) {
                 outputStack.pop().release();
             }
         }
+        
+        WritableMesh target = XmMeshes.claimWritable();
+
+        if(pendingOp == NO_OP) {
+            output.outputRecombinedQuads(target);
+        } else {
+            applyPendingOp(target);
+        }
+        
         input.clear();
         temp.clear();
-        
-        // TODO: make config option?
-//        final Random r = ThreadLocalRandom.current();
-//        MutablePolygon editor = output.editor();
-//        if(editor.origin()) {
-//            do {
-//                editor.colorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
-//            } while (editor.next());
-//        }
-        
-        // PERF: defer each operation until we know if it is the last operation
-        // this would save the step of building a BSP tree on the output mesh
-        // only to recombine it for terminal operation
-        WritableMesh target = XmMeshes.claimWritable();
-        
-        output.outputRecombinedQuads(target);
         output.clear();
+        pendingOp = NO_OP;
         
         target.splitAsNeeded();
         XmMesh result = target.releaseToReader();
@@ -117,8 +124,7 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     @Override
     public void union() {
         if(hasOutput) {
-            Csg.union(input, output, temp);
-            postOp();
+            pendingOp = UNION;
         } else {
             hasOutput = true;
         }
@@ -127,8 +133,7 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     @Override
     public void intersect() {
         if(hasOutput) {
-            Csg.intersect(input, output, temp);
-            postOp();
+            pendingOp = INTERSECT;
         } else {
             throw new UnsupportedOperationException("First operation must be union.");
         }
@@ -137,18 +142,36 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     @Override
     public void difference() {
         if(hasOutput) {
-            Csg.difference(input, output, temp);
-            postOp();
+            pendingOp = DIFFERENCE;
         } else {
             throw new UnsupportedOperationException("First operation must be union.");
         }
     }
     
-    private void postOp() {
-        CsgMesh swap = output;
-        output = temp;
-        temp = swap;
-        swap.clear();
-        input.clear();
+    private void applyPendingOp(WritableMesh target) {
+        switch(pendingOp) {
+            case UNION:
+                Csg.union(input, output, target);
+                break;
+            case DIFFERENCE:
+                Csg.difference(input, output, target);
+                break;
+            case INTERSECT:
+                Csg.intersect(input, output, target);
+                break;
+            default:
+            case NO_OP:
+                return;
+        }
+        
+        pendingOp = NO_OP;
+        
+        if(target == temp) {
+            CsgMesh swap = output;
+            output = temp;
+            temp = swap;
+            swap.clear();
+            input.clear();
+        }
     }
 }
