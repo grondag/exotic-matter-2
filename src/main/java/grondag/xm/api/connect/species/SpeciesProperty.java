@@ -42,7 +42,7 @@ public class SpeciesProperty {
         return (world, blockState, pos) -> {
             if(blockState.getBlock() == block) {
                 final Comparable<?> result = blockState.getEntries().get(SPECIES);
-                return result == null ? SpeciesFunction.NO_SPECIES : (int)result;
+                return result == null ? SpeciesFunction.NO_SPECIES : (Integer)result;
             } else {
                 return SpeciesFunction.NO_SPECIES;
             }

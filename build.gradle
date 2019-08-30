@@ -101,49 +101,46 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
-	modImplementation "grondag:fermion:${project.fermion_version}.+" {
-        exclude group :"grondag"
-        exclude group :"net.fabricmc.fabric-api"
-    }
+	modRuntime "grondag:fermion:${project.fermion_version}.+"
     include "grondag:fermion:${project.fermion_version}.+"
     
-	modImplementation "grondag:fermion-modkeys:${project.fermion_modkeys_version}.+" {
+	modImplementation ("grondag:fermion-modkeys:${project.fermion_modkeys_version}.+") {
         exclude group :"grondag"
         exclude group :"net.fabricmc.fabric-api"
     }
     include "grondag:fermion-modkeys:${project.fermion_modkeys_version}.+"
     
-    modImplementation "grondag:fermion-varia:${project.fermion_varia_version}.+" {
+    modImplementation ("grondag:fermion-varia:${project.fermion_varia_version}.+") {
         exclude group :"grondag"
         exclude group :"net.fabricmc.fabric-api"
     }
     include "grondag:fermion-varia:${project.fermion_varia_version}.+"
     
-    modImplementation "grondag:fermion-simulator:${project.fermion_simulator_version}.+" {
+    modImplementation ("grondag:fermion-simulator:${project.fermion_simulator_version}.+") {
         exclude group :"grondag"
         exclude group :"net.fabricmc.fabric-api"
     }
     include "grondag:fermion-simulator:${project.fermion_simulator_version}.+"
     
-	modImplementation "grondag:special-circumstances:${project.special_circumstances_version}.+" {
+	modImplementation ("grondag:special-circumstances:${project.special_circumstances_version}.+") {
         exclude group :"grondag"
         exclude group :"net.fabricmc.fabric-api"
     }
     include "grondag:special-circumstances:${project.special_circumstances_version}.+"
         
-	modImplementation "grondag:frex:${project.frex_version}.+" {
+	modImplementation ("grondag:frex:${project.frex_version}.+") {
         exclude group :"grondag"
         exclude group :"net.fabricmc.fabric-api"
     }
     include "grondag:frex:${project.frex_version}.+"
     
-	modImplementation "grondag:joml-mod:1.0+" {
+	modImplementation ("grondag:joml-mod:1.0+") {
         exclude group :"grondag"
         exclude group :"net.fabricmc.fabric-api"
     }
     include "grondag:joml-mod:1.0+"
 	
-	modImplementation "blue.endless:jankson:1.1.2" {
+	modImplementation ("blue.endless:jankson:1.1.2") {
         exclude group :"net.fabricmc.fabric-api"
     }
 	include "blue.endless:jankson:1.1.2"
