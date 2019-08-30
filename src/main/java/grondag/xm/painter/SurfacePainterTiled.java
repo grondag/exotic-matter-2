@@ -152,17 +152,17 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         final MutablePolygon writer = stream.writer();
 
         final int sliceAddress = stream.writerAddress();
-        stream.setVertexCount(sliceCount + 2);
-        writer.copyFrom(reader, false);
-        writer.minU(layerIndex, flipped ? 1 : 0);
-        writer.maxU(layerIndex, flipped ? 0 : 1);
-        stream.append();
+        writer.vertexCount(sliceCount + 2)
+            .copyFrom(reader, false)
+            .minU(layerIndex, flipped ? 1 : 0)
+            .maxU(layerIndex, flipped ? 0 : 1)
+            .append();
         int iSliceVertex = 0;
 
         final int remainderAddress = stream.writerAddress();
-        stream.setVertexCount(remainderCount + 2);
-        writer.copyFrom(reader, false);
-        stream.append();
+        writer.vertexCount(remainderCount + 2)
+            .copyFrom(reader, false)
+            .append();
         int iRemainderVertex = 0;
 
         float uThis = vertexU[vCountIn - 1];
@@ -296,17 +296,17 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         final MutablePolygon writer = stream.writer();
 
         final int sliceAddress = stream.writerAddress();
-        stream.setVertexCount(sliceCount + 2);
-        writer.copyFrom(reader, false);
-        writer.minV(layerIndex, flipped ? 1 : 0);
-        writer.maxV(layerIndex, flipped ? 0 : 1);
-        stream.append();
+        writer.vertexCount(sliceCount + 2)
+            .copyFrom(reader, false)
+            .minV(layerIndex, flipped ? 1 : 0)
+            .maxV(layerIndex, flipped ? 0 : 1)
+            .append();
         int iSliceVertex = 0;
 
         final int remainderAddress = stream.writerAddress();
-        stream.setVertexCount(remainderCount + 2);
-        writer.copyFrom(reader, false);
-        stream.append();
+        writer.vertexCount(remainderCount + 2)
+            .copyFrom(reader, false)
+            .append();
         int iRemainderVertex = 0;
 
         float vThis = vertexV[vCountIn - 1];
@@ -470,7 +470,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                             // earlier UV splits may have left us with something other than a convex quad or
                             // tri
                             // doing this last to avoid have to loop through the splits
-                            if (stream.splitIfNeeded(editorAddress) != Polygon.NO_LINK_OR_TAG) {
+                            if (editor.splitIfNeeded()) {
                                 assert editor.isDeleted();
                             }
                         });

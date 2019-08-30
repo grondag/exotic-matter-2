@@ -60,39 +60,39 @@ public class StackedPlates {
         writer.lockUV(0, true);
         writer.rotation(0, Rotation.ROTATE_NONE);
         writer.sprite(0, "");
-        mesh.saveDefaults();
+        writer.saveDefaults();
 
         final float height = getHeight(modelState) / 16;
         
         writer.surface(SURFACE_BOTTOM);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.accept(writer);
-        mesh.append();
+        writer.append();
         
         writer.surface(SURFACE_TOP);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 1 - height, Direction.NORTH);
         transform.accept(writer);
-        mesh.append();
+        writer.append();
         
         writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, height, 0, Direction.UP);
         transform.accept(writer);
-        mesh.append();
+        writer.append();
         
         writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, height, 0, Direction.UP);
         transform.accept(writer);
-        mesh.append();
+        writer.append();
         
         writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, height, 0, Direction.UP);
         transform.accept(writer);
-        mesh.append();
+        writer.append();
         
         writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, height, 0, Direction.UP);
         transform.accept(writer);
-        mesh.append();
+        writer.append();
 
         return mesh.releaseToReader();
     };

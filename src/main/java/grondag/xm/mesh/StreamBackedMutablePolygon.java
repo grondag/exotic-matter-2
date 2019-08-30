@@ -21,7 +21,6 @@ import org.apiguardian.api.API;
 
 import grondag.fermion.color.ColorHelper;
 import grondag.fermion.spatial.Rotation;
-import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
@@ -364,17 +363,18 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
     }
 
     @Override
-    public final void copyFrom(Polygon polyIn, boolean includeVertices) {
+    public final MutablePolygon copyFrom(Polygon polyIn, boolean includeVertices) {
         // PERF: make this faster for other stream-based polys
         nominalFace(polyIn.nominalFace());
         cullFace(polyIn.cullFace());
 
         final int faceNormalFormat = MeshFormat.getFaceNormalFormat(format());
-        if (faceNormalFormat == MeshFormat.FACE_NORMAL_FORMAT_COMPUTED)
+        if (faceNormalFormat == MeshFormat.FACE_NORMAL_FORMAT_COMPUTED) {
             clearFaceNormal();
-        else if (faceNormalFormat == MeshFormat.FACE_NORMAL_FORMAT_QUANTIZED)
+        } else if (faceNormalFormat == MeshFormat.FACE_NORMAL_FORMAT_QUANTIZED) {
             polyEncoder.setFaceNormal(stream, faceNormalFormat, polyIn.faceNormal());
-
+        }
+        
         final int layerCount = polyIn.spriteDepth();
         assert layerCount == spriteDepth();
 
@@ -400,12 +400,14 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         if (includeVertices) {
             final int vertexCount = polyIn.vertexCount();
             if (vertexCount() == vertexCount) {
-                for (int i = 0; i < vertexCount; i++)
+                for (int i = 0; i < vertexCount; i++) {
                     this.copyVertexFrom(i, polyIn, i);
-            } else
+                }
+            } else {
                 throw new UnsupportedOperationException("Polygon vertex counts must match when copying vertex data.");
-
+            }
         }
+        return this;
     }
 
     /**
@@ -543,7 +545,36 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
     @Override
     public MutablePolygon append() {
-        ((WritableMesh)this.mesh).append();
+        ((WritableMeshImpl)this.mesh).append();
         return this;
+    }
+
+    @Override
+    public MutablePolygon saveDefaults() {
+        ((WritableMeshImpl)this.mesh).saveDefaults();
+        return this;
+    }
+
+    @Override
+    public MutablePolygon clearDefaults() {
+        ((WritableMeshImpl)this.mesh).clearDefaults();
+        return this;
+    }
+
+    @Override
+    public MutablePolygon loadDefaults() {
+        ((WritableMeshImpl)this.mesh).loadDefaults();
+        return this;
+    }
+
+    @Override
+    public MutablePolygon vertexCount(int vertexCount) {
+        setFormat(MeshFormat.setVertexCount(format(), vertexCount));
+        return this;
+    }
+
+    @Override
+    public boolean splitIfNeeded() {
+        return ((WritableMeshImpl)this.mesh).splitIfNeeded(this.address()) != Polygon.NO_LINK_OR_TAG;
     }
 }

@@ -114,6 +114,6 @@ public class CubeInputs {
             break;
         }
 
-        stream.append();
+        q.append();
     }
 }

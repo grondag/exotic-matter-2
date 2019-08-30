@@ -67,8 +67,8 @@ class CsgPolyRecombinator {
         // invert if needed
         if (input.isInverted()) {
             polyAddress = input.writerAddress();
-            input.setVertexCount(polyA.vertexCount());
             final MutablePolygon writer = input.writer();
+            writer.vertexCount(polyA.vertexCount());
             writer.copyFrom(polyA, true);
             writer.flip();
             
@@ -90,37 +90,37 @@ class CsgPolyRecombinator {
             final MutablePolygon writer = output.writer();
             while (head - tail > 1) {
                 int size = head - tail == 2 ? 3 : 4;
-                output.setVertexCount(size);
-                writer.copyFrom(polyA, false);
-                writer.copyVertexFrom(0, polyA, head);
-                writer.copyVertexFrom(1, polyA, tail);
-                writer.copyVertexFrom(2, polyA, ++tail);
+                writer.vertexCount(size)
+                    .copyFrom(polyA, false)
+                    .copyVertexFrom(0, polyA, head)
+                    .copyVertexFrom(1, polyA, tail)
+                    .copyVertexFrom(2, polyA, ++tail);
                 
                 if (size == 3) {
-                    output.append();
+                    writer.append();
                 } else {
                     writer.copyVertexFrom(3, polyA, --head);
                     if (writer.isConvex()) {
-                        output.append();
+                        writer.append();
                     } else {
                         // Oops - output is convex so backtrack and do two tris instead.
                         // Can't call handleConvex because already using writer
                         tail--;
                         head++;
 
-                        output.setVertexCount(3);
-                        writer.copyFrom(polyA, false);
-                        writer.copyVertexFrom(0, polyA, head);
-                        writer.copyVertexFrom(1, polyA, tail);
-                        writer.copyVertexFrom(2, polyA, ++tail);
-                        output.append();
+                        writer.vertexCount(3)
+                            .copyFrom(polyA, false)
+                            .copyVertexFrom(0, polyA, head)
+                            .copyVertexFrom(1, polyA, tail)
+                            .copyVertexFrom(2, polyA, ++tail)
+                            .append();
 
-                        output.setVertexCount(3);
-                        writer.copyFrom(polyA, false);
-                        writer.copyVertexFrom(0, polyA, head);
-                        writer.copyVertexFrom(1, polyA, tail);
-                        writer.copyVertexFrom(2, polyA, --head);
-                        output.append();
+                        writer.vertexCount(3)
+                            .copyFrom(polyA, false)
+                            .copyVertexFrom(0, polyA, head)
+                            .copyVertexFrom(1, polyA, tail)
+                            .copyVertexFrom(2, polyA, --head)
+                            .append();
                     }
                 }
             }
@@ -399,9 +399,9 @@ class CsgPolyRecombinator {
         // actually build the new quad
         final int result = input.writerAddress();
         MutablePolygon writer = input.writer();
-        input.setVertexCount(size);
-        writer.copyFrom(polyA, false);
-        writer.tag(polyA.tag());
+        writer.vertexCount(size)
+            .copyFrom(polyA, false)
+            .tag(polyA.tag());
         for (int i = 0; i < size; i++) {
             int j = joinedVertex.getInt(i);
             if (j > 0) {

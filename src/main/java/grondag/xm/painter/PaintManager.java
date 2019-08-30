@@ -88,7 +88,10 @@ public class PaintManager implements Consumer<Polygon> {
         mesh.appendCopy(poly);
         editor.origin();
         
-        assert editor.vertexCount() <= 4;
+        if(editor.vertexCount() > 4) {
+            //TODO: remove 
+            Xm.LOG.info("Encountered higher-order polygon during paint. Bad primitive output.");
+        }
 
         final int depth = paint.textureDepth();
         editor.spriteDepth(depth);

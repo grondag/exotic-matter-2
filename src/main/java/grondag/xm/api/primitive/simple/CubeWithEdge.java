@@ -53,41 +53,41 @@ public class CubeWithEdge  {
         
         WritableMesh mesh = XmMeshes.claimWritable();
         MutablePolygon writer = mesh.writer();
-        writer.colorAll(0, 0xFFFFFFFF);
-        writer.lockUV(0, true);
-        writer.rotation(0, Rotation.ROTATE_NONE);
-        writer.sprite(0, "");
-        mesh.saveDefaults();
+        writer.colorAll(0, 0xFFFFFFFF)
+            .lockUV(0, true)
+            .rotation(0, Rotation.ROTATE_NONE)
+            .sprite(0, "")
+            .saveDefaults();
 
-        writer.surface(SURFACE_BACK);
-        writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.accept(writer);
-        mesh.append();
+        writer.surface(SURFACE_BACK)
+            .setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH)
+            .apply(transform)
+            .append();
+       
+        writer.surface(SURFACE_FRONT)
+            .setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH)
+            .apply(transform)
+            .append();
         
-        writer.surface(SURFACE_FRONT);
-        writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.accept(writer);
-        mesh.append();
+        writer.surface(SURFACE_SIDE)
+            .setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP)
+            .apply(transform)
+            .append();
         
-        writer.surface(SURFACE_SIDE);
-        writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.accept(writer);
-        mesh.append();
+        writer.surface(SURFACE_SIDE)
+            .setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP)
+            .apply(transform)
+            .append();
         
-        writer.surface(SURFACE_SIDE);
-        writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.accept(writer);
-        mesh.append();
+        writer.surface(SURFACE_FRONT)
+            .setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP)
+            .apply(transform)
+            .append();
         
-        writer.surface(SURFACE_FRONT);
-        writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.accept(writer);
-        mesh.append();
-        
-        writer.surface(SURFACE_BACK);
-        writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.accept(writer);
-        mesh.append();
+        writer.surface(SURFACE_BACK)
+            .setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP)
+            .apply(transform)
+            .append();
 
         return mesh.releaseToReader();
     };

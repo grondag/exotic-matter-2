@@ -62,14 +62,14 @@ public class Wedge extends AbstractWedge {
         
         quad.rotation(0, Rotation.ROTATE_NONE);
         quad.lockUV(0, true);
-        stream.saveDefaults();
+        quad.saveDefaults();
 
         // bottom is always the same
         quad.surface(SURFACE_BOTTOM);
         quad.nominalFace(Direction.DOWN);
         quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.NORTH);
         transform.accept(quad);
-        stream.append();
+        quad.append();
         
         // back is full except for outside corners
         quad.surface(SURFACE_BACK);
@@ -87,7 +87,7 @@ public class Wedge extends AbstractWedge {
             quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
         }
         transform.accept(quad);
-        stream.append();
+        quad.append();
         
         if(!isCorner || isInside) {
             quad.surface(SURFACE_SIDES);
@@ -100,7 +100,7 @@ public class Wedge extends AbstractWedge {
                     Direction.UP);
             quad.assignLockedUVCoordinates(0);
             transform.accept(quad);
-            stream.append();
+            quad.append();
         }
 //        } else {
 //            quad.setupFaceQuad(Direction.EAST, 
@@ -126,7 +126,7 @@ public class Wedge extends AbstractWedge {
         }
         quad.assignLockedUVCoordinates(0);
         transform.accept(quad);
-        stream.append();
+        quad.append();
         
         // front/top
         if(isCorner) {
@@ -141,7 +141,7 @@ public class Wedge extends AbstractWedge {
                         Direction.SOUTH);
                 quad.assignLockedUVCoordinates(0);
                 transform.accept(quad);
-                stream.append();
+                quad.append();
                 
                 quad.surface(SURFACE_TOP);
                 quad.nominalFace(Direction.UP);
@@ -153,7 +153,7 @@ public class Wedge extends AbstractWedge {
                         Direction.SOUTH);
                 quad.assignLockedUVCoordinates(0);
                 transform.accept(quad);
-                stream.append();
+                quad.append();
                 
                 // inside has an extra side face on the front
                 quad.surface(SURFACE_SIDES);
@@ -166,7 +166,7 @@ public class Wedge extends AbstractWedge {
                         Direction.UP);
                 quad.assignLockedUVCoordinates(0);
                 transform.accept(quad);
-                stream.append();
+                quad.append();
                 
             } else {
                 // outside
@@ -180,7 +180,7 @@ public class Wedge extends AbstractWedge {
                         Direction.SOUTH);
                 quad.assignLockedUVCoordinates(0);
                 transform.accept(quad);
-                stream.append();
+                quad.append();
                 
                 quad.surface(SURFACE_TOP);
                 quad.nominalFace(Direction.UP);
@@ -192,7 +192,7 @@ public class Wedge extends AbstractWedge {
                         Direction.SOUTH);
                 quad.assignLockedUVCoordinates(0);
                 transform.accept(quad);
-                stream.append();
+                quad.append();
             }
         } else {
             quad.surface(SURFACE_TOP);
@@ -205,7 +205,7 @@ public class Wedge extends AbstractWedge {
                     Direction.SOUTH);
             quad.assignLockedUVCoordinates(0);
             transform.accept(quad);
-            stream.append();
+            quad.append();
         }
 
         return stream.releaseToReader();

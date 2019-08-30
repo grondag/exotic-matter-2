@@ -95,11 +95,11 @@ public class XmMeshesImpl {
 
             MutablePolygon writer = result.writer();
             do {
-                result.setVertexCount(reader.vertexCount());
-                result.setLayerCount(reader.spriteDepth());
+                writer.vertexCount(reader.vertexCount());
+                writer.spriteDepth(reader.spriteDepth());
                 writer.copyFrom(reader, true);
                 writer.colorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
-                result.append();
+                writer.append();
             } while (reader.next());
         }
 

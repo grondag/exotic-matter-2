@@ -117,21 +117,18 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
         return writeAddress;
     }
 
-    @Override
-    public final void append() {
+    final void append() {
         appendCopy(writer, formatFlags);
         loadDefaults();
     }
 
-    @Override
-    public void saveDefaults() {
+    void saveDefaults() {
         writer.clearFaceNormal();
         defaultStream.clear();
         defaultStream.copyFrom(0, writerStream, 0, MeshFormat.polyStride(writer.format(), false));
     }
 
-    @Override
-    public void clearDefaults() {
+    void clearDefaults() {
         defaultStream.clear();
         defaultStream.set(0, MeshFormat.setVertexCount(formatFlags, 4));
         writer.stream = defaultStream;
@@ -143,8 +140,7 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
         writer.loadFormat();
     }
 
-    @Override
-    public void loadDefaults() {
+    void loadDefaults() {
         writerStream.clear();
         writerStream.copyFrom(0, defaultStream, 0, MAX_STRIDE);
         writer.loadFormat();
@@ -160,16 +156,6 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
     @Override
     public ReadOnlyMesh toReader() {
         return XmMeshesImpl.claimReadOnly(this, 0);
-    }
-
-    @Override
-    public void setVertexCount(int vertexCount) {
-        writer.setFormat(MeshFormat.setVertexCount(writer.format(), vertexCount));
-    }
-
-    @Override
-    public void setLayerCount(int layerCount) {
-        writer.spriteDepth(layerCount);
     }
 
     @Override
@@ -192,8 +178,7 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
         }
     }
     
-    @Override
-    public int splitIfNeeded(int targetAddress) {
+   int splitIfNeeded(int targetAddress) {
         internal.moveTo(targetAddress);
         final int inCount = internal.vertexCount();
         if (inCount == 3 || (inCount == 4 && internal.isConvex())) {
@@ -204,22 +189,22 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
 
         int head = inCount - 1;
         int tail = 2;
-        writer.copyFrom(internal, false);
-        setVertexCount(4);
-        writer.copyVertexFrom(0, internal, head);
-        writer.copyVertexFrom(1, internal, 0);
-        writer.copyVertexFrom(2, internal, 1);
-        writer.copyVertexFrom(3, internal, tail);
-        append();
+        writer.copyFrom(internal, false)
+            .vertexCount(4)
+            .copyVertexFrom(0, internal, head)
+            .copyVertexFrom(1, internal, 0)
+            .copyVertexFrom(2, internal, 1)
+            .copyVertexFrom(3, internal, tail)
+            .append();
 
         while (head - tail > 1) {
             final int vCount = head - tail == 2 ? 3 : 4;
             internal.moveTo(targetAddress);
-            writer.copyFrom(internal, false);
-            setVertexCount(vCount);
-            writer.copyVertexFrom(0, internal, head);
-            writer.copyVertexFrom(1, internal, tail);
-            writer.copyVertexFrom(2, internal, ++tail);
+            writer.copyFrom(internal, false)
+                .vertexCount(vCount)
+                .copyVertexFrom(0, internal, head)
+                .copyVertexFrom(1, internal, tail)
+                .copyVertexFrom(2, internal, ++tail);
             if (vCount == 4) {
                 writer.copyVertexFrom(3, internal, --head);
 
@@ -228,11 +213,11 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
                 if (!writer.isConvex()) {
                     head++;
                     tail--;
-                    writer.copyFrom(internal, false);
-                    setVertexCount(3);
-                    writer.copyVertexFrom(0, internal, head);
-                    writer.copyVertexFrom(1, internal, tail);
-                    writer.copyVertexFrom(2, internal, ++tail);
+                    writer.copyFrom(internal, false)
+                        .vertexCount(3)
+                        .copyVertexFrom(0, internal, head)
+                        .copyVertexFrom(1, internal, tail)
+                        .copyVertexFrom(2, internal, ++tail);
                 }
             }
             append();

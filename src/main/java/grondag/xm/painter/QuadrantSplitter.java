@@ -128,15 +128,15 @@ public class QuadrantSplitter {
 
             int highAddress = stream.writerAddress();
             int iHighVertex = 0;
-            stream.setVertexCount(highCount + 2);
-            writer.copyFrom(reader, false);
-            stream.append();
+            writer.vertexCount(highCount + 2)
+                .copyFrom(reader, false)
+                .append();
 
             int lowAddress = stream.writerAddress();
             int iLowVertex = 0;
-            stream.setVertexCount(lowCount + 2);
-            writer.copyFrom(reader, false);
-            stream.append();
+            writer.vertexCount(lowCount + 2)
+                .copyFrom(reader, false)
+                .append();
 
             int iThis = vCount - 1;
             float uThis = reader.u(iThis, layerIndex);
@@ -212,15 +212,15 @@ public class QuadrantSplitter {
 
             int highAddress = stream.writerAddress();
             int iHighVertex = 0;
-            stream.setVertexCount(highCount + 2);
-            writer.copyFrom(reader, false);
-            stream.append();
+            writer.vertexCount(highCount + 2)
+                .copyFrom(reader, false)
+                .append();
 
             int lowAddress = stream.writerAddress();
             int iLowVertex = 0;
-            stream.setVertexCount(lowCount + 2);
-            writer.copyFrom(reader, false);
-            stream.append();
+            writer.vertexCount(lowCount + 2)
+                .copyFrom(reader, false)
+                .append();
 
             int iThis = vCount - 1;
             float vThis = reader.v(iThis, layerIndex);

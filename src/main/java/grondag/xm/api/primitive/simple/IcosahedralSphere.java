@@ -44,9 +44,10 @@ public class IcosahedralSphere {
     static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
         
         WritableMesh mesh = XmMeshes.claimWritable();
-        mesh.writer().lockUV(0, false);
-        mesh.writer().surface(SURFACE_ALL);
-        mesh.saveDefaults();
+        mesh.writer()
+            .lockUV(0, false)
+            .surface(SURFACE_ALL)
+            .saveDefaults();
 
         sphere(mesh);
         return mesh.releaseToReader();
@@ -62,9 +63,10 @@ public class IcosahedralSphere {
     
     public static void sphere(WritableMesh mesh) {
         final WritableMesh icoMesh = XmMeshes.claimWritable();
-        icoMesh.writer().surface(mesh.writer().surface());
-        icoMesh.writer().lockUV(0, false);
-        icoMesh.saveDefaults();
+        icoMesh.writer()
+            .surface(mesh.writer().surface())
+            .lockUV(0, false)
+            .saveDefaults();
         Icosahedron.icosahedron(Vec3d.ZERO, 0.5, icoMesh, true);
         
         final Polygon reader = icoMesh.reader();
@@ -85,8 +87,8 @@ public class IcosahedralSphere {
     static void subdivideAndEmit(Polygon poly, WritableMesh output) {
         final MutablePolygon writer = output.writer();
         writer.spriteDepth(1);
-        output.setVertexCount(3);
-        output.saveDefaults();
+        writer.vertexCount(3);
+        writer.saveDefaults();
         
         final float xCenter = (poly.x(0) + poly.x(1) + poly.x(2)) / 3;
         final float yCenter = (poly.y(0) + poly.y(1) + poly.y(2)) / 3;
@@ -120,7 +122,7 @@ public class IcosahedralSphere {
         writer.color(2, 0, 0xFFFFFFFF);
         scalePoly(writer);
         writer.translate(0.5f);
-        output.append();
+        writer.append();
         
         writer.copyFrom(poly, false);
         writer.pos(0, xMid, yMid, zMid);
@@ -132,7 +134,7 @@ public class IcosahedralSphere {
         writer.color(2, 0, 0xFFFFFFFF);
         scalePoly(writer);
         writer.translate(0.5f);
-        output.append();
+        writer.append();
     }
     
     static void scalePoly(MutablePolygon poly) {

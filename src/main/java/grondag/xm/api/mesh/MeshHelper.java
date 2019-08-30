@@ -120,33 +120,33 @@ public class MeshHelper {
      */
     public static void box(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, WritableMesh stream) {
         MutablePolygon quad = stream.writer();
-        stream.setVertexCount(4);
+        quad.vertexCount(4);
         quad.setupFaceQuad(Direction.UP, 1 - maxX, minZ, 1 - minX, maxZ, 1 - maxY, Direction.SOUTH);
-        stream.append();
+        quad.append();
 
-        stream.setVertexCount(4);
+        quad.vertexCount(4);
         quad.setupFaceQuad(Direction.DOWN, minX, minZ, maxX, maxZ, minY, Direction.SOUTH);
-        stream.append();
+        quad.append();
 
         // -X
-        stream.setVertexCount(4);
+        quad.vertexCount(4);
         quad.setupFaceQuad(Direction.WEST, minZ, minY, maxZ, maxY, minX, Direction.UP);
-        stream.append();
+        quad.append();
 
         // +X
-        stream.setVertexCount(4);
+        quad.vertexCount(4);
         quad.setupFaceQuad(Direction.EAST, 1 - maxZ, minY, 1 - minZ, maxY, 1 - maxX, Direction.UP);
-        stream.append();
+        quad.append();
 
         // -Z
-        stream.setVertexCount(4);
+        quad.vertexCount(4);
         quad.setupFaceQuad(Direction.NORTH, 1 - maxX, minY, 1 - minX, maxY, minZ, Direction.UP);
-        stream.append();
+        quad.append();
 
         // +Z
-        stream.setVertexCount(4);
+        quad.vertexCount(4);
         quad.setupFaceQuad(Direction.SOUTH, minX, minY, maxX, maxY, 1 - maxZ, Direction.UP);
-        stream.append();
+        quad.append();
     }
 
 //    /**

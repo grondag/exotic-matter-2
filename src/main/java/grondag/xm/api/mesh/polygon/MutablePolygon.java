@@ -400,7 +400,7 @@ public interface MutablePolygon extends Polygon {
      * 
      * Does not copy links, marks, tags or deleted status.
      */
-    void copyFrom(Polygon polyIn, boolean includeVertices);
+    MutablePolygon copyFrom(Polygon polyIn, boolean includeVertices);
 
     default MutablePolygon tag(int tag) {
         throw new UnsupportedOperationException();
@@ -424,4 +424,31 @@ public interface MutablePolygon extends Polygon {
     }
     
     MutablePolygon append();
+    
+    /**
+     * Current poly settings will be used to initialize WIP after append.
+     */
+    MutablePolygon saveDefaults();
+
+    /**
+     * Undoes effects of {@link #saveDefaults()} so that defaults are for a new poly
+     * stream.
+     */
+    MutablePolygon clearDefaults();
+
+    /**
+     * Loads default values into WIP.
+     */
+    MutablePolygon loadDefaults();
+    
+    /**
+     * Sets vertex count for current writer. Value can be saved as part of defaults.
+     */
+    MutablePolygon vertexCount(int vertexCount);
+    
+    /**
+     * 
+     * @return {@code true} if poly was split - meaning it should also be deleted
+     */
+    boolean splitIfNeeded();
 }

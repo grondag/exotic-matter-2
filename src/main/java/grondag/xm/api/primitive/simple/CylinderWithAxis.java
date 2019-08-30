@@ -58,7 +58,7 @@ public class CylinderWithAxis  {
         writer.lockUV(0, false);
         writer.rotation(0, Rotation.ROTATE_NONE);
         writer.sprite(0, "");
-        mesh.saveDefaults();
+        writer.saveDefaults();
         
         final Consumer<MutablePolygon> transform = p -> {
             p.nominalFace(p.lightFace()).apply(pt);

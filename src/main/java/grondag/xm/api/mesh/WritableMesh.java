@@ -18,7 +18,6 @@ package grondag.xm.api.mesh;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -29,28 +28,6 @@ import grondag.xm.api.mesh.polygon.Polygon;
  */
 @API(status = EXPERIMENTAL)
 public interface WritableMesh extends XmMesh {
-
-    /**
-     * Current setting for packed normals. See {@link #setPackedNormals(boolean)}
-     */
-    default boolean usePackedNormals() {
-        return false;
-    }
-
-    /**
-     * Set to true to compress face and vertex normals.
-     * <p>
-     * 
-     * Packed normals are less precise, so should only use for streams that will be
-     * used for rendering and not CSG or other operations.
-     * <p>
-     * 
-     * False by default. Not all stream writers support. If unsupported, stream will
-     * simply ignore.
-     */
-    default void setPackedNormals(boolean usePacked) {
-        // NOOP
-    }
 
     /**
      * Holds WIP poly data that will be appended by next call to {@link #append()}.
@@ -69,32 +46,6 @@ public interface WritableMesh extends XmMesh {
     int writerAddress();
 
     /**
-     * Appends WIP as new poly and resets WIP to default values. Increases size of
-     * stream by 1.
-     * @deprecated Use append on poly instead.
-     */
-    //TODO: deprecated
-    @Deprecated
-    @API(status = Status.DEPRECATED)
-    void append();
-
-    /**
-     * Current poly settings will be used to initialize WIP after append.
-     */
-    void saveDefaults();
-
-    /**
-     * Undoes effects of {@link #saveDefaults()} so that defaults are for a new poly
-     * stream.
-     */
-    void clearDefaults();
-
-    /**
-     * Loads default values into WIP.
-     */
-    void loadDefaults();
-
-    /**
      * Releases this stream and returns an immutable reader stream. The reader strip
      * will use non-pooled heap memory and thus should only be used for streams with
      * a significant lifetime to prevent needless garbage collection.
@@ -109,16 +60,6 @@ public interface WritableMesh extends XmMesh {
     ReadOnlyMesh toReader();
     
     /**
-     * Sets vertex count for current writer. Value can be saved as part of defaults.
-     */
-    void setVertexCount(int vertexCount);
-
-    /**
-     * Sets layer count for current writer. Value can be saved as part of defaults.
-     */
-    void setLayerCount(int layerCount);
-
-    /**
      * Makes no change to writer state, except address.
      */
     void appendCopy(Polygon poly);
@@ -132,22 +73,6 @@ public interface WritableMesh extends XmMesh {
             } while (reader.next());
         }
     }
-
-    /**
-     * If the poly at the given address is a tri or a convex quad, does nothing and
-     * returns IStreamPolygon#NO_ADDRESS.
-     * <p>
-     * 
-     * If the poly is a concave quad or higher-order polygon, appends new polys
-     * split from this one at end of the stream, marks the poly at the given address
-     * as deleted, and returns the address of the first split output.<p>
-     * 
-     * @deprecated Handled during render output - can only cause trouble before
-     */
-    //TODO: deprecated
-    @Deprecated
-    @API(status = Status.DEPRECATED)
-    int splitIfNeeded(int targetAddress);
 
     void clear();
     

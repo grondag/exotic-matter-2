@@ -223,7 +223,7 @@ class CsgMeshImpl extends MutableMeshImpl implements CsgMesh {
      */
     protected int appendEmptySplit(Polygon template, int vertexCount) {
         int newAddress = writerAddress();
-        setVertexCount(vertexCount);
+        writer.vertexCount(vertexCount);
         writer.copyFromCSG(template);
         writer.tag(template.tag());
 

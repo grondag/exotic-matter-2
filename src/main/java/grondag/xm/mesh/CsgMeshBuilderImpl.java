@@ -151,13 +151,13 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     private void applyPendingOp(WritableMesh target) {
         switch(pendingOp) {
             case UNION:
-                Csg.union(input, output, target);
+                Csg.union(output, input, target);
                 break;
             case DIFFERENCE:
-                Csg.difference(input, output, target);
+                Csg.difference(output, input, target);
                 break;
             case INTERSECT:
-                Csg.intersect(input, output, target);
+                Csg.intersect(output, input, target);
                 break;
             default:
             case NO_OP:
