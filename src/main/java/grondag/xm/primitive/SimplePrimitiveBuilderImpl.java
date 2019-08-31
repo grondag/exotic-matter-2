@@ -124,7 +124,7 @@ public class SimplePrimitiveBuilderImpl {
         }
         
         @Override
-        public void produceQuads(PrimitiveState modelState, Consumer<Polygon> target) {
+        public void emitQuads(PrimitiveState modelState, Consumer<Polygon> target) {
             try {
                 int index = (modelState.orientationIndex() << bitShift) | modelState.primitiveBits();
                 if(simpleJoin) {

@@ -23,6 +23,7 @@ import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.api.orientation.CubeCorner;
 import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.CubeRotation;
+import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -36,6 +37,7 @@ public class XmProperties {
     public static final DirectionProperty Z_ORTHO_FACING = DirectionProperty.of("xm_y_facing", d -> d.getAxis() != Axis.Z);
     public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
     public static final EnumProperty<HorizontalFace> HORIZONTAL_FACE = EnumProperty.of("xm_horiz_face", HorizontalFace.class);
+    public static final EnumProperty<HorizontalEdge> HORIZONTAL_EDGE = EnumProperty.of("xm_horiz_edge", HorizontalEdge.class);
     public static final DirectionProperty FACE = Properties.FACING;
     public static final EnumProperty<CubeCorner> CORNER = EnumProperty.of("xm_corner", CubeCorner.class);
     public static final EnumProperty<CubeEdge> EDGE = EnumProperty.of("xm_edge", CubeEdge.class);
@@ -50,6 +52,12 @@ public class XmProperties {
     public static SimplePrimitiveStateMutator HORIZONTAL_FACE_MODIFIER = (modelState, blockState) -> {
         final HorizontalFace face = blockState.get(HORIZONTAL_FACE);
         modelState.orientationIndex(face.ordinal());
+        return modelState;
+    };
+    
+    public static SimplePrimitiveStateMutator HORIZONTAL_EDGE_MODIFIER = (modelState, blockState) -> {
+        final HorizontalEdge edge = blockState.get(HORIZONTAL_EDGE);
+        modelState.orientationIndex(edge.ordinal());
         return modelState;
     };
     

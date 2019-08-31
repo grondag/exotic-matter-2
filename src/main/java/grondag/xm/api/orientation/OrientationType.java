@@ -27,6 +27,7 @@ public enum OrientationType {
     NONE(NoOrientation.class),
     AXIS(Direction.Axis.class),
     HORIZONTAL_FACE(HorizontalFace.class),
+    HORIZONTAL_EDGE(HorizontalEdge.class),
     FACE(Direction.class),
     EDGE(CubeEdge.class),
     ROTATION(CubeRotation.class),

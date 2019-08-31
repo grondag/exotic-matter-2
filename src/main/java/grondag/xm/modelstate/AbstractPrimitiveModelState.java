@@ -447,7 +447,7 @@ public abstract class AbstractPrimitiveModelState
     
     @Override
     public final void emitPolygons(Consumer<Polygon> target) {
-        primitive.produceQuads((R)this, target);
+        primitive.emitQuads((R)this, target);
     }
     
     @Override

@@ -73,7 +73,7 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
      * Output polygons must be quads or tris. Consumer MUST NOT hold references to
      * any of the polys received.
      */
-    void produceQuads(R modelState, Consumer<Polygon> target);
+    void emitQuads(R modelState, Consumer<Polygon> target);
 
     R defaultState();
 

@@ -28,6 +28,7 @@ import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.orientation.CubeCorner;
 import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.CubeRotation;
+import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
 import grondag.xm.api.orientation.OrientationType;
 import net.minecraft.util.math.Direction;
@@ -81,6 +82,7 @@ public class PolyTransformImpl implements PolyTransform {
     private final static PolyTransformImpl[] EDGE = new PolyTransformImpl[CubeEdge.COUNT];
     private final static PolyTransformImpl[] CORNER = new PolyTransformImpl[CubeCorner.COUNT];
     private final static PolyTransformImpl[] FACE = new PolyTransformImpl[6];
+    private final static PolyTransformImpl[] HORIZONTAL_EDGE = new PolyTransformImpl[HorizontalEdge.COUNT];
     private final static PolyTransformImpl[] HORIZONTAL_FACE = new PolyTransformImpl[HorizontalFace.COUNT];
     private final static PolyTransformImpl[] AXIS = new PolyTransformImpl[3];
     
@@ -96,6 +98,7 @@ public class PolyTransformImpl implements PolyTransform {
         LOOKUP[OrientationType.CORNER.ordinal()] =  CORNER;
         LOOKUP[OrientationType.FACE.ordinal()] =  FACE;
         LOOKUP[OrientationType.HORIZONTAL_FACE.ordinal()] = HORIZONTAL_FACE;
+        LOOKUP[OrientationType.HORIZONTAL_EDGE.ordinal()] = HORIZONTAL_EDGE;
         LOOKUP[OrientationType.AXIS.ordinal()] = AXIS;
         LOOKUP[OrientationType.NONE.ordinal()] = new PolyTransformImpl[1];
         populateLookups();
@@ -116,6 +119,11 @@ public class PolyTransformImpl implements PolyTransform {
         HORIZONTAL_FACE[HorizontalFace.EAST.ordinal()] = EXACT[CubeRotation.EAST_SOUTH.ordinal()];
         HORIZONTAL_FACE[HorizontalFace.SOUTH.ordinal()] = EXACT[CubeRotation.SOUTH_WEST.ordinal()];
         HORIZONTAL_FACE[HorizontalFace.WEST.ordinal()] = EXACT[CubeRotation.WEST_SOUTH.ordinal()];
+        
+        HORIZONTAL_EDGE[HorizontalEdge.NORTH_EAST.ordinal()] = EXACT[CubeRotation.NORTH_EAST.ordinal()];
+        HORIZONTAL_EDGE[HorizontalEdge.NORTH_WEST.ordinal()] = EXACT[CubeRotation.NORTH_WEST.ordinal()];
+        HORIZONTAL_EDGE[HorizontalEdge.SOUTH_EAST.ordinal()] = EXACT[CubeRotation.SOUTH_EAST.ordinal()];
+        HORIZONTAL_EDGE[HorizontalEdge.SOUTH_WEST.ordinal()] = EXACT[CubeRotation.SOUTH_WEST.ordinal()];
         
         FACE[Direction.DOWN.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
         FACE[Direction.UP.ordinal()] = EXACT[CubeRotation.UP_SOUTH.ordinal()];

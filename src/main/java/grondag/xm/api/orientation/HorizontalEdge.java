@@ -21,10 +21,13 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 
 import grondag.xm.connect.helper.HorizontalCornerHelper;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
 /**
@@ -52,6 +55,13 @@ public enum HorizontalEdge implements StringIdentifiable {
         this.vector = new Vec3i(face1.face.getVector().getX() + face2.face.getVector().getX(), 0,
                 face1.face.getVector().getZ() + face2.face.getVector().getZ());
     }
+    
+    public HorizontalEdge rotate(BlockRotation rotation) {
+        final Direction face1 = rotation.rotate(this.face1.face);
+        final Direction face2 = rotation.rotate(this.face2.face);
+        return ObjectUtils.defaultIfNull(find(face1, face2), this);
+        
+    }
 
     public static final int COUNT = HorizontalCornerHelper.COUNT;
 
@@ -63,6 +73,11 @@ public enum HorizontalEdge implements StringIdentifiable {
         return HorizontalCornerHelper.find(face1, face2);
     }
 
+    @Nullable
+    public static HorizontalEdge find(Direction face1, Direction face2) {
+        return find(HorizontalFace.find(face1), HorizontalFace.find(face2));
+    }
+    
     public static HorizontalEdge fromOrdinal(int ordinal) {
         return HorizontalCornerHelper.fromOrdinal(ordinal);
     }

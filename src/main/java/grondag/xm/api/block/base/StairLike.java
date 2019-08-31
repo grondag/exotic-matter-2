@@ -23,18 +23,18 @@ import static net.minecraft.block.StairsBlock.WATERLOGGED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Random;
-import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 
 import grondag.fermion.spatial.DirectionHelper;
+import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.collision.CollisionDispatcher;
-import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.primitive.simple.Stair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockRenderLayer;
@@ -76,15 +76,12 @@ public abstract class StairLike extends Block implements Waterloggable {
     protected final Direction downDirection;
     protected final Axis leftRightAxis;
     protected final Axis frontBackAxis;
-    protected final Supplier<MutablePrimitiveState> modelStateFactory;
     
     
-    public StairLike(BlockState blockState, Settings settings, Supplier<MutablePrimitiveState> modelStateFactory) {
-        super(settings);
+    public StairLike(BlockState blockState, Settings settings) {
+        super(FabricBlockSettings.copyOf(settings).dynamicBounds().build());
         
         final Axis axis = axis();
-        //TODO: see if can implement getOutlineShape directly - if so won't need this
-        this.modelStateFactory = modelStateFactory;
         this.upDirection = axis == Axis.Y ? Direction.UP : (axis == Axis.X ? Direction.EAST : Direction.SOUTH);
         this.downDirection = upDirection.getOpposite();
         leftRightAxis = axis == Axis.Y ? Axis.Z : Axis.Y;
@@ -109,9 +106,9 @@ public abstract class StairLike extends Block implements Waterloggable {
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos pos, EntityContext entityContext) {
-        return CollisionDispatcher.shapeFor(MODELSTATE_FROM_BLOCKSTATE.mutate(modelStateFactory.get(), blockState));
+        return CollisionDispatcher.shapeFor(XmBlockState.modelState(blockState, blockView, pos, true));
     }
-
+    
     @Override
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(BlockState blockState_1, World world_1, BlockPos blockPos_1, Random random_1) {
@@ -311,8 +308,8 @@ public abstract class StairLike extends Block implements Waterloggable {
         return block instanceof StairLike && ((StairLike)block).axis() == axis();
     }
 
-    public static StairLike ofAxisY(BlockState blockState, Settings settings, Supplier<MutablePrimitiveState> modelStateFactory) {
-        return new StairLike(blockState, settings, modelStateFactory) {
+    public static StairLike ofAxisY(BlockState blockState, Settings settings) {
+        return new StairLike(blockState, settings) {
             @Override
             public Axis axis() {
                 return Axis.Y;
@@ -320,8 +317,8 @@ public abstract class StairLike extends Block implements Waterloggable {
         };
     }
     
-    public static StairLike ofAxisX(BlockState blockState, Settings settings, Supplier<MutablePrimitiveState> modelStateFactory) {
-        return new StairLike(blockState, settings, modelStateFactory) {
+    public static StairLike ofAxisX(BlockState blockState, Settings settings) {
+        return new StairLike(blockState, settings) {
             @Override
             public Axis axis() {
                 return Axis.X;
@@ -329,8 +326,8 @@ public abstract class StairLike extends Block implements Waterloggable {
         };
     }
     
-    public static StairLike ofAxisZ(BlockState blockState, Settings settings, Supplier<MutablePrimitiveState> modelStateFactory) {
-        return new StairLike(blockState, settings, modelStateFactory) {
+    public static StairLike ofAxisZ(BlockState blockState, Settings settings) {
+        return new StairLike(blockState, settings) {
             @Override
             public Axis axis() {
                 return Axis.Z;

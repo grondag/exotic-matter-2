@@ -121,7 +121,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
     }
 
     @Override
-    public void produceQuads(PrimitiveState modelState, Consumer<Polygon> target) {
+    public void emitQuads(PrimitiveState modelState, Consumer<Polygon> target) {
         FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
         for (int i = 0; i < 6; i++) {
             this.makeFaceQuads(modelState, Direction.byId(i), spec, target);

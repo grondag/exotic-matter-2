@@ -53,12 +53,11 @@ public class Wedge extends AbstractWedge {
     }
     
     @Override
-    protected ReadOnlyMesh buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside) {
+    protected ReadOnlyMesh buildMesh(PolyTransform transform, boolean isCorner, boolean isInside) {
         // Default geometry bottom/back against down/south faces. Corner is on right.
       
         final WritableMesh stream = XmMeshes.claimWritable();
         final MutablePolygon quad = stream.writer();
-        final PolyTransform transform = PolyTransform.forEdgeRotation(edgeIndex);
         
         quad.rotation(0, Rotation.ROTATE_NONE);
         quad.lockUV(0, true);

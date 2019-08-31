@@ -25,6 +25,7 @@ import java.util.function.Function;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.ReadOnlyMesh;
+import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
@@ -54,7 +55,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
     }
 
     @Override
-    public void produceQuads(PrimitiveState modelState, Consumer<Polygon> target) {
+    public void emitQuads(PrimitiveState modelState, Consumer<Polygon> target) {
         final int edgeIndex = modelState.orientationIndex();
         final boolean isCorner = isCorner(modelState);
         final boolean isInside = isInsideCorner(modelState);
@@ -62,7 +63,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         
         ReadOnlyMesh mesh = CACHE[key];
         if(mesh == null) {
-            mesh = buildPolyStream(edgeIndex, isCorner, isInside);
+            mesh = buildMesh(PolyTransform.forEdgeRotation(edgeIndex), isCorner, isInside);
             CACHE[key] = mesh;
         }
         
@@ -77,7 +78,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         reader.release();
     }
 
-    protected abstract ReadOnlyMesh buildPolyStream(int edgeIndex, boolean isCorner, boolean isInside);
+    protected abstract ReadOnlyMesh buildMesh(PolyTransform transform, boolean isCorner, boolean isInside);
     
     @Override
     public OrientationType orientationType(PrimitiveState modelState) {

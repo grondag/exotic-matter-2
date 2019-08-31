@@ -52,7 +52,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     }
 
     @Override
-    public void produceQuads(TerrainModelState modelState, Consumer<Polygon> target) {
+    public void emitQuads(TerrainModelState modelState, Consumer<Polygon> target) {
         cachedQuads.forEach(target);
     }
 
