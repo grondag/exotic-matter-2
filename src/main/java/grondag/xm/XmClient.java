@@ -25,11 +25,14 @@ import grondag.xm.dispatch.XmVariantProvider;
 import grondag.xm.mesh.helper.PolyTransformImpl;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
 import grondag.xm.network.Packets;
+import grondag.xm.paint.XmPaintRegistryImpl;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import grondag.xm.texture.XmTexturesImpl;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.InvalidateRenderStateCallback;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.resource.ResourceType;
 
 @API(status = INTERNAL)
 public class XmClient implements ClientModInitializer {
@@ -40,6 +43,7 @@ public class XmClient implements ClientModInitializer {
         InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
         Packets.initializeClient();
         AbstractPrimitiveModelState.useClientHandler();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(XmPaintRegistryImpl.INSTANCE);
     }
 
     public static void invalidate() {

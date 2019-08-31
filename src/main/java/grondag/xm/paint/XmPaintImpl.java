@@ -28,7 +28,6 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.Identifier;
@@ -58,7 +57,6 @@ public class XmPaintImpl {
     private static final int DEFAULT_PAINT_BITS;
 
     private static final ObjectArrayList<Value> LIST = new ObjectArrayList<>();
-    private static final Object2ObjectOpenHashMap<XmPaintImpl, Value> MAP = new Object2ObjectOpenHashMap<>();
 
     static {
         TEXTURE_DEPTH = PAINT_BITS.createIntElement(1, MAX_TEXTURE_DEPTH);
@@ -224,10 +222,15 @@ public class XmPaintImpl {
 
     public static class Value extends XmPaintImpl implements XmPaint {
         private final int index;
-        private final int hashCode;
+        private int hashCode;
+        boolean placeholder = false;
 
         protected Value(int index, XmPaintImpl template) {
             this.index = index;
+            copyFrom(template);
+        }
+
+        void copyFrom(XmPaintImpl template) {
             this.paintBits = template.paintBits;
             this.color0 = template.color0;
             this.color1 = template.color1;
@@ -240,7 +243,7 @@ public class XmPaintImpl {
             this.textureSet2 = template.textureSet2;
             this.hashCode = template.hashCode();
         }
-
+        
         @Override
         public int hashCode() {
             return hashCode;
@@ -258,13 +261,15 @@ public class XmPaintImpl {
         }
 
         @Override
-        public synchronized XmPaint find() {
-            Value result = MAP.get(this);
-            if (result == null) {
-                result = new Value(LIST.size(), this);
-                LIST.add(result);
-                MAP.put(result, result);
-            }
+        public synchronized Value find() {
+            Value result = new Value(LIST.size(), this);
+            LIST.add(result);
+            return result;
+        }
+        
+        synchronized Value replace(Value target) {
+            Value result = new Value(target.index, this);
+            LIST.set(target.index, result);
             return result;
         }
 

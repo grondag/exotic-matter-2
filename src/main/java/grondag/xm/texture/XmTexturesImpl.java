@@ -36,6 +36,7 @@ import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.XmTextures;
+import grondag.xm.paint.XmPaintRegistryImpl;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -54,6 +55,9 @@ public class XmTexturesImpl {
         
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlas, registry) -> {
             if (atlas == MinecraftClient.getInstance().getSpriteAtlas()) {
+                // need to resolve/use texture names at this point
+                XmPaintRegistryImpl.INSTANCE.apply(MinecraftClient.getInstance().getResourceManager());
+                
                 TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
                 texReg.forEach(set -> {
                     if (set.used()) {
