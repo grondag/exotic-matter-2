@@ -55,7 +55,7 @@ public class XmTextures {
     public static final TextureSet TILE_NOISE_EXTREME = TextureSet.builder()
             .displayNameToken("noise_extreme").baseTextureName("exotic-matter:blocks/noise_extreme")
             .versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_RANDOM)
-            .renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY).groups(STATIC_TILES).build("exotic-noise_extreme");
+            .renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY).groups(STATIC_TILES).build("exotic-matter:noise_extreme");
     
     public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white").baseTextureName("exotic-matter:blocks/white").versionCount(1).scale(SINGLE)
             .layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_NONE).groups(STATIC_TILES).build("exotic-matter:white");
@@ -63,6 +63,10 @@ public class XmTextures {
     public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
             .baseTextureName("exotic-matter:blocks/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13).rotation(ROTATE_NONE)
             .renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_smooth_blended");
+
+    public static final TextureSet BORDER_SINGLE_LINE = TextureSet.builder().displayNameToken("border_single_line")
+            .baseTextureName("exotic-matter:blocks/border_single_line").versionCount(1).scale(SINGLE).layout(BORDER_13).rotation(ROTATE_NONE)
+            .renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_single_line");
 
     public static final TextureSet BIGTEX_SANDSTONE = TextureSet.builder().displayNameToken("sandstone").baseTextureName("exotic-matter:blocks/sandstone").versionCount(1)
             .scale(GIANT).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_NO_CUTOUT)
