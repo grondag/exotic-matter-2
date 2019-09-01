@@ -62,6 +62,41 @@ public class McTextures {
     public static final TextureSet SMOOTH_QUARTZ = single("smooth_quartz");
     public static final TextureSet STONE_BRICK = single("stone_bricks");
     
+    public static final TextureSet YELLOW_TERRACOTTA = single("yellow_terracotta");
+    public static final TextureSet BLACK_TERRACOTTA = single("black_terracotta");
+    public static final TextureSet BLUE_TERRACOTTA = single("blue_terracotta");
+    public static final TextureSet BROWN_TERRACOTTA = single("brown_terracotta");
+    public static final TextureSet CYAN_TERRACOTTA = single("cyan_terracotta");
+    public static final TextureSet GRAY_TERRACOTTA = single("gray_terracotta");
+    public static final TextureSet GREEN_TERRACOTTA = single("green_terracotta");
+    public static final TextureSet LIGHT_BLUE_TERRACOTTA = single("light_blue_terracotta");
+    public static final TextureSet LIGHT_GRAY_TERRACOTTA = single("light_gray_terracotta");
+    public static final TextureSet LIME_TERRACOTTA = single("lime_terracotta");
+    public static final TextureSet MAGENTA_TERRACOTTA = single("magenta_terracotta");
+    public static final TextureSet ORANGE_TERRACOTTA = single("orange_terracotta");
+    public static final TextureSet PINK_TERRACOTTA = single("pink_terracotta");
+    public static final TextureSet PURPLE_TERRACOTTA = single("purple_terracotta");
+    public static final TextureSet RED_TERRACOTTA = single("red_terracotta");
+    public static final TextureSet TERRACOTTA = single("terracotta");
+    public static final TextureSet WHITE_TERRACOTTA = single("white_terracotta");
+    
+    public static final TextureSet BLACK_CONCRETE = single("black_concrete");
+    public static final TextureSet BLUE_CONCRETE = single("blue_concrete");
+    public static final TextureSet BROWN_CONCRETE = single("brown_concrete");
+    public static final TextureSet CYAN_CONCRETE = single("cyan_concrete");
+    public static final TextureSet GRAY_CONCRETE = single("gray_concrete");
+    public static final TextureSet GREEN_CONCRETE = single("green_concrete");
+    public static final TextureSet LIGHT_BLUE_CONCRETE = single("light_blue_concrete");
+    public static final TextureSet LIGHT_GRAY_CONCRETE = single("light_gray_concrete");
+    public static final TextureSet LIME_CONCRETE = single("lime_concrete");
+    public static final TextureSet MAGENTA_CONCRETE = single("magenta_concrete");
+    public static final TextureSet ORANGE_CONCRETE = single("orange_concrete");
+    public static final TextureSet PINK_CONCRETE = single("pink_concrete");
+    public static final TextureSet PURPLE_CONCRETE = single("purple_concrete");
+    public static final TextureSet RED_CONCRETE = single("red_concrete");
+    public static final TextureSet WHITE_CONCRETE = single("white_concrete");
+    public static final TextureSet YELLOW_CONCRETE = single("yellow_concrete");
+    
     public static TextureSet single(String name) {
         return TextureSet.builder()
                 .displayNameToken("mc_" + name).baseTextureName("minecraft:block/" + name)
