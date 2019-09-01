@@ -21,10 +21,10 @@ import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
-import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetRegistry;
+import grondag.xm.api.texture.TextureTransform;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.MutableRegistry;
@@ -70,7 +70,7 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
                 (MutableRegistry<?>) new DefaultedRegistry(NONE_ID.toString()));
         
         DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:blocks/noise_moderate").versionCount(4)
-                .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(TextureRotation.ROTATE_RANDOM)
+                .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
                 .renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
 
         DEFAULT_TEXTURE_SET.use();

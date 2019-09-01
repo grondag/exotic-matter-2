@@ -19,7 +19,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.connect.state.SimpleJoinFaceState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.mesh.MutableMesh;
@@ -27,6 +26,7 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.relics.placement.FaceQuadInputs;
 import net.minecraft.util.math.Direction;
@@ -45,35 +45,35 @@ public abstract class CubicPainterMasonry extends AbstractQuadPainter {
             FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.NO_FACE.ordinal()] = null;
 
             FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_LEFT_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT_RIGHT.ordinal(),
-                    Rotation.ROTATE_NONE, false, false);
+                    TextureOrientation.IDENTITY, false, false);
             FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM_LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT_RIGHT.ordinal(),
-                    Rotation.ROTATE_90, false, false);
+                    TextureOrientation.ROTATE_90, false, false);
             FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_LEFT_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT_RIGHT.ordinal(),
-                    Rotation.ROTATE_180, false, false);
+                    TextureOrientation.ROTATE_180, false, false);
             FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT_RIGHT.ordinal(),
-                    Rotation.ROTATE_270, false, false);
+                    TextureOrientation.ROTATE_270, false, false);
 
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_NONE,
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), TextureOrientation.IDENTITY,
                     false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_90, false,
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), TextureOrientation.ROTATE_90, false,
                     false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_180,
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), TextureOrientation.ROTATE_180,
                     false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), Rotation.ROTATE_270,
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM_RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM_LEFT.ordinal(), TextureOrientation.ROTATE_270,
                     false, false);
 
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.LEFT_RIGHT.ordinal()] = new FaceQuadInputs(Textures.LEFT_RIGHT.ordinal(), Rotation.ROTATE_NONE,
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.LEFT_RIGHT.ordinal()] = new FaceQuadInputs(Textures.LEFT_RIGHT.ordinal(), TextureOrientation.IDENTITY,
                     false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM.ordinal()] = new FaceQuadInputs(Textures.LEFT_RIGHT.ordinal(), Rotation.ROTATE_90, false,
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP_BOTTOM.ordinal()] = new FaceQuadInputs(Textures.LEFT_RIGHT.ordinal(), TextureOrientation.ROTATE_90, false,
                     false);
 
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), Rotation.ROTATE_NONE, false,
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.BOTTOM.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), TextureOrientation.IDENTITY, false,
                     false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), Rotation.ROTATE_90, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), Rotation.ROTATE_180, false, false);
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), Rotation.ROTATE_270, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.LEFT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), TextureOrientation.ROTATE_90, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.TOP.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), TextureOrientation.ROTATE_180, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.RIGHT.ordinal()] = new FaceQuadInputs(Textures.BOTTOM.ordinal(), TextureOrientation.ROTATE_270, false, false);
 
-            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.ALL.ordinal()] = new FaceQuadInputs(Textures.ALL.ordinal(), Rotation.ROTATE_NONE, false, false);
+            FACE_INPUTS[face.ordinal()][SimpleJoinFaceState.ALL.ordinal()] = new FaceQuadInputs(Textures.ALL.ordinal(), TextureOrientation.IDENTITY, false, false);
         }
     }
 

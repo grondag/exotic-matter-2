@@ -18,10 +18,10 @@ package grondag.xm.relics;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.util.math.Direction;
 
 @API(status = Status.DEPRECATED)
@@ -33,7 +33,7 @@ public class CubeInputs {
     public float v1;
     public String textureName = "";
     public int color = 0xFFFFFFFF;
-    public Rotation textureRotation = Rotation.ROTATE_NONE;
+    public TextureOrientation textureRotation = TextureOrientation.IDENTITY;
     public boolean rotateBottom = false;
     public boolean isOverlay = false;
     public boolean isItem = false;
@@ -42,10 +42,10 @@ public class CubeInputs {
 
     public CubeInputs() {
         // Minimum needed to prevent NPE
-        this.textureRotation = Rotation.ROTATE_NONE;
+        this.textureRotation = TextureOrientation.IDENTITY;
     }
 
-    public CubeInputs(int color, Rotation textureRotation, String textureName, boolean flipU, boolean flipV, boolean isOverlay, boolean isItem) {
+    public CubeInputs(int color, TextureOrientation textureRotation, String textureName, boolean flipU, boolean flipV, boolean isOverlay, boolean isItem) {
         this.color = color;
         this.textureRotation = textureRotation;
         this.textureName = textureName;

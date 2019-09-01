@@ -17,11 +17,11 @@ package grondag.xm.texture;
 
 import static grondag.xm.api.texture.TextureGroup.HIDDEN_TILES;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_ONLY;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_180;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_270;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_90;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_NONE;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_RANDOM;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_180;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_270;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_90;
+import static grondag.xm.api.texture.TextureTransform.IDENTITY;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
 import static grondag.xm.api.texture.TextureScale.GIANT;
 import static grondag.xm.api.texture.TextureScale.LARGE;
 import static grondag.xm.api.texture.TextureScale.MEDIUM;
@@ -77,11 +77,11 @@ public class XmTexturesImpl {
 
     public static final TextureSet BIGTEX_TEST_SINGLE = TextureSet.builder().displayNameToken("bigtex_test_single")
             .baseTextureName("exotic-matter:blocks/bigtex_single").versionCount(1)
-            .scale(SMALL).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("exotic-matter:bigtex_test_single");
+            .scale(SMALL).layout(TextureLayoutMap.SINGLE).transform(IDENTITY).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("exotic-matter:bigtex_test_single");
 
     public static final TextureSet BIGTEX_TEST1 = TextureSet.builder().displayNameToken("big_tex_test1")
             .baseTextureName("exotic-matter:blocks/bigtex").versionCount(4).scale(TINY)
-            .layout(TextureLayoutMap.VERSIONED).rotation(ROTATE_RANDOM).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("exotic-matter:big_tex_test1");
+            .layout(TextureLayoutMap.VERSIONED).transform(ROTATE_RANDOM).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("exotic-matter:big_tex_test1");
 
     public static final TextureSet BIGTEX_TEST2 = TextureSet.builder(BIGTEX_TEST1).displayNameToken("big_tex_test2").scale(SMALL).build("exotic-matter:big_tex_test2");
 
@@ -93,22 +93,22 @@ public class XmTexturesImpl {
 
     public static final TextureSet TEST = TextureSet.builder().displayNameToken("test")
             .baseTextureName("exotic-matter:blocks/test_1").versionCount(1).scale(SINGLE)
-            .layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("exotic-matter:test");
+            .layout(TextureLayoutMap.SINGLE).transform(IDENTITY).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("exotic-matter:test");
 
-    public static final TextureSet TEST_90 = TextureSet.builder(TEST).displayNameToken("test_90").rotation(ROTATE_90).build("exotic-matter:test_90");
+    public static final TextureSet TEST_90 = TextureSet.builder(TEST).displayNameToken("test_90").transform(ROTATE_90).build("exotic-matter:test_90");
 
-    public static final TextureSet TEST_180 = TextureSet.builder(TEST).displayNameToken("test_180").rotation(ROTATE_90).build("exotic-matter:test_180");
+    public static final TextureSet TEST_180 = TextureSet.builder(TEST).displayNameToken("test_180").transform(ROTATE_90).build("exotic-matter:test_180");
 
-    public static final TextureSet TEST_270 = TextureSet.builder(TEST).displayNameToken("test_270").rotation(ROTATE_90).build("exotic-matter:test_270");
+    public static final TextureSet TEST_270 = TextureSet.builder(TEST).displayNameToken("test_270").transform(ROTATE_90).build("exotic-matter:test_270");
 
     public static final TextureSet TEST_4X4 = TextureSet.builder().displayNameToken("test4x4")
             .baseTextureName("exotic-matter:blocks/test4x4").versionCount(1).scale(SMALL)
-            .layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("exotic-matter:test4x4");
+            .layout(TextureLayoutMap.SINGLE).transform(IDENTITY).renderIntent(BASE_ONLY).groups(HIDDEN_TILES).build("exotic-matter:test4x4");
 
-    public static final TextureSet TEST_4x4_90 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_90").rotation(ROTATE_90).build("exotic-matter:test4x4_90");
+    public static final TextureSet TEST_4x4_90 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_90").transform(ROTATE_90).build("exotic-matter:test4x4_90");
 
-    public static final TextureSet TEST_4x4_180 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_180").rotation(ROTATE_180).build("exotic-matter:test4x4_180");
+    public static final TextureSet TEST_4x4_180 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_180").transform(ROTATE_180).build("exotic-matter:test4x4_180");
 
-    public static final TextureSet TEST_4x4_270 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_270").rotation(ROTATE_270).build("exotic-matter:test4x4_270");
+    public static final TextureSet TEST_4x4_270 = TextureSet.builder(TEST_4X4).displayNameToken("test4x4_270").transform(ROTATE_270).build("exotic-matter:test4x4_270");
 
 }

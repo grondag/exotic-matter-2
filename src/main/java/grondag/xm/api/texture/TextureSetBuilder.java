@@ -30,7 +30,7 @@ public interface TextureSetBuilder {
 
     TextureSetBuilder layout(TextureLayoutMap layout);
 
-    TextureSetBuilder rotation(TextureRotation rotation);
+    TextureSetBuilder transform(TextureTransform rotation);
 
     TextureSetBuilder renderIntent(TextureRenderIntent renderIntent);
 

@@ -19,15 +19,17 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.api.texture.TextureRotation;
+import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
+import grondag.xm.api.texture.TextureTransform;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -63,7 +65,7 @@ public abstract class CubicPainterBigTex extends AbstractQuadPainter {
 
             final Direction nominalFace = editor.nominalFace();
             final TextureSet tex = paint.texture(textureIndex);
-            final boolean allowTexRotation = tex.rotation() != TextureRotation.ROTATE_NONE;
+            final boolean allowTexRotation = tex.transform() != TextureTransform.IDENTITY;
             final TextureScale scale = tex.scale();
 
             Vec3i surfaceVec = getSurfaceVector(modelState.posX(), modelState.posY(), modelState.posZ(), nominalFace, scale);
@@ -78,10 +80,10 @@ public abstract class CubicPainterBigTex extends AbstractQuadPainter {
                         : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.species() << 8) | (editor.textureSalt() << 12));
 
                 // rotation
-                editor.rotation(textureIndex,
-                        allowTexRotation ? Useful.offsetEnumValue(tex.rotation().rotation, depthAndSpeciesHash & 3) : tex.rotation().rotation);
+                final Rotation rot = allowTexRotation ? Useful.offsetEnumValue(tex.transform().baseRotation, depthAndSpeciesHash & 3) : tex.transform().baseRotation;
+                editor.rotation(textureIndex,TextureOrientation.find(rot, false, false));
 
-                surfaceVec = rotateFacePerspective(surfaceVec, editor.rotation(textureIndex), scale);
+                surfaceVec = rotateFacePerspective(surfaceVec, rot, scale);
 
                 editor.sprite(textureIndex, tex.textureName(0));
 
@@ -121,7 +123,7 @@ public abstract class CubicPainterBigTex extends AbstractQuadPainter {
                         allowTexRotation ? Useful.offsetEnumValue(textureRotationForFace(nominalFace, tex, modelState), (depthHash >> 16) & 3)
                                 : textureRotationForFace(nominalFace, tex, modelState));
 
-                surfaceVec = rotateFacePerspective(surfaceVec, editor.rotation(textureIndex), scale);
+                surfaceVec = rotateFacePerspective(surfaceVec, editor.rotation(textureIndex).rotation, scale);
 
                 final float sliceIncrement = scale.sliceIncrement;
 

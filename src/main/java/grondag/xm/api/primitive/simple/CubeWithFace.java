@@ -17,7 +17,6 @@ package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -30,6 +29,7 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.util.math.Direction;
 
 public class CubeWithFace  {
@@ -50,7 +50,7 @@ public class CubeWithFace  {
         MutablePolygon writer = mesh.writer();
         writer.colorAll(0, 0xFFFFFFFF);
         writer.lockUV(0, true);
-        writer.rotation(0, Rotation.ROTATE_NONE);
+        writer.rotation(0, TextureOrientation.IDENTITY);
         writer.sprite(0, "");
         writer.saveDefaults();
 

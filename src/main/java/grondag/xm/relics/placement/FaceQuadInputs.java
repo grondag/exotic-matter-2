@@ -18,17 +18,17 @@ package grondag.xm.relics.placement;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.spatial.Rotation;
+import grondag.xm.api.texture.TextureOrientation;
 
 @API(status = Status.DEPRECATED)
 @Deprecated
 public class FaceQuadInputs {
     public final int textureOffset;
-    public final Rotation rotation;
+    public final TextureOrientation rotation;
     public final boolean flipU;
     public final boolean flipV;
 
-    public FaceQuadInputs(int textureOffset, Rotation rotation, boolean flipU, boolean flipV) {
+    public FaceQuadInputs(int textureOffset, TextureOrientation rotation, boolean flipU, boolean flipV) {
         this.textureOffset = textureOffset;
         this.rotation = rotation;
         this.flipU = flipU;

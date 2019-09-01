@@ -81,7 +81,7 @@ public interface TextureSet {
     // UGLY: rename after fixing breaks
     TextureLayoutMap map();
 
-    TextureRotation rotation();
+    TextureTransform transform();
 
     TextureScale scale();
 

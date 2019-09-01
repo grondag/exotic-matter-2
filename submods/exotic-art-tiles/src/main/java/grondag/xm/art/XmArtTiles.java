@@ -16,7 +16,7 @@
 
 package grondag.xm.art;
 
-import static grondag.xm.api.texture.TextureRotation.ROTATE_RANDOM;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
 
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
@@ -26,11 +26,11 @@ import grondag.xm.api.texture.TextureSet;
 
 public class XmArtTiles {
     public static final TextureSet TILE_DOTS = TextureSet.builder().displayNameToken("dots").baseTextureName("exotic-art:blocks/dots").versionCount(4)
-            .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).rotation(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
+            .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
             .groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-art:dots");
     
     public static final TextureSet TILE_DOTS_SUBTLE = TextureSet.builder().displayNameToken("dots_subtle").versionCount(4).scale(TextureScale.SINGLE)
-            .layout(TextureLayoutMap.VERSION_X_8).baseTextureName("exotic-art:blocks/dots_subtle").rotation(ROTATE_RANDOM)
+            .layout(TextureLayoutMap.VERSION_X_8).baseTextureName("exotic-art:blocks/dots_subtle").transform(ROTATE_RANDOM)
             .renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT).groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS)
             .build("exotic-art:dots_subtle");
 

@@ -22,17 +22,19 @@ import java.util.function.IntConsumer;
 
 import org.apiguardian.api.API;
 
+import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.api.texture.TextureRotation;
+import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
+import grondag.xm.api.texture.TextureTransform;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -460,9 +462,12 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                             int textureVersion = tex.versionMask() & (salt >> 4);
                             editor.sprite(textureIndex, tex.textureName(textureVersion));
 
-                            editor.rotation(textureIndex,
-                                    tex.rotation() == TextureRotation.ROTATE_RANDOM ? Useful.offsetEnumValue(tex.rotation().rotation, (salt >> 16) & 3)
-                                            : tex.rotation().rotation);
+                            //TODO: honor additional transform types
+                            final Rotation rot = tex.transform() == TextureTransform.ROTATE_RANDOM 
+                                    ? Useful.offsetEnumValue(tex.transform().baseRotation, (salt >> 16) & 3)
+                                    : tex.transform().baseRotation;
+                                    
+                            editor.rotation(textureIndex, TextureOrientation.find(rot, false, false));
 
                             editor.lockUV(textureIndex, false);
                             commonPostPaint(editor, modelState, surface, paint, textureIndex);

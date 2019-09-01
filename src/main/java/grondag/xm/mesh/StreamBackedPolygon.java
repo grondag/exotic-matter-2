@@ -22,10 +22,10 @@ import java.util.function.IntUnaryOperator;
 import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 
@@ -305,7 +305,7 @@ class StreamBackedPolygon implements Polygon {
     }
 
     @Override
-    public final Rotation rotation(int layerIndex) {
+    public final TextureOrientation rotation(int layerIndex) {
         return StaticEncoder.getRotation(stream, baseAddress, layerIndex);
     }
 

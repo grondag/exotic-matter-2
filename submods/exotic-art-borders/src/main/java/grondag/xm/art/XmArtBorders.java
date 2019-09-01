@@ -16,7 +16,7 @@
 
 package grondag.xm.art;
 
-import static grondag.xm.api.texture.TextureRotation.ROTATE_NONE;
+import static grondag.xm.api.texture.TextureTransform.IDENTITY;
 import static grondag.xm.texture.TextureSetHelper.addBorderRandom;
 import static grondag.xm.texture.TextureSetHelper.addBorderSingle;
 
@@ -30,7 +30,7 @@ public class XmArtBorders {
     private static final String ASSETS = "exotic-art";
     
     public static final TextureSet MASONRY_SIMPLE = TextureSet.builder().displayNameToken("masonry_simple").baseTextureName(ASSETS + ":blocks/masonry_simple")
-            .versionCount(1).scale(TextureScale.SINGLE).layout(TextureLayoutMap.MASONRY_5).rotation(ROTATE_NONE).renderIntent(TextureRenderIntent.OVERLAY_ONLY)
+            .versionCount(1).scale(TextureScale.SINGLE).layout(TextureLayoutMap.MASONRY_5).transform(IDENTITY).renderIntent(TextureRenderIntent.OVERLAY_ONLY)
             .groups(TextureGroup.STATIC_BORDERS).build(ASSETS + ":masonry_simple");
 
     public static final TextureSet BORDER_SINGLE_PINSTRIPE = addBorderSingle(ASSETS, "border_single_pinstripe");

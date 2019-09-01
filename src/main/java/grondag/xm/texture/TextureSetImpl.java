@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.modelstate.ModelStateFlags;
-import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetBuilder;
 import net.minecraft.client.MinecraftClient;
@@ -57,9 +56,8 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
         int flags = template.scale.modelStateFlag | template.layoutMap.layout.modelStateFlag;
 
         // textures with randomization options also require position information
-
-        if (template.rotation == TextureRotation.ROTATE_RANDOM) {
-            flags |= (ModelStateFlags.TEXTURE_ROTATION | ModelStateFlags.POSITION);
+        if (template.transform.hasRandom) {
+            flags |= ModelStateFlags.POSITION;
         }
 
         if (template.versionCount > 1) {

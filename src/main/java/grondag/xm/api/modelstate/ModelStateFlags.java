@@ -58,7 +58,4 @@ public class ModelStateFlags {
     public static final int POSITION = MASONRY_JOIN << 1;
 
     public static final int BLOCK_SPECIES = POSITION << 1;
-
-    public static final int TEXTURE_ROTATION = BLOCK_SPECIES << 1;
-
 }

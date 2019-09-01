@@ -21,8 +21,8 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -59,7 +59,7 @@ public interface MutablePolygon extends Polygon {
 
     MutablePolygon sprite(int layerIndex, String spriteName);
 
-    MutablePolygon rotation(int layerIndex, Rotation rotation);
+    MutablePolygon rotation(int layerIndex, TextureOrientation rotation);
 
     MutablePolygon contractUV(int layerIndex, boolean contractUVs);
 

@@ -19,7 +19,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.WritableMesh;
@@ -31,6 +30,7 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
@@ -59,7 +59,7 @@ public class Wedge extends AbstractWedge {
         final WritableMesh stream = XmMeshes.claimWritable();
         final MutablePolygon quad = stream.writer();
         
-        quad.rotation(0, Rotation.ROTATE_NONE);
+        quad.rotation(0, TextureOrientation.IDENTITY);
         quad.lockUV(0, true);
         quad.saveDefaults();
 

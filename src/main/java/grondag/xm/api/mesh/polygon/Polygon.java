@@ -19,10 +19,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -319,7 +319,7 @@ public interface Polygon {
 
     boolean shouldContractUVs(int layerIndex);
 
-    Rotation rotation(int layerIndex);
+    TextureOrientation rotation(int layerIndex);
 
     /**
      * Will return quad color if vertex color not set.

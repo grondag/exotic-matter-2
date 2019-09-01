@@ -16,9 +16,9 @@
 
 package grondag.xm.art;
 
-import static grondag.xm.api.texture.TextureRotation.ROTATE_90;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_NONE;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_RANDOM;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_90;
+import static grondag.xm.api.texture.TextureTransform.IDENTITY;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
 import static grondag.xm.texture.TextureSetHelper.addDecal;
 
 import grondag.xm.api.texture.TextureSet;
@@ -26,25 +26,25 @@ import grondag.xm.api.texture.TextureSet;
 public class XmArtDecals {
     private static final String ASSETS = "exotic-art";
     
-    public static final TextureSet DECAL_SKINNY_DIAGONAL_RIDGES = addDecal(ASSETS, "skinny_diagonal_ridges", "skinny_diagonal_ridges", ROTATE_NONE);
-    public static final TextureSet DECAL_THICK_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "thick_diagonal_cross_ridges", "thick_diagonal_cross_ridges", ROTATE_NONE);
-    public static final TextureSet DECAL_THICK_DIAGONAL_RIDGES = addDecal(ASSETS, "thick_diagonal_ridges", "thick_diagonal_ridges", ROTATE_NONE);
-    public static final TextureSet DECAL_THIN_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "thin_diagonal_cross_ridges", "thin_diagonal_cross_ridges", ROTATE_NONE);
-    public static final TextureSet DECAL_THIN_DIAGONAL_RIDGES = addDecal(ASSETS, "thin_diagonal_ridges", "thin_diagonal_ridges", ROTATE_NONE);
-    public static final TextureSet DECAL_THIN_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "thin_diagonal_cross_bars", "thin_diagonal_cross_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_THIN_DIAGONAL_BARS = addDecal(ASSETS, "thin_diagonal_bars", "thin_diagonal_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_SKINNY_DIAGNAL_CROSS_BARS = addDecal(ASSETS, "skinny_diagonal_cross_bars", "skinny_diagonal_cross_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_SKINNY_DIAGONAL_BARS = addDecal(ASSETS, "skinny_diagonal_bars", "skinny_diagonal_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "diagonal_cross_bars", "diagonal_cross_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_DIAGONAL_BARS = addDecal(ASSETS, "diagonal_bars", "diagonal_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_FAT_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "fat_diagonal_cross_bars", "fat_diagonal_cross_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_FAT_DIAGONAL_BARS = addDecal(ASSETS, "fat_diagonal_bars", "fat_diagonal_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "diagonal_cross_ridges", "diagonal_cross_ridges", ROTATE_NONE);
-    public static final TextureSet DECAL_DIAGONAL_RIDGES = addDecal(ASSETS, "diagonal_ridges", "diagonal_ridges", ROTATE_NONE);
-    public static final TextureSet DECAL_SKINNY_BARS = addDecal(ASSETS, "skinny_bars", "skinny_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_FAT_BARS = addDecal(ASSETS, "fat_bars", "fat_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_THICK_BARS = addDecal(ASSETS, "thick_bars", "thick_bars", ROTATE_NONE);
-    public static final TextureSet DECAL_THIN_BARS = addDecal(ASSETS, "thin_bars", "thin_bars", ROTATE_NONE);
+    public static final TextureSet DECAL_SKINNY_DIAGONAL_RIDGES = addDecal(ASSETS, "skinny_diagonal_ridges", "skinny_diagonal_ridges", IDENTITY);
+    public static final TextureSet DECAL_THICK_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "thick_diagonal_cross_ridges", "thick_diagonal_cross_ridges", IDENTITY);
+    public static final TextureSet DECAL_THICK_DIAGONAL_RIDGES = addDecal(ASSETS, "thick_diagonal_ridges", "thick_diagonal_ridges", IDENTITY);
+    public static final TextureSet DECAL_THIN_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "thin_diagonal_cross_ridges", "thin_diagonal_cross_ridges", IDENTITY);
+    public static final TextureSet DECAL_THIN_DIAGONAL_RIDGES = addDecal(ASSETS, "thin_diagonal_ridges", "thin_diagonal_ridges", IDENTITY);
+    public static final TextureSet DECAL_THIN_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "thin_diagonal_cross_bars", "thin_diagonal_cross_bars", IDENTITY);
+    public static final TextureSet DECAL_THIN_DIAGONAL_BARS = addDecal(ASSETS, "thin_diagonal_bars", "thin_diagonal_bars", IDENTITY);
+    public static final TextureSet DECAL_SKINNY_DIAGNAL_CROSS_BARS = addDecal(ASSETS, "skinny_diagonal_cross_bars", "skinny_diagonal_cross_bars", IDENTITY);
+    public static final TextureSet DECAL_SKINNY_DIAGONAL_BARS = addDecal(ASSETS, "skinny_diagonal_bars", "skinny_diagonal_bars", IDENTITY);
+    public static final TextureSet DECAL_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "diagonal_cross_bars", "diagonal_cross_bars", IDENTITY);
+    public static final TextureSet DECAL_DIAGONAL_BARS = addDecal(ASSETS, "diagonal_bars", "diagonal_bars", IDENTITY);
+    public static final TextureSet DECAL_FAT_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "fat_diagonal_cross_bars", "fat_diagonal_cross_bars", IDENTITY);
+    public static final TextureSet DECAL_FAT_DIAGONAL_BARS = addDecal(ASSETS, "fat_diagonal_bars", "fat_diagonal_bars", IDENTITY);
+    public static final TextureSet DECAL_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "diagonal_cross_ridges", "diagonal_cross_ridges", IDENTITY);
+    public static final TextureSet DECAL_DIAGONAL_RIDGES = addDecal(ASSETS, "diagonal_ridges", "diagonal_ridges", IDENTITY);
+    public static final TextureSet DECAL_SKINNY_BARS = addDecal(ASSETS, "skinny_bars", "skinny_bars", IDENTITY);
+    public static final TextureSet DECAL_FAT_BARS = addDecal(ASSETS, "fat_bars", "fat_bars", IDENTITY);
+    public static final TextureSet DECAL_THICK_BARS = addDecal(ASSETS, "thick_bars", "thick_bars", IDENTITY);
+    public static final TextureSet DECAL_THIN_BARS = addDecal(ASSETS, "thin_bars", "thin_bars", IDENTITY);
     public static final TextureSet DECAL_SKINNY_DIAGONAL_RIDGES_90 = addDecal(ASSETS, "skinny_diagonal_ridges_90", "skinny_diagonal_ridges", ROTATE_90);
     public static final TextureSet DECAL_THICK_DIAGONAL_RIDGES_90 = addDecal(ASSETS, "thick_diagonal_ridges_90", "thick_diagonal_ridges", ROTATE_90);
     public static final TextureSet DECAL_THIN_DIAGONAL_RIDGES_90 = addDecal(ASSETS, "thin_diagonal_ridges_90", "thin_diagonal_ridges", ROTATE_90);
@@ -71,26 +71,26 @@ public class XmArtDecals {
     public static final TextureSet DECAL_THIN_BARS_RANDOM = addDecal(ASSETS, "thin_bars_random", "thin_bars", ROTATE_RANDOM);
 
     public static final TextureSet DECAL_SOFT_SKINNY_DIAGONAL_RIDGES = addDecal(ASSETS, "skinny_diagonal_ridges_seamless", "skinny_diagonal_ridges_seamless",
-            ROTATE_NONE);
+            IDENTITY);
     public static final TextureSet DECAL_SOFT_THICK_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "thick_diagonal_cross_ridges_seamless",
-            "thick_diagonal_cross_ridges_seamless", ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_THICK_DIAGONAL_RIDGES = addDecal(ASSETS, "thick_diagonal_ridges_seamless", "thick_diagonal_ridges_seamless", ROTATE_NONE);
+            "thick_diagonal_cross_ridges_seamless", IDENTITY);
+    public static final TextureSet DECAL_SOFT_THICK_DIAGONAL_RIDGES = addDecal(ASSETS, "thick_diagonal_ridges_seamless", "thick_diagonal_ridges_seamless", IDENTITY);
     public static final TextureSet DECAL_SOFT_THIN_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "thin_diagonal_cross_ridges_seamless",
-            "thin_diagonal_cross_ridges_seamless", ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_THIN_DIAGONAL_RIDGES = addDecal(ASSETS, "thin_diagonal_ridges_seamless", "thin_diagonal_ridges_seamless", ROTATE_NONE);
+            "thin_diagonal_cross_ridges_seamless", IDENTITY);
+    public static final TextureSet DECAL_SOFT_THIN_DIAGONAL_RIDGES = addDecal(ASSETS, "thin_diagonal_ridges_seamless", "thin_diagonal_ridges_seamless", IDENTITY);
     public static final TextureSet DECAL_SOFT_THIN_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "thin_diagonal_cross_bars_seamless", "thin_diagonal_cross_bars_seamless",
-            ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_THIN_DIAGONAL_BARS = addDecal(ASSETS, "thin_diagonal_bars_seamless", "thin_diagonal_bars_seamless", ROTATE_NONE);
+            IDENTITY);
+    public static final TextureSet DECAL_SOFT_THIN_DIAGONAL_BARS = addDecal(ASSETS, "thin_diagonal_bars_seamless", "thin_diagonal_bars_seamless", IDENTITY);
     public static final TextureSet DECAL_SOFT_SKINNY_DIAGNAL_CROSS_BARS = addDecal(ASSETS, "skinny_diagonal_cross_bars_seamless", "skinny_diagonal_cross_bars_seamless",
-            ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_SKINNY_DIAGONAL_BARS = addDecal(ASSETS, "skinny_diagonal_bars_seamless", "skinny_diagonal_bars_seamless", ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "diagonal_cross_bars_seamless", "diagonal_cross_bars_seamless", ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_DIAGONAL_BARS = addDecal(ASSETS, "diagonal_bars_seamless", "diagonal_bars_seamless", ROTATE_NONE);
+            IDENTITY);
+    public static final TextureSet DECAL_SOFT_SKINNY_DIAGONAL_BARS = addDecal(ASSETS, "skinny_diagonal_bars_seamless", "skinny_diagonal_bars_seamless", IDENTITY);
+    public static final TextureSet DECAL_SOFT_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "diagonal_cross_bars_seamless", "diagonal_cross_bars_seamless", IDENTITY);
+    public static final TextureSet DECAL_SOFT_DIAGONAL_BARS = addDecal(ASSETS, "diagonal_bars_seamless", "diagonal_bars_seamless", IDENTITY);
     public static final TextureSet DECAL_SOFT_FAT_DIAGONAL_CROSS_BARS = addDecal(ASSETS, "fat_diagonal_cross_bars_seamless", "fat_diagonal_cross_bars_seamless",
-            ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_FAT_DIAGONAL_BARS = addDecal(ASSETS, "fat_diagonal_bars_seamless", "fat_diagonal_bars_seamless", ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "diagonal_cross_ridges_seamless", "diagonal_cross_ridges_seamless", ROTATE_NONE);
-    public static final TextureSet DECAL_SOFT_DIAGONAL_RIDGES = addDecal(ASSETS, "diagonal_ridges_seamless", "diagonal_ridges_seamless", ROTATE_NONE);
+            IDENTITY);
+    public static final TextureSet DECAL_SOFT_FAT_DIAGONAL_BARS = addDecal(ASSETS, "fat_diagonal_bars_seamless", "fat_diagonal_bars_seamless", IDENTITY);
+    public static final TextureSet DECAL_SOFT_DIAGONAL_CROSS_RIDGES = addDecal(ASSETS, "diagonal_cross_ridges_seamless", "diagonal_cross_ridges_seamless", IDENTITY);
+    public static final TextureSet DECAL_SOFT_DIAGONAL_RIDGES = addDecal(ASSETS, "diagonal_ridges_seamless", "diagonal_ridges_seamless", IDENTITY);
 
     public static final TextureSet DECAL_SOFT_SKINNY_DIAGONAL_RIDGES_90 = addDecal(ASSETS, "skinny_diagonal_ridges_90", "skinny_diagonal_ridges", ROTATE_90);
     public static final TextureSet DECAL_SOFT_THICK_DIAGONAL_RIDGES_90 = addDecal(ASSETS, "thick_diagonal_ridges_seamless_90", "thick_diagonal_ridges_seamless",

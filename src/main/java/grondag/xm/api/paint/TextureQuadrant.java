@@ -23,6 +23,7 @@ import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.orientation.FaceCorner;
 import grondag.xm.api.orientation.FaceEdge;
+import grondag.xm.api.texture.TextureOrientation;
 
 /**
  * Identifies content of each quadrant within texture file, starting at top
@@ -109,6 +110,6 @@ public enum TextureQuadrant {
      * <p>
      */
     public void applyForQuadrant(MutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
-        polygon.rotation(layerIndex, Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - this.rotation) & 3]);
+        polygon.rotation(layerIndex, TextureOrientation.find(Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - this.rotation) & 3], false, false));
     }
 }

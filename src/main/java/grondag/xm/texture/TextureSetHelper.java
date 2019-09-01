@@ -19,9 +19,9 @@ import static grondag.xm.api.texture.TextureGroup.STATIC_BORDERS;
 import static grondag.xm.api.texture.TextureLayoutMap.BORDER_13;
 import static grondag.xm.api.texture.TextureLayoutMap.BORDER_14;
 import static grondag.xm.api.texture.TextureRenderIntent.OVERLAY_ONLY;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_NONE;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_RANDOM;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
+import static grondag.xm.api.texture.TextureTransform.IDENTITY;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
@@ -29,9 +29,9 @@ import org.apiguardian.api.API;
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
-import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
+import grondag.xm.api.texture.TextureTransform;
 
 @API(status = INTERNAL)
 public abstract class TextureSetHelper {
@@ -42,19 +42,19 @@ public abstract class TextureSetHelper {
     
     public static TextureSet addBorderSingle(String modId, String name) {
         return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":blocks/" + name).versionCount(1).scale(SINGLE).layout(BORDER_13)
-                .rotation(ROTATE_NONE).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build(modId + ":" + name);
+                .transform(IDENTITY).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build(modId + ":" + name);
     }
     
     public static TextureSet addBorderRandom(String modId, String name, boolean allowTile, boolean renderNoBorderAsTile) {
         return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":blocks/" + name).versionCount(4).scale(SINGLE)
                 .layout(renderNoBorderAsTile ? BORDER_14 : BORDER_13)
                 .renderIntent(allowTile ? TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT : TextureRenderIntent.OVERLAY_ONLY)
-                .groups(allowTile ? BORDERS_STATIC : DUAL_STATIC).rotation(ROTATE_NONE).build(modId + ":" + name);
+                .groups(allowTile ? BORDERS_STATIC : DUAL_STATIC).transform(IDENTITY).build(modId + ":" + name);
     }
 
     public static TextureSet addBigTex(String modId, String name) {
         return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":blocks/" + name).versionCount(1).scale(TextureScale.MEDIUM)
-                .layout(TextureLayoutMap.SINGLE).rotation(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.STATIC_TILES)
+                .layout(TextureLayoutMap.SINGLE).transform(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.STATIC_TILES)
                 .build(modId + ":" + name);
     }
 
@@ -68,9 +68,9 @@ public abstract class TextureSetHelper {
                 .build(template.id().toString() + "_zoom2");
     }
 
-    public static TextureSet addDecal(String modId, String idName, String fileName, TextureRotation rotation) {
+    public static TextureSet addDecal(String modId, String idName, String fileName, TextureTransform rotation) {
         return TextureSet.builder().displayNameToken(idName).baseTextureName(modId + ":blocks/" + fileName).versionCount(1).scale(TextureScale.SINGLE)
-                .layout(TextureLayoutMap.SINGLE).rotation(rotation).renderIntent(TextureRenderIntent.OVERLAY_ONLY).groups(TextureGroup.STATIC_DETAILS)
+                .layout(TextureLayoutMap.SINGLE).transform(rotation).renderIntent(TextureRenderIntent.OVERLAY_ONLY).groups(TextureGroup.STATIC_DETAILS)
                 .build(modId + ":" + idName);
     }
 }

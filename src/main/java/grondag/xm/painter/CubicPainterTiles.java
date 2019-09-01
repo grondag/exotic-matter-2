@@ -19,13 +19,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.math.Direction;
@@ -42,7 +42,7 @@ public abstract class CubicPainterTiles extends AbstractQuadPainter {
             final Direction nominalFace = editor.nominalFace();
             final TextureSet tex = paint.texture(textureIndex);
 
-            Rotation rotation = textureRotationForFace(nominalFace, tex, modelState);
+            TextureOrientation rotation = textureRotationForFace(nominalFace, tex, modelState);
             int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
 
             final int salt = editor.textureSalt();

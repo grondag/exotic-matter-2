@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -32,6 +31,7 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
+import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.relics.CubeInputs;
 import net.minecraft.util.math.Direction;
 
@@ -59,7 +59,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     private XmMesh getCubeQuads() {
         CubeInputs cube = new CubeInputs();
         cube.color = 0xFFFFFFFF;
-        cube.textureRotation = Rotation.ROTATE_NONE;
+        cube.textureRotation = TextureOrientation.IDENTITY;
         cube.isFullBrightness = false;
         cube.u0 = 0;
         cube.v0 = 0;

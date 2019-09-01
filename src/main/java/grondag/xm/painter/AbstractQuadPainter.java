@@ -26,7 +26,7 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.api.texture.TextureRotation;
+import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
@@ -188,16 +188,36 @@ public abstract class AbstractQuadPainter {
      * rotation type is RANDOM, is based on position (chunked by texture size) and
      * species (if applies).
      */
-    protected static Rotation textureRotationForFace(Direction face, TextureSet tex, BaseModelState modelState) {
-        final int species = modelState.hasSpecies() ? modelState.species() : 0;
-        if (tex.rotation() == TextureRotation.ROTATE_RANDOM) {
-            if (tex.scale() == TextureScale.SINGLE) {
-                return Useful.offsetEnumValue(Rotation.ROTATE_NONE, (textureHashForFace(face, tex, modelState) >> 8) & 3);
-            } else {
-                return species == 0 ? Rotation.ROTATE_NONE : Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
-            }
-        } else {
-            return tex.rotation().rotation;
+    protected static TextureOrientation textureRotationForFace(Direction face, TextureSet tex, BaseModelState modelState) {
+        switch(tex.transform()) {
+        case ROTATE_180:
+            return TextureOrientation.ROTATE_180;
+
+        case ROTATE_270:
+            return TextureOrientation.ROTATE_270;
+
+        case ROTATE_90:
+            return TextureOrientation.ROTATE_90;
+
+        case ROTATE_BIGTEX: {
+            final int species = modelState.hasSpecies() ? modelState.species() : 0;
+            final Rotation rot =  species == 0 ? Rotation.ROTATE_NONE : Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
+            return TextureOrientation.find(rot, false, false);
+        }
+        
+        case ROTATE_RANDOM:
+            return TextureOrientation.find(Useful.offsetEnumValue(Rotation.ROTATE_NONE, (textureHashForFace(face, tex, modelState) >> 8) & 3), false, false);
+            
+        case STONE_LIKE: {
+            final int hash = textureHashForFace(face, tex, modelState);
+            final Rotation rot = (hash & 0b100000000) == 0 ? Rotation.ROTATE_NONE : Rotation.ROTATE_180;
+            return TextureOrientation.find(rot, (hash & 0b1000000000) == 0, false); 
+        }
+        
+        case IDENTITY:
+        default:
+            return TextureOrientation.IDENTITY;
+        
         }
     }
 }

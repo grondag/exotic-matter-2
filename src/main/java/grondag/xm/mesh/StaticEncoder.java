@@ -21,9 +21,9 @@ import org.apiguardian.api.API;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.intstream.IntStream;
-import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.IndexedInterner;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.block.BlockRenderLayer;
 
 @API(status = INTERNAL)
@@ -93,32 +93,32 @@ class StaticEncoder {
     }
 
     @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.EnumElement<Rotation>[] ROTATION = (BitPacker32<StaticEncoder>.EnumElement<Rotation>[]) new BitPacker32<?>.EnumElement<?>[3];
+    private static final BitPacker32<StaticEncoder>.EnumElement<TextureOrientation>[] ROTATION = (BitPacker32<StaticEncoder>.EnumElement<TextureOrientation>[]) new BitPacker32<?>.EnumElement<?>[3];
 
     static {
-        ROTATION[0] = BITPACKER.createEnumElement(Rotation.class);
-        ROTATION[1] = BITPACKER.createEnumElement(Rotation.class);
-        ROTATION[2] = BITPACKER.createEnumElement(Rotation.class);
+        ROTATION[0] = BITPACKER.createEnumElement(TextureOrientation.class);
+        ROTATION[1] = BITPACKER.createEnumElement(TextureOrientation.class);
+        ROTATION[2] = BITPACKER.createEnumElement(TextureOrientation.class);
     }
 
-    public static Rotation getRotation(IntStream stream, int baseAddress, int layerIndex) {
+    public static TextureOrientation getRotation(IntStream stream, int baseAddress, int layerIndex) {
         return ROTATION[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setRotation(IntStream stream, int baseAddress, int layerIndex, Rotation rotation) {
+    public static void setRotation(IntStream stream, int baseAddress, int layerIndex, TextureOrientation rotation) {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, ROTATION[layerIndex].setValue(rotation, bits));
     }
 
-    private static final BitPacker32<StaticEncoder>.IntElement SALT = BITPACKER.createIntElement(256);
+    private static final BitPacker32<StaticEncoder>.IntElement SALT = BITPACKER_2.createIntElement(256);
 
     public static int getTextureSalt(IntStream stream, int baseAddress) {
-        return SALT.getValue(stream.get(baseAddress + BIT_OFFSET));
+        return SALT.getValue(stream.get(baseAddress + BIT_OFFSET_2));
     }
 
     public static void setTextureSalt(IntStream stream, int baseAddress, int salt) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, SALT.setValue(salt, bits));
+        final int bits = stream.get(baseAddress + BIT_OFFSET_2);
+        stream.set(baseAddress + BIT_OFFSET_2, SALT.setValue(salt, bits));
     }
 
     @SuppressWarnings("unchecked")

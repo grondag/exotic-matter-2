@@ -1,10 +1,10 @@
 package grondag.xm.api.mesh.generator;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.util.math.Direction;
 
 public class StairMesh {
@@ -28,7 +28,7 @@ public class StairMesh {
         
         final MutablePolygon quad = mesh.writer();
         
-        quad.rotation(0, Rotation.ROTATE_NONE);
+        quad.rotation(0, TextureOrientation.IDENTITY);
         quad.lockUV(0, true);
         quad.saveDefaults();
 

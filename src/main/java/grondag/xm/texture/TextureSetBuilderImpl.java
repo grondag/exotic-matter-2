@@ -22,10 +22,10 @@ import org.apiguardian.api.API;
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
-import grondag.xm.api.texture.TextureRotation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetBuilder;
+import grondag.xm.api.texture.TextureTransform;
 import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
@@ -49,8 +49,8 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
     }
 
     @Override
-    public TextureSetBuilder rotation(TextureRotation rotation) {
-        this.rotation = rotation;
+    public TextureSetBuilder transform(TextureTransform rotation) {
+        this.transform = rotation;
         return this;
     }
 

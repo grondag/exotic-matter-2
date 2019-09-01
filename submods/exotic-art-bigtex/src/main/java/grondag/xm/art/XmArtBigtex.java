@@ -16,8 +16,8 @@
 
 package grondag.xm.art;
 
-import static grondag.xm.api.texture.TextureRotation.ROTATE_90;
-import static grondag.xm.api.texture.TextureRotation.ROTATE_NONE;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_90;
+import static grondag.xm.api.texture.TextureTransform.IDENTITY;
 import static grondag.xm.texture.TextureSetHelper.addBigTex;
 import static grondag.xm.texture.TextureSetHelper.addZoom;
 import static grondag.xm.texture.TextureSetHelper.addZoom2;
@@ -52,12 +52,12 @@ public class XmArtBigtex {
     public static final TextureSet BIGTEX_WORN_ASPHALT_ZOOM_X2 = addZoom2(BIGTEX_WORN_ASPHALT);
 
     public static final TextureSet BIGTEX_WOOD = TextureSet.builder().displayNameToken("wood").baseTextureName("exotic-art:blocks/wood").versionCount(1)
-            .scale(TextureScale.MEDIUM).layout(TextureLayoutMap.SINGLE).rotation(ROTATE_NONE).renderIntent(TextureRenderIntent.BASE_ONLY)
+            .scale(TextureScale.MEDIUM).layout(TextureLayoutMap.SINGLE).transform(IDENTITY).renderIntent(TextureRenderIntent.BASE_ONLY)
             .groups(TextureGroup.STATIC_TILES).build("exotic-art:wood");
     public static final TextureSet BIGTEX_WOOD_ZOOM = addZoom(BIGTEX_WOOD);
     public static final TextureSet BIGTEX_WOOD_ZOOM_X2 = addZoom2(BIGTEX_WOOD_ZOOM);
 
-    public static final TextureSet BIGTEX_WOOD_FLIP = TextureSet.builder(BIGTEX_WOOD).displayNameToken("wood_flip").rotation(ROTATE_90)
+    public static final TextureSet BIGTEX_WOOD_FLIP = TextureSet.builder(BIGTEX_WOOD).displayNameToken("wood_flip").transform(ROTATE_90)
             .build("exotic-art:wood_flip");
 
     public static final TextureSet BIGTEX_WOOD_ZOOM_FLIP = addZoom(BIGTEX_WOOD_FLIP);

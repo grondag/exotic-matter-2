@@ -20,11 +20,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 
 import grondag.fermion.color.ColorHelper;
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -100,7 +100,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
     }
 
     @Override
-    public final MutablePolygon rotation(int layerIndex, Rotation rotation) {
+    public final MutablePolygon rotation(int layerIndex, TextureOrientation rotation) {
         StaticEncoder.setRotation(stream, baseAddress, layerIndex, rotation);
         return this;
     }

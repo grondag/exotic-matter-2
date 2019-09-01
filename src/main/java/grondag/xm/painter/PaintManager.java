@@ -347,7 +347,7 @@ public class PaintManager implements Consumer<Polygon> {
 
     private void applyTextureRotation(int spriteIndex, MutablePolygon poly) {
         final int vCount = poly.vertexCount();
-        switch (poly.rotation(spriteIndex)) {
+        switch (poly.rotation(spriteIndex).rotation) {
         case ROTATE_NONE:
         default:
             break;

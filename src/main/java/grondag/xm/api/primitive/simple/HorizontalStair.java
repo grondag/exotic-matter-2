@@ -21,7 +21,6 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -34,6 +33,7 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
+import grondag.xm.api.texture.TextureOrientation;
 
 @API(status = EXPERIMENTAL)
 public class HorizontalStair {
@@ -55,7 +55,7 @@ public class HorizontalStair {
         mesh.writer()
             .colorAll(0, 0xFFFFFFFF)
             .lockUV(0, false)
-            .rotation(0, Rotation.ROTATE_NONE)
+            .rotation(0, TextureOrientation.IDENTITY)
             .sprite(0, "")
             .saveDefaults();
         
