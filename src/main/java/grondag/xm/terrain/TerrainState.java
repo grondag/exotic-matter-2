@@ -563,7 +563,7 @@ public class TerrainState {
         int heightCorner = height(corner);
 
         if (heightCorner == TerrainState.NO_BLOCK) {
-            int max = Math.max(Math.max(height(corner.face1), height(corner.face2)), centerHeight());
+            int max = Math.max(Math.max(height(corner.left), height(corner.right)), centerHeight());
             heightCorner = max - BLOCK_LEVELS_INT;
         }
 
@@ -571,8 +571,8 @@ public class TerrainState {
     }
 
     private float calcMidCornerVertexHeight(HorizontalEdge corner) {
-        int heightSide1 = height(corner.face1);
-        int heightSide2 = height(corner.face2);
+        int heightSide1 = height(corner.left);
+        int heightSide2 = height(corner.right);
         int heightCorner = height(corner);
 
         int max = Math.max(Math.max(heightSide1, heightSide2), Math.max(heightCorner, centerHeight())) - BLOCK_LEVELS_INT;
@@ -663,8 +663,8 @@ public class TerrainState {
         if (centerHeat == 0)
             return 0;
 
-        final int heatSide1 = SIDE_HOTNESS[corner.face1.ordinal()].getValue(this.hotness);
-        final int heatSide2 = SIDE_HOTNESS[corner.face2.ordinal()].getValue(this.hotness);
+        final int heatSide1 = SIDE_HOTNESS[corner.left.ordinal()].getValue(this.hotness);
+        final int heatSide2 = SIDE_HOTNESS[corner.right.ordinal()].getValue(this.hotness);
         final int heatCorner = CORNER_HOTNESS[corner.ordinal()].getValue(this.hotness);
 
         if (heatSide1 == 0) {
@@ -753,9 +753,9 @@ public class TerrainState {
             return 0;
         if (this.neighborHotness(corner) == 0 && this.height(corner) != NO_BLOCK)
             return 0;
-        if (this.neighborHotness(corner.face1) == 0 && this.height(corner.face1) != NO_BLOCK)
+        if (this.neighborHotness(corner.left) == 0 && this.height(corner.left) != NO_BLOCK)
             return 0;
-        if (this.neighborHotness(corner.face2) == 0 && this.height(corner.face2) != NO_BLOCK)
+        if (this.neighborHotness(corner.right) == 0 && this.height(corner.right) != NO_BLOCK)
             return 0;
 
         return 1;
@@ -847,18 +847,18 @@ public class TerrainState {
             // this is a lava block
             if (this.neighborHotness(corner) < IHotBlock.MAX_HEAT && this.height(corner) != NO_BLOCK)
                 return 0.5f;
-            if (this.neighborHotness(corner.face1) < IHotBlock.MAX_HEAT && this.height(corner.face1) != NO_BLOCK)
+            if (this.neighborHotness(corner.left) < IHotBlock.MAX_HEAT && this.height(corner.left) != NO_BLOCK)
                 return 0.5f;
-            if (this.neighborHotness(corner.face2) < IHotBlock.MAX_HEAT && this.height(corner.face2) != NO_BLOCK)
+            if (this.neighborHotness(corner.right) < IHotBlock.MAX_HEAT && this.height(corner.right) != NO_BLOCK)
                 return 0.5f;
             return 0;
         } else // hot basalt
         {
             if (this.neighborHotness(corner) == IHotBlock.MAX_HEAT)
                 return 0.5f;
-            if (this.neighborHotness(corner.face1) == IHotBlock.MAX_HEAT)
+            if (this.neighborHotness(corner.left) == IHotBlock.MAX_HEAT)
                 return 0.5f;
-            if (this.neighborHotness(corner.face2) == IHotBlock.MAX_HEAT)
+            if (this.neighborHotness(corner.right) == IHotBlock.MAX_HEAT)
                 return 0.5f;
             return 1;
         }
@@ -942,9 +942,9 @@ public class TerrainState {
     private final float edgeAlpha(HorizontalEdge corner) {
         if (this.height(corner) != NO_BLOCK && this.neighborHotness(corner) == 0)
             return 1;
-        if (this.height(corner.face1) != NO_BLOCK && this.neighborHotness(corner.face1) == 0)
+        if (this.height(corner.left) != NO_BLOCK && this.neighborHotness(corner.left) == 0)
             return 1;
-        if (this.height(corner.face2) != NO_BLOCK && this.neighborHotness(corner.face2) == 0)
+        if (this.height(corner.right) != NO_BLOCK && this.neighborHotness(corner.right) == 0)
             return 1;
         return 0;
     }

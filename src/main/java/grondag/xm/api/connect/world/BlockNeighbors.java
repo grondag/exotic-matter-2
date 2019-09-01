@@ -92,7 +92,7 @@ public interface BlockNeighbors {
     }
 
     default BlockState blockState(HorizontalEdge corner) {
-        return blockState(corner.face1.face, corner.face2.face);
+        return blockState(corner.left.face, corner.right.face);
     }
 
     default BlockState blockState(Direction face1, Direction face2, Direction face3) {
@@ -116,7 +116,7 @@ public interface BlockNeighbors {
     }
 
     default BlockEntity blockEntity(HorizontalEdge corner) {
-        return blockEntity(corner.face1.face, corner.face2.face);
+        return blockEntity(corner.left.face, corner.right.face);
     }
 
     default BlockEntity blockEntity(Direction face1, Direction face2, Direction face3) {
@@ -144,7 +144,7 @@ public interface BlockNeighbors {
     }
 
     default Object modelState(HorizontalEdge corner) {
-        return modelState(corner.face1.face, corner.face2.face);
+        return modelState(corner.left.face, corner.right.face);
     }
 
     /** use this to override world results */
@@ -165,7 +165,7 @@ public interface BlockNeighbors {
     }
 
     public default boolean result(HorizontalEdge corner) {
-        return result(corner.face1.face, corner.face2.face);
+        return result(corner.left.face, corner.right.face);
     }
 
     public default boolean result(Direction face1, Direction face2, Direction face3) {

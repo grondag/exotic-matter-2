@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import grondag.xm.connect.helper.CubeRotationHelper;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -127,5 +128,11 @@ public enum CubeRotation implements StringIdentifiable {
     @Override
     public String asString() {
         return name;
+    }
+
+    public CubeRotation rotate(BlockRotation rotation) {
+        final Direction newBack = rotation.rotate(this.back);
+        final Direction newBottom = rotation.rotate(this.bottom);
+        return find(newBottom, newBack);
     }
 }

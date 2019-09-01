@@ -47,7 +47,7 @@ public abstract class CubicPainterTiles extends AbstractQuadPainter {
             int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
 
             final int salt = editor.textureSalt();
-            if (salt != 0) {
+            if (salt != 0 && tex.transform().hasRandom) {
                 int saltHash = HashCommon.mix(salt);
                 rotation = Useful.offsetEnumValue(rotation, saltHash & 3);
                 textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();

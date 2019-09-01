@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.HorizontalCornerHelper;
+import grondag.xm.connect.helper.HorizontalEdgeHelper;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
@@ -37,40 +37,44 @@ import net.minecraft.util.math.Vec3i;
 @API(status = EXPERIMENTAL)
 public enum HorizontalEdge implements StringIdentifiable {
     NORTH_EAST(HorizontalFace.NORTH, HorizontalFace.EAST),
-    NORTH_WEST(HorizontalFace.NORTH, HorizontalFace.WEST),
-    SOUTH_EAST(HorizontalFace.SOUTH, HorizontalFace.EAST),
+    NORTH_WEST(HorizontalFace.WEST, HorizontalFace.NORTH),
+    SOUTH_EAST(HorizontalFace.EAST, HorizontalFace.SOUTH),
     SOUTH_WEST(HorizontalFace.SOUTH, HorizontalFace.WEST);
 
-    public final HorizontalFace face1;
-    public final HorizontalFace face2;
+    public final HorizontalFace left;
+    public final HorizontalFace right;
 
     public final Vec3i vector;
 
     public final String name;
 
-    private HorizontalEdge(HorizontalFace face1, HorizontalFace face2) {
+    private HorizontalEdge(HorizontalFace left, HorizontalFace right) {
         this.name = this.name().toLowerCase();
-        this.face1 = face1;
-        this.face2 = face2;
-        this.vector = new Vec3i(face1.face.getVector().getX() + face2.face.getVector().getX(), 0,
-                face1.face.getVector().getZ() + face2.face.getVector().getZ());
+        this.left = left;
+        this.right = right;
+        this.vector = new Vec3i(left.face.getVector().getX() + right.face.getVector().getX(), 0,
+                left.face.getVector().getZ() + right.face.getVector().getZ());
     }
     
     public HorizontalEdge rotate(BlockRotation rotation) {
-        final Direction face1 = rotation.rotate(this.face1.face);
-        final Direction face2 = rotation.rotate(this.face2.face);
+        final Direction face1 = rotation.rotate(this.left.face);
+        final Direction face2 = rotation.rotate(this.right.face);
         return ObjectUtils.defaultIfNull(find(face1, face2), this);
-        
     }
 
-    public static final int COUNT = HorizontalCornerHelper.COUNT;
+    @Override
+    public String asString() {
+        return name;
+    }
+    
+    public static final int COUNT = HorizontalEdgeHelper.COUNT;
 
     /**
      * Will return null if inputs do not specify a horizontal block edge.
      */
     @Nullable
     public static HorizontalEdge find(HorizontalFace face1, HorizontalFace face2) {
-        return HorizontalCornerHelper.find(face1, face2);
+        return HorizontalEdgeHelper.find(face1, face2);
     }
 
     @Nullable
@@ -78,16 +82,15 @@ public enum HorizontalEdge implements StringIdentifiable {
         return find(HorizontalFace.find(face1), HorizontalFace.find(face2));
     }
     
+    public static HorizontalEdge fromRotation(double yawDegrees) {
+        return HorizontalEdgeHelper.fromRotation(yawDegrees);
+    }
+    
     public static HorizontalEdge fromOrdinal(int ordinal) {
-        return HorizontalCornerHelper.fromOrdinal(ordinal);
+        return HorizontalEdgeHelper.fromOrdinal(ordinal);
     }
 
     public static void forEach(Consumer<HorizontalEdge> consumer) {
-        HorizontalCornerHelper.forEach(consumer);
-    }
-
-    @Override
-    public String asString() {
-        return name;
+        HorizontalEdgeHelper.forEach(consumer);
     }
 }

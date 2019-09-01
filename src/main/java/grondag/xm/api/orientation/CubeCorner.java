@@ -22,9 +22,11 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 
 import grondag.xm.connect.helper.CubeCornerHelper;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -97,5 +99,12 @@ public enum CubeCorner implements StringIdentifiable {
     @Override
     public String asString() {
         return name;
+    }
+
+    public CubeCorner rotate(BlockRotation rotation) {
+        final Direction face1 = rotation.rotate(this.face1);
+        final Direction face2 = rotation.rotate(this.face2);
+        final Direction face3 = rotation.rotate(this.face3);
+        return ObjectUtils.defaultIfNull(find(face1, face2, face3), this);
     }
 }

@@ -23,10 +23,11 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
+import net.minecraft.util.math.MathHelper;
 
 @API(status = INTERNAL)
-public abstract class HorizontalCornerHelper {
-    private HorizontalCornerHelper() {
+public abstract class HorizontalEdgeHelper {
+    private HorizontalEdgeHelper() {
     }
 
     private static final HorizontalEdge[] VALUES = HorizontalEdge.values();
@@ -36,8 +37,8 @@ public abstract class HorizontalCornerHelper {
 
     static {
         for (HorizontalEdge corner : HorizontalEdge.values()) {
-            HORIZONTAL_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()] = corner;
-            HORIZONTAL_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()] = corner;
+            HORIZONTAL_CORNER_LOOKUP[corner.left.ordinal()][corner.right.ordinal()] = corner;
+            HORIZONTAL_CORNER_LOOKUP[corner.right.ordinal()][corner.left.ordinal()] = corner;
         }
     }
 
@@ -52,6 +53,21 @@ public abstract class HorizontalCornerHelper {
     public static void forEach(Consumer<HorizontalEdge> consumer) {
         for (HorizontalEdge val : VALUES) {
             consumer.accept(val);
+        }
+    }
+    
+    public static HorizontalEdge fromRotation(double yawDegrees) {
+        final int ordinal = MathHelper.floor(yawDegrees / 90.0D) & 3;
+        
+        switch(ordinal) {
+        case 0:
+            return HorizontalEdge.SOUTH_WEST;
+        case 1:
+            return HorizontalEdge.NORTH_WEST;
+        case 2:
+            return HorizontalEdge.NORTH_EAST;
+        default:
+            return HorizontalEdge.SOUTH_EAST;
         }
     }
 }

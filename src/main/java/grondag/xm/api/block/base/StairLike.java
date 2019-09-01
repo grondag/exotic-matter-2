@@ -15,22 +15,24 @@
  ******************************************************************************/
 package grondag.xm.api.block.base;
 
-import static grondag.xm.api.block.XmProperties.X_ORTHO_FACING;
-import static grondag.xm.api.block.XmProperties.Z_ORTHO_FACING;
-import static net.minecraft.block.StairsBlock.HALF;
-import static net.minecraft.block.StairsBlock.SHAPE;
 import static net.minecraft.block.StairsBlock.WATERLOGGED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Random;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.DirectionHelper;
+import grondag.fermion.modkeys.impl.ModKeysAccess;
+import grondag.fermion.world.WorldHelper;
 import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.api.orientation.CubeRotation;
+import grondag.xm.api.orientation.FaceEdge;
+import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.primitive.simple.Stair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,10 +42,7 @@ import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.StairsBlock;
 import net.minecraft.block.Waterloggable;
-import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.block.enums.StairShape;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,8 +50,6 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
@@ -61,6 +58,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Direction.AxisDirection;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
@@ -69,36 +67,27 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
 @API(status = EXPERIMENTAL)
-public abstract class StairLike extends Block implements Waterloggable {
+public class StairLike extends Block implements Waterloggable {
     protected final Block baseBlock;
     protected final BlockState baseBlockState;
-    protected final Direction upDirection;
-    protected final Direction downDirection;
-    protected final Axis leftRightAxis;
-    protected final Axis frontBackAxis;
     
+    public static enum Shape {
+        STRAIGHT,
+        INSIDE_CORNER,
+        OUTSIDE_CORNER;
+    }
     
-    public StairLike(BlockState blockState, Settings settings) {
+    public final Shape shape;
+    
+    public StairLike(BlockState blockState, Settings settings, Shape shape) {
         super(FabricBlockSettings.copyOf(settings).dynamicBounds().build());
-        
-        final Axis axis = axis();
-        this.upDirection = axis == Axis.Y ? Direction.UP : (axis == Axis.X ? Direction.EAST : Direction.SOUTH);
-        this.downDirection = upDirection.getOpposite();
-        leftRightAxis = axis == Axis.Y ? Axis.Z : Axis.Y;
-        frontBackAxis = axis == Axis.X ? Axis.Z : Axis.X;
-        
-        this.setDefaultState(this.stateFactory.getDefaultState().with(faceProperty(), Direction.from(frontBackAxis, AxisDirection.NEGATIVE)).with(HALF, BlockHalf.BOTTOM).with(SHAPE, StairShape.STRAIGHT).with(WATERLOGGED, false));
+        this.setDefaultState(this.stateFactory.getDefaultState()
+                .with(WATERLOGGED, false));
         this.baseBlock = blockState.getBlock();
         this.baseBlockState = blockState;
+        this.shape = shape;
     }
 
-    public abstract Axis axis();
-    
-    public final DirectionProperty faceProperty() {
-        final Axis axis = axis();
-        return axis == Axis.Y ? Properties.HORIZONTAL_FACING : (axis == Axis.X ? X_ORTHO_FACING : Z_ORTHO_FACING);
-    }
-    
     @Override
     public boolean hasSidedTransparency(BlockState blockState_1) {
         return true;
@@ -175,24 +164,128 @@ public abstract class StairLike extends Block implements Waterloggable {
         this.baseBlock.onDestroyedByExplosion(world_1, blockPos_1, explosion_1);
     }
 
+    //UGLY: It was bad in the previous versions, too.  There must be a better model for this, but I haven't found it yet.
+    //TODO: consider splitting this mess into a utility class for reuse - like it was in prior version
+    //TODO: make modifier key mappings configurable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext itemPlacementContext) {
-        final Direction face = itemPlacementContext.getSide();
-        final BlockPos pos = itemPlacementContext.getBlockPos();
-        final Axis axis = this.axis();
-        final FluidState fluidState = itemPlacementContext.getWorld().getFluidState(pos);
-        final Direction playerFacing = itemPlacementContext.getPlayerFacing();
-        final Direction backFace = playerFacing.getAxis() == axis
-                ? (itemPlacementContext.getPlayer().pitch > 0 ? Direction.DOWN : Direction.UP)
-                : playerFacing;
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        final BlockPos pos = context.getBlockPos();
+        final PlayerEntity player = context.getPlayer();
+        final FluidState fluidState = context.getWorld().getFluidState(pos);
+        final Direction onFace = context.getSide().getOpposite();
+        BlockState result = this.getDefaultState().with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
         
-        final BlockState result = this.getDefaultState()
-                .with(faceProperty(), backFace)
-                .with(HALF, face != downDirection && (face == upDirection 
-                    || itemPlacementContext.getHitPos().getComponentAlongAxis(axis) - axis.choose(pos.getX(), pos.getY(), pos.getZ()) <= 0.5D)
-                    ? BlockHalf.BOTTOM : BlockHalf.TOP) 
-                .with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
-        return result.with(SHAPE, computeShape(result, itemPlacementContext.getWorld(), pos));
+        Direction bottomFace = Direction.DOWN;
+        Direction backFace = Direction.SOUTH;
+        if(player != null) {
+            final Direction[] faces = context.getPlacementDirections();
+            final int xIndex = faces[0].getAxis() == Axis.X ? 0 : (faces[1].getAxis() == Axis.X ? 1 : 2);
+            final int yIndex = faces[0].getAxis() == Axis.Y ? 0 : (faces[1].getAxis() == Axis.Y ? 1 : 2);
+            final int zIndex = faces[0].getAxis() == Axis.Z ? 0 : (faces[1].getAxis() == Axis.Z ? 1 : 2);
+            
+            final boolean modKey = ModKeysAccess.isSuperPressed(player);
+            final boolean forceKey = ModKeysAccess.isControlPressed(player);
+            
+            final Vec3d hit = context.getHitPos();
+            if(shape == Shape.STRAIGHT) {
+                if (modKey) {
+                    // horizontal stairs
+                    if (onFace.getAxis() != Axis.Y) {
+                        bottomFace = onFace;
+                        if (forceKey) {
+                            backFace = WorldHelper.closestAdjacentFace(onFace, hit.x, hit.y, hit.z);
+                        } else {
+                            if(onFace.getAxis() == Axis.X) {
+                                backFace = yIndex < zIndex ? faces[yIndex] : faces[zIndex];
+                            } else {
+                                backFace = yIndex < xIndex ? faces[yIndex] : faces[xIndex];
+                            }
+                        }
+                    } else {
+                        // placed on up or down
+                        backFace = onFace;
+                        bottomFace = forceKey 
+                                ? WorldHelper.closestAdjacentFace(onFace, hit.x, hit.y, hit.z)
+                                : player.getHorizontalFacing();
+                    }
+                } else {
+                    // vertical (normal)
+                    if (onFace.getAxis() == Axis.Y) {
+                        bottomFace = onFace;
+                        backFace = forceKey 
+                                ? WorldHelper.closestAdjacentFace(onFace, hit.x, hit.y, hit.z)
+                                : player.getHorizontalFacing();
+                    } else {
+                        backFace = onFace;
+                        if( forceKey) {
+                            final Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, hit.x, hit.y, hit.z);
+                            bottomFace = pair.getLeft().getAxis() == Axis.Y ? pair.getLeft() : pair.getRight();
+                        } else {
+                            bottomFace = faces[yIndex];
+                        }
+                    }
+                }
+            } else { 
+                // CORNER
+                if (modKey) {
+                    // Horizontal
+                    if (onFace.getAxis() == Axis.Y) {
+                        // placed on up or down
+                        if (forceKey) {
+                            Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, (float)hit.x, (float)hit.y, (float)hit.z);
+                            bottomFace = pair.getLeft();
+                            final Direction rightFace = FaceEdge.fromWorld(onFace, bottomFace).counterClockwise().toWorld(bottomFace);
+                            backFace = rightFace == pair.getRight() ? onFace : pair.getRight();
+                        } else {
+                            bottomFace = player.getHorizontalFacing();
+                            final int otherIndex = bottomFace.getAxis() == Axis.X ? zIndex : xIndex;
+                            final Direction otherFace = faces[otherIndex];
+                            final Direction rightFace = FaceEdge.fromWorld(onFace, bottomFace).counterClockwise().toWorld(bottomFace);
+                            backFace = rightFace == otherFace ? onFace : otherFace;
+                        }
+                    } else {
+                        // placed on bottom (horizontal) face directly
+                        bottomFace = onFace;
+                        if (forceKey) {
+                            Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, (float)hit.x, (float)hit.y, (float)hit.z);
+                            boolean leftRightOrder = pair.getLeft().rotateClockwise(onFace.getAxis()) == pair.getRight();
+                            if (onFace.getDirection() == AxisDirection.NEGATIVE) {
+                                leftRightOrder = !leftRightOrder;
+                            }
+                            backFace = leftRightOrder ? pair.getRight() : pair.getLeft();
+                        } else {
+                            final int firstIndex = onFace.getAxis() == Axis.X ? Math.min(yIndex, zIndex) : Math.min(yIndex, xIndex);
+                            final int secondIndex = onFace.getAxis() == Axis.X ? Math.max(yIndex, zIndex) : Math.max(yIndex, xIndex);
+                            final Direction firstFace = faces[firstIndex];
+                            final Direction secondFace = faces[secondIndex];
+                            final Direction rightFace = FaceEdge.fromWorld(firstFace, bottomFace).counterClockwise().toWorld(bottomFace);
+                            backFace = rightFace == secondFace ? firstFace : secondFace;
+                        }
+                    }
+                } else {
+                    // vertical (normal)
+                    if(forceKey) {
+                        if(onFace.getAxis() == Axis.Y) {
+                            bottomFace = onFace;
+                            backFace = WorldHelper.closestAdjacentFace(onFace, hit.x, hit.y, hit.z);
+                        } else {
+                            final Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, hit.x, hit.y, hit.z);
+                            final boolean isLeftY = pair.getLeft().getAxis() == Axis.Y;
+                            bottomFace = isLeftY ? pair.getLeft() : pair.getRight();
+                            final Direction neighborFace = isLeftY ? pair.getRight() : pair.getLeft();
+                            final HorizontalEdge edge = HorizontalEdge.find(onFace, neighborFace);
+                            backFace = bottomFace == Direction.DOWN ? edge.left.face : edge.right.face;
+                        }
+                    } else {
+                        bottomFace = faces[yIndex];
+                        HorizontalEdge edge = HorizontalEdge.fromRotation(player.yaw);
+                        backFace = bottomFace == Direction.DOWN ? edge.left.face : edge.right.face;
+                    }
+                }
+            }
+        }
+        result = result.with(XmProperties.ROTATION, ObjectUtils.defaultIfNull(CubeRotation.find(bottomFace, backFace), CubeRotation.DOWN_WEST));
+        return result;
     }
 
     @Override
@@ -200,13 +293,12 @@ public abstract class StairLike extends Block implements Waterloggable {
         if ((Boolean)blockState_1.get(WATERLOGGED)) {
             iWorld_1.getFluidTickScheduler().schedule(blockPos_1, Fluids.WATER, Fluids.WATER.getTickRate(iWorld_1));
         }
-
-        return direction_1.getAxis().isHorizontal() ? (BlockState)blockState_1.with(SHAPE, computeShape(blockState_1, iWorld_1, blockPos_1)) : super.getStateForNeighborUpdate(blockState_1, direction_1, blockState_2, iWorld_1, blockPos_1, blockPos_2);
+        return super.getStateForNeighborUpdate(blockState_1, direction_1, blockState_2, iWorld_1, blockPos_1, blockPos_2);
     }
 
     @Override
-    protected void appendProperties(StateFactory.Builder<Block, BlockState> stateFactory$Builder_1) {
-        stateFactory$Builder_1.add(faceProperty(), HALF, SHAPE, WATERLOGGED);
+    protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
+        builder.add(XmProperties.ROTATION, WATERLOGGED);
     }
 
     @Override
@@ -221,172 +313,24 @@ public abstract class StairLike extends Block implements Waterloggable {
 
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        final DirectionProperty faceProp = faceProperty();
-        return state.with(faceProp, rotation.rotate(state.get(faceProp)));
+        return state.with(XmProperties.ROTATION, state.get(XmProperties.ROTATION).rotate(rotation));
     }
 
-    @SuppressWarnings("incomplete-switch")
     @Override
     public BlockState mirror(BlockState state, BlockMirror mirrir) {
-        Direction face = (Direction)state.get(faceProperty());
-        StairShape shape = (StairShape)state.get(SHAPE);
-        switch(mirrir) {
-        case LEFT_RIGHT:
-            if (face.getAxis() == leftRightAxis) {
-                switch(shape) {
-                case INNER_LEFT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_RIGHT);
-                case INNER_RIGHT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_LEFT);
-                case OUTER_LEFT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_RIGHT);
-                case OUTER_RIGHT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_LEFT);
-                default:
-                    return state.rotate(BlockRotation.CLOCKWISE_180);
-                }
-            }
-            break;
-        case FRONT_BACK:
-            if (face.getAxis() == frontBackAxis) {
-                switch(shape) {
-                case INNER_LEFT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_LEFT);
-                case INNER_RIGHT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.INNER_RIGHT);
-                case OUTER_LEFT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_RIGHT);
-                case OUTER_RIGHT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180).with(SHAPE, StairShape.OUTER_LEFT);
-                case STRAIGHT:
-                    return state.rotate(BlockRotation.CLOCKWISE_180);
-                }
-            }
-        }
-
-        return super.mirror(state, mirrir);
+        return state.rotate(BlockRotation.CLOCKWISE_180);
     }
 
-    protected StairShape computeShape(BlockState placedState, BlockView world, BlockPos inPos) {
-        final DirectionProperty faceProp = faceProperty();
-        final Axis axis = axis();
-        final Direction backFace = placedState.get(faceProp);
-        final BlockState onState = world.getBlockState(inPos.offset(backFace));
-        if (isMatchingStairs(onState) && placedState.get(HALF) == onState.get(HALF)) {
-            final Direction onBackFace = onState.get(faceProp);
-            if (onBackFace.getAxis() != (placedState.get(faceProp)).getAxis() && computeShapeInner(placedState, world, inPos, onBackFace.getOpposite(), faceProp)) {
-                if (onBackFace == DirectionHelper.counterClockwise(backFace, axis)) {
-                    return StairShape.OUTER_LEFT;
-                }
-
-                return StairShape.OUTER_RIGHT;
-            }
-        }
-
-        BlockState frontState = world.getBlockState(inPos.offset(backFace.getOpposite()));
-        if (isMatchingStairs(frontState) && placedState.get(HALF) == frontState.get(HALF)) {
-            final Direction frontBackFace = frontState.get(faceProp);
-            if (frontBackFace.getAxis() != (placedState.get(faceProp)).getAxis() && computeShapeInner(placedState, world, inPos, frontBackFace, faceProp)) {
-                if (frontBackFace == DirectionHelper.counterClockwise(backFace, axis)) {
-                    return StairShape.INNER_LEFT;
-                }
-
-                return StairShape.INNER_RIGHT;
-            }
-        }
-
-        return StairShape.STRAIGHT;
-    }
-
-    protected boolean computeShapeInner(BlockState placedState, BlockView world, BlockPos inPos, Direction testFace, DirectionProperty faceProp) {
-        BlockState testState = world.getBlockState(inPos.offset(testFace));
-        return !isMatchingStairs(testState) || testState.get(faceProp) != placedState.get(faceProp) || testState.get(HALF) != placedState.get(HALF);
-    }
-
-    protected boolean isMatchingStairs(BlockState blockState) {
-        final Block block = blockState.getBlock();
-        return block instanceof StairLike && ((StairLike)block).axis() == axis();
-    }
-
-    public static StairLike ofAxisY(BlockState blockState, Settings settings) {
-        return new StairLike(blockState, settings) {
-            @Override
-            public Axis axis() {
-                return Axis.Y;
-            }
-        };
-    }
-    
-    public static StairLike ofAxisX(BlockState blockState, Settings settings) {
-        return new StairLike(blockState, settings) {
-            @Override
-            public Axis axis() {
-                return Axis.X;
-            }
-        };
-    }
-    
-    public static StairLike ofAxisZ(BlockState blockState, Settings settings) {
-        return new StairLike(blockState, settings) {
-            @Override
-            public Axis axis() {
-                return Axis.Z;
-            }
-        };
-    }
-    
     public static SimplePrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
         final Block rawBlock = blockState.getBlock();
         if(!(rawBlock instanceof StairLike)) {
             return modelState;
         }
-        final StairLike block = (StairLike)rawBlock;
-        final DirectionProperty faceProp = block.faceProperty();
         
-        final Comparable<?> half = blockState.getEntries().get(StairsBlock.HALF);
-        final Comparable<?> shapeVal = blockState.getEntries().get(StairsBlock.SHAPE);
-        final Comparable<?> faceVal = blockState.getEntries().get(faceProp);
-
-        if (faceProp != null && half != null && shapeVal != null) {
-            final StairShape shape = StairsBlock.SHAPE.getValueType().cast(shapeVal);
-            Direction face = faceProp.getValueType().cast(faceVal);
-            final boolean bottom = StairsBlock.HALF.getValueType().cast(half) == BlockHalf.BOTTOM;
-            final boolean corner = shape != StairShape.STRAIGHT;
-            boolean inside = false;
-            boolean left = false;
-            
-            final Axis axis = block.axis();
-            
-            switch(shape) {
-            case INNER_LEFT:
-               left = true;
-            case INNER_RIGHT:
-               inside = true;
-                break;
-            case OUTER_LEFT:
-                left = true;
-                break;
-            default:
-                break;
-            }
-            
-            if(corner) {
-                if(bottom) {
-                    if(left) {
-                        face = DirectionHelper.counterClockwise(face, axis);
-                    }
-                } else {
-                    if(!left) {
-                        face = DirectionHelper.clockwise(face, axis);
-                    }
-                }
-            }
-            Stair.setCorner(corner, modelState);
-            Stair.setInsideCorner(corner && inside, modelState);
-            
-            modelState.orientationIndex(CubeRotation.find(Direction.from(axis, bottom ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE), face).ordinal());
-        }
-        
+        StairLike block = (StairLike)rawBlock;
+        Stair.setCorner(block.shape != Shape.STRAIGHT, modelState);
+        Stair.setInsideCorner(block.shape == Shape.INSIDE_CORNER, modelState);
+        modelState.orientationIndex(blockState.get(XmProperties.ROTATION).ordinal());
         return modelState;
     };
 }
