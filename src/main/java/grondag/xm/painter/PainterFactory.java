@@ -60,6 +60,7 @@ public class PainterFactory {
                 return (texture.scale() == TextureScale.SINGLE) ? CubicPainterTiles::paintQuads : CubicPainterBigTex::paintQuads;
 
             case BORDER_13:
+            case BORDER_14:
                 return surface.allowBorders() ? CubicPainterBorders::paintQuads : null;
 
             case MASONRY_5:
