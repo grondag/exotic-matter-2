@@ -41,19 +41,19 @@ public abstract class TextureSetHelper {
     static final TextureGroup[] DUAL_STATIC =  new TextureGroup[] { TextureGroup.STATIC_TILES, TextureGroup.STATIC_BORDERS };
     
     public static TextureSet addBorderSingle(String modId, String name) {
-        return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":blocks/" + name).versionCount(1).scale(SINGLE).layout(BORDER_13)
+        return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(1).scale(SINGLE).layout(BORDER_13)
                 .transform(IDENTITY).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build(modId + ":" + name);
     }
     
     public static TextureSet addBorderRandom(String modId, String name, boolean allowTile, boolean renderNoBorderAsTile) {
-        return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":blocks/" + name).versionCount(4).scale(SINGLE)
+        return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(4).scale(SINGLE)
                 .layout(renderNoBorderAsTile ? BORDER_14 : BORDER_13)
                 .renderIntent(allowTile ? TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT : TextureRenderIntent.OVERLAY_ONLY)
                 .groups(allowTile ? BORDERS_STATIC : DUAL_STATIC).transform(IDENTITY).build(modId + ":" + name);
     }
 
     public static TextureSet addBigTex(String modId, String name) {
-        return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":blocks/" + name).versionCount(1).scale(TextureScale.MEDIUM)
+        return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(1).scale(TextureScale.MEDIUM)
                 .layout(TextureLayoutMap.SINGLE).transform(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.STATIC_TILES)
                 .build(modId + ":" + name);
     }
@@ -69,7 +69,7 @@ public abstract class TextureSetHelper {
     }
 
     public static TextureSet addDecal(String modId, String idName, String fileName, TextureTransform rotation) {
-        return TextureSet.builder().displayNameToken(idName).baseTextureName(modId + ":blocks/" + fileName).versionCount(1).scale(TextureScale.SINGLE)
+        return TextureSet.builder().displayNameToken(idName).baseTextureName(modId + ":block/" + fileName).versionCount(1).scale(TextureScale.SINGLE)
                 .layout(TextureLayoutMap.SINGLE).transform(rotation).renderIntent(TextureRenderIntent.OVERLAY_ONLY).groups(TextureGroup.STATIC_DETAILS)
                 .build(modId + ":" + idName);
     }

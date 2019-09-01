@@ -35,8 +35,8 @@ public enum TextureOrientation {
     
     FLIP_U(Rotation.ROTATE_NONE, true, false), 
     FLIP_U_ROTATE_90(Rotation.ROTATE_90, true, false), 
-    FLIP_U_ROTATE_180(Rotation.ROTATE_180, false, false),
-    FLIP_U_ROTATE_270(Rotation.ROTATE_270, false, false),
+    FLIP_U_ROTATE_180(Rotation.ROTATE_180, true, false),
+    FLIP_U_ROTATE_270(Rotation.ROTATE_270, true, false),
     
     FLIP_V(Rotation.ROTATE_NONE, false, true), 
     FLIP_V_ROTATE_90(Rotation.ROTATE_90, false, true), 

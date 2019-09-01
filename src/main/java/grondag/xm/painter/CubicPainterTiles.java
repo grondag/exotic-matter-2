@@ -43,6 +43,7 @@ public abstract class CubicPainterTiles extends AbstractQuadPainter {
             final TextureSet tex = paint.texture(textureIndex);
 
             TextureOrientation rotation = textureRotationForFace(nominalFace, tex, modelState);
+            
             int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
 
             final int salt = editor.textureSalt();

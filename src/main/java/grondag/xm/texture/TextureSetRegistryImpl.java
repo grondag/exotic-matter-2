@@ -69,7 +69,7 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
         REGISTRY = (MutableRegistry<TextureSetImpl>) Registry.REGISTRIES.add(Xm.id("texture_sets"), 
                 (MutableRegistry<?>) new DefaultedRegistry(NONE_ID.toString()));
         
-        DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:blocks/noise_moderate").versionCount(4)
+        DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)
                 .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
                 .renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
 

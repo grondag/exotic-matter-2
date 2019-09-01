@@ -30,6 +30,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -347,7 +348,9 @@ public class PaintManager implements Consumer<Polygon> {
 
     private void applyTextureRotation(int spriteIndex, MutablePolygon poly) {
         final int vCount = poly.vertexCount();
-        switch (poly.rotation(spriteIndex).rotation) {
+        final TextureOrientation orientation = poly.rotation(spriteIndex);
+        
+        switch (orientation.rotation) {
         case ROTATE_NONE:
         default:
             break;
@@ -376,6 +379,18 @@ public class PaintManager implements Consumer<Polygon> {
             }
             break;
 
+        }
+        
+        if (orientation.flipU) {
+            final float swap = poly.minU(spriteIndex);
+            poly.minU(spriteIndex, poly.maxU(spriteIndex));
+            poly.maxU(spriteIndex, swap);
+        }
+        
+        if (orientation.flipV) {
+            final float swap = poly.minV(spriteIndex);
+            poly.minV(spriteIndex, poly.maxV(spriteIndex));
+            poly.maxV(spriteIndex, swap);
         }
     }
 

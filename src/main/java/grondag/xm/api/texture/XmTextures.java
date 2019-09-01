@@ -36,50 +36,50 @@ public class XmTextures {
     private XmTextures() {}
     
     public static final TextureSet TILE_COBBLE = TextureSet.builder()
-            .displayNameToken("cobble").baseTextureName("exotic-matter:blocks/cobble")
+            .displayNameToken("cobble").baseTextureName("exotic-matter:block/cobble")
             .versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM)
             .renderIntent(BASE_ONLY).groups(STATIC_TILES).build("exotic-matter:cobble");
 
     public static final TextureSet TILE_NOISE_STRONG = TextureSet.builder(TILE_COBBLE).displayNameToken("noise_strong")
-            .baseTextureName("exotic-matter:blocks/noise_strong").build("exotic-matter:noise_strong");
+            .baseTextureName("exotic-matter:block/noise_strong").build("exotic-matter:noise_strong");
 
     public static final TextureSet TILE_NOISE_MODERATE = TextureSet.builder(TILE_COBBLE).displayNameToken("noise_moderate")
-            .baseTextureName("exotic-matter:blocks/noise_moderate").build("exotic-matter:noise_moderate");
+            .baseTextureName("exotic-matter:block/noise_moderate").build("exotic-matter:noise_moderate");
 
     public static final TextureSet TILE_NOISE_LIGHT = TextureSet.builder(TILE_COBBLE).displayNameToken("noise_light")
-            .baseTextureName("exotic-matter:blocks/noise_light").build("exotic-matter:noise_light");
+            .baseTextureName("exotic-matter:block/noise_light").build("exotic-matter:noise_light");
 
     public static final TextureSet TILE_NOISE_SUBTLE = TextureSet.builder(TILE_COBBLE).displayNameToken("noise_subtle")
-            .baseTextureName("exotic-matter:blocks/noise_subtle").build("exotic-matter:noise_subtle");
+            .baseTextureName("exotic-matter:block/noise_subtle").build("exotic-matter:noise_subtle");
 
     public static final TextureSet TILE_NOISE_EXTREME = TextureSet.builder()
-            .displayNameToken("noise_extreme").baseTextureName("exotic-matter:blocks/noise_extreme")
+            .displayNameToken("noise_extreme").baseTextureName("exotic-matter:block/noise_extreme")
             .versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM)
             .renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY).groups(STATIC_TILES).build("exotic-matter:noise_extreme");
     
-    public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white").baseTextureName("exotic-matter:blocks/white").versionCount(1).scale(SINGLE)
+    public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white").baseTextureName("exotic-matter:block/white").versionCount(1).scale(SINGLE)
             .layout(TextureLayoutMap.VERSION_X_8).transform(IDENTITY).groups(STATIC_TILES).build("exotic-matter:white");
 
     public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
-            .baseTextureName("exotic-matter:blocks/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13).transform(IDENTITY)
+            .baseTextureName("exotic-matter:block/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13).transform(IDENTITY)
             .renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_smooth_blended");
 
     public static final TextureSet BORDER_SINGLE_LINE = TextureSet.builder().displayNameToken("border_single_line")
-            .baseTextureName("exotic-matter:blocks/border_single_line").versionCount(1).scale(SINGLE).layout(BORDER_13).transform(IDENTITY)
+            .baseTextureName("exotic-matter:block/border_single_line").versionCount(1).scale(SINGLE).layout(BORDER_13).transform(IDENTITY)
             .renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_single_line");
 
-    public static final TextureSet BIGTEX_SANDSTONE = TextureSet.builder().displayNameToken("sandstone").baseTextureName("exotic-matter:blocks/sandstone").versionCount(1)
+    public static final TextureSet BIGTEX_SANDSTONE = TextureSet.builder().displayNameToken("sandstone").baseTextureName("exotic-matter:block/sandstone").versionCount(1)
             .scale(GIANT).layout(TextureLayoutMap.SINGLE).transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_NO_CUTOUT)
             .groups(STATIC_TILES).build("exotic-matter:sandstone");
     
     public static final TextureSet TILE_NOISE_BLUE_A = TextureSet.builder().displayNameToken("blue_noise_a")
-            .baseTextureName("exotic-matter:blocks/noise_blue_0").versionCount(4)
+            .baseTextureName("exotic-matter:block/noise_blue_0").versionCount(4)
             .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSIONED)
             .transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
             .groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_a");
     
     public static final TextureSet TILE_NOISE_BLUE_B = TextureSet.builder().displayNameToken("blue_noise_b")
-            .baseTextureName("exotic-matter:blocks/noise_blue_1").versionCount(4)
+            .baseTextureName("exotic-matter:block/noise_blue_1").versionCount(4)
             .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSIONED)
             .transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
             .groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_b");
