@@ -22,14 +22,13 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import com.google.common.collect.ImmutableList;
-
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
-import net.minecraft.util.math.Box;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 @API(status = INTERNAL)
-class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon> {
+class MeshVoxelizer extends AbstractMeshVoxelizer implements Consumer<Polygon> {
     private static void div1(final float[] polyData, final long[] voxelBits) {
         if (TriangleBoxTest.triBoxOverlap(CLOW1, CLOW1, CLOW1, R1, polyData))
             div2(00000, 0.0f, 0.0f, 0.0f, polyData, voxelBits);
@@ -178,9 +177,7 @@ class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polyg
 
     private final long[] voxelBits = new long[128];
     private final float[] polyData = new float[36];
-    private final SimpleBoxListBuilder builder = new SimpleBoxListBuilder();
     final long[] snapshot = new long[8];
-    final BoxFinder bf = new BoxFinder();
 
     @Override
     protected void acceptTriangle(Vec3f v0, Vec3f v1, Vec3f v2) {
@@ -189,132 +186,37 @@ class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polyg
         div1(polyData, voxelBits);
     }
 
-    /**
-     * Returns voxel volume of loaded mesh after simplification. Simplification
-     * level is estimated based on the count of maximal bounding volumes vs the
-     * budget per mesh. Call after inputing mesh via
-     * {@link #accept(grondag.xm.api.mesh.Polygon.primitives.IPolygon)} and before calling
-     * {@link #build()}
-     * <p>
-     * .
-     * 
-     * Returns -1 if mesh isn't appropriate for optimization.
-     */
-    final double prepare() {
+    // field because lambdas... OK because threadlocal
+    VoxelShape result;
+    
+    static final double SIZE = 1.0/8.0;
+    final VoxelShape build() {
+        result = VoxelShapes.empty();
+        
         final long[] data = this.voxelBits;
         VoxelVolume16.fillVolume(data);
-        bf.clear();
-        VoxelVolume16.forEachSimpleVoxel(data, 4, (x, y, z) -> bf.setFilled(x, y, z));
+        
+        //PERF: output larger voxels when have them
+        VoxelVolume16.forEachSimpleVoxel(data, 4, (x, y, z) -> {
+            final double x0 = x * SIZE;
+            final double y0 = y * SIZE;
+            final double z0 = z * SIZE;
+            result = VoxelShapes.union(result, VoxelShapes.cuboid(x0, y0, z0, x0 + SIZE, y0 + SIZE, z0 + SIZE));
+        });
 
-        // handle very small meshes that don't half-fill any simple voxels; avoid having
-        // no collision boxes
-        if (bf.isEmpty()) {
-            VoxelVolume16.forEachSimpleVoxel(data, 1, (x, y, z) -> bf.setFilled(x, y, z));
+        if (result.isEmpty()) {
+            // handle very small meshes that don't half-fill any simple voxels; avoid having no collision volume
+            VoxelVolume16.forEachSimpleVoxel(data, 1, (x, y, z) -> {
+                final double x0 = x * SIZE;
+                final double y0 = y * SIZE;
+                final double z0 = z * SIZE;
+                result = VoxelShapes.union(result, VoxelShapes.cuboid(x0, y0, z0, x0 + SIZE, y0 + SIZE, z0 + SIZE));
+            });
         }
         
         // prep for next use
         System.arraycopy(ALL_EMPTY, 0, data, 0, 128);
-
-        //TODO: put back
-//        bf.calcCombined();
-//        bf.populateMaximalVolumes();
-
-        //TODO: remove or put back - simplification needs to fill concavities for this to work
-//        // find maximal volumes to enable estimate of simplification level
-//        int overage = bf.volumeCount - XmConfig.BLOCKS.collisionBoxBudget;
-//
-//        if (overage > 0) {
-//            bf.simplify(overage);
-//            bf.calcCombined();
-//            bf.populateMaximalVolumes();
-//            if (bf.volumeCount > 16)
-//                return -1;
-//        }
-//
-        bf.saveTo(snapshot);
-        int voxelCount = 0;
-        for (long bits : snapshot)
-            voxelCount += Long.bitCount(bits);
-
-        return voxelCount * VOXEL_VOLUME;
-    }
-
-//    /**
-//     * Call after prepare but before build.
-//     * Only for use in dev environment.
-//     */
-//    final void generateCalibrationOutput()
-//    {
-//        final long[] data = this.voxelBits;
-//        final long[] savedData = new long[128];
-//        System.arraycopy(data, 0, savedData, 0, 128);
-//        
-//        VoxelVolume16.fillVolume(data);
-//        bf.clear();
-//        VoxelVolume16.forEachSimpleVoxel(data, 4, (x, y, z) -> bf.setFilled(x, y, z));
-//        
-//        // handle very small meshes that don't half-fill any simple voxels; avoid having no collision boxes
-//        if(bf.isEmpty())
-//            VoxelVolume16.forEachSimpleVoxel(data, 1, (x, y, z) -> bf.setFilled(x, y, z));
-//        
-//        bf.saveTo(snapshot);
-//        builder.clear();
-//        
-//        bf.calcCombined();
-//        bf.populateMaximalVolumes();
-//        bf.populateIntersects();
-//        
-//        // find maximal volumes to enable estimate of simplification level
-//        int volCount = bf.volumeCount;
-//        int intersectionCount = 0;
-//        for(long vi : bf.intersects)
-//        {
-//            intersectionCount += Long.bitCount(vi);
-//        }
-//        intersectionCount /= 2;
-//        int startingVoxels = bf.filledVoxelCount();
-//        
-//        bf.outputBoxes(builder);
-//
-//        if(builder.size() > BrocadeConfig.BLOCKS.collisionBoxBudget)
-//        {
-//            int simplificationLevel = 1;
-//            while(true)
-//            {
-//                bf.restoreFrom(snapshot);
-//                
-//                if(bf.simplify(simplificationLevel))
-//                {
-//                    int voxDiff = bf.filledVoxelCount() - startingVoxels;
-//                    
-//                    builder.clear();
-//                    bf.outputBoxes(builder);
-//                    if(builder.size() <= BrocadeConfig.BLOCKS.collisionBoxBudget)
-//                    {
-//                        Brocade.INSTANCE.info("%d, %d, %d, %d, %d, %d",
-//                                volCount,
-//                                intersectionCount,
-//                                startingVoxels,
-//                                voxDiff,
-//                                simplificationLevel,
-//                                builder.size()
-//                                );
-//                        break;
-//                    }
-//                    else
-//                        simplificationLevel++;
-//                }
-//                else assert false : "Unable to simplify below target volume count";
-//                
-//            }
-//        }
-//        System.arraycopy(savedData, 0, data, 0, 128);
-//        builder.clear();
-//    }
-
-    final ImmutableList<Box> build() {
-        builder.clear();
-        bf.outputBoxes(builder);
-        return builder.build();
+        
+        return result;
     }
 }

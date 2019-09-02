@@ -25,7 +25,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 
 @API(status = INTERNAL)
-abstract class AbstractBoxGenerator implements Consumer<Polygon> {
+abstract class AbstractMeshVoxelizer implements Consumer<Polygon> {
     // diameters
     static final float D1 = 0.5f;
     static final float D2 = D1 * 0.5f;

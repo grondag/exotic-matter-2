@@ -21,42 +21,18 @@ import org.apiguardian.api.API;
 
 @API(status = INTERNAL)
 interface Functions {
-
     @FunctionalInterface
-    public static interface AreaBoundsIntFunction {
-        /**
-         * Max values are inclusive.
-         */
-        int apply(int xMin, int yMin, int xMax, int yMax);
-    }
-    
-    @FunctionalInterface
-    public static interface BoxBoundsIntConsumer {
-        void accept(int minX, int minY, int minZ, int maxX, int maxY, int maxZ);
-    }
-    
-    @FunctionalInterface
-    public static interface BoxBoundsIntFunction {
-        int accept(int minX, int minY, int minZ, int maxX, int maxY, int maxZ);
-    }
-    
-    @FunctionalInterface
-    public static interface BoxBoundsObjectFunction<V> {
-        V accept(int minX, int minY, int minZ, int maxX, int maxY, int maxZ);
-    }
-    
-    @FunctionalInterface
-    public static interface Int3Consumer {
+    static interface Int3Consumer {
         public void accept(int x, int y, int z);
     }
     
     @FunctionalInterface
-    public static interface Float3Test {
+    static interface Float3Test {
         public boolean apply(float x, float y, float z);
     }
     
     @FunctionalInterface
-    public static interface Float3Consumer {
+    static interface Float3Consumer {
         public void accept(float x, float y, float z);
     }
 }

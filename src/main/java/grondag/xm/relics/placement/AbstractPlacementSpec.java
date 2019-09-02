@@ -25,7 +25,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.ModelState;
 import net.fabricmc.api.EnvType;
@@ -38,7 +37,6 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 
 @API(status = Status.DEPRECATED)
 @Deprecated
@@ -158,14 +156,15 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
                     OBSTRUCTED.green, OBSTRUCTED.blue, 1f);
             tessellator.draw();
         } else {
+            //TODO: use voxelshap instead
             // Draw collision boxes
-            GlStateManager.lineWidth(1.0F);
-            for (Box blockAABB : CollisionDispatcher.boxesFor(placementModelState)) {
-                bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-                WorldRenderer.buildBoxOutline(bufferBuilder, blockAABB.minX, blockAABB.minY, blockAABB.minZ, blockAABB.maxX, blockAABB.maxY, blockAABB.maxZ, 1f,
-                        1f, 1f, 1f);
-                tessellator.draw();
-            }
+//            GlStateManager.lineWidth(1.0F);
+//            for (Box blockAABB : CollisionDispatcher.boxesFor(placementModelState)) {
+//                bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+//                WorldRenderer.buildBoxOutline(bufferBuilder, blockAABB.minX, blockAABB.minY, blockAABB.minZ, blockAABB.maxX, blockAABB.maxY, blockAABB.maxZ, 1f,
+//                        1f, 1f, 1f);
+//                tessellator.draw();
+//            }
         }
     }
 

@@ -4,8 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinBlockCrackParticle",
-    "MixinGameRenderer",
-    "MixinWorldRenderer"
+    "MixinGameRenderer"
       ],
   "injectors": {
     "defaultRequire": 1

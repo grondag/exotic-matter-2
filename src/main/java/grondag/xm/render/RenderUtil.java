@@ -18,27 +18,11 @@ package grondag.xm.render;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
-import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import grondag.xm.XmConfig;
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.collision.CollisionDispatcher;
-import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.BlockRenderLayer;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 @API(status = INTERNAL)
 public class RenderUtil {
@@ -112,30 +96,30 @@ public class RenderUtil {
         }
     }
 
-    public static void drawModelOutline(Camera camera, HitResult hit, World world) {
-        if(XmConfig.RENDER.debugCollisionBoxes) {
-            BlockPos pos = ((BlockHitResult)hit).getBlockPos();
-            BlockState blockState = world.getBlockState(pos);
-            ModelState modelState = XmBlockState.modelState(blockState, world, pos, true);
-            if(modelState == null) return;
-            
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
-            
-            final double x = pos.getX() - camera.getPos().x;
-            final double y = pos.getY() - camera.getPos().y;
-            final double z = pos.getZ() - camera.getPos().z;
-            
-            // Draw collision boxes
-            GlStateManager.lineWidth(3.0F);
-            for (Box blockAABB : CollisionDispatcher.boxesFor(modelState)) {
-                bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-                WorldRenderer.buildBoxOutline(bufferBuilder, 
-                        blockAABB.minX + x, blockAABB.minY + y, blockAABB.minZ + z, 
-                        blockAABB.maxX + x, blockAABB.maxY + y, blockAABB.maxZ + z, 
-                        1f, 1f, 1f, 1f);
-                tessellator.draw();
-            }
-        }
-    }
+//    public static void drawModelOutline(Camera camera, HitResult hit, World world) {
+//        if(XmConfig.RENDER.debugCollisionBoxes) {
+//            BlockPos pos = ((BlockHitResult)hit).getBlockPos();
+//            BlockState blockState = world.getBlockState(pos);
+//            ModelState modelState = XmBlockState.modelState(blockState, world, pos, true);
+//            if(modelState == null) return;
+//            
+//            Tessellator tessellator = Tessellator.getInstance();
+//            BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
+//            
+//            final double x = pos.getX() - camera.getPos().x;
+//            final double y = pos.getY() - camera.getPos().y;
+//            final double z = pos.getZ() - camera.getPos().z;
+//            
+//            // Draw collision boxes
+//            GlStateManager.lineWidth(3.0F);
+//            for (Box blockAABB : CollisionDispatcher.boxesFor(modelState)) {
+//                bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+//                WorldRenderer.buildBoxOutline(bufferBuilder, 
+//                        blockAABB.minX + x, blockAABB.minY + y, blockAABB.minZ + z, 
+//                        blockAABB.maxX + x, blockAABB.maxY + y, blockAABB.maxZ + z, 
+//                        1f, 1f, 1f, 1f);
+//                tessellator.draw();
+//            }
+//        }
+//    }
 }

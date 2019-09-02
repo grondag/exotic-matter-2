@@ -21,7 +21,6 @@ import java.util.Arrays;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.collision.Functions.BoxBoundsIntConsumer;
 import grondag.xm.collision.Functions.Float3Consumer;
 import grondag.xm.collision.Functions.Float3Test;
 import grondag.xm.collision.Functions.Int3Consumer;
@@ -289,20 +288,5 @@ class OctreeCoordinates {
         final int xyz = indexToXYZ(index, divisionLevel);
         final int mask = (1 << divisionLevel) - 1;
         consumer.accept(xyz & mask, (xyz >> divisionLevel) & mask, (xyz >> (divisionLevel * 2)) & mask);
-    }
-
-    /**
-     * Gives numerators of AABB coordinates aligned to 1/8 divisions. Meant only for
-     * division levels 0-3. (Level 4 is 1/16)
-     */
-    static void withBounds8(final int index, final int divisionLevel, BoxBoundsIntConsumer consumer) {
-        final int xyz = indexToXYZ(index, divisionLevel);
-        final int mask = (1 << divisionLevel) - 1;
-        final int x = xyz & mask;
-        final int y = (xyz >> divisionLevel) & mask;
-        final int z = (xyz >> (divisionLevel * 2)) & mask;
-        final int f = 1 << (3 - divisionLevel);
-
-        consumer.accept(x * f, y * f, z * f, (x + 1) * f, (y + 1) * f, (z + 1) * f);
     }
 }
