@@ -99,6 +99,7 @@ public abstract class AbstractPrimitiveModelState
         assert SHAPE_ENCODER.bitLength() <= 32;
         PRIMITIVE_BIT_COUNT = 32 - SHAPE_ENCODER.bitLength();
         PRIMITIVE_BITS = SHAPE_ENCODER.createIntElement(1 << PRIMITIVE_BIT_COUNT);
+        assert SHAPE_ENCODER.bitLength() <= 32;
     }
     
     static Consumer<AbstractPrimitiveModelState> clientClearHandler = s -> {};
@@ -273,6 +274,7 @@ public abstract class AbstractPrimitiveModelState
         worldBits = 0;
         shapeBits = 0;
         clearStateFlags();
+        invalidateHashCode();
         clientClearHandler.accept(this);
     }
     
@@ -660,6 +662,9 @@ public abstract class AbstractPrimitiveModelState
 
     @Override
     public final W cornerJoin(CornerJoinState join) {
+        final int stateFlags = stateFlags();
+        assert (stateFlags & CORNER_JOIN) != 0 : "Attempt to set corner join for model state not requiring it";
+        
         BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
         return (W)this;
@@ -675,6 +680,9 @@ public abstract class AbstractPrimitiveModelState
 
     @Override
     public final W simpleJoin(SimpleJoinState join) {
+        final int stateFlags = stateFlags();
+        assert (stateFlags & CORNER_JOIN) == 0 : "Attempt to set simple join for model state requiring corner join";
+        
         BLOCK_JOIN.setValue(join.ordinal(), this);
         invalidateHashCode();
         return (W)this;

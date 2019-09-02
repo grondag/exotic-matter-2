@@ -33,6 +33,14 @@ import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
+/**
+ * 
+ * NB: the default paint at index zero has a special significance/requirement.
+ * Because it used as the default paint value in a model state implementation
+ * it needs to have no flags that would affect model state flags, especially block joins.
+ * We create the default value in the constructor here to ensure this requirement
+ * is always met.
+ */
 @API(status = INTERNAL)
 public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousResourceReloadListener {
     public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
@@ -40,6 +48,8 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
     private final Identifier id = Xm.id("paint_registry");
     
     private XmPaintRegistryImpl() {
+        // see header notes
+        register(Xm.id("default"), XmPaintImpl.finder().find());
     };
 
     private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
