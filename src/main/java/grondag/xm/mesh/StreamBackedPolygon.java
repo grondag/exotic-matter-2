@@ -174,7 +174,12 @@ class StreamBackedPolygon implements Polygon {
     @Override
     @Deprecated
     public final Vec3f getPos(int index) {
-        return Vec3f.create(x(index), y(index), z(index));
+        final float x = x(index);
+        final float y = y(index);
+        final float z = z(index);
+        final Vec3f result = Vec3f.create(x(index), y(index), z(index));
+        assert result.x() == x && result.y() == y && result.z() == z;
+        return result;
     }
 
     /**

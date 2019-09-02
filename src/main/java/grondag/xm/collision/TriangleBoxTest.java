@@ -16,10 +16,13 @@
 package grondag.xm.collision;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static grondag.xm.api.mesh.polygon.PolyHelper.EPSILON;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Vec3f;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Ported to Java from Tomas Akenine-Möller
@@ -29,7 +32,17 @@ import grondag.xm.api.mesh.polygon.Vec3f;
  */
 @API(status = INTERNAL)
 class TriangleBoxTest {
-
+    /**
+     * 
+     * @param normX
+     * @param normY
+     * @param normZ
+     * @param vX
+     * @param vY
+     * @param vZ
+     * @param boxHalfSize
+     * @return True if plane specified by point and normal intersects with a box of given radius centered at origin.
+     */
     static boolean planeBoxOverlap(final float normX, final float normY, final float normZ, final float vX, final float vY, final float vZ,
             float boxHalfSize) {
         float minX, minY, minZ, maxX, maxY, maxZ;
@@ -58,12 +71,14 @@ class TriangleBoxTest {
             maxZ = -boxHalfSize - vZ;
         }
 
-        if (normX * minX + normY * minY + normZ * minZ > 0.0f)
+        if (normX * minX + normY * minY + normZ * minZ > 0.0f) {
             return false;
+        }
 
-        if (normX * maxX + normY * maxY + normZ * maxZ >= 0.0f)
+        if (normX * maxX + normY * maxY + normZ * maxZ >= -EPSILON) {
             return true;
-
+        }
+        
         return false;
     }
 
@@ -113,17 +128,17 @@ class TriangleBoxTest {
      * For low garbage, use a threadlocal array.
      */
     public static void packPolyData(Vec3f v0, Vec3f v1, Vec3f v2, float[] polyData) {
-        final float x0 = v0.x();
-        final float y0 = v0.y();
-        final float z0 = v0.z();
+        final float x0 = MathHelper.clamp(v0.x(), 0, 1);
+        final float y0 = MathHelper.clamp(v0.y(), 0, 1);
+        final float z0 = MathHelper.clamp(v0.z(), 0, 1);
 
-        final float x1 = v1.x();
-        final float y1 = v1.y();
-        final float z1 = v1.z();
+        final float x1 = MathHelper.clamp(v1.x(), 0, 1);
+        final float y1 = MathHelper.clamp(v1.y(), 0, 1);
+        final float z1 = MathHelper.clamp(v1.z(), 0, 1);
 
-        final float x2 = v2.x();
-        final float y2 = v2.y();
-        final float z2 = v2.z();
+        final float x2 = MathHelper.clamp(v2.x(), 0, 1);
+        final float y2 = MathHelper.clamp(v2.y(), 0, 1);
+        final float z2 = MathHelper.clamp(v2.z(), 0, 1);
 
         polyData[POLY_V0_X] = x0;
         polyData[POLY_V0_Y] = y0;
@@ -244,34 +259,50 @@ class TriangleBoxTest {
      * Per-axis bounding box test. Returns true if tri min/max outside box bounds.
      * Exclude polys that merely touch an edge unless the poly is co-planar
      */
-    private static boolean isTriExcluded(float triMin, float triMax, float boxCenter, float boxHalfSize) {
-        if (triMin == triMax) {
-            if (triMin > boxCenter + boxHalfSize)
+    private static boolean isTriExcluded(float triMin, float triMax, float triNormal, float boxCenter, float boxHalfSize) {
+        if (PolyHelper.epsilonEquals(triMin,triMax)) {
+            // axis-aligned tri
+            final float triVal = (triMin + triMax) * 0.5f;
+            
+            final float boxMax = boxCenter + boxHalfSize;
+            final float dMax = triVal - boxMax;
+
+            if (PolyHelper.epsilonZero(dMax)) {
+                return triNormal < 0;
+            } else if (dMax > 0) {
                 return true;
-            if (triMax < boxCenter - boxHalfSize)
+            }
+            
+            final float boxMin = boxCenter - boxHalfSize;
+            final float dMin = triVal - boxMin;
+            
+            if (PolyHelper.epsilonZero(dMin)) {
+                return triNormal > 0;
+            } else if (dMin < 0) {
                 return true;
+            }
         } else {
-            if (triMin >= boxCenter + boxHalfSize)
+            if (triMin >= boxCenter + boxHalfSize - EPSILON)
                 return true;
-            if (triMax <= boxCenter - boxHalfSize)
+            if (triMax <= boxCenter - boxHalfSize + EPSILON)
                 return true;
         }
         return false;
     }
-
+    
     /**
      * Assumes boxes are cubes and polygon info is pre-packed into array using
      * {@link #packPolyData(Vertex, Vertex, Vertex, float[])},
      */
     public static boolean triBoxOverlap(float boxCenterX, float boxCenterY, float boxCenterZ, float boxHalfSize, float[] polyData) {
         // bounding box tests
-        if (isTriExcluded(polyData[POLY_MIN_X], polyData[POLY_MAX_X], boxCenterX, boxHalfSize))
+        if (isTriExcluded(polyData[POLY_MIN_X], polyData[POLY_MAX_X], polyData[POLY_NORM_X], boxCenterX, boxHalfSize))
             return false;
 
-        if (isTriExcluded(polyData[POLY_MIN_Y], polyData[POLY_MAX_Y], boxCenterY, boxHalfSize))
+        if (isTriExcluded(polyData[POLY_MIN_Y], polyData[POLY_MAX_Y], polyData[POLY_NORM_Y], boxCenterY, boxHalfSize))
             return false;
 
-        if (isTriExcluded(polyData[POLY_MIN_Z], polyData[POLY_MAX_Z], boxCenterZ, boxHalfSize))
+        if (isTriExcluded(polyData[POLY_MIN_Z], polyData[POLY_MAX_Z], polyData[POLY_NORM_Z], boxCenterZ, boxHalfSize))
             return false;
 
         // offset coordinate so that the boxcenter is in (0,0,0)
@@ -302,7 +333,7 @@ class TriangleBoxTest {
                 final float a = ez * v0y - ey * v0z;
                 final float b = ez * v2y - ey * v2z;
 //                final float rad = (Math.abs(ez) + Math.abs(ey)) * boxHalfSize; //fez + fey;
-                final float rad = polyData[ASL_0_YZ] * boxHalfSize;
+                final float rad = polyData[ASL_0_YZ] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -314,7 +345,7 @@ class TriangleBoxTest {
                 final float a = -ez * v0x + ex * v0z;
                 final float b = -ez * v2x + ex * v2z;
 //                final float rad = (Math.abs(ez) + Math.abs(ex)) * boxHalfSize; //fez + fex;
-                final float rad = polyData[ASL_0_XZ] * boxHalfSize;
+                final float rad = polyData[ASL_0_XZ] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -326,7 +357,7 @@ class TriangleBoxTest {
                 final float a = ey * v1x - ex * v1y;
                 final float b = ey * v2x - ex * v2y;
 //                final float rad = (Math.abs(ey) + Math.abs(ex)) * boxHalfSize; //fey + fex;
-                final float rad = polyData[ASL_0_XY] * boxHalfSize;
+                final float rad = polyData[ASL_0_XY] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -343,7 +374,7 @@ class TriangleBoxTest {
             {
                 final float a = ez * v0y - ey * v0z;
                 final float b = ez * v2y - ey * v2z;
-                final float rad = polyData[ASL_1_YZ] * boxHalfSize;
+                final float rad = polyData[ASL_1_YZ] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -354,7 +385,7 @@ class TriangleBoxTest {
             {
                 final float a = -ez * v0x + ex * v0z;
                 final float b = -ez * v2x + ex * v2z;
-                final float rad = polyData[ASL_1_XZ] * boxHalfSize;
+                final float rad = polyData[ASL_1_XZ] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -365,7 +396,7 @@ class TriangleBoxTest {
             {
                 final float a = ey * v0x - ex * v0y;
                 final float b = ey * v1x - ex * v1y;
-                final float rad = polyData[ASL_1_XY] * boxHalfSize;
+                final float rad = polyData[ASL_1_XY] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -382,7 +413,7 @@ class TriangleBoxTest {
             {
                 final float a = ez * v0y - ey * v0z;
                 final float b = ez * v1y - ey * v1z;
-                final float rad = polyData[ASL_2_YZ] * boxHalfSize;
+                final float rad = polyData[ASL_2_YZ] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -393,7 +424,7 @@ class TriangleBoxTest {
             {
                 final float a = -ez * v0x + ex * v0z;
                 final float b = -ez * v1x + ex * v1z;
-                final float rad = polyData[ASL_2_XZ] * boxHalfSize;
+                final float rad = polyData[ASL_2_XZ] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -404,7 +435,7 @@ class TriangleBoxTest {
             {
                 final float a = ey * v1x - ex * v1y;
                 final float b = ey * v2x - ex * v2y;
-                final float rad = polyData[ASL_2_XY] * boxHalfSize;
+                final float rad = polyData[ASL_2_XY] * boxHalfSize + EPSILON;
                 if (a < b) {
                     if (a > rad || b < -rad)
                         return false;
@@ -415,4 +446,6 @@ class TriangleBoxTest {
 
         return true; /* box and triangle overlaps */
     }
+    
+    
 }

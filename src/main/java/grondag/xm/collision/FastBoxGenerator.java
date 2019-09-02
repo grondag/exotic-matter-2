@@ -168,6 +168,7 @@ class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon>
     final ImmutableList<Box> build() {
         builder.clear();
         final long[] data = this.voxelBits;
+        
         VoxelVolume8.fillVolume(data);
         VoxelVolume8.forEachSimpleVoxel(data, 4, (x, y, z) -> {
             builder.addSorted(x, y, z, x + 2, y + 2, z + 2);
@@ -175,9 +176,10 @@ class FastBoxGenerator extends AbstractBoxGenerator implements Consumer<Polygon>
 
         // handle very small meshes that don't half-fill any simple voxels; avoid having
         // no collision boxes
-        if (builder.isEmpty())
+        if (builder.isEmpty()) {
             VoxelVolume8.forEachSimpleVoxel(data, 1, (x, y, z) -> builder.addSorted(x, y, z, x + 2, y + 2, z + 2));
-
+        }
+        
         // prep for next use
         System.arraycopy(ALL_EMPTY, 0, data, 0, 16);
 

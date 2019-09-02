@@ -88,14 +88,14 @@ class BoxFinder {
     }
 
     /**
-     * Coordinates must be 0 - 8
+     * Coordinates must be 0 - 7
      */
     void setFilled(int x, int y, int z) {
         voxels[z] |= (1L << BoxFinderUtils.areaBitIndex(x, y));
     }
 
     /**
-     * Coordinates must be 0 - 8
+     * Coordinates must be 0 - 7
      */
     boolean isFilled(int x, int y, int z) {
         return (voxels[z] & (1L << BoxFinderUtils.areaBitIndex(x, y))) != 0;
@@ -131,8 +131,8 @@ class BoxFinder {
             return false;
         }
         while (simplifyOnce() && --iterations > 0) {
-        }
-        ;
+        };
+        
         return iterations == 0;
     }
 
@@ -229,9 +229,10 @@ class BoxFinder {
     }
 
     void outputBoxes(CollisionBoxListBuilder builder) {
-        while (outputBest(builder)) {
-        }
-        ;
+        //TODO: put back
+//        while (outputBest(builder)) {
+//        };
+        
         outputRemainders(builder);
     }
 
@@ -390,6 +391,7 @@ class BoxFinder {
         });
     }
 
+    @SuppressWarnings("unused")
     private boolean outputBest(CollisionBoxListBuilder builder) {
         calcCombined();
         populateMaximalVolumes();
@@ -598,7 +600,7 @@ class BoxFinder {
 //            {
 //                if(i != j && BoxFinderUtils.isVolumeIncluded(volumes[i], volumes[j]))
 //                {
-//                    Brocade.INSTANCE.info("REDUNDANT MAXIMAL VOLUMES");
+//                    Xm.LOG.info("REDUNDANT MAXIMAL VOLUMES");
 //                    explainVolume(i);
 //                    explainVolume(j);
 //                }

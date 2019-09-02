@@ -24,7 +24,6 @@ import org.apiguardian.api.API;
 
 import com.google.common.collect.ImmutableList;
 
-import grondag.xm.XmConfig;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import net.minecraft.util.math.Box;
@@ -170,6 +169,11 @@ class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polyg
         voxelBits[xyz >> 6] |= (1L << (xyz & 63));
     }
 
+    static boolean getVoxelBit(int voxelIndex4, long[] voxelBits) {
+        final int xyz = OctreeCoordinates.indexToXYZ4(voxelIndex4);
+        return (voxelBits[xyz >> 6] & (1L << (xyz & 63))) != 0;
+    }
+    
     static final double VOXEL_VOLUME = 1.0 / 8 / 8 / 8;
 
     private final long[] voxelBits = new long[128];
@@ -204,26 +208,29 @@ class OptimalBoxGenerator extends AbstractBoxGenerator implements Consumer<Polyg
 
         // handle very small meshes that don't half-fill any simple voxels; avoid having
         // no collision boxes
-        if (bf.isEmpty())
+        if (bf.isEmpty()) {
             VoxelVolume16.forEachSimpleVoxel(data, 1, (x, y, z) -> bf.setFilled(x, y, z));
-
-        // prep for next use
-        System.arraycopy(ALL_EMPTY, 0, data, 0, 64);
-
-        bf.calcCombined();
-        bf.populateMaximalVolumes();
-
-        // find maximal volumes to enable estimate of simplification level
-        int overage = bf.volumeCount - XmConfig.BLOCKS.collisionBoxBudget;
-
-        if (overage > 0) {
-            bf.simplify(overage);
-            bf.calcCombined();
-            bf.populateMaximalVolumes();
-            if (bf.volumeCount > 16)
-                return -1;
         }
+        
+        // prep for next use
+        System.arraycopy(ALL_EMPTY, 0, data, 0, 128);
 
+        //TODO: put back
+//        bf.calcCombined();
+//        bf.populateMaximalVolumes();
+
+        //TODO: remove or put back - simplification needs to fill concavities for this to work
+//        // find maximal volumes to enable estimate of simplification level
+//        int overage = bf.volumeCount - XmConfig.BLOCKS.collisionBoxBudget;
+//
+//        if (overage > 0) {
+//            bf.simplify(overage);
+//            bf.calcCombined();
+//            bf.populateMaximalVolumes();
+//            if (bf.volumeCount > 16)
+//                return -1;
+//        }
+//
         bf.saveTo(snapshot);
         int voxelCount = 0;
         for (long bits : snapshot)

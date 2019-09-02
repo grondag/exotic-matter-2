@@ -21,11 +21,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import grondag.xm.relics.placement.PlacementPreviewRenderer;
 import grondag.xm.render.XmRenderHelper;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.VisibleRegion;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer {
@@ -39,20 +37,16 @@ public abstract class MixinGameRenderer {
         XmRenderHelper.tickDelta(partialTick);
     }
     
-//FIXME: make this work
 //    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/FrustumWithOrigin;<init>(Lnet/minecraft/client/render/Frustum;)V"), method = "renderCenter", require = 1)
-    @SuppressWarnings("unused")
-    private VisibleRegion visibleRegionHook(VisibleRegion original) {
-        XmRenderHelper.visibleRegion(original);
-        return original;
-    }
-
-    @SuppressWarnings("unused")
-    @Inject(method = "renderCenter", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/debug/DebugRenderer;shouldRender()Z"), cancellable = false, require = 1)
-    void blockHighlightHook(float tickDelta, long nanos, CallbackInfo ci) {
-        //FIXME: re-enable
-        if (blockOutlineEnabled && false) {
-            PlacementPreviewRenderer.renderPreview(tickDelta);
-        }
-    }
+//    private VisibleRegion visibleRegionHook(VisibleRegion original) {
+//        XmRenderHelper.visibleRegion(original);
+//        return original;
+//    }
+//    
+//    @Inject(method = "renderCenter", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/debug/DebugRenderer;shouldRender()Z"), cancellable = false, require = 1)
+//    void blockHighlightHook(float tickDelta, long nanos, CallbackInfo ci) {
+//        if (blockOutlineEnabled && false) {
+//            PlacementPreviewRenderer.renderPreview(tickDelta);
+//        }
+//    }
 }

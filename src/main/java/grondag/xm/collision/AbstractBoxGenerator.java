@@ -55,8 +55,11 @@ abstract class AbstractBoxGenerator implements Consumer<Polygon> {
     public final void accept(Polygon poly) {
         acceptTriangle(poly.getPos(0), poly.getPos(1), poly.getPos(2));
 
-        if (poly.vertexCount() == 4)
+        if (poly.vertexCount() == 4) {
             acceptTriangle(poly.getPos(0), poly.getPos(2), poly.getPos(3));
+        }
+        
+        assert poly.vertexCount() < 5;
     }
 
     protected abstract void acceptTriangle(Vec3f v0, Vec3f v1, Vec3f v2);
