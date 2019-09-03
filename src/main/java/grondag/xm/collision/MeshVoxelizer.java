@@ -24,8 +24,6 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 
 @API(status = INTERNAL)
 class MeshVoxelizer extends AbstractMeshVoxelizer implements Consumer<Polygon> {
@@ -173,11 +171,29 @@ class MeshVoxelizer extends AbstractMeshVoxelizer implements Consumer<Polygon> {
         return (voxelBits[xyz >> 6] & (1L << (xyz & 63))) != 0;
     }
     
-    static final double VOXEL_VOLUME = 1.0 / 8 / 8 / 8;
-
-    private final long[] voxelBits = new long[128];
+    /**
+     * Offset where voxels from mesh are stored.
+     */
+    static final int INPUT = 0;
+    
+    /** 
+     * Output of fill operation and source for iteration.
+     */
+    static final int OUTPUT = 64;
+    
+    /**
+     * Holds temp results of reverse fill to detect single voxels
+     */
+    static final int FILL_CHECK = 128;
+    
+    /**
+     * Holds current run marker for fill operation (only one compound word)
+     */
+    static final int RUN_MARKER = FILL_CHECK + 64;
+    
+    private final long[] voxelBits = new long[RUN_MARKER + 4];
+    
     private final float[] polyData = new float[36];
-    final long[] snapshot = new long[8];
 
     @Override
     protected void acceptTriangle(Vec3f v0, Vec3f v1, Vec3f v2) {
@@ -185,38 +201,82 @@ class MeshVoxelizer extends AbstractMeshVoxelizer implements Consumer<Polygon> {
         TriangleBoxTest.packPolyData(v0, v1, v2, data);
         div1(polyData, voxelBits);
     }
-
-    // field because lambdas... OK because threadlocal
-    VoxelShape result;
     
-    static final double SIZE = 1.0/8.0;
-    final VoxelShape build() {
-        result = VoxelShapes.empty();
+    // Will be interned by cache, and this instance is threadlocal so OK
+    final VoxelVolumeKey result = new VoxelVolumeKey();
+
+    /**
+     * @return THREADLOCAL shape key to retrieve or create voxel shape - expects to be interned by cache
+     */
+    VoxelVolumeKey build() {
+        
+        final VoxelVolumeKey result = this.result;
+        result.clear();
         
         final long[] data = this.voxelBits;
-        VoxelVolume16.fillVolume(data);
+        fillVolume();
         
-        //PERF: output larger voxels when have them
-        VoxelVolume16.forEachSimpleVoxel(data, 4, (x, y, z) -> {
-            final double x0 = x * SIZE;
-            final double y0 = y * SIZE;
-            final double z0 = z * SIZE;
-            result = VoxelShapes.union(result, VoxelShapes.cuboid(x0, y0, z0, x0 + SIZE, y0 + SIZE, z0 + SIZE));
+        VoxelVolume16.forEachSimpleVoxel(data, OUTPUT, 4, (x, y, z) -> {
+            result.set(x, y, z);
         });
 
         if (result.isEmpty()) {
             // handle very small meshes that don't half-fill any simple voxels; avoid having no collision volume
-            VoxelVolume16.forEachSimpleVoxel(data, 1, (x, y, z) -> {
-                final double x0 = x * SIZE;
-                final double y0 = y * SIZE;
-                final double z0 = z * SIZE;
-                result = VoxelShapes.union(result, VoxelShapes.cuboid(x0, y0, z0, x0 + SIZE, y0 + SIZE, z0 + SIZE));
+            VoxelVolume16.forEachSimpleVoxel(data, OUTPUT, 1, (x, y, z) -> {
+                result.set(x, y, z);
             });
         }
         
         // prep for next use
-        System.arraycopy(ALL_EMPTY, 0, data, 0, 128);
+        System.arraycopy(ALL_EMPTY, 0, data, 0, 64);
         
         return result;
+    }
+    
+    /**
+     * Straightforward z-axis flood fill. Seems more reliable than the previous
+     * implementation.
+     */
+    public void fillVolume() {
+        
+        final long[] data = this.voxelBits;
+        
+        // sweep z-plane
+
+        // Copy to upper words for compatibility with previous implementation
+        // and because we need the unmodified inputs
+        System.arraycopy(data, INPUT, data, OUTPUT, 64);
+        
+        System.arraycopy(data, INPUT, data, RUN_MARKER, 4);
+        
+        for(int z = 1; z < 15; z++) {
+            // set if set in mask
+            VoxelVolume16.compoundSet(data, z + OUTPUT / 4, data, RUN_MARKER / 4);
+            
+            // clear/set run marker
+            // runs end at first encountered set pixel
+            VoxelVolume16.compoundXor(data, RUN_MARKER / 4, data, z);
+        }
+        
+        
+        // sweep z-plane in opposite direction
+        System.arraycopy(data, INPUT, data, FILL_CHECK, 64);
+        
+        
+        System.arraycopy(data, INPUT + 60, data, RUN_MARKER, 4);
+        
+        for(int z = 14; z > 0; z--) {
+            // set if set in mask
+            VoxelVolume16.compoundSet(data, z + FILL_CHECK / 4, data, RUN_MARKER / 4);
+            
+            // clear/set run marker
+            // runs end at first encountered set pixel
+            VoxelVolume16.compoundXor(data, RUN_MARKER / 4, data, z);
+        }
+        
+        // voxels must be set in both passes to be valid
+        for (int z = 4; z < 60; z++) {
+            data[OUTPUT + z] &= data[FILL_CHECK + z];
+        }
     }
 }

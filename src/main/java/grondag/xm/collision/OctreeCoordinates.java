@@ -29,7 +29,7 @@ import grondag.xm.collision.Functions.Int3Consumer;
 class OctreeCoordinates {
     static final long FULL_BITS = 0xFFFFFFFFFFFFFFFFL;
     static final long[] ALL_FULL = new long[64];
-    static final long[] ALL_EMPTY = new long[128];
+    static final long[] ALL_EMPTY = new long[64];
 
     /**
      * Indexes to face voxels in division level 4

@@ -25,8 +25,11 @@ import net.minecraft.util.shape.VoxelShape;
 
 @API(status = INTERNAL)
 public class CollisionDispatcherImpl {
-    private static final ObjectSimpleLoadingCache<ModelState, VoxelShape> modelBounds = new ObjectSimpleLoadingCache<ModelState, VoxelShape>(
+    private static final ObjectSimpleLoadingCache<ModelState, VoxelShape> modelCache = new ObjectSimpleLoadingCache<ModelState, VoxelShape>(
             CollisionDispatcherImpl::load, k -> k.toImmutable(), 0xFFF);
+    
+    private static final ObjectSimpleLoadingCache<VoxelVolumeKey, VoxelShape> volCache = new ObjectSimpleLoadingCache<VoxelVolumeKey, VoxelShape>(
+            k -> k.build(), k -> k.toImmutable(), 0xFFF);
 
     private static ThreadLocal<MeshVoxelizer> fastBoxGen = new ThreadLocal<MeshVoxelizer>() {
         @Override
@@ -36,21 +39,23 @@ public class CollisionDispatcherImpl {
     };
 
     public static VoxelShape shapeFor(ModelState modelState) {
-        return modelBounds.get(modelState.geometricState());
+        return modelCache.get(modelState.geometricState());
     }
 
     /**
      * Clears the cache.
      */
     public static void clear() {
-        modelBounds.clear();
+        modelCache.clear();
+        volCache.clear();
     }
-
+    
     private static VoxelShape load(ModelState key) {
         final MeshVoxelizer generator = fastBoxGen.get();
         key.emitPolygons(generator);
-
-        // note that build clears for next use
-        return generator.build();
+        
+        VoxelVolumeKey vKey = generator.build();
+        
+        return volCache.get(vKey);
     }
 }
