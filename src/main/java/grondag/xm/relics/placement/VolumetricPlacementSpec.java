@@ -87,7 +87,7 @@ abstract class VolumetricPlacementSpec extends SingleStackPlacementSpec {
                             break;
                     }
                 }
-                if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
+                if (checkCount++ >= XmConfig.maxPlacementCheckCount)
                     break;
             }
         } else {
@@ -104,7 +104,7 @@ abstract class VolumetricPlacementSpec extends SingleStackPlacementSpec {
                             break;
                     }
                 }
-                if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
+                if (checkCount++ >= XmConfig.maxPlacementCheckCount)
                     break;
             }
         }

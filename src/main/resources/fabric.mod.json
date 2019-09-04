@@ -19,7 +19,8 @@
   "environment": "*",
   "entrypoints": {
     "main": [ "grondag.xm.Xm" ],
-    "client": [ "grondag.xm.XmClient" ]
+    "client": [ "grondag.xm.XmClient" ],
+    "modmenu": [ "grondag.xm.ModMenuHelper" ]
   },
   "mixins": [
 	  {

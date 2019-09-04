@@ -33,6 +33,7 @@ public class Xm implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        XmConfig.init();
         ServerStartCallback.EVENT.register(Simulator::start);
         ServerTickCallback.EVENT.register(s -> Simulator.instance().tick(s));
         Packets.initializeCommon();

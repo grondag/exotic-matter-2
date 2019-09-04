@@ -255,7 +255,7 @@ public abstract class PlacementHandler {
             int adjacentSpecies = 0; //SpeciesHelper.joinableSpecies(world, pos, null); //withBlockState, withModelState);
             if (adjacentSpecies >= 0 && adjacentSpecies <= 15)
                 adjacentCount[adjacentSpecies]++;
-            if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
+            if (checkCount++ >= XmConfig.maxPlacementCheckCount)
                 break;
         }
 
@@ -264,7 +264,7 @@ public abstract class PlacementHandler {
             int interiorSpecies = 0;//SpeciesHelper.joinableSpecies(world, pos, null); //withBlockState, withModelState);
             if (interiorSpecies >= 0 && interiorSpecies <= 15)
                 surfaceCount[interiorSpecies]++;
-            if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
+            if (checkCount++ >= XmConfig.maxPlacementCheckCount)
                 break;
         }
 

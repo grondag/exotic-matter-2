@@ -67,7 +67,7 @@ public class SpeciesImpl {
             int adjacentSpecies = func.species(world, pos);
             if (adjacentSpecies >= 0 && adjacentSpecies <= 15)
                 adjacentCount[adjacentSpecies]++;
-            if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
+            if (checkCount++ >= XmConfig.maxPlacementCheckCount)
                 break;
         }
 
@@ -75,7 +75,7 @@ public class SpeciesImpl {
             int interiorSpecies = func.species(world, pos);
             if (interiorSpecies >= 0 && interiorSpecies <= 15)
                 surfaceCount[interiorSpecies]++;
-            if (checkCount++ >= XmConfig.BLOCKS.maxPlacementCheckCount)
+            if (checkCount++ >= XmConfig.maxPlacementCheckCount)
                 break;
         }
 
