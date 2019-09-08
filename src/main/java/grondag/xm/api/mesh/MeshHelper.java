@@ -37,13 +37,13 @@ public class MeshHelper {
      * @param topSurface
      * @param bottomSurface
      */
-    public static void unitCylinder(WritableMesh mesh, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, XmSurface topSurface, XmSurface bottomSurface) {
+    public static void unitCylinder(WritableMesh mesh, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, XmSurface topSurface, XmSurface bottomSurface, float wrapDistance) {
         sliceCount = Math.max(8, ((sliceCount + 3) / 4) * 4);
         final MutablePolygon writer = mesh.writer();
         final double sliceRadians = Math.PI * 2 / sliceCount;
         
         for(int i = 0; i < sliceCount; i++) {
-            cylSide(i, sliceRadians, writer, transform, sideSurface);
+            cylSide(i, sliceRadians, writer, transform, sideSurface, wrapDistance);
             if((i & 1) == 0) {
                 cylEnd(i, sliceRadians, writer, transform, topSurface, Direction.UP);
                 cylEnd(i, sliceRadians, writer, transform, bottomSurface, Direction.DOWN);
@@ -51,7 +51,7 @@ public class MeshHelper {
         }
     }
     
-    private static void cylSide(int slice, double sliceRadians, MutablePolygon writer, Consumer<MutablePolygon> transform, XmSurface sideSurface) {
+    private static void cylSide(int slice, double sliceRadians, MutablePolygon writer, Consumer<MutablePolygon> transform, XmSurface sideSurface, float wrapDistance) {
         final double fromRad = sliceRadians * slice;
         final double toRad = fromRad + sliceRadians;
         final float nx0 = (float) Math.sin(fromRad);
@@ -62,9 +62,12 @@ public class MeshHelper {
         final float x1 = (float) (0.5 + 0.5 * nx1);
         final float z0 = (float) (0.5 + 0.5 * nz0);
         final float z1 = (float) (0.5 + 0.5 * nz1);
-        final float uMin = (float) (fromRad / Math.PI / 2);
-        final float uMax = (float) (toRad / Math.PI / 2);
+        final float uMin = (float) (fromRad / Math.PI / 2) * wrapDistance;
+        final float uMax = (float) (toRad / Math.PI / 2) * wrapDistance;
 
+        writer.maxU(0, wrapDistance);
+        writer.maxV(0, 1);
+        
         writer.surface(sideSurface)
             .vertex(0, x0, 0f, z0, uMin, 0f, 0xFFFFFFFF)
             .normal(0, nx0, 0, nz0)

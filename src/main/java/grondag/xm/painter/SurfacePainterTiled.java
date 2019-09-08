@@ -100,8 +100,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
      */
     private static int splitU(MutableMesh stream, int targetAddress, int layerIndex, final float uSplitLow, final float uSpan, IntConsumer vSplitter) {
         Polygon reader = stream.reader(targetAddress);
-        final float uMin = reader.minU(layerIndex);
-        final float uMax = reader.maxU(layerIndex);
+        assert PolyHelper.epsilonZero(reader.minU(layerIndex));
         final int vCountIn = reader.vertexCount();
 
         // PERF: make this threadlocal
@@ -115,7 +114,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
         for (int i = 0; i < vCountIn; i++) {
             // vertex u where 0 corresponds to low split and 1 to high split
-            final float u = (uMin + reader.u(i, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
+            final float u = (reader.u(i, layerIndex) - uSplitLow) / uSpan;
             vertexU[i] = u;
 
             final int t = vertexType(u);
@@ -149,7 +148,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         // if we get to here, take slice and return remainder
 
         /** point on 0-1 on input vertex scale that separates slice and remainder */
-        final float vertexSplitU = (uSplitLow + uSpan) / (uMax - uMin);
+        final float vertexSplitU = (uSplitLow + uSpan);
 
         final MutablePolygon writer = stream.writer();
 
@@ -189,7 +188,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                     stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
 
                     final Polygon remainder = stream.polyA(remainderAddress);
-                    final float uNew = (uMin + remainder.u(iRemainderVertex, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
+                    final float uNew = (remainder.u(iRemainderVertex, layerIndex) * - uSplitLow) / uSpan;
                     stream.editor(sliceAddress).uv(iSliceVertex, layerIndex, uNew, remainder.v(iRemainderVertex, layerIndex));
 
                     iRemainderVertex++;
@@ -203,7 +202,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                     stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
 
                     final Polygon remainder = stream.polyA(remainderAddress);
-                    final float uNew = (uMin + remainder.u(iRemainderVertex, layerIndex) * (uMax - uMin) - uSplitLow) / uSpan;
+                    final float uNew = (remainder.u(iRemainderVertex, layerIndex) - uSplitLow) / uSpan;
                     stream.editor(sliceAddress).uv(iSliceVertex, layerIndex, uNew, remainder.v(iRemainderVertex, layerIndex));
 
                     iRemainderVertex++;
@@ -245,8 +244,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
      */
     private static int splitV(MutableMesh stream, int targetAddress, int layerIndex, float vSplitLow, float vSpan, IntConsumer output) {
         Polygon reader = stream.reader(targetAddress);
-        final float vMin = reader.minV(layerIndex);
-        final float vMax = reader.maxV(layerIndex);
+        assert PolyHelper.epsilonZero(reader.minV(layerIndex));
         final int vCountIn = reader.vertexCount();
         // PERF: make this threadlocal
         final float[] vertexV = new float[vCountIn];
@@ -259,7 +257,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
         for (int i = 0; i < vCountIn; i++) {
             // vertex u where 0 corresponds to low split and 1 to high split
-            final float v = (vMin + reader.v(i, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
+            final float v = (reader.v(i, layerIndex) - vSplitLow) / vSpan;
             vertexV[i] = v;
 
             final int t = vertexType(v);
@@ -293,7 +291,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         // if we get to here, take slice and return remainder
 
         /** point on 0-1 on input vertex scale that separates slice and remainder */
-        final float vertexSplitV = (vSplitLow + vSpan) / (vMax - vMin);
+        final float vertexSplitV = (vSplitLow + vSpan);
 
         final MutablePolygon writer = stream.writer();
 
@@ -333,7 +331,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                     stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
 
                     final Polygon remainder = stream.polyA(remainderAddress);
-                    final float vNew = (vMin + remainder.v(iRemainderVertex, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
+                    final float vNew = (remainder.v(iRemainderVertex, layerIndex) - vSplitLow) / vSpan;
                     stream.editor(sliceAddress).uv(iSliceVertex, layerIndex, remainder.u(iRemainderVertex, layerIndex), vNew);
 
                     iRemainderVertex++;
@@ -347,7 +345,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                     stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
 
                     final Polygon remainder = stream.polyA(remainderAddress);
-                    final float vNew = (vMin + remainder.v(iRemainderVertex, layerIndex) * (vMax - vMin) - vSplitLow) / vSpan;
+                    final float vNew = (remainder.v(iRemainderVertex, layerIndex) - vSplitLow) / vSpan;
                     stream.editor(sliceAddress).uv(iSliceVertex, layerIndex, remainder.u(iRemainderVertex, layerIndex), vNew);
 
                     iRemainderVertex++;
@@ -404,43 +402,52 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
              * within a single texture tile distance but actually start or end mid-texture.
              * <p>
              */
+            
+            float minU = editor.u(0, textureIndex);
+            float maxU = minU;
+            float minV = editor.v(0, textureIndex);
+            float maxV = minV;
+            
+            final int vCount = editor.vertexCount();
+            for(int i = 1; i < vCount; i++) {
+                final float u = editor.u(i, textureIndex);
+                if (u < minU) {
+                    minU = u;
+                } else if (u > maxU) {
+                    maxU = u;
+                }
+                final float v = editor.v(i, textureIndex);
+                if (v < minV) {
+                    minV = v;
+                } else if (v > maxV) {
+                    maxV = v;
+                }
+            }
 
-            final boolean uFlipped = editor.maxU(textureIndex) < editor.minU(textureIndex);
-            final int uMinIndex = uFlipped ? MathHelper.ceil(editor.minU(textureIndex) / tilingDistance)
-                    : MathHelper.floor(editor.minU(textureIndex) / tilingDistance);
+            final int uMinIndex = MathHelper.floor(minU / tilingDistance);
 
-            final int uMaxIndex = uFlipped ? MathHelper.floor(editor.maxU(textureIndex) / tilingDistance)
-                    : MathHelper.ceil(editor.maxU(textureIndex) / tilingDistance);
+            final int uMaxIndex = MathHelper.ceil(maxU / tilingDistance);
 
-            final boolean vFlipped = editor.maxV(textureIndex) < editor.minV(textureIndex);
-            final int vMinIndex = vFlipped ? MathHelper.ceil(editor.minV(textureIndex) / tilingDistance)
-                    : MathHelper.floor(editor.minV(textureIndex) / tilingDistance);
+            final int vMinIndex = MathHelper.floor(minV / tilingDistance);
 
-            final int vMaxIndex = vFlipped ? MathHelper.floor(editor.maxV(textureIndex) / tilingDistance)
-                    : MathHelper.ceil(editor.maxV(textureIndex) / tilingDistance);
-
-            final int uStep = uFlipped ? -1 : 1;
-            final int vStep = vFlipped ? -1 : 1;
-
-            final float uSpan = uStep * tilingDistance;
-            final float vSpan = vStep * tilingDistance;
+            final int vMaxIndex = MathHelper.ceil(maxV / tilingDistance);
 
             final int baseSalt = (editor.textureSalt() << 3) | (face == null ? 6 : face.ordinal());
 
             int uRemainder = editorAddress;
 
             // do the splits
-            for (int uIndex = uMinIndex; uIndex != uMaxIndex; uIndex += uStep) {
+            for (int uIndex = uMinIndex; uIndex != uMaxIndex; uIndex++) {
                 final int uIndexFinal = uIndex;
                 final float uSplitLow = uIndexFinal * tilingDistance;
 
-                uRemainder = splitU(stream, uRemainder, textureIndex, uSplitLow, uSpan, vTargetAddress -> {
+                uRemainder = splitU(stream, uRemainder, textureIndex, uSplitLow, tilingDistance, vTargetAddress -> {
                     int vRemainder = vTargetAddress;
-                    for (int vIndex = vMinIndex; vIndex != vMaxIndex; vIndex += vStep) {
+                    for (int vIndex = vMinIndex; vIndex != vMaxIndex; vIndex++) {
                         final int vIndexFinal = vIndex;
                         final float vSplitLow = vIndexFinal * tilingDistance;
 
-                        vRemainder = splitV(stream, vRemainder, textureIndex, vSplitLow, vSpan, outputAddress -> {
+                        vRemainder = splitV(stream, vRemainder, textureIndex, vSplitLow, tilingDistance, outputAddress -> {
                             // final painting and output
 
                             // If we get to this point, quad is within tile boundaries (if needed) and all

@@ -43,7 +43,7 @@ public class CylinderWithAxis  {
     
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-            .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+            .add("sides", SurfaceTopology.TILED, XmSurface.FLAG_NONE)
             .build();
 
     public static final XmSurface SURFACE_ENDS = SURFACES.get(0);
@@ -64,7 +64,7 @@ public class CylinderWithAxis  {
             p.nominalFace(p.lightFace()).apply(pt);
         };
 
-        MeshHelper.unitCylinder(mesh, 16, transform, SURFACE_SIDES, SURFACE_ENDS, SURFACE_ENDS);
+        MeshHelper.unitCylinder(mesh, 16, transform, SURFACE_SIDES, SURFACE_ENDS, SURFACE_ENDS, 4);
 
         return mesh.releaseToReader();
     };
