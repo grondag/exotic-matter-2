@@ -104,6 +104,19 @@ public class XmPaintImpl {
     protected TextureSet textureSet1 = textureSet0;
     protected TextureSet textureSet2 = textureSet0;
 
+    protected void copyFrom(XmPaintImpl template) {
+        this.paintBits = template.paintBits;
+        this.color0 = template.color0;
+        this.color1 = template.color1;
+        this.color2 = template.color2;
+        this.vertexProcessor0 = template.vertexProcessor0;
+        this.vertexProcessor1 = template.vertexProcessor1;
+        this.vertexProcessor2 = template.vertexProcessor2;
+        this.textureSet0 = template.textureSet0;
+        this.textureSet1 = template.textureSet1;
+        this.textureSet2 = template.textureSet2;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof XmPaintImpl) {
@@ -230,17 +243,9 @@ public class XmPaintImpl {
             copyFrom(template);
         }
 
-        void copyFrom(XmPaintImpl template) {
-            this.paintBits = template.paintBits;
-            this.color0 = template.color0;
-            this.color1 = template.color1;
-            this.color2 = template.color2;
-            this.vertexProcessor0 = template.vertexProcessor0;
-            this.vertexProcessor1 = template.vertexProcessor1;
-            this.vertexProcessor2 = template.vertexProcessor2;
-            this.textureSet0 = template.textureSet0;
-            this.textureSet1 = template.textureSet1;
-            this.textureSet2 = template.textureSet2;
+        @Override
+        protected void copyFrom(XmPaintImpl template) {
+            super.copyFrom(template);
             this.hashCode = template.hashCode();
         }
         
@@ -271,6 +276,12 @@ public class XmPaintImpl {
             Value result = new Value(target.index, this);
             LIST.set(target.index, result);
             return result;
+        }
+        
+        @Override
+        public XmPaintFinder copy(XmPaint paint) {
+            copyFrom((XmPaintImpl) paint);
+            return this;
         }
 
         @Override

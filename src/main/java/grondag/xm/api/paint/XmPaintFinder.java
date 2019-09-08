@@ -29,6 +29,8 @@ public interface XmPaintFinder {
 
     XmPaintFinder clear();
 
+    XmPaintFinder copy(XmPaint paint);
+    
     XmPaintFinder textureDepth(int depth);
 
     XmPaintFinder textureColor(int textureIndex, int colorARBG);
