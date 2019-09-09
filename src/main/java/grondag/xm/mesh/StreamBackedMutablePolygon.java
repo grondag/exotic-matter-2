@@ -376,7 +376,9 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         }
         
         final int layerCount = polyIn.spriteDepth();
-        assert layerCount == spriteDepth();
+        if (spriteDepth() < layerCount) {
+            spriteDepth(layerCount);
+        }
 
         textureSalt(polyIn.textureSalt());
         surface(polyIn.surface());

@@ -64,7 +64,7 @@ public class CylinderWithAxis  {
             p.nominalFace(p.lightFace()).apply(pt);
         };
 
-        MeshHelper.unitCylinder(mesh, 16, transform, SURFACE_SIDES, SURFACE_ENDS, SURFACE_ENDS, 4);
+        MeshHelper.unitCylinder(mesh, 16, transform, SURFACE_SIDES, SURFACE_ENDS, SURFACE_ENDS, 3);
 
         return mesh.releaseToReader();
     };
