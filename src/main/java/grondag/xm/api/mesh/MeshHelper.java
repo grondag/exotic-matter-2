@@ -19,6 +19,8 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -34,10 +36,10 @@ public class MeshHelper {
      * @param sliceCount Should be a multiple of 4, and at least 8;
      * @param transform
      * @param sideSurface
-     * @param topSurface
-     * @param bottomSurface
+     * @param topSurface If null, top cap not output.
+     * @param bottomSurface If null, bottom cap not output.
      */
-    public static void unitCylinder(WritableMesh mesh, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, XmSurface topSurface, XmSurface bottomSurface, float wrapDistance) {
+    public static void unitCylinder(WritableMesh mesh, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, @Nullable XmSurface topSurface, @Nullable XmSurface bottomSurface, float wrapDistance) {
         sliceCount = Math.max(8, ((sliceCount + 3) / 4) * 4);
         final MutablePolygon writer = mesh.writer();
         final double sliceRadians = Math.PI * 2 / sliceCount;
@@ -45,8 +47,12 @@ public class MeshHelper {
         for(int i = 0; i < sliceCount; i++) {
             cylSide(i, sliceRadians, writer, transform, sideSurface, wrapDistance);
             if((i & 1) == 0) {
-                cylEnd(i, sliceRadians, writer, transform, topSurface, Direction.UP);
-                cylEnd(i, sliceRadians, writer, transform, bottomSurface, Direction.DOWN);
+                if(topSurface != null) {
+                    cylEnd(i, sliceRadians, writer, transform, topSurface, Direction.UP);
+                }
+                if(bottomSurface != null) {
+                    cylEnd(i, sliceRadians, writer, transform, bottomSurface, Direction.DOWN);
+                }
             }
         }
     }

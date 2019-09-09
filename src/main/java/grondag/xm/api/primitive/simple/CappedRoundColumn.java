@@ -61,24 +61,34 @@ public class CappedRoundColumn  {
         final CsgMeshBuilder csg = CsgMeshBuilder.threadLocal();
         final SimpleJoinState state = modelState.simpleJoin();
         
+        boolean hasCap = false;
+        
         final Axis axis = AXES[modelState.orientationIndex()];
         if (!state.isJoined(Direction.from(axis, AxisDirection.POSITIVE))) {
             emitCapSection(csg.input(), pt, axis != Axis.X);
             csg.union();
+            hasCap = true;
         }
         
         if (!state.isJoined(Direction.from(axis, AxisDirection.NEGATIVE))) {
             emitCapSection(csg.input(), pt, axis == Axis.X);
             csg.union();
+            hasCap = true;
         }
         
-        emitRoundSection(csg.input(), pt);
+        emitRoundSection(csg.input(), pt, hasCap);
         csg.union();
 
         return csg.build();
     };
 
-    private static final void emitRoundSection(WritableMesh mesh, PolyTransform pt) {
+    /**
+     * 
+     * @param mesh
+     * @param pt
+     * @param incudeCaps  True if either cap is included so that CSG operation is supported. Otherwise cull.
+     */
+    private static final void emitRoundSection(WritableMesh mesh, PolyTransform pt, boolean incudeCaps) {
         final MutablePolygon writer = mesh.writer();
         final Consumer<MutablePolygon> transform = p -> {
             p.scaleFromBlockCenter(0.75f, 1, 0.75f).apply(pt);
@@ -90,7 +100,9 @@ public class CappedRoundColumn  {
             .sprite(0, "")
             .saveDefaults();
         
-        MeshHelper.unitCylinder(mesh, 16, transform, SURFACE_SIDES, SURFACE_ENDS, SURFACE_ENDS, 3);
+        final XmSurface surface = incudeCaps ? SURFACE_ENDS : null;
+        
+        MeshHelper.unitCylinder(mesh, 16, transform, SURFACE_SIDES, surface, surface, 3);
     }
     
     private static final void emitCapSection(WritableMesh mesh, PolyTransform pt, boolean top) {
