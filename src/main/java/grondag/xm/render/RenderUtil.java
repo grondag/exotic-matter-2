@@ -23,7 +23,6 @@ import org.lwjgl.opengl.GL11;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
@@ -107,14 +106,14 @@ public class RenderUtil {
     }
 
     public static void drawModelOutline(ModelState modelState, double x, double y, double z, float r, float g, float b, float a) {
-        MutableModelState geoState = modelState.geometricState();
+        if (modelState == null) return;
+        
         final WritableMesh mesh = outlineMesh;
-        if(outlineModelState == null || !geoState.equals(outlineModelState)) {
-            outlineModelState = geoState.toImmutable();
+        if(outlineModelState == null || !modelState.equals(outlineModelState)) {
+            outlineModelState = modelState.toImmutable();
             mesh.clear();
-            geoState.emitPolygons(p -> mesh.appendCopy(p));
+            outlineModelState.emitPolygons(p -> mesh.appendCopy(p));
         }
-        geoState.release();
         
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
