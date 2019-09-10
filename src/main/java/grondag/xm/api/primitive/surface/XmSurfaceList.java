@@ -17,6 +17,8 @@ package grondag.xm.api.primitive.surface;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import javax.annotation.Nullable;
+
 import org.apiguardian.api.API;
 
 import grondag.xm.api.paint.SurfaceTopology;
@@ -31,6 +33,9 @@ public interface XmSurfaceList {
     int size();
 
     XmSurface get(int index);
+    
+    @Nullable
+    XmSurface lamp();
     
     static XmSurfaceList ALL = builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 }

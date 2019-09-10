@@ -20,7 +20,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
@@ -33,6 +36,9 @@ public class RenderUtil {
     public static final BlockRenderLayer[] RENDER_LAYERS = BlockRenderLayer.values();
     public static final int RENDER_LAYER_COUNT = RENDER_LAYERS.length;
 
+    private static ModelState outlineModelState = null;
+    private static final WritableMesh outlineMesh = XmMeshes.claimWritable();
+    
     /**
      * Draws block-aligned grid on sides of AABB if entity can see it from outside
      */
@@ -101,11 +107,20 @@ public class RenderUtil {
     }
 
     public static void drawModelOutline(ModelState modelState, double x, double y, double z, float r, float g, float b, float a) {
+        MutableModelState geoState = modelState.geometricState();
+        final WritableMesh mesh = outlineMesh;
+        if(outlineModelState == null || !geoState.equals(outlineModelState)) {
+            outlineModelState = geoState.toImmutable();
+            mesh.clear();
+            geoState.emitPolygons(p -> mesh.appendCopy(p));
+        }
+        geoState.release();
+        
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
         
         bufferBuilder.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
-        modelState.emitPolygons(p -> {
+        mesh.forEach(p -> {
             final int limit = p.vertexCount() - 1;
             for(int i = 0; i < limit; i++) {
                 bufferBuilder.vertex(p.x(i) + x, p.y(i) + y, p.z(i) + z).color(r, g, b, a).next();

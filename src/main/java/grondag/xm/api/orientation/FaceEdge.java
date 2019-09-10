@@ -36,10 +36,10 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public enum FaceEdge implements StringIdentifiable {
-    TOP_EDGE(SOUTH, SOUTH, UP, UP, UP, UP),
-    BOTTOM_EDGE(NORTH, NORTH, DOWN, DOWN, DOWN, DOWN),
-    LEFT_EDGE(WEST, EAST, EAST, WEST, NORTH, SOUTH),
-    RIGHT_EDGE(EAST, WEST, WEST, EAST, SOUTH, NORTH);
+    TOP_EDGE(SOUTH, NORTH, UP, UP, UP, UP),
+    BOTTOM_EDGE(NORTH, SOUTH, DOWN, DOWN, DOWN, DOWN),
+    LEFT_EDGE(WEST, WEST, EAST, WEST, NORTH, SOUTH),
+    RIGHT_EDGE(EAST, EAST, WEST, EAST, SOUTH, NORTH);
 
     // for a given face, which face is at the position identified by this enum?
     private final Direction relativeLookup[];

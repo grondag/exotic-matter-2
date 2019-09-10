@@ -20,9 +20,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Polygon;
+import it.unimi.dsi.fastutil.Swapper;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
+import it.unimi.dsi.fastutil.ints.AbstractIntComparator;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
@@ -57,24 +61,13 @@ class CsgVertexMap {
     private static final int NONE = -1;
 
     /**
-     * Current iteration position within cluster map
-     */
-    private int clusterSearchIndex = NONE;
-    
-    /** 
-     * Set to cluster map size at start of iteration
-     * to avoid incorrect results due to unsorted addtionas
-     * at end of map.
-     */
-    private int clusterSearchLimit = 0;
-    
-    /**
      * Current iteration position within matches.
      */
     private int matchIndex = NONE;
     
     private final IntArrayList matches = new IntArrayList();
     private final IntArrayList matchBuilder = new IntArrayList();
+    private final Int2IntOpenHashMap matchCounts = new Int2IntOpenHashMap();
     
     private static final int MATCH_POLY_A = 0;
     private static final int MATCH_VERTEX_A = 1;
@@ -120,7 +113,6 @@ class CsgVertexMap {
         vertices.clear();
         clusterMap.clear();
         isClusterMapDirty = false;
-        clusterSearchIndex = NONE;
         matchIndex = NONE;
         matches.clear();
     }
@@ -134,83 +126,122 @@ class CsgVertexMap {
                 clusterMap.rem(i--);
             }
             isClusterMapDirty = false;
-            clusterSearchLimit = clusterMap.size();
         }
     }
     
-    private void populateMatches() {
-        matchIndex = NONE;
-        while(matchIndex == NONE && clusterSearchIndex != NONE) {
-            populateMatchesInner();
+    private void populateMatches(XmMesh mesh) {
+        populateMatchesInner(mesh);
+        
+        final int size = matches.size() / 4;
+        
+        matchIndex = size == 0 ? NONE : 0;
+        
+        // Sort to put best matches first - will tend to get more optimal joins that way
+        if(size > 1) {
+            it.unimi.dsi.fastutil.Arrays.quickSort(0, size, comparator, swapper);
         }
     }
     
-    private void populateMatchesInner() {
+    /**
+     * Join polys with fewest potential matches first
+     */
+    @SuppressWarnings("serial")
+    private final AbstractIntComparator comparator = new AbstractIntComparator() {
+        @Override
+        public int compare(int a, int b) {
+            final Int2IntOpenHashMap counts = matchCounts;
+            final IntArrayList m = matches;
+            final int a0 = m.getInt(a * 4);
+            final int a1 = m.getInt(a * 4 + 2);
+            final int aCount = Math.min(counts.get(a0), counts.get(a1));
+            final int b0 = m.getInt(b * 4);
+            final int b1 = m.getInt(b * 4 + 2);
+            final int bCount = Math.min(counts.get(b0), counts.get(b1));
+            return Integer.compare(aCount, bCount);
+        }
+    };
+
+    private final Swapper swapper = new Swapper() {
+        final int[] swap = new int[4];
+        
+        @Override
+        public void swap(int a, int b) {
+            final int[] data = matches.elements();
+            final int aIndex = a * 4;
+            final int bIndex = b * 4;
+            System.arraycopy(data, aIndex, swap, 0, 4);
+            System.arraycopy(data, bIndex, data, aIndex, 4);
+            System.arraycopy(swap, 0, data, bIndex, 4);
+        }
+    };
+    
+    private void populateMatchesInner(XmMesh mesh) {
         final IntArrayList matchBuilder = this.matchBuilder;
         matchBuilder.clear();
+        matches.clear();
+        matchCounts.clear();
         
         final LongArrayList clusterMap = this.clusterMap;
-        final int limit = clusterSearchLimit;
-        if(clusterSearchIndex >= limit) {
-            clusterSearchIndex = NONE;
-            return;
-        }
         
-        // position at first non-deleted value
-        while(clusterSearchIndex < limit && clusterMap.getLong(clusterSearchIndex) == Long.MAX_VALUE) {
-            clusterSearchIndex++;
-        }
+        final int limit = clusterMap.size();
+        if(limit == 0) return;
         
-        if(clusterSearchIndex >= limit) {
-            clusterSearchIndex = NONE;
-            return;
-        }
+        int clusterSearchIndex = 0;
         
-//        final int startIndex = clusterSearchIndex;
         long pair = clusterMap.getLong(clusterSearchIndex++);
-        final long cluster = pair & CLUSTER_MASK;
+        while (pair == Long.MAX_VALUE && clusterSearchIndex < limit) {
+            pair = clusterMap.getLong(clusterSearchIndex++);
+        }
+        
+        if(clusterSearchIndex == limit) return;
+        
+        long lastCluster = pair & CLUSTER_MASK;
         matchBuilder.add((int)(pair & VERTEX_MASK));
         
         while (clusterSearchIndex < limit) {
-            pair = clusterMap.getLong(clusterSearchIndex);
-            if((pair & CLUSTER_MASK) == cluster) {
-                matchBuilder.add((int)(pair & VERTEX_MASK));
-                clusterSearchIndex++;
-            } else if (pair == Long.MAX_VALUE) {
-                clusterSearchIndex++;
-            } else {
-                break;
+            pair = clusterMap.getLong(clusterSearchIndex++);
+            if(pair == Long.MAX_VALUE) continue;
+            
+            if((pair & CLUSTER_MASK) != lastCluster) {
+                lastCluster = pair & CLUSTER_MASK;
+                if (matchBuilder.size() > 1) {
+                    addMatches(mesh);
+                }
+                matchBuilder.clear();
             }
+            matchBuilder.add((int)(pair & VERTEX_MASK));
         }
         
+        if (matchBuilder.size() > 1) {
+            addMatches(mesh);
+        }
+    }
+    
+    private void addMatches(XmMesh mesh) {
+        final IntArrayList matchBuilder = this.matchBuilder;
         final int matchCount = matchBuilder.size();
-        if(matchCount < 2) {
-            matchIndex = NONE;
-            if(matchCount == 0) {
-                assert clusterSearchIndex == limit : "CsgVertexMap: abnormal termination";
-                clusterSearchIndex = NONE;
-            } else {
-                assert matchCount == 1 : "CsgVertexMap: negative match count";
-                // Having this causes failed matches, not sure why
-                // remove unmatched cluster - nothing can come of it
-//                clusterMap.set(startIndex, Long.MAX_VALUE);
-            }
-        } else {
-            matchIndex = 0;
-            final IntArrayList matches = this.matches;
-            matches.clear();
-            
-            // PERF: could be better to use pairs directly vs building combinations 
-            for(int i = 0; i < matchCount; i++) {
-                final int matchA = matchBuilder.getInt(i);
-                final int idA = vertices.getInt(matchA + VERTEX_POLY_ID);
-                final int vertexA = vertices.getInt(matchA + VERTEX_INDEX);
-                for(int j = i + 1; j < matchCount; j++) {
+        final IntArrayList matches = this.matches;
+        final Int2IntOpenHashMap matchCounts = this.matchCounts;
+        
+        // PERF: could be better to use pairs directly vs building combinations 
+        for(int i = 0; i < matchCount; i++) {
+            final int matchA = matchBuilder.getInt(i);
+            final int idA = vertices.getInt(matchA + VERTEX_POLY_ID);
+            Polygon polyA = mesh.polyA(idA);
+            final int vertexA = vertices.getInt(matchA + VERTEX_INDEX);
+            for(int j = i + 1; j < matchCount; j++) {
+                final int matchB = matchBuilder.getInt(j);
+                final int idB = vertices.getInt(matchB + VERTEX_POLY_ID);
+                final int vertexB = vertices.getInt(matchB + VERTEX_INDEX);
+                Polygon polyB = mesh.polyB(idB);
+                
+                if (CsgPolyRecombinator.couldJoinAtVertex(polyA, vertexA, polyB, vertexB)) {
                     matches.add(idA);
                     matches.add(vertexA);
-                    final int matchB = matchBuilder.getInt(j);
-                    matches.add(vertices.getInt(matchB + VERTEX_POLY_ID));
-                    matches.add(vertices.getInt(matchB + VERTEX_INDEX));
+                    matches.add(idB);
+                    matches.add(vertexB);
+                    matchCounts.addTo(idA, 1);
+                    matchCounts.addTo(idB, 1);
                 }
             }
         }
@@ -220,11 +251,10 @@ class CsgVertexMap {
      * Finds matches and moves cursor to first potential match.
      * @return true if any potential matches remain
      */
-    boolean first() {
+    boolean first(XmMesh mesh) {
         sortClusterMap();
-        clusterSearchIndex = 0;
         matchIndex = NONE;
-        populateMatches();
+        populateMatches(mesh);
         return hasValue();
     }
     
@@ -233,10 +263,9 @@ class CsgVertexMap {
      * CAUTION: only call after {@link #first()} returns true
      * and if no changes have been made since. Otherwise will fail unpredictably.
      */
-    boolean unsafeRetryFirst() {
-        clusterSearchIndex = 0;
+    boolean unsafeRetryFirst(XmMesh mesh) {
         matchIndex = NONE;
-        populateMatches();
+        populateMatches(mesh);
         return hasValue();
     }
     
@@ -244,12 +273,12 @@ class CsgVertexMap {
      * Moves cursor to next potential match.
      * @return false if at end of potential matches
      */
-    boolean next() {
+    boolean next(XmMesh mesh) {
         if(hasValue()) {
             matchIndex += 4;
             if(matchIndex >= matches.size()) {
-                populateMatches();
-                return hasValue();
+                matchIndex = NONE;
+                return false;
             } else {
                 return true;
             }
@@ -319,9 +348,5 @@ class CsgVertexMap {
     int vertexB() {
         final int matchIndex = this.matchIndex;
         return matchIndex == NONE ? NONE : matches.getInt(matchIndex + MATCH_VERTEX_B);
-    }
-    
-    int bucketSize() {
-        return matchBuilder.size();
     }
 }

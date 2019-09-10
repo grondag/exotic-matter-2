@@ -48,5 +48,7 @@ public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutableP
 
         Builder simpleJoin(boolean needsJoin);
 
+        Builder cornerJoin(boolean needsJoin);
+
     }
 }

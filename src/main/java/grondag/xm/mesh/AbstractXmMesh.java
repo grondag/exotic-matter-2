@@ -69,7 +69,7 @@ abstract class AbstractXmMesh implements XmMesh {
 
     protected final void validateAddress(int address) {
         if (!isValidAddress(address)) {
-            throw new IndexOutOfBoundsException();
+            throw new IndexOutOfBoundsException(Integer.toString(address));
         }
     }
 

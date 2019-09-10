@@ -27,9 +27,16 @@ class XmSurfaceListImpl implements XmSurfaceList {
     private final int size;
     private final XmSurfaceImpl[] surfaces;
 
+    private final XmSurface lamp;
+    
     XmSurfaceListImpl(XmSurfaceImpl[] surfaces) {
         this.surfaces = surfaces;
         this.size = surfaces.length;
+        XmSurface lamp = null;
+        for (XmSurfaceImpl surface : surfaces) {
+            if (surface.isLamp()) lamp = surface;
+        }
+        this.lamp = lamp;
     }
 
     @Override
@@ -40,5 +47,10 @@ class XmSurfaceListImpl implements XmSurfaceList {
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public XmSurface lamp() {
+        return lamp;
     }
 }

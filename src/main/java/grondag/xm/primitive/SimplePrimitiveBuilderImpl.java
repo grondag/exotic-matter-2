@@ -17,6 +17,7 @@ package grondag.xm.primitive;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
+import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
@@ -45,6 +46,7 @@ public class SimplePrimitiveBuilderImpl {
         private Function<PrimitiveState, XmMesh> polyFactory;
         private int bitCount = 0;
         private boolean simpleJoin;
+        private boolean cornerJoin;
         
         @Override
         public SimplePrimitive build(String idString) {
@@ -80,6 +82,12 @@ public class SimplePrimitiveBuilderImpl {
             this.simpleJoin = needsJoin;
             return this;
         }
+        
+        @Override
+        public Builder cornerJoin(boolean needsJoin) {
+            this.cornerJoin = needsJoin;
+            return this;
+        }
     }
     protected static class Primitive extends AbstractSimplePrimitive {
         private final XmMesh[] cachedQuads;
@@ -93,14 +101,16 @@ public class SimplePrimitiveBuilderImpl {
         private final int bitShift;
         
         private final boolean simpleJoin;
+        private final boolean cornerJoin;
         
         static Function<PrimitiveState, XmSurfaceList> listWrapper(XmSurfaceList list) {
             return s -> list;
         }
         
         public Primitive(String idString, BuilderImpl builder) {
-            super(idString, builder.simpleJoin ? SIMPLE_JOIN : NONE, SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
+            super(idString, (builder.cornerJoin ? CORNER_JOIN : NONE) | (builder.simpleJoin ? SIMPLE_JOIN : NONE), SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
             simpleJoin = builder.simpleJoin;
+            cornerJoin = builder.cornerJoin;
             orientationType = builder.orientationType;
             polyFactory = builder.polyFactory;
             bitShift = builder.bitCount;
@@ -108,14 +118,16 @@ public class SimplePrimitiveBuilderImpl {
             if(simpleJoin) {
                 count <<= 6;
             }
-            cachedQuads = new XmMesh[count];
+            cachedQuads = cornerJoin ? null : new XmMesh[count];
             invalidateCache();
         }
         
         @Override
         public void invalidateCache() {
             notifyException = true;
-            Arrays.fill(cachedQuads, null);
+            if(!cornerJoin) {
+                Arrays.fill(cachedQuads, null);
+            }
         }
         
         @Override
@@ -126,15 +138,21 @@ public class SimplePrimitiveBuilderImpl {
         @Override
         public void emitQuads(PrimitiveState modelState, Consumer<Polygon> target) {
             try {
-                int index = (modelState.orientationIndex() << bitShift) | modelState.primitiveBits();
-                if(simpleJoin) {
-                    index = (index << 6) | modelState.simpleJoin().ordinal();
-                }
-                XmMesh mesh =  cachedQuads[index];
+                XmMesh mesh;
                 
-                if(mesh == null) {
+                if (cornerJoin) {
                     mesh = polyFactory.apply(modelState);
-                    cachedQuads[index] = mesh;
+                    
+                } else {
+                    int index = (modelState.orientationIndex() << bitShift) | modelState.primitiveBits();
+                    if(simpleJoin) {
+                        index = (index << 6) | modelState.simpleJoin().ordinal();
+                    }
+                    mesh =  cachedQuads[index];
+                    if(mesh == null) {
+                        mesh = polyFactory.apply(modelState);
+                        cachedQuads[index] = mesh;
+                    }
                 }
                 
                 final Polygon reader = mesh.threadSafeReader();
@@ -159,7 +177,9 @@ public class SimplePrimitiveBuilderImpl {
                     .orientationIndex(fromState.orientationIndex())
                     .primitiveBits(fromState.primitiveBits());
             
-            if(simpleJoin) {
+            if (cornerJoin) {
+                result.cornerJoin(fromState.cornerJoin());
+            } else if (simpleJoin) {
                 result.simpleJoin(fromState.simpleJoin());
             }
             
@@ -168,10 +188,18 @@ public class SimplePrimitiveBuilderImpl {
 
         @Override
         public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
-            return from.primitive() == to.primitive()
-                    && from.orientationIndex() == to.orientationIndex()
-                    && from.primitiveBits() == to.primitiveBits()
-                    && (!simpleJoin || from.simpleJoin() == to.simpleJoin());
+            if (from.primitive() != to.primitive()
+                    || from.orientationIndex() != to.orientationIndex()
+                    || from.primitiveBits() != to.primitiveBits()) {
+                return false;
+            }
+            if (cornerJoin) {
+                return from.cornerJoin() == to.cornerJoin();
+            } else if (simpleJoin) {
+                return from.simpleJoin() == to.simpleJoin();
+            } else {
+                return true;
+            }
         }
     }
     

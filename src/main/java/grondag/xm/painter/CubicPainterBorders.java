@@ -154,18 +154,6 @@ public abstract class CubicPainterBorders extends AbstractQuadPainter {
 
             FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_TL_TR_BL_BR.ordinal()] = new FaceQuadInputs(BORDER_CORNERS_ALL, TextureOrientation.IDENTITY, false,
                     false);
-
-            // rotate top face 180 so that it works - top face orientation is
-            // different from others
-            if (face == Direction.UP) {
-                for (int i = 0; i < FACE_INPUTS[Direction.UP.ordinal()].length; i++) {
-                    FaceQuadInputs fqi = FACE_INPUTS[Direction.UP.ordinal()][i];
-                    if (fqi != null && fqi != NO_BORDER) {
-                        FACE_INPUTS[Direction.UP.ordinal()][i] = new FaceQuadInputs(fqi.textureOffset, fqi.rotation.clockwise().clockwise(), fqi.flipU,
-                                fqi.flipV);
-                    }
-                }
-            }
         }
     }
 

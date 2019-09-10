@@ -99,10 +99,12 @@ public abstract class Csg {
         a.complete();
         b.complete();
 
-        // A outside of B bounds can be passed directly to output
-        if (outputDisjointA(a, b, output))
-            // if A is empty there is nothing to subtract from
-            return;
+        //PERF: look at restoring - problem with former implementation
+        // is that it happens without face recombination
+//        // A outside of B bounds can be passed directly to output
+//        if (outputDisjointA(a, b, output))
+//            // if A is empty there is nothing to subtract from
+//            return;
 
         // add portions of A within B bounds but not inside B mesh
         a.invert();
@@ -239,6 +241,7 @@ public abstract class Csg {
      * deleted. Returns true if A is empty, either because it was empty at the
      * start, or because all A polygons have been deleted.
      */
+    @SuppressWarnings("unused")
     private static boolean outputDisjointA(CsgMesh a, CsgMesh b, WritableMesh output) {
         final Polygon aReader = a.reader();
         if (aReader.origin()) {

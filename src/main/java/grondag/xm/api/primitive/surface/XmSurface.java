@@ -82,4 +82,8 @@ public interface XmSurface {
     default boolean isLampGradient() {
         return (flags() & FLAG_LAMP_GRADIENT) == FLAG_LAMP_GRADIENT;
     }
+    
+    default boolean isLamp() {
+        return (flags() & FLAG_LAMP) == FLAG_LAMP;
+    }
 }

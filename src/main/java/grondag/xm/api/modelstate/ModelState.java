@@ -52,7 +52,7 @@ public interface ModelState {
      * Returns a copy of this model state with only the bits that matter for
      * geometry. Used as lookup key for block damage models.
      */
-    ModelState geometricState();
+    MutableModelState geometricState();
     
     void toTag(CompoundTag tag);
 

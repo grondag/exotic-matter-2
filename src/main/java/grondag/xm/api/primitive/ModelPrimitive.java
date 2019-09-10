@@ -19,6 +19,8 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -56,8 +58,10 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 
     XmSurfaceList surfaces(R modelState);
 
+    @Nullable
     default XmSurface lampSurface(R modelState) {
-        return null;
+        final XmSurface lamp = surfaces(modelState).lamp();
+        return lamp == null ? null : modelState.paint(lamp).emissive(0) ? lamp : null;
     }
     
     /**

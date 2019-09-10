@@ -264,6 +264,32 @@ class CsgPolyRecombinator {
         handleOutput(input, polyAddress1, output);
 
     }
+    
+    static boolean couldJoinAtVertex(Polygon polyA, int aTargetIndex, Polygon polyB, int bTargetIndex) {
+            final int aSize = polyA.vertexCount();
+            final int bSize = polyB.vertexCount();
+            final int aMaxIndex = aSize - 1;
+            final int bMaxIndex = bSize - 1;
+
+            final int aAfterTargetIndex = aTargetIndex == aMaxIndex ? 0 : aTargetIndex + 1;
+            final int aBeforeTargetIndex = aTargetIndex == 0 ? aMaxIndex : aTargetIndex - 1;
+
+            final int bAfterTargetIndex = bTargetIndex == bMaxIndex ? 0 : bTargetIndex + 1;
+            final int bBeforeTargetIndex = bTargetIndex == 0 ? bMaxIndex : bTargetIndex - 1;
+
+            // look for a second matching vertex on either side of known shared vertex
+            if (epsilonEquals(polyA.x(aAfterTargetIndex), polyB.x(bBeforeTargetIndex)) 
+                    && epsilonEquals(polyA.y(aAfterTargetIndex), polyB.y(bBeforeTargetIndex))
+                    && epsilonEquals(polyA.z(aAfterTargetIndex), polyB.z(bBeforeTargetIndex))) {
+                return true;
+            } else if (epsilonEquals(polyA.x(aBeforeTargetIndex), polyB.x(bAfterTargetIndex))
+                    && epsilonEquals(polyA.y(aBeforeTargetIndex), polyB.y(bAfterTargetIndex))
+                    && epsilonEquals(polyA.z(aBeforeTargetIndex), polyB.z(bAfterTargetIndex))) {
+               return true;
+            } else {
+                return false;
+            }
+    }
 
     private int joinAtVertex(CsgMeshImpl input, int addressA, int indexA, int addressB, int indexB, boolean trisOnly) {
         final Polygon polyA = input.polyA(addressA);
@@ -475,7 +501,7 @@ class CsgPolyRecombinator {
         while (potentialMatchesRemain) {
             potentialMatchesRemain = false;
 
-            if(vertexMap.first()) {
+            if(vertexMap.first(input)) {
                 // we do two passes - with the first pass only accepting
                 // combinations that result in triangles.  If any triangles
                 // can be made we reset before continuing.
@@ -484,7 +510,6 @@ class CsgPolyRecombinator {
                 // ourselves into a situation were we can't merge any more
                 // polys because they don't have two vertices in common.
                 while (vertexMap.hasValue()) {
-                    assert vertexMap.bucketSize() > 1 : "CsgVertexMap has value with single unmatched vertex";
                     
                     final int newPoly = joinAtVertex(input, 
                             vertexMap.idA(), vertexMap.vertexA(), 
@@ -497,15 +522,14 @@ class CsgPolyRecombinator {
                         vertexMap.add(newPoly, input.polyA(newPoly));
                     }
                     
-                    vertexMap.next();
+                    vertexMap.next(input);
                 }
                 
                 // if no tris then try again for higher-order polygons
                 if(!potentialMatchesRemain) {
-                    vertexMap.unsafeRetryFirst();
+                    vertexMap.unsafeRetryFirst(input);
                     
                     while (vertexMap.hasValue()) {
-                        assert vertexMap.bucketSize() > 1 : "CsgVertexMap has value with single unmatched vertex";
                         
                         final int newPoly = joinAtVertex(input, 
                                 vertexMap.idA(), vertexMap.vertexA(), 
@@ -518,7 +542,7 @@ class CsgPolyRecombinator {
                             vertexMap.add(newPoly, input.polyA(newPoly));
                         }
                         
-                        vertexMap.next();
+                        vertexMap.next(input);
                     }
                 }
             }
