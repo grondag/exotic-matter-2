@@ -34,7 +34,7 @@ public interface CsgMeshBuilder {
 
     XmMesh build();
     
-    WritableMesh buildWritable();
+    MutableMesh buildMutable();
 
     /** must be the first operation */
     void union();

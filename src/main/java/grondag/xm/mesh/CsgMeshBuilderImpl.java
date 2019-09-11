@@ -22,6 +22,7 @@ import org.apiguardian.api.API.Status;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.Csg;
 import grondag.xm.api.mesh.CsgMeshBuilder;
+import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.CsgMesh;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -94,11 +95,11 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     
     @Override
     public XmMesh build() {
-        return buildWritable().releaseToReader();
+        return buildMutable().releaseToReader();
     }
     
     @Override
-    public WritableMesh buildWritable() {
+    public MutableMesh buildMutable() {
         if(!outputStack.isEmpty()) {
             Xm.LOG.warn("CsgMeshBuilder build with non-empty stack.  This is unexpected and probably incorrect usage.");
             while (!outputStack.isEmpty()) {
@@ -106,7 +107,7 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
             }
         }
         
-        WritableMesh target = XmMeshes.claimWritable();
+        MutableMesh target = XmMeshes.claimMutable();
 
         if(pendingOp == NO_OP) {
             output.outputRecombinedQuads(target);
