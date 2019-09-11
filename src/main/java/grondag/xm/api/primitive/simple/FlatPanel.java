@@ -41,26 +41,23 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
 
 @API(status = EXPERIMENTAL)
-public class InsetPanel {
-    private InsetPanel() {}
+public class FlatPanel {
+    private FlatPanel() {}
     
-    private static final float DEPTH = 2f / 16f;
-    private static final float INV_DEPTH = 1 -  DEPTH;
+    private static final float DEPTH = 1f / 16f;
+    private static final float INV_DEPTH = 1 - DEPTH;
     
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("outer", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
             .add("inner", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS | XmSurface.FLAG_LAMP)
             .build();
 
     public static final XmSurface SURFACE_OUTER = SURFACES.get(0);
-    public static final XmSurface SURFACE_CUT = SURFACES.get(1);
-    public static final XmSurface SURFACE_INNER = SURFACES.get(2);
+    public static final XmSurface SURFACE_INNER = SURFACES.get(1);
 
-    private static final float[][] SPECS = ConnectedShapeHelper.panelspec(DEPTH * 2);
+    private static final float[][] SPECS = ConnectedShapeHelper.panelspec(1f / 8f);
     
     static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
         final CornerJoinState joins = modelState.cornerJoin();
@@ -70,9 +67,6 @@ public class InsetPanel {
         }
         
         final CsgMeshBuilder csg = CsgMeshBuilder.threadLocal();
-        emitOuter(csg.input(), joins);
-        
-        csg.union();
         
         final boolean isLit = modelState.primitive().lampSurface(modelState) != null;
         
@@ -80,9 +74,11 @@ public class InsetPanel {
             final Direction face = Direction.byId(i);
             cutSide(face, csg, joins.faceState(face), isLit);
         }
+
+        emitOuter(csg.input(), joins);
+        csg.union();
         
         return csg.build();
-
     };
     
     private static void cutSide(Direction face, CsgMeshBuilder csg, CornerJoinFaceState faceJoin, boolean isLit) {
@@ -115,7 +111,7 @@ public class InsetPanel {
             writer.setupFaceQuad(opposite, 1 - x1, y0, 1 - x0, y1, INV_DEPTH, top);
             writer.append();
             
-            writer.surface(SURFACE_OUTER);
+            writer.surface(SURFACE_INNER);
             writer.setupFaceQuad(face, x0, y0, x1, y1, 0, top);
             writer.append();
             
@@ -124,30 +120,20 @@ public class InsetPanel {
             
             setupCutSideQuad(writer, 1 - y1, INV_DEPTH, 1 - y0, 1, x0, PolyHelper.leftOf(face, top), face, isLit);
             setupCutSideQuad(writer, y0, INV_DEPTH, y1, 1, 1 - x1, PolyHelper.rightOf(face, top), face, isLit);
-            csg.difference();
+            csg.union();
         }
     }
     
     private static void setupCutSideQuad(MutablePolygon poly, float x0, float y0, float x1, float y1, float depth, Direction face, Direction topFace, boolean isLit) {
-        final int glow = isLit ? 255 : 0;
         
-        poly.surface(SURFACE_CUT);
+        poly.surface(SURFACE_INNER);
         
         poly.setupFaceQuad(face, 
-                new FaceVertex.Colored(x0, y0, depth, Color.WHITE, glow),
-                new FaceVertex.Colored(x1, y0, depth, Color.WHITE, glow),
-                new FaceVertex.Colored(x1, y1, depth, Color.WHITE, glow / 3),
-                new FaceVertex.Colored(x0, y1, depth, Color.WHITE, glow / 3),
+                new FaceVertex.Colored(x0, y0, depth, Color.WHITE, 0),
+                new FaceVertex.Colored(x1, y0, depth, Color.WHITE, 0),
+                new FaceVertex.Colored(x1, y1, depth, Color.WHITE, 0),
+                new FaceVertex.Colored(x0, y1, depth, Color.WHITE, 0),
                 topFace);
-        
-        // force vertex normals out to prevent lighting anomalies
-        final Vec3i vec = face.getVector();
-        final float x = vec.getX();
-        final float y = vec.getY();
-        final float z = vec.getZ();
-        for(int i = 0; i < 4; i++) {
-            poly.normal(i, x, y, z);
-        }
         
         poly.append();
     }
@@ -205,5 +191,5 @@ public class InsetPanel {
             .cornerJoin(true)
             .polyFactory(POLY_FACTORY)
             .orientationType(OrientationType.NONE)
-            .build(Xm.idString("inset_panel"));
+            .build(Xm.idString("flat_panel"));
 }
