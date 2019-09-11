@@ -33,6 +33,8 @@ public interface CsgMeshBuilder {
     CsgMesh input();
 
     XmMesh build();
+    
+    WritableMesh buildWritable();
 
     /** must be the first operation */
     void union();

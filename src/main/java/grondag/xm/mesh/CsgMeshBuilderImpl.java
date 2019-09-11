@@ -94,6 +94,11 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
     
     @Override
     public XmMesh build() {
+        return buildWritable().releaseToReader();
+    }
+    
+    @Override
+    public WritableMesh buildWritable() {
         if(!outputStack.isEmpty()) {
             Xm.LOG.warn("CsgMeshBuilder build with non-empty stack.  This is unexpected and probably incorrect usage.");
             while (!outputStack.isEmpty()) {
@@ -115,9 +120,8 @@ public class CsgMeshBuilderImpl implements CsgMeshBuilder {
         pendingOp = NO_OP;
         
         target.splitAsNeeded();
-        XmMesh result = target.releaseToReader();
         hasOutput = false;
-        return result;
+        return target;
     }
     
     /** must be the first operation */
