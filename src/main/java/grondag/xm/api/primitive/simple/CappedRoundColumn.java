@@ -102,7 +102,7 @@ public class CappedRoundColumn  {
         
         final XmSurface surface = incudeCaps ? SURFACE_ENDS : null;
         
-        MeshHelper.unitCylinder(mesh, 16, transform, SURFACE_SIDES, surface, surface, 3);
+        MeshHelper.unitCylinder(mesh.writer(), 16, transform, SURFACE_SIDES, surface, surface, 3);
     }
     
     private static final void emitCapSection(WritableMesh mesh, PolyTransform pt, boolean top) {

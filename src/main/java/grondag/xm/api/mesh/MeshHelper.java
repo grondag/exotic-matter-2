@@ -30,6 +30,23 @@ import net.minecraft.util.math.Direction;
 @API(status = EXPERIMENTAL)
 public class MeshHelper {
    
+    public static void unitCylinder(MutablePolygon writer, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, @Nullable XmSurface topSurface, @Nullable XmSurface bottomSurface, float wrapDistance) {
+        unitCylinder(writer, sliceCount, transform, sideSurface, topSurface, false, bottomSurface, false, wrapDistance);
+    }
+    
+    public static void unitCylinder(
+            MutablePolygon writer,
+            int sliceCount,
+            Consumer<MutablePolygon> transform,
+            XmSurface sideSurface,
+            @Nullable XmSurface topSurface,
+            boolean subdivideTop,
+            @Nullable XmSurface bottomSurface,
+            boolean subdiviteBottom,
+            float wrapDistance) {
+        unitCylinder(writer, sliceCount, transform, sideSurface, topSurface, false, bottomSurface, false, wrapDistance, 0, 1);
+    }
+    
     /**
      * 
      * @param mesh
@@ -39,25 +56,45 @@ public class MeshHelper {
      * @param topSurface If null, top cap not output.
      * @param bottomSurface If null, bottom cap not output.
      */
-    public static void unitCylinder(WritableMesh mesh, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, @Nullable XmSurface topSurface, @Nullable XmSurface bottomSurface, float wrapDistance) {
+    public static void unitCylinder(
+            MutablePolygon writer,
+            int sliceCount,
+            Consumer<MutablePolygon> transform,
+            XmSurface sideSurface,
+            @Nullable XmSurface topSurface,
+            boolean subdivideTop,
+            @Nullable XmSurface bottomSurface,
+            boolean subdiviteBottom,
+            float wrapDistance,
+            float bottom,
+            float top) {
         sliceCount = Math.max(8, ((sliceCount + 3) / 4) * 4);
-        final MutablePolygon writer = mesh.writer();
+        
         final double sliceRadians = Math.PI * 2 / sliceCount;
         
         for(int i = 0; i < sliceCount; i++) {
-            cylSide(i, sliceRadians, writer, transform, sideSurface, wrapDistance);
+            cylSide(i, sliceRadians, writer, transform, sideSurface, wrapDistance, bottom, top);
             if((i & 1) == 0) {
                 if(topSurface != null) {
-                    cylEnd(i, sliceRadians, writer, transform, topSurface, Direction.UP);
+                    cylEnd(i, sliceRadians, writer, transform, topSurface, Direction.UP, subdivideTop, top);
                 }
                 if(bottomSurface != null) {
-                    cylEnd(i, sliceRadians, writer, transform, bottomSurface, Direction.DOWN);
+                    cylEnd(i, sliceRadians, writer, transform, bottomSurface, Direction.DOWN, subdiviteBottom, bottom);
                 }
             }
         }
     }
     
-    private static void cylSide(int slice, double sliceRadians, MutablePolygon writer, Consumer<MutablePolygon> transform, XmSurface sideSurface, float wrapDistance) {
+    private static void cylSide(
+            int slice,
+            double sliceRadians,
+            MutablePolygon writer,
+            Consumer<MutablePolygon> transform,
+            XmSurface sideSurface,
+            float wrapDistance,
+            float bottom,
+            float top)
+    {
         final double fromRad = sliceRadians * slice;
         final double toRad = fromRad + sliceRadians;
         final float nx0 = (float) Math.sin(fromRad);
@@ -75,16 +112,16 @@ public class MeshHelper {
         writer.maxV(0, 1);
         
         writer.surface(sideSurface)
-            .vertex(0, x0, 0f, z0, uMin, 0f, 0xFFFFFFFF)
+            .vertex(0, x0, bottom, z0, uMin, bottom, 0xFFFFFFFF)
             .normal(0, nx0, 0, nz0)
             
-            .vertex(1, x1, 0f, z1, uMax, 0f, 0xFFFFFFFF)
+            .vertex(1, x1, bottom, z1, uMax, bottom, 0xFFFFFFFF)
             .normal(1, nx1, 0, nz1)
             
-            .vertex(2, x1, 1f, z1, uMax, 1f, 0xFFFFFFFF)
+            .vertex(2, x1, top, z1, uMax, top, 0xFFFFFFFF)
             .normal(2, nx1, 0, nz1)
             
-            .vertex(3, x0, 1f, z0, uMin, 1f, 0xFFFFFFFF)
+            .vertex(3, x0, top, z0, uMin, top, 0xFFFFFFFF)
             .normal(3, nx0, 0, nz0)
             
             .nominalFace(writer.lightFace())
@@ -92,7 +129,26 @@ public class MeshHelper {
             .append();
     }
     
-    private static void cylEnd(int slice, double sliceRadians, MutablePolygon writer, Consumer<MutablePolygon> transform, XmSurface surface, Direction face) {
+    /**
+     * 
+     * @param slice
+     * @param sliceRadians
+     * @param writer
+     * @param transform
+     * @param surface
+     * @param face
+     * @param subDivide Use true for CSG surfaces that may benefit from better recombination. Especially hollow cylinders.
+     */
+    private static void cylEnd(
+            int slice, 
+            double sliceRadians, 
+            MutablePolygon writer, 
+            Consumer<MutablePolygon> transform, 
+            XmSurface surface, 
+            Direction face, 
+            boolean subDivide,
+            float y)
+    {
         final double fromRad =slice * sliceRadians;
         final double midRad = fromRad + sliceRadians;
         final double toRad = midRad + sliceRadians;
@@ -104,17 +160,51 @@ public class MeshHelper {
         final float z2 = (float) (0.5 + 0.5 * Math.cos(toRad));
         
         if(face == Direction.UP) {
-            writer
-                .vertex(0, x0, 1f, z0, x0, z0, 0xFFFFFFFF)
-                .vertex(1, x1, 1f, z1, x1, z1, 0xFFFFFFFF)
-                .vertex(2, x2, 1f, z2, x2, z2, 0xFFFFFFFF)
-                .vertex(3, 0.5f, 1f, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
+            if (subDivide) {
+                writer.vertexCount(3)
+                    .vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
+                    .vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
+                    .vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
+                    .surface(surface)
+                    .clearFaceNormal()
+                    .nominalFace(face)
+                    .apply(transform)
+                    .append();
+                
+                writer.vertexCount(3)
+                    .vertex(0, x1, y, z1, x1, z1, 0xFFFFFFFF)
+                    .vertex(1, x2, y, z2, x2, z2, 0xFFFFFFFF)
+                    .vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
+            } else {
+                writer
+                    .vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
+                    .vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
+                    .vertex(2, x2, y, z2, x2, z2, 0xFFFFFFFF)
+                    .vertex(3, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
+            }
         } else {
-            writer
-                .vertex(0, x0, 0f, z0, x0, z0, 0xFFFFFFFF)
-                .vertex(1, 0.5f, 0f, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
-                .vertex(2, x2, 0f, z2, x2, z2, 0xFFFFFFFF)
-                .vertex(3, x1, 0f, z1, x1, z1, 0xFFFFFFFF);
+            if (subDivide) {
+                writer.vertexCount(3)
+                    .vertex(0, x1, y, z1, x1, z1, 0xFFFFFFFF)
+                    .vertex(1, x0, y, z0, x0, z0, 0xFFFFFFFF)
+                    .vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
+                    .surface(surface)
+                    .clearFaceNormal()
+                    .nominalFace(face)
+                    .apply(transform)
+                    .append();
+            
+                writer.vertexCount(3)
+                    .vertex(0, x2, y, z2, x2, z2, 0xFFFFFFFF)
+                    .vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
+                    .vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
+            } else {
+                writer
+                    .vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
+                    .vertex(1, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
+                    .vertex(2, x2, y, z2, x2, z2, 0xFFFFFFFF)
+                    .vertex(3, x1, y, z1, x1, z1, 0xFFFFFFFF);
+            }
         }
         
         writer.surface(surface)

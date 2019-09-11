@@ -101,7 +101,7 @@ public class CappedSquareInsetColumn  {
         }
         
         // Filter out quads that are occluded by connection
-        WritableMesh result = csg.buildWritable();
+        WritableMesh result = csg.buildMutable();
         
         if(!hasLower || !hasUpper) {
             final Polygon reader = result.reader();
