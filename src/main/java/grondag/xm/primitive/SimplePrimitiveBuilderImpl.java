@@ -113,7 +113,7 @@ public class SimplePrimitiveBuilderImpl {
             cornerJoin = builder.cornerJoin;
             orientationType = builder.orientationType;
             polyFactory = builder.polyFactory;
-            bitShift = builder.bitCount;
+            bitShift = builder.bitCount + 1; // + 1 for lamp
             int count = orientationType.enumClass.getEnumConstants().length << bitShift;
             if(simpleJoin) {
                 count <<= 6;
@@ -144,7 +144,10 @@ public class SimplePrimitiveBuilderImpl {
                     mesh = polyFactory.apply(modelState);
                     
                 } else {
-                    int index = (modelState.orientationIndex() << bitShift) | modelState.primitiveBits();
+                    int index = (modelState.orientationIndex() << bitShift) | (modelState.primitiveBits() << 1);
+                    if (modelState.primitive().lampSurface(modelState) != null) {
+                        index |= 1;
+                    }
                     if(simpleJoin) {
                         index = (index << 6) | modelState.simpleJoin().ordinal();
                     }
