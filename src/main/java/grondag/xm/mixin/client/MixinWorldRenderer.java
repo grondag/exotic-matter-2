@@ -42,9 +42,11 @@ public class MixinWorldRenderer {
     
     @Inject(method = "drawHighlightedBlockOutline", at = @At(value = "HEAD"), cancellable = false, require = 1)
     private void onBlockHighlight(Camera camera, HitResult hit, int zero, CallbackInfo ci) {
-        BlockPos pos = ((BlockHitResult)hit).getBlockPos();
-        BlockState blockState = world.getBlockState(pos);
-        modelState = XmBlockState.modelState(blockState, world, pos, true);
+        if (hit.getType() == HitResult.Type.BLOCK) {
+            BlockPos pos = ((BlockHitResult)hit).getBlockPos();
+            BlockState blockState = world.getBlockState(pos);
+            modelState = XmBlockState.modelState(blockState, world, pos, true);
+        }
     }
     
     @Inject(method = "drawShapeOutline", at = @At(value = "HEAD"), cancellable = true, require = 1)
