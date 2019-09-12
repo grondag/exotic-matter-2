@@ -145,7 +145,7 @@ dependencies {
     }
 	include "blue.endless:jankson:1.1.2"
 	
-	modRuntime ("me.shedaniel.cloth:config-2:${clothconfig_version}") {
+	modImplementation ("me.shedaniel.cloth:config-2:${clothconfig_version}") {
         exclude group :"io.github.prospector.modmenu"
         exclude group :"net.fabricmc.fabric-api"
     }
