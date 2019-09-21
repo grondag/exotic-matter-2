@@ -45,7 +45,7 @@ public class XmConfig {
     public static boolean debugCollisionBoxes = DEFAULTS.debugCollisionBoxes;
 
     // reserved
-    public static int maxPlacementCheckCount;
+    public static int maxPlacementCheckCount = 32;
     public static boolean logExcavationRenderTracking;
     
 

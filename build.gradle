@@ -134,16 +134,16 @@ dependencies {
     }
     include "grondag:frex:${project.frex_version}.+"
     
-	modImplementation ("grondag:joml-mod:1.0+") {
+	modImplementation ("grondag:joml-mod:${joml_version}+") {
         exclude group :"grondag"
         exclude group :"net.fabricmc.fabric-api"
     }
-    include "grondag:joml-mod:1.0+"
+    include "grondag:joml-mod:${joml_version}+"
 	
-	modImplementation ("blue.endless:jankson:1.1.2") {
+	modImplementation ("blue.endless:jankson:${jankson_version}") {
         exclude group :"net.fabricmc.fabric-api"
     }
-	include "blue.endless:jankson:1.1.2"
+	include "blue.endless:jankson:${jankson_version}"
 	
 	modImplementation ("me.shedaniel.cloth:config-2:${clothconfig_version}") {
         exclude group :"io.github.prospector.modmenu"
@@ -151,9 +151,12 @@ dependencies {
     }
 	include "me.shedaniel.cloth:config-2:${clothconfig_version}"
 	
+	modImplementation ("io.github.prospector:modmenu:${project.modmenu_version}") {
+        exclude group :"net.fabricmc.fabric-api"
+    }
+
 	// For dev env testing 
 	modRuntime "com.jamieswhiteshirt:developer-mode:${project.devmode_version}"
-	modImplementation "io.github.prospector:modmenu:${project.modmenu_version}"
 	modRuntime "grondag:canvas:${project.canvas_version}+"
 
 	// dev env annotation support
@@ -162,16 +165,16 @@ dependencies {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-			artifact(jar.archivePath) {
-	    		builtBy remapJar
+	publications {
+		mavenJava(MavenPublication) {
+			artifact(remapJar) {
+				builtBy remapJar
 			}
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
 			}
-        }
-    }
+		}
+	}
 
     repositories {
         maven {
