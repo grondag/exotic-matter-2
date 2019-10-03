@@ -22,6 +22,7 @@ import org.apiguardian.api.API;
 import grondag.fermion.sc.cache.ObjectSimpleLoadingCache;
 import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 
 @API(status = INTERNAL)
 public class CollisionDispatcherImpl {
@@ -39,7 +40,7 @@ public class CollisionDispatcherImpl {
     };
 
     public static VoxelShape shapeFor(ModelState modelState) {
-        return modelCache.get(modelState.geometricState());
+        return modelState == null ? VoxelShapes.fullCube() : modelCache.get(modelState.geometricState());
     }
 
     /**
