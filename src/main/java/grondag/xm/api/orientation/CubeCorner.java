@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -62,19 +62,19 @@ public enum CubeCorner implements StringIdentifiable {
     public final int superOrdinalBit;
 
     private CubeCorner(Direction face1, Direction face2, Direction face3) {
-        this.name = this.name().toLowerCase();
+        name = name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
         this.face3 = face3;
 
         // 6 is number of possible faces
-        this.superOrdinal = 6 + this.ordinal() + CubeEdge.values().length;
-        this.superOrdinalBit = 1 << superOrdinal;
+        superOrdinal = 6 + ordinal() + CubeEdge.values().length;
+        superOrdinalBit = 1 << superOrdinal;
 
-        Vec3i v1 = face1.getVector();
-        Vec3i v2 = face2.getVector();
-        Vec3i v3 = face3.getVector();
-        this.vector = new Vec3i(v1.getX() + v2.getX() + v3.getX(), v1.getY() + v2.getY() + v3.getY(), v1.getZ() + v2.getZ() + v3.getZ());
+        final Vec3i v1 = face1.getVector();
+        final Vec3i v2 = face2.getVector();
+        final Vec3i v3 = face3.getVector();
+        vector = new Vec3i(v1.getX() + v2.getX() + v3.getX(), v1.getY() + v2.getY() + v3.getY(), v1.getZ() + v2.getZ() + v3.getZ());
 
     }
 

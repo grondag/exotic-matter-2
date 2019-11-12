@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -37,27 +37,27 @@ import net.minecraft.util.math.Vec3i;
 @SuppressWarnings("rawtypes")
 public abstract class AbstractQuadPainter {
     @FunctionalInterface
-    public static interface PaintMethod {
+    public interface PaintMethod {
         /**
          * Assigns specific texture and texture rotation based on model state and
          * information in the polygon and surface. Also handles texture UV mapping.
          * <p>
-         * 
+         *
          * Implementations can and should assume locked UV coordinates are assigned
          * before this is called if UV locking is enabled for the quad
          * <p>
-         * 
+         *
          * Implementation should claim and use first render layer with a null texture
          * name.<br>
          * (Claim by assigning a non-null texture name.)
-         * 
+         *
          * Any polys in the input stream that are split should be deleted and new polys
          * appended to the stream.
          * <p>
-         * 
+         *
          * Implementation may assume stream is non-empty and stream editor is at origin.
          * <p>
-         * 
+         *
          */
         void paintQuads(MutableMesh stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureDepth);
     }
@@ -79,12 +79,12 @@ public abstract class AbstractQuadPainter {
      * with u,v origin at upper left and z is depth, where positive values represent
      * distance into the face (away from viewer). <br>
      * <br>
-     * 
+     *
      * Coordinates are start masked to the scale of the texture being used and when
      * we reverse an orthogonalAxis, we use the texture's sliceMask as the basis so
      * that we remain within the frame of the texture scale we are using. <br>
      * <br>
-     * 
+     *
      * Note that the x, y components are for determining min/max UV values. They
      * should NOT be used to set vertex UV coordinates directly. All bigtex models
      * should have lockUV = true, which means that uv coordinates will be derived at
@@ -95,10 +95,10 @@ public abstract class AbstractQuadPainter {
     protected static Vec3i getSurfaceVector(int blockX, int blockY, int blockZ, Direction face, TextureScale scale) {
         // PERF: reuse instances?
 
-        int sliceCountMask = scale.sliceCountMask;
-        int x = blockX & sliceCountMask;
-        int y = blockY & sliceCountMask;
-        int z = blockZ & sliceCountMask;
+        final int sliceCountMask = scale.sliceCountMask;
+        final int x = blockX & sliceCountMask;
+        final int y = blockY & sliceCountMask;
+        final int z = blockZ & sliceCountMask;
 
         switch (face) {
         case EAST:
@@ -125,7 +125,7 @@ public abstract class AbstractQuadPainter {
     /**
      * Rotates given surface vector around the center of the texture by the given
      * degree.
-     * 
+     *
      */
     protected static Vec3i rotateFacePerspective(Vec3i vec, Rotation rotation, TextureScale scale) {
         // PERF - reuse instances?
@@ -204,20 +204,20 @@ public abstract class AbstractQuadPainter {
             final Rotation rot =  species == 0 ? Rotation.ROTATE_NONE : Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
             return TextureOrientation.find(rot, false, false);
         }
-        
+
         case ROTATE_RANDOM:
             return TextureOrientation.find(Useful.offsetEnumValue(Rotation.ROTATE_NONE, (textureHashForFace(face, tex, modelState) >> 8) & 3), false, false);
-            
+
         case STONE_LIKE: {
             final int hash = textureHashForFace(face, tex, modelState);
             final Rotation rot = (hash & 0b100000000) == 0 ? Rotation.ROTATE_NONE : Rotation.ROTATE_180;
-            return TextureOrientation.find(rot, (hash & 0b1000000000) == 0, false); 
+            return TextureOrientation.find(rot, (hash & 0b1000000000) == 0, false);
         }
-        
+
         case IDENTITY:
         default:
             return TextureOrientation.IDENTITY;
-        
+
         }
     }
 }

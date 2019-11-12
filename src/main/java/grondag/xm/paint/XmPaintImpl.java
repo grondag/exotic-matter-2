@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -80,7 +80,7 @@ public class XmPaintImpl {
 
         assert PAINT_BITS.bitLength() <= 32;
 
-        int defaultBits = 0;
+        final int defaultBits = 0;
         BLEND_MODES[0].setValue(null, defaultBits);
         BLEND_MODES[1].setValue(null, defaultBits);
         BLEND_MODES[2].setValue(null, defaultBits);
@@ -105,18 +105,18 @@ public class XmPaintImpl {
     protected TextureSet textureSet2 = textureSet0;
 
     protected void copyFrom(XmPaintImpl template) {
-        this.paintBits = template.paintBits;
-        this.color0 = template.color0;
-        this.color1 = template.color1;
-        this.color2 = template.color2;
-        this.vertexProcessor0 = template.vertexProcessor0;
-        this.vertexProcessor1 = template.vertexProcessor1;
-        this.vertexProcessor2 = template.vertexProcessor2;
-        this.textureSet0 = template.textureSet0;
-        this.textureSet1 = template.textureSet1;
-        this.textureSet2 = template.textureSet2;
+        paintBits = template.paintBits;
+        color0 = template.color0;
+        color1 = template.color1;
+        color2 = template.color2;
+        vertexProcessor0 = template.vertexProcessor0;
+        vertexProcessor1 = template.vertexProcessor1;
+        vertexProcessor2 = template.vertexProcessor2;
+        textureSet0 = template.textureSet0;
+        textureSet1 = template.textureSet1;
+        textureSet2 = template.textureSet2;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (obj != null && obj instanceof XmPaintImpl) {
@@ -131,9 +131,8 @@ public class XmPaintImpl {
                     && vertexProcessor0 == other.vertexProcessor0
                     && vertexProcessor1 == other.vertexProcessor1
                     && vertexProcessor2 == other.vertexProcessor2;
-        } else {
+        } else
             return false;
-        }
     }
 
     @Override
@@ -246,9 +245,9 @@ public class XmPaintImpl {
         @Override
         protected void copyFrom(XmPaintImpl template) {
             super.copyFrom(template);
-            this.hashCode = template.hashCode();
+            hashCode = template.hashCode();
         }
-        
+
         @Override
         public int hashCode() {
             return hashCode;
@@ -267,17 +266,17 @@ public class XmPaintImpl {
 
         @Override
         public synchronized Value find() {
-            Value result = new Value(LIST.size(), this);
+            final Value result = new Value(LIST.size(), this);
             LIST.add(result);
             return result;
         }
-        
+
         synchronized Value replace(Value target) {
-            Value result = new Value(target.index, this);
+            final Value result = new Value(target.index, this);
             LIST.set(target.index, result);
             return result;
         }
-        
+
         @Override
         public XmPaintFinder copy(XmPaint paint) {
             copyFrom((XmPaintImpl) paint);
@@ -303,9 +302,8 @@ public class XmPaintImpl {
 
         @Override
         public XmPaintFinder textureDepth(int depth) {
-            if (depth < 1 || depth > MAX_TEXTURE_DEPTH) {
+            if (depth < 1 || depth > MAX_TEXTURE_DEPTH)
                 throw new IndexOutOfBoundsException("Invalid texture depth: " + depth);
-            }
             TEXTURE_DEPTH.setValue(depth, this);
             return this;
         }

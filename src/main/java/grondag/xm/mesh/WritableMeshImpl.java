@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -148,11 +148,11 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
 
     @Override
     public ReadOnlyMesh releaseToReader() {
-        ReadOnlyMesh result = toReader();
+        final ReadOnlyMesh result = toReader();
         release();
         return result;
     }
-    
+
     @Override
     public ReadOnlyMesh toReader() {
         return XmMeshesImpl.claimReadOnly(this, 0);
@@ -167,7 +167,7 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
     public void splitAsNeeded() {
         final Polygon reader = reader();
         if (reader.origin()) {
-            final int limit = this.writerAddress();
+            final int limit = writerAddress();
             do {
                 final int readAddress = reader.address();
                 splitIfNeeded(readAddress);
@@ -177,34 +177,33 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
             } while(reader.next() && reader.address() < limit);
         }
     }
-    
-   int splitIfNeeded(int targetAddress) {
+
+    int splitIfNeeded(int targetAddress) {
         internal.moveTo(targetAddress);
         final int inCount = internal.vertexCount();
-        if (inCount == 3 || (inCount == 4 && internal.isConvex())) {
+        if (inCount == 3 || (inCount == 4 && internal.isConvex()))
             return Polygon.NO_LINK_OR_TAG;
-        }
-        
-        int firstSplitAddress = this.writerAddress();
+
+        final int firstSplitAddress = writerAddress();
 
         int head = inCount - 1;
         int tail = 2;
         writer.copyFrom(internal, false)
-            .vertexCount(4)
-            .copyVertexFrom(0, internal, head)
-            .copyVertexFrom(1, internal, 0)
-            .copyVertexFrom(2, internal, 1)
-            .copyVertexFrom(3, internal, tail)
-            .append();
+        .vertexCount(4)
+        .copyVertexFrom(0, internal, head)
+        .copyVertexFrom(1, internal, 0)
+        .copyVertexFrom(2, internal, 1)
+        .copyVertexFrom(3, internal, tail)
+        .append();
 
         while (head - tail > 1) {
             final int vCount = head - tail == 2 ? 3 : 4;
             internal.moveTo(targetAddress);
             writer.copyFrom(internal, false)
-                .vertexCount(vCount)
-                .copyVertexFrom(0, internal, head)
-                .copyVertexFrom(1, internal, tail)
-                .copyVertexFrom(2, internal, ++tail);
+            .vertexCount(vCount)
+            .copyVertexFrom(0, internal, head)
+            .copyVertexFrom(1, internal, tail)
+            .copyVertexFrom(2, internal, ++tail);
             if (vCount == 4) {
                 writer.copyVertexFrom(3, internal, --head);
 
@@ -214,10 +213,10 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
                     head++;
                     tail--;
                     writer.copyFrom(internal, false)
-                        .vertexCount(3)
-                        .copyVertexFrom(0, internal, head)
-                        .copyVertexFrom(1, internal, tail)
-                        .copyVertexFrom(2, internal, ++tail);
+                    .vertexCount(3)
+                    .copyVertexFrom(0, internal, head)
+                    .copyVertexFrom(1, internal, tail)
+                    .copyVertexFrom(2, internal, ++tail);
                 }
             }
             append();

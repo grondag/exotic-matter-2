@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -21,8 +21,8 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
+import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.orientation.FaceCorner;
 
 /**
@@ -42,17 +42,19 @@ public class QuadrantSplitter {
         float vMax = vMin;
 
         for (int i = 1; i < vCount; i++) {
-            float u = quad.u(i, layerIndex);
-            float v = quad.v(i, layerIndex);
-            if (u < uMin)
+            final float u = quad.u(i, layerIndex);
+            final float v = quad.v(i, layerIndex);
+            if (u < uMin) {
                 uMin = u;
-            else if (u > uMax)
+            } else if (u > uMax) {
                 uMax = u;
+            }
 
-            if (v < vMin)
+            if (v < vMin) {
                 vMin = v;
-            else if (v > vMax)
+            } else if (v > vMax) {
                 vMax = v;
+            }
         }
 
         // note that v is inverted from FaceCorner semantics.
@@ -96,7 +98,7 @@ public class QuadrantSplitter {
      * so.<br>
      * If split occurs, poly at editor position will be marked deleted.
      * <p>
-     * 
+     *
      * May also move reader, and does not restore reader position if it does so.
      */
     public static final void split(MutableMesh stream, int layerIndex) {
@@ -110,33 +112,34 @@ public class QuadrantSplitter {
 
         for (int i = 0; i < vCount; i++) {
             final int t = vertexType(reader.u(i, layerIndex));
-            if (t == HIGH)
+            if (t == HIGH) {
                 highCount++;
-            else if (t == LOW)
+            } else if (t == LOW) {
                 lowCount++;
+            }
         }
 
-        if (lowCount == 0)
+        if (lowCount == 0) {
             // all on on high side
             splitV(stream, editorAddress, true, layerIndex);
-        else if (highCount == 0)
+        } else if (highCount == 0) {
             // all on low side
             splitV(stream, editorAddress, false, layerIndex);
-        else {
+        } else {
             // spanning
-            MutablePolygon writer = stream.writer();
+            final MutablePolygon writer = stream.writer();
 
-            int highAddress = stream.writerAddress();
+            final int highAddress = stream.writerAddress();
             int iHighVertex = 0;
             writer.vertexCount(highCount + 2)
-                .copyFrom(reader, false)
-                .append();
+            .copyFrom(reader, false)
+            .append();
 
-            int lowAddress = stream.writerAddress();
+            final int lowAddress = stream.writerAddress();
             int iLowVertex = 0;
             writer.vertexCount(lowCount + 2)
-                .copyFrom(reader, false)
-                .append();
+            .copyFrom(reader, false)
+            .append();
 
             int iThis = vCount - 1;
             float uThis = reader.u(iThis, layerIndex);
@@ -194,10 +197,11 @@ public class QuadrantSplitter {
 
         for (int i = 0; i < vCount; i++) {
             final int t = vertexType(reader.v(i, layerIndex));
-            if (t == HIGH)
+            if (t == HIGH) {
                 highCount++;
-            else if (t == LOW)
+            } else if (t == LOW) {
                 lowCount++;
+            }
         }
 
         if (lowCount == 0)
@@ -208,19 +212,19 @@ public class QuadrantSplitter {
             return;
         else {
             // spanning
-            MutablePolygon writer = stream.writer();
+            final MutablePolygon writer = stream.writer();
 
-            int highAddress = stream.writerAddress();
+            final int highAddress = stream.writerAddress();
             int iHighVertex = 0;
             writer.vertexCount(highCount + 2)
-                .copyFrom(reader, false)
-                .append();
+            .copyFrom(reader, false)
+            .append();
 
-            int lowAddress = stream.writerAddress();
+            final int lowAddress = stream.writerAddress();
             int iLowVertex = 0;
             writer.vertexCount(lowCount + 2)
-                .copyFrom(reader, false)
-                .append();
+            .copyFrom(reader, false)
+            .append();
 
             int iThis = vCount - 1;
             float vThis = reader.v(iThis, layerIndex);
@@ -271,9 +275,8 @@ public class QuadrantSplitter {
                 return EDGE;
             else
                 return HIGH;
-        } else {
+        } else
             // < 0.5f - QuadHelper.EPSILON
             return LOW;
-        }
     }
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -40,7 +40,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
 /**
- * 
+ *
  * See {@link SurfaceTopology#TILED}
  */
 @API(status = INTERNAL)
@@ -71,35 +71,35 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
     }
 
     /**
-     * 
+     *
      * If quad at the target address is within the given u bounds, does nothing to
      * it and passes address to consumer, and then returns
      * {@link Polygon#NO_ADDRESS};
-     * 
+     *
      * Otherwise, slices off a quad from the poly at the target address, with u
      * value between low bound + span, with the assumption no vertices are below the
      * lower bound. Appends the new quad to the end of the stream, and passes its
      * address to the consumer. The original quad is marked as deleted.
      * <p>
-     * 
+     *
      * Output quads will have uMin/uMax of 0,1 corresponding to the given split
      * bounds and all vertices will be scaled to that range. This will be true even
      * for quads that covered a multiple or fraction of a 0-1 range, or which were
      * offset.
      * <p>
-     * 
+     *
      * Also appends a new quad containing the remnants of the original polygon less
      * the slice. This remainder quad will have the same uMin/uMax as the input
      * quad, and all vertices will remain scaled to that range. Address of remainder
      * quad is the return value.
      * <p>
-     * 
+     *
      * EXCEPT, if all remainder vertices are within the given split bounds, will
      * instead apply offset and scaled as if it had been sliced, and pass it to the
      * consumer. Will then return {@link Polygon#NO_ADDRESS}.
      */
     private static int splitU(MutableMesh stream, int targetAddress, int layerIndex, final float uSplitLow, final float uSpan, IntConsumer vSplitter) {
-        Polygon reader = stream.reader(targetAddress);
+        final Polygon reader = stream.reader(targetAddress);
         assert PolyHelper.epsilonZero(reader.minU(layerIndex));
         final int vCountIn = reader.vertexCount();
 
@@ -118,10 +118,11 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
             vertexU[i] = u;
 
             final int t = vertexType(u);
-            if (t == REMAINDER)
+            if (t == REMAINDER) {
                 remainderCount++;
-            else if (t == SLICE)
+            } else if (t == SLICE) {
                 sliceCount++;
+            }
         }
 
         // if nothing to slice do nothing and stop iteration - should not happen
@@ -134,7 +135,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         if (remainderCount == 0) {
             assert sliceCount > 0 : "degenerate u split - no remainder and no quads in slice";
 
-            MutablePolygon editor = stream.editor(targetAddress);
+            final MutablePolygon editor = stream.editor(targetAddress);
             editor.minU(layerIndex, flipped ? 1 : 0);
             editor.maxU(layerIndex, flipped ? 0 : 1);
 
@@ -150,16 +151,16 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
         final int sliceAddress = stream.writerAddress();
         writer.vertexCount(sliceCount + 2)
-            .copyFrom(reader, false)
-            .minU(layerIndex, flipped ? 1 : 0)
-            .maxU(layerIndex, flipped ? 0 : 1)
-            .append();
+        .copyFrom(reader, false)
+        .minU(layerIndex, flipped ? 1 : 0)
+        .maxU(layerIndex, flipped ? 0 : 1)
+        .append();
         int iSliceVertex = 0;
 
         final int remainderAddress = stream.writerAddress();
         writer.vertexCount(remainderCount + 2)
-            .copyFrom(reader, false)
-            .append();
+        .copyFrom(reader, false)
+        .append();
         int iRemainderVertex = 0;
 
         float uThis = vertexU[vCountIn - 1];
@@ -173,12 +174,12 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
             if (thisType == EDGE) {
                 stream.editor(sliceAddress)
-                    .copyVertexFrom(iSliceVertex, reader, iThis)
-                    .u(iSliceVertex, layerIndex, uThis);
+                .copyVertexFrom(iSliceVertex, reader, iThis)
+                .u(iSliceVertex, layerIndex, uThis);
                 iSliceVertex++;
                 stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
                 iRemainderVertex++;
-                
+
             } else if (thisType == SLICE) {
                 stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).u(iSliceVertex, layerIndex, uThis);
                 iSliceVertex++;
@@ -193,7 +194,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                     iRemainderVertex++;
                     iSliceVertex++;
                 }
-                
+
             } else {
                 stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
                 iRemainderVertex++;
@@ -232,10 +233,9 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                 return EDGE;
             else
                 return REMAINDER;
-        } else {
+        } else
             // < 1-QuadHelper.EPSILON
             return SLICE;
-        }
     }
 
     /**
@@ -243,10 +243,10 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
      * the v dimension.
      */
     private static int splitV(MutableMesh stream, int targetAddress, int layerIndex, float vSplitLow, float vSpan, IntConsumer output) {
-        Polygon reader = stream.reader(targetAddress);
+        final Polygon reader = stream.reader(targetAddress);
         assert PolyHelper.epsilonZero(reader.minV(layerIndex));
         final int vCountIn = reader.vertexCount();
-        
+
         // PERF: make this threadlocal
         final float[] vertexV = new float[vCountIn];
         final boolean flipped = vSpan < 0;
@@ -262,10 +262,11 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
             vertexV[i] = v;
 
             final int t = vertexType(v);
-            if (t == REMAINDER)
+            if (t == REMAINDER) {
                 remainderCount++;
-            else if (t == SLICE)
+            } else if (t == SLICE) {
                 sliceCount++;
+            }
         }
 
         // if nothing to slice return unmodified; no output to consumer
@@ -278,7 +279,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         if (remainderCount == 0) {
             assert sliceCount > 0 : "degenerate u split - no remainder and no quads in slice";
 
-            MutablePolygon editor = stream.editor(targetAddress);
+            final MutablePolygon editor = stream.editor(targetAddress);
             editor.minV(layerIndex, flipped ? 1 : 0);
             editor.maxV(layerIndex, flipped ? 0 : 1);
 
@@ -293,16 +294,16 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
         final int sliceAddress = stream.writerAddress();
         writer.vertexCount(sliceCount + 2)
-            .copyFrom(reader, false)
-            .minV(layerIndex, flipped ? 1 : 0)
-            .maxV(layerIndex, flipped ? 0 : 1)
-            .append();
+        .copyFrom(reader, false)
+        .minV(layerIndex, flipped ? 1 : 0)
+        .maxV(layerIndex, flipped ? 0 : 1)
+        .append();
         int iSliceVertex = 0;
 
         final int remainderAddress = stream.writerAddress();
         writer.vertexCount(remainderCount + 2)
-            .copyFrom(reader, false)
-            .append();
+        .copyFrom(reader, false)
+        .append();
         int iRemainderVertex = 0;
 
         float vThis = vertexV[vCountIn - 1];
@@ -370,14 +371,15 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
         final int limitAddress = stream.writerAddress();
 
         final MutablePolygon editor = stream.editor();
-        
+
         do {
             // may move editor so save address and restore at end
             final int editorAddress = editor.address();
 
             // if the poly was added after we started we are done
-            if (editorAddress >= limitAddress)
+            if (editorAddress >= limitAddress) {
                 break;
+            }
 
             final Direction face = editor.nominalFace();
             final TextureSet tex = paint.texture(textureIndex);
@@ -387,24 +389,24 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
              * the size of each tile in the tiling grid. If no wrap, is simply the texture
              * size. If we wrap, then pick the distance that gives the texture scaling
              * closest to 1:1.
-             * 
+             *
              */
             final float tilingDistance = tilingDistance(editor.uvWrapDistance(), tex.scale().sliceCount);
 
             /**
              * See if we will need to split the quad on a UV boundary.
              * <p>
-             * 
+             *
              * Test on span > tile distance isn't sufficient because uv span might fit
              * within a single texture tile distance but actually start or end mid-texture.
              * <p>
              */
-            
+
             float minU = editor.u(0, textureIndex);
             float maxU = minU;
             float minV = editor.v(0, textureIndex);
             float maxV = minV;
-            
+
             final int vCount = editor.vertexCount();
             for(int i = 1; i < vCount; i++) {
                 final float u = editor.u(i, textureIndex);
@@ -463,34 +465,36 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
                             // For now, always use uv 0,0 as tiling origin.
 
                             final int salt = HashCommon.mix(baseSalt | (uIndexFinal << 16) | (vIndexFinal << 22));
-                            int textureVersion = tex.versionMask() & (salt >> 4);
+                            final int textureVersion = tex.versionMask() & (salt >> 4);
                             editor.sprite(textureIndex, tex.textureName(textureVersion));
 
                             //TODO: honor additional transform types
-                            final Rotation rot = tex.transform() == TextureTransform.ROTATE_RANDOM 
+                            final Rotation rot = tex.transform() == TextureTransform.ROTATE_RANDOM
                                     ? Useful.offsetEnumValue(tex.transform().baseRotation, (salt >> 16) & 3)
-                                    : tex.transform().baseRotation;
-                                    
-                            editor.rotation(textureIndex, TextureOrientation.find(rot, false, false));
+                                            : tex.transform().baseRotation;
 
-                            editor.lockUV(textureIndex, false);
-                            commonPostPaint(editor, modelState, surface, paint, textureIndex);
+                                    editor.rotation(textureIndex, TextureOrientation.find(rot, false, false));
 
-                            // earlier UV splits may have left us with something other than a convex quad or
-                            // tri
-                            // doing this last to avoid have to loop through the splits
-                            if (editor.splitIfNeeded()) {
-                                assert editor.isDeleted();
-                            }
+                                    editor.lockUV(textureIndex, false);
+                                    commonPostPaint(editor, modelState, surface, paint, textureIndex);
+
+                                    // earlier UV splits may have left us with something other than a convex quad or
+                                    // tri
+                                    // doing this last to avoid have to loop through the splits
+                                    if (editor.splitIfNeeded()) {
+                                        assert editor.isDeleted();
+                                    }
                         });
 
-                        if (vRemainder == Polygon.NO_LINK_OR_TAG)
+                        if (vRemainder == Polygon.NO_LINK_OR_TAG) {
                             break;
+                        }
                     }
                 });
 
-                if (uRemainder == Polygon.NO_LINK_OR_TAG)
+                if (uRemainder == Polygon.NO_LINK_OR_TAG) {
                     break;
+                }
             }
 
             // restore editor position for iteration

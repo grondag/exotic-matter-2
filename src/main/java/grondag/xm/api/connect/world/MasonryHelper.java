@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -32,27 +32,25 @@ public class MasonryHelper implements BlockTest<PrimitiveState> {
     private static final ThreadLocal<MasonryHelper> POOL = ThreadLocal.withInitial(MasonryHelper::new);
 
     public static BlockTest<PrimitiveState> wrap(BlockTest<PrimitiveState> test) {
-        MasonryHelper result = POOL.get();
+        final MasonryHelper result = POOL.get();
         result.test = test;
         return result;
     }
-    
+
     private BlockTest<PrimitiveState> test;
-    
+
     @Override
     public boolean apply(BlockTestContext<PrimitiveState> context) {
 
-        if (context.fromModelState() == null) {
+        if (context.fromModelState() == null)
             return false;
-        }
 
         final BlockState toBlockState = context.toBlockState();
         final BlockPos toPos = context.toPos();
-        
+
         // if not a sibling, mortar if against full opaque
-        if (!test.apply(context)) {
+        if (!test.apply(context))
             return toBlockState.isFullOpaque(context.world(), toPos);
-        }
 
         final BlockPos fromPos = context.fromPos();
 

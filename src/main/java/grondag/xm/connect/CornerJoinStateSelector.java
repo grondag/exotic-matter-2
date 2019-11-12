@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -33,7 +33,7 @@ public class CornerJoinStateSelector {
         int firstIndex = 0;
 
         for (int i = 0; i < 64; i++) {
-            SimpleJoinStateImpl baseJoin = SimpleJoinStateImpl.fromOrdinal(i);
+            final SimpleJoinStateImpl baseJoin = SimpleJoinStateImpl.fromOrdinal(i);
             BLOCK_JOIN_SELECTOR[i] = new CornerJoinStateSelector(baseJoin, firstIndex);
 
             for (int j = 0; j < BLOCK_JOIN_SELECTOR[i].stateCount(); j++) {
@@ -45,7 +45,7 @@ public class CornerJoinStateSelector {
     }
 
     public static int ordinalFromWorld(BlockNeighbors tests) {
-        SimpleJoinStateImpl baseJoin = SimpleJoinStateImpl.fromWorld(tests);
+        final SimpleJoinStateImpl baseJoin = SimpleJoinStateImpl.fromWorld(tests);
         return BLOCK_JOIN_SELECTOR[baseJoin.ordinal()].indexFromNeighbors(tests);
     }
 
@@ -60,11 +60,11 @@ public class CornerJoinStateSelector {
     private final int firstIndex;
     private final SimpleJoinStateImpl simpleJoin;
 
-    private CornerJoinFaceSelector faceSelector[] = new CornerJoinFaceSelector[6];
+    private final CornerJoinFaceSelector faceSelector[] = new CornerJoinFaceSelector[6];
 
     private CornerJoinStateSelector(SimpleJoinStateImpl baseJoinState, int firstIndex) {
         this.firstIndex = firstIndex;
-        this.simpleJoin = baseJoinState;
+        simpleJoin = baseJoinState;
         for (int i = 0; i < 6; i++) {
             faceSelector[i] = new CornerJoinFaceSelector(FACES[i], baseJoinState);
         }
@@ -72,15 +72,15 @@ public class CornerJoinStateSelector {
 
     private CornerJoinStateImpl createChildState(int index) {
         int shift = 1;
-        int localIndex = index - firstIndex;
-        byte[] faceJoinIndex = new byte[6];
+        final int localIndex = index - firstIndex;
+        final byte[] faceJoinIndex = new byte[6];
 
         for (int i = 0; i < 6; i++) {
             final Direction face = FACES[i];
             if (faceSelector[i].faceCount == 1) {
                 faceJoinIndex[face.ordinal()] = (byte) faceSelector[i].getFaceJoinFromIndex(0).ordinal();
             } else {
-                int faceIndex = (localIndex / shift) % faceSelector[i].faceCount;
+                final int faceIndex = (localIndex / shift) % faceSelector[i].faceCount;
                 faceJoinIndex[face.ordinal()] = (byte) faceSelector[i].getFaceJoinFromIndex(faceIndex).ordinal();
                 shift *= faceSelector[i].faceCount;
             }

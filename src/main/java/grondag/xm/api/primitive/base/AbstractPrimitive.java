@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -37,11 +37,11 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
     private final R defaultState;
 
     private final BaseModelStateFactory<R, W> factory;
-    
+
     private final Identifier id;
-    
+
     private final Function<R, XmSurfaceList> surfaceFunc;
-    
+
     /**
      * bits flags used by ModelState to know which optional state elements are
      * needed by this shape
@@ -53,14 +53,14 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
         this.id = id;
         this.factory = factory;
         this.surfaceFunc = surfaceFunc;
-        
+
         // we handle registration here because model state currently relies on it for
         // serialization
         if (!ModelPrimitiveRegistry.INSTANCE.register(this)) {
             Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + id.toString());
         }
 
-        W state = factory.claim(this);
+        final W state = factory.claim(this);
         updateDefaultState(state);
         this.defaultState = state.releaseToImmutable();
     }
@@ -73,7 +73,7 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
     public final XmSurfaceList surfaces(R modelState) {
         return surfaceFunc.apply(modelState);
     }
-    
+
     @Override
     public R defaultState() {
         return defaultState;
@@ -94,12 +94,12 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
      */
     protected void updateDefaultState(W modelState) {
     }
-    
+
     @Override
     public final W fromBuffer(PacketByteBuf buf) {
         return factory.fromBuffer(this, buf);
     }
-    
+
     @Override
     public final W fromTag(CompoundTag tag) {
         return factory.fromTag(this, tag);

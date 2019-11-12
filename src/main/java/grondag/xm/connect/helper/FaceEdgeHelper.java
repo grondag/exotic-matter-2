@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -43,11 +43,11 @@ public abstract class FaceEdgeHelper {
     private final static FaceEdge FACE_LOOKUP[][] = new FaceEdge[6][6];
 
     static {
-        for (Direction onFace : Direction.values()) {
-            for (Direction edgeFace : Direction.values()) {
+        for (final Direction onFace : Direction.values()) {
+            for (final Direction edgeFace : Direction.values()) {
                 FaceEdge match = null;
 
-                for (FaceEdge side : FaceEdge.values()) {
+                for (final FaceEdge side : FaceEdge.values()) {
                     if (side.toWorld(onFace) == edgeFace) {
                         match = side;
                     }
@@ -68,7 +68,7 @@ public abstract class FaceEdgeHelper {
     }
 
     public static void forEach(Consumer<FaceEdge> consumer) {
-        for (FaceEdge val : VALUES) {
+        for (final FaceEdge val : VALUES) {
             consumer.accept(val);
         }
     }

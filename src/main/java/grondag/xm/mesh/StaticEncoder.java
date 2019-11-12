@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -30,7 +30,7 @@ import net.minecraft.block.BlockRenderLayer;
 class StaticEncoder {
     private static final BitPacker32<StaticEncoder> BITPACKER = new BitPacker32<StaticEncoder>(null, null);
     private static final BitPacker32<StaticEncoder> BITPACKER_2 = new BitPacker32<StaticEncoder>(null, null);
-    
+
     private static final IndexedInterner<XmSurface> xmSurfaces = new IndexedInterner<>(XmSurface.class);
 
     private static final int BIT_OFFSET = 1;
@@ -176,7 +176,7 @@ class StaticEncoder {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, AO[layerIndex].setValue(disable, bits));
     }
-    
+
     public static boolean disableDiffuse(IntStream stream, int baseAddress, int layerIndex) {
         return DIFFUSE[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
@@ -185,7 +185,7 @@ class StaticEncoder {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, DIFFUSE[layerIndex].setValue(isEmissive, bits));
     }
-    
+
     @SuppressWarnings("unchecked")
     private static final BitPacker32<StaticEncoder>.EnumElement<BlockRenderLayer>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<BlockRenderLayer>[]) new BitPacker32<?>.EnumElement<?>[3];
 

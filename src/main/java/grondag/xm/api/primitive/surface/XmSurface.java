@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -46,7 +46,7 @@ public interface XmSurface {
      * color BLACK. If the lighting mode for the surface is shaded, then quad bake
      * should color vertices to form a gradient.
      * <p>
-     * 
+     *
      * If the surface is full-brightness, need to re-color all vertices to white.
      */
     int FLAG_LAMP_GRADIENT = 4;
@@ -82,7 +82,7 @@ public interface XmSurface {
     default boolean isLampGradient() {
         return (flags() & FLAG_LAMP_GRADIENT) == FLAG_LAMP_GRADIENT;
     }
-    
+
     default boolean isLamp() {
         return (flags() & FLAG_LAMP) == FLAG_LAMP;
     }

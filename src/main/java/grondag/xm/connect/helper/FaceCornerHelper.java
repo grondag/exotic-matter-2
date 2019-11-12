@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -34,7 +34,7 @@ public abstract class FaceCornerHelper {
     private static FaceCorner[][] LOOKUP = new FaceCorner[4][4];
 
     static {
-        for (FaceCorner corner : VALUES) {
+        for (final FaceCorner corner : VALUES) {
             LOOKUP[corner.leftSide.ordinal()][corner.rightSide.ordinal()] = corner;
             LOOKUP[corner.rightSide.ordinal()][corner.leftSide.ordinal()] = corner;
         }
@@ -49,7 +49,7 @@ public abstract class FaceCornerHelper {
     }
 
     public static void forEach(Consumer<FaceCorner> consumer) {
-        for (FaceCorner val : VALUES) {
+        for (final FaceCorner val : VALUES) {
             consumer.accept(val);
         }
     }

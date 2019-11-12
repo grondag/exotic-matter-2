@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -41,16 +41,16 @@ import net.minecraft.util.math.Vec3i;
  */
 @API(status = EXPERIMENTAL)
 public enum CubeEdge implements StringIdentifiable {
-    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180), 
+    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180),
     DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
-    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE), 
+    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE),
     DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90),
-    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180), 
-    UP_EAST(Direction.UP, Direction.EAST, ROTATE_90), 
+    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180),
+    UP_EAST(Direction.UP, Direction.EAST, ROTATE_90),
     UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE),
-    UP_WEST(Direction.UP, Direction.WEST, ROTATE_270), 
+    UP_WEST(Direction.UP, Direction.WEST, ROTATE_270),
     NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90),
-    NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270), 
+    NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270),
     SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_270),
     SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_90);
 
@@ -86,21 +86,22 @@ public enum CubeEdge implements StringIdentifiable {
     public final HorizontalEdge horizontalEdge;
 
     private CubeEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
-        this.name = this.name().toLowerCase();
+        name = name().toLowerCase();
         this.face1 = face1;
         this.face2 = face2;
         this.rotation = rotation;
-        superOrdinal = 6 + this.ordinal();
+        superOrdinal = 6 + ordinal();
         superOrdinalBit = 1 << superOrdinal;
 
-        Vec3i v1 = face1.getVector();
-        Vec3i v2 = face2.getVector();
+        final Vec3i v1 = face1.getVector();
+        final Vec3i v2 = face2.getVector();
         vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
 
-        if (face1.getAxis() == Axis.Y || face2.getAxis() == Axis.Y)
+        if (face1.getAxis() == Axis.Y || face2.getAxis() == Axis.Y) {
             horizontalEdge = null;
-        else
+        } else {
             horizontalEdge = HorizontalEdge.find(HorizontalFace.find(face1), HorizontalFace.find(face2));
+        }
     }
 
     public static final int COUNT = CubeEdgeHelper.COUNT;

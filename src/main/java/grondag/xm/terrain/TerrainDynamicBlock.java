@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -37,7 +37,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
 
     // PERF: sucks
     private static TerrainModelState.Mutable adjustShape(ModelState stateIn, boolean isFiller) {
-        TerrainModelState.Mutable result = isFiller ? TerrainSurface.FILLER.newState() : TerrainSurface.HEIGHT.newState();
+        final TerrainModelState.Mutable result = isFiller ? TerrainSurface.FILLER.newState() : TerrainSurface.HEIGHT.newState();
         result.copyFrom(stateIn);
         result.setStatic(false);
         return result;
@@ -48,11 +48,11 @@ public class TerrainDynamicBlock extends TerrainBlock {
      * given.
      */
     public void makeStatic(BlockState state, World world, BlockPos pos) {
-        TerrainStaticBlock staticVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getStaticBlock(this);
+        final TerrainStaticBlock staticVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getStaticBlock(this);
         if (staticVersion == null || state.getBlock() != this)
             return;
 
-        MutableModelState myModelState = XmBlockState.modelState(state, world, pos, true);
+        final MutableModelState myModelState = XmBlockState.modelState(state, world, pos, true);
         myModelState.setStatic(true);
         // TODO: transfer heat block state?
         world.setBlockState(pos, staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)), 7);
@@ -60,28 +60,28 @@ public class TerrainDynamicBlock extends TerrainBlock {
     }
 
     // TODO: restore or remove
-//    @Override
-//    public int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state) {
-//        double volume = 0;
-//        ISuperModelState modelState = SuperBlockWorldAccess.access(world).computeModelState(this, state, pos, true);
-//        for (BoundingBox box : modelState.getShape().meshFactory().collisionHandler().getCollisionBoxes(modelState)) {
-//            volume += Useful.volumeAABB(box);
-//        }
-//
-//        return (int) Math.min(9, volume * 9);
-//    }
+    //    @Override
+    //    public int quantityDropped(ExtendedBlockView world, BlockPos pos, BlockState state) {
+    //        double volume = 0;
+    //        ISuperModelState modelState = SuperBlockWorldAccess.access(world).computeModelState(this, state, pos, true);
+    //        for (BoundingBox box : modelState.getShape().meshFactory().collisionHandler().getCollisionBoxes(modelState)) {
+    //            volume += Useful.volumeAABB(box);
+    //        }
+    //
+    //        return (int) Math.min(9, volume * 9);
+    //    }
 
     // TODO: restore or remove
-//    @Override
-//    public boolean isReplaceable(ExtendedBlockView worldIn, BlockPos pos) {
-//        return SuperBlockWorldAccess.access(worldIn).terrainState(pos).isEmpty();
-//    }
+    //    @Override
+    //    public boolean isReplaceable(ExtendedBlockView worldIn, BlockPos pos) {
+    //        return SuperBlockWorldAccess.access(worldIn).terrainState(pos).isEmpty();
+    //    }
 
     // TODO: restore or remove
-//    @Override
-//    public boolean isAir(BlockState state, ExtendedBlockView world, BlockPos pos) {
-//        return SuperBlockWorldAccess.access(world).terrainState(pos).isEmpty();
-//    }
+    //    @Override
+    //    public boolean isAir(BlockState state, ExtendedBlockView world, BlockPos pos) {
+    //        return SuperBlockWorldAccess.access(world).terrainState(pos).isEmpty();
+    //    }
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
@@ -104,9 +104,9 @@ public class TerrainDynamicBlock extends TerrainBlock {
         for (int x = -2; x <= 2; x++) {
             for (int z = -2; z <= 2; z++) {
                 for (int y = -4; y <= 4; y++) {
-//                    if(!(x == 0 && y == 0 && z == 0))
+                    //                    if(!(x == 0 && y == 0 && z == 0))
                     {
-                        BlockPos targetPos = pos.add(x, y, z);
+                        final BlockPos targetPos = pos.add(x, y, z);
                         targetState = worldIn.getBlockState(targetPos);
                         targetBlock = targetState.getBlock();
                         if (targetBlock instanceof TerrainDynamicBlock) {

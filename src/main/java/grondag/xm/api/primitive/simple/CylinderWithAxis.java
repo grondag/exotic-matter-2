@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -40,7 +40,7 @@ import grondag.xm.api.texture.TextureOrientation;
 @API(status = EXPERIMENTAL)
 public class CylinderWithAxis  {
     private CylinderWithAxis() {}
-    
+
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
             .add("sides", SurfaceTopology.TILED, XmSurface.FLAG_NONE)
@@ -51,15 +51,15 @@ public class CylinderWithAxis  {
 
     static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
         final PolyTransform pt = PolyTransform.get(modelState);
-        
-        WritableMesh mesh = XmMeshes.claimWritable();
-        MutablePolygon writer = mesh.writer();
+
+        final WritableMesh mesh = XmMeshes.claimWritable();
+        final MutablePolygon writer = mesh.writer();
         writer.colorAll(0, 0xFFFFFFFF);
         writer.lockUV(0, false);
         writer.rotation(0, TextureOrientation.IDENTITY);
         writer.sprite(0, "");
         writer.saveDefaults();
-        
+
         final Consumer<MutablePolygon> transform = p -> {
             p.nominalFace(p.lightFace()).apply(pt);
         };

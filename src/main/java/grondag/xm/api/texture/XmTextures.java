@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -20,14 +20,14 @@ import static grondag.xm.api.texture.TextureGroup.STATIC_TILES;
 import static grondag.xm.api.texture.TextureLayoutMap.BORDER_13;
 import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_CONNECTED_SINGLE;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_ONLY;
-import static grondag.xm.api.texture.TextureRenderIntent.OVERLAY_ONLY;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_CUTOUT_OKAY;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT;
+import static grondag.xm.api.texture.TextureRenderIntent.OVERLAY_ONLY;
+import static grondag.xm.api.texture.TextureScale.GIANT;
+import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_90;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
-import static grondag.xm.api.texture.TextureScale.GIANT;
-import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.texture.TextureSetHelper.addBigTex;
 import static grondag.xm.texture.TextureSetHelper.addBorderRandom;
 import static grondag.xm.texture.TextureSetHelper.addBorderSingle;
@@ -41,7 +41,7 @@ import grondag.xm.Xm;
 @API(status = EXPERIMENTAL)
 public class XmTextures {
     private XmTextures() {}
-    
+
     public static final TextureSet TILE_COBBLE = TextureSet.builder()
             .displayNameToken("cobble").baseTextureName("exotic-matter:block/cobble")
             .versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM)
@@ -63,7 +63,7 @@ public class XmTextures {
             .displayNameToken("noise_extreme").baseTextureName("exotic-matter:block/noise_extreme")
             .versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM)
             .renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY).groups(STATIC_TILES).build("exotic-matter:noise_extreme");
-    
+
     public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white").baseTextureName("exotic-matter:block/white").versionCount(1).scale(SINGLE)
             .layout(TextureLayoutMap.VERSION_X_8).transform(IDENTITY).groups(STATIC_TILES).build("exotic-matter:white");
 
@@ -83,13 +83,13 @@ public class XmTextures {
     public static final TextureSet BIGTEX_SANDSTONE = TextureSet.builder().displayNameToken("sandstone").baseTextureName("exotic-matter:block/sandstone").versionCount(1)
             .scale(GIANT).layout(TextureLayoutMap.SINGLE).transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_NO_CUTOUT)
             .groups(STATIC_TILES).build("exotic-matter:sandstone");
-    
+
     public static final TextureSet TILE_NOISE_BLUE_A = TextureSet.builder().displayNameToken("blue_noise_a")
             .baseTextureName("exotic-matter:block/noise_blue_0").versionCount(4)
             .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSIONED)
             .transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
             .groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_a");
-    
+
     public static final TextureSet TILE_NOISE_BLUE_B = TextureSet.builder().displayNameToken("blue_noise_b")
             .baseTextureName("exotic-matter:block/noise_blue_1").versionCount(4)
             .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSIONED)
@@ -97,7 +97,7 @@ public class XmTextures {
             .groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_b");
 
     public static final TextureSet BORDER_GRITTY_SINGLE_LINE = addBorderRandom("exotic-matter", "border_gritty_single_line", false, false);
-    
+
     public static final TextureSet BIGTEX_MARBLE = addBigTex(Xm.MODID, "marble");
     public static final TextureSet BIGTEX_WEATHERED_STONE = addBigTex(Xm.MODID, "weathered_smooth_stone");
     public static final TextureSet BIGTEX_ASPHALT = addBigTex(Xm.MODID, "asphalt");
@@ -111,8 +111,8 @@ public class XmTextures {
     public static final TextureSet BIGTEX_SLATE = addBigTex(Xm.MODID, "slate");
     public static final TextureSet BIGTEX_ROUGH_ROCK = addBigTex(Xm.MODID, "rough_rock");
     public static final TextureSet BIGTEX_CRACKED_EARTH = addBigTex(Xm.MODID, "cracked_earth");
-    
-    
+
+
     public static final TextureSet MASONRY_SIMPLE = TextureSet.builder().displayNameToken("masonry_simple").baseTextureName(Xm.MODID + ":blocks/masonry_simple")
             .versionCount(1).scale(TextureScale.SINGLE).layout(TextureLayoutMap.MASONRY_5).transform(IDENTITY).renderIntent(TextureRenderIntent.OVERLAY_ONLY)
             .groups(TextureGroup.STATIC_BORDERS).build(Xm.MODID + ":masonry_simple");
@@ -157,7 +157,7 @@ public class XmTextures {
     public static final TextureSet BORDER_LOGIC = addBorderRandom(Xm.MODID, "border_logic", true, false);
     public static final TextureSet BORDER_INVERSE_TILE_1 = addBorderRandom(Xm.MODID, "border_inverse_logic_1", true, true);
     public static final TextureSet BORDER_INVERSE_TILE_2 = addBorderRandom(Xm.MODID, "border_inverse_logic_2", true, true);
-    
+
     public static final TextureSet DECAL_SKINNY_DIAGONAL_RIDGES = addDecal(Xm.MODID, "skinny_diagonal_ridges", "skinny_diagonal_ridges", IDENTITY);
     public static final TextureSet DECAL_THICK_DIAGONAL_CROSS_RIDGES = addDecal(Xm.MODID, "thick_diagonal_cross_ridges", "thick_diagonal_cross_ridges", IDENTITY);
     public static final TextureSet DECAL_THICK_DIAGONAL_RIDGES = addDecal(Xm.MODID, "thick_diagonal_ridges", "thick_diagonal_ridges", IDENTITY);
@@ -254,7 +254,7 @@ public class XmTextures {
     public static final TextureSet TILE_DOTS = TextureSet.builder().displayNameToken("dots").baseTextureName("exotic-matter:blocks/dots").versionCount(4)
             .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
             .groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:dots");
-    
+
     public static final TextureSet TILE_DOTS_SUBTLE = TextureSet.builder().displayNameToken("dots_subtle").versionCount(4).scale(TextureScale.SINGLE)
             .layout(TextureLayoutMap.VERSION_X_8).baseTextureName("exotic-matter:blocks/dots_subtle").transform(ROTATE_RANDOM)
             .renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT).groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS)

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -68,8 +68,9 @@ class VertexEncoder {
     private static final VertexEncoder MUTABLE;
 
     static {
-        for (int i = 0; i < VERTEX_FORMAT_COUNT; i++)
+        for (int i = 0; i < VERTEX_FORMAT_COUNT; i++) {
             ENCODERS[i] = new VertexEncoder(i << VERTEX_FORMAT_SHIFT);
+        }
 
         int mutableFormat = 0;
         mutableFormat = setLayerCount(mutableFormat, 3);
@@ -266,7 +267,7 @@ class VertexEncoder {
             return null;
 
         final int base = vertexAddress + vertexIndex * vertexStride;
-        Vec3f result = Vec3f.create(getNormalX.get(stream, base + offsetNormalX), getNormalY.get(stream, base + offsetNormalY),
+        final Vec3f result = Vec3f.create(getNormalX.get(stream, base + offsetNormalX), getNormalY.get(stream, base + offsetNormalY),
                 getNormalZ.get(stream, base + offsetNormalZ));
 
         return result == Vec3f.ZERO ? null : result;
@@ -333,7 +334,7 @@ class VertexEncoder {
     public void setVertexZ(IntStream stream, int vertexAddress, int vertexIndex, float z) {
         setPos.set(stream, vertexAddress + vertexIndex * vertexStride + offsetPosZ, z);
     }
-    
+
     public boolean hasColor() {
         return hasColor;
     }
@@ -345,12 +346,13 @@ class VertexEncoder {
     }
 
     public void setVertexColor(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex, int color) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setColor0.set(stream, vertexAddress + vertexIndex * vertexStride + offsetColor0, color);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setColor1.set(stream, vertexAddress + vertexIndex * vertexStride + offsetColor1, color);
-        else
+        } else {
             setColor2.set(stream, vertexAddress + vertexIndex * vertexStride + offsetColor2, color);
+        }
     }
 
     public float getVertexU(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex) {
@@ -360,12 +362,13 @@ class VertexEncoder {
     }
 
     public void setVertexU(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float u) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setU0.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU0, u);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setU1.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU1, u);
-        else
+        } else {
             setU2.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU2, u);
+        }
     }
 
     public float getVertexV(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex) {
@@ -375,21 +378,23 @@ class VertexEncoder {
     }
 
     public void setVertexV(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float v) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setV0.set(stream, vertexAddress + vertexIndex * vertexStride + offsetV0, v);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setV1.set(stream, vertexAddress + vertexIndex * vertexStride + offsetV1, v);
-        else
+        } else {
             setV2.set(stream, vertexAddress + vertexIndex * vertexStride + offsetV2, v);
+        }
     }
 
     public void setVertexUV(IntStream stream, int vertexAddress, int layerIndex, int vertexIndex, float u, float v) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setUV0.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU0, u, v);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setUV1.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU1, u, v);
-        else
+        } else {
             setUV2.set(stream, vertexAddress + vertexIndex * vertexStride + offsetU2, u, v);
+        }
     }
 
     /**

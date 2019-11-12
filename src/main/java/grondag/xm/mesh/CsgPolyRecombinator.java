@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -48,7 +48,7 @@ class CsgPolyRecombinator {
     private final IntArrayList polys = new IntArrayList();
     private final IntArrayList joinedVertex = new IntArrayList();
     private final CsgVertexMap vertexMap = new CsgVertexMap();
-    
+
     private CsgPolyRecombinator() {}
 
     /**
@@ -57,13 +57,12 @@ class CsgPolyRecombinator {
      */
     private void handleOutput(CsgMeshImpl input, int polyAddress, WritableMesh output) {
         final Polygon polyA = input.polyA(polyAddress);
-        if(polyA.isDeleted()) {
+        if(polyA.isDeleted())
             return;
-        }
-        
+
         //TODO: make debug config option
-//        input.editor(polyAddress).colorAll(0, (ThreadLocalRandom.current().nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
-        
+        //        input.editor(polyAddress).colorAll(0, (ThreadLocalRandom.current().nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
+
         // invert if needed
         if (input.isInverted()) {
             polyAddress = input.writerAddress();
@@ -71,9 +70,9 @@ class CsgPolyRecombinator {
             writer.vertexCount(polyA.vertexCount());
             writer.copyFrom(polyA, true);
             writer.flip();
-            
+
             input.appendRaw();
-            
+
             // output recombined should be terminal op, but delete original for consistency
             polyA.delete();
             polyA.moveTo(polyAddress);
@@ -84,18 +83,18 @@ class CsgPolyRecombinator {
         } else {
             // concave - split to quads or tris
             final int vCount = polyA.vertexCount();
-            
+
             int head = vCount - 1;
             int tail = 0;
             final MutablePolygon writer = output.writer();
             while (head - tail > 1) {
-                int size = head - tail == 2 ? 3 : 4;
+                final int size = head - tail == 2 ? 3 : 4;
                 writer.vertexCount(size)
-                    .copyFrom(polyA, false)
-                    .copyVertexFrom(0, polyA, head)
-                    .copyVertexFrom(1, polyA, tail)
-                    .copyVertexFrom(2, polyA, ++tail);
-                
+                .copyFrom(polyA, false)
+                .copyVertexFrom(0, polyA, head)
+                .copyVertexFrom(1, polyA, tail)
+                .copyVertexFrom(2, polyA, ++tail);
+
                 if (size == 3) {
                     writer.append();
                 } else {
@@ -109,18 +108,18 @@ class CsgPolyRecombinator {
                         head++;
 
                         writer.vertexCount(3)
-                            .copyFrom(polyA, false)
-                            .copyVertexFrom(0, polyA, head)
-                            .copyVertexFrom(1, polyA, tail)
-                            .copyVertexFrom(2, polyA, ++tail)
-                            .append();
+                        .copyFrom(polyA, false)
+                        .copyVertexFrom(0, polyA, head)
+                        .copyVertexFrom(1, polyA, tail)
+                        .copyVertexFrom(2, polyA, ++tail)
+                        .append();
 
                         writer.vertexCount(3)
-                            .copyFrom(polyA, false)
-                            .copyVertexFrom(0, polyA, head)
-                            .copyVertexFrom(1, polyA, tail)
-                            .copyVertexFrom(2, polyA, --head)
-                            .append();
+                        .copyFrom(polyA, false)
+                        .copyVertexFrom(0, polyA, head)
+                        .copyVertexFrom(1, polyA, tail)
+                        .copyVertexFrom(2, polyA, --head)
+                        .append();
                     }
                 }
             }
@@ -135,29 +134,28 @@ class CsgPolyRecombinator {
         if (reader.origin()) {
             // output routine can add polys, so need to stop when we get to current end
             final int limit = input.writerAddress();
-            do
+            do {
                 handleOutput(input, reader.address(), output);
-            while (reader.next() && reader.address() < limit);
+            } while (reader.next() && reader.address() < limit);
         }
     }
 
     private void doRecombine(CsgMeshImpl input, WritableMesh output) {
         final Polygon reader = input.reader();
         final LongArrayList tagPolyPairs = this.tagPolyPairs;
-        
-        if (!reader.origin()) {
+
+        if (!reader.origin())
             return;
-        }
-        
-//        // TODO: debug option to disable face recombination
-//        if(true) {
-//            handleOutput(input, output);
-//            return;
-//        }
-        
+
+        //        // TODO: debug option to disable face recombination
+        //        if(true) {
+        //            handleOutput(input, output);
+        //            return;
+        //        }
+
         tagPolyPairs.clear();
         do {
-            long tag = reader.tag();
+            final long tag = reader.tag();
             assert tag > 0;
             assert !reader.isDeleted();
             tagPolyPairs.add((tag << TAG_SHIFT) | reader.address());
@@ -174,13 +172,14 @@ class CsgPolyRecombinator {
         if (count == 2) {
             // if only two polys and have same tag, try to combine
             // if not, simply pass through to output
-            long pair0 = tagPolyPairs.getLong(0);
-            long pair1 = tagPolyPairs.getLong(1);
+            final long pair0 = tagPolyPairs.getLong(0);
+            final long pair1 = tagPolyPairs.getLong(1);
 
-            if ((pair0 & TAG_MASK) == (pair1 & TAG_MASK))
+            if ((pair0 & TAG_MASK) == (pair1 & TAG_MASK)) {
                 combineTwoPolys(input, output, (int) (POLY_MASK & pair0), (int) (POLY_MASK & pair1));
-            else
+            } else {
                 handleOutput(input, output);
+            }
 
             return;
         }
@@ -190,7 +189,7 @@ class CsgPolyRecombinator {
         tagPolyPairs.sort(LongComparators.NATURAL_COMPARATOR);
 
         final IntArrayList polys = this.polys;
-        
+
         long pair = tagPolyPairs.getLong(0);
         long lastTag = pair & TAG_MASK;
         polys.add((int) (pair & POLY_MASK));
@@ -218,12 +217,12 @@ class CsgPolyRecombinator {
      * a map. For volcano terrain, this is about 15% of the cases involving a
      * potential join (more than 1 poly).
      * <p>
-     * 
+     *
      * Assumes both polys have the same tag.
      */
     private void combineTwoPolys(CsgMeshImpl input, WritableMesh output, int polyAddress0, int polyAddress1) {
-        Polygon polyA = input.polyA(polyAddress0);
-        Polygon polyB = input.polyB(polyAddress1);
+        final Polygon polyA = input.polyA(polyAddress0);
+        final Polygon polyB = input.polyB(polyAddress1);
 
         final int aLimit = polyA.vertexCount();
         final int bLimit = polyB.vertexCount();
@@ -264,48 +263,45 @@ class CsgPolyRecombinator {
         handleOutput(input, polyAddress1, output);
 
     }
-    
+
     static boolean couldJoinAtVertex(Polygon polyA, int aTargetIndex, Polygon polyB, int bTargetIndex) {
-            final int aSize = polyA.vertexCount();
-            final int bSize = polyB.vertexCount();
-            final int aMaxIndex = aSize - 1;
-            final int bMaxIndex = bSize - 1;
+        final int aSize = polyA.vertexCount();
+        final int bSize = polyB.vertexCount();
+        final int aMaxIndex = aSize - 1;
+        final int bMaxIndex = bSize - 1;
 
-            final int aAfterTargetIndex = aTargetIndex == aMaxIndex ? 0 : aTargetIndex + 1;
-            final int aBeforeTargetIndex = aTargetIndex == 0 ? aMaxIndex : aTargetIndex - 1;
+        final int aAfterTargetIndex = aTargetIndex == aMaxIndex ? 0 : aTargetIndex + 1;
+        final int aBeforeTargetIndex = aTargetIndex == 0 ? aMaxIndex : aTargetIndex - 1;
 
-            final int bAfterTargetIndex = bTargetIndex == bMaxIndex ? 0 : bTargetIndex + 1;
-            final int bBeforeTargetIndex = bTargetIndex == 0 ? bMaxIndex : bTargetIndex - 1;
+        final int bAfterTargetIndex = bTargetIndex == bMaxIndex ? 0 : bTargetIndex + 1;
+        final int bBeforeTargetIndex = bTargetIndex == 0 ? bMaxIndex : bTargetIndex - 1;
 
-            // look for a second matching vertex on either side of known shared vertex
-            if (epsilonEquals(polyA.x(aAfterTargetIndex), polyB.x(bBeforeTargetIndex)) 
-                    && epsilonEquals(polyA.y(aAfterTargetIndex), polyB.y(bBeforeTargetIndex))
-                    && epsilonEquals(polyA.z(aAfterTargetIndex), polyB.z(bBeforeTargetIndex))) {
-                return true;
-            } else if (epsilonEquals(polyA.x(aBeforeTargetIndex), polyB.x(bAfterTargetIndex))
-                    && epsilonEquals(polyA.y(aBeforeTargetIndex), polyB.y(bAfterTargetIndex))
-                    && epsilonEquals(polyA.z(aBeforeTargetIndex), polyB.z(bAfterTargetIndex))) {
-               return true;
-            } else {
-                return false;
-            }
+        // look for a second matching vertex on either side of known shared vertex
+        if (epsilonEquals(polyA.x(aAfterTargetIndex), polyB.x(bBeforeTargetIndex))
+                && epsilonEquals(polyA.y(aAfterTargetIndex), polyB.y(bBeforeTargetIndex))
+                && epsilonEquals(polyA.z(aAfterTargetIndex), polyB.z(bBeforeTargetIndex)))
+            return true;
+        else if (epsilonEquals(polyA.x(aBeforeTargetIndex), polyB.x(bAfterTargetIndex))
+                && epsilonEquals(polyA.y(aBeforeTargetIndex), polyB.y(bAfterTargetIndex))
+                && epsilonEquals(polyA.z(aBeforeTargetIndex), polyB.z(bAfterTargetIndex)))
+            return true;
+        else
+            return false;
     }
 
     private int joinAtVertex(CsgMeshImpl input, int addressA, int indexA, int addressB, int indexB, boolean trisOnly) {
         final Polygon polyA = input.polyA(addressA);
         final Polygon polyB = input.polyB(addressB);
-        if(polyA.isDeleted() || polyB.isDeleted()) {
+        if(polyA.isDeleted() || polyB.isDeleted())
             return Polygon.NO_LINK_OR_TAG;
-        }
         return joinAtVertex(input, polyA, indexA, polyB, indexB, trisOnly);
     }
 
     private int joinAtVertex(CsgMeshImpl input, Polygon polyA, int aTargetIndex, Polygon polyB, int bTargetIndex, boolean trisOnly) {
         if(! (epsilonEquals(polyA.x(aTargetIndex), polyB.x(bTargetIndex))
-               && epsilonEquals(polyA.y(aTargetIndex), polyB.y(bTargetIndex))
-               && epsilonEquals(polyA.z(aTargetIndex), polyB.z(bTargetIndex)))) {
+                && epsilonEquals(polyA.y(aTargetIndex), polyB.y(bTargetIndex))
+                && epsilonEquals(polyA.z(aTargetIndex), polyB.z(bTargetIndex))))
             return Polygon.NO_LINK_OR_TAG;
-        }
 
         final int aSize = polyA.vertexCount();
         final int bSize = polyB.vertexCount();
@@ -347,7 +343,7 @@ class CsgPolyRecombinator {
         int bAfterSharedIndex;
 
         // look for a second matching vertex on either side of known shared vertex
-        if (epsilonEquals(polyA.x(aAfterTargetIndex), polyB.x(bBeforeTargetIndex)) 
+        if (epsilonEquals(polyA.x(aAfterTargetIndex), polyB.x(bBeforeTargetIndex))
                 && epsilonEquals(polyA.y(aAfterTargetIndex), polyB.y(bBeforeTargetIndex))
                 && epsilonEquals(polyA.z(aAfterTargetIndex), polyB.z(bBeforeTargetIndex))) {
             aFirstSharedIndex = aTargetIndex;
@@ -369,12 +365,11 @@ class CsgPolyRecombinator {
             bBeforeSharedIndex = bBeforeTargetIndex;
             aAfterSharedIndex = aAfterTargetIndex;
             bAfterSharedIndex = bSecondSharedIndex == bMaxIndex ? 0 : bSecondSharedIndex + 1;
-        } else {
+        } else
             return Polygon.NO_LINK_OR_TAG;
-        }
-        
+
         final IntArrayList joinedVertex = this.joinedVertex;
-        
+
         /**
          * positive values are A poly vertex index + 1 negative values are negative (B
          * poly vertex index + 1) zero values have not been populated
@@ -386,7 +381,7 @@ class CsgPolyRecombinator {
             if (a == aFirstSharedIndex) {
                 //  if vertex is on the same line as prev and next vertex, leave it out.
                 if (!Vec3f.isPointOnLine(
-                        polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex), polyA.z(aFirstSharedIndex), 
+                        polyA.x(aFirstSharedIndex), polyA.y(aFirstSharedIndex), polyA.z(aFirstSharedIndex),
                         polyA.x(aBeforeSharedIndex), polyA.y(aBeforeSharedIndex), polyA.z(aBeforeSharedIndex),
                         polyB.x(bAfterSharedIndex), polyB.y(bAfterSharedIndex), polyB.z(bAfterSharedIndex))) {
                     joinedVertex.add(a + 1);
@@ -417,19 +412,18 @@ class CsgPolyRecombinator {
 
         if (size < 3) {
             assert false : "Bad polygon formation during CSG recombine.";
+        return Polygon.NO_LINK_OR_TAG;
+        } else if (trisOnly && size > 3)
             return Polygon.NO_LINK_OR_TAG;
-        } else if (trisOnly && size > 3) {
-            return Polygon.NO_LINK_OR_TAG;
-        }
 
         // actually build the new quad
         final int result = input.writerAddress();
-        MutablePolygon writer = input.writer();
+        final MutablePolygon writer = input.writer();
         writer.vertexCount(size)
-            .copyFrom(polyA, false)
-            .tag(polyA.tag());
+        .copyFrom(polyA, false)
+        .tag(polyA.tag());
         for (int i = 0; i < size; i++) {
-            int j = joinedVertex.getInt(i);
+            final int j = joinedVertex.getInt(i);
             if (j > 0) {
                 writer.copyVertexFrom(i, polyA, j - 1);
             } else {
@@ -451,7 +445,7 @@ class CsgPolyRecombinator {
      */
     private void combinePolys(CsgMeshImpl input, WritableMesh output) {
         final IntArrayList polys = this.polys;
-        
+
         assert !polys.isEmpty();
 
         final int count = polys.size();
@@ -486,12 +480,12 @@ class CsgPolyRecombinator {
         final IntArrayList polys = this.polys;
         populateVertexMap(input);
         final CsgVertexMap vertexMap = this.vertexMap;
-        
+
         /**
          * Cleared at top of each loop and set to true if and only if new polys are
          * created due to joins AND the line/quad/vertex map has at least one new value
          * added to it.<p>
-         * 
+         *
          * The second condition avoids making another pass when all the joined polys
          * have edges that are outside edges (and thus can't be joined) or the edge is
          * no longer being tracked because fewer than two polys reference it.
@@ -510,38 +504,38 @@ class CsgPolyRecombinator {
                 // ourselves into a situation were we can't merge any more
                 // polys because they don't have two vertices in common.
                 while (vertexMap.hasValue()) {
-                    
-                    final int newPoly = joinAtVertex(input, 
-                            vertexMap.idA(), vertexMap.vertexA(), 
+
+                    final int newPoly = joinAtVertex(input,
+                            vertexMap.idA(), vertexMap.vertexA(),
                             vertexMap.idB(), vertexMap.vertexB(), true);
-                    
+
                     if (newPoly != Polygon.NO_LINK_OR_TAG) {
                         potentialMatchesRemain = true;
                         vertexMap.remove();
                         polys.add(newPoly);
                         vertexMap.add(newPoly, input.polyA(newPoly));
                     }
-                    
+
                     vertexMap.next(input);
                 }
-                
+
                 // if no tris then try again for higher-order polygons
                 if(!potentialMatchesRemain) {
                     vertexMap.unsafeRetryFirst(input);
-                    
+
                     while (vertexMap.hasValue()) {
-                        
-                        final int newPoly = joinAtVertex(input, 
-                                vertexMap.idA(), vertexMap.vertexA(), 
+
+                        final int newPoly = joinAtVertex(input,
+                                vertexMap.idA(), vertexMap.vertexA(),
                                 vertexMap.idB(), vertexMap.vertexB(), false);
-                        
+
                         if (newPoly != Polygon.NO_LINK_OR_TAG) {
                             potentialMatchesRemain = true;
                             vertexMap.remove();
                             polys.add(newPoly);
                             vertexMap.add(newPoly, input.polyA(newPoly));
                         }
-                        
+
                         vertexMap.next(input);
                     }
                 }

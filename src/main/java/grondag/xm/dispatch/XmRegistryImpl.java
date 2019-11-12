@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -23,8 +23,8 @@ import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
 import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.modelstate.ModelStateFunction;
+import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
@@ -35,16 +35,16 @@ import net.minecraft.item.ItemStack;
 public class XmRegistryImpl {
     private XmRegistryImpl() {
     }
-    
+
     public static void register(Block block, Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap, Function<ItemStack, MutableModelState> itemModelFunction) {
-        for (BlockState blockState : block.getStateFactory().getStates()) {
+        for (final BlockState blockState : block.getStateFactory().getStates()) {
             if (XmBlockState.get(blockState) != null) {
                 // TODO: localize
                 Xm.LOG.warn(String.format("[%s] BlockState %s already associated with an XmBlockState. Skipping.", Xm.MODID, blockState.toString()));
                 return;
             }
             ((XmBlockStateAccess) blockState).xm_modelStateFunc(modelFunctionMap.apply(blockState));
-            
+
             if(itemModelFunction != null) {
                 final Item item = BlockItem.fromBlock(block);
                 if(item != null) {
@@ -53,7 +53,7 @@ public class XmRegistryImpl {
             }
         }
     }
-    
+
     public static void register(Item item, Function<ItemStack, MutableModelState> modelFunction) {
         final XmItemAccess access = (XmItemAccess)item;
         final Function<ItemStack, MutableModelState> oldFunc = access.xm_modelStateFunc();
@@ -62,7 +62,7 @@ public class XmRegistryImpl {
                 Xm.LOG.warn(String.format("[%s] Item %s already associated with a model function. Skipping.", Xm.MODID, item.toString()));
                 return;
             }
-        }     
+        }
         access.xm_modelStateFunc(modelFunction);
     }
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -43,7 +43,7 @@ public interface Polygon {
     default Vec3f getPosModulo(int index) {
         return getPos(index % vertexCount());
     }
-    
+
     Vec3f faceNormal();
 
     default float faceNormalX() {
@@ -59,32 +59,32 @@ public interface Polygon {
     }
 
     default Box bounds() {
-        Vec3f p0 = getPos(0);
-        Vec3f p1 = getPos(1);
-        Vec3f p2 = getPos(2);
-        Vec3f p3 = getPos(3);
+        final Vec3f p0 = getPos(0);
+        final Vec3f p1 = getPos(1);
+        final Vec3f p2 = getPos(2);
+        final Vec3f p3 = getPos(3);
 
-        double minX = Math.min(Math.min(p0.x(), p1.x()), Math.min(p2.x(), p3.x()));
-        double minY = Math.min(Math.min(p0.y(), p1.y()), Math.min(p2.y(), p3.y()));
-        double minZ = Math.min(Math.min(p0.z(), p1.z()), Math.min(p2.z(), p3.z()));
+        final double minX = Math.min(Math.min(p0.x(), p1.x()), Math.min(p2.x(), p3.x()));
+        final double minY = Math.min(Math.min(p0.y(), p1.y()), Math.min(p2.y(), p3.y()));
+        final double minZ = Math.min(Math.min(p0.z(), p1.z()), Math.min(p2.z(), p3.z()));
 
-        double maxX = Math.max(Math.max(p0.x(), p1.x()), Math.max(p2.x(), p3.x()));
-        double maxY = Math.max(Math.max(p0.y(), p1.y()), Math.max(p2.y(), p3.y()));
-        double maxZ = Math.max(Math.max(p0.z(), p1.z()), Math.max(p2.z(), p3.z()));
+        final double maxX = Math.max(Math.max(p0.x(), p1.x()), Math.max(p2.x(), p3.x()));
+        final double maxY = Math.max(Math.max(p0.y(), p1.y()), Math.max(p2.y(), p3.y()));
+        final double maxZ = Math.max(Math.max(p0.z(), p1.z()), Math.max(p2.z(), p3.z()));
 
         return new Box(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    static final int VERTEX_NOT_FOUND = -1;
+    int VERTEX_NOT_FOUND = -1;
 
     /**
      * Will return {@link #VERTEX_NOT_FOUND} (-1) if vertex is not found in this
      * polygon.
      */
     default int indexOf(Vec3f v) {
-        final int limit = this.vertexCount();
+        final int limit = vertexCount();
         for (int i = 0; i < limit; i++) {
-            if (v.equals(this.getPos(i)))
+            if (v.equals(getPos(i)))
                 return i;
         }
         return VERTEX_NOT_FOUND;
@@ -95,46 +95,43 @@ public interface Polygon {
     }
 
     default boolean isOrthogonalTo(Direction face) {
-        Vec3i dv = face.getVector();
-        float dot = this.faceNormal().dotProduct(dv.getX(), dv.getY(), dv.getZ());
+        final Vec3i dv = face.getVector();
+        final float dot = faceNormal().dotProduct(dv.getX(), dv.getY(), dv.getZ());
         return Math.abs(dot) <= PolyHelper.EPSILON;
     }
 
     default boolean isOnSinglePlane() {
-        if (this.vertexCount() == 3)
+        if (vertexCount() == 3)
             return true;
 
-        Vec3f fn = this.faceNormal();
+        final Vec3f fn = faceNormal();
 
-        float faceX = fn.x();
-        float faceY = fn.y();
-        float faceZ = fn.z();
+        final float faceX = fn.x();
+        final float faceY = fn.y();
+        final float faceZ = fn.z();
 
-        Vec3f first = this.getPos(0);
+        final Vec3f first = getPos(0);
 
-        for (int i = 3; i < this.vertexCount(); i++) {
-            Vec3f v = this.getPos(i);
+        for (int i = 3; i < vertexCount(); i++) {
+            final Vec3f v = getPos(i);
 
-            float dx = v.x() - first.x();
-            float dy = v.y() - first.y();
-            float dz = v.z() - first.z();
+            final float dx = v.x() - first.x();
+            final float dy = v.y() - first.y();
+            final float dz = v.z() - first.z();
 
-            if (Math.abs(faceX * dx + faceY * dy + faceZ * dz) > PolyHelper.EPSILON) {
+            if (Math.abs(faceX * dx + faceY * dy + faceZ * dz) > PolyHelper.EPSILON)
                 return false;
-            }
         }
 
         return true;
     }
 
     default boolean isOnFace(Direction face, float tolerance) {
-        if (face == null) {
+        if (face == null)
             return false;
-        }
-        for (int i = 0; i < this.vertexCount(); i++) {
-            if (!getPos(i).isOnFacePlane(face, tolerance)) {
+        for (int i = 0; i < vertexCount(); i++) {
+            if (!getPos(i).isOnFacePlane(face, tolerance))
                 return false;
-            }
         }
         return true;
     }
@@ -159,13 +156,14 @@ public interface Polygon {
             final float z = x0 * y1 - y0 * x1;
 
             float mag = MathHelper.sqrt(x * x + y * y + z * z);
-            if (mag < 1.0E-4F)
+            if (mag < 1.0E-4F) {
                 mag = 1f;
+            }
 
             return Vec3f.create(x / mag, y / mag, z / mag);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             assert false : "Bad polygon structure during face normal request.";
-            return Vec3f.ZERO;
+        return Vec3f.ZERO;
         }
     }
 
@@ -181,8 +179,8 @@ public interface Polygon {
         float an, ax, ay, az; // abs value of normal and its coords
         int coord; // coord to ignore: 1=x, 2=y, 3=z
         int i, j, k; // loop indices
-        final int n = this.vertexCount();
-        Vec3f N = this.faceNormal();
+        final int n = vertexCount();
+        final Vec3f N = faceNormal();
 
         if (n < 3)
             return 0; // a degenerate polygon
@@ -195,23 +193,30 @@ public interface Polygon {
         coord = 3; // ignore z-coord
         if (ax > ay) {
             if (ax > az)
+            {
                 coord = 1; // ignore x-coord
+            }
         } else if (ay > az)
+        {
             coord = 2; // ignore y-coord
+        }
 
         // compute area of the 2D projection
         switch (coord) {
         case 1:
-            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
+            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
                 area += (getPosModulo(i)).y() * (getPosModulo(j).z() - getPosModulo(k).z());
+            }
             break;
         case 2:
-            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
+            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
                 area += (getPosModulo(i).z() * (getPosModulo(j).x() - getPosModulo(k).x()));
+            }
             break;
         case 3:
-            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++)
+            for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
                 area += (getPosModulo(i).x() * (getPosModulo(j).y() - getPosModulo(k).y()));
+            }
             break;
         }
 
@@ -253,7 +258,7 @@ public interface Polygon {
      * Face to use for shading testing. Based on which way face points. Never null
      */
     default Direction lightFace() {
-        return PolyHelper.faceForNormal(this.faceNormal());
+        return PolyHelper.faceForNormal(faceNormal());
     }
 
     Direction nominalFace();
@@ -265,21 +270,21 @@ public interface Polygon {
     Direction cullFace();
 
     default Direction computeCullFace() {
-        Direction nominalFace = this.nominalFace();
+        final Direction nominalFace = nominalFace();
 
         // semantic face will be right most of the time
-        if (this.isOnFace(nominalFace, PolyHelper.EPSILON))
+        if (isOnFace(nominalFace, PolyHelper.EPSILON))
             return nominalFace;
 
         for (int i = 0; i < 6; i++) {
             final Direction f = Direction.byId(i);
-            if (f != nominalFace && this.isOnFace(f, PolyHelper.EPSILON))
+            if (f != nominalFace && isOnFace(f, PolyHelper.EPSILON))
                 return f;
         }
-        
+
         return null;
     }
-    
+
     float maxU(int layerIndex);
 
     float maxV(int layerIndex);
@@ -291,24 +296,24 @@ public interface Polygon {
     /**
      * The maximum wrapping uv distance for either dimension on this surface.
      * <p>
-     * 
+     *
      * Must be zero or positive. Setting to zero disable uvWrapping - painter will
      * use a 1:1 scale.
      * <p>
-     * 
+     *
      * If the surface is painted with a texture larger than this distance, the
      * texture will be scaled down to fit in order to prevent visible seams. A scale
      * of 4, for example, would force a 32x32 texture to be rendered at 1/8 scale.
      * <p>
-     * 
+     *
      * If the surface is painted with a texture smaller than this distance, then the
      * texture will be zoomed tiled to fill the surface.
      * <p>
-     * 
+     *
      * Default is 0 and generally only comes into play for non-cubic surface
      * painters.
      * <p>
-     * 
+     *
      * See also {@link SurfaceTopology#TILED}
      */
     float uvWrapDistance();
@@ -338,25 +343,25 @@ public interface Polygon {
     BlockRenderLayer blendMode(int layerIndex);
 
     boolean emissive(int layerIndex);
-    
+
     boolean disableAo(int layerIndex);
-    
+
     boolean disableDiffuse(int layerIndex);
 
     // Use materials instead
-//    int getPipelineIndex();
-//    
-//    @Override
-//    default IRenderPipeline getPipeline()
-//    {
-//        return ClientProxy.acuityPipeline(getPipelineIndex());
-//    }
+    //    int getPipelineIndex();
+    //
+    //    @Override
+    //    default IRenderPipeline getPipeline()
+    //    {
+    //        return ClientProxy.acuityPipeline(getPipelineIndex());
+    //    }
 
     /**
      * Should be called by when the original reference or another reference created
      * via {@link #retain()} is no longer held.
      * <p>
-     * 
+     *
      * When retain count is 0 the object will be returned to its allocation pool if
      * it has one.
      */
@@ -385,7 +390,7 @@ public interface Polygon {
     float normalY(int vertexIndex);
 
     float normalZ(int vertexIndex);
-    
+
     boolean isDeleted();
 
     void delete();
@@ -393,16 +398,16 @@ public interface Polygon {
     /**
      * Improbable non-zero value that signifies no link set or link not supported.
      */
-    static final int NO_LINK_OR_TAG = Integer.MIN_VALUE;
+    int NO_LINK_OR_TAG = Integer.MIN_VALUE;
 
     int link();
 
     void link(int link);
-    
+
     default boolean hasLink() {
         return link() != Polygon.NO_LINK_OR_TAG;
     }
-    
+
     void moveTo(int address);
 
     /**
@@ -420,12 +425,12 @@ public interface Polygon {
     boolean next();
 
     boolean nextLink();
-    
+
     /**
      * Moves reader to start of stream.<br>
      * Note that WIP is not considered part of stream.
      * <p>
-     * 
+     *
      * Returns true if reader has a value, meaning stream not empty & not all polys
      * are deleted.
      */
@@ -439,10 +444,10 @@ public interface Polygon {
     int address();
 
     void clearLink();
-    
+
     default void toLog() {
-        Xm.LOG.debug("Polygon @ mesh address " + this.address());
-        final int limit = this.vertexCount();
+        Xm.LOG.debug("Polygon @ mesh address " + address());
+        final int limit = vertexCount();
         for(int i = 0; i < limit ; i++) {
             Xm.LOG.info(String.format("   %d = %f  %f  %f", i, x(i), y(i), z(i)));
         }

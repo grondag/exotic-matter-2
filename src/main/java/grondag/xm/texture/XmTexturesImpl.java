@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -17,17 +17,17 @@ package grondag.xm.texture;
 
 import static grondag.xm.api.texture.TextureGroup.HIDDEN_TILES;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_ONLY;
-import static grondag.xm.api.texture.TextureTransform.ROTATE_180;
-import static grondag.xm.api.texture.TextureTransform.ROTATE_270;
-import static grondag.xm.api.texture.TextureTransform.ROTATE_90;
-import static grondag.xm.api.texture.TextureTransform.IDENTITY;
-import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
 import static grondag.xm.api.texture.TextureScale.GIANT;
 import static grondag.xm.api.texture.TextureScale.LARGE;
 import static grondag.xm.api.texture.TextureScale.MEDIUM;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureScale.SMALL;
 import static grondag.xm.api.texture.TextureScale.TINY;
+import static grondag.xm.api.texture.TextureTransform.IDENTITY;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_180;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_270;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_90;
+import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
@@ -49,16 +49,17 @@ public class XmTexturesImpl {
      */
     public static void init() {
         Xm.LOG.debug("Registering Exotic Matter textures");
-        
+
         @SuppressWarnings("unused")
+        final
         TextureSet dummy = XmTextures.TILE_COBBLE;
-        
+
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlas, registry) -> {
             if (atlas == MinecraftClient.getInstance().getSpriteAtlas()) {
                 // need to resolve/use texture names at this point
                 XmPaintRegistryImpl.INSTANCE.apply(MinecraftClient.getInstance().getResourceManager());
-                
-                TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
+
+                final TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
                 texReg.forEach(set -> {
                     if (set.used()) {
                         set.prestitch(id -> registry.register(id));

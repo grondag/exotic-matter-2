@@ -12,10 +12,10 @@ public enum TextureTransform {
     ROTATE_BIGTEX(Rotation.ROTATE_NONE, true),
     /** Rotate 180 and allow horizontal texture flip */
     STONE_LIKE(Rotation.ROTATE_NONE, true);
-    
+
     public final Rotation baseRotation;
     public final boolean hasRandom;
-    
+
     private TextureTransform(Rotation baseRotation, boolean hasRandom) {
         this.baseRotation = baseRotation;
         this.hasRandom = hasRandom;

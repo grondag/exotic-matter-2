@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -28,18 +28,18 @@ import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface TextureSet {
-    public static TextureSetBuilder builder() {
+    static TextureSetBuilder builder() {
         return TextureSetImpl.builder();
     }
 
-    public static TextureSetBuilder builder(TextureSet template) {
+    static TextureSetBuilder builder(TextureSet template) {
         return TextureSetImpl.builder(template);
     }
 
     static TextureSet none() {
         return TextureSetRegistry.instance().get(TextureSetRegistry.NONE_ID);
     }
-    
+
     /** Registration ID */
     Identifier id();
 
@@ -76,7 +76,7 @@ public interface TextureSet {
      * number generation may support larger number of values. Implies number of
      * texture versions must be a power of 2
      */
-    public int versionMask();
+    int versionMask();
 
     // UGLY: rename after fixing breaks
     TextureLayoutMap map();
@@ -104,7 +104,7 @@ public interface TextureSet {
     boolean renderNoBorderAsTile();
 
     String displayNameToken();
-    
+
     /**
      * Player-friendly, localized name for this texture palette
      */
@@ -122,9 +122,9 @@ public interface TextureSet {
      * Used by modelstate to know which world state must be retrieved to drive this
      * texture (rotation and block version)
      */
-    public int stateFlags();
+    int stateFlags();
 
-    public int textureGroupFlags();
+    int textureGroupFlags();
 
     /**
      * Call to force textures to be loaded into memory. Will be called automatically
@@ -132,10 +132,10 @@ public interface TextureSet {
      * explicitly for any texture sets that may be referenced dynamically at run
      * time.
      */
-    public void use();
+    void use();
 
     /**
      * True if {@link #use()} has been called.
      */
-    public boolean used();
+    boolean used();
 }

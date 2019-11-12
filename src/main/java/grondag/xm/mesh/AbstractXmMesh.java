@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -54,7 +54,7 @@ abstract class AbstractXmMesh implements XmMesh {
         polyB.mesh = this;
         internal.mesh = this;
     }
-    
+
     /**
      * Value used to initialize origin and writer for new streams and on reset.
      * Override if stream needs to pack metadatq at front.
@@ -68,9 +68,8 @@ abstract class AbstractXmMesh implements XmMesh {
     }
 
     protected final void validateAddress(int address) {
-        if (!isValidAddress(address)) {
+        if (!isValidAddress(address))
             throw new IndexOutOfBoundsException(Integer.toString(address));
-        }
     }
 
     @Override
@@ -85,17 +84,15 @@ abstract class AbstractXmMesh implements XmMesh {
 
     protected boolean moveReaderToNext(StreamBackedPolygon targetReader) {
         int currentAddress = targetReader.baseAddress;
-        if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS) {
+        if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS)
             return false;
-        }
 
         currentAddress += targetReader.stride();
-        if (currentAddress >= writeAddress) {
+        if (currentAddress >= writeAddress)
             return false;
-        }
-        
+
         targetReader.moveTo(currentAddress);
-        
+
         while (targetReader.isDeleted() && currentAddress < writeAddress) {
             currentAddress += targetReader.stride();
             targetReader.moveTo(currentAddress);
@@ -213,7 +210,7 @@ abstract class AbstractXmMesh implements XmMesh {
         stream.set(writeAddress, newFormat);
         internal.moveTo(writeAddress);
         internal.copyFrom(polyIn, true);
-        
+
         writeAddress += MeshFormat.polyStride(newFormat, true);
 
         if (needReaderLoad) {
@@ -226,8 +223,9 @@ abstract class AbstractXmMesh implements XmMesh {
         @Override
         public final void release() {
             super.release();
-            if (mesh.readerCount.decrementAndGet() == 0 && mesh.didRelease.get() == true)
+            if (mesh.readerCount.decrementAndGet() == 0 && mesh.didRelease.get() == true) {
                 mesh.doRelease();
+            }
             stream = null;
             mesh = null;
             safeReaders.offer(this);
@@ -248,7 +246,7 @@ abstract class AbstractXmMesh implements XmMesh {
     protected Polygon threadSafeReaderImpl() {
         readerCount.incrementAndGet();
 
-        if (this.didRelease.get()) {
+        if (didRelease.get()) {
             readerCount.decrementAndGet();
             throw new UnsupportedOperationException("Cannot claim threadsafe reader on released stream.");
         }
@@ -257,10 +255,10 @@ abstract class AbstractXmMesh implements XmMesh {
         if (reader == null) {
             reader = new ThreadSafeReader();
         }
-        
+
         reader.mesh = this;
-        reader.stream = this.stream;
-        reader.moveTo(this.originAddress);
+        reader.stream = stream;
+        reader.moveTo(originAddress);
         return reader;
     }
 }

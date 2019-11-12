@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -66,7 +66,7 @@ public class BlockSubstance {
     }
 
     public static BlockSubstance fromBytes(PacketByteBuf pBuff) {
-        int ordinal = pBuff.readByte();
+        final int ordinal = pBuff.readByte();
         return ordinal >= 0 && ordinal < allByOrdinal.size() ? allByOrdinal.get(ordinal) : null;
     }
 
@@ -80,11 +80,11 @@ public class BlockSubstance {
 
     public static BlockSubstance create(String systemName, SubstanceConfig config, Material material, BlockSoundGroup sound, int defaultColorMapID,
             boolean isHyperMaterial) {
-        BlockSubstance existing = get(systemName);
+        final BlockSubstance existing = get(systemName);
         if (existing != null) {
             assert false : "Duplicate substance name";
-            Xm.LOG.warn(String.format("Block substance with duplicate name %s not created.  Existing substance with that name be used instead.", systemName));
-            return existing;
+        Xm.LOG.warn(String.format("Block substance with duplicate name %s not created.  Existing substance with that name be used instead.", systemName));
+        return existing;
         }
 
         return new BlockSubstance(systemName, config, material, sound, defaultColorMapID, isHyperMaterial);
@@ -118,23 +118,23 @@ public class BlockSubstance {
     private BlockSubstance(String systemName, SubstanceConfig substance, Material material, BlockSoundGroup sound, int defaultColorMapID,
             boolean isHyperMaterial) {
         this.systemName = systemName;
-        this.ordinal = nextOrdinal++;
+        ordinal = nextOrdinal++;
         this.material = material;
         this.isHyperMaterial = isHyperMaterial;
         soundType = sound;
         this.defaultColorMapID = defaultColorMapID;
-        this.isTranslucent = this.material == Material.GLASS;
+        isTranslucent = this.material == Material.GLASS;
 
-        this.hardness = substance.hardness;
-        this.resistance = substance.resistance;
-        this.harvestTool = substance.harvestTool;
-        this.harvestLevel = substance.harvestLevel;
-        this.walkSpeedFactor = substance.walkSpeedFactor;
-        this.flammability = substance.flammability;
-        this.isBurning = substance.isBurning;
-        this.pathNodeType = substance.pathNodeType;
+        hardness = substance.hardness;
+        resistance = substance.resistance;
+        harvestTool = substance.harvestTool;
+        harvestLevel = substance.harvestLevel;
+        walkSpeedFactor = substance.walkSpeedFactor;
+        flammability = substance.flammability;
+        isBurning = substance.isBurning;
+        pathNodeType = substance.pathNodeType;
 
-        if (this.ordinal < MAX_SUBSTANCES) {
+        if (ordinal < MAX_SUBSTANCES) {
             allByName.put(systemName, this);
             allByOrdinal.add(this);
         } else {
@@ -144,15 +144,15 @@ public class BlockSubstance {
     }
 
     public String localizedName() {
-        return I18n.translate("material." + this.systemName.toLowerCase());
+        return I18n.translate("material." + systemName.toLowerCase());
     }
 
     public void serializeNBT(CompoundTag tag) {
-        tag.putString(NBT_SUBSTANCE, this.systemName);
+        tag.putString(NBT_SUBSTANCE, systemName);
     }
 
     public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeByte(this.ordinal);
+        pBuff.writeByte(ordinal);
     }
 
     public static List<BlockSubstance> all() {

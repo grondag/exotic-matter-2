@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -42,13 +42,13 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
     public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.idString("terrain_cube"));
-    
+
     /** never changes so may as well save it */
     private final XmMesh cachedQuads;
 
     protected TerrainCubePrimitive(String idString) {
         super(idString, NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
-        this.cachedQuads = getCubeQuads();
+        cachedQuads = getCubeQuads();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
     }
 
     private XmMesh getCubeQuads() {
-        CubeInputs cube = new CubeInputs();
+        final CubeInputs cube = new CubeInputs();
         cube.color = 0xFFFFFFFF;
         cube.textureRotation = TextureOrientation.IDENTITY;
         cube.isFullBrightness = false;
@@ -68,7 +68,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
         cube.isOverlay = false;
         cube.surface = SURFACE_ALL;
 
-        WritableMesh stream = XmMeshes.claimWritable();
+        final WritableMesh stream = XmMeshes.claimWritable();
         cube.appendFace(stream, Direction.DOWN);
         cube.appendFace(stream, Direction.UP);
         cube.appendFace(stream, Direction.EAST);
@@ -76,7 +76,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
         cube.appendFace(stream, Direction.NORTH);
         cube.appendFace(stream, Direction.SOUTH);
 
-        XmMesh result = stream.releaseToReader();
+        final XmMesh result = stream.releaseToReader();
 
         result.reader().origin();
         assert result.reader().vertexCount() == 4;

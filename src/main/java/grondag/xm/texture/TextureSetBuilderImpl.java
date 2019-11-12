@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -44,13 +44,13 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
 
     @Override
     public TextureSetBuilder layout(TextureLayoutMap layout) {
-        this.layoutMap = (TextureLayoutMapImpl) layout;
+        layoutMap = (TextureLayoutMapImpl) layout;
         return this;
     }
 
     @Override
     public TextureSetBuilder transform(TextureTransform rotation) {
-        this.transform = rotation;
+        transform = rotation;
         return this;
     }
 
@@ -62,7 +62,7 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
 
     @Override
     public TextureSetBuilder groups(TextureGroup... groups) {
-        this.textureGroupFlags = TextureGroup.makeTextureGroupFlags(groups);
+        textureGroupFlags = TextureGroup.makeTextureGroupFlags(groups);
         return this;
     }
 
@@ -74,7 +74,7 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
 
     @Override
     public TextureSetBuilder baseTextureName(String baseTextureName) {
-        this.rawBaseTextureName = baseTextureName;
+        rawBaseTextureName = baseTextureName;
         return this;
     }
 

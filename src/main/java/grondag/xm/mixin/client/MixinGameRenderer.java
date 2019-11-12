@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -36,17 +36,17 @@ public abstract class MixinGameRenderer {
     void renderCenterHook(float partialTick, long nanos, CallbackInfo ci) {
         XmRenderHelper.tickDelta(partialTick);
     }
-    
-//    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/FrustumWithOrigin;<init>(Lnet/minecraft/client/render/Frustum;)V"), method = "renderCenter", require = 1)
-//    private VisibleRegion visibleRegionHook(VisibleRegion original) {
-//        XmRenderHelper.visibleRegion(original);
-//        return original;
-//    }
-//    
-//    @Inject(method = "renderCenter", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/debug/DebugRenderer;shouldRender()Z"), cancellable = false, require = 1)
-//    void blockHighlightHook(float tickDelta, long nanos, CallbackInfo ci) {
-//        if (blockOutlineEnabled && false) {
-//            PlacementPreviewRenderer.renderPreview(tickDelta);
-//        }
-//    }
+
+    //    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/FrustumWithOrigin;<init>(Lnet/minecraft/client/render/Frustum;)V"), method = "renderCenter", require = 1)
+    //    private VisibleRegion visibleRegionHook(VisibleRegion original) {
+    //        XmRenderHelper.visibleRegion(original);
+    //        return original;
+    //    }
+    //
+    //    @Inject(method = "renderCenter", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/debug/DebugRenderer;shouldRender()Z"), cancellable = false, require = 1)
+    //    void blockHighlightHook(float tickDelta, long nanos, CallbackInfo ci) {
+    //        if (blockOutlineEnabled && false) {
+    //            PlacementPreviewRenderer.renderPreview(tickDelta);
+    //        }
+    //    }
 }

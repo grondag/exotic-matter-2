@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -39,12 +39,12 @@ public abstract class TextureSetHelper {
 
     static final TextureGroup[] BORDERS_STATIC = new TextureGroup[] { TextureGroup.STATIC_BORDERS };
     static final TextureGroup[] DUAL_STATIC =  new TextureGroup[] { TextureGroup.STATIC_TILES, TextureGroup.STATIC_BORDERS };
-    
+
     public static TextureSet addBorderSingle(String modId, String name) {
         return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(1).scale(SINGLE).layout(BORDER_13)
                 .transform(IDENTITY).renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build(modId + ":" + name);
     }
-    
+
     public static TextureSet addBorderRandom(String modId, String name, boolean allowTile, boolean renderNoBorderAsTile) {
         return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(4).scale(SINGLE)
                 .layout(renderNoBorderAsTile ? BORDER_14 : BORDER_13)

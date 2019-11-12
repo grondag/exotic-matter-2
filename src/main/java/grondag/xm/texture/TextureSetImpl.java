@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -35,7 +35,7 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
     }
 
     public static TextureSetBuilder builder(TextureSet template) {
-        TextureSetBuilderImpl result = new TextureSetBuilderImpl();
+        final TextureSetBuilderImpl result = new TextureSetBuilderImpl();
         result.copyFrom((AbstractTextureSet) template);
         return result;
     }
@@ -48,10 +48,10 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 
     TextureSetImpl(Identifier id, AbstractTextureSet template) {
         this.id = id;
-        this.baseTextureName = template.rawBaseTextureName;
+        baseTextureName = template.rawBaseTextureName;
         copyFrom(template);
-        this.versionMask = Math.max(0, template.versionCount - 1);
-        this.layoutMap = template.layoutMap;
+        versionMask = Math.max(0, template.versionCount - 1);
+        layoutMap = template.layoutMap;
 
         int flags = template.scale.modelStateFlag | template.layoutMap.layout.modelStateFlag;
 
@@ -64,8 +64,8 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
             flags |= ModelStateFlags.POSITION;
         }
 
-        this.stateFlags = flags;
-        
+        stateFlags = flags;
+
         TextureSetRegistryImpl.INSTANCE.add(this);
     }
 

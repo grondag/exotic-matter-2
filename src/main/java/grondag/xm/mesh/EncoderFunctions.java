@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -27,59 +27,59 @@ abstract class EncoderFunctions {
     public static final int BAD_ADDRESS = Integer.MIN_VALUE;
 
     @FunctionalInterface
-    public static interface ByteGetter {
+    public interface ByteGetter {
         int get(IntStream stream, int byteIndex, int baseAddress);
-        
-        static ByteGetter ZERO  = (s, b, a) -> 0;
+
+        ByteGetter ZERO  = (s, b, a) -> 0;
     }
 
     @FunctionalInterface
-    public static interface ByteSetter {
+    public interface ByteSetter {
         void set(IntStream stream, int baseAddress, int byteIndex, int value);
-        
-        static ByteSetter VOID = (s, a, b, v) -> {};
+
+        ByteSetter VOID = (s, a, b, v) -> {};
     }
 
     @FunctionalInterface
-    public static interface IntGetter {
+    public interface IntGetter {
         int get(IntStream stream, int baseAddress);
-        
-        static IntGetter ZERO  = (s, b) -> 0;
+
+        IntGetter ZERO  = (s, b) -> 0;
     }
 
     @FunctionalInterface
-    public static interface IntSetter {
+    public interface IntSetter {
         void set(IntStream stream, int baseAddress, int value);
-        
-        static IntSetter VOID = (s, b, v) -> {};
+
+        IntSetter VOID = (s, b, v) -> {};
     }
 
     @FunctionalInterface
-    public static interface FloatGetter {
+    public interface FloatGetter {
         float get(IntStream stream, int baseAddress);
-        
-        static FloatGetter ZERO  = (s, b) -> 0f;
+
+        FloatGetter ZERO  = (s, b) -> 0f;
     }
 
     @FunctionalInterface
-    public static interface FloatSetter {
+    public interface FloatSetter {
         void set(IntStream stream, int baseAddress, float value);
-        
-        static FloatSetter VOID = (s, b, v) -> {};
+
+        FloatSetter VOID = (s, b, v) -> {};
     }
 
     @FunctionalInterface
-    public static interface FloatSetter2 {
+    public interface FloatSetter2 {
         void set(IntStream stream, int baseAddress, float u, float v);
-        
-        static FloatSetter2 VOID = (s, b, u, v) -> {};
+
+        FloatSetter2 VOID = (s, b, u, v) -> {};
     }
 
     @FunctionalInterface
-    public static interface FloatSetter3 {
+    public interface FloatSetter3 {
         void set(IntStream stream, int baseAddress, float x, float y, float z);
-        
-        static FloatSetter3 VOID = (s, b, x, y, z) -> {};
+
+        FloatSetter3 VOID = (s, b, x, y, z) -> {};
     }
 
     public static final ByteGetter GET_BYTE_FAIL = (stream, address, byteIndex) -> {

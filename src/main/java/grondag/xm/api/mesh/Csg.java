@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -64,7 +64,7 @@ public abstract class Csg {
      * Output a new mesh solid representing the difference of the two input meshes.
      *
      * <blockquote>
-     * 
+     *
      * <pre>
      * A.difference(B)
      *
@@ -77,12 +77,12 @@ public abstract class Csg {
      *      |       |
      *      +-------+
      * </pre>
-     * 
+     *
      * </blockquote>
      */
     public static void difference(XmMesh a, XmMesh b, WritableMesh output) {
-        CsgMesh aCsg = XmMeshes.claimCsg(a);
-        CsgMesh bCsg = XmMeshes.claimCsg(b);
+        final CsgMesh aCsg = XmMeshes.claimCsg(a);
+        final CsgMesh bCsg = XmMeshes.claimCsg(b);
 
         difference(aCsg, bCsg, output);
 
@@ -101,10 +101,10 @@ public abstract class Csg {
 
         //PERF: look at restoring - problem with former implementation
         // is that it happens without face recombination
-//        // A outside of B bounds can be passed directly to output
-//        if (outputDisjointA(a, b, output))
-//            // if A is empty there is nothing to subtract from
-//            return;
+        //        // A outside of B bounds can be passed directly to output
+        //        if (outputDisjointA(a, b, output))
+        //            // if A is empty there is nothing to subtract from
+        //            return;
 
         // add portions of A within B bounds but not inside B mesh
         a.invert();
@@ -122,7 +122,7 @@ public abstract class Csg {
      * Output a new mesh representing the intersection of two input meshes.
      *
      * <blockquote>
-     * 
+     *
      * <pre>
      *     A.intersect(B)
      *
@@ -135,12 +135,12 @@ public abstract class Csg {
      *          |       |
      *          +-------+
      * </pre>
-     * 
+     *
      * </blockquote>
      */
     public static void intersect(XmMesh a, XmMesh b, WritableMesh output) {
-        CsgMesh aCsg = XmMeshes.claimCsg(a);
-        CsgMesh bCsg = XmMeshes.claimCsg(b);
+        final CsgMesh aCsg = XmMeshes.claimCsg(a);
+        final CsgMesh bCsg = XmMeshes.claimCsg(b);
 
         intersect(aCsg, bCsg, output);
 
@@ -177,7 +177,7 @@ public abstract class Csg {
      * Output a new mesh representing the union of the input meshes.
      *
      * <blockquote>
-     * 
+     *
      * <pre>
      *    A.union(B)
      *
@@ -190,20 +190,20 @@ public abstract class Csg {
      *         |       |            |       |
      *         +-------+            +-------+
      * </pre>
-     * 
+     *
      * </blockquote>
      *
      */
     public static void union(XmMesh a, XmMesh b, WritableMesh output) {
-        CsgMesh aCsg = XmMeshes.claimCsg(a);
-        CsgMesh bCsg = XmMeshes.claimCsg(b);
+        final CsgMesh aCsg = XmMeshes.claimCsg(a);
+        final CsgMesh bCsg = XmMeshes.claimCsg(b);
 
         union(aCsg, bCsg, output);
 
         aCsg.release();
         bCsg.release();
     }
-    
+
     /**
      * Version of {@link #union(XmMesh, XmMesh, WritableMesh)} to
      * use when you've already built CSG streams. Marks the streams complete but
@@ -215,25 +215,25 @@ public abstract class Csg {
 
         //PERF: look at restoring - problem with former implementation
         // is that it happens without face recombination
-        
+
         // A outside of B bounds can be passed directly to output
-//        if (outputDisjointA(a, b, output)) {
-//            // A and B bounds don't overlap, so output all of original b
-//            b.outputRecombinedQuads(output);
-//        } else {
-            // some potential overlap
-            // add union of the overlapping bits,
-            // which will include any parts of B that need to be included
-        
-            a.clipTo(b);
-            b.clipTo(a);
-            b.invert();
-            b.clipTo(a);
-            b.invert();
-            
-            a.outputRecombinedQuads(output);
-            b.outputRecombinedQuads(output);
-//        }
+        //        if (outputDisjointA(a, b, output)) {
+        //            // A and B bounds don't overlap, so output all of original b
+        //            b.outputRecombinedQuads(output);
+        //        } else {
+        // some potential overlap
+        // add union of the overlapping bits,
+        // which will include any parts of B that need to be included
+
+        a.clipTo(b);
+        b.clipTo(a);
+        b.invert();
+        b.clipTo(a);
+        b.invert();
+
+        a.outputRecombinedQuads(output);
+        b.outputRecombinedQuads(output);
+        //        }
     }
 
     /**
@@ -250,7 +250,7 @@ public abstract class Csg {
                 return outputDisjointAInner(a, b, output);
             else {
                 // B is empty, A is not, therefore output all of A and return false
-                
+
                 do {
                     output.appendCopy(aReader);
                     aReader.delete();
@@ -284,22 +284,25 @@ public abstract class Csg {
                 final int vCount = bReader.vertexCount();
                 for (int i = 1; i < vCount; i++) {
                     final float x = bReader.x(i);
-                    if (x < bMinX)
+                    if (x < bMinX) {
                         bMinX = x;
-                    else if (x > bMaxX)
+                    } else if (x > bMaxX) {
                         bMaxX = x;
+                    }
 
                     final float y = bReader.y(i);
-                    if (y < bMinY)
+                    if (y < bMinY) {
                         bMinY = y;
-                    else if (y > bMaxY)
+                    } else if (y > bMaxY) {
                         bMaxY = y;
+                    }
 
                     final float z = bReader.z(i);
-                    if (z < bMinZ)
+                    if (z < bMinZ) {
                         bMinZ = z;
-                    else if (z > bMaxZ)
+                    } else if (z > bMaxZ) {
                         bMaxZ = z;
+                    }
                 }
             } while (bReader.next());
         }
@@ -323,29 +326,32 @@ public abstract class Csg {
             final int vCount = aReader.vertexCount();
             for (int i = 1; i < vCount; i++) {
                 final float x = aReader.x(i);
-                if (x < pMinX)
+                if (x < pMinX) {
                     pMinX = x;
-                else if (x > pMaxX)
+                } else if (x > pMaxX) {
                     pMaxX = x;
+                }
 
                 final float y = aReader.y(i);
-                if (y < pMinY)
+                if (y < pMinY) {
                     pMinY = y;
-                else if (y > pMaxY)
+                } else if (y > pMaxY) {
                     pMaxY = y;
+                }
 
                 final float z = aReader.z(i);
-                if (z < pMinZ)
+                if (z < pMinZ) {
                     pMinZ = z;
-                else if (z > pMaxZ)
+                } else if (z > pMaxZ) {
                     pMaxZ = z;
+                }
             }
 
             // For CSG operations we consider a point on the edge to be intersecting.
-            if (bMinX <= pMaxX && bMaxX >= pMinX && bMinY <= pMaxY && bMaxY >= pMinY && bMinZ <= pMaxZ && bMaxZ >= pMinZ)
+            if (bMinX <= pMaxX && bMaxX >= pMinX && bMinY <= pMaxY && bMaxY >= pMinY && bMinZ <= pMaxZ && bMaxZ >= pMinZ) {
                 // potentially intersecting
                 aIsEmpty = false;
-            else {
+            } else {
                 // disjoint
                 output.appendCopy(aReader);
                 aReader.delete();

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -49,16 +49,16 @@ public class FixedRegionBounds {
 
     public FixedRegionBounds(CompoundTag tag) {
         final long from = tag.getLong(TAG_START);
-        this.fromPos = PackedBlockPos.unpack(from);
-        this.fromIsCentered = PackedBlockPos.getExtra(from) == 1;
+        fromPos = PackedBlockPos.unpack(from);
+        fromIsCentered = PackedBlockPos.getExtra(from) == 1;
         final long to = tag.getLong(TAG_END);
-        this.toPos = PackedBlockPos.unpack(to);
-        this.toIsCentered = PackedBlockPos.getExtra(to) == 1;
+        toPos = PackedBlockPos.unpack(to);
+        toIsCentered = PackedBlockPos.getExtra(to) == 1;
     }
 
     public void saveToNBT(CompoundTag tag) {
-        tag.putLong(TAG_START, PackedBlockPos.pack(this.fromPos, this.fromIsCentered ? 1 : 0));
-        tag.putLong(TAG_END, PackedBlockPos.pack(this.toPos, this.toIsCentered ? 1 : 0));
+        tag.putLong(TAG_START, PackedBlockPos.pack(fromPos, fromIsCentered ? 1 : 0));
+        tag.putLong(TAG_END, PackedBlockPos.pack(toPos, toIsCentered ? 1 : 0));
     }
 
     public static boolean isPresentInTag(CompoundTag tag) {

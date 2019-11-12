@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -39,23 +39,24 @@ public class XmStackHelper {
     }
 
     public static byte getStackLightValue(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
+        final CompoundTag tag = stack.getOrCreateTag();
         // important that the tag used here matches that used in tile entity
         return tag == null ? 0 : tag.getByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
     }
 
     public static void setStackSubstance(ItemStack stack, BlockSubstance substance) {
-        if (substance != null)
+        if (substance != null) {
             substance.serializeNBT(Useful.getOrCreateTagCompound(stack));
+        }
     }
 
     public static BlockSubstance getStackSubstance(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
+        final CompoundTag tag = stack.getOrCreateTag();
         return tag == null ? BlockSubstance.DEFAULT : BlockSubstance.deserializeNBT(tag);
     }
 
     public static void setStackModelState(ItemStack stack, ModelState modelState) {
-        CompoundTag tag = stack.getOrCreateTag();
+        final CompoundTag tag = stack.getOrCreateTag();
         if (modelState == null) {
             ModelStateTagHelper.clearNBTValues(tag);
             return;

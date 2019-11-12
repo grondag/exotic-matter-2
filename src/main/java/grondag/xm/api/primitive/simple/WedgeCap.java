@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -40,72 +40,72 @@ public class WedgeCap  {
 
     public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
     public static final XmSurface SURFACE_TOP = SURFACES.get(1);
-    
+
     static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
         final PolyTransform transform = PolyTransform.get(modelState);
-        
-        WritableMesh mesh = XmMeshes.claimWritable();
-        MutablePolygon writer = mesh.writer()
-            .colorAll(0, 0xFFFFFFFF)
-            .lockUV(0, true)
-            .rotation(0, TextureOrientation.IDENTITY)
-            .sprite(0, "")
-            .saveDefaults();
-            
-        writer
-            .surface(SURFACE_BOTTOM)
-            .setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH)
-            .apply(transform)
-            .append();
-        
-        writer
-            .surface(SURFACE_TOP)
-            .vertexCount(3)
-            .pos(0, 0, 0, 0).color(0, 0, 0xFFFFFFFF)
-            .pos(1, 0.5f, 0.5f, 0.5f).color(1, 0, 0xFFFFFFFF)
-            .pos(2, 1, 0, 0).color(2, 0, 0xFFFFFFFF)
-            .nominalFace(Direction.UP)
-            .apply(transform)
-            .append();
+
+        final WritableMesh mesh = XmMeshes.claimWritable();
+        final MutablePolygon writer = mesh.writer()
+                .colorAll(0, 0xFFFFFFFF)
+                .lockUV(0, true)
+                .rotation(0, TextureOrientation.IDENTITY)
+                .sprite(0, "")
+                .saveDefaults();
 
         writer
-            .surface(SURFACE_TOP)
-            .vertexCount(3)
-            .pos(0, 1, 0, 0).color(0, 0, 0xFFFFFFFF)
-            .pos(1, 0.5f, 0.5f, 0.5f).color(1, 0, 0xFFFFFFFF)
-            .pos(2, 1, 0, 1).color(2, 0, 0xFFFFFFFF)
-            .nominalFace(Direction.UP)
-            .apply(transform)
-            .append();
+        .surface(SURFACE_BOTTOM)
+        .setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH)
+        .apply(transform)
+        .append();
 
         writer
-            .surface(SURFACE_TOP)
-            .vertexCount(3)
-            .pos(0, 1, 0, 1).color(0, 0, 0xFFFFFFFF)
-            .pos(1, 0.5f, 0.5f, 0.5f).color(1, 0, 0xFFFFFFFF)
-            .pos(2, 0, 0, 1).color(2, 0, 0xFFFFFFFF)
-            .nominalFace(Direction.UP)
-            .apply(transform)
-            .append();
-        
+        .surface(SURFACE_TOP)
+        .vertexCount(3)
+        .pos(0, 0, 0, 0).color(0, 0, 0xFFFFFFFF)
+        .pos(1, 0.5f, 0.5f, 0.5f).color(1, 0, 0xFFFFFFFF)
+        .pos(2, 1, 0, 0).color(2, 0, 0xFFFFFFFF)
+        .nominalFace(Direction.UP)
+        .apply(transform)
+        .append();
+
         writer
-            .surface(SURFACE_TOP)
-            .vertexCount(3)
-            .pos(0, 0, 0, 1).color(0, 0, 0xFFFFFFFF)
-            .pos(1, 0.5f, 0.5f, 0.5f).color(1, 0, 0xFFFFFFFF)
-            .pos(2, 0, 0, 0).color(2, 0, 0xFFFFFFFF)
-            .nominalFace(Direction.UP)
-            .apply(transform)
-            .append();
-        
+        .surface(SURFACE_TOP)
+        .vertexCount(3)
+        .pos(0, 1, 0, 0).color(0, 0, 0xFFFFFFFF)
+        .pos(1, 0.5f, 0.5f, 0.5f).color(1, 0, 0xFFFFFFFF)
+        .pos(2, 1, 0, 1).color(2, 0, 0xFFFFFFFF)
+        .nominalFace(Direction.UP)
+        .apply(transform)
+        .append();
+
+        writer
+        .surface(SURFACE_TOP)
+        .vertexCount(3)
+        .pos(0, 1, 0, 1).color(0, 0, 0xFFFFFFFF)
+        .pos(1, 0.5f, 0.5f, 0.5f).color(1, 0, 0xFFFFFFFF)
+        .pos(2, 0, 0, 1).color(2, 0, 0xFFFFFFFF)
+        .nominalFace(Direction.UP)
+        .apply(transform)
+        .append();
+
+        writer
+        .surface(SURFACE_TOP)
+        .vertexCount(3)
+        .pos(0, 0, 0, 1).color(0, 0, 0xFFFFFFFF)
+        .pos(1, 0.5f, 0.5f, 0.5f).color(1, 0, 0xFFFFFFFF)
+        .pos(2, 0, 0, 0).color(2, 0, 0xFFFFFFFF)
+        .nominalFace(Direction.UP)
+        .apply(transform)
+        .append();
+
         return mesh.releaseToReader();
     };
-    
+
 
     public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
             .surfaceList(SURFACES)
             .polyFactory(POLY_FACTORY)
             .orientationType(OrientationType.FACE)
             .build(Xm.idString("wedge_cap"));
-    
+
 }

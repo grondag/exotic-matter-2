@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -28,13 +28,15 @@ class XmSurfaceListImpl implements XmSurfaceList {
     private final XmSurfaceImpl[] surfaces;
 
     private final XmSurface lamp;
-    
+
     XmSurfaceListImpl(XmSurfaceImpl[] surfaces) {
         this.surfaces = surfaces;
-        this.size = surfaces.length;
+        size = surfaces.length;
         XmSurface lamp = null;
-        for (XmSurfaceImpl surface : surfaces) {
-            if (surface.isLamp()) lamp = surface;
+        for (final XmSurfaceImpl surface : surfaces) {
+            if (surface.isLamp()) {
+                lamp = surface;
+            }
         }
         this.lamp = lamp;
     }

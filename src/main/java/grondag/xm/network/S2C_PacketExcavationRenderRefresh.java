@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -47,10 +47,10 @@ public abstract class S2C_PacketExcavationRenderRefresh {
     public static final Identifier ID = new Identifier(Xm.MODID, "exrr");
 
     public static Packet<?> toPacket(Collection<ExcavationRenderEntry> entries) {
-        PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
+        final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
 
         pBuff.writeInt(entries.size());
-        for (ExcavationRenderEntry r : entries) {
+        for (final ExcavationRenderEntry r : entries) {
             pBuff.writeInt(r.id);
             pBuff.writeLong(r.aabb().minPos().asLong());
             pBuff.writeLong(r.aabb().maxPos().asLong());
@@ -58,10 +58,11 @@ public abstract class S2C_PacketExcavationRenderRefresh {
             final BlockPos[] positions = r.renderPositions();
             pBuff.writeInt(positions == null ? 0 : positions.length);
             if (positions != null) {
-                if (XmConfig.logExcavationRenderTracking)
+                if (XmConfig.logExcavationRenderTracking) {
                     Xm.LOG.info("id %d Refresh toBytes position count = %d", r.id, positions == null ? 0 : positions.length);
+                }
 
-                for (BlockPos pos : positions) {
+                for (final BlockPos pos : positions) {
                     pBuff.writeLong(pos.asLong());
                 }
             }
@@ -72,14 +73,14 @@ public abstract class S2C_PacketExcavationRenderRefresh {
 
     public static void accept(PacketContext context, PacketByteBuf pBuff) {
         ExcavationRenderManager.clear();
-        int count = pBuff.readInt();
+        final int count = pBuff.readInt();
         if (count > 0) {
             for (int i = 0; i < count; i++) {
-                int id = pBuff.readInt();
-                BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
-                BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
-                boolean isExchange = pBuff.readBoolean();
-                int positionCount = pBuff.readInt();
+                final int id = pBuff.readInt();
+                final BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
+                final BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
+                final boolean isExchange = pBuff.readBoolean();
+                final int positionCount = pBuff.readInt();
                 BlockPos[] list;
                 if (positionCount == 0) {
                     list = null;
@@ -91,8 +92,9 @@ public abstract class S2C_PacketExcavationRenderRefresh {
 
                 }
 
-                if (XmConfig.logExcavationRenderTracking)
+                if (XmConfig.logExcavationRenderTracking) {
                     Xm.LOG.info("id %d Refresh toBytes position count = %d", id, list == null ? 0 : list.length);
+                }
                 ExcavationRenderManager.addOrUpdate(new ExcavationRenderer(id, new IntegerBox(minPos, maxPos).toAABB(), isExchange, list));
             }
         }

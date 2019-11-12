@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -29,22 +29,22 @@ public enum SurfaceTopology {
      * for any model that fits within a single world block position and has some
      * approximate orientation within the world.
      * <p>
-     * 
+     *
      * Face is identified by {@link IPolygon#getNominalFace()} and does not have to
      * actually be on the face of a cube. (But it will be textured as if it were.)
      * <p>
-     * 
+     *
      * Models generating quads for this topology should emit quads with min/max UVs
      * with the full span of 0-1. A UV span of 1 represents one in-world block. The
      * model mesh do not have to span a full block.
      * <p>
-     * 
+     *
      * During BigTex painting, quad UV min/max will be set to some sub-span of 0-1
      * based on location within the world and texture scale. For single-block tiled
      * texture painting, the span is not altered but UV coordinates may be flipped,
      * rotated or the underlying texture randomized if multiple versions exist.
      * <p>
-     * 
+     *
      * Surface UV scale is generally ignored for this surface type.
      */
     CUBIC,
@@ -53,7 +53,7 @@ public enum SurfaceTopology {
      * Quad is part of a continuous surface. A UV distance of 1 should approximate 1
      * in-world block width.
      * <p>
-     * 
+     *
      * UV coordinates should be kept positive for simplicity but can be in any
      * range. If any coordinate exceeds the size of the selected texture, the
      * painter will subdivide the quad to allow tiling and will also use the
@@ -62,7 +62,7 @@ public enum SurfaceTopology {
      * doesn't have to consider texture tiling for textures that are smaller than
      * the whole surface - the painter will handle it.
      * <p>
-     * 
+     *
      * If the surface wraps in any dimension, then periodicity should be
      * communicated in {@link SurfaceInstance#uvWrapDistance}. If that value is
      * non-zero, the painter will scale and tile textures to the closest
@@ -71,7 +71,7 @@ public enum SurfaceTopology {
      * wrapping dimension should govern and to avoid seams the longer dimension
      * should wrap at a multiple of the smaller.
      * <p>
-     * 
+     *
      * Some surface topologies need to wrap at edges but don't map to a square
      * texture - icosahedrons and cubic spheres, for example. For these, break the
      * model into quads that should connect and then emit (possibly subdivided)
@@ -79,7 +79,7 @@ public enum SurfaceTopology {
      * face. For best results, use textures that can wrap in rotation. Some bigTex
      * textures won't join perfectly, but it's the best that can be done.
      * <p>
-     * 
+     *
      * Unlike a cubic surface, in-world position can't be used for face
      * randomization within the model. As mentioned before, for surfaces large
      * enough to tile with a given texture, the painter will using tiling position
@@ -91,7 +91,7 @@ public enum SurfaceTopology {
      * texturing process, but this does not provide variation of faces within the
      * model.)
      * <p>
-     * 
+     *
      * Example 1: A cubic sphere of one block diameter has a UVwrap of ~1 with
      * nominal faces assigned to quads. All quads will have UV min of 0 and max
      * equal to the wrap distance. The quad painter will scale/tile the selected
@@ -99,7 +99,7 @@ public enum SurfaceTopology {
      * but will wrap correctly. Nominal face will be used to prevent visual
      * repetition.
      * <p>
-     * 
+     *
      * Example 2: A single-texture cylinder of radius 1 and length 10 will have a
      * UVwrap distance ~6.2 because the texture must wrap on the circular surface
      * and the approximate circumference will be ~6.2. The cylinder is longer than 8

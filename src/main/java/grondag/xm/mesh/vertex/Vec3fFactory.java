@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -26,7 +26,7 @@ import net.minecraft.util.math.Vec3i;
 @API(status = INTERNAL)
 public class Vec3fFactory {
     private Vec3fFactory() {}
-    
+
     private static final Vec3f[] FACES = new Vec3f[6];
 
     static {
@@ -37,7 +37,7 @@ public class Vec3fFactory {
         FACES[Direction.NORTH.ordinal()] = create(Direction.NORTH.getVector());
         FACES[Direction.SOUTH.ordinal()] = create(Direction.SOUTH.getVector());
     }
-    
+
     public static final Vec3f ZERO = Vec3fImpl.ZERO;
 
     public static Vec3f forFace(Direction face) {
@@ -49,6 +49,6 @@ public class Vec3fFactory {
     }
 
     public static Vec3f create(float x, float y, float z) {
-            return Vec3fCache.INSTANCE.get(x, y, z);
+        return Vec3fCache.INSTANCE.get(x, y, z);
     }
 }

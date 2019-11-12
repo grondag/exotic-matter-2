@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -39,7 +39,7 @@ import net.minecraft.util.math.Direction;
 @API(status = EXPERIMENTAL)
 public class CubeWithRotation {
     private CubeWithRotation() {}
-    
+
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("down", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("up", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
@@ -55,7 +55,7 @@ public class CubeWithRotation {
     public static final XmSurface SURFACE_SOUTH = SURFACES.get(3);
     public static final XmSurface SURFACE_WEST = SURFACES.get(4);
     public static final XmSurface SURFACE_EAST = SURFACES.get(5);
-    
+
     public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
     public static final XmSurface SURFACE_TOP = SURFACES.get(1);
     public static final XmSurface SURFACE_FRONT = SURFACES.get(2);
@@ -65,9 +65,9 @@ public class CubeWithRotation {
 
     static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
         final PolyTransform transform = PolyTransform.get(modelState);
-        
-        WritableMesh mesh = XmMeshes.claimWritable();
-        MutablePolygon writer = mesh.writer();
+
+        final WritableMesh mesh = XmMeshes.claimWritable();
+        final MutablePolygon writer = mesh.writer();
         writer.colorAll(0, 0xFFFFFFFF);
         writer.lockUV(0, true);
         writer.rotation(0, TextureOrientation.IDENTITY);
@@ -78,27 +78,27 @@ public class CubeWithRotation {
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_UP);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_EAST);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_WEST);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_NORTH);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_SOUTH);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
         transform.accept(writer);

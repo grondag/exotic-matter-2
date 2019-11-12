@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -52,7 +52,7 @@ public abstract class CubicPainterQuadrants extends AbstractQuadPainter {
     }
 
     static {
-        for (FaceCorner corner : FaceCorner.values()) {
+        for (final FaceCorner corner : FaceCorner.values()) {
             CornerJoinFaceStates.forEach(faceState -> {
                 TEXTURE_MAP[corner.ordinal()][faceState.ordinal()] = textureMap(corner, faceState);
             });
@@ -76,7 +76,7 @@ public abstract class CubicPainterQuadrants extends AbstractQuadPainter {
             }
 
             final Direction nominalFace = editor.nominalFace();
-            TextureSet tex = paint.texture(textureIndex);
+            final TextureSet tex = paint.texture(textureIndex);
             final int textureVersion = tex.versionMask() & (textureHashForFace(nominalFace, tex, modelState) >> (quadrant.ordinal() * 4));
 
             editor.sprite(textureIndex, tex.textureName(textureVersion));

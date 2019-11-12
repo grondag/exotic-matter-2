@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -63,7 +63,7 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
         final XmSurface lamp = surfaces(modelState).lamp();
         return lamp == null ? null : modelState.paint(lamp).emissive(0) ? lamp : null;
     }
-    
+
     /**
      * Override if shape has an orientation to be selected during placement.
      */
@@ -88,15 +88,15 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
     }
 
     W fromBuffer(PacketByteBuf buf);
-    
+
 
     W fromTag(CompoundTag tag);
-    
+
     boolean doesShapeMatch(R from, R to);
 
     default boolean isMultiBlock() {
         return false;
     }
-    
+
     default void invalidateCache() { }
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -51,12 +51,12 @@ public interface PlacementItem {
     // STATIC MEMBERS
     /////////////////////////////////////////////////////
 
-    public final static String NBT_REGION_FLOATING_RANGE = NBTDictionary.claim("floatingRegionRange");
-    public final static String NBT_REGION_SIZE = NBTDictionary.claim("regionSize");
-    public final static String NBT_FIXED_REGION_ENABLED = NBTDictionary.claim("fixedRegionOn");
-    public final static String NBT_FIXED_REGION_SELECT_POS = NBTDictionary.claim("fixedRegionPos");
+    String NBT_REGION_FLOATING_RANGE = NBTDictionary.claim("floatingRegionRange");
+    String NBT_REGION_SIZE = NBTDictionary.claim("regionSize");
+    String NBT_FIXED_REGION_ENABLED = NBTDictionary.claim("fixedRegionOn");
+    String NBT_FIXED_REGION_SELECT_POS = NBTDictionary.claim("fixedRegionPos");
 
-    public static EnumBitSet<PlacementItemFeature> BENUMSET_FEATURES = new EnumBitSet<PlacementItemFeature>(PlacementItemFeature.class);
+    EnumBitSet<PlacementItemFeature> BENUMSET_FEATURES = new EnumBitSet<PlacementItemFeature>(PlacementItemFeature.class);
 
     /**
      * Returns PlacementItem held by player in either hand, or null if player isn't
@@ -64,7 +64,7 @@ public interface PlacementItem {
      * in primary hand.
      */
 
-    public static ItemStack getHeldPlacementItem(PlayerEntity player) {
+    static ItemStack getHeldPlacementItem(PlayerEntity player) {
         ItemStack stack = MinecraftClient.getInstance().player.getMainHandStack();
 
         if (stack.getItem() instanceof PlacementItem)
@@ -78,11 +78,11 @@ public interface PlacementItem {
         return null;
     }
 
-    public static boolean isPlacementItem(ItemStack stack) {
+    static boolean isPlacementItem(ItemStack stack) {
         return stack.getItem() instanceof PlacementItem;
     }
 
-    public static PlacementItem getPlacementItem(ItemStack stack) {
+    static PlacementItem getPlacementItem(ItemStack stack) {
         return isPlacementItem(stack) ? (PlacementItem) stack.getItem() : null;
     }
 
@@ -91,10 +91,10 @@ public interface PlacementItem {
     /////////////////////////////////////////////////////
 
     /** True if item places air blocks or carves empty space in CSG blocks */
-    public boolean isExcavator(ItemStack placedStack);
+    boolean isExcavator(ItemStack placedStack);
 
     /** True if only places/affects virtual blocks. */
-    public boolean isVirtual(ItemStack stack);
+    boolean isVirtual(ItemStack stack);
 
     /////////////////////////////////////////////////////
     // DEFAULT MEMBERS
@@ -102,26 +102,26 @@ public interface PlacementItem {
 
     /**
      * Used with {@link #BENUMSET_FEATURES} to know what features are supported.
-     * 
+     *
      * @param stack
      */
-    public default int featureFlags(ItemStack stack) {
+    default int featureFlags(ItemStack stack) {
         return 0xFFFFFFFF;
     }
 
-    public default boolean isGuiSupported(ItemStack stack) {
+    default boolean isGuiSupported(ItemStack stack) {
         return false;
     }
 
-    public default void displayGui(PlayerEntity player) {
+    default void displayGui(PlayerEntity player) {
         // noop
     }
 
-    public default boolean isBlockOrientationSupported(ItemStack stack) {
-        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.BLOCK_ORIENTATION, this.featureFlags(stack));
+    default boolean isBlockOrientationSupported(ItemStack stack) {
+        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.BLOCK_ORIENTATION, featureFlags(stack));
     }
 
-    public default void setBlockOrientationAxis(ItemStack stack, BlockOrientationAxis orientation) {
+    default void setBlockOrientationAxis(ItemStack stack, BlockOrientationAxis orientation) {
         if (!isBlockOrientationSupported(stack))
             return;
 
@@ -132,20 +132,20 @@ public interface PlacementItem {
      * Hides what type of shape we are using and just lets us know the axis. Returns
      * UP/DOWN if not applicable.
      */
-    public default Direction.Axis getBlockPlacementAxis(ItemStack stack) {
+    default Direction.Axis getBlockPlacementAxis(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
             return Direction.Axis.Y;
 
-        BaseModelState modelState = XmItem.modelState(stack);
+        final BaseModelState modelState = XmItem.modelState(stack);
         if (modelState == null)
             return Direction.Axis.Y;
 
         switch (modelState.orientationType()) {
         case AXIS:
-            return this.getBlockOrientationAxis(stack).axis;
+            return getBlockOrientationAxis(stack).axis;
 
         case FACE:
-            return this.getBlockOrientationFace(stack).face.getAxis();
+            return getBlockOrientationFace(stack).face.getAxis();
 
         case EDGE:
             // TODO
@@ -162,7 +162,7 @@ public interface PlacementItem {
      * Hides what type of shape we are using and just lets us know the axis. Returns
      * false if not applicable.
      */
-    public default boolean getBlockPlacementAxisIsInverted(ItemStack stack) {
+    default boolean getBlockPlacementAxisIsInverted(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -171,11 +171,11 @@ public interface PlacementItem {
             return false;
 
         case FACE:
-            return this.getBlockOrientationFace(stack).face.getDirection() == Direction.AxisDirection.NEGATIVE;
+            return getBlockOrientationFace(stack).face.getDirection() == Direction.AxisDirection.NEGATIVE;
 
         case EDGE:
             // FIXME: is this right?
-            return this.getBlockOrientationEdge(stack).edge.face1.getDirection() == Direction.AxisDirection.POSITIVE;
+            return getBlockOrientationEdge(stack).edge.face1.getDirection() == Direction.AxisDirection.POSITIVE;
 
         case CORNER:
             // TODO
@@ -186,13 +186,13 @@ public interface PlacementItem {
         }
     }
 
-    public default ClockwiseRotation getBlockPlacementRotation(ItemStack stack) {
+    default ClockwiseRotation getBlockPlacementRotation(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
             return ClockwiseRotation.ROTATE_NONE;
 
         switch (((BaseModelState)XmItem.modelState(stack)).orientationType()) {
         case EDGE:
-            return this.getBlockOrientationEdge(stack).edge.rotation;
+            return getBlockOrientationEdge(stack).edge.rotation;
 
         case CORNER:
             // TODO
@@ -208,7 +208,7 @@ public interface PlacementItem {
     /**
      * Hides what type of shape we are using.
      */
-    public default boolean isBlockOrientationDynamic(ItemStack stack) {
+    default boolean isBlockOrientationDynamic(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -234,7 +234,7 @@ public interface PlacementItem {
     /**
      * Hides what type of shape we are using.
      */
-    public default boolean isBlockOrientationFixed(ItemStack stack) {
+    default boolean isBlockOrientationFixed(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -260,7 +260,7 @@ public interface PlacementItem {
     /**
      * Hides what type of shape we are using.
      */
-    public default boolean isBlockOrientationMatchClosest(ItemStack stack) {
+    default boolean isBlockOrientationMatchClosest(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -283,14 +283,14 @@ public interface PlacementItem {
         }
     }
 
-    public default BlockOrientationAxis getBlockOrientationAxis(ItemStack stack) {
+    default BlockOrientationAxis getBlockOrientationAxis(ItemStack stack) {
         return BlockOrientationAxis.DYNAMIC.deserializeNBT(stack.getTag());
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleBlockOrientationAxis(ItemStack stack, boolean reverse) {
+    default boolean cycleBlockOrientationAxis(ItemStack stack, boolean reverse) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -298,20 +298,20 @@ public interface PlacementItem {
         return true;
     }
 
-    public default void setBlockOrientationFace(ItemStack stack, BlockOrientationFace orientation) {
+    default void setBlockOrientationFace(ItemStack stack, BlockOrientationFace orientation) {
         if (!isBlockOrientationSupported(stack))
             return;
         orientation.serializeNBT(Useful.getOrCreateTagCompound(stack));
     }
 
-    public default BlockOrientationFace getBlockOrientationFace(ItemStack stack) {
+    default BlockOrientationFace getBlockOrientationFace(ItemStack stack) {
         return BlockOrientationFace.DYNAMIC.deserializeNBT(stack.getTag());
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleBlockOrientationFace(ItemStack stack, boolean reverse) {
+    default boolean cycleBlockOrientationFace(ItemStack stack, boolean reverse) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -319,21 +319,21 @@ public interface PlacementItem {
         return true;
     }
 
-    public default void setBlockOrientationEdge(ItemStack stack, BlockOrientationEdge orientation) {
+    default void setBlockOrientationEdge(ItemStack stack, BlockOrientationEdge orientation) {
         if (!isBlockOrientationSupported(stack))
             return;
 
         orientation.serializeNBT(Useful.getOrCreateTagCompound(stack));
     }
 
-    public default BlockOrientationEdge getBlockOrientationEdge(ItemStack stack) {
+    default BlockOrientationEdge getBlockOrientationEdge(ItemStack stack) {
         return BlockOrientationEdge.DYNAMIC.deserializeNBT(stack.getTag());
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleBlockOrientationEdge(ItemStack stack, boolean reverse) {
+    default boolean cycleBlockOrientationEdge(ItemStack stack, boolean reverse) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -341,21 +341,21 @@ public interface PlacementItem {
         return true;
     }
 
-    public default void setBlockOrientationCorner(ItemStack stack, BlockOrientationCorner orientation) {
+    default void setBlockOrientationCorner(ItemStack stack, BlockOrientationCorner orientation) {
         if (!isBlockOrientationSupported(stack))
             return;
 
         orientation.serializeNBT(Useful.getOrCreateTagCompound(stack));
     }
 
-    public default BlockOrientationCorner getBlockOrientationCorner(ItemStack stack) {
+    default BlockOrientationCorner getBlockOrientationCorner(ItemStack stack) {
         return BlockOrientationCorner.DYNAMIC.deserializeNBT(stack.getTag());
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleBlockOrientationCorner(ItemStack stack, boolean reverse) {
+    default boolean cycleBlockOrientationCorner(ItemStack stack, boolean reverse) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -368,7 +368,7 @@ public interface PlacementItem {
      * Context-sensitive version - calls appropriate cycle method based on shape
      * type. Return false if this item doesn't support this feature.
      */
-    public default boolean cycleBlockOrientation(ItemStack stack, boolean reverse) {
+    default boolean cycleBlockOrientation(ItemStack stack, boolean reverse) {
         if (!isBlockOrientationSupported(stack))
             return false;
 
@@ -399,7 +399,7 @@ public interface PlacementItem {
     /**
      * Context-sensitive localized name of current orientation.
      */
-    public default String blockOrientationLocalizedName(ItemStack stack) {
+    default String blockOrientationLocalizedName(ItemStack stack) {
         if (!isBlockOrientationSupported(stack))
             return "NOT SUPPORTED";
 
@@ -422,11 +422,11 @@ public interface PlacementItem {
         }
     }
 
-    public default boolean isRegionOrientationSupported(ItemStack stack) {
-        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.REGION_ORIENTATION, this.featureFlags(stack));
+    default boolean isRegionOrientationSupported(ItemStack stack) {
+        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.REGION_ORIENTATION, featureFlags(stack));
     }
 
-    public default void setRegionOrientation(ItemStack stack, RegionOrientation orientation) {
+    default void setRegionOrientation(ItemStack stack, RegionOrientation orientation) {
         if (!isRegionOrientationSupported(stack))
             return;
 
@@ -437,14 +437,14 @@ public interface PlacementItem {
      * Always returns XYZ during selection operations because display wouldn't match
      * what user is doing otherwise.
      */
-    public default RegionOrientation getRegionOrientation(ItemStack stack) {
+    default RegionOrientation getRegionOrientation(ItemStack stack) {
         return isFixedRegionSelectionInProgress(stack) ? RegionOrientation.XYZ : RegionOrientation.XYZ.deserializeNBT(stack.getTag());
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleRegionOrientation(ItemStack stack, boolean reverse) {
+    default boolean cycleRegionOrientation(ItemStack stack, boolean reverse) {
         if (!isRegionOrientationSupported(stack))
             return false;
 
@@ -452,78 +452,78 @@ public interface PlacementItem {
         return true;
     }
 
-    public default boolean isTargetModeSupported(ItemStack stack) {
-        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.TARGET_MODE, this.featureFlags(stack));
+    default boolean isTargetModeSupported(ItemStack stack) {
+        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.TARGET_MODE, featureFlags(stack));
     }
 
-    public default void setTargetMode(ItemStack stack, TargetMode mode) {
-        if (!this.isTargetModeSupported(stack))
+    default void setTargetMode(ItemStack stack, TargetMode mode) {
+        if (!isTargetModeSupported(stack))
             return;
 
         mode.serializeNBT(Useful.getOrCreateTagCompound(stack));
     }
 
-    public default TargetMode getTargetMode(ItemStack stack) {
+    default TargetMode getTargetMode(ItemStack stack) {
         return TargetMode.FILL_REGION.deserializeNBT(stack.getTag());
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleTargetMode(ItemStack stack, boolean reverse) {
-        if (!this.isTargetModeSupported(stack))
+    default boolean cycleTargetMode(ItemStack stack, boolean reverse) {
+        if (!isTargetModeSupported(stack))
             return false;
 
         setTargetMode(stack, reverse ? Useful.prevEnumValue(getTargetMode(stack)) : Useful.nextEnumValue(getTargetMode(stack)));
         return true;
     }
 
-    public default boolean isFilterModeSupported(ItemStack stack) {
-        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.FILTER_MODE, this.featureFlags(stack));
+    default boolean isFilterModeSupported(ItemStack stack) {
+        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.FILTER_MODE, featureFlags(stack));
     }
 
-    public default void setFilterMode(ItemStack stack, FilterMode mode) {
-        if (!this.isFilterModeSupported(stack))
+    default void setFilterMode(ItemStack stack, FilterMode mode) {
+        if (!isFilterModeSupported(stack))
             return;
 
         mode.serializeNBT(Useful.getOrCreateTagCompound(stack));
     }
 
-    public default FilterMode getFilterMode(ItemStack stack) {
+    default FilterMode getFilterMode(ItemStack stack) {
         return FilterMode.FILL_REPLACEABLE.deserializeNBT(stack.getTag());
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleFilterMode(ItemStack stack, boolean reverse) {
-        if (!this.isFilterModeSupported(stack))
+    default boolean cycleFilterMode(ItemStack stack, boolean reverse) {
+        if (!isFilterModeSupported(stack))
             return false;
 
         setFilterMode(stack, reverse ? Useful.prevEnumValue(getFilterMode(stack)) : Useful.nextEnumValue(getFilterMode(stack)));
         return true;
     }
 
-    public default boolean isSpeciesModeSupported(ItemStack stack) {
-        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.SPECIES_MODE, this.featureFlags(stack));
+    default boolean isSpeciesModeSupported(ItemStack stack) {
+        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.SPECIES_MODE, featureFlags(stack));
     }
 
-    public default void setSpeciesMode(ItemStack stack, SpeciesMode mode) {
-        if (!this.isSpeciesModeSupported(stack))
+    default void setSpeciesMode(ItemStack stack, SpeciesMode mode) {
+        if (!isSpeciesModeSupported(stack))
             return;
 
         mode.serializeNBT(Useful.getOrCreateTagCompound(stack));
     }
 
-    public default SpeciesMode getSpeciesMode(ItemStack stack) {
+    default SpeciesMode getSpeciesMode(ItemStack stack) {
         return SpeciesMode.MATCH_CLICKED.deserializeNBT(stack.getTag());
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleSpeciesMode(ItemStack stack, boolean reverse) {
-        if (!this.isSpeciesModeSupported(stack))
+    default boolean cycleSpeciesMode(ItemStack stack, boolean reverse) {
+        if (!isSpeciesModeSupported(stack))
             return false;
 
         setSpeciesMode(stack, reverse ? Useful.prevEnumValue(getSpeciesMode(stack)) : Useful.nextEnumValue(getSpeciesMode(stack)));
@@ -536,78 +536,78 @@ public interface PlacementItem {
      * different than the stack block because SuperModel in-world blocks are
      * dependent on substance and other properties stored in the stack.
      */
-    public static BlockState getPlacementBlockStateFromStackStatically(ItemStack stack) {
+    static BlockState getPlacementBlockStateFromStackStatically(ItemStack stack) {
         // supermodel blocks may need to use a different block instance depending on
         // model/substance
         // handle this here by substituting a stack different than what we received
-        Item item = stack.getItem();
+        final Item item = stack.getItem();
 
         if (item instanceof PlacementItem) {
-            BaseModelState modelState = XmItem.modelState(stack);
+            final BaseModelState modelState = XmItem.modelState(stack);
             if (modelState == null)
                 return null;
 
-            Block targetBlock = ((BlockItem) stack.getItem()).getBlock();
+            final Block targetBlock = ((BlockItem) stack.getItem()).getBlock();
 
             // TODO: remove when confirmed no longer be needed
-//            if (!sBlock.isVirtual() && targetBlock instanceof SuperBlock) {
-//                BlockSubstance substance = SuperBlockStackHelper.getStackSubstance(stack);
-//                if (substance == null)
-//                    return null;
-//                targetBlock = SuperModelBlock.findAppropriateSuperModelBlock(substance, modelState);
-//            }
+            //            if (!sBlock.isVirtual() && targetBlock instanceof SuperBlock) {
+            //                BlockSubstance substance = SuperBlockStackHelper.getStackSubstance(stack);
+            //                if (substance == null)
+            //                    return null;
+            //                targetBlock = SuperModelBlock.findAppropriateSuperModelBlock(substance, modelState);
+            //            }
 
             // TODO: may need to handle other properties/make dynamic somehow
-            BlockState result = targetBlock.getDefaultState();
+            final BlockState result = targetBlock.getDefaultState();
             if (modelState.hasSpecies()) {
-//                result = result.with(XmSimpleBlock.SPECIES, modelState.species());
+                //                result = result.with(XmSimpleBlock.SPECIES, modelState.species());
             }
 
             return result;
         } else if (item instanceof BlockItem) {
-            Block targetBlock = (Block) ((BlockItem) stack.getItem()).getBlock();
+            final Block targetBlock = ((BlockItem) stack.getItem()).getBlock();
             return targetBlock.getDefaultState();
-        } else {
+        } else
             return Blocks.AIR.getDefaultState();
-        }
 
     }
 
-    public default BlockState getPlacementBlockStateFromStack(ItemStack stack) {
+    default BlockState getPlacementBlockStateFromStack(ItemStack stack) {
         return getPlacementBlockStateFromStackStatically(stack);
     }
 
-//    public default void toggleDeleteMode(ItemStack stack)
-//    {
-//        setDeleteModeEnabled(stack, !isDeleteModeEnabled(stack));
-//    }
-//    
-//    public default boolean isDeleteModeEnabled(ItemStack stack)
-//    {
-//        return Useful.getOrCreateTagCompound(stack).getBoolean(ModNBTTag.PLACEMENT_DELETE_ENABLED);
-//    }
-//    
-//    public default void setDeleteModeEnabled(ItemStack stack, boolean enabled)
-//    {
-//        Useful.getOrCreateTagCompound(stack).setBoolean(ModNBTTag.PLACEMENT_DELETE_ENABLED, enabled);
-//    }
+    //    public default void toggleDeleteMode(ItemStack stack)
+    //    {
+    //        setDeleteModeEnabled(stack, !isDeleteModeEnabled(stack));
+    //    }
+    //
+    //    public default boolean isDeleteModeEnabled(ItemStack stack)
+    //    {
+    //        return Useful.getOrCreateTagCompound(stack).getBoolean(ModNBTTag.PLACEMENT_DELETE_ENABLED);
+    //    }
+    //
+    //    public default void setDeleteModeEnabled(ItemStack stack, boolean enabled)
+    //    {
+    //        Useful.getOrCreateTagCompound(stack).setBoolean(ModNBTTag.PLACEMENT_DELETE_ENABLED, enabled);
+    //    }
 
-    public default boolean isFixedRegionSupported(ItemStack stack) {
-        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.FIXED_REGION, this.featureFlags(stack));
+    default boolean isFixedRegionSupported(ItemStack stack) {
+        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.FIXED_REGION, featureFlags(stack));
     }
 
     /**
      * Return false if this item doesn't support this feature. Turning off cancels
      * any region selection in progress.
      */
-    public default boolean toggleFixedRegionEnabled(ItemStack stack) {
-        if (!this.isFixedRegionSupported(stack))
+    default boolean toggleFixedRegionEnabled(ItemStack stack) {
+        if (!isFixedRegionSupported(stack))
             return false;
 
-        boolean current = this.isFixedRegionEnabled(stack);
+        final boolean current = isFixedRegionEnabled(stack);
 
-        if (current && this.isFixedRegionSelectionInProgress(stack))
-            this.fixedRegionCancel(stack);
+        if (current && isFixedRegionSelectionInProgress(stack)) {
+            fixedRegionCancel(stack);
+        }
 
         setFixedRegionEnabled(stack, !current);
         return true;
@@ -616,33 +616,33 @@ public interface PlacementItem {
     /**
      * If true, any region target method should use the fixed endpoints from
      * {@link #fixedRegionFinish(ItemStack, EntityPlayer, BlockPos, boolean)}
-     * 
+     *
      * @param stack
      * @return
      */
-    public default boolean isFixedRegionEnabled(ItemStack stack) {
-        if (!this.isFixedRegionSupported(stack))
+    default boolean isFixedRegionEnabled(ItemStack stack) {
+        if (!isFixedRegionSupported(stack))
             return false;
 
         return Useful.getOrCreateTagCompound(stack).getBoolean(NBT_FIXED_REGION_ENABLED);
     }
 
-    public default void setFixedRegionEnabled(ItemStack stack, boolean isFixedRegion) {
-        if (!this.isFixedRegionSupported(stack))
+    default void setFixedRegionEnabled(ItemStack stack, boolean isFixedRegion) {
+        if (!isFixedRegionSupported(stack))
             return;
 
         Useful.getOrCreateTagCompound(stack).putBoolean(NBT_FIXED_REGION_ENABLED, isFixedRegion);
     }
 
-    public default FixedRegionBounds getFixedRegion(ItemStack stack) {
+    default FixedRegionBounds getFixedRegion(ItemStack stack) {
         return new FixedRegionBounds(Useful.getOrCreateTagCompound(stack));
     }
 
     /**
      * Sets fixed region in the stack. Does not enable fixed region.
      */
-    public default void setFixedRegion(FixedRegionBounds bounds, ItemStack stack) {
-        if (!this.isFixedRegionSupported(stack))
+    default void setFixedRegion(FixedRegionBounds bounds, ItemStack stack) {
+        if (!isFixedRegionSupported(stack))
             return;
 
         bounds.saveToNBT(Useful.getOrCreateTagCompound(stack));
@@ -652,41 +652,44 @@ public interface PlacementItem {
      * Sets the begining point for a fixed region. Enables fixed region. Does not
      * change the current fixed region.
      */
-    public default void fixedRegionStart(ItemStack stack, BlockPos pos, boolean isCenter) {
-        if (!this.isFixedRegionSupported(stack))
+    default void fixedRegionStart(ItemStack stack, BlockPos pos, boolean isCenter) {
+        if (!isFixedRegionSupported(stack))
             return;
 
-        if (!this.isFixedRegionEnabled(stack))
-            this.setFixedRegionEnabled(stack, true);
+        if (!isFixedRegionEnabled(stack)) {
+            setFixedRegionEnabled(stack, true);
+        }
 
-        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
+        final CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 
         tag.putLong(NBT_FIXED_REGION_SELECT_POS, PackedBlockPos.pack(pos, isCenter ? 1 : 0));
 
-        TargetMode currentMode = getTargetMode(stack);
+        final TargetMode currentMode = getTargetMode(stack);
         // assume user wants to fill a region and
         // change mode to region fill if not already set to FILL_REGION or HOLLOW_FILL
-        if (!currentMode.usesSelectionRegion)
+        if (!currentMode.usesSelectionRegion) {
             TargetMode.FILL_REGION.serializeNBT(tag);
+        }
     }
 
-    public default boolean isFixedRegionSelectionInProgress(ItemStack stack) {
-        if (!this.isFixedRegionSupported(stack) || !this.isFixedRegionEnabled(stack))
+    default boolean isFixedRegionSelectionInProgress(ItemStack stack) {
+        if (!isFixedRegionSupported(stack) || !isFixedRegionEnabled(stack))
             return false;
 
         return Useful.getOrCreateTagCompound(stack).containsKey(NBT_FIXED_REGION_SELECT_POS);
     }
 
-    public default void fixedRegionCancel(ItemStack stack) {
-        if (!this.isFixedRegionSupported(stack))
+    default void fixedRegionCancel(ItemStack stack) {
+        if (!isFixedRegionSupported(stack))
             return;
 
-        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
+        final CompoundTag tag = Useful.getOrCreateTagCompound(stack);
         tag.remove(NBT_FIXED_REGION_SELECT_POS);
 
         // disable fixed region if we don't have one
-        if (!FixedRegionBounds.isPresentInTag(tag))
+        if (!FixedRegionBounds.isPresentInTag(tag)) {
             tag.putBoolean(NBT_FIXED_REGION_ENABLED, false);
+        }
     }
 
     /**
@@ -695,28 +698,27 @@ public interface PlacementItem {
      * is true if point is centered.
      */
 
-    public default Pair<BlockPos, Boolean> fixedRegionSelectionPos(ItemStack stack) {
-        if (!this.isFixedRegionSupported(stack))
+    default Pair<BlockPos, Boolean> fixedRegionSelectionPos(ItemStack stack) {
+        if (!isFixedRegionSupported(stack))
             return null;
 
-        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
+        final CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 
         if (tag.containsKey(NBT_FIXED_REGION_SELECT_POS)) {
-            long packed = tag.getLong(NBT_FIXED_REGION_SELECT_POS);
+            final long packed = tag.getLong(NBT_FIXED_REGION_SELECT_POS);
             return Pair.of(PackedBlockPos.unpack(packed), PackedBlockPos.getExtra(packed) == 1);
-        } else {
+        } else
             return null;
-        }
     }
 
-    public default void fixedRegionFinish(ItemStack stack, PlayerEntity player, BlockPos pos, boolean isCenter) {
-        if (!this.isFixedRegionSupported(stack))
+    default void fixedRegionFinish(ItemStack stack, PlayerEntity player, BlockPos pos, boolean isCenter) {
+        if (!isFixedRegionSupported(stack))
             return;
 
-        Pair<BlockPos, Boolean> fromPos = fixedRegionSelectionPos(stack);
+        final Pair<BlockPos, Boolean> fromPos = fixedRegionSelectionPos(stack);
 
         // if somehow missing start position, still want to cancel selection operation
-        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
+        final CompoundTag tag = Useful.getOrCreateTagCompound(stack);
 
         if (fromPos == null)
             return;
@@ -727,31 +729,32 @@ public interface PlacementItem {
 
         setFixedRegionEnabled(stack, true);
 
-        TargetMode currentMode = getTargetMode(stack);
+        final TargetMode currentMode = getTargetMode(stack);
         // assume user wants to fill a region and
         // change mode to region fill if not already set to FILL_REGION or HOLLOW_FILL
-        if (!currentMode.usesSelectionRegion)
+        if (!currentMode.usesSelectionRegion) {
             TargetMode.FILL_REGION.serializeNBT(tag);
+        }
 
     }
 
-//    /**
-//     * See {@link #placementRegionPosition(ItemStack)} for some explanation.
-//     */
-//    public static BlockPos getPlayerRelativeRegionFromEndPoints(BlockPos from, BlockPos to, EntityPlayer player)
-//    {
-//        BlockPos diff = to.subtract(from); 
-//        BlockPos selectedPos = new BlockPos(
-//                diff.getX() >= 0 ? diff.getX() + 1 : diff.getX() -1,
-//                diff.getY() >= 0 ? diff.getY() + 1 : diff.getY() -1,
-//                diff.getZ() >= 0 ? diff.getZ() + 1 : diff.getZ() -1);
-//        return(player.getHorizontalFacing().getAxis() == Direction.Axis.Z)
-//                ? selectedPos
-//                : new BlockPos(selectedPos.getZ(), selectedPos.getY(), selectedPos.getX());
-//    }
+    //    /**
+    //     * See {@link #placementRegionPosition(ItemStack)} for some explanation.
+    //     */
+    //    public static BlockPos getPlayerRelativeRegionFromEndPoints(BlockPos from, BlockPos to, EntityPlayer player)
+    //    {
+    //        BlockPos diff = to.subtract(from);
+    //        BlockPos selectedPos = new BlockPos(
+    //                diff.getX() >= 0 ? diff.getX() + 1 : diff.getX() -1,
+    //                diff.getY() >= 0 ? diff.getY() + 1 : diff.getY() -1,
+    //                diff.getZ() >= 0 ? diff.getZ() + 1 : diff.getZ() -1);
+    //        return(player.getHorizontalFacing().getAxis() == Direction.Axis.Z)
+    //                ? selectedPos
+    //                : new BlockPos(selectedPos.getZ(), selectedPos.getY(), selectedPos.getX());
+    //    }
 
-    public default boolean isRegionSizeSupported(ItemStack stack) {
-        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.REGION_SIZE, this.featureFlags(stack));
+    default boolean isRegionSizeSupported(ItemStack stack) {
+        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.REGION_SIZE, featureFlags(stack));
     }
 
     /**
@@ -761,12 +764,12 @@ public interface PlacementItem {
      * All are always positive numbers.<br>
      * Region rotation is or isn't applied according to parameter.<br>
      */
-    public default BlockPos getRegionSize(ItemStack stack, boolean applyRegionRotation) {
-        CompoundTag tag = stack.getTag();
+    default BlockPos getRegionSize(ItemStack stack, boolean applyRegionRotation) {
+        final CompoundTag tag = stack.getTag();
         if (tag == null || !tag.containsKey(NBT_REGION_SIZE))
             return new BlockPos(1, 1, 1);
 
-        BlockPos result = BlockPos.fromLong(tag.getLong(NBT_REGION_SIZE));
+        final BlockPos result = BlockPos.fromLong(tag.getLong(NBT_REGION_SIZE));
 
         return applyRegionRotation ? getRegionOrientation(stack).rotatedRegionPos(result) : result;
     }
@@ -774,11 +777,11 @@ public interface PlacementItem {
     /**
      * See {@link #getRegionSize(ItemStack, boolean)}
      */
-    public default void setRegionSize(ItemStack stack, BlockPos pos) {
-        if (!this.isRegionSizeSupported(stack))
+    default void setRegionSize(ItemStack stack, BlockPos pos) {
+        if (!isRegionSizeSupported(stack))
             return;
 
-        CompoundTag tag = stack.getTag();
+        final CompoundTag tag = stack.getTag();
         tag.putLong(NBT_REGION_SIZE, pos.asLong());
     }
 
@@ -786,54 +789,54 @@ public interface PlacementItem {
      * See {@link #getRegionSize(ItemStack, boolean)} Returns false if feature not
      * supported.
      */
-    public default boolean changeRegionSize(ItemStack stack, int dx, int dy, int dz) {
-        if (!this.isRegionSizeSupported(stack))
+    default boolean changeRegionSize(ItemStack stack, int dx, int dy, int dz) {
+        if (!isRegionSizeSupported(stack))
             return false;
 
-        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
-        BlockPos oldPos = BlockPos.fromLong(tag.getLong(NBT_REGION_SIZE));
+        final CompoundTag tag = Useful.getOrCreateTagCompound(stack);
+        final BlockPos oldPos = BlockPos.fromLong(tag.getLong(NBT_REGION_SIZE));
 
-        BlockPos newPos = new BlockPos(MathHelper.clamp(oldPos.getX() + dx, 1, 9), MathHelper.clamp(oldPos.getY() + dy, 1, 9),
-                MathHelper.clamp(oldPos.getZ() + dz, 1, this.isExcavator(stack) ? 64 : 9));
+        final BlockPos newPos = new BlockPos(MathHelper.clamp(oldPos.getX() + dx, 1, 9), MathHelper.clamp(oldPos.getY() + dy, 1, 9),
+                MathHelper.clamp(oldPos.getZ() + dz, 1, isExcavator(stack) ? 64 : 9));
         tag.putLong(NBT_REGION_SIZE, newPos.asLong());
 
         if (newPos.getX() == 1 && newPos.getY() == 1 && newPos.getZ() == 1) {
             // change to single-block mode if region size is single block
-            if (this.getTargetMode(stack).usesSelectionRegion && this.isTargetModeSupported(stack)) {
-                this.setTargetMode(stack, TargetMode.ON_CLICKED_FACE);
+            if (getTargetMode(stack).usesSelectionRegion && isTargetModeSupported(stack)) {
+                setTargetMode(stack, TargetMode.ON_CLICKED_FACE);
             }
         } else {
             // change to multiblock mode if region size is single block
-            if (!this.getTargetMode(stack).usesSelectionRegion && this.isTargetModeSupported(stack)) {
-                this.setTargetMode(stack, TargetMode.FILL_REGION);
+            if (!getTargetMode(stack).usesSelectionRegion && isTargetModeSupported(stack)) {
+                setTargetMode(stack, TargetMode.FILL_REGION);
             }
         }
 
         return true;
     }
 
-//    /**
-//     * Meant for use by packet handler
-//     */
-//    public static void selectedRegionUpdate(ItemStack stack, BlockPos selectedPos)
-//    {
-//        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
-//        if(selectedPos == null)
-//        {
-//            tag.removeTag(NBT_REGION_SIZE);
-//        }
-//        else
-//        {
-//            tag.setLong(NBT_REGION_SIZE, selectedPos.toLong());
-//        }
-//    }
+    //    /**
+    //     * Meant for use by packet handler
+    //     */
+    //    public static void selectedRegionUpdate(ItemStack stack, BlockPos selectedPos)
+    //    {
+    //        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
+    //        if(selectedPos == null)
+    //        {
+    //            tag.removeTag(NBT_REGION_SIZE);
+    //        }
+    //        else
+    //        {
+    //            tag.setLong(NBT_REGION_SIZE, selectedPos.toLong());
+    //        }
+    //    }
 
-    public default String selectedRegionLocalizedName(ItemStack stack) {
+    default String selectedRegionLocalizedName(ItemStack stack) {
         switch (getTargetMode(stack)) {
         case FILL_REGION:
-            if (!this.isRegionSizeSupported(stack))
+            if (!isRegionSizeSupported(stack))
                 return "";
-            BlockPos pos = getRegionSize(stack, false);
+            final BlockPos pos = getRegionSize(stack, false);
             return I18n.translate("placement.message.region_box", pos.getX(), pos.getY(), pos.getZ());
 
         case ON_CLICKED_SURFACE:
@@ -846,54 +849,57 @@ public interface PlacementItem {
         }
     }
 
-    public default boolean isSelectionRangeSupported(ItemStack stack) {
-        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.SELECTION_RANGE, this.featureFlags(stack));
+    default boolean isSelectionRangeSupported(ItemStack stack) {
+        return BENUMSET_FEATURES.isFlagSetForValue(PlacementItemFeature.SELECTION_RANGE, featureFlags(stack));
     }
 
     /**
      * 0 means non-floating
      */
-    public default void setSelectionTargetRange(ItemStack stack, int range) {
-        if (!this.isSelectionRangeSupported(stack))
+    default void setSelectionTargetRange(ItemStack stack, int range) {
+        if (!isSelectionRangeSupported(stack))
             return;
 
         // subtract because external values jump from 0 to 2
-        if (range > 0)
+        if (range > 0) {
             range--;
+        }
         Useful.getOrCreateTagCompound(stack).putByte(NBT_REGION_FLOATING_RANGE, (byte) range);
     }
 
     /**
      * 0 means non-floating
      */
-    public default int getFloatingSelectionRange(ItemStack stack) {
-        if (!this.isSelectionRangeSupported(stack))
+    default int getFloatingSelectionRange(ItemStack stack) {
+        if (!isSelectionRangeSupported(stack))
             return 0;
 
-        CompoundTag tag = stack.getTag();
-        int range = tag == null ? 0 : MathHelper.clamp(tag.getByte(NBT_REGION_FLOATING_RANGE), 0, 4);
+        final CompoundTag tag = stack.getTag();
+        final int range = tag == null ? 0 : MathHelper.clamp(tag.getByte(NBT_REGION_FLOATING_RANGE), 0, 4);
         return range == 0 ? 0 : range + 1;
     }
 
     /**
      * Return false if this item doesn't support this feature.
      */
-    public default boolean cycleSelectionTargetRange(ItemStack stack, boolean reverse) {
-        if (!this.isSelectionRangeSupported(stack))
+    default boolean cycleSelectionTargetRange(ItemStack stack, boolean reverse) {
+        if (!isSelectionRangeSupported(stack))
             return false;
 
-        CompoundTag tag = Useful.getOrCreateTagCompound(stack);
+        final CompoundTag tag = Useful.getOrCreateTagCompound(stack);
         int range = tag.getByte(NBT_REGION_FLOATING_RANGE) + (reverse ? -1 : 1);
-        if (range > 4)
+        if (range > 4) {
             range = 0;
-        if (range < 0)
+        }
+        if (range < 0) {
             range = 4;
+        }
         tag.putByte(NBT_REGION_FLOATING_RANGE, (byte) range);
         return true;
     }
 
-    public default boolean isFloatingSelectionEnabled(ItemStack stack) {
-        if (!this.isSelectionRangeSupported(stack))
+    default boolean isFloatingSelectionEnabled(ItemStack stack) {
+        if (!isSelectionRangeSupported(stack))
             return false;
 
         return getFloatingSelectionRange(stack) != 0;
@@ -901,17 +907,17 @@ public interface PlacementItem {
 
     /**
      * Will return a meaningless result if floating selection is disabled.
-     * 
+     *
      * TODO: remove - replaced by PlacementPosition
      */
-    public default BlockPos getFloatingSelectionBlockPos(ItemStack stack, LivingEntity entity) {
-        int range = getFloatingSelectionRange(stack);
+    default BlockPos getFloatingSelectionBlockPos(ItemStack stack, LivingEntity entity) {
+        final int range = getFloatingSelectionRange(stack);
 
-        Vec3d look = entity.getRotationVector();
-        Vec3d pos = entity.getPos();
-        int blockX = MathHelper.floor(look.x * range + pos.x);
-        int blockY = MathHelper.floor(look.y * range + pos.y + entity.getEyeHeight(entity.getPose()));
-        int blockZ = MathHelper.floor(look.z * range + pos.z);
+        final Vec3d look = entity.getRotationVector();
+        final Vec3d pos = entity.getPos();
+        final int blockX = MathHelper.floor(look.x * range + pos.x);
+        final int blockY = MathHelper.floor(look.y * range + pos.y + entity.getEyeHeight(entity.getPose()));
+        final int blockZ = MathHelper.floor(look.z * range + pos.z);
 
         return new BlockPos(blockX, blockY, blockZ);
     }

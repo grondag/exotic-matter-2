@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -30,13 +30,13 @@ public class PolyHelper {
     public static boolean epsilonEquals(float first, float second) {
         return Math.abs(first - second) < EPSILON;
     }
-    
+
     public static boolean epsilonZero(float value) {
         return Math.abs(value) < EPSILON;
     }
 
     private static final Direction[] FACES = Direction.values();
-    
+
     public static Direction faceForNormal(final float x, final float y, final float z) {
         Direction result = null;
 
@@ -44,8 +44,8 @@ public class PolyHelper {
 
         for (int i = 0; i < 6; i++) {
             final Direction f = FACES[i];
-            Vec3i faceNormal = f.getVector();
-            float diff = Vec3f.dotProduct(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ(), x, y, z);
+            final Vec3i faceNormal = f.getVector();
+            final float diff = Vec3f.dotProduct(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ(), x, y, z);
 
             if (diff >= 0.0 && diff > minDiff) {
                 minDiff = diff;
@@ -53,11 +53,10 @@ public class PolyHelper {
             }
         }
 
-        if (result == null) {
+        if (result == null)
             return Direction.UP;
-        } else {
+        else
             return result;
-        }
     }
 
     public static Direction faceForNormal(Vec3f normal) {
@@ -191,7 +190,7 @@ public class PolyHelper {
         Vec3f thisVertex = poly.getPos(vertexCount - 1);
 
         for (int nextIndex = 0; nextIndex < vertexCount; nextIndex++) {
-            Vec3f nextVertex = poly.getPos(nextIndex);
+            final Vec3f nextVertex = poly.getPos(nextIndex);
 
             final float ax = thisVertex.x() - priorVertex.x();
             final float ay = thisVertex.y() - priorVertex.y();
@@ -210,9 +209,8 @@ public class PolyHelper {
                 testX = crossX;
                 testY = crossY;
                 testZ = crossZ;
-            } else if (testX * crossX + testY * crossY + testZ * crossZ < 0) {
+            } else if (testX * crossX + testY * crossY + testZ * crossZ < 0)
                 return false;
-            }
 
             priorVertex = thisVertex;
             thisVertex = nextVertex;

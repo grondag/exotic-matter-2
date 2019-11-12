@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -64,24 +64,25 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
         this.heldStack = heldStack;
         this.player = player;
         this.pPos = pPos;
-        this.placementItem = (PlacementItem) heldStack.getItem();
-        this.isSelectionInProgress = this.placementItem.isFixedRegionSelectionInProgress(heldStack);
-        this.selectionMode = this.placementItem.getTargetMode(heldStack);
-        this.isExcavation = this.placementItem.isExcavator(heldStack);
-        this.isVirtual = this.placementItem.isVirtual(heldStack);
+        placementItem = (PlacementItem) heldStack.getItem();
+        isSelectionInProgress = placementItem.isFixedRegionSelectionInProgress(heldStack);
+        selectionMode = placementItem.getTargetMode(heldStack);
+        isExcavation = placementItem.isExcavator(heldStack);
+        isVirtual = placementItem.isVirtual(heldStack);
 
-        FilterMode filterMode = this.placementItem.getFilterMode(heldStack);
+        FilterMode filterMode = placementItem.getFilterMode(heldStack);
 
         // if excavating, adjust filter mode if needed so that it does something
-        if (isExcavation && filterMode == FilterMode.FILL_REPLACEABLE)
+        if (isExcavation && filterMode == FilterMode.FILL_REPLACEABLE) {
             filterMode = FilterMode.REPLACE_SOLID;
-        this.effectiveFilterMode = filterMode;
+        }
+        effectiveFilterMode = filterMode;
     }
 
     /**
      * Type-specific logic for {@link #validate()}. Populate obstacles if
      * applicable.
-     * 
+     *
      * @return Same semantics as {@link #validate()}
      */
     protected abstract boolean doValidate();
@@ -96,7 +97,7 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
 
     @Override
     public boolean isExcavation() {
-        return this.isExcavation;
+        return isExcavation;
     }
 
     @Environment(EnvType.CLIENT)
@@ -112,7 +113,7 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
      */
     @Environment(EnvType.CLIENT)
     protected BlockPos previewPos() {
-        return this.pPos.inPos;
+        return pPos.inPos;
     }
 
     /**
@@ -121,7 +122,7 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
      */
     @Nullable
     protected ModelState previewModelState() {
-        return XmItem.modelState(this.heldStack);
+        return XmItem.modelState(heldStack);
     }
 
     public ItemStack placedStack() {
@@ -129,11 +130,11 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
     }
 
     public PlacementPosition placementPosition() {
-        return this.pPos;
+        return pPos;
     }
 
     public PlayerEntity player() {
-        return this.player;
+        return player;
     }
 
     /**
@@ -142,15 +143,15 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
      */
     @Environment(EnvType.CLIENT)
     protected void drawPlacementPreview(Tessellator tessellator, BufferBuilder bufferBuilder) {
-        if (this.previewPos() == null || this.isExcavation)
+        if (previewPos() == null || isExcavation)
             return;
 
         GlStateManager.disableDepthTest();
 
-        ModelState placementModelState = this.previewModelState();
+        final ModelState placementModelState = previewModelState();
         if (placementModelState == null) {
             // No model state, draw generic box
-            BlockPos pos = this.previewPos();
+            final BlockPos pos = previewPos();
             bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
             WorldRenderer.buildBoxOutline(bufferBuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, OBSTRUCTED.red,
                     OBSTRUCTED.green, OBSTRUCTED.blue, 1f);
@@ -158,27 +159,27 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
         } else {
             //TODO: use voxelshap instead
             // Draw collision boxes
-//            GlStateManager.lineWidth(1.0F);
-//            for (Box blockAABB : CollisionDispatcher.boxesFor(placementModelState)) {
-//                bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-//                WorldRenderer.buildBoxOutline(bufferBuilder, blockAABB.minX, blockAABB.minY, blockAABB.minZ, blockAABB.maxX, blockAABB.maxY, blockAABB.maxZ, 1f,
-//                        1f, 1f, 1f);
-//                tessellator.draw();
-//            }
+            //            GlStateManager.lineWidth(1.0F);
+            //            for (Box blockAABB : CollisionDispatcher.boxesFor(placementModelState)) {
+            //                bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+            //                WorldRenderer.buildBoxOutline(bufferBuilder, blockAABB.minX, blockAABB.minY, blockAABB.minZ, blockAABB.maxX, blockAABB.maxY, blockAABB.maxZ, 1f,
+            //                        1f, 1f, 1f);
+            //                tessellator.draw();
+            //            }
         }
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public final void renderPreview(float tickDelta, ClientPlayerEntity player) {
-        this.validate();
+        validate();
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
 
-        double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
-        double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
-        double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
+        final double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
+        final double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
+        final double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
 
         bufferBuilder.setOffset(-d0, -d1, -d2);
 
@@ -192,14 +193,14 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
         GlStateManager.enablePolygonOffset();
         GlStateManager.polygonOffset(-1, -1);
 
-        if (this.isSelectionInProgress) {
-            this.drawSelection(tessellator, bufferBuilder);
-        } else if (this.isExcavation) {
-            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.EXCAVATE);
-        } else if (this.isValid) {
-            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.PLACE);
+        if (isSelectionInProgress) {
+            drawSelection(tessellator, bufferBuilder);
+        } else if (isExcavation) {
+            drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.EXCAVATE);
+        } else if (isValid) {
+            drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.PLACE);
         } else {
-            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.OBSTRUCTED);
+            drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.OBSTRUCTED);
         }
 
         bufferBuilder.setOffset(0, 0, 0);

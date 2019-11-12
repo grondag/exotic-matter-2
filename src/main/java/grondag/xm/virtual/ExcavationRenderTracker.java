@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -40,7 +40,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 
     public static final ExcavationRenderTracker INSTANCE = new ExcavationRenderTracker();
 
-    private IdentityHashMap<ServerPlayerEntity, PlayerData> playerTracking = new IdentityHashMap<>();
+    private final IdentityHashMap<ServerPlayerEntity, PlayerData> playerTracking = new IdentityHashMap<>();
 
     @Override
     protected Int2ObjectOpenHashMap<ExcavationRenderEntry> load(int dimension) {
@@ -48,19 +48,21 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
     }
 
     public void add(ExcavationRenderTask task) {
-        ExcavationRenderEntry entry = new ExcavationRenderEntry(task);
-        if (XmConfig.logExcavationRenderTracking)
+        final ExcavationRenderEntry entry = new ExcavationRenderEntry(task);
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("id = %d new Entry, valid=%s", entry.id, Boolean.toString(entry.isValid()));
+        }
         if (entry.isValid()) {
             synchronized (this) {
                 this.get(entry.rawDimensionId).put(entry.id, entry);
             }
 
-            for (Map.Entry<ServerPlayerEntity, PlayerData> playerEntry : playerTracking.entrySet()) {
-                PlayerData pd = playerEntry.getValue();
+            for (final Map.Entry<ServerPlayerEntity, PlayerData> playerEntry : playerTracking.entrySet()) {
+                final PlayerData pd = playerEntry.getValue();
                 if (pd.dimensionID == entry.rawDimensionId && task.visibleTo(playerEntry.getKey())) {
-                    if (XmConfig.logExcavationRenderTracking)
+                    if (XmConfig.logExcavationRenderTracking) {
                         Xm.LOG.info("adding listeners for %s", playerEntry.getKey().getDisplayName());
+                    }
                     entry.addListener(playerEntry.getKey(), true);
                 }
             }
@@ -68,15 +70,16 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
     }
 
     public synchronized void remove(ExcavationRenderEntry entry) {
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("id = %d removing excavation render entry", entry.id);
+        }
 
         this.get(entry.rawDimensionId).remove(entry.id);
 
-        Packet<?> packet = S2C_ExcavationRenderUpdate.toPacket(entry.id);
+        final Packet<?> packet = S2C_ExcavationRenderUpdate.toPacket(entry.id);
 
-        for (Map.Entry<ServerPlayerEntity, PlayerData> playerEntry : playerTracking.entrySet()) {
-            PlayerData pd = playerEntry.getValue();
+        for (final Map.Entry<ServerPlayerEntity, PlayerData> playerEntry : playerTracking.entrySet()) {
+            final PlayerData pd = playerEntry.getValue();
             if (pd.dimensionID == entry.rawDimensionId) {
                 entry.removeListener(playerEntry.getKey());
                 ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntry.getKey(), packet);
@@ -88,16 +91,18 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
      * Call when player joins server, changes dimension or changes active domain.
      */
     public void updatePlayerTracking(ServerPlayerEntity player) {
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("updatePlayerTracking for %s", player.getName());
+        }
 
-        PlayerData newData = new PlayerData(player);
-        PlayerData oldData = playerTracking.get(player);
+        final PlayerData newData = new PlayerData(player);
+        final PlayerData oldData = playerTracking.get(player);
 
         if (oldData != null && oldData.dimensionID == newData.dimensionID && oldData.domainID == newData.domainID) {
             // no changes
-            if (XmConfig.logExcavationRenderTracking)
+            if (XmConfig.logExcavationRenderTracking) {
                 Xm.LOG.info("updatePlayerTracking exit no changes");
+            }
             return;
         }
 
@@ -106,9 +111,9 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
         // remove old listeners if needed
         if (oldData != null) {
             synchronized (this) {
-                Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(oldData.dimensionID);
+                final Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(oldData.dimensionID);
                 if (entries != null && !entries.isEmpty()) {
-                    for (ExcavationRenderEntry entry : entries.values()) {
+                    for (final ExcavationRenderEntry entry : entries.values()) {
                         entry.removeListener(player);
                     }
                 }
@@ -118,13 +123,14 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
         // build refresh
         final SimpleUnorderedArrayList<ExcavationRenderEntry> output = new SimpleUnorderedArrayList<>();
         synchronized (this) {
-            Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(newData.dimensionID);
+            final Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(newData.dimensionID);
             if (entries != null && !entries.isEmpty()) {
-                for (ExcavationRenderEntry entry : entries.values()) {
+                for (final ExcavationRenderEntry entry : entries.values()) {
                     if(entry.task.visibleTo(player)) {
                         entry.addListener(player, false);
-                        if (entry.isFirstComputeDone())
+                        if (entry.isFirstComputeDone()) {
                             output.add(entry);
+                        }
                     }
                 }
             }
@@ -133,15 +139,15 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
     }
 
     public void stopPlayerTracking(ServerPlayerEntity player) {
-        PlayerData oldData = playerTracking.get(player);
+        final PlayerData oldData = playerTracking.get(player);
 
         if (oldData == null)
             return;
 
         synchronized (this) {
-            Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(oldData.dimensionID);
+            final Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(oldData.dimensionID);
             if (entries != null && !entries.isEmpty()) {
-                for (ExcavationRenderEntry entry : entries.values()) {
+                for (final ExcavationRenderEntry entry : entries.values()) {
                     entry.removeListener(player);
                 }
             }
@@ -155,8 +161,8 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
         private final int dimensionID;
 
         private PlayerData(ServerPlayerEntity player) {
-            this.domainID = DomainManager.instance().getActiveDomain(player).getAssignedNumber();
-            this.dimensionID = player.dimension.getRawId();
+            domainID = DomainManager.instance().getActiveDomain(player).getAssignedNumber();
+            dimensionID = player.dimension.getRawId();
         }
     }
 

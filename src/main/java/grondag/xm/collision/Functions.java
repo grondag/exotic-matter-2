@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -21,18 +21,15 @@ import org.apiguardian.api.API;
 
 @API(status = INTERNAL)
 interface Functions {
-    @FunctionalInterface
-    static interface Int3Consumer {
-        public void accept(int x, int y, int z);
+    @FunctionalInterface interface Int3Consumer {
+        void accept(int x, int y, int z);
     }
-    
-    @FunctionalInterface
-    static interface Float3Test {
-        public boolean apply(float x, float y, float z);
+
+    @FunctionalInterface interface Float3Test {
+        boolean apply(float x, float y, float z);
     }
-    
-    @FunctionalInterface
-    static interface Float3Consumer {
-        public void accept(float x, float y, float z);
+
+    @FunctionalInterface interface Float3Consumer {
+        void accept(float x, float y, float z);
     }
 }

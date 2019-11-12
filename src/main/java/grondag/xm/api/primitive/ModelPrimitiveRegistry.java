@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -30,7 +30,7 @@ import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
 public interface ModelPrimitiveRegistry {
-    static ModelPrimitiveRegistry INSTANCE = ModelPrimitiveRegistryImpl.INSTANCE;
+    ModelPrimitiveRegistry INSTANCE = ModelPrimitiveRegistryImpl.INSTANCE;
 
     <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> boolean register(ModelPrimitive<R, W> primitive);
 
@@ -56,8 +56,8 @@ public interface ModelPrimitiveRegistry {
     default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> int indexOf(ModelPrimitive<R, W> primitive) {
         return indexOf(primitive.id());
     }
-    
+
     <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag);
-    
+
     <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf);
 }

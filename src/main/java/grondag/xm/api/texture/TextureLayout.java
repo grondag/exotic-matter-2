@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,9 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
+import static grondag.xm.api.modelstate.ModelStateFlags.BLOCK_SPECIES;
 import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.MASONRY_JOIN;
-import static grondag.xm.api.modelstate.ModelStateFlags.BLOCK_SPECIES;
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -29,9 +29,9 @@ public enum TextureLayout {
     /**
      * Separate random tiles with naming convention base_j_i where i is 0-7 and j is
      * 0 or more.
-     * 
+     *
      * Use {@code SIMPLE} instead.  This should be a layout map and will be removed.
-     * 
+     *
      * TODO: convert to layout map, remove
      */
     @Deprecated
@@ -65,7 +65,7 @@ public enum TextureLayout {
 
     /**
      * Animated big textures stored as series of .jpg files.
-     * 
+     *
      * Holdover from 1.12 - not yet clear if will be implemented or removed.
      */
     @Deprecated
@@ -85,7 +85,7 @@ public enum TextureLayout {
     }
 
     private TextureLayout(int stateFlags, int textureCount) {
-        this.modelStateFlag = stateFlags;
+        modelStateFlag = stateFlags;
         this.textureCount = textureCount;
     }
 

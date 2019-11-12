@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -35,19 +35,19 @@ import net.minecraft.world.BlockView;
 @API(status = INTERNAL)
 public class SpeciesImpl {
     private SpeciesImpl() {}
-    
+
     public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
         // ways this can happen:
         // have a species we want to match because we clicked on a face
         // break with everything - need to know adjacent species
         // match with most - need to know adjacent species
 
-        boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
+        final boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
 
         // if no region provided or species mode used clicked block then
         // result is based on the clicked face
         if (((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
-            int clickedSpecies = func.species(world, onPos);
+            final int clickedSpecies = func.species(world, onPos);
 
             if (clickedSpecies >= 0)
                 return clickedSpecies;
@@ -57,26 +57,30 @@ public class SpeciesImpl {
         if(region == null) {
             region = BlockRegion.of(onPos.offset(onFace));
         }
-        int[] adjacentCount = new int[16];
-        int[] surfaceCount = new int[16];
+        final int[] adjacentCount = new int[16];
+        final int[] surfaceCount = new int[16];
 
         /** limit block positions checked for very large regions */
         int checkCount = 0;
 
-        for (BlockPos pos : region.adjacentPositions()) {
-            int adjacentSpecies = func.species(world, pos);
-            if (adjacentSpecies >= 0 && adjacentSpecies <= 15)
+        for (final BlockPos pos : region.adjacentPositions()) {
+            final int adjacentSpecies = func.species(world, pos);
+            if (adjacentSpecies >= 0 && adjacentSpecies <= 15) {
                 adjacentCount[adjacentSpecies]++;
-            if (checkCount++ >= XmConfig.maxPlacementCheckCount)
+            }
+            if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
                 break;
+            }
         }
 
-        for (BlockPos pos : region.surfacePositions()) {
-            int interiorSpecies = func.species(world, pos);
-            if (interiorSpecies >= 0 && interiorSpecies <= 15)
+        for (final BlockPos pos : region.surfacePositions()) {
+            final int interiorSpecies = func.species(world, pos);
+            if (interiorSpecies >= 0 && interiorSpecies <= 15) {
                 surfaceCount[interiorSpecies]++;
-            if (checkCount++ >= XmConfig.maxPlacementCheckCount)
+            }
+            if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
                 break;
+            }
         }
 
         if (shouldBreak) {
@@ -85,7 +89,7 @@ public class SpeciesImpl {
             int bestCount = adjacentCount[0] + surfaceCount[0];
 
             for (int i = 1; i < 16; i++) {
-                int tryCount = adjacentCount[i] + surfaceCount[i];
+                final int tryCount = adjacentCount[i] + surfaceCount[i];
                 if (tryCount < bestCount) {
                     bestCount = tryCount;
                     bestSpecies = i;
@@ -116,16 +120,16 @@ public class SpeciesImpl {
             return bestSpecies;
         }
     }
-    
+
     @SuppressWarnings("rawtypes")
     private static boolean blockAndSpeciesTest(BlockTestContext ctx) {
         return ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock()
                 && ctx.fromBlockState().get(SpeciesProperty.SPECIES) == ctx.toBlockState().get(SpeciesProperty.SPECIES);
     }
-    
+
     @SuppressWarnings("rawtypes")
     private static final BlockTest SAME_BLOCK_AND_SPECIES = SpeciesImpl::blockAndSpeciesTest;
-    
+
     @SuppressWarnings("unchecked")
     public static <T extends ModelState> BlockTest<T> sameBlockAndSpecies() {
         return SAME_BLOCK_AND_SPECIES;

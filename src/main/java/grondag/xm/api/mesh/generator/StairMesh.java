@@ -9,15 +9,15 @@ import net.minecraft.util.math.Direction;
 
 public class StairMesh {
     public static void build(
-            WritableMesh mesh, 
-            PolyTransform transform, 
-            boolean isCorner, 
+            WritableMesh mesh,
+            PolyTransform transform,
+            boolean isCorner,
             boolean isInside,
-            XmSurface SURFACE_BOTTOM, 
+            XmSurface SURFACE_BOTTOM,
             XmSurface SURFACE_TOP,
-            XmSurface SURFACE_FRONT, 
-            XmSurface SURFACE_BACK, 
-            XmSurface SURFACE_LEFT, 
+            XmSurface SURFACE_FRONT,
+            XmSurface SURFACE_BACK,
+            XmSurface SURFACE_LEFT,
             XmSurface SURFACE_RIGHT )
     {
         // Default geometry bottom/back against down/south faces. Corner is on right.
@@ -25,9 +25,9 @@ public class StairMesh {
         // Sides are split into three quadrants vs one long strip plus one long quadrant
         // is necessary to avoid AO lighting artifacts. AO is done by vertex, and having
         // a T-junction tends to mess about with the results.
-        
+
         final MutablePolygon quad = mesh.writer();
-        
+
         quad.rotation(0, TextureOrientation.IDENTITY);
         quad.lockUV(0, true);
         quad.saveDefaults();
@@ -39,7 +39,7 @@ public class StairMesh {
         transform.accept(quad);
         quad.append();
 
-        
+
         // back is full except for outside corners
         if(isCorner && !isInside) {
             quad.surface(SURFACE_BACK);
@@ -70,19 +70,19 @@ public class StairMesh {
                 quad.setupFaceQuad(Direction.EAST, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.UP);
                 transform.accept(quad);
                 quad.append();
-                
+
                 // Extra, inset top quadrant on inside corner
-                
+
                 // make cuts appear different from top/front face
-                quad.textureSalt(1); 
+                quad.textureSalt(1);
                 quad.surface(SURFACE_LEFT);
                 quad.setupFaceQuad(Direction.EAST, 0.5f, 0.5f, 1.0f, 1.0f, 0.5f, Direction.UP);
                 transform.accept(quad);
                 quad.append();
-                
+
             } else {
                 // Left side top quadrant is inset on an outside corner
-                quad.textureSalt(1); 
+                quad.textureSalt(1);
                 quad.surface(SURFACE_LEFT);
                 quad.setupFaceQuad(Direction.EAST, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f, Direction.UP);
                 transform.accept(quad);
@@ -95,7 +95,7 @@ public class StairMesh {
             transform.accept(quad);
             quad.append();
         }
-        
+
         quad.surface(SURFACE_LEFT);
         quad.setupFaceQuad(Direction.EAST, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, Direction.UP);
         transform.accept(quad);
@@ -106,7 +106,7 @@ public class StairMesh {
         transform.accept(quad);
         quad.append();
 
-        
+
         // right side is a full face on an inside corner
         if(isCorner && isInside) {
             quad.surface(SURFACE_RIGHT);
@@ -130,25 +130,25 @@ public class StairMesh {
             quad.append();
         }
 
-        // front 
+        // front
         if(isCorner) {
             if(isInside) {
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, Direction.UP);
                 transform.accept(quad);
                 quad.append();
-                
+
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
                 transform.accept(quad);
                 quad.append();
-                
+
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, Direction.UP);
                 transform.accept(quad);
                 quad.append();
-                
-                quad.textureSalt(1); 
+
+                quad.textureSalt(1);
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f, Direction.UP);
                 transform.accept(quad);
@@ -158,8 +158,8 @@ public class StairMesh {
                 quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
                 transform.accept(quad);
                 quad.append();
-                
-                quad.textureSalt(1); 
+
+                quad.textureSalt(1);
                 quad.surface(SURFACE_FRONT);
                 quad.setupFaceQuad(Direction.NORTH, 0.5f, 0.5f, 1.0f, 1.0f, 0.5f, Direction.UP);
                 transform.accept(quad);
@@ -171,7 +171,7 @@ public class StairMesh {
             quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
             transform.accept(quad);
             quad.append();
-            
+
             quad.textureSalt(1);
             quad.surface(SURFACE_FRONT);
             quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.5f, 1.0f, 1.0f, 0.5f, Direction.UP);
@@ -179,14 +179,14 @@ public class StairMesh {
             quad.append();
         }
 
-        // top 
+        // top
         if(isCorner) {
             if(isInside) {
                 quad.surface(SURFACE_TOP);
                 quad.setupFaceQuad(Direction.UP, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.SOUTH);
                 transform.accept(quad);
                 quad.append();
-                
+
                 quad.surface(SURFACE_TOP);
                 quad.setupFaceQuad(Direction.UP, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, Direction.SOUTH);
                 transform.accept(quad);
@@ -196,7 +196,7 @@ public class StairMesh {
                 quad.setupFaceQuad(Direction.UP, 0.5f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.SOUTH);
                 transform.accept(quad);
                 quad.append();
-                
+
                 quad.surface(SURFACE_TOP);
                 quad.textureSalt(1);
                 quad.setupFaceQuad(Direction.UP, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, Direction.SOUTH);
@@ -213,13 +213,13 @@ public class StairMesh {
                 quad.setupFaceQuad(Direction.UP, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, Direction.SOUTH);
                 transform.accept(quad);
                 quad.append();
-                
+
                 quad.surface(SURFACE_TOP);
                 quad.textureSalt(1);
                 quad.setupFaceQuad(Direction.UP, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f, Direction.SOUTH);
                 transform.accept(quad);
                 quad.append();
-                
+
                 quad.surface(SURFACE_TOP);
                 quad.textureSalt(1);
                 quad.setupFaceQuad(Direction.UP, 0.5f, 0.0f, 1.0f, 0.5f, 0.5f, Direction.SOUTH);

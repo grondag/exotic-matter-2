@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -25,12 +25,12 @@ import org.apiguardian.api.API;
 abstract class AbstractModelState {
 
     /////// REFERENCE COUNTING /////////
-    
+
     private static final AtomicIntegerFieldUpdater<AbstractModelState> retainCountUpdater = AtomicIntegerFieldUpdater.newUpdater(AbstractModelState.class,
             "refCount");
 
     private volatile int refCount = 0;
-    
+
     public final int refCount() {
         return refCount;
     }
@@ -54,7 +54,7 @@ abstract class AbstractModelState {
     }
 
     /////// HASH CODE /////////
-    
+
     private int hashCode = -1;
 
     protected abstract int computeHashCode();
@@ -69,12 +69,13 @@ abstract class AbstractModelState {
         }
         return result;
     }
-    
+
     protected final void invalidateHashCode() {
-        if (this.hashCode != -1)
-            this.hashCode = -1;
+        if (hashCode != -1) {
+            hashCode = -1;
+        }
     }
-    
+
     /////// MUTABILITY /////////
 
     protected boolean isImmutable = true;
@@ -82,11 +83,10 @@ abstract class AbstractModelState {
     public final boolean isImmutable() {
         return isImmutable;
     }
-    
+
     protected final void confirmMutable() {
-        if (isImmutable) {
+        if (isImmutable)
             throw new UnsupportedOperationException("Encounted attempt to modify immutable model state.");
-        }
     }
 
     /////// INT ARRAY SERIALIZATION /////////
@@ -106,7 +106,7 @@ abstract class AbstractModelState {
 
 
     protected final int[] serializeToInts() {
-        int[] result = new int[intSize()];
+        final int[] result = new int[intSize()];
         doSerializeToInts(result, 0);
         return result;
     }

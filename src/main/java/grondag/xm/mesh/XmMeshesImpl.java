@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -25,9 +25,9 @@ import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.CsgMesh;
 import grondag.xm.api.mesh.MutableMesh;
-import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 
@@ -47,8 +47,9 @@ public class XmMeshesImpl {
 
     static WritableMesh claimWritable(int formatFlags) {
         WritableMeshImpl result = writables.poll();
-        if (result == null)
+        if (result == null) {
             result = new WritableMeshImpl();
+        }
         result.prepare(formatFlags);
         return result;
     }
@@ -60,11 +61,12 @@ public class XmMeshesImpl {
     public static MutableMesh claimMutable() {
         return claimMutable(0);
     }
-    
+
     static MutableMesh claimMutable(int formatFlags) {
         MutableMeshImpl result = mutables.poll();
-        if (result == null)
+        if (result == null) {
             result = new MutableMeshImpl();
+        }
         result.prepare(formatFlags);
         return result;
     }
@@ -75,8 +77,9 @@ public class XmMeshesImpl {
 
     static ReadOnlyMesh claimReadOnly(WritableMeshImpl writablePolyStream, int formatFlags) {
         ReadOnlyMeshImpl result = readables.poll();
-        if (result == null)
+        if (result == null) {
             result = new ReadOnlyMeshImpl();
+        }
         result.load(writablePolyStream, formatFlags);
         return result;
     }
@@ -84,16 +87,16 @@ public class XmMeshesImpl {
     /**
      * Creates a stream with randomly recolored copies of the input stream.
      * <p>
-     * 
+     *
      * Does not modify or release the input stream.
      */
     public static ReadOnlyMesh claimRecoloredCopy(XmMesh input) {
-        WritableMesh result = claimWritable();
+        final WritableMesh result = claimWritable();
         final Polygon reader = input.reader();
         if (reader.origin()) {
-            Random r = ThreadLocalRandom.current();
+            final Random r = ThreadLocalRandom.current();
 
-            MutablePolygon writer = result.writer();
+            final MutablePolygon writer = result.writer();
             do {
                 writer.vertexCount(reader.vertexCount());
                 writer.spriteDepth(reader.spriteDepth());
@@ -112,14 +115,15 @@ public class XmMeshesImpl {
 
     public static CsgMeshImpl claimCsg() {
         CsgMeshImpl result = csgStreams.poll();
-        if (result == null)
+        if (result == null) {
             result = new CsgMeshImpl();
+        }
         result.prepare();
         return result;
     }
 
     public static CsgMesh claimCsg(XmMesh stream) {
-        CsgMeshImpl result = claimCsg();
+        final CsgMeshImpl result = claimCsg();
         result.appendAll(stream);
         return result;
     }

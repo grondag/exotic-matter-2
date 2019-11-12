@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -74,8 +74,9 @@ class PolyEncoder {
     private static final float MISSING_NORMAL = Float.NaN;
 
     static {
-        for (int i = 0; i < POLY_FORMAT_COUNT; i++)
+        for (int i = 0; i < POLY_FORMAT_COUNT; i++) {
             ENCODERS[i] = new PolyEncoder(i << POLY_FORMAT_SHIFT);
+        }
     }
 
     public static PolyEncoder get(int format) {
@@ -401,12 +402,13 @@ class PolyEncoder {
     }
 
     public final void setMaxU(IntStream stream, int baseAddress, int layerIndex, float maxU) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setU0.set(stream, baseAddress + maxUOffset0, maxU);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setU1.set(stream, baseAddress + maxUOffset1, maxU);
-        else
+        } else {
             setU2.set(stream, baseAddress + maxUOffset2, maxU);
+        }
     }
 
     public final float getMinU(IntStream stream, int baseAddress, int layerIndex) {
@@ -415,12 +417,13 @@ class PolyEncoder {
     }
 
     public final void setMinU(IntStream stream, int baseAddress, int layerIndex, float minU) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setU0.set(stream, baseAddress + minUOffset0, minU);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setU1.set(stream, baseAddress + minUOffset1, minU);
-        else
+        } else {
             setU2.set(stream, baseAddress + minUOffset2, minU);
+        }
     }
 
     public final float getMaxV(IntStream stream, int baseAddress, int layerIndex) {
@@ -429,12 +432,13 @@ class PolyEncoder {
     }
 
     public final void setMaxV(IntStream stream, int baseAddress, int layerIndex, float maxV) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setV0.set(stream, baseAddress + maxVOffset0, maxV);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setV1.set(stream, baseAddress + maxVOffset1, maxV);
-        else
+        } else {
             setV2.set(stream, baseAddress + maxVOffset2, maxV);
+        }
     }
 
     public final float getMinV(IntStream stream, int baseAddress, int layerIndex) {
@@ -443,29 +447,31 @@ class PolyEncoder {
     }
 
     public final void setMinV(IntStream stream, int baseAddress, int layerIndex, float minV) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setV0.set(stream, baseAddress + minVOffset0, minV);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setV1.set(stream, baseAddress + minVOffset1, minV);
-        else
+        } else {
             setV2.set(stream, baseAddress + minVOffset2, minV);
+        }
     }
 
     public final String getTextureName(IntStream stream, int baseAddress, int layerIndex) {
         final int handle = layerIndex == 0 ? getTexture0.get(stream, baseAddress + textureOffset01)
                 : layerIndex == 1 ? getTexture1.get(stream, baseAddress + textureOffset01) : getTexture2.get(stream, baseAddress + textureOffset2);
 
-        return handle == 0 ? "" : textureHandler.fromHandle(handle);
+                return handle == 0 ? "" : textureHandler.fromHandle(handle);
     }
 
     public final void setTextureName(IntStream stream, int baseAddress, int layerIndex, String textureName) {
         final int handle = textureName == null || textureName.isEmpty() ? 0 : textureHandler.toHandle(textureName);
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setTexture0.set(stream, baseAddress + textureOffset01, handle);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setTexture1.set(stream, baseAddress + textureOffset01, handle);
-        else
+        } else {
             setTexture2.set(stream, baseAddress + textureOffset2, handle);
+        }
     }
 
     public final int getVertexColor(IntStream stream, int baseAddress, int layerIndex) {
@@ -474,11 +480,12 @@ class PolyEncoder {
     }
 
     public final void setVertexColor(IntStream stream, int baseAddress, int layerIndex, int color) {
-        if (layerIndex == 0)
+        if (layerIndex == 0) {
             setColor0.set(stream, baseAddress + colorOffset0, color);
-        else if (layerIndex == 1)
+        } else if (layerIndex == 1) {
             setColor1.set(stream, baseAddress + colorOffset1, color);
-        else
+        } else {
             setColor2.set(stream, baseAddress + colorOffset2, color);
+        }
     }
 }

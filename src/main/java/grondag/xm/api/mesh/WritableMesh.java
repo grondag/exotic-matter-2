@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -33,7 +33,7 @@ public interface WritableMesh extends XmMesh {
      * Holds WIP poly data that will be appended by next call to {@link #append()}.
      * Is reset to defaults when append is called.
      * <p>
-     * 
+     *
      * DO NOT HOLD A NON-LOCAL REFERENCE TO THIS.
      */
     MutablePolygon writer();
@@ -50,7 +50,7 @@ public interface WritableMesh extends XmMesh {
      * will use non-pooled heap memory and thus should only be used for streams with
      * a significant lifetime to prevent needless garbage collection.
      * <p>
-     * 
+     *
      * The reader stream will not include deleted polygons, and will only include
      * tag, link or bounds metadata if those flags are specified.
      */
@@ -58,7 +58,7 @@ public interface WritableMesh extends XmMesh {
 
     /** Creates a read-only copy without releasing allocation */
     ReadOnlyMesh toReader();
-    
+
     /**
      * Makes no change to writer state, except address.
      */
@@ -69,13 +69,13 @@ public interface WritableMesh extends XmMesh {
         if (reader.origin()) {
             do {
                 assert !reader.isDeleted();
-                this.appendCopy(reader);
+                appendCopy(reader);
             } while (reader.next());
         }
     }
 
     void clear();
-    
+
     void splitAsNeeded();
-    
+
 }

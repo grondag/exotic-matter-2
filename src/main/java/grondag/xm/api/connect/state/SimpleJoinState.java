@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -34,22 +34,22 @@ public interface SimpleJoinState {
     int STATE_COUNT = 64; // 2^6
     SimpleJoinState NO_JOINS = SimpleJoinStateImpl.NO_JOINS;
     SimpleJoinState ALL_JOINS = SimpleJoinStateImpl.ALL_JOINS;
-    
+
     boolean isJoined(Direction face);
 
     boolean hasJoins(Axis axis);
-    
+
     int ordinal();
 
-    public static SimpleJoinState fromOrdinal(int ordinal) {
+    static SimpleJoinState fromOrdinal(int ordinal) {
         return SimpleJoinStateImpl.fromOrdinal(ordinal);
     }
 
-    public static SimpleJoinState fromWorld(BlockNeighbors neighbors) {
+    static SimpleJoinState fromWorld(BlockNeighbors neighbors) {
         return SimpleJoinStateImpl.fromWorld(neighbors);
     }
 
-    public static int ordinalFromWorld(BlockNeighbors neighbors) {
+    static int ordinalFromWorld(BlockNeighbors neighbors) {
         return SimpleJoinStateImpl.ordinalFromWorld(neighbors);
     }
 }

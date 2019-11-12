@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -49,16 +49,16 @@ public enum HorizontalEdge implements StringIdentifiable {
     public final String name;
 
     private HorizontalEdge(HorizontalFace left, HorizontalFace right) {
-        this.name = this.name().toLowerCase();
+        name = name().toLowerCase();
         this.left = left;
         this.right = right;
-        this.vector = new Vec3i(left.face.getVector().getX() + right.face.getVector().getX(), 0,
+        vector = new Vec3i(left.face.getVector().getX() + right.face.getVector().getX(), 0,
                 left.face.getVector().getZ() + right.face.getVector().getZ());
     }
-    
+
     public HorizontalEdge rotate(BlockRotation rotation) {
-        final Direction face1 = rotation.rotate(this.left.face);
-        final Direction face2 = rotation.rotate(this.right.face);
+        final Direction face1 = rotation.rotate(left.face);
+        final Direction face2 = rotation.rotate(right.face);
         return ObjectUtils.defaultIfNull(find(face1, face2), this);
     }
 
@@ -66,7 +66,7 @@ public enum HorizontalEdge implements StringIdentifiable {
     public String asString() {
         return name;
     }
-    
+
     public static final int COUNT = HorizontalEdgeHelper.COUNT;
 
     /**
@@ -81,11 +81,11 @@ public enum HorizontalEdge implements StringIdentifiable {
     public static HorizontalEdge find(Direction face1, Direction face2) {
         return find(HorizontalFace.find(face1), HorizontalFace.find(face2));
     }
-    
+
     public static HorizontalEdge fromRotation(double yawDegrees) {
         return HorizontalEdgeHelper.fromRotation(yawDegrees);
     }
-    
+
     public static HorizontalEdge fromOrdinal(int ordinal) {
         return HorizontalEdgeHelper.fromOrdinal(ordinal);
     }

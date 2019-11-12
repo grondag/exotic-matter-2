@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -42,11 +42,11 @@ public class Vec3fCache {
     private final Object writeLock = new Object();
 
     private Vec3fCache(int maxSize) {
-        this.capacity = 1 << (Integer.SIZE - Integer.numberOfLeadingZeros((int) (maxSize / ISimpleLoadingCache.LOAD_FACTOR)));
-        this.maxFill = (int) (capacity * ISimpleLoadingCache.LOAD_FACTOR);
-        this.positionMask = capacity - 1;
-        this.activeState = new Vec3fCacheState(this.capacity);
-        this.clear();
+        capacity = 1 << (Integer.SIZE - Integer.numberOfLeadingZeros((int) (maxSize / ISimpleLoadingCache.LOAD_FACTOR)));
+        maxFill = (int) (capacity * ISimpleLoadingCache.LOAD_FACTOR);
+        positionMask = capacity - 1;
+        activeState = new Vec3fCacheState(capacity);
+        clear();
     }
 
     public int size() {
@@ -54,23 +54,23 @@ public class Vec3fCache {
     }
 
     public void clear() {
-        this.activeState = new Vec3fCacheState(this.capacity);
+        activeState = new Vec3fCacheState(capacity);
     }
 
     public Vec3f get(final float x, final float y, final float z) {
-        Vec3fCacheState localState = activeState;
+        final Vec3fCacheState localState = activeState;
 
         // Zero value normally indicates an unused spot in key array
         // so requires privileged handling to prevent search weirdness.
         if (x == 0f && y == 0f && z == 0f)
             return Vec3fImpl.ZERO;
 
-        final long hash = ((long) Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16) ^ (((long) Float.floatToIntBits(z)) << 32);
+        final long hash = (Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16) ^ (((long) Float.floatToIntBits(z)) << 32);
 
         int position = (int) (HashCommon.mix(hash) & positionMask);
 
         do {
-            Vec3fImpl check = localState.values[position];
+            final Vec3fImpl check = localState.values[position];
 
             if (check == null)
                 return load(localState, x, y, z, position);
@@ -85,7 +85,7 @@ public class Vec3fCache {
 
     protected Vec3fImpl loadFromBackup(Vec3fCacheState backup, final float x, final float y, final float z, int position) {
         do {
-            Vec3fImpl v = backup.values[position];
+            final Vec3fImpl v = backup.values[position];
             if (v != null && v.x() == x && v.y() == y && v.z() == z)
                 return v;
 
@@ -104,7 +104,7 @@ public class Vec3fCache {
     protected Vec3fImpl load(Vec3fCacheState localState, final float x, final float y, final float z, int position) {
         // no need to handle zero key here - is handled as privileged case in get();
 
-        Vec3fCacheState backupState = this.backupState.get();
+        final Vec3fCacheState backupState = this.backupState.get();
 
         final Vec3fImpl result = backupState == null ? new Vec3fImpl(x, y, z) : loadFromBackup(backupState, x, y, z, position);
         do {
@@ -127,22 +127,22 @@ public class Vec3fCache {
 
         } while (true);
 
-        if (localState.size.incrementAndGet() == this.maxFill) {
-            Vec3fCacheState newState = new Vec3fCacheState(this.capacity);
-            this.backupState.set(this.activeState);
-            this.activeState = newState;
-            this.backupMissCount.set(0);
+        if (localState.size.incrementAndGet() == maxFill) {
+            final Vec3fCacheState newState = new Vec3fCacheState(capacity);
+            this.backupState.set(activeState);
+            activeState = newState;
+            backupMissCount.set(0);
         }
 
         return result;
     }
-    
+
     private static class Vec3fCacheState {
         protected AtomicInteger size = new AtomicInteger(0);
         protected final Vec3fImpl[] values;
 
         public Vec3fCacheState(int capacityIn) {
-            this.values = new Vec3fImpl[capacityIn];
+            values = new Vec3fImpl[capacityIn];
         }
     }
 }

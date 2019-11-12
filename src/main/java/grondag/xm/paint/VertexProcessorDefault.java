@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -34,7 +34,7 @@ public class VertexProcessorDefault implements VertexProcessor {
     @Override
     @SuppressWarnings("rawtypes")
     public final void process(MutablePolygon poly, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        int color = paint.textureColor(textureIndex);
+        final int color = paint.textureColor(textureIndex);
 
         // If surface is a lamp gradient then glow bits are used
         // to blend the lamp color/brighness with the nominal color/brightness.
@@ -48,14 +48,14 @@ public class VertexProcessorDefault implements VertexProcessor {
                 if(lampPaint != null) {
                     final int lampColor = lampPaint.textureColor(0);
                     final int lampBrightness = lampPaint.emissive(0) ? 0xF0 : 0;
-                    
+
                     // keep target surface alpha
-                    int alpha = color & 0xFF000000;
-        
+                    final int alpha = color & 0xFF000000;
+
                     for (int i = 0; i < poly.vertexCount(); i++) {
                         final float w = poly.glow(i) / 255f;
-                        int b = Math.round(lampBrightness * w);
-                        int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
+                        final int b = Math.round(lampBrightness * w);
+                        final int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
                         poly.color(i, textureIndex, c | alpha);
                         poly.glow(i, b);
                     }

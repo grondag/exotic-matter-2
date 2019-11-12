@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -42,33 +42,33 @@ public class FaceVertex {
     }
 
     public int glow() {
-        return this.glow;
+        return glow;
     }
 
     @Override
     public FaceVertex clone() {
         assert false : "Why u clone immutable object?";
-        return new FaceVertex(x, y, depth, this.glow);
+    return new FaceVertex(x, y, depth, glow);
     }
 
     public FaceVertex withXY(float x, float y) {
-        return new FaceVertex(x, y, this.depth, this.glow);
+        return new FaceVertex(x, y, depth, glow);
     }
 
     public FaceVertex withDepth(float depth) {
-        return new FaceVertex(this.x, this.y, depth, this.glow);
+        return new FaceVertex(x, y, depth, glow);
     }
 
     public FaceVertex withColor(int color) {
-        return new FaceVertex.Colored(this.x, this.y, depth, color, this.glow);
+        return new FaceVertex.Colored(x, y, depth, color, glow);
     }
 
     public FaceVertex withGlow(int glow) {
-        return new FaceVertex(this.x, this.y, this.depth, glow);
+        return new FaceVertex(x, y, depth, glow);
     }
 
     public FaceVertex withUV(float u, float v) {
-        return new FaceVertex.UV(this.x, this.y, this.depth, u, v, this.glow);
+        return new FaceVertex.UV(x, y, depth, u, v, glow);
     }
 
     public int color() {
@@ -79,12 +79,12 @@ public class FaceVertex {
      * This value is logical 0-1 within the texture for this face. NOT 0-16. And NOT
      * interpolated for the sprite. <br>
      * <br>
-     * 
+     *
      * Note that the V orientation is flipped from the Y axis used for vertices.
      * Origin is at the top left for textures, vs. bottom left for vertex
      * coordinates. This means the default values for u, v will be x, 1-y. <br>
      * <br>
-     * 
+     *
      * The bottom face is handled differently and RawQuad will flip it
      * automatically..
      */
@@ -124,27 +124,27 @@ public class FaceVertex {
 
         @Override
         public FaceVertex withXY(float x, float y) {
-            return new FaceVertex.Colored(x, y, this.depth, this.color, this.glow);
+            return new FaceVertex.Colored(x, y, depth, color, glow);
         }
 
         @Override
         public FaceVertex withDepth(float depth) {
-            return new FaceVertex.Colored(this.x, this.y, depth, this.color, this.glow);
+            return new FaceVertex.Colored(x, y, depth, color, glow);
         }
 
         @Override
         public FaceVertex withColor(int color) {
-            return new FaceVertex.Colored(this.x, this.y, depth, color, this.glow);
+            return new FaceVertex.Colored(x, y, depth, color, glow);
         }
 
         @Override
         public FaceVertex withGlow(int glow) {
-            return new FaceVertex.Colored(this.x, this.y, depth, this.color, glow);
+            return new FaceVertex.Colored(x, y, depth, color, glow);
         }
 
         @Override
         public FaceVertex withUV(float u, float v) {
-            return new FaceVertex.UVColored(this.x, this.y, this.depth, u, v, this.color, this.glow);
+            return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
         }
     }
 
@@ -164,43 +164,43 @@ public class FaceVertex {
 
         @Override
         public float u() {
-            return this.u;
+            return u;
         }
 
         @Override
         public float v() {
-            return this.v;
+            return v;
         }
 
         @Override
         public FaceVertex clone() {
             assert false : "Why u clone immutable object?";
-            return new FaceVertex.UV(x, y, depth, u, v, glow);
+        return new FaceVertex.UV(x, y, depth, u, v, glow);
         }
 
         @Override
         public FaceVertex withXY(float x, float y) {
-            return new FaceVertex.UV(x, y, this.depth, this.u, this.v, this.glow);
+            return new FaceVertex.UV(x, y, depth, u, v, glow);
         }
 
         @Override
         public FaceVertex withDepth(float depth) {
-            return new FaceVertex.UV(this.x, this.y, depth, this.u, this.v, this.glow);
+            return new FaceVertex.UV(x, y, depth, u, v, glow);
         }
 
         @Override
         public FaceVertex withColor(int color) {
-            return new FaceVertex.UVColored(this.x, this.y, depth, this.u, this.v, color, this.glow);
+            return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
         }
 
         @Override
         public FaceVertex withGlow(int glow) {
-            return new FaceVertex.UV(this.x, this.y, depth, this.u, this.v, glow);
+            return new FaceVertex.UV(x, y, depth, u, v, glow);
         }
 
         @Override
         public FaceVertex withUV(float u, float v) {
-            return new FaceVertex.UV(this.x, this.y, this.depth, u, v, this.glow);
+            return new FaceVertex.UV(x, y, depth, u, v, glow);
         }
     }
 
@@ -223,43 +223,43 @@ public class FaceVertex {
 
         @Override
         public float u() {
-            return this.u;
+            return u;
         }
 
         @Override
         public float v() {
-            return this.v;
+            return v;
         }
 
         @Override
         public FaceVertex clone() {
             assert false : "Why u clone immutable object?";
-            return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
+        return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
         }
 
         @Override
         public FaceVertex withXY(float x, float y) {
-            return new FaceVertex.UVColored(x, y, this.depth, this.u, this.v, this.color, this.glow);
+            return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
         }
 
         @Override
         public FaceVertex withDepth(float depth) {
-            return new FaceVertex.UVColored(this.x, this.y, depth, this.u, this.v, this.color, this.glow);
+            return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
         }
 
         @Override
         public FaceVertex withColor(int color) {
-            return new FaceVertex.UVColored(this.x, this.y, this.depth, this.u, this.v, color, this.glow);
+            return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
         }
 
         @Override
         public FaceVertex withGlow(int glow) {
-            return new FaceVertex.UVColored(this.x, this.y, depth, this.u, this.v, this.color, glow);
+            return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
         }
 
         @Override
         public FaceVertex withUV(float u, float v) {
-            return new FaceVertex.UVColored(this.x, this.y, this.depth, u, v, this.color, this.glow);
+            return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
         }
     }
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -27,14 +27,14 @@ import grondag.xm.connect.CornerJoinFaceStateImpl;
  * Identifies all of the possible face state within a corner join. All of these
  * states must be textures/transformed to correctly render the face.
  * <p>
- * 
+ *
  * The actual texturing/transformation is not part of this library because it
  * can vary greatly depending on use case, texture layout, etc.
  */
 @API(status = STABLE)
 public abstract class CornerJoinFaceStates {
     private CornerJoinFaceStates() {
-    };
+    }
 
     public static final CornerJoinFaceState NO_FACE = CornerJoinFaceStateImpl.NO_FACE;
     public static final CornerJoinFaceState NONE = CornerJoinFaceStateImpl.NONE;

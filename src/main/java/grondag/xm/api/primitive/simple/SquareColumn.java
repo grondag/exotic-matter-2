@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -63,7 +63,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
     public static final int MIN_CUTS = 1;
     public static final int MAX_CUTS = 3;
-    
+
 
     private static final BitPacker32<SquareColumn> STATE_PACKER = new BitPacker32<SquareColumn>(null, null);
     private static final BitPacker32<SquareColumn>.BooleanElement STATE_ARE_CUTS_ON_EDGE = STATE_PACKER.createBooleanElement();
@@ -75,7 +75,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
     private static class FaceSpec {
         private final int cutCount;
-//        private final boolean areCutsOnEdge;
+        //        private final boolean areCutsOnEdge;
         private final float cutWidth;
         private final float baseMarginWidth;
         private final float marginOffset;
@@ -83,7 +83,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
         private FaceSpec(int cutCount, boolean areCutsOnEdge) {
             this.cutCount = cutCount;
-//            this.areCutsOnEdge = areCutsOnEdge;
+            //            this.areCutsOnEdge = areCutsOnEdge;
 
             if (areCutsOnEdge) {
                 cutWidth = 0.5f / (cutCount + 1);
@@ -98,7 +98,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
             }
         }
     }
-    
+
     public static final SquareColumn INSTANCE = new SquareColumn(Xm.idString("column_square"));
 
     @Override
@@ -113,9 +113,9 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
     @Override
     public void emitQuads(PrimitiveState modelState, Consumer<Polygon> target) {
-        FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
+        final FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
         for (int i = 0; i < 6; i++) {
-            this.makeFaceQuads(modelState, Direction.byId(i), spec, target);
+            makeFaceQuads(modelState, Direction.byId(i), spec, target);
         }
     }
 
@@ -123,7 +123,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
     public OrientationType orientationType(PrimitiveState modelState) {
         return OrientationType.AXIS;
     }
-    
+
     private static final Axis[] AXIS = Direction.Axis.values();
 
     private void makeFaceQuads(PrimitiveState state, Direction face, FaceSpec spec, Consumer<Polygon> target) {
@@ -134,20 +134,20 @@ public class SquareColumn extends AbstractSimplePrimitive {
         // be a stream?
         // Why create a stream just to pipe it to the consumer? Or cache the result.
 
-        CornerJoinState bjs = state.cornerJoin();
-        Direction.Axis axis = AXIS[state.orientationIndex() % 3];
-        WritableMesh stream = XmMeshes.claimWritable();
+        final CornerJoinState bjs = state.cornerJoin();
+        final Direction.Axis axis = AXIS[state.orientationIndex() % 3];
+        final WritableMesh stream = XmMeshes.claimWritable();
 
         stream.writer()
-            .vertexCount(4)
+        .vertexCount(4)
         // PERF set cull face for unconnected faces - doesn't work if connected
-            .lockUV(0, true) //.cullFace(face);
-            .saveDefaults();
+        .lockUV(0, true) //.cullFace(face);
+        .saveDefaults();
 
-        XmSurfaceList surfaces = surfaces(state);
+        final XmSurfaceList surfaces = surfaces(state);
 
         final boolean isLit = INSTANCE.lampSurface(state) != null;
-        
+
         if (face.getAxis() == axis) {
             makeCapFace(face, stream, bjs.faceState(face), spec, axis, surfaces, isLit);
         } else {
@@ -170,30 +170,32 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
         final MutablePolygon writer = stream.writer();
 
-        Direction topFace = PolyHelper.positiveDirection(axis);
-        Direction bottomFace = topFace.getOpposite();
-        Direction leftFace = PolyHelper.leftOf(face, topFace);
-        Direction rightFace = PolyHelper.rightOf(face, topFace);
+        final Direction topFace = PolyHelper.positiveDirection(axis);
+        final Direction bottomFace = topFace.getOpposite();
+        final Direction leftFace = PolyHelper.leftOf(face, topFace);
+        final Direction rightFace = PolyHelper.rightOf(face, topFace);
 
         int actualCutCount = spec.cutCount;
 
         /** used to randomize cut textures */
         int salt = 1;
 
-        boolean hasLeftJoin = fjs.isJoined(leftFace, face);
-        boolean hasRightJoin = fjs.isJoined(rightFace, face);
-        boolean hasTopJoin = fjs.isJoined(topFace, face);
-        boolean hasBottomJoin = fjs.isJoined(bottomFace, face);
+        final boolean hasLeftJoin = fjs.isJoined(leftFace, face);
+        final boolean hasRightJoin = fjs.isJoined(rightFace, face);
+        final boolean hasTopJoin = fjs.isJoined(topFace, face);
+        final boolean hasBottomJoin = fjs.isJoined(bottomFace, face);
 
-        if (hasLeftJoin)
+        if (hasLeftJoin) {
             actualCutCount++;
-        if (hasRightJoin)
+        }
+        if (hasRightJoin) {
             actualCutCount++;
+        }
 
-        float leftMarginWidth = hasLeftJoin ? spec.marginOffset * spec.cutWidth : spec.baseMarginWidth;
-        float rightMarginWidth = hasRightJoin ? spec.marginOffset * spec.cutWidth : spec.baseMarginWidth;
-        float topCapHeight = hasTopJoin ? 0 : spec.baseMarginWidth;
-        float bottomCapHeight = hasBottomJoin ? 0 : spec.baseMarginWidth;
+        final float leftMarginWidth = hasLeftJoin ? spec.marginOffset * spec.cutWidth : spec.baseMarginWidth;
+        final float rightMarginWidth = hasRightJoin ? spec.marginOffset * spec.cutWidth : spec.baseMarginWidth;
+        final float topCapHeight = hasTopJoin ? 0 : spec.baseMarginWidth;
+        final float bottomCapHeight = hasBottomJoin ? 0 : spec.baseMarginWidth;
 
         // bottom
         if (!hasBottomJoin) {
@@ -258,10 +260,10 @@ public class SquareColumn extends AbstractSimplePrimitive {
             writer.setupFaceQuad(face, 1 - rightMarginWidth - spec.cutWidth, 0, Math.min(1 - rightMarginWidth, 1), spec.baseMarginWidth, 0, topFace);
             writer.append();
         }
-        
+
         for (int i = 0; i < actualCutCount; i++) {
-            float sx0 = Math.max(0, leftMarginWidth + spec.cutWidth * 2 * i);
-            float sx1 = Math.min(1, leftMarginWidth + spec.cutWidth * 2 * i + spec.cutWidth);
+            final float sx0 = Math.max(0, leftMarginWidth + spec.cutWidth * 2 * i);
+            final float sx1 = Math.min(1, leftMarginWidth + spec.cutWidth * 2 * i + spec.cutWidth);
 
             // left face
             if (sx0 > 0.0001f) {
@@ -348,7 +350,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
             return;
 
         final MutablePolygon writer = stream.writer();
-        
+
         /** used to randomize cut textures */
         int salt = 1;
 
@@ -357,7 +359,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
             writer.surface(SURFACE_INLAY);
             writer.setupFaceQuad(face, fjs.isJoined(FaceEdge.LEFT_EDGE) ? 0 : spec.baseMarginWidth,
                     fjs.isJoined(FaceEdge.BOTTOM_EDGE) ? 0 : spec.baseMarginWidth, fjs.isJoined(FaceEdge.RIGHT_EDGE) ? 1 : 1 - spec.baseMarginWidth,
-                    fjs.isJoined(FaceEdge.TOP_EDGE) ? 1 : 1 - spec.baseMarginWidth, spec.cutDepth, FaceEdge.TOP_EDGE.toWorld(face));
+                            fjs.isJoined(FaceEdge.TOP_EDGE) ? 1 : 1 - spec.baseMarginWidth, spec.cutDepth, FaceEdge.TOP_EDGE.toWorld(face));
             writer.append();
         }
 
@@ -366,7 +368,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
         for (int f = 0; f < FaceEdge.COUNT; f++) {
             final FaceEdge joinSide = FaceEdge.fromOrdinal(f);
-            Direction side = joinSide.toWorld(face);
+            final Direction side = joinSide.toWorld(face);
 
             if (fjs.isJoined(joinSide)) {
                 // This side is joined, so connect cuts to other block on this side.
@@ -405,8 +407,8 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
                 // splines
                 for (int i = 0; i < spec.cutCount / 2; i++) {
-                    float xLeft = spec.baseMarginWidth + (i * 2 + 1) * spec.cutWidth;
-                    float xRight = Math.min(xLeft + spec.cutWidth, 0.5f);
+                    final float xLeft = spec.baseMarginWidth + (i * 2 + 1) * spec.cutWidth;
+                    final float xRight = Math.min(xLeft + spec.cutWidth, 0.5f);
 
                     {
                         writer.surface(SURFACE_END);
@@ -469,7 +471,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
                 {
                     // outer cut sides
                     for (int i = 0; i < (spec.cutCount + 1) / 2; i++) {
-                        float offset = spec.baseMarginWidth + (spec.cutWidth * 2 * i);
+                        final float offset = spec.baseMarginWidth + (spec.cutWidth * 2 * i);
 
                         writer.surface(SURFACE_CUT);
                         writer.textureSalt(salt++);
@@ -480,7 +482,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
                 }
 
                 for (int i = 0; i < spec.cutCount / 2; i++) {
-                    float offset = spec.baseMarginWidth + spec.cutWidth * (2 * i + 1);
+                    final float offset = spec.baseMarginWidth + spec.cutWidth * (2 * i + 1);
 
                     {
                         // inner cut sides
@@ -506,14 +508,14 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
     private void setupCutSideQuad(MutablePolygon qi, SimpleQuadBounds qb, Direction face, boolean isLit) {
         final int glow = isLit ? 255 : 0;
-        
-        qi.setupFaceQuad(qb.face, 
+
+        qi.setupFaceQuad(qb.face,
                 new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, Color.WHITE, glow),
                 new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, Color.WHITE, glow),
                 new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, glow / 3),
                 new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, Color.WHITE, glow / 3),
                 qb.topFace);
-        
+
         // force vertex normals out to prevent lighting anomalies
         final Vec3i vec = face.getVector();
         final float x = vec.getX();
@@ -558,19 +560,19 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
     @Override
     public MutablePrimitiveState geometricState(PrimitiveState fromState) {
-        final MutablePrimitiveState result = this.newState();
+        final MutablePrimitiveState result = newState();
         return result;
     }
 
     @Override
     public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
-        
-        return from.primitive() == to.primitive() 
+
+        return from.primitive() == to.primitive()
                 && from.orientationIndex() == to.orientationIndex()
                 && from.cornerJoin() == to.cornerJoin()
                 && from.primitiveBits() == to.primitiveBits();
     }
-    
+
     /** a relic from simpler times */
     @Deprecated
     private static class SimpleQuadBounds {

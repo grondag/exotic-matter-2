@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -55,7 +55,7 @@ public abstract class CubicPainterBorders extends AbstractQuadPainter {
     private final static FaceQuadInputs NO_BORDER = new FaceQuadInputs(BORDER_NONE, TextureOrientation.IDENTITY, false, false);
 
     static {
-        for (Direction face : Direction.values()) {
+        for (final Direction face : Direction.values()) {
             // First one will only be used if we are rendering in solid layer.
             FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.ALL_NO_CORNERS.ordinal()] = NO_BORDER;
             FACE_INPUTS[face.ordinal()][CornerJoinFaceStates.NO_FACE.ordinal()] = null; // NULL FACE
@@ -162,25 +162,27 @@ public abstract class CubicPainterBorders extends AbstractQuadPainter {
         final MutablePolygon editor = stream.editor();
         do {
 
-            CornerJoinState bjs = modelState.cornerJoin();
-            Direction face = editor.nominalFace();
-            FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][bjs.faceState(face).ordinal()];
-            
+            final CornerJoinState bjs = modelState.cornerJoin();
+            final Direction face = editor.nominalFace();
+            final FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][bjs.faceState(face).ordinal()];
+
             // if can't identify a face, skip texturing
-            if (inputs == null)
+            if (inputs == null) {
                 continue;
+            }
 
             final TextureSet tex = paint.texture(textureIndex);
 
             // don't render the "no border" texture unless this is a tile of some kind
-            if (inputs == NO_BORDER && !tex.renderNoBorderAsTile())
+            if (inputs == NO_BORDER && !tex.renderNoBorderAsTile()) {
                 continue;
+            }
 
             editor.lockUV(textureIndex, true);
             editor.assignLockedUVCoordinates(textureIndex);
 
             editor.rotation(textureIndex, inputs.rotation);
-//            cubeInputs.rotateBottom = false;
+            //            cubeInputs.rotateBottom = false;
             editor.minU(textureIndex, inputs.flipU ? 1 : 0);
             editor.minV(textureIndex, inputs.flipV ? 1 : 0);
             editor.maxU(textureIndex, inputs.flipU ? 0 : 1);

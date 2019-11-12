@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -43,13 +43,13 @@ public enum SimpleJoinFaceState {
     private final int bitFlags;
 
     static {
-        for (SimpleJoinFaceState state : SimpleJoinFaceState.values()) {
+        for (final SimpleJoinFaceState state : SimpleJoinFaceState.values()) {
             LOOKUP[state.bitFlags] = state;
         }
     }
 
     private SimpleJoinFaceState(int faceBits) {
-        this.bitFlags = faceBits;
+        bitFlags = faceBits;
 
     }
 
@@ -67,7 +67,7 @@ public enum SimpleJoinFaceState {
         if (join.isJoined(face)) {
             fjs = SimpleJoinFaceState.NO_FACE;
         } else {
-            for (FaceEdge fside : EDGES) {
+            for (final FaceEdge fside : EDGES) {
                 if (join.isJoined(fside.toWorld(face))) {
                     faceFlags |= fside.ordinalBit;
                 }
@@ -86,8 +86,8 @@ public enum SimpleJoinFaceState {
         if (tests.result(face)) {
             fjs = SimpleJoinFaceState.NO_FACE;
         } else {
-            for (FaceEdge fside : EDGES) {
-                Direction joinFace = fside.toWorld(face);
+            for (final FaceEdge fside : EDGES) {
+                final Direction joinFace = fside.toWorld(face);
                 if (tests.result(joinFace) && !tests.result(CubeEdge.find(face, joinFace))) {
                     faceFlags |= fside.ordinalBit;
                 }
@@ -99,11 +99,11 @@ public enum SimpleJoinFaceState {
     }
 
     public boolean isJoined(FaceEdge side) {
-        return (this.bitFlags & side.ordinalBit) == side.ordinalBit;
+        return (bitFlags & side.ordinalBit) == side.ordinalBit;
     }
 
     public boolean isJoined(Direction toFace, Direction onFace) {
-        FaceEdge side = FaceEdge.fromWorld(toFace, onFace);
+        final FaceEdge side = FaceEdge.fromWorld(toFace, onFace);
         return side == null ? false : this.isJoined(side);
     }
 }

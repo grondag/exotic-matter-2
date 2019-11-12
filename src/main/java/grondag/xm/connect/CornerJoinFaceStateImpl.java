@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,8 +15,14 @@
  ******************************************************************************/
 package grondag.xm.connect;
 
-import static grondag.xm.api.orientation.FaceCorner.*;
-import static grondag.xm.api.orientation.FaceEdge.*;
+import static grondag.xm.api.orientation.FaceCorner.BOTTOM_LEFT;
+import static grondag.xm.api.orientation.FaceCorner.BOTTOM_RIGHT;
+import static grondag.xm.api.orientation.FaceCorner.TOP_LEFT;
+import static grondag.xm.api.orientation.FaceCorner.TOP_RIGHT;
+import static grondag.xm.api.orientation.FaceEdge.BOTTOM_EDGE;
+import static grondag.xm.api.orientation.FaceEdge.LEFT_EDGE;
+import static grondag.xm.api.orientation.FaceEdge.RIGHT_EDGE;
+import static grondag.xm.api.orientation.FaceEdge.TOP_EDGE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
@@ -103,7 +109,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
     private CornerJoinFaceStateImpl[] subStates;
 
     private CornerJoinFaceStateImpl(int faceBits, int cornerBits, FaceCorner... cornerTests) {
-        this.bitFlags = faceBits | (cornerBits << 4);
+        bitFlags = faceBits | (cornerBits << 4);
         this.cornerTests = cornerTests;
     }
 
@@ -121,12 +127,12 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
 
     @Override
     public boolean isJoined(FaceEdge side) {
-        return (this.bitFlags & side.ordinalBit) == side.ordinalBit;
+        return (bitFlags & side.ordinalBit) == side.ordinalBit;
     }
 
     @Override
     public boolean isJoined(Direction toFace, Direction onFace) {
-        FaceEdge side = FaceEdge.fromWorld(toFace, onFace);
+        final FaceEdge side = FaceEdge.fromWorld(toFace, onFace);
         return side == null ? false : this.isJoined(side);
     }
 
@@ -136,13 +142,13 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
      */
     @Override
     public boolean needsCorner(FaceCorner corner) {
-        return ((this.bitFlags >> 4) & corner.ordinalBit) == corner.ordinalBit;
+        return ((bitFlags >> 4) & corner.ordinalBit) == corner.ordinalBit;
     }
 
     @Override
     public boolean needsCorner(Direction face1, Direction face2, Direction onFace) {
-        FaceEdge side1 = FaceEdge.fromWorld(face1, onFace);
-        FaceEdge side2 = FaceEdge.fromWorld(face2, onFace);
+        final FaceEdge side1 = FaceEdge.fromWorld(face1, onFace);
+        final FaceEdge side2 = FaceEdge.fromWorld(face2, onFace);
         return side1 == null || side2 == null ? false : this.needsCorner(FaceCorner.find(side1, side2));
     }
 
@@ -156,15 +162,15 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
     private static final CornerJoinFaceStateImpl[] LOOKUP = new CornerJoinFaceStateImpl[256];
 
     static {
-        for (CornerJoinFaceStateImpl state : CornerJoinFaceStateImpl.values()) {
+        for (final CornerJoinFaceStateImpl state : CornerJoinFaceStateImpl.values()) {
             LOOKUP[state.bitFlags] = state;
 
-            ArrayList<CornerJoinFaceStateImpl> subStateList = new ArrayList<CornerJoinFaceStateImpl>();
+            final ArrayList<CornerJoinFaceStateImpl> subStateList = new ArrayList<CornerJoinFaceStateImpl>();
 
             if (state == NO_FACE) {
                 subStateList.add(NO_FACE);
             } else {
-                for (CornerJoinFaceStateImpl subState : CornerJoinFaceStateImpl.values()) {
+                for (final CornerJoinFaceStateImpl subState : CornerJoinFaceStateImpl.values()) {
                     if (subState != NO_FACE && (subState.bitFlags & state.bitFlags & 15) == (subState.bitFlags & 15)) {
                         subStateList.add(subState);
                     }
@@ -218,7 +224,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
             fjs = CornerJoinFaceStateImpl.find(faceFlags, cornerFlags);
 
             if (fjs.hasCornerTests()) {
-                for (FaceCorner corner : fjs.cornerTests()) {
+                for (final FaceCorner corner : fjs.cornerTests()) {
                     if (!tests.result(corner.leftSide.toWorld(face), corner.rightSide.toWorld(face))
                             || tests.result(corner.leftSide.toWorld(face), corner.rightSide.toWorld(face), face)) {
                         cornerFlags |= corner.ordinalBit;
@@ -236,7 +242,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
     }
 
     public static void forEach(Consumer<CornerJoinFaceState> consumer) {
-        for (CornerJoinFaceStateImpl val : VALUES) {
+        for (final CornerJoinFaceStateImpl val : VALUES) {
             consumer.accept(val);
         }
     }

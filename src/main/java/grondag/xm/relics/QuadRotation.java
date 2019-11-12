@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -84,8 +84,8 @@ public class QuadRotation implements QuadTransform {
     private final boolean relight;
 
     private QuadRotation(Builder builder) {
-        this.matrix = new Matrix4f(builder.matrix);
-        this.relight = builder.relight;
+        matrix = new Matrix4f(builder.matrix);
+        relight = builder.relight;
     }
 
     private static final boolean isIndigo = RendererAccess.INSTANCE.getRenderer().getClass() == IndigoRenderer.class;
@@ -103,7 +103,7 @@ public class QuadRotation implements QuadTransform {
             ColorHelper.applyDiffuseShading((ShadeableQuad) quad, true);
         }
 
-        Vector3f vec = VEC3.get();
+        final Vector3f vec = VEC3.get();
 
         applyRotation(0, vec, quad);
         applyRotation(1, vec, quad);

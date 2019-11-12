@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -51,14 +51,15 @@ public abstract class S2C_ExcavationRenderUpdate {
     public static Packet<?> toPacket(ExcavationRenderEntry entry) {
         final IntegerBox aabb = entry.aabb();
         final BlockPos[] positions = entry.renderPositions();
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("id %d New update packet position count = %d, aabb=%s", entry.id, positions == null ? 0 : positions.length,
                     aabb == null ? "null" : aabb.toString());
+        }
         return toPacket(entry.id, aabb, entry.task.isExchange(), positions);
     }
 
     /**
-     * 
+     *
      * Use this for deleted.
      */
     public static Packet<?> toPacket(int deletedId) {
@@ -66,9 +67,10 @@ public abstract class S2C_ExcavationRenderUpdate {
     }
 
     private static Packet<?> toPacket(int id, IntegerBox aabb, boolean isExchange, BlockPos[] positions) {
-        PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
-        if (XmConfig.logExcavationRenderTracking)
+        final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("id %d Update toBytes position count = %d", id, positions == null ? 0 : positions.length);
+        }
 
         pBuff.writeInt(id);
         // deletion flag
@@ -80,7 +82,7 @@ public abstract class S2C_ExcavationRenderUpdate {
 
             pBuff.writeInt(positions == null ? 0 : positions.length);
             if (positions != null) {
-                for (BlockPos pos : positions) {
+                for (final BlockPos pos : positions) {
                     pBuff.writeLong(pos.asLong());
                 }
             }
@@ -100,12 +102,12 @@ public abstract class S2C_ExcavationRenderUpdate {
             positions = null;
             isExchange = false;
         } else {
-            BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
-            BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
+            final BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
+            final BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
             aabb = new IntegerBox(minPos, maxPos);
             isExchange = pBuff.readBoolean();
 
-            int posCount = pBuff.readInt();
+            final int posCount = pBuff.readInt();
             if (posCount == 0) {
                 positions = null;
             } else {
@@ -116,12 +118,14 @@ public abstract class S2C_ExcavationRenderUpdate {
             }
         }
 
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("id %d Update fromBytes position count = %d", id, positions == null ? 0 : positions.length);
+        }
 
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("id %d Update handler position count = %d, aabb=%s", id, positions == null ? 0 : positions.length,
                     aabb == null ? "null" : aabb.toString());
+        }
 
         if (aabb == null) {
             ExcavationRenderManager.remove(id);

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -46,10 +46,10 @@ public enum FaceCorner implements StringIdentifiable {
     public final int ordinalBit;
 
     private FaceCorner(FaceEdge leftSide, FaceEdge rightSide) {
-        this.name = this.name().toLowerCase();
+        name = name().toLowerCase();
         this.leftSide = leftSide;
         this.rightSide = rightSide;
-        this.ordinalBit = 1 << this.ordinal();
+        ordinalBit = 1 << ordinal();
     }
 
     public static final int COUNT = FaceCornerHelper.COUNT;

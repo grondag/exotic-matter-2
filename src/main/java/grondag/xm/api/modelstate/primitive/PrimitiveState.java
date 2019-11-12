@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -31,13 +31,13 @@ import net.minecraft.util.math.Direction;
 @API(status = EXPERIMENTAL)
 public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePrimitiveState>  {
     SimplePrimitiveStateMutator AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
-        Comparable<?> axis = blockState.getEntries().get(PillarBlock.AXIS);
+        final Comparable<?> axis = blockState.getEntries().get(PillarBlock.AXIS);
         if (axis != null) {
             modelState.orientationIndex(PillarBlock.AXIS.getValueType().cast(axis).ordinal());
         }
         return modelState;
     };
-    
+
     SimplePrimitiveStateMutator STAIRS_FROM_BLOCKSTATE = (modelState, blockState) -> {
         final Comparable<?> faceProp = blockState.getEntries().get(StairsBlock.FACING);
         final Comparable<?> half = blockState.getEntries().get(StairsBlock.HALF);
@@ -50,12 +50,12 @@ public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePr
             final boolean corner = shape != StairShape.STRAIGHT;
             boolean inside = false;
             boolean left = false;
-            
+
             switch(shape) {
             case INNER_LEFT:
-               left = true;
+                left = true;
             case INNER_RIGHT:
-               inside = true;
+                inside = true;
                 break;
             case OUTER_LEFT:
                 left = true;
@@ -63,7 +63,7 @@ public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePr
             default:
                 break;
             }
-            
+
             if(corner) {
                 if(bottom) {
                     if(left) {
@@ -79,8 +79,8 @@ public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePr
             Stair.setInsideCorner(corner && inside, modelState);
             modelState.orientationIndex(CubeRotation.find(bottom ? Direction.DOWN : Direction.UP, face).ordinal());
         }
-        
+
         return modelState;
     };
-    
+
 }

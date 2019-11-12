@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -29,9 +29,9 @@ import net.minecraft.state.property.IntProperty;
 @API(status = Status.EXPERIMENTAL)
 public class SpeciesProperty {
     private SpeciesProperty() {}
-    
+
     public static final IntProperty SPECIES = IntProperty.of("xm_species", 0, 15);
-    
+
     public static SimplePrimitiveStateMutator SPECIES_MODIFIER = (modelState, blockState) -> {
         final int species = blockState.get(SPECIES);
         modelState.species(species);
@@ -43,12 +43,11 @@ public class SpeciesProperty {
             if(blockState.getBlock() == block) {
                 final Comparable<?> result = blockState.getEntries().get(SPECIES);
                 return result == null ? SpeciesFunction.NO_SPECIES : (Integer)result;
-            } else {
+            } else
                 return SpeciesFunction.NO_SPECIES;
-            }
         };
     }
-    
+
     /** True when blocks are same block and same species property */
     public static <T extends ModelState> BlockTest<T> matchBlockAndSpecies() {
         return SpeciesImpl.sameBlockAndSpecies();

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -85,13 +85,13 @@ public class PolyTransformImpl implements PolyTransform {
     private final static PolyTransformImpl[] HORIZONTAL_EDGE = new PolyTransformImpl[HorizontalEdge.COUNT];
     private final static PolyTransformImpl[] HORIZONTAL_FACE = new PolyTransformImpl[HorizontalFace.COUNT];
     private final static PolyTransformImpl[] AXIS = new PolyTransformImpl[3];
-    
+
 
     // mainly for run-time testing
-    public static void invalidateCache() { 
+    public static void invalidateCache() {
         populateLookups();
     }
-    
+
     static {
         LOOKUP[OrientationType.ROTATION.ordinal()] = EXACT;
         LOOKUP[OrientationType.EDGE.ordinal()] =  EDGE;
@@ -103,35 +103,35 @@ public class PolyTransformImpl implements PolyTransform {
         LOOKUP[OrientationType.NONE.ordinal()] = new PolyTransformImpl[1];
         populateLookups();
     }
-    
+
     private static void populateLookups() {
         CubeRotation.forEach(e -> {
             EXACT[e.ordinal()] = createEdgeTransform(e);
         });
-        
+
         LOOKUP[OrientationType.NONE.ordinal()][0] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
 
         AXIS[Axis.Y.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
         AXIS[Axis.X.ordinal()] = EXACT[CubeRotation.EAST_UP.ordinal()];
         AXIS[Axis.Z.ordinal()] = EXACT[CubeRotation.NORTH_UP.ordinal()];
-        
+
         HORIZONTAL_FACE[HorizontalFace.NORTH.ordinal()] = EXACT[CubeRotation.NORTH_EAST.ordinal()];
         HORIZONTAL_FACE[HorizontalFace.EAST.ordinal()] = EXACT[CubeRotation.EAST_SOUTH.ordinal()];
         HORIZONTAL_FACE[HorizontalFace.SOUTH.ordinal()] = EXACT[CubeRotation.SOUTH_WEST.ordinal()];
         HORIZONTAL_FACE[HorizontalFace.WEST.ordinal()] = EXACT[CubeRotation.WEST_SOUTH.ordinal()];
-        
+
         HORIZONTAL_EDGE[HorizontalEdge.NORTH_EAST.ordinal()] = EXACT[CubeRotation.NORTH_EAST.ordinal()];
         HORIZONTAL_EDGE[HorizontalEdge.NORTH_WEST.ordinal()] = EXACT[CubeRotation.NORTH_WEST.ordinal()];
         HORIZONTAL_EDGE[HorizontalEdge.SOUTH_EAST.ordinal()] = EXACT[CubeRotation.SOUTH_EAST.ordinal()];
         HORIZONTAL_EDGE[HorizontalEdge.SOUTH_WEST.ordinal()] = EXACT[CubeRotation.SOUTH_WEST.ordinal()];
-        
+
         FACE[Direction.DOWN.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
         FACE[Direction.UP.ordinal()] = EXACT[CubeRotation.UP_SOUTH.ordinal()];
         FACE[Direction.NORTH.ordinal()] = EXACT[CubeRotation.NORTH_EAST.ordinal()];
         FACE[Direction.SOUTH.ordinal()] = EXACT[CubeRotation.SOUTH_WEST.ordinal()];
         FACE[Direction.EAST.ordinal()] = EXACT[CubeRotation.EAST_SOUTH.ordinal()];
         FACE[Direction.WEST.ordinal()] = EXACT[CubeRotation.WEST_SOUTH.ordinal()];
-        
+
         CORNER[CubeCorner.UP_NORTH_EAST.ordinal()] = EXACT[CubeRotation.NORTH_UP.ordinal()];
         CORNER[CubeCorner.UP_NORTH_WEST.ordinal()] = EXACT[CubeRotation.UP_NORTH.ordinal()];
         CORNER[CubeCorner.UP_SOUTH_EAST.ordinal()] = EXACT[CubeRotation.UP_SOUTH.ordinal()];
@@ -140,7 +140,7 @@ public class PolyTransformImpl implements PolyTransform {
         CORNER[CubeCorner.DOWN_NORTH_WEST.ordinal()] = EXACT[CubeRotation.NORTH_DOWN.ordinal()];
         CORNER[CubeCorner.DOWN_SOUTH_EAST.ordinal()] = EXACT[CubeRotation.DOWN_EAST.ordinal()];
         CORNER[CubeCorner.DOWN_SOUTH_WEST.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
-        
+
         EDGE[CubeEdge.DOWN_SOUTH.ordinal()] = EXACT[CubeRotation.DOWN_SOUTH.ordinal()];
         EDGE[CubeEdge.DOWN_WEST.ordinal()] = EXACT[CubeRotation.DOWN_WEST.ordinal()];
         EDGE[CubeEdge.DOWN_NORTH.ordinal()] = EXACT[CubeRotation.DOWN_NORTH.ordinal()];
@@ -163,22 +163,22 @@ public class PolyTransformImpl implements PolyTransform {
     public static PolyTransform forEdgeRotation(int ordinal) {
         return EXACT[ordinal];
     }
-    
+
     public static PolyTransform get(CubeRotation corner) {
         return EXACT[corner.ordinal()];
     }
-    
+
     public static PolyTransform get(Axis axis) {
         return AXIS[axis.ordinal()];
     }
-    
+
     public static PolyTransform get(Direction face) {
         return FACE[face.ordinal()];
     }
-    
+
     private static PolyTransformImpl createEdgeTransform(CubeRotation edge) {
-        Matrix4f matrix = new Matrix4f().identity();
-        
+        final Matrix4f matrix = new Matrix4f().identity();
+
         switch(edge) {
         case DOWN_EAST:
             matrix.rotate((float) Math.toRadians(90), 0, 1, 0);
@@ -255,8 +255,8 @@ public class PolyTransformImpl implements PolyTransform {
 
         default:
             break;
-        
-        };
+
+        }
         return new PolyTransformImpl(matrix);
     }
 }

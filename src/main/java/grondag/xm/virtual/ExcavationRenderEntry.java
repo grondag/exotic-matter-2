@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -48,9 +48,9 @@ public class ExcavationRenderEntry {
     private static int nextID = 0;
 
     public final int id;
-    
+
     public final int rawDimensionId;
-    
+
     public final ExcavationRenderTask task;
 
     @Nullable
@@ -62,11 +62,11 @@ public class ExcavationRenderEntry {
     @Nullable
     private BlockPos[] renderPositions = null;
 
-    private Int2ObjectMap<AtomicInteger> xCounts = new Int2ObjectOpenHashMap<AtomicInteger>();
-    private Int2ObjectMap<AtomicInteger> yCounts = new Int2ObjectOpenHashMap<AtomicInteger>();
-    private Int2ObjectMap<AtomicInteger> zCounts = new Int2ObjectOpenHashMap<AtomicInteger>();
+    private final Int2ObjectMap<AtomicInteger> xCounts = new Int2ObjectOpenHashMap<AtomicInteger>();
+    private final Int2ObjectMap<AtomicInteger> yCounts = new Int2ObjectOpenHashMap<AtomicInteger>();
+    private final Int2ObjectMap<AtomicInteger> zCounts = new Int2ObjectOpenHashMap<AtomicInteger>();
 
-    private Set<BlockPos> positions = Collections.synchronizedSet(new HashSet<BlockPos>());
+    private final Set<BlockPos> positions = Collections.synchronizedSet(new HashSet<BlockPos>());
 
     private boolean isValid = true;
 
@@ -74,24 +74,24 @@ public class ExcavationRenderEntry {
      * If true, has changed after the start of the last computation. Cleared at
      * start of computation run.
      * <p>
-     * 
+     *
      * If dirty when computation completes, computation will resubmit self to queue
      * for recomputation.
      * <p>
-     * 
+     *
      * If becomes dirty while computation not in progress, {@link #setDirty()} will
      * submit for computation.
      */
-    private AtomicBoolean isDirty = new AtomicBoolean(true);
+    private final AtomicBoolean isDirty = new AtomicBoolean(true);
 
     /**
      * Players who could be viewing this excavation and should received client-side
      * updates.
      */
-    private SimpleUnorderedArrayList<ServerPlayerEntity> listeners = new SimpleUnorderedArrayList<ServerPlayerEntity>();
+    private final SimpleUnorderedArrayList<ServerPlayerEntity> listeners = new SimpleUnorderedArrayList<ServerPlayerEntity>();
 
     private void addPos(BlockPos pos) {
-        this.positions.add(pos);
+        positions.add(pos);
 
         synchronized (xCounts) {
             AtomicInteger xCounter = xCounts.get(pos.getX());
@@ -128,7 +128,7 @@ public class ExcavationRenderEntry {
      * Returns true if any dimension had a count drop to zero
      */
     private boolean removePos(BlockPos pos) {
-        this.positions.remove(pos);
+        positions.remove(pos);
         boolean gotZero = xCounts.get(pos.getX()).decrementAndGet() == 0;
         gotZero = yCounts.get(pos.getY()).decrementAndGet() == 0 || gotZero;
         gotZero = zCounts.get(pos.getZ()).decrementAndGet() == 0 || gotZero;
@@ -142,39 +142,43 @@ public class ExcavationRenderEntry {
         id = nextID++;
         rawDimensionId = task.world().dimension.getType().getRawId();
         this.task = task;
-        
-        if (XmConfig.logExcavationRenderTracking)
-            Xm.LOG.info("id = %d new Entry constructor", this.id);
+
+        if (XmConfig.logExcavationRenderTracking) {
+            Xm.LOG.info("id = %d new Entry constructor", id);
+        }
 
         task.addCompletionListener(this::onPositionComplete);
-        
+
         task.forEachPosition(this::addPos);
 
         if (ExcavationRenderEntry.this.positions.size() == 0) {
-            if (XmConfig.logExcavationRenderTracking)
-                Xm.LOG.info("id = %d new Entry constructor - invalid", this.id);
-            this.isValid = false;
+            if (XmConfig.logExcavationRenderTracking) {
+                Xm.LOG.info("id = %d new Entry constructor - invalid", id);
+            }
+            isValid = false;
         } else {
-            if (XmConfig.logExcavationRenderTracking)
-                Xm.LOG.info("id = %d new Entry constructor - launching compute", this.id);
+            if (XmConfig.logExcavationRenderTracking) {
+                Xm.LOG.info("id = %d new Entry constructor - launching compute", id);
+            }
             ExcavationRenderEntry.this.compute();
         }
     }
 
     public void onPositionComplete(BlockPos pos) {
-        boolean needsCompute = this.removePos(pos);
-        this.isValid = this.isValid && this.positions.size() > 0;
-        if (this.isValid) {
-            if (needsCompute)
-                this.setDirty();
+        final boolean needsCompute = removePos(pos);
+        isValid = isValid && positions.size() > 0;
+        if (isValid) {
+            if (needsCompute) {
+                setDirty();
+            }
         } else {
             ExcavationRenderTracker.INSTANCE.remove(this);
         }
     }
 
     private void setDirty() {
-        this.isDirty.compareAndSet(false, true);
-        this.compute();
+        isDirty.compareAndSet(false, true);
+        compute();
     }
 
     /**
@@ -182,28 +186,30 @@ public class ExcavationRenderEntry {
      * scheduled.
      */
     public boolean isFirstComputeDone() {
-        return this.isFirstComputeDone;
+        return isFirstComputeDone;
     }
 
     public void compute() {
-        if (XmConfig.logExcavationRenderTracking)
-            Xm.LOG.info("id = %d Compute running.", this.id);
+        if (XmConfig.logExcavationRenderTracking) {
+            Xm.LOG.info("id = %d Compute running.", id);
+        }
 
-        this.isDirty.set(false);
+        isDirty.set(false);
 
-        int count = this.positions.size();
+        final int count = positions.size();
 
         if (count == 0) {
-            if (XmConfig.logExcavationRenderTracking)
-                Xm.LOG.info("id = %d Compute existing due to empty positions.", this.id);
-            this.updateListeners();
+            if (XmConfig.logExcavationRenderTracking) {
+                Xm.LOG.info("id = %d Compute existing due to empty positions.", id);
+            }
+            updateListeners();
             ExcavationRenderTracker.INSTANCE.remove(this);
             return;
         }
 
         int minX = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE;
-        for (Int2ObjectMap.Entry<AtomicInteger> x : this.xCounts.int2ObjectEntrySet()) {
+        for (final Int2ObjectMap.Entry<AtomicInteger> x : xCounts.int2ObjectEntrySet()) {
             if (x.getValue().get() > 0) {
                 minX = Math.min(minX, x.getIntKey());
                 maxX = Math.max(maxX, x.getIntKey());
@@ -212,7 +218,7 @@ public class ExcavationRenderEntry {
 
         int minY = Integer.MAX_VALUE;
         int maxY = Integer.MIN_VALUE;
-        for (Int2ObjectMap.Entry<AtomicInteger> y : this.yCounts.int2ObjectEntrySet()) {
+        for (final Int2ObjectMap.Entry<AtomicInteger> y : yCounts.int2ObjectEntrySet()) {
             if (y.getValue().get() > 0) {
                 minY = Math.min(minY, y.getIntKey());
                 maxY = Math.max(maxY, y.getIntKey());
@@ -221,43 +227,46 @@ public class ExcavationRenderEntry {
 
         int minZ = Integer.MAX_VALUE;
         int maxZ = Integer.MIN_VALUE;
-        for (Int2ObjectMap.Entry<AtomicInteger> z : this.zCounts.int2ObjectEntrySet()) {
+        for (final Int2ObjectMap.Entry<AtomicInteger> z : zCounts.int2ObjectEntrySet()) {
             if (z.getValue().get() > 0) {
                 minZ = Math.min(minZ, z.getIntKey());
                 maxZ = Math.max(maxZ, z.getIntKey());
             }
         }
 
-        IntegerBox newBox = new IntegerBox(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
+        final IntegerBox newBox = new IntegerBox(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
 
         // always send start time computed
-        boolean needsListenerUpdate = !this.isFirstComputeDone;
-        this.isFirstComputeDone = true;
+        boolean needsListenerUpdate = !isFirstComputeDone;
+        isFirstComputeDone = true;
 
-        if (!newBox.equals(this.aabb)) {
-            this.aabb = newBox;
+        if (!newBox.equals(aabb)) {
+            aabb = newBox;
             needsListenerUpdate = true;
         }
 
-        if (count <= 16 && (this.renderPositions == null || this.renderPositions.length != count)) {
-            synchronized (this.positions) {
-                BlockPos[] newPositions = new BlockPos[this.positions.size()];
-                newPositions = this.positions.toArray(newPositions);
-                this.renderPositions = newPositions;
+        if (count <= 16 && (renderPositions == null || renderPositions.length != count)) {
+            synchronized (positions) {
+                BlockPos[] newPositions = new BlockPos[positions.size()];
+                newPositions = positions.toArray(newPositions);
+                renderPositions = newPositions;
             }
             needsListenerUpdate = true;
-            if (XmConfig.logExcavationRenderTracking)
-                Xm.LOG.info("id %d Computed render position length = %d", this.id, this.renderPositions == null ? 0 : this.renderPositions.length);
+            if (XmConfig.logExcavationRenderTracking) {
+                Xm.LOG.info("id %d Computed render position length = %d", id, renderPositions == null ? 0 : renderPositions.length);
+            }
         }
 
-        if (XmConfig.logExcavationRenderTracking)
-            Xm.LOG.info("id = %d Compute done, updateListeners=%s, isDirty=%s", this.id, Boolean.toString(needsListenerUpdate),
-                    Boolean.toString(this.isDirty.get()));
+        if (XmConfig.logExcavationRenderTracking) {
+            Xm.LOG.info("id = %d Compute done, updateListeners=%s, isDirty=%s", id, Boolean.toString(needsListenerUpdate),
+                    Boolean.toString(isDirty.get()));
+        }
 
-        if (needsListenerUpdate)
-            this.updateListeners();
+        if (needsListenerUpdate) {
+            updateListeners();
+        }
 
-        if (this.isDirty.get() && count > 0) {
+        if (isDirty.get() && count > 0) {
             compute();
         }
     }
@@ -276,50 +285,52 @@ public class ExcavationRenderEntry {
     }
 
     public void addListener(ServerPlayerEntity listener, boolean sendPacketIfNew) {
-        if (XmConfig.logExcavationRenderTracking)
-            Xm.LOG.info("id=%d addListenger sendIfNew=%s, isValue=%s, isFirstComputeDone=%s", this.id, Boolean.toString(sendPacketIfNew),
+        if (XmConfig.logExcavationRenderTracking) {
+            Xm.LOG.info("id=%d addListenger sendIfNew=%s, isValue=%s, isFirstComputeDone=%s", id, Boolean.toString(sendPacketIfNew),
                     Boolean.toString(isValid), Boolean.toString(isFirstComputeDone));
+        }
 
-        synchronized (this.listeners) {
-            if (this.listeners.addIfNotPresent(listener) && sendPacketIfNew && this.isValid && this.isFirstComputeDone) {
-                if (XmConfig.logExcavationRenderTracking)
-                    Xm.LOG.info("id=%d addListenger scheduling packet.", this.id);
+        synchronized (listeners) {
+            if (listeners.addIfNotPresent(listener) && sendPacketIfNew && isValid && isFirstComputeDone) {
+                if (XmConfig.logExcavationRenderTracking) {
+                    Xm.LOG.info("id=%d addListenger scheduling packet.", id);
+                }
                 ServerSidePacketRegistry.INSTANCE.sendToPlayer(listener, S2C_ExcavationRenderUpdate.toPacket(this));
             }
         }
     }
 
     public void removeListener(ServerPlayerEntity listener) {
-        synchronized (this.listeners) {
-            this.listeners.removeIfPresent(listener);
+        synchronized (listeners) {
+            listeners.removeIfPresent(listener);
         }
     }
 
     public void updateListeners() {
-        if (this.listeners.isEmpty())
+        if (listeners.isEmpty())
             return;
 
-//        // think network operations need to run in world tick
-//        WorldTaskManager.enqueueImmediate(new Runnable() 
-//        {
-        Packet<?> packet = ExcavationRenderEntry.this.isValid && ExcavationRenderEntry.this.positions.size() > 0
+        //        // think network operations need to run in world tick
+        //        WorldTaskManager.enqueueImmediate(new Runnable()
+        //        {
+        final Packet<?> packet = ExcavationRenderEntry.this.isValid && ExcavationRenderEntry.this.positions.size() > 0
                 // update
                 ? S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this)
-                // remove
-                : S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this.id);
+                        // remove
+                        : S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this.id);
 
-//            @Override
-//            public void run()
-//            {
-        synchronized (ExcavationRenderEntry.this.listeners) {
-            if (!ExcavationRenderEntry.this.listeners.isEmpty()) {
-                for (ServerPlayerEntity player : listeners) {
-                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, packet);
+                //            @Override
+                //            public void run()
+                //            {
+                synchronized (ExcavationRenderEntry.this.listeners) {
+                    if (!ExcavationRenderEntry.this.listeners.isEmpty()) {
+                        for (final ServerPlayerEntity player : listeners) {
+                            ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, packet);
+                        }
+                    }
                 }
-            }
-        }
-//            }
-//        });
+                //            }
+                //        });
     }
 
     /**
@@ -328,8 +339,9 @@ public class ExcavationRenderEntry {
      */
     @Nullable
     public BlockPos[] renderPositions() {
-        if (XmConfig.logExcavationRenderTracking)
-            Xm.LOG.info("id %d Render position retrieval, count = %d", this.id, this.renderPositions == null ? 0 : this.renderPositions.length);
-        return this.renderPositions;
+        if (XmConfig.logExcavationRenderTracking) {
+            Xm.LOG.info("id %d Render position retrieval, count = %d", id, renderPositions == null ? 0 : renderPositions.length);
+        }
+        return renderPositions;
     }
 }

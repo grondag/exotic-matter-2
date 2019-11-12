@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -41,7 +41,7 @@ import net.minecraft.util.math.MathHelper;
 @API(status = EXPERIMENTAL)
 public class StackedPlates {
     private StackedPlates() {}
-    
+
     public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
             .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
             .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
@@ -53,9 +53,9 @@ public class StackedPlates {
 
     static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
         final PolyTransform transform = PolyTransform.get(modelState);
-        
-        WritableMesh mesh = XmMeshes.claimWritable();
-        MutablePolygon writer = mesh.writer();
+
+        final WritableMesh mesh = XmMeshes.claimWritable();
+        final MutablePolygon writer = mesh.writer();
         writer.colorAll(0, 0xFFFFFFFF);
         writer.lockUV(0, true);
         writer.rotation(0, TextureOrientation.IDENTITY);
@@ -63,32 +63,32 @@ public class StackedPlates {
         writer.saveDefaults();
 
         final float height = getHeight(modelState) / 16;
-        
+
         writer.surface(SURFACE_BOTTOM);
         writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_TOP);
         writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 1 - height, Direction.NORTH);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.EAST, 0, 0, 1, height, 0, Direction.UP);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.WEST, 0, 0, 1, height, 0, Direction.UP);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, height, 0, Direction.UP);
         transform.accept(writer);
         writer.append();
-        
+
         writer.surface(SURFACE_SIDES);
         writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, height, 0, Direction.UP);
         transform.accept(writer);
@@ -104,11 +104,11 @@ public class StackedPlates {
             .primitiveBitCount(4)
             .build(Xm.idString("stacked_plates"));
 
-   /**
-    * 
-    * @param height  1-16
-    * @param modelState
-    */
+    /**
+     *
+     * @param height  1-16
+     * @param modelState
+     */
     public static void setHeight(int height, MutablePrimitiveState modelState) {
         modelState.primitiveBits(MathHelper.clamp(height, 1, 16) - 1);
     }

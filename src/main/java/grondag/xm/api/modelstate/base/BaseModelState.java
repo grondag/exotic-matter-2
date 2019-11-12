@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -42,7 +42,7 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> extends ModelState {
-    
+
     BaseModelStateFactory<R, W> factory();
 
     @Override
@@ -53,7 +53,7 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 
     /**
      * Does NOT consider isStatic in comparison.<p>
-     * 
+     *
      * {@inheritDoc}
      */
     @Override
@@ -119,22 +119,22 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
     /**
      * Will return 0 if model state does not include species. This is more
      * convenient than checking each place species is used.
-     * 
+     *
      * @return
      */
     int species();
 
     CornerJoinState cornerJoin();
-    
+
     SimpleJoinState simpleJoin();
-    
+
     SimpleJoinState masonryJoin();
 
 
     int primitiveBits();
 
     ////////////////////////////////////////// RENDERING //////////////////////////////////////////
-    
+
     @Override
     @Environment(EnvType.CLIENT)
     List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);

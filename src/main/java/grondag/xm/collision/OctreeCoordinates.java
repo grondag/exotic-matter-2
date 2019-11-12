@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -46,7 +46,7 @@ class OctreeCoordinates {
 
         int exteriorIndex = 0;
         for (int i = 0; i < 4096; i++) {
-            int xyz = indexToXYZ4(i);
+            final int xyz = indexToXYZ4(i);
             final int x = xyz & 15;
             final int y = (xyz >> 4) & 15;
             final int z = (xyz >> 8) & 15;
@@ -71,7 +71,7 @@ class OctreeCoordinates {
 
         int exteriorBottomIndex = 0;
         for (int i = 0; i < 512; i++) {
-            int xyz = indexToXYZ3(i);
+            final int xyz = indexToXYZ3(i);
             final int x = xyz & 7;
             final int y = (xyz >> 3) & 7;
             final int z = (xyz >> 6) & 7;
@@ -247,7 +247,7 @@ class OctreeCoordinates {
         // voxel coordinates are interleaved: zyx zyx zyx zyx
 
         final int j = i4 >> 2;
-        final int k = i4 >> 4;
+                final int k = i4 >> 4;
         final int l = i4 >> 6;
 
         return ((i4 & 1) | (j & 2) | (k & 4) | (l & 8))
@@ -283,7 +283,7 @@ class OctreeCoordinates {
         final int mask = (1 << divisionLevel) - 1;
         return test.apply(((xyz & mask) + 0.5f) * d, (((xyz >> divisionLevel) & mask) + 0.5f) * d, (((xyz >> (divisionLevel * 2)) & mask) + 0.5f) * d);
     }
-    
+
     static void withXYZ(final int index, final int divisionLevel, Int3Consumer consumer) {
         final int xyz = indexToXYZ(index, divisionLevel);
         final int mask = (1 << divisionLevel) - 1;

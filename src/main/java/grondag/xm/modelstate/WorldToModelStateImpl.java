@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -33,8 +33,8 @@ import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.connect.world.ModelStateFunction;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateFunction;
+import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.primitive.simple.CubeWithRotation;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -45,10 +45,10 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
     private final BlockTest<PrimitiveState> joinTest;
     private final PrimitiveStateMutator updater;
     private final PrimitiveState defaultState;
-    
+
     private WorldToModelStateImpl(BuilderImpl builder) {
-        this.joinTest = builder.joinTest;
-        this.defaultState = builder.defaultState;
+        joinTest = builder.joinTest;
+        defaultState = builder.defaultState;
         if(builder.updaters.isEmpty()) {
             updater = (modelState, xmBlockState, world, pos, neighbors, refreshFromWorld) -> {};
         } else if(builder.updaters.size() == 1) {
@@ -56,20 +56,20 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
         } else {
             final PrimitiveStateMutator[] funcs = builder.updaters.toArray(new PrimitiveStateMutator[builder.updaters.size()]);
             updater = (modelState, xmBlockState, world, pos, neighbors, refreshFromWorld) -> {
-                for(PrimitiveStateMutator func : funcs) {
+                for(final PrimitiveStateMutator func : funcs) {
                     func.mutate(modelState, xmBlockState, world, pos, neighbors, refreshFromWorld);
                 }
             };
         }
-    };
-    
+    }
+
     @Override
     public MutablePrimitiveState apply(BlockState blockState, BlockView world, BlockPos pos, boolean refreshFromWorld) {
-        MutablePrimitiveState modelState = defaultState.mutableCopy();
+        final MutablePrimitiveState modelState = defaultState.mutableCopy();
         if(!modelState.isStatic() && refreshFromWorld) {
-            
+
             BlockNeighbors neighbors = null;
-            
+
             final int stateFlags = modelState.stateFlags();
             if ((stateFlags & POSITION) == POSITION) {
                 modelState.pos(pos);
@@ -92,21 +92,21 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
                 }
                 modelState.masonryJoin(SimpleJoinState.fromWorld(neighbors));
             }
-            
+
             updater.mutate(modelState, blockState, world, pos, neighbors, refreshFromWorld);
 
             if (neighbors != null) {
                 neighbors.release();
             }
-        }      
+        }
         return modelState;
     }
-    
+
     private static class BuilderImpl implements PrimitiveStateFunction.Builder {
         private BlockTest<PrimitiveState> joinTest = BlockTest.sameBlock();
-        private ArrayList<PrimitiveStateMutator> updaters = new ArrayList<>();
+        private final ArrayList<PrimitiveStateMutator> updaters = new ArrayList<>();
         private PrimitiveState defaultState = CubeWithRotation.INSTANCE.defaultState();
-        
+
         private BuilderImpl() {}
 
         @Override
@@ -114,13 +114,13 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
             this.defaultState = defaultState == null ? CubeWithRotation.INSTANCE.defaultState() : defaultState;
             return this;
         }
-        
+
         @Override
         public Builder withJoin(BlockTest<PrimitiveState> joinTest) {
             this.joinTest = joinTest == null ? BlockTest.sameBlock() : joinTest;
             return this;
         }
-        
+
         @Override
         public Builder withUpdate(PrimitiveStateMutator function) {
             if(function != null) {
@@ -136,7 +136,7 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
             updaters.clear();
             return this;
         }
-        
+
         @Override
         public
         PrimitiveStateFunction build() {

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -28,11 +28,11 @@ import net.minecraft.util.math.Direction.Axis;
 public class SimpleJoinStateImpl implements SimpleJoinState {
     public static final SimpleJoinState NO_JOINS;
     public static final SimpleJoinState ALL_JOINS;
-    
+
     private static final int X_MASK = (1 << Direction.EAST.ordinal()) | (1 << Direction.WEST.ordinal());
     private static final int Y_MASK = (1 << Direction.UP.ordinal()) | (1 << Direction.DOWN.ordinal());
     private static final int Z_MASK = (1 << Direction.NORTH.ordinal()) | (1 << Direction.SOUTH.ordinal());
-    
+
     private final int joins;
 
     @Override
@@ -43,7 +43,7 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 
     @Override
     public int ordinal() {
-        return (int) joins;
+        return joins;
     }
 
     private SimpleJoinStateImpl(int joins) {

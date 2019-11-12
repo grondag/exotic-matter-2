@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -46,25 +46,23 @@ public enum HorizontalFace implements StringIdentifiable {
     public final String name;
 
     private HorizontalFace(Direction face) {
-        this.name = this.name().toLowerCase();
+        name = name().toLowerCase();
         this.face = face;
-        this.vector = face.getVector();
+        vector = face.getVector();
     }
 
     public HorizontalFace left() {
-        if (this.ordinal() == 0) {
+        if (ordinal() == 0)
             return HorizontalFace.values()[3];
-        } else {
-            return HorizontalFace.values()[this.ordinal() - 1];
-        }
+        else
+            return HorizontalFace.values()[ordinal() - 1];
     }
 
     public HorizontalFace right() {
-        if (this.ordinal() == 3) {
+        if (ordinal() == 3)
             return HorizontalFace.values()[0];
-        } else {
-            return HorizontalFace.values()[this.ordinal() + 1];
-        }
+        else
+            return HorizontalFace.values()[ordinal() + 1];
     }
 
     public static final int COUNT = HorizontalFaceHelper.COUNT;

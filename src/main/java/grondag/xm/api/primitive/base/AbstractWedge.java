@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -37,20 +37,20 @@ import grondag.xm.modelstate.SimpleModelStateImpl;
 @API(status = EXPERIMENTAL)
 public abstract class AbstractWedge extends AbstractSimplePrimitive {
     protected static final int KEY_COUNT = CubeRotation.COUNT * 3;
-    
+
     protected static int computeKey(int edgeIndex, boolean isCorner, boolean isInside) {
         return edgeIndex * 3 + (isCorner ? (isInside ? 1 : 2) : 0);
     }
 
     protected final ReadOnlyMesh[] CACHE = new ReadOnlyMesh[KEY_COUNT];
-    
+
     public AbstractWedge(String idString, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
         super(idString, NONE, SimpleModelStateImpl.FACTORY, surfaceFunc);
     }
-    
+
     // mainly for run-time testing
     @Override
-    public void invalidateCache() { 
+    public void invalidateCache() {
         Arrays.fill(CACHE, null);
     }
 
@@ -60,26 +60,26 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         final boolean isCorner = isCorner(modelState);
         final boolean isInside = isInsideCorner(modelState);
         final int key = computeKey(edgeIndex, isCorner, isInside);
-        
+
         ReadOnlyMesh mesh = CACHE[key];
         if(mesh == null) {
             mesh = buildMesh(PolyTransform.forEdgeRotation(edgeIndex), isCorner, isInside);
             CACHE[key] = mesh;
         }
-        
+
         final Polygon reader = mesh.threadSafeReader();
         if (reader.origin()) {
 
             do {
                 target.accept(reader);
             } while (reader.next());
-            
+
         }
         reader.release();
     }
 
     protected abstract ReadOnlyMesh buildMesh(PolyTransform transform, boolean isCorner, boolean isInside);
-    
+
     @Override
     public OrientationType orientationType(PrimitiveState modelState) {
         return OrientationType.ROTATION;
@@ -87,7 +87,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 
     @Override
     public MutablePrimitiveState geometricState(PrimitiveState fromState) {
-        MutablePrimitiveState result = this.newState();
+        final MutablePrimitiveState result = newState();
         if(fromState.primitive().orientationType(fromState) == OrientationType.ROTATION) {
             result.orientationIndex(fromState.orientationIndex());
             result.primitiveBits(fromState.primitiveBits());
@@ -104,7 +104,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 
     private static final int CORNER_FLAG = 1;
     private static final int INSIDE_FLAG = 2;
-    
+
     public static boolean isCorner(PrimitiveState modelState) {
         return (modelState.primitiveBits() & CORNER_FLAG) == CORNER_FLAG;
     }
@@ -113,8 +113,8 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
         final int oldBits = modelState.primitiveBits();
         modelState.primitiveBits(isCorner ? oldBits | CORNER_FLAG : oldBits & ~CORNER_FLAG);
     }
-    
-    /** 
+
+    /**
      * Only applies when {@link #isCorner(PrimitiveState)} == (@code true}.
      * @param modelState  State of this primitive.
      * @return {@code true} when inside corner, {@code false} when outside corner.

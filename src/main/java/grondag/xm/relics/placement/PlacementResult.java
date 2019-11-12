@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -50,7 +50,7 @@ public class PlacementResult {
     }
 
     public IPlacementSpec builder() {
-        return this.builder;
+        return builder;
     }
 
     /**
@@ -59,7 +59,7 @@ public class PlacementResult {
      * that {@link #mutate(ItemStack, EntityPlayer)} will have no effect.
      */
     public boolean shouldInputEventsContinue() {
-        return this.event == PlacementEvent.NO_OPERATION_CONTINUE;
+        return event == PlacementEvent.NO_OPERATION_CONTINUE;
     }
 
     /**
@@ -67,16 +67,16 @@ public class PlacementResult {
      * no block placements.
      */
     public boolean isExcavationOnly() {
-        return this.event.isExcavation;
+        return event.isExcavation;
     }
 
     public void apply(ItemStack stackIn, PlayerEntity player) {
         if (!PlacementItem.isPlacementItem(stackIn))
             return;
 
-        PlacementItem item = (PlacementItem) stackIn.getItem();
+        final PlacementItem item = (PlacementItem) stackIn.getItem();
 
-        switch (this.event) {
+        switch (event) {
 
         case START_PLACEMENT_REGION:
             item.fixedRegionStart(stackIn, blockPos, false);
@@ -89,19 +89,20 @@ public class PlacementResult {
         case PLACE:
         case EXCAVATE:
             if (!player.world.isClient) {
-                if (this.builder.validate()) {
+                if (builder.validate()) {
                     // Turn off fixed region when completing a successful fixed region
                     // Did this because did not want to require two clicks to place a fixed region
                     // and no point in leaving the region there once placed.
-                    if (item.isFixedRegionEnabled(stackIn))
+                    if (item.isFixedRegionEnabled(stackIn)) {
                         item.setFixedRegionEnabled(stackIn, false);
+                    }
 
                     if (item.isVirtual(stackIn)) {
-                        WorldTaskManager.enqueue(this.builder.worldTask((ServerPlayerEntity) player));
+                        WorldTaskManager.enqueue(builder.worldTask((ServerPlayerEntity) player));
                     } else {
                         // non-virtual placement operations happen immediately
                         // such actions are typically single blocks
-                        this.builder.worldTask((ServerPlayerEntity) player).getAsBoolean();
+                        builder.worldTask((ServerPlayerEntity) player).getAsBoolean();
                     }
                 }
             }

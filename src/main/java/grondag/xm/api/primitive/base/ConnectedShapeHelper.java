@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -78,12 +78,12 @@ public class ConnectedShapeHelper {
     private static void spec(float[][] target, CornerJoinFaceState state, float... values) {
         target[state.ordinal()] = values;
     }
-    
+
     /** generates CSG cuts needed for a simple even-margin panel */
     public static float[][] panelspec(final float margin) {
         final float far = 1 - margin;
         final float[][] result = new float[COUNT][];
-        
+
         spec(result, ALL_NO_CORNERS, 0, 0, 1, 1);
         spec(result, NONE, margin, margin, far, far);
         spec(result, TOP, margin, margin, far, 1);

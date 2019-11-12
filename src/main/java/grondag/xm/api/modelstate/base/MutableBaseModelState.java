@@ -22,14 +22,14 @@ public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends
 
     @Override
     R releaseToImmutable();
-    
+
     @Override
     W setStatic(boolean isStatic);
 
     W paint(int surfaceIndex, int paintIndex);
 
     W paint(int surfaceIndex, XmPaint paint);
-    
+
     W paint(XmSurface surface, XmPaint paint);
 
     W paint(XmSurface surface, int paintIndex);
@@ -45,7 +45,7 @@ public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends
     W posZ(int index);
 
     W pos(BlockPos pos);
-    
+
     W species(int species);
 
     W orientationIndex(int index);
@@ -55,10 +55,10 @@ public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends
     W simpleJoin(SimpleJoinState join);
 
     W masonryJoin(SimpleJoinState join);
-    
+
     W primitiveBits(int bits);
 
     <T> T applyAndRelease(Function<ModelState, T> func);
-    
+
     W apply(Consumer<W> consumer);
 }

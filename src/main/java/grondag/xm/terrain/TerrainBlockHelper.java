@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -49,7 +49,7 @@ public class TerrainBlockHelper {
 
     @Nullable
     public static TerrainType terrainType(BlockState state) {
-        Comparable<?> val = state.getEntries().get(TerrainBlock.TERRAIN_TYPE);
+        final Comparable<?> val = state.getEntries().get(TerrainBlock.TERRAIN_TYPE);
         return val == null ? null : TerrainBlock.TERRAIN_TYPE.getValueType().cast(val);
     }
 
@@ -57,7 +57,7 @@ public class TerrainBlockHelper {
      * Convenience method to check for filler block.
      */
     public static boolean isFlowFiller(BlockState state) {
-        TerrainType val = terrainType(state);
+        final TerrainType val = terrainType(state);
         return val != null && val.isFiller;
     }
 
@@ -65,12 +65,12 @@ public class TerrainBlockHelper {
      * Convenience method to check for height block.
      */
     public static boolean isFlowHeight(BlockState state) {
-        TerrainType val = terrainType(state);
+        final TerrainType val = terrainType(state);
         return val != null && val.isHeight;
     }
 
     public static int getHotness(BlockState state) {
-        Comparable<?> val = state.getEntries().get(TerrainBlock.HEAT);
+        final Comparable<?> val = state.getEntries().get(TerrainBlock.HEAT);
         return val == null ? 0 : TerrainBlock.HEAT.getValueType().cast(val);
     }
 
@@ -79,7 +79,7 @@ public class TerrainBlockHelper {
      * height of this block. Returns zero if not a flow block.
      */
     public static int getFlowHeightFromState(BlockState state) {
-        TerrainType val = terrainType(state);
+        final TerrainType val = terrainType(state);
         return val == null ? 0 : val.height;
     }
 
@@ -92,7 +92,7 @@ public class TerrainBlockHelper {
     }
 
     public static BlockState stateWithFlowHeight(BlockState state, float value) {
-        return stateWithDiscreteFlowHeight(state, (int) Math.round(value * TerrainState.BLOCK_LEVELS_INT));
+        return stateWithDiscreteFlowHeight(state, Math.round(value * TerrainState.BLOCK_LEVELS_INT));
     }
 
     /**
@@ -107,10 +107,10 @@ public class TerrainBlockHelper {
      * Adds or removes a filler block if needed. Also replaces static filler blocks
      * with dynamic version. Returns the blockstate that was set if it was changed.
      * <p>
-     * 
+     *
      * Optional predicate can limit what block states are updated. If provided, only
      * block states where predicate test returns true will be changed.
-     * 
+     *
      */
     public static BlockState adjustFillIfNeeded(TerrainWorldAdapter worldObj, final long packedBasePos, Predicate<BlockState> filter) {
         final BlockState baseState = worldObj.getBlockState(packedBasePos);
@@ -134,7 +134,7 @@ public class TerrainBlockHelper {
         /**
          * If space is occupied with a non-displaceable block, will be ignored.
          * Otherwise, possible target states: air, fill +1, fill +2
-         * 
+         *
          * Should be fill +1 if block below is a heightblock and needs a fill >= 1;
          * Should be a fill +2 if block below is not a heightblock and block two below
          * needs a fill = 2; Otherwise should be air.
@@ -161,12 +161,12 @@ public class TerrainBlockHelper {
                 update = Blocks.AIR.getDefaultState();
                 worldObj.setBlockState(packedBasePos, update);
             } else if (fillBlock != null && (getYOffsetFromState(baseState) != targetFill || baseBlock != fillBlock)) {
-                update = stateWithYOffset(((Block) fillBlock).getDefaultState(), targetFill);
+                update = stateWithYOffset(fillBlock.getDefaultState(), targetFill);
                 worldObj.setBlockState(packedBasePos, update);
             }
             // confirm filler needed and adjustIfEnabled/remove if needed
         } else if (targetFill != SHOULD_BE_AIR && fillBlock != null) {
-            update = stateWithYOffset(((Block) fillBlock).getDefaultState(), targetFill);
+            update = stateWithYOffset(fillBlock.getDefaultState(), targetFill);
             worldObj.setBlockState(packedBasePos, update);
         }
 
@@ -180,31 +180,29 @@ public class TerrainBlockHelper {
      */
     public static boolean shouldBeFullCube(BlockState blockState, BlockView blockAccess, BlockPos pos) {
         if (isFlowBlock(blockState)) {
-            TerrainModelState.Mutable mState = (TerrainModelState.Mutable)XmBlockState.modelState(blockState, blockAccess, pos, true);
+            final TerrainModelState.Mutable mState = (TerrainModelState.Mutable)XmBlockState.modelState(blockState, blockAccess, pos, true);
             final boolean result = mState.getTerrainState().isFullCube();
             mState.release();
             return result;
-        } else {
+        } else
             return false;
-        }
     }
 
     public static @Nullable TerrainState terrainState(BlockState blockState, BlockView blockAccess, BlockPos pos) {
         if (isFlowBlock(blockState)) {
-            TerrainModelState.Mutable mState = (TerrainModelState.Mutable)XmBlockState.modelState(blockState, blockAccess, pos, true);
+            final TerrainModelState.Mutable mState = (TerrainModelState.Mutable)XmBlockState.modelState(blockState, blockAccess, pos, true);
             final TerrainState result = mState.getTerrainState();
             mState.release();
             return result;
-        } else {
+        } else
             return null;
-        }
     }
-    
+
     /**
      * Use for filler blocks. Returns values from +1 to +2, or zero if not a filler.
      */
     public static int getYOffsetFromState(BlockState state) {
-        TerrainType val = terrainType(state);
+        final TerrainType val = terrainType(state);
         return val == null ? 0 : val.fillOffset;
     }
 

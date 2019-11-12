@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -84,15 +84,16 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
     @Override
     public final MutablePolygon assignLockedUVCoordinates(int layerIndex) {
-        UVLocker locker = UVLOCKERS[nominalFace().ordinal()];
+        final UVLocker locker = UVLOCKERS[nominalFace().ordinal()];
 
         final int vertexCount = vertexCount();
-        for (int i = 0; i < vertexCount; i++)
+        for (int i = 0; i < vertexCount; i++) {
             locker.apply(i, layerIndex, this);
+        }
 
         return this;
     }
-    
+
     @Override
     public final MutablePolygon sprite(int layerIndex, String textureName) {
         polyEncoder.setTextureName(stream, baseAddress, layerIndex, textureName);
@@ -134,7 +135,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         StaticEncoder.setEmissive(stream, baseAddress, layerIndex, emissive);
         return this;
     }
-    
+
     @Override
     public MutablePolygon disableAo(int layerIndex, boolean disable) {
         StaticEncoder.disableAo(stream, baseAddress, layerIndex, disable);
@@ -171,10 +172,11 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
     @Override
     public final MutablePolygon color(int vertexIndex, int layerIndex, int color) {
-        if (vertexEncoder.hasColor())
+        if (vertexEncoder.hasColor()) {
             vertexEncoder.setVertexColor(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), color);
-        else
+        } else {
             polyEncoder.setVertexColor(stream, baseAddress, layerIndex, color);
+        }
         return this;
     }
 
@@ -189,13 +191,13 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         vertexEncoder.setVertexY(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), y);
         return this;
     }
-    
+
     @Override
     public final MutablePolygon z(int vertexIndex, float z) {
         vertexEncoder.setVertexZ(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), z);
         return this;
     }
-    
+
     @Override
     public final MutablePolygon u(int vertexIndex, int layerIndex, float u) {
         vertexEncoder.setVertexU(stream, vertexAddress, layerIndex, vertexIndexer.applyAsInt(vertexIndex), u);
@@ -223,31 +225,33 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
     @Override
     public final MutablePolygon normal(int vertexIndex, Vec3f normal) {
         if (vertexEncoder.hasNormals()) {
-            if (normal == null)
+            if (normal == null) {
                 vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), Float.NaN, Float.NaN, Float.NaN);
-            else
+            } else {
                 vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), normal.x(), normal.y(), normal.z());
+            }
         }
         return this;
     }
 
     @Override
     public final MutablePolygon normal(int vertexIndex, float x, float y, float z) {
-        if (vertexEncoder.hasNormals())
+        if (vertexEncoder.hasNormals()) {
             vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), x, y, z);
+        }
         return this;
     }
 
     // TODO replace with render material
-//    @Override
-//    public final IMutablePolygon setPipelineIndex(int pipelineIndex) {
-//        StaticEncoder.setPipelineIndex(stream, baseAddress, pipelineIndex);
-//        return this;
-//    }
+    //    @Override
+    //    public final IMutablePolygon setPipelineIndex(int pipelineIndex) {
+    //        StaticEncoder.setPipelineIndex(stream, baseAddress, pipelineIndex);
+    //        return this;
+    //    }
 
     @Override
     public final MutablePolygon clearFaceNormal() {
-        int normalFormat = MeshFormat.getFaceNormalFormat(format());
+        final int normalFormat = MeshFormat.getFaceNormalFormat(format());
 
         assert normalFormat == MeshFormat.FACE_NORMAL_FORMAT_COMPUTED : "Face normal clear should only happen for full-precision normals";
 
@@ -266,7 +270,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         setFormat(MeshFormat.setCullFace(format(), face));
         return this;
     }
-    
+
     @Override
     public final MutablePolygon surface(XmSurface surface) {
         StaticEncoder.surface(stream, baseAddress, surface);
@@ -278,15 +282,17 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         if (source.hasNormal(sourceIndex)) {
             assert vertexEncoder.hasNormals();
             normal(targetIndex, source.normalX(sourceIndex), source.normalY(sourceIndex), source.normalZ(sourceIndex));
-        } else if (vertexEncoder.hasNormals())
+        } else if (vertexEncoder.hasNormals()) {
             this.normal(targetIndex, (Vec3f) null);
+        }
 
         pos(targetIndex, source.x(sourceIndex), source.y(sourceIndex), source.z(sourceIndex));
 
-        if (glowEncoder.glowFormat() == MeshFormat.VERTEX_GLOW_PER_VERTEX)
+        if (glowEncoder.glowFormat() == MeshFormat.VERTEX_GLOW_PER_VERTEX) {
             glow(targetIndex, source.glow(sourceIndex));
-        else if (targetIndex == 0 && glowEncoder.glowFormat() == MeshFormat.VERTEX_GLOW_SAME)
+        } else if (targetIndex == 0 && glowEncoder.glowFormat() == MeshFormat.VERTEX_GLOW_SAME) {
             glow(0, source.glow(sourceIndex));
+        }
 
         final int layerCount = source.spriteDepth();
         assert layerCount <= spriteDepth();
@@ -313,7 +319,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
         return this;
     }
-    
+
     @Override
     public MutablePolygon copyInterpolatedVertexFrom(int targetIndex, Polygon from, int fromIndex, Polygon to, int toIndex, float toWeight) {
         final int layerCount = from.spriteDepth();
@@ -321,8 +327,8 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         if(this.spriteDepth() < layerCount) {
             this.spriteDepth(layerCount);
         }
-        
-        this.pos(targetIndex, 
+
+        this.pos(targetIndex,
                 MathHelper.lerp(toWeight, from.x(fromIndex), to.x(toIndex)),
                 MathHelper.lerp(toWeight, from.y(fromIndex), to.y(toIndex)),
                 MathHelper.lerp(toWeight, from.z(fromIndex), to.z(toIndex)));
@@ -339,26 +345,26 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         } else {
             this.normal(targetIndex, null);
         }
-        
+
         this.color(targetIndex, 0, ColorHelper.interpolate(from.color(fromIndex, 0), to.color(toIndex, 0), toWeight));
-        this.uv(targetIndex, 0, 
+        uv(targetIndex, 0,
                 MathHelper.lerp(toWeight, from.u(fromIndex, 0), to.u(toIndex, 0)),
                 MathHelper.lerp(toWeight, from.v(fromIndex, 0), to.v(toIndex, 0)));
 
         if (layerCount > 1) {
             this.color(targetIndex, 1, ColorHelper.interpolate(from.color(fromIndex, 1), to.color(toIndex, 1), toWeight));
-            this.uv(targetIndex, 1, 
+            uv(targetIndex, 1,
                     MathHelper.lerp(toWeight, from.u(fromIndex, 1), to.u(toIndex, 1)),
                     MathHelper.lerp(toWeight, from.v(fromIndex, 1), to.v(toIndex, 1)));
 
             if (layerCount == 3) {
                 this.color(targetIndex, 2, ColorHelper.interpolate(from.color(fromIndex, 2), to.color(toIndex, 2), toWeight));
-                this.uv(targetIndex, 2, 
+                uv(targetIndex, 2,
                         MathHelper.lerp(toWeight, from.u(fromIndex, 2), to.u(toIndex, 2)),
                         MathHelper.lerp(toWeight, from.v(fromIndex, 2), to.v(toIndex, 2)));
             }
         }
-        
+
         return this;
     }
 
@@ -374,7 +380,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         } else if (faceNormalFormat == MeshFormat.FACE_NORMAL_FORMAT_QUANTIZED) {
             polyEncoder.setFaceNormal(stream, faceNormalFormat, polyIn.faceNormal());
         }
-        
+
         final int layerCount = polyIn.spriteDepth();
         if (spriteDepth() < layerCount) {
             spriteDepth(layerCount);
@@ -382,7 +388,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
         textureSalt(polyIn.textureSalt());
         surface(polyIn.surface());
-        
+
         uvWrapDistance(polyIn.uvWrapDistance());
         tag(polyIn.tag());
 
@@ -403,11 +409,10 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
             final int vertexCount = polyIn.vertexCount();
             if (vertexCount() == vertexCount) {
                 for (int i = 0; i < vertexCount; i++) {
-                    this.copyVertexFrom(i, polyIn, i);
+                    copyVertexFrom(i, polyIn, i);
                 }
-            } else {
+            } else
                 throw new UnsupportedOperationException("Polygon vertex counts must match when copying vertex data.");
-            }
         }
         return this;
     }
@@ -426,7 +431,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         final int vCount = this.vertexCount();
         final int midPoint = (vCount + 1) / 2;
         nominalFace(nominalFace().getOpposite());
-        
+
         for(int low = 0; low < midPoint; low++) {
             final int high = vCount - low - 1;
 
@@ -434,13 +439,13 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
             if(hasNormal(low)) {
                 normal(low, -normalX(low), -normalY(low), -normalZ(low));
             }
-            
+
             if(low != high) {
                 // flip high vertex normal
                 if(hasNormal(high)) {
                     normal(high, -normalX(high), -normalY(high), -normalZ(high));
                 }
-            
+
                 // swap low with high
                 final float x = x(low);
                 final float y = y(low);
@@ -460,7 +465,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
                 final int color0 = color(low, 0);
                 final float u0 = u(low, 0);
                 final float v0 = u(low, 0);
-                
+
                 int color1 = 0, color2 = 0;
                 float u1 = 0, u2 = 0, v1 = 0, v2 = 0;
                 final int depth = spriteDepth();
@@ -475,7 +480,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
                     }
                 }
                 copyVertexFrom(low, this, high);
-                
+
                 pos(high, x, y, z);
                 if(hasNormal) {
                     normal(high, normX, normY, normZ);
@@ -487,7 +492,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
                 }
                 uv(high, 0, u0, v0);
                 color(high, 0, color0);
-                
+
                 if(depth > 1) {
                     uv(high, 1, u1, v1);
                     color(high, 1, color1);
@@ -498,7 +503,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
                 }
             }
         }
-        
+
         clearFaceNormal();
 
         return this;
@@ -521,7 +526,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
         polyEncoder.setTag(stream, baseAddress, tag);
         return this;
     }
-    
+
     @FunctionalInterface
     interface UVLocker {
         void apply(int vertexIndex, int layerIndex, MutablePolygon poly);
@@ -547,25 +552,25 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
     @Override
     public MutablePolygon append() {
-        ((WritableMeshImpl)this.mesh).append();
+        ((WritableMeshImpl)mesh).append();
         return this;
     }
 
     @Override
     public MutablePolygon saveDefaults() {
-        ((WritableMeshImpl)this.mesh).saveDefaults();
+        ((WritableMeshImpl)mesh).saveDefaults();
         return this;
     }
 
     @Override
     public MutablePolygon clearDefaults() {
-        ((WritableMeshImpl)this.mesh).clearDefaults();
+        ((WritableMeshImpl)mesh).clearDefaults();
         return this;
     }
 
     @Override
     public MutablePolygon loadDefaults() {
-        ((WritableMeshImpl)this.mesh).loadDefaults();
+        ((WritableMeshImpl)mesh).loadDefaults();
         return this;
     }
 
@@ -577,6 +582,6 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
     @Override
     public boolean splitIfNeeded() {
-        return ((WritableMeshImpl)this.mesh).splitIfNeeded(this.address()) != Polygon.NO_LINK_OR_TAG;
+        return ((WritableMeshImpl)mesh).splitIfNeeded(address()) != Polygon.NO_LINK_OR_TAG;
     }
 }

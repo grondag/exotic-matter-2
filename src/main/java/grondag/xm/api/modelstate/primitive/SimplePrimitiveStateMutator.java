@@ -16,7 +16,7 @@ import net.minecraft.world.BlockView;
 public interface SimplePrimitiveStateMutator extends PrimitiveStateMutator {
     @Override
     MutablePrimitiveState mutate(MutablePrimitiveState modelState, BlockState blockState);
-    
+
     @Override
     default void mutate(MutablePrimitiveState modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
         mutate(modelState, blockState);

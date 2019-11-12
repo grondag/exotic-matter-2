@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -41,34 +41,34 @@ public class Icosahedron {
     public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
     static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
-        WritableMesh mesh = XmMeshes.claimWritable();
+        final WritableMesh mesh = XmMeshes.claimWritable();
         mesh.writer()
-            .lockUV(0, false)
-            .surface(SURFACE_ALL)
-            .saveDefaults();
+        .lockUV(0, false)
+        .surface(SURFACE_ALL)
+        .saveDefaults();
 
         icosahedron(new Vec3d(.5, .5, .5), 0.6, mesh, false);
         return mesh.releaseToReader();
     };
-    
+
     public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
             .surfaceList(SURFACES)
             .polyFactory(POLY_FACTORY)
             .orientationType(OrientationType.NONE)
             .build(Xm.idString("icosahedron"));
-    
+
     /**
      * Makes a regular icosahedron, which is a very close approximation to a sphere
      * for most purposes. Loosely based on
      * http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
-     * 
+     *
      * PERF: use primitives instead of Vec3d
      */
     public static void icosahedron(Vec3d center, double radius, WritableMesh mesh, boolean smoothNormals) {
         /** vertex scale */
         final double s = radius / (2 * Math.sin(2 * Math.PI / 5));
 
-        Vec3d[] vertexes = new Vec3d[12];
+        final Vec3d[] vertexes = new Vec3d[12];
 
         // create 12 vertices of a icosahedron
         final double t = s * (1.0 + Math.sqrt(5.0)) / 2.0;
@@ -99,10 +99,10 @@ public class Icosahedron {
 
         // create 20 triangles of the icosahedron
 
-        MutablePolygon writer = mesh.writer();
+        final MutablePolygon writer = mesh.writer();
         writer.vertexCount(3);
 
-        XmSurface surface = writer.surface();
+        final XmSurface surface = writer.surface();
         if (surface.topology() == SurfaceTopology.TILED) {
             final float uvMax = (float) (2 * s);
             writer.maxU(0, uvMax);
@@ -166,7 +166,7 @@ public class Icosahedron {
     }
 
     private static void icosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3d[] points, Vec3d[] normals, WritableMesh mesh) {
-        MutablePolygon writer = mesh.writer();
+        final MutablePolygon writer = mesh.writer();
         if (normals == null) {
             if (topHalf) {
                 writer.vertex(0, points[p1], 1, 1, 0xFFFFFFFF, null);

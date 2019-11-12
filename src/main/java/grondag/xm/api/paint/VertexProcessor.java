@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -29,7 +29,7 @@ import grondag.xm.paint.VertexProcessorRegistryImpl;
  * quad, surface, or model state to each vertex in the quad. Applied after UV
  * coordinates have been assigned.
  * <p>
- * 
+ *
  * While intended to assign color values, could also be used to transform UV,
  * normal or other vertex attributes.
  */
@@ -38,6 +38,6 @@ import grondag.xm.paint.VertexProcessorRegistryImpl;
 public interface VertexProcessor {
     @SuppressWarnings("rawtypes")
     void process(MutablePolygon result, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex);
-    
-    static VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorRegistryImpl.DEFAULT_VERTEX_PROCESSOR;
+
+    VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorRegistryImpl.DEFAULT_VERTEX_PROCESSOR;
 }

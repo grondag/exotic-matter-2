@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -18,8 +18,8 @@ package grondag.xm.api.texture;
 import static grondag.xm.api.texture.TextureGroup.STATIC_TILES;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_ONLY;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
-import static grondag.xm.api.texture.TextureTransform.STONE_LIKE;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
+import static grondag.xm.api.texture.TextureTransform.STONE_LIKE;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
@@ -27,12 +27,12 @@ import org.apiguardian.api.API;
 @API(status = EXPERIMENTAL)
 public class McTextures {
     private McTextures() {}
-    
+
     public static final TextureSet STONE = TextureSet.builder()
             .displayNameToken("mc_stone").baseTextureName("minecraft:block/stone")
             .versionCount(1).scale(SINGLE).layout(TextureLayoutMap.SINGLE).transform(STONE_LIKE)
             .renderIntent(BASE_ONLY).groups(STATIC_TILES).build("minecraft:stone");
-    
+
     public static final TextureSet ANDESITE = single("andesite");
     public static final TextureSet BRICK = single("bricks");
     public static final TextureSet COBBLESTONE = single("cobblestone");
@@ -61,7 +61,7 @@ public class McTextures {
     public static final TextureSet SANDSTONE_BOTTOM = single("sandstone_bottom");
     public static final TextureSet SMOOTH_QUARTZ = single("smooth_quartz");
     public static final TextureSet STONE_BRICK = single("stone_bricks");
-    
+
     public static final TextureSet YELLOW_TERRACOTTA = single("yellow_terracotta");
     public static final TextureSet BLACK_TERRACOTTA = single("black_terracotta");
     public static final TextureSet BLUE_TERRACOTTA = single("blue_terracotta");
@@ -79,7 +79,7 @@ public class McTextures {
     public static final TextureSet RED_TERRACOTTA = single("red_terracotta");
     public static final TextureSet TERRACOTTA = single("terracotta");
     public static final TextureSet WHITE_TERRACOTTA = single("white_terracotta");
-    
+
     public static final TextureSet BLACK_CONCRETE = single("black_concrete");
     public static final TextureSet BLUE_CONCRETE = single("blue_concrete");
     public static final TextureSet BROWN_CONCRETE = single("brown_concrete");
@@ -96,7 +96,7 @@ public class McTextures {
     public static final TextureSet RED_CONCRETE = single("red_concrete");
     public static final TextureSet WHITE_CONCRETE = single("white_concrete");
     public static final TextureSet YELLOW_CONCRETE = single("yellow_concrete");
-    
+
     public static TextureSet single(String name) {
         return TextureSet.builder()
                 .displayNameToken("mc_" + name).baseTextureName("minecraft:block/" + name)

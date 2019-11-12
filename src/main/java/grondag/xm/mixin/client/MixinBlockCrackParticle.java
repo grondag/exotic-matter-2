@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -38,7 +38,7 @@ public abstract class MixinBlockCrackParticle extends SpriteBillboardParticle {
     }
 
     private static ThreadLocal<BlockPos.Mutable> POS = ThreadLocal.withInitial(BlockPos.Mutable::new);
-    
+
     @Inject(method = "<init>", at = @At(value = "RETURN"), cancellable = false, require = 0)
     void onNew(World world, double double_1, double double_2, double double_3, double double_4, double double_5, double double_6, BlockState blockState, CallbackInfo ci) {
         final MutableModelState lookupState = XmBlockState.modelState(blockState, world, POS.get().set(x, y, z), false);
@@ -47,9 +47,9 @@ public abstract class MixinBlockCrackParticle extends SpriteBillboardParticle {
             lookupState.release();
             this.setSprite(renderState.particleSprite());
             final int color = renderState.particleColorARBG();
-            this.colorRed = ((color >> 16) & 0xFF) / 255f;
-            this.colorGreen = ((color >> 8) & 0xFF) / 255f;
-            this.colorBlue = (color& 0xFF) / 255f;
+            colorRed = ((color >> 16) & 0xFF) / 255f;
+            colorGreen = ((color >> 8) & 0xFF) / 255f;
+            colorBlue = (color& 0xFF) / 255f;
         }
     }
 }

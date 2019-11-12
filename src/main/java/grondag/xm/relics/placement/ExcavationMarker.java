@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -53,33 +53,31 @@ public class ExcavationMarker extends Item implements PlacementItem {
         // TODO: logic here is too elaborate for what this item does, and probably
         // needed by Virtual Block
 
-        if (player == null) {
+        if (player == null)
             return new TypedActionResult<>(ActionResult.PASS, null);
-        }
-        
-        ItemStack stackIn = player.getStackInHand(hand);
 
-        if (stackIn.isEmpty() || stackIn.getItem() != this) {
+        final ItemStack stackIn = player.getStackInHand(hand);
+
+        if (stackIn.isEmpty() || stackIn.getItem() != this)
             return new TypedActionResult<>(ActionResult.PASS, stackIn);
-        }
-        
-        PlacementResult result = PlacementHandler.doRightClickBlock(player, null, null, null, stackIn, this);
+
+        final PlacementResult result = PlacementHandler.doRightClickBlock(player, null, null, null, stackIn, this);
 
         if (!result.shouldInputEventsContinue()) {
             result.apply(stackIn, player);
-//            this.doPlacements(result, stackIn, world, player);
+            //            this.doPlacements(result, stackIn, world, player);
             return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
         }
 
         if (world.isClient) {
-            HitResult hit = MinecraftClient.getInstance().hitResult;
+            final HitResult hit = MinecraftClient.getInstance().hitResult;
             if(hit.getType() == HitResult.Type.BLOCK) {
-                BlockPos blockpos = ((BlockHitResult)hit).getBlockPos();
+                final BlockPos blockpos = ((BlockHitResult)hit).getBlockPos();
                 // if trying to place a block but too close, is annoying to get GUI
                 // so only display if clicking on air
                 if (blockpos != null && !VirtualBlock.isVirtualBlock(world.getBlockState(blockpos).getBlock())
-                        && world.getBlockState(blockpos).getMaterial().isReplaceable() && this.isVirtual(stackIn)) {
-                    this.displayGui(player);
+                        && world.getBlockState(blockpos).getMaterial().isReplaceable() && isVirtual(stackIn)) {
+                    displayGui(player);
                     return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
                 }
             }
@@ -87,8 +85,8 @@ public class ExcavationMarker extends Item implements PlacementItem {
 
         return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
     }
-    
-    
+
+
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context ) {
@@ -97,15 +95,15 @@ public class ExcavationMarker extends Item implements PlacementItem {
         final PlayerEntity playerIn = context.getPlayer();
         final Hand hand = context.getHand();
         final Direction facing = context.getSide();
-        
+
         if (playerIn == null)
             return ActionResult.FAIL;
 
-        ItemStack stackIn = playerIn.getStackInHand(hand);
+        final ItemStack stackIn = playerIn.getStackInHand(hand);
         if (stackIn.isEmpty() || stackIn.getItem() != this)
             return ActionResult.FAIL;
 
-        PlacementResult result = PlacementHandler.doRightClickBlock(playerIn, context.getBlockPos(), facing, context.getHitPos(), stackIn, this);
+        final PlacementResult result = PlacementHandler.doRightClickBlock(playerIn, context.getBlockPos(), facing, context.getHitPos(), stackIn, this);
 
         result.apply(stackIn, playerIn);
 
@@ -126,7 +124,7 @@ public class ExcavationMarker extends Item implements PlacementItem {
 
     @Override
     public FilterMode getFilterMode(ItemStack stack) {
-        FilterMode result = PlacementItem.super.getFilterMode(stack);
+        final FilterMode result = PlacementItem.super.getFilterMode(stack);
         return result == FilterMode.REPLACE_ALL || result == FilterMode.REPLACE_SOLID ? result : FilterMode.REPLACE_SOLID;
     }
 
@@ -135,7 +133,7 @@ public class ExcavationMarker extends Item implements PlacementItem {
         boolean done = false;
         do {
             PlacementItem.super.cycleFilterMode(stack, reverse);
-            FilterMode result = PlacementItem.super.getFilterMode(stack);
+            final FilterMode result = PlacementItem.super.getFilterMode(stack);
             done = result == FilterMode.REPLACE_ALL || result == FilterMode.REPLACE_SOLID;
         } while (!done);
         return true;

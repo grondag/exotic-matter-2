@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -70,25 +70,26 @@ public class ExcavationRenderManager {
         GlStateManager.disableDepthTest();
         GlStateManager.lineWidth(2);
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBufferBuilder();
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder bufferbuilder = tessellator.getBufferBuilder();
         bufferbuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
         secondPass.clear();
 
-        VisibleRegion visibleRegion = XmRenderHelper.visibleRegion();
+        final VisibleRegion visibleRegion = XmRenderHelper.visibleRegion();
 
-        double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
-        double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
-        double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
+        final double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
+        final double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
+        final double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
 
         // TODO: needed?
         // bufferBuilder.setOffset(-d0, -d1, -d2);
 
-        for (ExcavationRenderer ex : renderCopy) {
+        for (final ExcavationRenderer ex : renderCopy) {
             if (ex.bounds() != null && visibleRegion.intersects(ex.bounds())) {
-                if (ex.drawBounds(bufferbuilder, player, d0, d1, d2, (float) tickDelta))
+                if (ex.drawBounds(bufferbuilder, player, d0, d1, d2, tickDelta)) {
                     secondPass.add(ex);
+                }
             }
         }
 
@@ -98,7 +99,7 @@ public class ExcavationRenderManager {
 
             GlStateManager.lineWidth(1);
             bufferbuilder.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
-            for (ExcavationRenderer ex : secondPass) {
+            for (final ExcavationRenderer ex : secondPass) {
                 ex.drawGrid(bufferbuilder, d0, d1, d2);
             }
             tessellator.draw();
@@ -110,7 +111,7 @@ public class ExcavationRenderManager {
             GlStateManager.polygonOffset(-1, -1);
 
             bufferbuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-            for (ExcavationRenderer ex : secondPass) {
+            for (final ExcavationRenderer ex : secondPass) {
                 ex.drawBox(bufferbuilder, d0, d1, d2);
             }
             tessellator.draw();
@@ -130,25 +131,28 @@ public class ExcavationRenderManager {
     }
 
     public static void addOrUpdate(ExcavationRenderer... renders) {
-        for (ExcavationRenderer render : renders) {
+        for (final ExcavationRenderer render : renders) {
             excavations.put(render.id, render);
         }
         renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("mass update, excavationSize = %d, renderSize = %d", excavations.size(), renderCopy.length);
+        }
     }
 
     public static void addOrUpdate(ExcavationRenderer render) {
         excavations.put(render.id, render);
         renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("addOrUpdate id = %d, excavationSize = %d, renderSize = %d", render.id, excavations.size(), renderCopy.length);
+        }
     }
 
     public static void remove(int id) {
         excavations.remove(id);
         renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("remove id = %d, excavationSize = %d, renderSize = %d", id, excavations.size(), renderCopy.length);
+        }
     }
 }

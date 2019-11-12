@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -36,7 +36,7 @@ public abstract class HorizontalEdgeHelper {
     private static final HorizontalEdge[][] HORIZONTAL_CORNER_LOOKUP = new HorizontalEdge[4][4];
 
     static {
-        for (HorizontalEdge corner : HorizontalEdge.values()) {
+        for (final HorizontalEdge corner : HorizontalEdge.values()) {
             HORIZONTAL_CORNER_LOOKUP[corner.left.ordinal()][corner.right.ordinal()] = corner;
             HORIZONTAL_CORNER_LOOKUP[corner.right.ordinal()][corner.left.ordinal()] = corner;
         }
@@ -51,14 +51,14 @@ public abstract class HorizontalEdgeHelper {
     }
 
     public static void forEach(Consumer<HorizontalEdge> consumer) {
-        for (HorizontalEdge val : VALUES) {
+        for (final HorizontalEdge val : VALUES) {
             consumer.accept(val);
         }
     }
-    
+
     public static HorizontalEdge fromRotation(double yawDegrees) {
         final int ordinal = MathHelper.floor(yawDegrees / 90.0D) & 3;
-        
+
         switch(ordinal) {
         case 0:
             return HorizontalEdge.SOUTH_WEST;

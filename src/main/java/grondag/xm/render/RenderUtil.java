@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -37,33 +37,33 @@ public class RenderUtil {
 
     private static ModelState outlineModelState = null;
     private static final WritableMesh outlineMesh = XmMeshes.claimWritable();
-    
+
     /**
      * Draws block-aligned grid on sides of AABB if entity can see it from outside
      */
 
     public static void drawGrid(BufferBuilder buffer, Box aabb, Vec3d viewFrom, double offsetX, double offsetY, double offsetZ, float red, float green,
             float blue, float alpha) {
-        double minX = aabb.minX - offsetX;
-        double minY = aabb.minY - offsetY;
-        double minZ = aabb.minZ - offsetZ;
-        double maxX = aabb.maxX - offsetX;
-        double maxY = aabb.maxY - offsetY;
-        double maxZ = aabb.maxZ - offsetZ;
-        int xSpan = (int) (aabb.maxX + 0.0001 - aabb.minX);
-        int ySpan = (int) (aabb.maxY + 0.0001 - aabb.minY);
-        int zSpan = (int) (aabb.maxZ + 0.0001 - aabb.minZ);
+        final double minX = aabb.minX - offsetX;
+        final double minY = aabb.minY - offsetY;
+        final double minZ = aabb.minZ - offsetZ;
+        final double maxX = aabb.maxX - offsetX;
+        final double maxY = aabb.maxY - offsetY;
+        final double maxZ = aabb.maxZ - offsetZ;
+        final int xSpan = (int) (aabb.maxX + 0.0001 - aabb.minX);
+        final int ySpan = (int) (aabb.maxY + 0.0001 - aabb.minY);
+        final int zSpan = (int) (aabb.maxZ + 0.0001 - aabb.minZ);
 
         if (xSpan > 1 && zSpan > 1) {
-            double dy = viewFrom.y > aabb.maxY ? maxY : viewFrom.y < aabb.minY ? minY : Double.MAX_VALUE;
+            final double dy = viewFrom.y > aabb.maxY ? maxY : viewFrom.y < aabb.minY ? minY : Double.MAX_VALUE;
             if (dy != Double.MAX_VALUE) {
                 for (int x = 1; x <= xSpan; x++) {
-                    double dx = minX + x;
+                    final double dx = minX + x;
                     buffer.vertex(dx, dy, minZ).color(red, green, blue, alpha).end();
                     buffer.vertex(dx, dy, maxZ).color(red, green, blue, alpha).end();
                 }
                 for (int z = 1; z <= zSpan; z++) {
-                    double dz = minZ + z;
+                    final double dz = minZ + z;
                     buffer.vertex(minX, dy, dz).color(red, green, blue, alpha).end();
                     buffer.vertex(maxX, dy, dz).color(red, green, blue, alpha).end();
                 }
@@ -72,15 +72,15 @@ public class RenderUtil {
 
         if (ySpan > 1) {
             if (zSpan > 1) {
-                double dx = viewFrom.x > aabb.maxX ? maxX : viewFrom.x < aabb.minX ? minX : Double.MAX_VALUE;
+                final double dx = viewFrom.x > aabb.maxX ? maxX : viewFrom.x < aabb.minX ? minX : Double.MAX_VALUE;
                 if (dx != Double.MAX_VALUE) {
                     for (int y = 1; y <= ySpan; y++) {
-                        double dy = minY + y;
+                        final double dy = minY + y;
                         buffer.vertex(dx, dy, minZ).color(red, green, blue, alpha).end();
                         buffer.vertex(dx, dy, maxZ).color(red, green, blue, alpha).end();
                     }
                     for (int z = 1; z <= zSpan; z++) {
-                        double dz = minZ + z;
+                        final double dz = minZ + z;
                         buffer.vertex(dx, minY, dz).color(red, green, blue, alpha).end();
                         buffer.vertex(dx, maxY, dz).color(red, green, blue, alpha).end();
                     }
@@ -88,15 +88,15 @@ public class RenderUtil {
             }
 
             if (xSpan > 1) {
-                double dz = viewFrom.z > aabb.maxZ ? maxZ : viewFrom.z < aabb.minZ ? minZ : Double.MAX_VALUE;
+                final double dz = viewFrom.z > aabb.maxZ ? maxZ : viewFrom.z < aabb.minZ ? minZ : Double.MAX_VALUE;
                 if (dz != Double.MAX_VALUE) {
                     for (int y = 1; y <= ySpan; y++) {
-                        double dy = minY + y;
+                        final double dy = minY + y;
                         buffer.vertex(minX, dy, dz).color(red, green, blue, alpha).end();
                         buffer.vertex(maxX, dy, dz).color(red, green, blue, alpha).end();
                     }
                     for (int x = 1; x <= xSpan; x++) {
-                        double dx = minX + x;
+                        final double dx = minX + x;
                         buffer.vertex(dx, minY, dz).color(red, green, blue, alpha).end();
                         buffer.vertex(dx, maxY, dz).color(red, green, blue, alpha).end();
                     }
@@ -107,17 +107,17 @@ public class RenderUtil {
 
     public static void drawModelOutline(ModelState modelState, double x, double y, double z, float r, float g, float b, float a) {
         if (modelState == null) return;
-        
+
         final WritableMesh mesh = outlineMesh;
         if(outlineModelState == null || !modelState.equals(outlineModelState)) {
             outlineModelState = modelState.toImmutable();
             mesh.clear();
             outlineModelState.emitPolygons(p -> mesh.appendCopy(p));
         }
-        
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
-        
+
+        final Tessellator tessellator = Tessellator.getInstance();
+        final BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
+
         bufferBuilder.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
         mesh.forEach(p -> {
             final int limit = p.vertexCount() - 1;

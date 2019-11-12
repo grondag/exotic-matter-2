@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -58,70 +58,71 @@ public class ExcavationRenderer {
     public ExcavationRenderer(int id, Box aabb, boolean isExchange, @Nullable BlockPos[] positions) {
         this.id = id;
         this.isExchange = isExchange;
-        this.setBounds(aabb, positions);
+        setBounds(aabb, positions);
     }
 
     public void setBounds(Box bounds, @Nullable BlockPos[] positions) {
-        this.aabb = bounds;
-        this.visibilityBounds = bounds.expand(192);
+        aabb = bounds;
+        visibilityBounds = bounds.expand(192);
         this.positions = positions;
 
-        if (XmConfig.logExcavationRenderTracking)
+        if (XmConfig.logExcavationRenderTracking) {
             Xm.LOG.info("id %d Renderer setBounds position count = %d", id, positions == null ? 0 : positions.length);
+        }
     }
 
     public Box bounds() {
-        return this.aabb;
+        return aabb;
     }
 
     public Box visibilityBounds() {
-        return this.visibilityBounds;
+        return visibilityBounds;
     }
 
     /** return true if something was drawn */
     @Environment(EnvType.CLIENT)
     public boolean drawBounds(BufferBuilder bufferbuilder, Entity viewEntity, double d0, double d1, double d2, float partialTicks) {
-        this.lastEyePosition = viewEntity.getCameraPosVec(partialTicks);
-        if (this.visibilityBounds.contains(this.lastEyePosition)) {
-            if (this.positions == null) {
-                Box box = this.aabb;
+        lastEyePosition = viewEntity.getCameraPosVec(partialTicks);
+        if (visibilityBounds.contains(lastEyePosition)) {
+            if (positions == null) {
+                final Box box = aabb;
                 WorldRenderer.buildBox(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f, 0.3f,
                         1f);
             } else {
-                for (BlockPos pos : this.positions) {
-                    double x = pos.getX() - d0;
-                    double y = pos.getY() - d1;
-                    double z = pos.getZ() - d2;
+                for (final BlockPos pos : positions) {
+                    final double x = pos.getX() - d0;
+                    final double y = pos.getY() - d1;
+                    final double z = pos.getZ() - d2;
                     WorldRenderer.buildBox(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 1f);
                 }
             }
-            this.didDrawBoundsLastTime = true;
+            didDrawBoundsLastTime = true;
             return true;
         } else {
-            this.didDrawBoundsLastTime = false;
+            didDrawBoundsLastTime = false;
             return false;
         }
     }
 
     @Environment(EnvType.CLIENT)
     public void drawGrid(BufferBuilder buffer, double d0, double d1, double d2) {
-        if (this.didDrawBoundsLastTime && this.positions == null) {
-            RenderUtil.drawGrid(buffer, this.aabb, this.lastEyePosition, d0, d1, d2, 1f, 0.3f, 0.3f, 0.5F);
+        if (didDrawBoundsLastTime && positions == null) {
+            RenderUtil.drawGrid(buffer, aabb, lastEyePosition, d0, d1, d2, 1f, 0.3f, 0.3f, 0.5F);
         }
     }
 
     @Environment(EnvType.CLIENT)
     public void drawBox(BufferBuilder bufferbuilder, double d0, double d1, double d2) {
-        if (this.didDrawBoundsLastTime) {
-            if (this.positions == null) {
-                Box box = this.aabb;
+        if (didDrawBoundsLastTime) {
+            if (positions == null) {
+                final Box box = aabb;
                 WorldRenderer.buildBoxOutline(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f,
                         0.3f, 0.3f);
             } else {
-                for (BlockPos pos : this.positions) {
-                    double x = pos.getX() - d0;
-                    double y = pos.getY() - d1;
-                    double z = pos.getZ() - d2;
+                for (final BlockPos pos : positions) {
+                    final double x = pos.getX() - d0;
+                    final double y = pos.getY() - d1;
+                    final double z = pos.getZ() - d2;
                     WorldRenderer.buildBoxOutline(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 0.3f);
                 }
             }

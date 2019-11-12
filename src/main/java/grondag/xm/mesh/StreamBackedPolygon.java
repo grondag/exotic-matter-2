@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -104,16 +104,16 @@ class StreamBackedPolygon implements Polygon {
     protected void loadFormat() {
         final int format = format();
         final int vertexCount = MeshFormat.getVertexCount(format);
-        this.vertexIndexer = vertexCount == 3 ? VERTEX_FUNC_TRIANGLE : VERTEX_FUNC_STRAIGHT;
-        this.polyEncoder = PolyEncoder.get(format);
-        this.vertexEncoder = VertexEncoder.get(format);
-        this.glowEncoder = GlowEncoder.get(format);
-        this.vertexOffset = MeshFormat.polyStride(format, false);
-        this.glowOffset = vertexOffset + vertexEncoder.vertexStride() * vertexCount;
-        this.vertexAddress = baseAddress + vertexOffset;
-        this.glowAddress = baseAddress + glowOffset;
-        this.stride = glowOffset + glowEncoder.stride(format);
-        assert this.stride == MeshFormat.polyStride(format, true);
+        vertexIndexer = vertexCount == 3 ? VERTEX_FUNC_TRIANGLE : VERTEX_FUNC_STRAIGHT;
+        polyEncoder = PolyEncoder.get(format);
+        vertexEncoder = VertexEncoder.get(format);
+        glowEncoder = GlowEncoder.get(format);
+        vertexOffset = MeshFormat.polyStride(format, false);
+        glowOffset = vertexOffset + vertexEncoder.vertexStride() * vertexCount;
+        vertexAddress = baseAddress + vertexOffset;
+        glowAddress = baseAddress + glowOffset;
+        stride = glowOffset + glowEncoder.stride(format);
+        assert stride == MeshFormat.polyStride(format, true);
     }
 
     /**
@@ -160,7 +160,7 @@ class StreamBackedPolygon implements Polygon {
     public final void link(int link) {
         polyEncoder.setLink(stream, baseAddress, link);
     }
-    
+
     @Override
     public void clearLink() {
         link(Polygon.NO_LINK_OR_TAG);
@@ -186,7 +186,7 @@ class StreamBackedPolygon implements Polygon {
      * Gets current face normal format and if normal needs to be computed, does so
      * and updates both the normal and the format.
      * <p>
-     * 
+     *
      * Returns true if nominal face normal should be used.
      */
     private boolean checkFaceNormal() {
@@ -194,7 +194,7 @@ class StreamBackedPolygon implements Polygon {
         if (normalFormat == MeshFormat.FACE_NORMAL_FORMAT_NOMINAL)
             return true;
         else if (normalFormat == MeshFormat.FACE_NORMAL_FORMAT_COMPUTED && Float.isNaN(polyEncoder.getFaceNormalX(stream, baseAddress))) {
-            Vec3f normal = this.computeFaceNormal();
+            final Vec3f normal = computeFaceNormal();
             polyEncoder.setFaceNormal(stream, baseAddress, normal);
         }
         return false;
@@ -229,7 +229,7 @@ class StreamBackedPolygon implements Polygon {
     public final Direction cullFace() {
         return MeshFormat.getCullFace(format());
     }
-    
+
     @Override
     public final XmSurface surface() {
         return StaticEncoder.surface(stream, baseAddress);
@@ -240,7 +240,7 @@ class StreamBackedPolygon implements Polygon {
     public final Vec3f vertexNormal(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
                 ? vertexEncoder.getVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
-                : faceNormal();
+                        : faceNormal();
     }
 
     @Override
@@ -252,21 +252,21 @@ class StreamBackedPolygon implements Polygon {
     public final float normalX(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
                 ? vertexEncoder.getVertexNormalX(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
-                : faceNormalX();
+                        : faceNormalX();
     }
 
     @Override
     public final float normalY(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
                 ? vertexEncoder.getVertexNormalY(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
-                : faceNormalY();
+                        : faceNormalY();
     }
 
     @Override
     public final float normalZ(int vertexIndex) {
         return vertexEncoder.hasVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
                 ? vertexEncoder.getVertexNormalZ(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex))
-                : faceNormalZ();
+                        : faceNormalZ();
     }
 
     @Override
@@ -369,7 +369,7 @@ class StreamBackedPolygon implements Polygon {
     public boolean emissive(int layerIndex) {
         return StaticEncoder.isEmissive(stream, baseAddress, layerIndex);
     }
-    
+
     @Override
     public boolean disableAo(int layerIndex) {
         return StaticEncoder.disableAo(stream, baseAddress, layerIndex);
@@ -379,15 +379,15 @@ class StreamBackedPolygon implements Polygon {
     public boolean disableDiffuse(int layerIndex) {
         return StaticEncoder.disableDiffuse(stream, baseAddress, layerIndex);
     }
-    
+
     @Override
     public final boolean next() {
-        return this.mesh.moveReaderToNext(this);
+        return mesh.moveReaderToNext(this);
     }
 
     @Override
     public final boolean hasValue() {
-        return mesh.isValidAddress(baseAddress) && !this.isDeleted();
+        return mesh.isValidAddress(baseAddress) && !isDeleted();
     }
 
     @Override
@@ -403,11 +403,11 @@ class StreamBackedPolygon implements Polygon {
     @Override
     public final boolean origin() {
         if (mesh.isEmpty()) {
-            this.invalidate();
+            invalidate();
             return false;
         } else {
-            this.moveTo(mesh.originAddress);
-            if (this.isDeleted()) {
+            moveTo(mesh.originAddress);
+            if (isDeleted()) {
                 next();
             }
             return hasValue();

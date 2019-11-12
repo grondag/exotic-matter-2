@@ -8,5 +8,5 @@ import grondag.xm.api.modelstate.base.MutableBaseModelState;
 
 @API(status = EXPERIMENTAL)
 public interface MutablePrimitiveState extends PrimitiveState, MutableBaseModelState<PrimitiveState, MutablePrimitiveState> {
-    
+
 }

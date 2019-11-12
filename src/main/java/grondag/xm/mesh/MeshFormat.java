@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -71,7 +71,7 @@ class MeshFormat {
     public static int setCullFace(int formatIn, Direction face) {
         return CULL_FACE.setValue(face, formatIn);
     }
-    
+
     private static final BitPacker32<MeshFormat>.BooleanElement IS_DELETED = BITPACKER.createBooleanElement();
 
     public static boolean isDeleted(int formatIn) {
@@ -235,32 +235,32 @@ class MeshFormat {
     public static int setVertexGlowFormat(int formatIn, int glowFormat) {
         return VERTEX_GLOW_FORMAT.setValue(glowFormat, formatIn);
     }
-    
+
     // static features
-//    isMutable   2   1       poly    yes yes
-//    vertexCount 128 7       vertex  no  no
-//    nominalFace 6   3       poly    no  no
-//    isMarked    2   1   stream metadata poly    no  no
-//    isDeleted   2   1   stream metadata poly    no  no
+    //    isMutable   2   1       poly    yes yes
+    //    vertexCount 128 7       vertex  no  no
+    //    nominalFace 6   3       poly    no  no
+    //    isMarked    2   1   stream metadata poly    no  no
+    //    isDeleted   2   1   stream metadata poly    no  no
 
     // poly-encoder features
-//    isLinked
-//    isTagged
-//    isCSG
-//    faceNormal  4   2   Dynamic/Cached/Quantized/Nominal    poly    yes no
-//    uvFormat    2   1   full/half   layer   yes no
+    //    isLinked
+    //    isTagged
+    //    isCSG
+    //    faceNormal  4   2   Dynamic/Cached/Quantized/Nominal    poly    yes no
+    //    uvFormat    2   1   full/half   layer   yes no
 
     // poly and vertex features
-//    layerCount  3   2   if mutable, how many layers are used    layer   yes yes
-//    vertexColor 4   2   white/same/same by layer/each   vertex layer    yes yes
+    //    layerCount  3   2   if mutable, how many layers are used    layer   yes yes
+    //    vertexColor 4   2   white/same/same by layer/each   vertex layer    yes yes
 
     // vertex encoder features
-//    vertexPos   2   1   Regular/Quantized   vertex  no  yes
-//    vertexNormals   3   2   Face/Regular/Quantized  vertex  no  yes
-//    vertexUV    4   2   Same/Per Layer/Same Half/Per Layer Half vertex layer    no  yes
+    //    vertexPos   2   1   Regular/Quantized   vertex  no  yes
+    //    vertexNormals   3   2   Face/Regular/Quantized  vertex  no  yes
+    //    vertexUV    4   2   Same/Per Layer/Same Half/Per Layer Half vertex layer    no  yes
 
     // glow encoder features
-//    vertexGlow  3   2   None/Same/Per Vertex    vertex layer    no  no
+    //    vertexGlow  3   2   None/Same/Per Vertex    vertex layer    no  no
 
     final static int POLY_FORMAT_SHIFTED_MASK;
     final static int POLY_FORMAT_SHIFT;
@@ -286,7 +286,7 @@ class MeshFormat {
 
         HAS_LINK_FLAG = HAS_LINK.comparisonMask();
         HAS_TAG_FLAG = HAS_TAG.comparisonMask();
-        
+
         // force certain features to full flexibility for mutable formats
         // doesn't include CSG bounds
         POLY_FORMAT_MUTABLE_UNSHIFTED_MASK = ~(HAS_LINK.comparisonMask() | HAS_TAG.comparisonMask() | FACE_NORMAL_FORMAT.comparisonMask()
@@ -306,14 +306,15 @@ class MeshFormat {
         VERTEX_FORMAT_SHIFT = Integer.numberOfTrailingZeros(vertexMask);
         VERTEX_FORMAT_MASK = vertexMask >> VERTEX_FORMAT_SHIFT;
         VERTEX_FORMAT_COUNT = VERTEX_FORMAT_MASK + 1;
-        
+
         assert BITPACKER.bitLength() <= 32;
     }
 
     public static int polyFormatKey(int formatIn) {
         // force certain features to full flexibility for mutable formats
-        if (isMutable(formatIn))
+        if (isMutable(formatIn)) {
             formatIn = (formatIn & POLY_FORMAT_MUTABLE_UNSHIFTED_MASK) | POLY_FORMAT_MUTABLE_BITS;
+        }
         return (formatIn >> POLY_FORMAT_SHIFT) & POLY_FORMAT_SHIFTED_MASK;
     }
 
@@ -326,7 +327,7 @@ class MeshFormat {
      * poly, plus any metadata declared in formatTags (tags, links, or bounds).
      * Never copies marks.
      * <p>
-     * 
+     *
      * Ignore mutable flag in input poly and flag - output format will always have
      * mutable = false because this meant for optimal storage and there would be no
      * guarantee changes could be stored in the format.
@@ -342,31 +343,32 @@ class MeshFormat {
         if(polyIn.tag() != Polygon.NO_LINK_OR_TAG) {
             result |= HAS_TAG_FLAG;
         }
-        
+
         result = setLayerCount(result, layerCount);
         result = setVertexCount(result, vertexCount);
 
         assert !polyIn.isDeleted();
 
-        Direction nominalFace = polyIn.nominalFace();
+        final Direction nominalFace = polyIn.nominalFace();
         result = setNominalFace(result, nominalFace);
-        
+
         result = setCullFace(result, polyIn.cullFace());
 
-        Vec3f faceNormal = polyIn.faceNormal();
-        if (faceNormal.equals(Vec3f.forFace(nominalFace)))
+        final Vec3f faceNormal = polyIn.faceNormal();
+        if (faceNormal.equals(Vec3f.forFace(nominalFace))) {
             result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_NOMINAL);
-        else
+        } else {
             result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_COMPUTED);
+        }
 
         boolean allFaceNormal = true;
-        int firstGlow = polyIn.glow(0);
+        final int firstGlow = polyIn.glow(0);
         boolean allSameGlow = true;
         boolean allSameUV = layerCount > 1;
 
-        int color0 = polyIn.color(0, 0);
-        int color1 = layerCount > 1 ? polyIn.color(0, 1) : 0;
-        int color2 = layerCount == 3 ? polyIn.color(0, 2) : 0;
+        final int color0 = polyIn.color(0, 0);
+        final int color1 = layerCount > 1 ? polyIn.color(0, 1) : 0;
+        final int color2 = layerCount == 3 ? polyIn.color(0, 2) : 0;
         /**
          * True if all vertices in each layer are same color as each other. Does not
          * mean all layers are same color.
@@ -375,53 +377,63 @@ class MeshFormat {
 
         for (int v = 0; v < vertexCount; v++) {
             // glow
-            if (allSameGlow && v > 0 && polyIn.glow(v) != firstGlow)
+            if (allSameGlow && v > 0 && polyIn.glow(v) != firstGlow) {
                 allSameGlow = false;
+            }
 
             // vertex normal
-            if (allFaceNormal && polyIn.hasNormal(v) && !polyIn.vertexNormal(v).equals(faceNormal))
+            if (allFaceNormal && polyIn.hasNormal(v) && !polyIn.vertexNormal(v).equals(faceNormal)) {
                 allFaceNormal = false;
+            }
 
-            if (allVertexSameColor & v > 0 && polyIn.color(v, 0) != color0)
+            if (allVertexSameColor & v > 0 && polyIn.color(v, 0) != color0) {
                 allVertexSameColor = false;
+            }
 
             if (layerCount > 1) {
                 // vertex uv format
-                if (allSameUV && (polyIn.u(v, 0) != polyIn.u(v, 1) || polyIn.v(v, 0) != polyIn.v(v, 1)))
+                if (allSameUV && (polyIn.u(v, 0) != polyIn.u(v, 1) || polyIn.v(v, 0) != polyIn.v(v, 1))) {
                     allSameUV = false;
+                }
 
                 // vertex color
-                if (allVertexSameColor & v > 0 && polyIn.color(v, 1) != color1)
+                if (allVertexSameColor & v > 0 && polyIn.color(v, 1) != color1) {
                     allVertexSameColor = false;
+                }
 
                 if (layerCount == 3) {
                     // vertex uv format
-                    if (allSameUV && (polyIn.u(v, 0) != polyIn.u(v, 2) || polyIn.v(v, 0) != polyIn.v(v, 2)))
+                    if (allSameUV && (polyIn.u(v, 0) != polyIn.u(v, 2) || polyIn.v(v, 0) != polyIn.v(v, 2))) {
                         allSameUV = false;
+                    }
 
                     // vertex color
-                    if (allVertexSameColor & v > 0 && polyIn.color(v, 2) != color2)
+                    if (allVertexSameColor & v > 0 && polyIn.color(v, 2) != color2) {
                         allVertexSameColor = false;
+                    }
                 }
             }
         }
 
         result = setVertexNormalFormat(result, allFaceNormal ? VERTEX_NORMAL_FACE : VERTEX_NORMAL_REGULAR);
 
-        if (allSameGlow)
+        if (allSameGlow) {
             result = setVertexGlowFormat(result, firstGlow == 0 ? VERTEX_GLOW_NONE : VERTEX_GLOW_SAME);
-        else
+        } else {
             result = setVertexGlowFormat(result, VERTEX_GLOW_PER_VERTEX);
+        }
 
         result = setVertexUVFormat(result, allSameUV ? VERTEX_UV_SAME : VERTEX_UV_BY_LAYER);
 
         if (allVertexSameColor) {
-            if (layerCount == 1 || (color0 == color1 && (layerCount == 2 || color1 == color2)))
+            if (layerCount == 1 || (color0 == color1 && (layerCount == 2 || color1 == color2))) {
                 result = setVertexColorFormat(result, color0 == 0xFFFFFFFF ? VERTEX_COLOR_WHITE : VERTEX_COLOR_SAME);
-            else
+            } else {
                 result = setVertexColorFormat(result, VERTEX_COLOR_SAME_BY_LAYER);
-        } else
+            }
+        } else {
             result = setVertexColorFormat(result, VERTEX_COLOR_PER_VERTEX_LAYER);
+        }
 
         return result & ~MUTABLE_FLAG;
     }
@@ -441,8 +453,9 @@ class MeshFormat {
      */
     public static int polyStride(int newFormat, boolean includeVertices) {
         int result = 1 + StaticEncoder.INTEGER_WIDTH + PolyEncoder.get(newFormat).stride();
-        if (includeVertices)
+        if (includeVertices) {
             result += VertexEncoder.get(newFormat).vertexStride() * getVertexCount(newFormat) + GlowEncoder.get(newFormat).stride(newFormat);
+        }
         return result;
     }
 }

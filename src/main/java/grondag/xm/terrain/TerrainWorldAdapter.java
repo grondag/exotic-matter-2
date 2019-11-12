@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -38,7 +38,7 @@ import net.minecraft.world.biome.Biome;
  * server-side use on server thread only. Doesn't try to track state changes
  * while not in active use, and all state changes must be single threaded and
  * occur through this instance.
- * 
+ *
  * TODO: add caching for flow height - do with as part of SuperBlockState TODO:
  * reinstate usage or remove
  */
@@ -52,7 +52,7 @@ public class TerrainWorldAdapter implements ExtendedBlockView {
         /**
          * DOES NOT SUPPORT ZERO-VALUED KEYS
          * <p>
-         * 
+         *
          * Only computes key 1x and scans arrays 1x for a modest savings. Here because
          * block updates are the on-tick performance bottleneck for lava sim.
          */
@@ -73,8 +73,9 @@ public class TerrainWorldAdapter implements ExtendedBlockView {
             final V result = v.get();
             key[pos] = k;
             value[pos] = result;
-            if (size++ >= maxFill)
+            if (size++ >= maxFill) {
                 rehash(arraySize(size + 1, f));
+            }
             return result;
         }
     }
@@ -87,22 +88,22 @@ public class TerrainWorldAdapter implements ExtendedBlockView {
     }
 
     public TerrainWorldAdapter(World world) {
-        this.prepare(world);
+        prepare(world);
     }
 
     public void prepare(World world) {
         this.world = world;
-        this.blockStates.clear();
-        this.terrainStates.clear();
+        blockStates.clear();
+        terrainStates.clear();
     }
 
     public World wrapped() {
-        return this.world;
+        return world;
     }
 
     @Override
     public BlockState getBlockState(final BlockPos pos) {
-        long packedBlockPos = PackedBlockPos.pack(pos);
+        final long packedBlockPos = PackedBlockPos.pack(pos);
         return blockStates.computeFast(packedBlockPos, () -> world.getBlockState(pos));
     }
 
@@ -133,7 +134,7 @@ public class TerrainWorldAdapter implements ExtendedBlockView {
     public TerrainState terrainState(long packedBlockPos) {
         return terrainState(getBlockState(packedBlockPos), packedBlockPos);
     }
-    
+
     /**
      * Note this doesn't invalidate terrain state cache. Need to do that directly
      * before using anything that needs it if changing terrain surface.
@@ -147,7 +148,7 @@ public class TerrainWorldAdapter implements ExtendedBlockView {
      * {@link #onBlockStateChange(long, BlockState, BlockState)} call back.
      */
     protected void setBlockState(long packedBlockPos, BlockState newState, boolean callback) {
-        BlockState oldState = getBlockState(packedBlockPos);
+        final BlockState oldState = getBlockState(packedBlockPos);
 
         if (newState == oldState)
             return;
@@ -155,8 +156,9 @@ public class TerrainWorldAdapter implements ExtendedBlockView {
         blockStates.put(packedBlockPos, newState);
         applyBlockState(packedBlockPos, oldState, newState);
 
-        if (callback)
-            this.onBlockStateChange(packedBlockPos, oldState, newState);
+        if (callback) {
+            onBlockStateChange(packedBlockPos, oldState, newState);
+        }
     }
 
     /**

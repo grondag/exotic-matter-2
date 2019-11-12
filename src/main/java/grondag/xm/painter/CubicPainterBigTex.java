@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -58,7 +58,7 @@ public abstract class CubicPainterBigTex extends AbstractQuadPainter {
     // instance.
     @SuppressWarnings("rawtypes")
     public static void paintQuads(MutableMesh mesh, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        MutablePolygon editor = mesh.editor();
+        final MutablePolygon editor = mesh.editor();
         do {
             editor.lockUV(textureIndex, true);
             editor.assignLockedUVCoordinates(textureIndex);
@@ -76,7 +76,7 @@ public abstract class CubicPainterBigTex extends AbstractQuadPainter {
 
                 // abs is necessary so that hash input components combine together properly
                 // Small random numbers already have most bits set.
-                int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization() ? HashCommon.mix((modelState.species() << 8) | editor.textureSalt())
+                final int depthAndSpeciesHash = editor.surface().ignoreDepthForRandomization() ? HashCommon.mix((modelState.species() << 8) | editor.textureSalt())
                         : HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.species() << 8) | (editor.textureSalt() << 12));
 
                 // rotation

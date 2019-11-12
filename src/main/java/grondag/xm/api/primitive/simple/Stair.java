@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -39,7 +39,7 @@ public class Stair extends AbstractWedge {
     public static final XmSurface SURFACE_SOUTH = CubeWithRotation.SURFACE_SOUTH;
     public static final XmSurface SURFACE_WEST = CubeWithRotation.SURFACE_WEST;
     public static final XmSurface SURFACE_EAST = CubeWithRotation.SURFACE_EAST;
-    
+
     public static final XmSurface SURFACE_BOTTOM = CubeWithRotation.SURFACE_BOTTOM;
     public static final XmSurface SURFACE_TOP = CubeWithRotation.SURFACE_TOP;
     public static final XmSurface SURFACE_BACK = CubeWithRotation.SURFACE_BACK;
@@ -48,11 +48,11 @@ public class Stair extends AbstractWedge {
     public static final XmSurface SURFACE_RIGHT = CubeWithRotation.SURFACE_RIGHT;
 
     public static final Stair INSTANCE = new Stair(Xm.idString("stair"));
-    
+
     protected Stair(String idString) {
         super(idString, s -> SURFACES);
     }
-    
+
     @Override
     protected ReadOnlyMesh buildMesh(PolyTransform transform, boolean isCorner, boolean isInside) {
         final WritableMesh mesh = XmMeshes.claimWritable();

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,7 +15,12 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
-import static grondag.xm.mesh.MeshFormat.*;
+import static grondag.xm.mesh.MeshFormat.VERTEX_GLOW_NONE;
+import static grondag.xm.mesh.MeshFormat.VERTEX_GLOW_PER_VERTEX;
+import static grondag.xm.mesh.MeshFormat.VERTEX_GLOW_SAME;
+import static grondag.xm.mesh.MeshFormat.getVertexCount;
+import static grondag.xm.mesh.MeshFormat.getVertexGlowFormat;
+import static grondag.xm.mesh.MeshFormat.isMutable;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;

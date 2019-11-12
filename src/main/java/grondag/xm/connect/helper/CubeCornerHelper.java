@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -34,7 +34,7 @@ public abstract class CubeCornerHelper {
     private static final CubeCorner[][][] FAR_CORNER_LOOKUP = new CubeCorner[6][6][6];
 
     static {
-        for (CubeCorner corner : VALUES) {
+        for (final CubeCorner corner : VALUES) {
             FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()][corner.face3.ordinal()] = corner;
             FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face3.ordinal()][corner.face2.ordinal()] = corner;
             FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()][corner.face3.ordinal()] = corner;
@@ -53,7 +53,7 @@ public abstract class CubeCornerHelper {
     }
 
     public static void forEach(Consumer<CubeCorner> consumer) {
-        for (CubeCorner val : VALUES) {
+        for (final CubeCorner val : VALUES) {
             consumer.accept(val);
         }
     }

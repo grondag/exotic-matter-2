@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -62,7 +62,7 @@ public class PaintManager implements Consumer<Polygon> {
     private final MutableMesh work = XmMeshes.claimMutable();
     private final QuadEmitter emitter = builder.getEmitter();
     private BaseModelState modelState;
-    private MaterialFinder finder = RENDERER.materialFinder();
+    private final MaterialFinder finder = RENDERER.materialFinder();
 
     private Mesh handlePaint(BaseModelState modelState) {
         this.modelState = modelState;
@@ -75,8 +75,8 @@ public class PaintManager implements Consumer<Polygon> {
     public void accept(Polygon poly) {
         final BaseModelState modelState = this.modelState;
         final QuadEmitter emitter = this.emitter;
-        final MutableMesh mesh = this.work;
-        MutablePolygon editor = mesh.editor();
+        final MutableMesh mesh = work;
+        final MutablePolygon editor = mesh.editor();
 
         XmSurface surface = poly.surface();
         if(surface == null) {
@@ -84,13 +84,13 @@ public class PaintManager implements Consumer<Polygon> {
             Xm.LOG.info("Encountered null surface during paint, using default surface");
             surface = modelState.primitive().surfaces(modelState).get(0);
         }
-        XmPaint paint = modelState.paint(surface);
+        final XmPaint paint = modelState.paint(surface);
 
         mesh.appendCopy(poly);
         editor.origin();
-        
+
         if(editor.vertexCount() > 4) {
-            //TODO: remove 
+            //TODO: remove
             Xm.LOG.info("Encountered higher-order polygon during paint. Bad primitive output.");
         }
 
@@ -165,29 +165,29 @@ public class PaintManager implements Consumer<Polygon> {
     private void polyToMeshFrex(MutablePolygon poly, QuadEmitter emitter) {
         final int depth = poly.spriteDepth();
         final MaterialFinder finder = this.finder;
-        
+
         finder.clear()
-            .spriteDepth(depth)
-            .blendMode(0, poly.blendMode(0))
-            .emissive(0, poly.emissive(0))
-            .disableAo(0, poly.disableAo(0))
-            .disableDiffuse(0, poly.disableDiffuse(0));
-        
+        .spriteDepth(depth)
+        .blendMode(0, poly.blendMode(0))
+        .emissive(0, poly.emissive(0))
+        .disableAo(0, poly.disableAo(0))
+        .disableDiffuse(0, poly.disableDiffuse(0));
+
         bakeSprite(0, poly);
 
         if (depth > 1) {
             bakeSprite(1, poly);
             finder.blendMode(1, poly.blendMode(1))
-                .emissive(1, poly.emissive(1))
-                .disableAo(1, poly.disableAo(1))
-                .disableDiffuse(1, poly.disableDiffuse(1));
-            
+            .emissive(1, poly.emissive(1))
+            .disableAo(1, poly.disableAo(1))
+            .disableDiffuse(1, poly.disableDiffuse(1));
+
             if (depth == 3) {
                 bakeSprite(2, poly);
                 finder.blendMode(2, poly.blendMode(2))
-                    .emissive(2, poly.emissive(2))
-                    .disableAo(2, poly.disableAo(2))
-                    .disableDiffuse(2, poly.disableDiffuse(2));
+                .emissive(2, poly.emissive(2))
+                .disableAo(2, poly.disableAo(2))
+                .disableDiffuse(2, poly.disableDiffuse(2));
             }
         }
 
@@ -199,12 +199,12 @@ public class PaintManager implements Consumer<Polygon> {
         }
         for (int v = 0; v < 4; v++) {
             emitter.pos(v, poly.x(v), poly.y(v), poly.z(v));
-            
+
             final int g = poly.glow(v);
             if(g > 0) {
                 emitter.lightmap(v, g);
             }
-            
+
             if (poly.hasNormal(v)) {
                 emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
             }
@@ -231,10 +231,10 @@ public class PaintManager implements Consumer<Polygon> {
         final MaterialFinder finder = this.finder;
 
         finder.clear()
-            .blendMode(0, poly.blendMode(0))
-            .emissive(0, poly.emissive(0))
-            .disableAo(0, poly.disableAo(0))
-            .disableDiffuse(0, poly.disableDiffuse(0));
+        .blendMode(0, poly.blendMode(0))
+        .emissive(0, poly.emissive(0))
+        .disableAo(0, poly.disableAo(0))
+        .disableDiffuse(0, poly.disableDiffuse(0));
 
         bakeSprite(0, poly);
         emitter.material(finder.find());
@@ -244,23 +244,23 @@ public class PaintManager implements Consumer<Polygon> {
             bakeSprite(1, poly);
 
             finder.clear()
-                .blendMode(0, poly.blendMode(1))
-                .emissive(0, poly.emissive(1))
-                .disableAo(0, poly.disableAo(1))
-                .disableDiffuse(0, poly.disableDiffuse(1));
-            
+            .blendMode(0, poly.blendMode(1))
+            .emissive(0, poly.emissive(1))
+            .disableAo(0, poly.disableAo(1))
+            .disableDiffuse(0, poly.disableDiffuse(1));
+
             emitter.material(finder.find());
             outputIndigoQuad(poly, emitter, 1);
 
             if (depth == 3) {
                 bakeSprite(2, poly);
-               
+
                 finder.clear()
-                    .blendMode(0, poly.blendMode(2))
-                    .emissive(0, poly.emissive(2))
-                    .disableAo(0, poly.disableAo(2))
-                    .disableDiffuse(0, poly.disableDiffuse(2));
-                
+                .blendMode(0, poly.blendMode(2))
+                .emissive(0, poly.emissive(2))
+                .disableAo(0, poly.disableAo(2))
+                .disableDiffuse(0, poly.disableDiffuse(2));
+
                 emitter.material(finder.find());
                 outputIndigoQuad(poly, emitter, 2);
             }
@@ -323,8 +323,8 @@ public class PaintManager implements Consumer<Polygon> {
      * coordinates.
      */
     private void contractUVs(int spriteIndex, Sprite sprite, MutablePolygon poly) {
-        final float uPixels = (float) sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU());
-        final float vPixels = (float) sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV());
+        final float uPixels = sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU());
+        final float vPixels = sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV());
         final float nudge = 4.0f / Math.max(vPixels, uPixels);
 
         final float u0 = poly.u(0, spriteIndex);
@@ -349,7 +349,7 @@ public class PaintManager implements Consumer<Polygon> {
     private void applyTextureRotation(int spriteIndex, MutablePolygon poly) {
         final int vCount = poly.vertexCount();
         final TextureOrientation orientation = poly.rotation(spriteIndex);
-        
+
         switch (orientation.rotation) {
         case ROTATE_NONE:
         default:
@@ -380,13 +380,13 @@ public class PaintManager implements Consumer<Polygon> {
             break;
 
         }
-        
+
         if (orientation.flipU) {
             final float swap = poly.minU(spriteIndex);
             poly.minU(spriteIndex, poly.maxU(spriteIndex));
             poly.maxU(spriteIndex, swap);
         }
-        
+
         if (orientation.flipV) {
             final float swap = poly.minV(spriteIndex);
             poly.minV(spriteIndex, poly.maxV(spriteIndex));

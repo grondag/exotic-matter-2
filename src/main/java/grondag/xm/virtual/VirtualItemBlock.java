@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -21,13 +21,13 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.relics.placement.FilterMode;
 import grondag.xm.relics.placement.PlacementItem;
 import grondag.xm.relics.placement.PlacementItemFeature;
 import grondag.xm.relics.placement.XmBlockItem;
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -89,18 +89,16 @@ public class VirtualItemBlock extends XmBlockItem implements PlacementItem {
     @SuppressWarnings("unchecked")
     @Override
     public BlockState getPlacementBlockStateFromStack(ItemStack stack) {
-        Item item = stack.getItem();
+        final Item item = stack.getItem();
         if (item instanceof VirtualItemBlock) {
             @SuppressWarnings("rawtypes")
             final MutableBaseModelState modelState = XmItem.modelState(stack);
-            if (modelState == null) {
+            if (modelState == null)
                 return null;
-            } else {
+            else
                 return  (BlockState) modelState.applyAndRelease(VFUNC);
-            }
-        } else {
+        } else
             return Blocks.AIR.getDefaultState();
-        }
     }
 
     public static ItemStack getStack(World world, BlockState blockState, BlockPos pos) {

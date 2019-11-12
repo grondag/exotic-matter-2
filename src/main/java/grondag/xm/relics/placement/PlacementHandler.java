@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -82,9 +82,9 @@ public abstract class PlacementHandler {
             // if floating selection enabled, there is no "placed on" position
             // No floating selection - so look for block placed on.
 
-            MinecraftClient mc = MinecraftClient.getInstance();
+            final MinecraftClient mc = MinecraftClient.getInstance();
 
-            HitResult target = mc.hitResult;
+            final HitResult target = mc.hitResult;
 
             if (target.getType() == HitResult.Type.BLOCK) {
                 final BlockHitResult hitBlock = (BlockHitResult) target;
@@ -113,22 +113,22 @@ public abstract class PlacementHandler {
      * block is known or if floating selection is known to be enabled, pass onPos,
      * onFace, and hitVec = null instead. DOES NOT UPDATE STATE.
      * <p>
-     * 
+     *
      * Called by Predict placement results, and by OnItemUse and onItemRightClick.
      */
     public static PlacementResult doRightClickBlock(PlayerEntity player, @Nullable BlockPos onPos, @Nullable Direction onFace, @Nullable Vec3d hitVec,
             ItemStack stack, PlacementItem item) {
 
-        PlacementPosition pPos = new PlacementPosition(player, onPos, onFace, hitVec, item.getFloatingSelectionRange(stack), item.isExcavator(stack));
+        final PlacementPosition pPos = new PlacementPosition(player, onPos, onFace, hitVec, item.getFloatingSelectionRange(stack), item.isExcavator(stack));
 
         // if not position, then either need to be using floating selection
         // or a fixed region (for preview only - see logic below) if not enabled
         if (onPos == null && !item.isFloatingSelectionEnabled(stack)) {
             // don't force player to be in placement range to see big region selections
             // but note this doesn't work for selection in progress
-            if (item.isFixedRegionEnabled(stack) && !item.isFixedRegionSelectionInProgress(stack)) {
+            if (item.isFixedRegionEnabled(stack) && !item.isFixedRegionSelectionInProgress(stack))
                 return new PlacementResult(pPos.inPos, PlacementEvent.NO_OPERATION_CONTINUE, PlacementSpecHelper.placementBuilder(player, pPos, stack));
-            } else
+            else
                 return PlacementResult.EMPTY_RESULT_CONTINUE;
         }
 
@@ -139,7 +139,7 @@ public abstract class PlacementHandler {
         // only virtual blocks support advanced placement behavior
         // so emulate vanilla right-click behavior if we have non-virtual block
         if (!VirtualBlock.isVirtualBlock(((BlockItem) item).getBlock())) {
-            ItemStack tweakedStack = stack.copy();
+            final ItemStack tweakedStack = stack.copy();
             item.setTargetMode(tweakedStack, TargetMode.ON_CLICKED_FACE);
 
             return new PlacementResult(pPos.inPos, PlacementEvent.PLACE, PlacementSpecHelper.placementBuilder(player, pPos, tweakedStack));
@@ -147,7 +147,7 @@ public abstract class PlacementHandler {
 
         // Ctrl + right click: start new placement region
         if (ModKeys.isControlPressed(player)) {
-            ItemStack tweakedStack = stack.copy();
+            final ItemStack tweakedStack = stack.copy();
             item.fixedRegionStart(tweakedStack, pPos.inPos, false);
 
             return new PlacementResult(pPos.inPos, PlacementEvent.START_PLACEMENT_REGION, PlacementSpecHelper.placementBuilder(player, pPos, tweakedStack));
@@ -155,15 +155,15 @@ public abstract class PlacementHandler {
 
         if (item.isFixedRegionSelectionInProgress(stack)) {
             // finish placement region
-            ItemStack tweakedStack = stack.copy();
+            final ItemStack tweakedStack = stack.copy();
             item.fixedRegionFinish(tweakedStack, player, pPos.inPos, false);
-            IPlacementSpec builder = PlacementSpecHelper.placementBuilder(player, pPos, stack);
+            final IPlacementSpec builder = PlacementSpecHelper.placementBuilder(player, pPos, stack);
 
             return new PlacementResult(pPos.inPos, builder.isExcavation() ? PlacementEvent.EXCAVATE : PlacementEvent.PLACE,
                     PlacementSpecHelper.placementBuilder(player, pPos, tweakedStack));
         } else {
             // normal right click on block
-            IPlacementSpec builder = PlacementSpecHelper.placementBuilder(player, pPos, stack);
+            final IPlacementSpec builder = PlacementSpecHelper.placementBuilder(player, pPos, stack);
             return new PlacementResult(pPos.inPos, builder.isExcavation() ? PlacementEvent.EXCAVATE : PlacementEvent.PLACE, builder);
         }
     }
@@ -173,7 +173,7 @@ public abstract class PlacementHandler {
      * now this is just species. Intended for single and cubic region placements of
      * non-CSG virtual blocks.
      * <p>
-     * 
+     *
      * Assumes block rotation was already set in stack by calling
      * {@link BlockOrientationHandler#configureStackForPlacement(ItemStack, PlayerEntity, PlacementPosition)}
      * when spec was constructed.
@@ -209,15 +209,17 @@ public abstract class PlacementHandler {
 
         if (!PlacementItem.isPlacementItem(stack))
             return 0;
-        PlacementItem item = (PlacementItem) stack.getItem();
+        final PlacementItem item = (PlacementItem) stack.getItem();
 
         SpeciesMode mode = item.getSpeciesMode(stack);
-        if (ModKeys.isAltPressed(player))
+        if (ModKeys.isAltPressed(player)) {
             mode = mode.alternate();
+        }
 
-        boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
+        final boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
 
         @SuppressWarnings("rawtypes")
+        final
         MutableBaseModelState withModelState = XmItem.modelState(stack);
         if (withModelState == null || !withModelState.hasSpecies())
             return 0;
@@ -225,15 +227,15 @@ public abstract class PlacementHandler {
         if (player.world == null)
             return 0;
 
-        World world = player.world;
+        final World world = player.world;
 
-        BlockState withBlockState = item.getPlacementBlockStateFromStack(stack);
+        final BlockState withBlockState = item.getPlacementBlockStateFromStack(stack);
 
         // if no region provided or species mode used clicked block then
         // result is based on the clicked face
         if (region == null || ((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
             // NOTE: stubbed out
-            int clickedSpecies = 0; //SpeciesHelper.joinableSpecies(world, onPos, null); //withBlockState, withModelState);
+            final int clickedSpecies = 0; //SpeciesHelper.joinableSpecies(world, onPos, null); //withBlockState, withModelState);
 
             // if no region, then return something different than what is clicked,
             // unless didn't get a species - will return 0 in that case.
@@ -244,28 +246,32 @@ public abstract class PlacementHandler {
                 return clickedSpecies;
         }
 
-        int[] adjacentCount = new int[16];
-        int[] surfaceCount = new int[16];
+        final int[] adjacentCount = new int[16];
+        final int[] surfaceCount = new int[16];
 
         /** limit block positions checked for very large regions */
         int checkCount = 0;
 
-        for (BlockPos pos : region.adjacentPositions()) {
+        for (final BlockPos pos : region.adjacentPositions()) {
             //NOTE: stubbed out
-            int adjacentSpecies = 0; //SpeciesHelper.joinableSpecies(world, pos, null); //withBlockState, withModelState);
-            if (adjacentSpecies >= 0 && adjacentSpecies <= 15)
+            final int adjacentSpecies = 0; //SpeciesHelper.joinableSpecies(world, pos, null); //withBlockState, withModelState);
+            if (adjacentSpecies >= 0 && adjacentSpecies <= 15) {
                 adjacentCount[adjacentSpecies]++;
-            if (checkCount++ >= XmConfig.maxPlacementCheckCount)
+            }
+            if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
                 break;
+            }
         }
 
-        for (BlockPos pos : region.surfacePositions()) {
+        for (final BlockPos pos : region.surfacePositions()) {
             // NOTE: stubbed out
-            int interiorSpecies = 0;//SpeciesHelper.joinableSpecies(world, pos, null); //withBlockState, withModelState);
-            if (interiorSpecies >= 0 && interiorSpecies <= 15)
+            final int interiorSpecies = 0;//SpeciesHelper.joinableSpecies(world, pos, null); //withBlockState, withModelState);
+            if (interiorSpecies >= 0 && interiorSpecies <= 15) {
                 surfaceCount[interiorSpecies]++;
-            if (checkCount++ >= XmConfig.maxPlacementCheckCount)
+            }
+            if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
                 break;
+            }
         }
 
         if (shouldBreak) {
@@ -274,7 +280,7 @@ public abstract class PlacementHandler {
             int bestCount = adjacentCount[0] + surfaceCount[0];
 
             for (int i = 1; i < 16; i++) {
-                int tryCount = adjacentCount[i] + surfaceCount[i];
+                final int tryCount = adjacentCount[i] + surfaceCount[i];
                 if (tryCount < bestCount) {
                     bestCount = tryCount;
                     bestSpecies = i;
@@ -310,14 +316,14 @@ public abstract class PlacementHandler {
      * Find the position offset for the placement/deletion position values in
      * PlacementItem relative to the player's current orientation and starting
      * location.
-     * 
+     *
      * @param onFace if non-null, assumes startPos is against this face, and should
      *               extend in the opposite direction. OffsetPosition alters box
      *               placements and is used to find alternate regions that might
      *               avoid obstacles.
      */
     public static BlockPos getPlayerRelativeOffset(BlockPos startPos, BlockPos offsetPos, PlayerEntity player, Direction onFace, OffsetPosition offset) {
-        Vec3d lookVec = player.getRotationVec(1.0f);
+        final Vec3d lookVec = player.getRotationVec(1.0f);
         int xFactor = lookVec.x > 0 ? 1 : -1;
         int zFactor = lookVec.z > 0 ? 1 : -1;
 
@@ -333,13 +339,12 @@ public abstract class PlacementHandler {
             }
         }
 
-        if (player.getHorizontalFacing().getAxis() == Direction.Axis.X) {
+        if (player.getHorizontalFacing().getAxis() == Direction.Axis.X)
             return startPos.add((offsetPos.getX() - 1) * xFactor * offset.depthFactor, (offsetPos.getY() - 1) * offset.heightFactor,
                     (offsetPos.getZ() - 1) * zFactor * offset.widthFactor);
-        } else {
+        else
             return startPos.add((offsetPos.getZ() - 1) * xFactor * offset.widthFactor, (offsetPos.getY() - 1) * offset.heightFactor,
                     (offsetPos.getX() - 1) * zFactor * offset.depthFactor);
-        }
     }
 
     /**
@@ -347,8 +352,8 @@ public abstract class PlacementHandler {
      */
     public static Direction[] faceCheckOrder(PlayerEntity player, Direction onFace) {
         if (onFace == null) {
-            HorizontalFace playerFacing = HorizontalFace.find(player.getHorizontalFacing());
-            Direction[] result = new Direction[6];
+            final HorizontalFace playerFacing = HorizontalFace.find(player.getHorizontalFacing());
+            final Direction[] result = new Direction[6];
             result[0] = playerFacing.left().face;
             result[1] = playerFacing.right().face;
             result[2] = playerFacing.face.getOpposite();
@@ -388,27 +393,26 @@ public abstract class PlacementHandler {
     }
 
     public static void placeVirtualBlock(World world, ItemStack stack, PlayerEntity player, BlockPos pos) { //, Build build) {
-        if (!player.canModifyWorld()) { // || build == null || !build.isOpen())
+        if (!player.canModifyWorld())
             return;
-        }
-        
-        BlockSoundGroup soundtype = XmStackHelper.getStackSubstance(stack).soundType;
 
-        PlacementItem item = PlacementItem.getPlacementItem(stack);
+        final BlockSoundGroup soundtype = XmStackHelper.getStackSubstance(stack).soundType;
+
+        final PlacementItem item = PlacementItem.getPlacementItem(stack);
         if (item == null)
             return;
 
-        BlockState placedState = item.getPlacementBlockStateFromStack(stack);
+        final BlockState placedState = item.getPlacementBlockStateFromStack(stack);
 
         if (placeBlockAt(stack, player, world, pos, null, 0, 0, 0, placedState)) {
             //build.addPosition(pos);
 
             world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
-//            BlockEntity blockTE = world.getBlockEntity(pos);
-//            if (blockTE != null && blockTE instanceof VirtualBlockEntity) {
-//                ((VirtualBlockEntity) blockTE).setBuild(build);
-//            }
+            //            BlockEntity blockTE = world.getBlockEntity(pos);
+            //            if (blockTE != null && blockTE instanceof VirtualBlockEntity) {
+            //                ((VirtualBlockEntity) blockTE).setBuild(build);
+            //            }
         }
     }
 
@@ -418,7 +422,7 @@ public abstract class PlacementHandler {
         // state
         // this is OK normally, but if we need to update the TileEntity it is the
         // opposite of OK
-        boolean wasUpdated = world.setBlockState(pos, newState, 3) || world.getBlockState(pos) == newState;
+        final boolean wasUpdated = world.setBlockState(pos, newState, 3) || world.getBlockState(pos) == newState;
 
         if (!wasUpdated)
             return false;

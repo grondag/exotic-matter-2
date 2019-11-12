@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -32,15 +32,15 @@ import grondag.xm.api.mesh.polygon.Vec3f;
  * included with it. // SoftSurfer makes no warranty for this code, and cannot
  * be held // liable for any real or imagined damage resulting from its use. //
  * Users of this code must verify correctness for their application.
- * 
- * 
+ *
+ *
  */
 @API(status = INTERNAL)
 public class PointInPolygonTest {
 
     /**
      * Tests if a point is Left|On|Right of an infinite line
-     * 
+     *
      * @param lineStart
      * @param lineEnd
      * @param point
@@ -54,7 +54,7 @@ public class PointInPolygonTest {
 
     /**
      * Tests if a point is Left|On|Right of an infinite line
-     * 
+     *
      * @param lineStart
      * @param lineEnd
      * @param point
@@ -70,7 +70,7 @@ public class PointInPolygonTest {
     /**
      * Crossing number test for a point in a polygon. This code is patterned after
      * [Franklin, 2000]
-     * 
+     *
      * @param point    point to be tested
      * @param vertices vertex points of a closed polygon V[n+1] with V[n]=V[0]
      * @return true if inside
@@ -79,7 +79,7 @@ public class PointInPolygonTest {
         int cn = 0; // the crossing number counter
 
         // number of vertices is one less due to wrapped input array
-        int size = vertices.length - 1;
+        final int size = vertices.length - 1;
 
         // loop through all edges of the polygon
         for (int i = 0; i < size; i++) { // edge from V[i] to V[i+1]
@@ -87,9 +87,11 @@ public class PointInPolygonTest {
                     || ((vertices[i].y > point.y) && (vertices[i + 1].y <= point.y))) // a downward crossing
             {
                 // compute the actual edge-ray intersect x-coordinate
-                double vt = (point.y - vertices[i].y) / (vertices[i + 1].y - vertices[i].y);
-                if (point.x < vertices[i].x + vt * (vertices[i + 1].x - vertices[i].x)) // P.x < intersect
+                final double vt = (point.y - vertices[i].y) / (vertices[i + 1].y - vertices[i].y);
+                if (point.x < vertices[i].x + vt * (vertices[i + 1].x - vertices[i].x))
+                {
                     ++cn; // a valid crossing of y=P.y right of P.x
+                }
             }
         }
         return (cn & 1) == 1; // 0 if even (out), and 1 if odd (in)
@@ -97,7 +99,7 @@ public class PointInPolygonTest {
 
     /**
      * Winding number test for a point in a polygon
-     * 
+     *
      * @param point    point to be tested
      * @param vertices vertex points of a closed polygon V[n+1] with V[n]=V[0]
      * @return true if inside
@@ -106,7 +108,7 @@ public class PointInPolygonTest {
         int wn = 0; // the winding number counter
 
         // number of vertices is one less due to wrapped input array
-        int size = vertices.length - 1;
+        final int size = vertices.length - 1;
 
         // loop through all edges of the polygon
         for (int i = 0; i < size; i++) // edge from V[i] to V[i+1]
@@ -114,13 +116,17 @@ public class PointInPolygonTest {
             if (vertices[i].y <= point.y) // start y <= P.y
             {
                 if (vertices[i + 1].y > point.y) // an upward crossing
-                    if (isLeft(vertices[i], vertices[i + 1], point) > 0) // P left of edge
+                    if (isLeft(vertices[i], vertices[i + 1], point) > 0)
+                    {
                         ++wn; // have a valid up intersect
+                    }
             } else // start y > P.y (no test needed)
             {
                 if (vertices[i + 1].y <= point.y) // a downward crossing
-                    if (isLeft(vertices[i], vertices[i + 1], point) < 0) // P right of edge
+                    if (isLeft(vertices[i], vertices[i + 1], point) < 0)
+                    {
                         --wn; // have a valid down intersect
+                    }
             }
         }
         return wn != 0;
@@ -220,7 +226,7 @@ public class PointInPolygonTest {
                 && (y0 - y2) * (x - x2) + (-x0 + x2) * (y - y2) >= 0;
     }
 
-    static enum DiscardAxis {
+    enum DiscardAxis {
         X() {
             @Override
             protected final float x(Vec3f pointIn) {
@@ -266,8 +272,8 @@ public class PointInPolygonTest {
             final float absY = Math.abs(normal.y());
             if (absX > absY)
                 return absX > Math.abs(normal.z()) ? X : Z;
-            else // y >= x
-                return absY > Math.abs(normal.z()) ? Y : Z;
+                else // y >= x
+                    return absY > Math.abs(normal.z()) ? Y : Z;
         }
 
         /**

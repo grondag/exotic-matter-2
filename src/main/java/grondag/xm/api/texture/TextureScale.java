@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2019 grondag
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
  * of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
@@ -15,7 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
-import static grondag.xm.api.modelstate.ModelStateFlags.*;
+import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
+import static grondag.xm.api.modelstate.ModelStateFlags.POSITION;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
@@ -66,9 +67,9 @@ public enum TextureScale {
 
     private TextureScale(int power, int modelStateFlag) {
         this.power = power;
-        this.sliceCount = 1 << power;
-        this.sliceCountMask = sliceCount - 1;
-        this.sliceIncrement = 1f / sliceCount;
+        sliceCount = 1 << power;
+        sliceCountMask = sliceCount - 1;
+        sliceIncrement = 1f / sliceCount;
         this.modelStateFlag = modelStateFlag;
     }
 }
