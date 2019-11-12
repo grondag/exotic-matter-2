@@ -38,12 +38,12 @@ import grondag.xm.render.RenderUtil;
 import grondag.xm.render.XmRenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.class_4604;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.VisibleRegion;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -103,7 +103,7 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 
             if (offsetPos.getZ() > 1) {
                 // depth
-                endPos = endPos.offset(pPos.onFace.getOpposite(), offsetPos.getZ() - 1);
+                endPos = endPos.method_10079(pPos.onFace.getOpposite(), this.offsetPos.getZ() - 1);
             }
 
             final Pair<Direction, Direction> nearestCorner = WorldHelper.closestAdjacentFaces(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY,
@@ -120,8 +120,8 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
                 final boolean fullUp = (h & 1) == 1 || isUpclosest;
                 final boolean fullDown = (h & 1) == 1 || !isUpclosest;
 
-                startPos = startPos.offset(relativeUp, fullUp ? half_h : half_h - 1);
-                endPos = endPos.offset(relativeUp.getOpposite(), fullDown ? half_h : half_h - 1);
+                startPos = startPos.method_10079(relativeUp, fullUp ? half_h : half_h - 1);
+                endPos = endPos.method_10079(relativeUp.getOpposite(), fullDown ? half_h : half_h - 1);
             }
 
             // width
@@ -135,8 +135,8 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
                 final boolean fullLeft = (w & 1) == 1 || isLeftclosest;
                 final boolean fullRight = (w & 1) == 1 || !isLeftclosest;
 
-                startPos = startPos.offset(relativeLeft, fullLeft ? half_w : half_w - 1);
-                endPos = endPos.offset(relativeLeft.getOpposite(), fullRight ? half_w : half_w - 1);
+                startPos = startPos.method_10079(relativeLeft, fullLeft ? half_w : half_w - 1);
+                endPos = endPos.method_10079(relativeLeft.getOpposite(), fullRight ? half_w : half_w - 1);
             }
 
             region = new CubicBlockRegion(startPos, endPos, false);
@@ -220,10 +220,12 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
         tessellator.draw();
 
         // draw sides with depth to better show what parts are unobstructed
-        GlStateManager.enableDepthTest();
-        bufferBuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        WorldRenderer.buildBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, SELECT.red, SELECT.green, SELECT.blue, 0.4f);
-        tessellator.draw();
+
+        // TODO: reimplement with new render methods
+//        GlStateManager.enableDepthTest();
+//        bufferBuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+//        WorldRenderer.buildBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, SELECT.red, SELECT.green, SELECT.blue, 0.4f);
+//        tessellator.draw();
     }
 
     @Environment(EnvType.CLIENT)
@@ -235,8 +237,8 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
         final Box box = region.toAABB();
 
         // fixed regions could be outside of view
-        final VisibleRegion visible = XmRenderHelper.visibleRegion();
-        if (!visible.intersects(box))
+        final class_4604 visible = XmRenderHelper.visibleRegion();
+        if (!visible.method_23093(box))
             return;
 
         // draw edges without depth to show extent of region
@@ -271,11 +273,12 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
         }
 
         // draw sides with depth to better show what parts are unobstructed
-        GlStateManager.enableDepthTest();
-        bufferBuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        WorldRenderer.buildBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green, previewMode.blue,
-                0.4f);
-        tessellator.draw();
+        // Will need to be fixed for new rendering methods
+//        GlStateManager.enableDepthTest();
+//        bufferBuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+//        WorldRenderer.buildBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green, previewMode.blue,
+//                0.4f);
+//        tessellator.draw();
     }
 
     @Override
@@ -285,27 +288,88 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
             // a flood fill starting with the block last clicked
             // by the player.
             return new BooleanSupplier() {
-            //                private CuboidPlacementSpec spec = (CuboidPlacementSpec) buildSpec();
-            //                private Job job = new Job(RequestPriority.MEDIUM, player);
-            //                IDomain domain = DomainManager.instance().getActiveDomain(player);
+//                private CuboidPlacementSpec spec = (CuboidPlacementSpec) buildSpec();
+//                private Job job = new Job(RequestPriority.MEDIUM, player);
+//                IDomain domain = DomainManager.instance().getActiveDomain(player);
 
-            /**
-             * Block positions to be checked. Will initially contain only the starting
-             * (user-clicked) position. Entry is antecedent, or null if no dependency.
-             */
-            //ArrayDeque<Pair<BlockPos, ExcavationTask>> queue = new ArrayDeque<Pair<BlockPos, ExcavationTask>>();
-            ArrayDeque<BlockPos> queue = new ArrayDeque<>();
+                /**
+                 * Block positions to be checked. Will initially contain only the starting
+                 * (user-clicked) position. Entry is antecedent, or null if no dependency.
+                 */
+                //ArrayDeque<Pair<BlockPos, ExcavationTask>> queue = new ArrayDeque<Pair<BlockPos, ExcavationTask>>();
+                ArrayDeque<BlockPos> queue = new ArrayDeque<>();
 
-            /**
-             * Block positions that have been tested.
-             */
-            HashSet<BlockPos> checked = new HashSet<BlockPos>();
+                /**
+                 * Block positions that have been tested.
+                 */
+                HashSet<BlockPos> checked = new HashSet<BlockPos>();
 
-            World world = player.world;
+                World world = player.world;
 
-            {
-                scheduleVisitIfNotAlreadyVisited(pPos.inPos); //, null);
-            }
+                {
+                    scheduleVisitIfNotAlreadyVisited(pPos.inPos); //, null);
+                }
+
+                @Override
+                public boolean getAsBoolean() {
+                    if (!queue.isEmpty()) {
+                        //Pair<BlockPos, ExcavationTask> visit = queue.poll();
+                        BlockPos pos = queue.poll();
+                        if (pos != null) {
+                            //BlockPos pos = visit.getLeft();
+
+                            // is the position inside our region?
+                            // is the position inside the world?
+                            if (region.contains(pos) && World.isValid(pos)) {
+                                boolean canPassThrough = false;
+
+                                BlockState blockState = world.getBlockState(pos);
+
+                                // will be antecedent for any branches from here
+                                // if this is empty space, then will be antecedent for this visit
+//                                ExcavationTask branchAntecedent = visit.getRight();
+
+                                // is the block at the position affected
+                                // by this excavation?
+                                if (effectiveFilterMode.shouldAffectBlock(blockState, world, pos, outputStack, isVirtual)) {
+//                                    branchAntecedent = new ExcavationTask(pos);
+//                                    job.addTask(branchAntecedent);
+//                                    if (visit.getRight() != null) {
+//                                        AbstractTask.link(visit.getRight(), branchAntecedent);
+//                                    }
+                                    canPassThrough = true;
+                                }
+
+                                // even if we can't excavate the block,
+                                // can we move through it to check others?
+                                canPassThrough = canPassThrough || !blockState.getMaterial().blocksMovement();
+
+                                // check adjacent blocks if are or will
+                                // be accessible and haven't already been
+                                // checked.
+                                if (canPassThrough) {
+                                    // PERF: allocation
+                                    scheduleVisitIfNotAlreadyVisited(pos.up()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.down(1)); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.east()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.west()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.north()); //, branchAntecedent);
+                                    scheduleVisitIfNotAlreadyVisited(pos.south()); //, branchAntecedent);
+                                }
+                            }
+                        }
+                    }
+
+                    if (queue.isEmpty()) {
+                        // when done, finalize entries list and submit job
+                        this.checked.clear();
+//                        if (domain != null)
+//                            domain.getCapability(JobManager.class).addJob(job);
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
 
             @Override
             public boolean getAsBoolean() {

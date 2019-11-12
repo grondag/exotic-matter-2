@@ -26,7 +26,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.block.BlockRenderLayer;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
@@ -361,7 +361,7 @@ class StreamBackedPolygon implements Polygon {
     }
 
     @Override
-    public BlockRenderLayer blendMode(int layerIndex) {
+    public BlendMode blendMode(int layerIndex) {
         return StaticEncoder.getRenderLayer(stream, baseAddress, layerIndex);
     }
 

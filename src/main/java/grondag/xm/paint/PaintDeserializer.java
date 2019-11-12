@@ -24,7 +24,7 @@ import com.google.gson.JsonObject;
 
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSetRegistry;
-import net.minecraft.block.BlockRenderLayer;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 
@@ -77,18 +77,18 @@ class PaintDeserializer {
         }
     }
 
-    private static BlockRenderLayer readBlendMode(String val) {
+    private static BlendMode readBlendMode(String val) {
         val = val.toLowerCase(Locale.ROOT);
         switch(val) {
         case "solid":
         default:
-            return BlockRenderLayer.SOLID;
+            return BlendMode.SOLID;
         case "cutout":
-            return BlockRenderLayer.CUTOUT;
+            return BlendMode.CUTOUT;
         case "cutout_mipped":
-            return BlockRenderLayer.CUTOUT_MIPPED;
+            return BlendMode.CUTOUT_MIPPED;
         case "translucent":
-            return BlockRenderLayer.TRANSLUCENT;
+            return BlendMode.TRANSLUCENT;
         }
     }
 

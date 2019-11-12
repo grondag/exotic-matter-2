@@ -19,21 +19,21 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import net.minecraft.client.render.VisibleRegion;
+import net.minecraft.class_4604;
 
 @API(status = INTERNAL)
 public abstract class XmRenderHelper {
     private XmRenderHelper() {
     }
 
-    private static VisibleRegion visibleRegion;
+    private static class_4604 visibleRegion;
     private static float tickDelta;
 
-    public static void visibleRegion(VisibleRegion region) {
+    public static void visibleRegion(class_4604 region) {
         visibleRegion = region;
     }
 
-    public static VisibleRegion visibleRegion() {
+    public static class_4604 visibleRegion() {
         return visibleRegion;
     }
 

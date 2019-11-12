@@ -25,7 +25,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.block.BlockRenderLayer;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
@@ -113,7 +113,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
     }
 
     @Override
-    public final MutablePolygon blendMode(int layerIndex, BlockRenderLayer layer) {
+    public final MutablePolygon blendMode(int layerIndex, BlendMode layer) {
         StaticEncoder.setRenderLayer(stream, baseAddress, layerIndex, layer);
         return this;
     }

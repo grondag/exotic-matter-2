@@ -172,44 +172,44 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
     @Environment(EnvType.CLIENT)
     @Override
     public final void renderPreview(float tickDelta, ClientPlayerEntity player) {
-        validate();
-
-        final Tessellator tessellator = Tessellator.getInstance();
-        final BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
-
-        final double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
-        final double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
-        final double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
-
-        bufferBuilder.setOffset(-d0, -d1, -d2);
-
-        GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
-                GlStateManager.DestFactor.ZERO);
-        GlStateManager.disableTexture();
-        GlStateManager.depthMask(false);
-
-        // prevent z-fighting
-        GlStateManager.enablePolygonOffset();
-        GlStateManager.polygonOffset(-1, -1);
-
-        if (isSelectionInProgress) {
-            drawSelection(tessellator, bufferBuilder);
-        } else if (isExcavation) {
-            drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.EXCAVATE);
-        } else if (isValid) {
-            drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.PLACE);
-        } else {
-            drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.OBSTRUCTED);
-        }
-
-        bufferBuilder.setOffset(0, 0, 0);
-
-        GlStateManager.disablePolygonOffset();
-        GlStateManager.enableDepthTest();
-        GlStateManager.depthMask(true);
-        GlStateManager.enableTexture();
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlphaTest();
+        this.validate();
+// TODO: reimplement with new render methods
+//        Tessellator tessellator = Tessellator.getInstance();
+//        BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
+//
+//        double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
+//        double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
+//        double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
+//
+//        bufferBuilder.setOffset(-d0, -d1, -d2);
+//
+//        GlStateManager.enableBlend();
+//        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+//                GlStateManager.DestFactor.ZERO);
+//        GlStateManager.disableTexture();
+//        GlStateManager.depthMask(false);
+//
+//        // prevent z-fighting
+//        GlStateManager.enablePolygonOffset();
+//        GlStateManager.polygonOffset(-1, -1);
+//
+//        if (this.isSelectionInProgress) {
+//            this.drawSelection(tessellator, bufferBuilder);
+//        } else if (this.isExcavation) {
+//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.EXCAVATE);
+//        } else if (this.isValid) {
+//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.PLACE);
+//        } else {
+//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.OBSTRUCTED);
+//        }
+//
+//        bufferBuilder.setOffset(0, 0, 0);
+//
+//        GlStateManager.disablePolygonOffset();
+//        GlStateManager.enableDepthTest();
+//        GlStateManager.depthMask(true);
+//        GlStateManager.enableTexture();
+//        GlStateManager.disableBlend();
+//        GlStateManager.enableAlphaTest();
     }
 }

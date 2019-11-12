@@ -49,8 +49,8 @@ public class TerrainBlockHelper {
 
     @Nullable
     public static TerrainType terrainType(BlockState state) {
-        final Comparable<?> val = state.getEntries().get(TerrainBlock.TERRAIN_TYPE);
-        return val == null ? null : TerrainBlock.TERRAIN_TYPE.getValueType().cast(val);
+        Comparable<?> val = state.getEntries().get(TerrainBlock.TERRAIN_TYPE);
+        return val == null ? null : TerrainBlock.TERRAIN_TYPE.getType().cast(val);
     }
 
     /**
@@ -70,8 +70,8 @@ public class TerrainBlockHelper {
     }
 
     public static int getHotness(BlockState state) {
-        final Comparable<?> val = state.getEntries().get(TerrainBlock.HEAT);
-        return val == null ? 0 : TerrainBlock.HEAT.getValueType().cast(val);
+        Comparable<?> val = state.getEntries().get(TerrainBlock.HEAT);
+        return val == null ? 0 : TerrainBlock.HEAT.getType().cast(val);
     }
 
     /**

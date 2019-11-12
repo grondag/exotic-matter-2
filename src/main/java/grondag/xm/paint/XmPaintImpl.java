@@ -29,7 +29,7 @@ import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSet;
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.block.BlockRenderLayer;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
@@ -50,7 +50,7 @@ public class XmPaintImpl {
     private static final BitPacker32<XmPaintImpl>.BooleanElement[] FLAGS = new BitPacker32.BooleanElement[COLOR_DISABLE_INDEX_START + MAX_TEXTURE_DEPTH];
 
     @SuppressWarnings("unchecked")
-    private static final BitPacker32<XmPaintImpl>.NullableEnumElement<BlockRenderLayer> BLEND_MODES[] = new BitPacker32.NullableEnumElement[MAX_TEXTURE_DEPTH];
+    private static final BitPacker32<XmPaintImpl>.NullableEnumElement<BlendMode> BLEND_MODES[] = new BitPacker32.NullableEnumElement[MAX_TEXTURE_DEPTH];
 
     private static final BitPacker32<XmPaintImpl>.IntElement TEXTURE_DEPTH;
 
@@ -74,9 +74,9 @@ public class XmPaintImpl {
         FLAGS[COLOR_DISABLE_INDEX_START + 1] = PAINT_BITS.createBooleanElement();
         FLAGS[COLOR_DISABLE_INDEX_START + 2] = PAINT_BITS.createBooleanElement();
 
-        BLEND_MODES[0] = PAINT_BITS.createNullableEnumElement(BlockRenderLayer.class);
-        BLEND_MODES[1] = PAINT_BITS.createNullableEnumElement(BlockRenderLayer.class);
-        BLEND_MODES[2] = PAINT_BITS.createNullableEnumElement(BlockRenderLayer.class);
+        BLEND_MODES[0] = PAINT_BITS.createNullableEnumElement(BlendMode.class);
+        BLEND_MODES[1] = PAINT_BITS.createNullableEnumElement(BlendMode.class);
+        BLEND_MODES[2] = PAINT_BITS.createNullableEnumElement(BlendMode.class);
 
         assert PAINT_BITS.bitLength() <= 32;
 
@@ -161,7 +161,7 @@ public class XmPaintImpl {
         return result;
     }
 
-    public @Nullable BlockRenderLayer blendMode(int textureIndex) {
+    public @Nullable BlendMode blendMode(int textureIndex) {
         return BLEND_MODES[textureIndex].getValue(this);
     }
 
@@ -346,7 +346,7 @@ public class XmPaintImpl {
         }
 
         @Override
-        public XmPaintFinder blendMode(int textureIndex, BlockRenderLayer blendMode) {
+        public XmPaintFinder blendMode(int textureIndex, BlendMode blendMode) {
             BLEND_MODES[textureIndex].setValue(blendMode, this);
             return this;
         }

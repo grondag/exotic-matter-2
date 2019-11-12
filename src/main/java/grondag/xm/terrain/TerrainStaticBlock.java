@@ -28,7 +28,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ExtendedBlockView;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 @API(status = INTERNAL)
@@ -92,8 +92,8 @@ public class TerrainStaticBlock extends Block implements IHotBlock {
     /**
      * Returns dynamic version of self if one is known. Otherwise returns self.
      */
-    public BlockState dynamicState(BlockState state, ExtendedBlockView world, BlockPos pos) {
-        final Block dynamicVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getDynamicBlock(this);
+    public BlockState dynamicState(BlockState state, BlockView world, BlockPos pos) {
+        Block dynamicVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getDynamicBlock(this);
         if (dynamicVersion == null || state.getBlock() != this)
             return state;
         // TODO: transfer heat block state?

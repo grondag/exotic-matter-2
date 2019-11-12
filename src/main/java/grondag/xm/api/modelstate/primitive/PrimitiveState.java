@@ -33,7 +33,7 @@ public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePr
     SimplePrimitiveStateMutator AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
         final Comparable<?> axis = blockState.getEntries().get(PillarBlock.AXIS);
         if (axis != null) {
-            modelState.orientationIndex(PillarBlock.AXIS.getValueType().cast(axis).ordinal());
+            modelState.orientationIndex(PillarBlock.AXIS.getType().cast(axis).ordinal());
         }
         return modelState;
     };
@@ -44,9 +44,9 @@ public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePr
         final Comparable<?> shapeProp = blockState.getEntries().get(StairsBlock.SHAPE);
 
         if (faceProp != null && half != null && shapeProp != null) {
-            final StairShape shape = StairsBlock.SHAPE.getValueType().cast(shapeProp);
-            Direction face = StairsBlock.FACING.getValueType().cast(faceProp);
-            final boolean bottom = StairsBlock.HALF.getValueType().cast(half) == BlockHalf.BOTTOM;
+            final StairShape shape = StairsBlock.SHAPE.getType().cast(shapeProp);
+            Direction face = StairsBlock.FACING.getType().cast(faceProp);
+            final boolean bottom = StairsBlock.HALF.getType().cast(half) == BlockHalf.BOTTOM;
             final boolean corner = shape != StairShape.STRAIGHT;
             boolean inside = false;
             boolean left = false;

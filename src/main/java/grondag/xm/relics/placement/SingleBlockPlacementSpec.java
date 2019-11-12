@@ -48,7 +48,7 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
 
     @Override
     protected boolean doValidate() {
-        if (!player.world.isHeightValidAndBlockLoaded(pPos.inPos))
+        if (!this.player.world.isChunkLoaded(this.pPos.inPos) || World.isHeightInvalid(this.pPos.inPos))
             return false;
 
         if (isExcavation)
@@ -89,10 +89,10 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
             GlStateManager.enableDepthTest();
 
             bufferBuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-            // TODO: confirm this is right method - names changed
-            WorldRenderer.buildBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green,
-                    previewMode.blue, 0.4f);
-            tessellator.draw();
+            // TODO: Fix for render changes
+//            WorldRenderer.buildBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green,
+//                    previewMode.blue, 0.4f);
+//            tessellator.draw();
 
             break;
         case PLACE:
@@ -112,13 +112,33 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
         if (isExcavation)
             return new BooleanSupplier() {
 
-            @Override
-            public boolean getAsBoolean() {
+                @Override
+                public boolean getAsBoolean() {
 
-                final World world = player.world;
+                    World world = player.world;
 
-                final BlockPos pos = SingleBlockPlacementSpec.this.pPos.inPos;
-                if (pos == null)
+                    BlockPos pos = SingleBlockPlacementSpec.this.pPos.inPos;
+                    if (pos == null)
+                        return false;
+
+                    // is the position inside the world?
+                    if (World.isValid(pos) || !world.isChunkLoaded(pos))
+                        return false;
+
+                    BlockState blockState = world.getBlockState(pos);
+
+                    // is the block at the position affected
+                    // by this excavation?
+                    if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
+                            SingleBlockPlacementSpec.this.isVirtual)) {
+//                        Job job = new Job(RequestPriority.MEDIUM, player);
+//                        job.setDimension(world.dimension);
+//                        job.addTask(new ExcavationTask(pos));
+//                        IDomain domain = DomainManager.instance().getActiveDomain(player);
+//                        if (domain != null) {
+//                            domain.getCapability(JobManager.class).addJob(job);
+//                        }
+                    }
                     return false;
 
                 // is the position inside the world?
@@ -163,9 +183,9 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
                 if (pos == null)
                     return false;
 
-                // is the position inside the world?
-                if (!world.isHeightValidAndBlockLoaded(pos))
-                    return false;
+                    // is the position inside the world?
+                    if (World.isValid(pos) || !world.isChunkLoaded(pos))
+                        return false;
 
                 final BlockState blockState = world.getBlockState(pos);
 

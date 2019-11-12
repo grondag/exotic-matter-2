@@ -53,20 +53,22 @@ public class ExcavationMarker extends Item implements PlacementItem {
         // TODO: logic here is too elaborate for what this item does, and probably
         // needed by Virtual Block
 
-        if (player == null)
-            return new TypedActionResult<>(ActionResult.PASS, null);
+        if (player == null) {
+            return new TypedActionResult<>(ActionResult.PASS, null, false);
+        }
 
-        final ItemStack stackIn = player.getStackInHand(hand);
+        ItemStack stackIn = player.getStackInHand(hand);
 
-        if (stackIn.isEmpty() || stackIn.getItem() != this)
-            return new TypedActionResult<>(ActionResult.PASS, stackIn);
+        if (stackIn.isEmpty() || stackIn.getItem() != this) {
+            return new TypedActionResult<>(ActionResult.PASS, stackIn, false);
+        }
 
-        final PlacementResult result = PlacementHandler.doRightClickBlock(player, null, null, null, stackIn, this);
+        PlacementResult result = PlacementHandler.doRightClickBlock(player, null, null, null, stackIn, this);
 
         if (!result.shouldInputEventsContinue()) {
             result.apply(stackIn, player);
-            //            this.doPlacements(result, stackIn, world, player);
-            return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
+//            this.doPlacements(result, stackIn, world, player);
+            return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand), true);
         }
 
         if (world.isClient) {
@@ -76,14 +78,14 @@ public class ExcavationMarker extends Item implements PlacementItem {
                 // if trying to place a block but too close, is annoying to get GUI
                 // so only display if clicking on air
                 if (blockpos != null && !VirtualBlock.isVirtualBlock(world.getBlockState(blockpos).getBlock())
-                        && world.getBlockState(blockpos).getMaterial().isReplaceable() && isVirtual(stackIn)) {
-                    displayGui(player);
-                    return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand));
+                        && world.getBlockState(blockpos).getMaterial().isReplaceable() && this.isVirtual(stackIn)) {
+                    this.displayGui(player);
+                    return new TypedActionResult<>(ActionResult.SUCCESS, player.getStackInHand(hand), true);
                 }
             }
         }
 
-        return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
+        return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand), false);
     }
 
 

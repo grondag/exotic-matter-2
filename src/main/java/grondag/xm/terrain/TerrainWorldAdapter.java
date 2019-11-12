@@ -28,10 +28,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ExtendedBlockView;
-import net.minecraft.world.LightType;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 
 /**
  * Caches expensive world state lookups until next prepare() call. For
@@ -43,7 +41,7 @@ import net.minecraft.world.biome.Biome;
  * reinstate usage or remove
  */
 @API(status = INTERNAL)
-public class TerrainWorldAdapter implements ExtendedBlockView {
+public class TerrainWorldAdapter implements BlockView {
     protected World world;
 
     @SuppressWarnings("serial")
@@ -188,15 +186,5 @@ public class TerrainWorldAdapter implements ExtendedBlockView {
     @Override
     public FluidState getFluidState(BlockPos pos) {
         return world.getFluidState(pos);
-    }
-
-    @Override
-    public Biome getBiome(BlockPos var1) {
-        return world.getBiome(var1);
-    }
-
-    @Override
-    public int getLightLevel(LightType var1, BlockPos var2) {
-        return world.getLightLevel(var1, var2);
     }
 }

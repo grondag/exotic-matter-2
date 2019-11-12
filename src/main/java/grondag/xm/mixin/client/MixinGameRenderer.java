@@ -37,16 +37,17 @@ public abstract class MixinGameRenderer {
         XmRenderHelper.tickDelta(partialTick);
     }
 
-    //    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/FrustumWithOrigin;<init>(Lnet/minecraft/client/render/Frustum;)V"), method = "renderCenter", require = 1)
-    //    private VisibleRegion visibleRegionHook(VisibleRegion original) {
-    //        XmRenderHelper.visibleRegion(original);
-    //        return original;
-    //    }
-    //
-    //    @Inject(method = "renderCenter", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/debug/DebugRenderer;shouldRender()Z"), cancellable = false, require = 1)
-    //    void blockHighlightHook(float tickDelta, long nanos, CallbackInfo ci) {
-    //        if (blockOutlineEnabled && false) {
-    //            PlacementPreviewRenderer.renderPreview(tickDelta);
-    //        }
-    //    }
+    //TODO: capture class_4604 in WorldRenderer as the new VisibleRegion
+//    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/FrustumWithOrigin;<init>(Lnet/minecraft/client/render/Frustum;)V"), method = "renderCenter", require = 1)
+//    private VisibleRegion visibleRegionHook(VisibleRegion original) {
+//        XmRenderHelper.visibleRegion(original);
+//        return original;
+//    }
+//
+//    @Inject(method = "renderCenter", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/debug/DebugRenderer;shouldRender()Z"), cancellable = false, require = 1)
+//    void blockHighlightHook(float tickDelta, long nanos, CallbackInfo ci) {
+//        if (blockOutlineEnabled && false) {
+//            PlacementPreviewRenderer.renderPreview(tickDelta);
+//        }
+//    }
 }

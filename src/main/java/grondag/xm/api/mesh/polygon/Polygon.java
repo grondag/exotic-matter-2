@@ -23,7 +23,7 @@ import grondag.xm.Xm;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.block.BlockRenderLayer;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -340,7 +340,7 @@ public interface Polygon {
 
     boolean lockUV(int layerIndex);
 
-    BlockRenderLayer blendMode(int layerIndex);
+    BlendMode blendMode(int layerIndex);
 
     boolean emissive(int layerIndex);
 

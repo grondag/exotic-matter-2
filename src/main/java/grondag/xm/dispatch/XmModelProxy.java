@@ -44,7 +44,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.ExtendedBlockView;
+import net.minecraft.world.BlockRenderView;
 
 @API(status = INTERNAL)
 @Environment(EnvType.CLIENT)
@@ -61,7 +61,7 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
     }
 
     @Override
-    public void emitBlockQuads(ExtendedBlockView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         final MutableModelState modelState = XmBlockState.modelState(state, blockView, pos, true);
         if (modelState != null) {
             XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
@@ -89,7 +89,7 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
     }
 
     @Override
-    public BakedModel bake(ModelLoader var1, Function<Identifier, Sprite> var2, ModelBakeSettings var3) {
+    public BakedModel bake(ModelLoader var1, Function<Identifier, Sprite> var2, ModelBakeSettings var3, Identifier modelId) {
         return this;
     }
 }

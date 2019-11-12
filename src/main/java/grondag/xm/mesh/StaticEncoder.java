@@ -24,7 +24,7 @@ import grondag.fermion.intstream.IntStream;
 import grondag.fermion.varia.IndexedInterner;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.block.BlockRenderLayer;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
 @API(status = INTERNAL)
 class StaticEncoder {
@@ -187,22 +187,22 @@ class StaticEncoder {
     }
 
     @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.EnumElement<BlockRenderLayer>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<BlockRenderLayer>[]) new BitPacker32<?>.EnumElement<?>[3];
+    private static final BitPacker32<StaticEncoder>.EnumElement<BlendMode>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<BlendMode>[]) new BitPacker32<?>.EnumElement<?>[3];
 
     static {
-        RENDER_LAYER[0] = BITPACKER.createEnumElement(BlockRenderLayer.class);
-        RENDER_LAYER[1] = BITPACKER.createEnumElement(BlockRenderLayer.class);
-        RENDER_LAYER[2] = BITPACKER.createEnumElement(BlockRenderLayer.class);
+        RENDER_LAYER[0] = BITPACKER.createEnumElement(BlendMode.class);
+        RENDER_LAYER[1] = BITPACKER.createEnumElement(BlendMode.class);
+        RENDER_LAYER[2] = BITPACKER.createEnumElement(BlendMode.class);
 
         assert BITPACKER.bitLength() <= 32;
         assert BITPACKER_2.bitLength() <= 32;
     }
 
-    public static BlockRenderLayer getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {
+    public static BlendMode getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {
         return RENDER_LAYER[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
     }
 
-    public static void setRenderLayer(IntStream stream, int baseAddress, int layerIndex, BlockRenderLayer layer) {
+    public static void setRenderLayer(IntStream stream, int baseAddress, int layerIndex, BlendMode layer) {
         final int bits = stream.get(baseAddress + BIT_OFFSET);
         stream.set(baseAddress + BIT_OFFSET, RENDER_LAYER[layerIndex].setValue(layer, bits));
     }

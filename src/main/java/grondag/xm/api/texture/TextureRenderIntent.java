@@ -19,7 +19,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import net.minecraft.block.BlockRenderLayer;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
 /**
  * Describes if/how this texture can be rendered in alpha or cutout modes. Used
@@ -69,8 +69,8 @@ public enum TextureRenderIntent {
         canRenderAsBaseInCutoutLayer = flexible;
     }
 
-    public boolean isCompatibleWith(BlockRenderLayer renderLayer) {
-        switch (renderLayer) {
+    public boolean isCompatibleWith(BlendMode blendMode) {
+        switch (blendMode) {
         case CUTOUT:
             return false;
 
