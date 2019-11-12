@@ -155,7 +155,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
         private final int dimensionID;
 
         private PlayerData(ServerPlayerEntity player) {
-            this.domainID = DomainManager.instance().getActiveDomain(player).getId();
+            this.domainID = DomainManager.instance().getActiveDomain(player).getAssignedNumber();
             this.dimensionID = player.dimension.getRawId();
         }
     }
