@@ -27,18 +27,18 @@ import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface TextureSetRegistry {
-    static TextureSetRegistry instance() {
-        return TextureSetRegistryImpl.INSTANCE;
-    }
+	static TextureSetRegistry instance() {
+		return TextureSetRegistryImpl.INSTANCE;
+	}
 
-    /**
-     * Will always be associated with index 0.
-     */
-    Identifier NONE_ID = new Identifier(Xm.MODID, "none");
+	/**
+	 * Will always be associated with index 0.
+	 */
+	Identifier NONE_ID = new Identifier(Xm.MODID, "none");
 
-    TextureSet get(Identifier id);
+	TextureSet get(Identifier id);
 
-    TextureSet get(int index);
+	TextureSet get(int index);
 
-    void forEach(Consumer<TextureSet> consumer);
+	void forEach(Consumer<TextureSet> consumer);
 }

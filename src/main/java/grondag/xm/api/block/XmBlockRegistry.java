@@ -31,39 +31,39 @@ import net.minecraft.item.ItemStack;
 
 @API(status = EXPERIMENTAL)
 public class XmBlockRegistry {
-    private XmBlockRegistry() {}
+	private XmBlockRegistry() {}
 
-    public static void addBlockStates(
-            Block block,
-            Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap,
-                    Function<ItemStack, MutableModelState> itemModelFunction)
-    {
+	public static void addBlockStates(
+			Block block,
+			Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap,
+					Function<ItemStack, MutableModelState> itemModelFunction)
+	{
 
-        XmRegistryImpl.register(block, modelFunctionMap, itemModelFunction);
-    }
+		XmRegistryImpl.register(block, modelFunctionMap, itemModelFunction);
+	}
 
-    public static void addBlockStates(
-            Block block,
-            Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap) {
+	public static void addBlockStates(
+			Block block,
+			Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap) {
 
-        XmRegistryImpl.register(block, modelFunctionMap, DEFAULT_ITEM_MODEL_FUNCTION);
-    }
+		XmRegistryImpl.register(block, modelFunctionMap, DEFAULT_ITEM_MODEL_FUNCTION);
+	}
 
-    public static <F extends ModelStateFunction<?>> void addBlock(Block block, F modelFunction) {
-        addBlockStates(block, (BlockState bs) -> modelFunction);
-    }
+	public static <F extends ModelStateFunction<?>> void addBlock(Block block, F modelFunction) {
+		addBlockStates(block, (BlockState bs) -> modelFunction);
+	}
 
-    public static <F extends ModelStateFunction<?>> void addBlock(Block block, F blockModelFunction, Function<ItemStack, MutableModelState> itemModelFunction) {
-        addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
-    }
+	public static <F extends ModelStateFunction<?>> void addBlock(Block block, F blockModelFunction, Function<ItemStack, MutableModelState> itemModelFunction) {
+		addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
+	}
 
-    public static final Function<ItemStack, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION  = s -> {
-        if (s.getItem() instanceof BlockItem) {
-            final BlockItem item = (BlockItem) s.getItem();
-            final XmBlockState xmState = XmBlockState.get(item);
-            if (xmState != null)
-                return xmState.defaultModelState();
-        }
-        return null;
-    };
+	public static final Function<ItemStack, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION  = s -> {
+		if (s.getItem() instanceof BlockItem) {
+			final BlockItem item = (BlockItem) s.getItem();
+			final XmBlockState xmState = XmBlockState.get(item);
+			if (xmState != null)
+				return xmState.defaultModelState();
+		}
+		return null;
+	};
 }

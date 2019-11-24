@@ -25,27 +25,27 @@ import grondag.xm.api.mesh.polygon.Polygon;
 
 @API(status = INTERNAL)
 class ReadOnlyMeshImpl extends AbstractXmMesh implements ReadOnlyMesh {
-    void load(WritableMeshImpl streamIn, int formatFlags) {
-        prepare(IntStreams.claim(streamIn.stream.capacity()));
+	void load(WritableMeshImpl streamIn, int formatFlags) {
+		prepare(IntStreams.claim(streamIn.stream.capacity()));
 
-        if (!streamIn.isEmpty()) {
-            final Polygon reader = streamIn.reader();
-            reader.origin();
-            do {
-                appendCopy(reader, formatFlags);
-            } while (reader.next());
-        }
+		if (!streamIn.isEmpty()) {
+			final Polygon reader = streamIn.reader();
+			reader.origin();
+			do {
+				appendCopy(reader, formatFlags);
+			} while (reader.next());
+		}
 
-        stream.compact();
-    }
+		stream.compact();
+	}
 
-    @Override
-    protected void returnToPool() {
-        XmMeshesImpl.release(this);
-    }
+	@Override
+	protected void returnToPool() {
+		XmMeshesImpl.release(this);
+	}
 
-    @Override
-    public Polygon threadSafeReader() {
-        return threadSafeReaderImpl();
-    }
+	@Override
+	public Polygon threadSafeReader() {
+		return threadSafeReaderImpl();
+	}
 }

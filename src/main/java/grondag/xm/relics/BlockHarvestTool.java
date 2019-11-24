@@ -21,16 +21,16 @@ import org.apiguardian.api.API.Status;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public enum BlockHarvestTool {
-    ANY(null), PICK("pickaxe"), AXE("axe"), SHOVEL("shovel");
+	ANY(null), PICK("pickaxe"), AXE("axe"), SHOVEL("shovel");
 
-    /**
-     * String MC uses to compare test for this tool type. Null means any tool can
-     * harvest.
-     */
+	/**
+	 * String MC uses to compare test for this tool type. Null means any tool can
+	 * harvest.
+	 */
 
-    public final String toolString;
+	public final String toolString;
 
-    private BlockHarvestTool(String toolString) {
-        this.toolString = toolString;
-    }
+	private BlockHarvestTool(String toolString) {
+		this.toolString = toolString;
+	}
 }

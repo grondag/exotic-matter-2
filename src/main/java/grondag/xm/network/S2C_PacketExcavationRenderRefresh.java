@@ -41,62 +41,62 @@ import net.minecraft.util.math.BlockPos;
  */
 @API(status = INTERNAL)
 public abstract class S2C_PacketExcavationRenderRefresh {
-    private S2C_PacketExcavationRenderRefresh() {
-    }
+	private S2C_PacketExcavationRenderRefresh() {
+	}
 
-    public static final Identifier ID = new Identifier(Xm.MODID, "exrr");
+	public static final Identifier ID = new Identifier(Xm.MODID, "exrr");
 
-    public static Packet<?> toPacket(Collection<ExcavationRenderEntry> entries) {
-        final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
+	public static Packet<?> toPacket(Collection<ExcavationRenderEntry> entries) {
+		final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
 
-        pBuff.writeInt(entries.size());
-        for (final ExcavationRenderEntry r : entries) {
-            pBuff.writeInt(r.id);
-            pBuff.writeLong(r.aabb().minPos().asLong());
-            pBuff.writeLong(r.aabb().maxPos().asLong());
-            pBuff.writeBoolean(r.task.isExchange());
-            final BlockPos[] positions = r.renderPositions();
-            pBuff.writeInt(positions == null ? 0 : positions.length);
-            if (positions != null) {
-                if (XmConfig.logExcavationRenderTracking) {
-                    Xm.LOG.info("id %d Refresh toBytes position count = %d", r.id, positions == null ? 0 : positions.length);
-                }
+		pBuff.writeInt(entries.size());
+		for (final ExcavationRenderEntry r : entries) {
+			pBuff.writeInt(r.id);
+			pBuff.writeLong(r.aabb().minPos().asLong());
+			pBuff.writeLong(r.aabb().maxPos().asLong());
+			pBuff.writeBoolean(r.task.isExchange());
+			final BlockPos[] positions = r.renderPositions();
+			pBuff.writeInt(positions == null ? 0 : positions.length);
+			if (positions != null) {
+				if (XmConfig.logExcavationRenderTracking) {
+					Xm.LOG.info("id %d Refresh toBytes position count = %d", r.id, positions == null ? 0 : positions.length);
+				}
 
-                for (final BlockPos pos : positions) {
-                    pBuff.writeLong(pos.asLong());
-                }
-            }
-        }
+				for (final BlockPos pos : positions) {
+					pBuff.writeLong(pos.asLong());
+				}
+			}
+		}
 
-        return ServerSidePacketRegistry.INSTANCE.toPacket(ID, pBuff);
-    }
+		return ServerSidePacketRegistry.INSTANCE.toPacket(ID, pBuff);
+	}
 
-    public static void accept(PacketContext context, PacketByteBuf pBuff) {
-        ExcavationRenderManager.clear();
-        final int count = pBuff.readInt();
-        if (count > 0) {
-            for (int i = 0; i < count; i++) {
-                final int id = pBuff.readInt();
-                final BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
-                final BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
-                final boolean isExchange = pBuff.readBoolean();
-                final int positionCount = pBuff.readInt();
-                BlockPos[] list;
-                if (positionCount == 0) {
-                    list = null;
-                } else {
-                    list = new BlockPos[positionCount];
-                    for (int j = 0; j < positionCount; j++) {
-                        list[j] = BlockPos.fromLong(pBuff.readLong());
-                    }
+	public static void accept(PacketContext context, PacketByteBuf pBuff) {
+		ExcavationRenderManager.clear();
+		final int count = pBuff.readInt();
+		if (count > 0) {
+			for (int i = 0; i < count; i++) {
+				final int id = pBuff.readInt();
+				final BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
+				final BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
+				final boolean isExchange = pBuff.readBoolean();
+				final int positionCount = pBuff.readInt();
+				BlockPos[] list;
+				if (positionCount == 0) {
+					list = null;
+				} else {
+					list = new BlockPos[positionCount];
+					for (int j = 0; j < positionCount; j++) {
+						list[j] = BlockPos.fromLong(pBuff.readLong());
+					}
 
-                }
+				}
 
-                if (XmConfig.logExcavationRenderTracking) {
-                    Xm.LOG.info("id %d Refresh toBytes position count = %d", id, list == null ? 0 : list.length);
-                }
-                ExcavationRenderManager.addOrUpdate(new ExcavationRenderer(id, new IntegerBox(minPos, maxPos).toAABB(), isExchange, list));
-            }
-        }
-    }
+				if (XmConfig.logExcavationRenderTracking) {
+					Xm.LOG.info("id %d Refresh toBytes position count = %d", id, list == null ? 0 : list.length);
+				}
+				ExcavationRenderManager.addOrUpdate(new ExcavationRenderer(id, new IntegerBox(minPos, maxPos).toAABB(), isExchange, list));
+			}
+		}
+	}
 }

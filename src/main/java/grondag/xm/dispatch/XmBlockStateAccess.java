@@ -26,9 +26,9 @@ import grondag.xm.api.modelstate.ModelStateFunction;
 
 @API(status = INTERNAL)
 public interface XmBlockStateAccess {
-    void xm_modelStateFunc(ModelStateFunction<?> func);
+	void xm_modelStateFunc(ModelStateFunction<?> func);
 
-    ModelStateFunction<?> xm_modelStateFunc();
+	ModelStateFunction<?> xm_modelStateFunc();
 
-    @Nullable XmBlockState xm_toXmBlockState();
+	@Nullable XmBlockState xm_toXmBlockState();
 }

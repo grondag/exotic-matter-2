@@ -28,84 +28,84 @@ import net.minecraft.world.BlockView;
 
 @API(status = INTERNAL)
 public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> implements TerrainModelState.Mutable {
-    public static final ModelStateFactoryImpl<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> FACTORY = new ModelStateFactoryImpl<>(TerrainModelStateImpl::new);
+	public static final ModelStateFactoryImpl<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> FACTORY = new ModelStateFactoryImpl<>(TerrainModelStateImpl::new);
 
-    private long flowBits;
-    private int glowBits;
+	private long flowBits;
+	private int glowBits;
 
-    @Override
-    protected int intSize() {
-        return super.intSize() + 3;
-    }
+	@Override
+	protected int intSize() {
+		return super.intSize() + 3;
+	}
 
-    public void doRefreshFromWorld(XmBlockState xmState, BlockView world, BlockPos pos) {
-        //TODO: restore super state retrieval and move whole thing to external helper
-        //super.doRefreshFromWorld(xmState, world, pos);
+	public void doRefreshFromWorld(XmBlockState xmState, BlockView world, BlockPos pos) {
+		//TODO: restore super state retrieval and move whole thing to external helper
+		//super.doRefreshFromWorld(xmState, world, pos);
 
-        TerrainState.produceBitsFromWorldStatically(xmState.blockState(), world, pos, (t, h) -> {
-            flowBits = t;
-            glowBits = h;
-            return null;
-        });
-    }
+		TerrainState.produceBitsFromWorldStatically(xmState.blockState(), world, pos, (t, h) -> {
+			flowBits = t;
+			glowBits = h;
+			return null;
+		});
+	}
 
-    @Override
-    public long getTerrainStateKey() {
-        return flowBits;
-    }
+	@Override
+	public long getTerrainStateKey() {
+		return flowBits;
+	}
 
-    @Override
-    public int getTerrainHotness() {
-        return glowBits;
-    }
+	@Override
+	public int getTerrainHotness() {
+		return glowBits;
+	}
 
-    @Override
-    public TerrainModelState.Mutable setTerrainStateKey(long terrainStateKey) {
-        flowBits = terrainStateKey;
-        return this;
-    }
+	@Override
+	public TerrainModelState.Mutable setTerrainStateKey(long terrainStateKey) {
+		flowBits = terrainStateKey;
+		return this;
+	}
 
-    @Override
-    public TerrainState getTerrainState() {
-        return new TerrainState(flowBits, glowBits);
-    }
+	@Override
+	public TerrainState getTerrainState() {
+		return new TerrainState(flowBits, glowBits);
+	}
 
-    @Override
-    public TerrainModelState.Mutable setTerrainState(TerrainState flowState) {
-        flowBits = flowState.getStateKey();
-        glowBits = flowState.getHotness();
-        invalidateHashCode();
-        return this;
-    }
+	@Override
+	public TerrainModelState.Mutable setTerrainState(TerrainState flowState) {
+		flowBits = flowState.getStateKey();
+		glowBits = flowState.getHotness();
+		invalidateHashCode();
+		return this;
+	}
 
-    @Override
-    public TerrainModelState.Mutable geometricState() {
-        final TerrainModelStateImpl result = FACTORY.claimInner(primitive);
-        result.flowBits = flowBits;
-        return result;
-    }
+	@Override
+	public TerrainModelState.Mutable geometricState() {
+		final TerrainModelStateImpl result = FACTORY.claimInner(primitive);
+		result.flowBits = flowBits;
+		return result;
+	}
 
-    @Override
-    public void fromBytes(PacketByteBuf pBuff) {
-        super.fromBytes(pBuff);
-        flowBits = pBuff.readLong();
-        glowBits = pBuff.readVarInt();
-    }
+	@Override
+	public void fromBytes(PacketByteBuf pBuff) {
+		super.fromBytes(pBuff);
+		flowBits = pBuff.readLong();
+		glowBits = pBuff.readVarInt();
+	}
 
-    @Override
-    public void toBytes(PacketByteBuf pBuff) {
-        super.toBytes(pBuff);
-        pBuff.writeLong(flowBits);
-        pBuff.writeVarInt(glowBits);
-    }
+	@Override
+	public void toBytes(PacketByteBuf pBuff) {
+		super.toBytes(pBuff);
+		pBuff.writeLong(flowBits);
+		pBuff.writeVarInt(glowBits);
+	}
 
-    @Override
-    public ModelStateFactoryImpl<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> factoryImpl() {
-        return FACTORY;
-    }
+	@Override
+	public ModelStateFactoryImpl<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> factoryImpl() {
+		return FACTORY;
+	}
 
-    @Override
-    protected int maxSurfaces() {
-        return 4;
-    }
+	@Override
+	protected int maxSurfaces() {
+		return 4;
+	}
 }

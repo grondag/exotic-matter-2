@@ -26,14 +26,14 @@ import grondag.xm.api.modelstate.ModelState;
 @API(status = INTERNAL)
 public class XmDispatcher extends KeyInterningCache<ModelState> {
 
-    public static final XmDispatcher INSTANCE = new XmDispatcher(0xFFFF);
+	public static final XmDispatcher INSTANCE = new XmDispatcher(0xFFFF);
 
-    public XmDispatcher(int maxSize) {
-        super(k -> k.toImmutable(), maxSize);
-    }
+	public XmDispatcher(int maxSize) {
+		super(k -> k.toImmutable(), maxSize);
+	}
 
-    @Override
-    public ModelState get(ModelState key) {
-        return super.get(key);
-    }
+	@Override
+	public ModelState get(ModelState key) {
+		return super.get(key);
+	}
 }

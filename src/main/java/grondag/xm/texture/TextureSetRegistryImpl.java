@@ -32,51 +32,51 @@ import net.minecraft.util.registry.Registry;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class TextureSetRegistryImpl implements TextureSetRegistry {
-    public static final TextureSetImpl DEFAULT_TEXTURE_SET;
+	public static final TextureSetImpl DEFAULT_TEXTURE_SET;
 
-    private static final MutableRegistry<TextureSetImpl> REGISTRY;
+	private static final MutableRegistry<TextureSetImpl> REGISTRY;
 
-    public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
+	public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
 
-    public static TextureSet noTexture() {
-        return INSTANCE.get(0);
-    }
+	public static TextureSet noTexture() {
+		return INSTANCE.get(0);
+	}
 
-    @Override
-    public TextureSetImpl get(Identifier id) {
-        return REGISTRY.get(id);
-    }
+	@Override
+	public TextureSetImpl get(Identifier id) {
+		return REGISTRY.get(id);
+	}
 
-    @Override
-    public TextureSetImpl get(int index) {
-        return index < 0 ? DEFAULT_TEXTURE_SET : REGISTRY.get(index);
-    }
+	@Override
+	public TextureSetImpl get(int index) {
+		return index < 0 ? DEFAULT_TEXTURE_SET : REGISTRY.get(index);
+	}
 
-    public int indexOf(TextureSetImpl set) {
-        return REGISTRY.getRawId(set);
-    }
+	public int indexOf(TextureSetImpl set) {
+		return REGISTRY.getRawId(set);
+	}
 
-    @Override
-    public void forEach(Consumer<TextureSet> consumer) {
-        REGISTRY.forEach(consumer);
-    }
+	@Override
+	public void forEach(Consumer<TextureSet> consumer) {
+		REGISTRY.forEach(consumer);
+	}
 
-    public boolean contains(Identifier id) {
-        return REGISTRY != null && REGISTRY.getIds().contains(id);
-    }
+	public boolean contains(Identifier id) {
+		return REGISTRY != null && REGISTRY.getIds().contains(id);
+	}
 
-    static {
-        REGISTRY = (MutableRegistry<TextureSetImpl>) Registry.REGISTRIES.add(Xm.id("texture_sets"),
-                (MutableRegistry<?>) new DefaultedRegistry(NONE_ID.toString()));
+	static {
+		REGISTRY = (MutableRegistry<TextureSetImpl>) Registry.REGISTRIES.add(Xm.id("texture_sets"),
+				(MutableRegistry<?>) new DefaultedRegistry(NONE_ID.toString()));
 
-        DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)
-                .scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
-                .renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
+		DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)
+				.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
+				.renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
 
-        DEFAULT_TEXTURE_SET.use();
-    }
+		DEFAULT_TEXTURE_SET.use();
+	}
 
-    void add(TextureSetImpl set) {
-        REGISTRY.add(set.id, set);
-    }
+	void add(TextureSetImpl set) {
+		REGISTRY.add(set.id, set);
+	}
 }

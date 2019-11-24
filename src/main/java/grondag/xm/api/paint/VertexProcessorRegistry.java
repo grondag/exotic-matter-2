@@ -25,18 +25,18 @@ import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface VertexProcessorRegistry {
-    VertexProcessorRegistry INSTANCE = VertexProcessorRegistryImpl.INSTANCE;
+	VertexProcessorRegistry INSTANCE = VertexProcessorRegistryImpl.INSTANCE;
 
-    /**
-     * Will always be associated with index 0.
-     */
-    Identifier NONE_ID = new Identifier(Xm.MODID, "none");
+	/**
+	 * Will always be associated with index 0.
+	 */
+	Identifier NONE_ID = new Identifier(Xm.MODID, "none");
 
-    VertexProcessor get(Identifier id);
+	VertexProcessor get(Identifier id);
 
-    VertexProcessor get(int index);
+	VertexProcessor get(int index);
 
-    VertexProcessor add(Identifier id, VertexProcessor set);
+	VertexProcessor add(Identifier id, VertexProcessor set);
 
-    boolean containsId(Identifier id);
+	boolean containsId(Identifier id);
 }

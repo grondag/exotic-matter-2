@@ -24,27 +24,27 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public class CornerJoinFaceSelector {
-    public final Direction face;
+	public final Direction face;
 
-    public final int faceCount;
-    public final CornerJoinFaceStateImpl[] faceJoins;
-    public final int[] joinIndex = new int[48];
+	public final int faceCount;
+	public final CornerJoinFaceStateImpl[] faceJoins;
+	public final int[] joinIndex = new int[48];
 
-    public CornerJoinFaceSelector(Direction face, SimpleJoinStateImpl baseJoinState) {
-        this.face = face;
-        faceJoins = CornerJoinFaceStateImpl.find(face, baseJoinState).subStates();
-        faceCount = faceJoins.length;
+	public CornerJoinFaceSelector(Direction face, SimpleJoinStateImpl baseJoinState) {
+		this.face = face;
+		faceJoins = CornerJoinFaceStateImpl.find(face, baseJoinState).subStates();
+		faceCount = faceJoins.length;
 
-        for (int i = 0; i < faceCount; i++) {
-            joinIndex[faceJoins[i].ordinal()] = i;
-        }
-    }
+		for (int i = 0; i < faceCount; i++) {
+			joinIndex[faceJoins[i].ordinal()] = i;
+		}
+	}
 
-    public <V> int getIndexFromNeighbors(BlockNeighbors tests) {
-        return joinIndex[CornerJoinFaceStateImpl.find(face, tests).ordinal()];
-    }
+	public <V> int getIndexFromNeighbors(BlockNeighbors tests) {
+		return joinIndex[CornerJoinFaceStateImpl.find(face, tests).ordinal()];
+	}
 
-    public CornerJoinFaceStateImpl getFaceJoinFromIndex(int index) {
-        return faceJoins[index];
-    }
+	public CornerJoinFaceStateImpl getFaceJoinFromIndex(int index) {
+		return faceJoins[index];
+	}
 }

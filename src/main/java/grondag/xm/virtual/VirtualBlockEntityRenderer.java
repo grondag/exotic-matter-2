@@ -36,9 +36,8 @@ public class VirtualBlockEntityRenderer extends BlockEntityRenderer<VirtualBlock
 
 	@Override
 	public void render(VirtualBlockEntityWithRenderer be, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
-		if (!be.isVirtual() || !((VirtualBlockEntity) be).isVisible()) {
+		if (!be.isVirtual() || !((VirtualBlockEntity) be).isVisible())
 			return;
-		}
 
 		// TODO: actually render - use 1.12 SuperBlockTESR as starting point
 	}

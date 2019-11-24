@@ -43,97 +43,97 @@ import net.minecraft.util.math.Vec3i;
  */
 @API(status = EXPERIMENTAL)
 public enum CubeRotation implements StringIdentifiable {
-    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH),
-    DOWN_WEST(Direction.DOWN, Direction.WEST),
-    DOWN_NORTH(Direction.DOWN, Direction.NORTH),
-    DOWN_EAST(Direction.DOWN, Direction.EAST),
-    UP_NORTH(Direction.UP, Direction.NORTH),
-    UP_EAST(Direction.UP, Direction.EAST),
-    UP_SOUTH(Direction.UP, Direction.SOUTH),
-    UP_WEST(Direction.UP, Direction.WEST),
-    NORTH_EAST(Direction.NORTH, Direction.EAST),
-    NORTH_WEST(Direction.NORTH, Direction.WEST),
-    SOUTH_EAST(Direction.SOUTH, Direction.EAST),
-    SOUTH_WEST(Direction.SOUTH, Direction.WEST),
-    SOUTH_DOWN(Direction.SOUTH, Direction.DOWN),
-    WEST_DOWN(Direction.WEST, Direction.DOWN),
-    NORTH_DOWN(Direction.NORTH, Direction.DOWN),
-    EAST_DOWN(Direction.EAST, Direction.DOWN),
-    NORTH_UP(Direction.NORTH, Direction.UP),
-    EAST_UP(Direction.EAST, Direction.UP),
-    SOUTH_UP(Direction.SOUTH, Direction.UP),
-    WEST_UP(Direction.WEST, Direction.UP),
-    EAST_NORTH(Direction.EAST, Direction.NORTH),
-    WEST_NORTH(Direction.WEST, Direction.NORTH),
-    EAST_SOUTH(Direction.EAST, Direction.SOUTH),
-    WEST_SOUTH(Direction.WEST, Direction.SOUTH);
+	DOWN_SOUTH(Direction.DOWN, Direction.SOUTH),
+	DOWN_WEST(Direction.DOWN, Direction.WEST),
+	DOWN_NORTH(Direction.DOWN, Direction.NORTH),
+	DOWN_EAST(Direction.DOWN, Direction.EAST),
+	UP_NORTH(Direction.UP, Direction.NORTH),
+	UP_EAST(Direction.UP, Direction.EAST),
+	UP_SOUTH(Direction.UP, Direction.SOUTH),
+	UP_WEST(Direction.UP, Direction.WEST),
+	NORTH_EAST(Direction.NORTH, Direction.EAST),
+	NORTH_WEST(Direction.NORTH, Direction.WEST),
+	SOUTH_EAST(Direction.SOUTH, Direction.EAST),
+	SOUTH_WEST(Direction.SOUTH, Direction.WEST),
+	SOUTH_DOWN(Direction.SOUTH, Direction.DOWN),
+	WEST_DOWN(Direction.WEST, Direction.DOWN),
+	NORTH_DOWN(Direction.NORTH, Direction.DOWN),
+	EAST_DOWN(Direction.EAST, Direction.DOWN),
+	NORTH_UP(Direction.NORTH, Direction.UP),
+	EAST_UP(Direction.EAST, Direction.UP),
+	SOUTH_UP(Direction.SOUTH, Direction.UP),
+	WEST_UP(Direction.WEST, Direction.UP),
+	EAST_NORTH(Direction.EAST, Direction.NORTH),
+	WEST_NORTH(Direction.WEST, Direction.NORTH),
+	EAST_SOUTH(Direction.EAST, Direction.SOUTH),
+	WEST_SOUTH(Direction.WEST, Direction.SOUTH);
 
-    public final Direction bottom;
-    public final Direction back;
-    public final String name;
+	public final Direction bottom;
+	public final Direction back;
+	public final String name;
 
-    public final Vec3i vector;
+	public final Vec3i vector;
 
-    /**
-     * Ordinal sequence that includes all faces, corner and far corners. Used to
-     * index them in a mixed array.
-     */
-    @API(status = INTERNAL)
-    public final int superOrdinal;
+	/**
+	 * Ordinal sequence that includes all faces, corner and far corners. Used to
+	 * index them in a mixed array.
+	 */
+	@API(status = INTERNAL)
+	public final int superOrdinal;
 
-    @API(status = INTERNAL)
-    public final int superOrdinalBit;
+	@API(status = INTERNAL)
+	public final int superOrdinalBit;
 
-    /**
-     * Will be null if not a horizontal edge.
-     */
-    @Nullable
-    public final HorizontalEdge horizontalEdge;
+	/**
+	 * Will be null if not a horizontal edge.
+	 */
+	@Nullable
+	public final HorizontalEdge horizontalEdge;
 
-    private CubeRotation(Direction bottom, Direction back) {
-        name = name().toLowerCase();
-        this.bottom = bottom;
-        this.back = back;
-        superOrdinal = 6 + ordinal();
-        superOrdinalBit = 1 << superOrdinal;
+	private CubeRotation(Direction bottom, Direction back) {
+		name = name().toLowerCase();
+		this.bottom = bottom;
+		this.back = back;
+		superOrdinal = 6 + ordinal();
+		superOrdinalBit = 1 << superOrdinal;
 
-        final Vec3i v1 = bottom.getVector();
-        final Vec3i v2 = back.getVector();
-        vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
+		final Vec3i v1 = bottom.getVector();
+		final Vec3i v2 = back.getVector();
+		vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
 
-        if (bottom.getAxis() == Axis.Y || back.getAxis() == Axis.Y) {
-            horizontalEdge = null;
-        } else {
-            horizontalEdge = HorizontalEdge.find(HorizontalFace.find(bottom), HorizontalFace.find(back));
-        }
-    }
+		if (bottom.getAxis() == Axis.Y || back.getAxis() == Axis.Y) {
+			horizontalEdge = null;
+		} else {
+			horizontalEdge = HorizontalEdge.find(HorizontalFace.find(bottom), HorizontalFace.find(back));
+		}
+	}
 
-    public static final int COUNT = CubeRotationHelper.COUNT;
+	public static final int COUNT = CubeRotationHelper.COUNT;
 
-    /**
-     * Will be null if the inputs do not specify an edge.
-     */
-    @Nullable
-    public static CubeRotation find(Direction bottom, Direction back) {
-        return CubeRotationHelper.find(bottom, back);
-    }
+	/**
+	 * Will be null if the inputs do not specify an edge.
+	 */
+	@Nullable
+	public static CubeRotation find(Direction bottom, Direction back) {
+		return CubeRotationHelper.find(bottom, back);
+	}
 
-    public static final CubeRotation fromOrdinal(int ordinal) {
-        return CubeRotationHelper.fromOrdinal(ordinal);
-    }
+	public static final CubeRotation fromOrdinal(int ordinal) {
+		return CubeRotationHelper.fromOrdinal(ordinal);
+	}
 
-    public static void forEach(Consumer<CubeRotation> consumer) {
-        CubeRotationHelper.forEach(consumer);
-    }
+	public static void forEach(Consumer<CubeRotation> consumer) {
+		CubeRotationHelper.forEach(consumer);
+	}
 
-    @Override
-    public String asString() {
-        return name;
-    }
+	@Override
+	public String asString() {
+		return name;
+	}
 
-    public CubeRotation rotate(BlockRotation rotation) {
-        final Direction newBack = rotation.rotate(back);
-        final Direction newBottom = rotation.rotate(bottom);
-        return find(newBottom, newBack);
-    }
+	public CubeRotation rotate(BlockRotation rotation) {
+		final Direction newBack = rotation.rotate(back);
+		final Direction newBottom = rotation.rotate(bottom);
+		return find(newBottom, newBack);
+	}
 }

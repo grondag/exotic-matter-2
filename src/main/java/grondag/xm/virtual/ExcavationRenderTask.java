@@ -27,19 +27,19 @@ import net.minecraft.world.World;
 @API(status = INTERNAL)
 public interface ExcavationRenderTask {
 
-    /**
-     * Called when task is complete or canceled at the given block position
-     * @param consumer
-     */
-    void addCompletionListener(Consumer<BlockPos> consumer);
+	/**
+	 * Called when task is complete or canceled at the given block position
+	 * @param consumer
+	 */
+	void addCompletionListener(Consumer<BlockPos> consumer);
 
-    boolean isComplete();
+	boolean isComplete();
 
-    boolean isExchange();
+	boolean isExchange();
 
-    void forEachPosition(Consumer<BlockPos> consumer);
+	void forEachPosition(Consumer<BlockPos> consumer);
 
-    World world();
+	World world();
 
-    boolean visibleTo(PlayerEntity player);
+	boolean visibleTo(PlayerEntity player);
 }

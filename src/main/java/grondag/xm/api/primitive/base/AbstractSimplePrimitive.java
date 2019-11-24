@@ -30,11 +30,11 @@ import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public abstract class AbstractSimplePrimitive extends AbstractPrimitive<PrimitiveState, MutablePrimitiveState> implements SimplePrimitive {
-    protected AbstractSimplePrimitive(Identifier id, int stateFlags, BaseModelStateFactory<PrimitiveState, MutablePrimitiveState> factory, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
-        super(id, stateFlags, factory, surfaceFunc);
-    }
+	protected AbstractSimplePrimitive(Identifier id, int stateFlags, BaseModelStateFactory<PrimitiveState, MutablePrimitiveState> factory, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
+		super(id, stateFlags, factory, surfaceFunc);
+	}
 
-    protected AbstractSimplePrimitive(String idString, int stateFlags, BaseModelStateFactory<PrimitiveState, MutablePrimitiveState> factory, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
-        super(idString, stateFlags, factory, surfaceFunc);
-    }
+	protected AbstractSimplePrimitive(String idString, int stateFlags, BaseModelStateFactory<PrimitiveState, MutablePrimitiveState> factory, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
+		super(idString, stateFlags, factory, surfaceFunc);
+	}
 }

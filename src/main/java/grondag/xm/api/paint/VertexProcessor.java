@@ -36,8 +36,8 @@ import grondag.xm.paint.VertexProcessorRegistryImpl;
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface VertexProcessor {
-    @SuppressWarnings("rawtypes")
-    void process(MutablePolygon result, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex);
+	@SuppressWarnings("rawtypes")
+	void process(MutablePolygon result, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex);
 
-    VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorRegistryImpl.DEFAULT_VERTEX_PROCESSOR;
+	VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorRegistryImpl.DEFAULT_VERTEX_PROCESSOR;
 }

@@ -38,63 +38,63 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class CubeWithCorner  {
-    public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-            .add("front", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .build();
+	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
+			.add("front", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.build();
 
-    public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
-    public static final XmSurface SURFACE_BACK = SURFACES.get(1);
+	public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
+	public static final XmSurface SURFACE_BACK = SURFACES.get(1);
 
-    static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
-        final PolyTransform transform = PolyTransform.get(modelState);
+	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
+		final PolyTransform transform = PolyTransform.get(modelState);
 
-        final WritableMesh mesh = XmMeshes.claimWritable();
-        final MutablePolygon writer = mesh.writer();
-        writer.colorAll(0, 0xFFFFFFFF);
-        writer.lockUV(0, true);
-        writer.rotation(0, TextureOrientation.IDENTITY);
-        writer.sprite(0, "");
-        writer.saveDefaults();
+		final WritableMesh mesh = XmMeshes.claimWritable();
+		final MutablePolygon writer = mesh.writer();
+		writer.colorAll(0, 0xFFFFFFFF);
+		writer.lockUV(0, true);
+		writer.rotation(0, TextureOrientation.IDENTITY);
+		writer.sprite(0, "");
+		writer.saveDefaults();
 
-        writer.surface(SURFACE_BACK);
-        writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_BACK);
+		writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_FRONT);
-        writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_FRONT);
+		writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_FRONT);
-        writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_FRONT);
+		writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_BACK);
-        writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_BACK);
+		writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_FRONT);
-        writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_FRONT);
+		writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_BACK);
-        writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_BACK);
+		writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
+		transform.accept(writer);
+		writer.append();
 
-        return mesh.releaseToReader();
-    };
+		return mesh.releaseToReader();
+	};
 
 
-    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-            .surfaceList(SURFACES)
-            .polyFactory(POLY_FACTORY)
-            .orientationType(OrientationType.CORNER)
-            .build(Xm.idString("cube_corner"));
+	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+			.surfaceList(SURFACES)
+			.polyFactory(POLY_FACTORY)
+			.orientationType(OrientationType.CORNER)
+			.build(Xm.idString("cube_corner"));
 
 }

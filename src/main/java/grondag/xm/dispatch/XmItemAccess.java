@@ -26,13 +26,13 @@ import net.minecraft.item.ItemStack;
 
 @API(status = INTERNAL)
 public interface XmItemAccess {
-    @SuppressWarnings("unchecked")
-    static <T extends MutableModelState> T getModelState(ItemStack stack) {
-        final Function<ItemStack, MutableModelState> func = ((XmItemAccess)stack.getItem()).xm_modelStateFunc();
-        return func == null ? null : (T) func.apply(stack);
-    }
+	@SuppressWarnings("unchecked")
+	static <T extends MutableModelState> T getModelState(ItemStack stack) {
+		final Function<ItemStack, MutableModelState> func = ((XmItemAccess)stack.getItem()).xm_modelStateFunc();
+		return func == null ? null : (T) func.apply(stack);
+	}
 
-    Function<ItemStack, MutableModelState> xm_modelStateFunc();
+	Function<ItemStack, MutableModelState> xm_modelStateFunc();
 
-    void xm_modelStateFunc(Function<ItemStack, MutableModelState> func);
+	void xm_modelStateFunc(Function<ItemStack, MutableModelState> func);
 }

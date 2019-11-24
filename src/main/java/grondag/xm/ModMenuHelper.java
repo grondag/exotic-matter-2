@@ -25,14 +25,14 @@ import net.minecraft.client.gui.screen.Screen;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuHelper implements ModMenuApi {
-    @Override
-    public Function<Screen, ? extends Screen> getConfigScreenFactory() {
-        return ConfigScreen::getScreen;
-    }
+	@Override
+	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
+		return ConfigScreen::getScreen;
+	}
 
-    @Override
-    public String getModId() {
-        return Xm.MODID;
-    }
+	@Override
+	public String getModId() {
+		return Xm.MODID;
+	}
 
 }

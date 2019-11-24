@@ -31,21 +31,21 @@ import net.minecraft.util.registry.Registry;
 @SuppressWarnings("unchecked")
 public class VertexProcessorRegistryImpl extends DefaultedRegistry<VertexProcessor> implements VertexProcessorRegistry {
 
-    public static final VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorDefault.INSTANCE;
+	public static final VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorDefault.INSTANCE;
 
-    public static final VertexProcessorRegistryImpl INSTANCE;
+	public static final VertexProcessorRegistryImpl INSTANCE;
 
-    static {
-        INSTANCE = (VertexProcessorRegistryImpl) Registry.REGISTRIES.add(Xm.id("vertex_proc"),
-                (MutableRegistry<?>) new VertexProcessorRegistryImpl(NONE_ID.toString()));
-    }
+	static {
+		INSTANCE = (VertexProcessorRegistryImpl) Registry.REGISTRIES.add(Xm.id("vertex_proc"),
+				(MutableRegistry<?>) new VertexProcessorRegistryImpl(NONE_ID.toString()));
+	}
 
-    VertexProcessorRegistryImpl(String defaultIdString) {
-        super(defaultIdString);
-    }
+	VertexProcessorRegistryImpl(String defaultIdString) {
+		super(defaultIdString);
+	}
 
-    @Override
-    public VertexProcessor add(Identifier id, VertexProcessor processor) {
-        return super.add(id, processor);
-    }
+	@Override
+	public VertexProcessor add(Identifier id, VertexProcessor processor) {
+		return super.add(id, processor);
+	}
 }

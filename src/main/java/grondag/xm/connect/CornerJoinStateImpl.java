@@ -24,31 +24,31 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 class CornerJoinStateImpl implements CornerJoinState {
-    private final int index;
+	private final int index;
 
-    /** join state considering only direct neighbors */
-    public final SimpleJoinStateImpl simpleJoin;
+	/** join state considering only direct neighbors */
+	public final SimpleJoinStateImpl simpleJoin;
 
-    private final byte[] faceJoinIndex;
+	private final byte[] faceJoinIndex;
 
-    CornerJoinStateImpl(int index, SimpleJoinStateImpl simpleJoin, byte[] faceJoinIndex) {
-        this.index = index;
-        this.simpleJoin = simpleJoin;
-        this.faceJoinIndex = faceJoinIndex;
-    }
+	CornerJoinStateImpl(int index, SimpleJoinStateImpl simpleJoin, byte[] faceJoinIndex) {
+		this.index = index;
+		this.simpleJoin = simpleJoin;
+		this.faceJoinIndex = faceJoinIndex;
+	}
 
-    @Override
-    public SimpleJoinStateImpl simpleJoin() {
-        return simpleJoin;
-    }
+	@Override
+	public SimpleJoinStateImpl simpleJoin() {
+		return simpleJoin;
+	}
 
-    @Override
-    public int ordinal() {
-        return index;
-    }
+	@Override
+	public int ordinal() {
+		return index;
+	}
 
-    @Override
-    public CornerJoinFaceStateImpl faceState(Direction face) {
-        return CornerJoinFaceStateImpl.fromOrdinal(faceJoinIndex[face.ordinal()]);
-    }
+	@Override
+	public CornerJoinFaceStateImpl faceState(Direction face) {
+		return CornerJoinFaceStateImpl.fromOrdinal(faceJoinIndex[face.ordinal()]);
+	}
 }

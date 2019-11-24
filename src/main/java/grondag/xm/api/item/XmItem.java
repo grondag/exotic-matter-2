@@ -27,9 +27,9 @@ import net.minecraft.item.ItemStack;
 
 @API(status = EXPERIMENTAL)
 public class XmItem {
-    private XmItem() {}
+	private XmItem() {}
 
-    public static @Nullable <T extends MutableModelState> T modelState(ItemStack stack) {
-        return XmItemAccess.getModelState(stack);
-    }
+	public static @Nullable <T extends MutableModelState> T modelState(ItemStack stack) {
+		return XmItemAccess.getModelState(stack);
+	}
 }

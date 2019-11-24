@@ -28,5 +28,5 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL)
 @FunctionalInterface
 public interface ITerrainBitConsumer<T> {
-    T apply(long terrainBits, int hotnessBits);
+	T apply(long terrainBits, int hotnessBits);
 }

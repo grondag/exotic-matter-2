@@ -30,25 +30,25 @@ import grondag.xm.primitive.SimplePrimitiveBuilderImpl;
 
 @API(status = EXPERIMENTAL)
 public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutablePrimitiveState>{
-    static Builder builder() {
-        return SimplePrimitiveBuilderImpl.builder();
-    }
+	static Builder builder() {
+		return SimplePrimitiveBuilderImpl.builder();
+	}
 
-    public interface Builder {
+	public interface Builder {
 
-        SimplePrimitive build(String idString);
+		SimplePrimitive build(String idString);
 
-        Builder surfaceList(XmSurfaceList list);
+		Builder surfaceList(XmSurfaceList list);
 
-        Builder primitiveBitCount(int bitCount);
+		Builder primitiveBitCount(int bitCount);
 
-        Builder orientationType(OrientationType orientationType);
+		Builder orientationType(OrientationType orientationType);
 
-        Builder polyFactory(Function<PrimitiveState, XmMesh> polyFactory);
+		Builder polyFactory(Function<PrimitiveState, XmMesh> polyFactory);
 
-        Builder simpleJoin(boolean needsJoin);
+		Builder simpleJoin(boolean needsJoin);
 
-        Builder cornerJoin(boolean needsJoin);
+		Builder cornerJoin(boolean needsJoin);
 
-    }
+	}
 }

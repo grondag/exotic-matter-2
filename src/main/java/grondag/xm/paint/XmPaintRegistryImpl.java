@@ -43,76 +43,76 @@ import net.minecraft.util.Identifier;
  */
 @API(status = INTERNAL)
 public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousResourceReloadListener {
-    public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
+	public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
 
-    private final Identifier id = Xm.id("paint_registry");
+	private final Identifier id = Xm.id("paint_registry");
 
-    private XmPaintRegistryImpl() {
-        // see header notes
-        register(Xm.id("default"), XmPaintImpl.finder().find());
-    }
+	private XmPaintRegistryImpl() {
+		// see header notes
+		register(Xm.id("default"), XmPaintImpl.finder().find());
+	}
 
-    private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
+	private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
 
-    @Override
-    public synchronized XmPaint register(Identifier id, XmPaint paint) {
-        final XmPaintImpl.Value prior = paints.get(id);
-        if(prior != null) {
-            prior.copyFrom((XmPaintImpl) paint);
-            return prior;
-        } else {
-            paints.put(id, (XmPaintImpl.Value) paint);
-            return paint;
-        }
-    }
+	@Override
+	public synchronized XmPaint register(Identifier id, XmPaint paint) {
+		final XmPaintImpl.Value prior = paints.get(id);
+		if(prior != null) {
+			prior.copyFrom((XmPaintImpl) paint);
+			return prior;
+		} else {
+			paints.put(id, (XmPaintImpl.Value) paint);
+			return paint;
+		}
+	}
 
-    public static Value byIndex(int index) {
-        return XmPaintImpl.byIndex(index);
-    }
+	public static Value byIndex(int index) {
+		return XmPaintImpl.byIndex(index);
+	}
 
-    @Override
-    public XmPaintImpl.Value get(int paintIndex) {
-        return XmPaintImpl.byIndex(paintIndex);
-    }
+	@Override
+	public XmPaintImpl.Value get(int paintIndex) {
+		return XmPaintImpl.byIndex(paintIndex);
+	}
 
-    @Override
-    public XmPaintImpl.Value get(Identifier paintId) {
-        XmPaintImpl.Value result = paints.get(paintId);
-        if(result == null) {
-            result = XmPaintImpl.finder().find();
-            result.placeholder = true;
-            register(paintId, result);
-        }
-        return result;
-    }
+	@Override
+	public XmPaintImpl.Value get(Identifier paintId) {
+		XmPaintImpl.Value result = paints.get(paintId);
+		if(result == null) {
+			result = XmPaintImpl.finder().find();
+			result.placeholder = true;
+			register(paintId, result);
+		}
+		return result;
+	}
 
-    @Override
-    public void apply(ResourceManager resourceManager) {
-        for( final Entry<Identifier, Value> e : paints.entrySet()) {
-            final Value newVal = loadPaint(e.getKey(), resourceManager, e.getValue().placeholder);
-            if(newVal != null) {
-                e.getValue().copyFrom(newVal);
-            }
-        }
-    }
+	@Override
+	public void apply(ResourceManager resourceManager) {
+		for( final Entry<Identifier, Value> e : paints.entrySet()) {
+			final Value newVal = loadPaint(e.getKey(), resourceManager, e.getValue().placeholder);
+			if(newVal != null) {
+				e.getValue().copyFrom(newVal);
+			}
+		}
+	}
 
-    @Override
-    public Identifier getFabricId() {
-        return id;
-    }
+	@Override
+	public Identifier getFabricId() {
+		return id;
+	}
 
-    private XmPaintImpl.Value loadPaint(Identifier idIn, ResourceManager rm, boolean loadExpected) {
-        final Identifier id = new Identifier(idIn.getNamespace(), "paints/" + idIn.getPath() + ".json");
+	private XmPaintImpl.Value loadPaint(Identifier idIn, ResourceManager rm, boolean loadExpected) {
+		final Identifier id = new Identifier(idIn.getNamespace(), "paints/" + idIn.getPath() + ".json");
 
-        XmPaintImpl.Value result = null;
-        try(Resource res = rm.getResource(id)) {
-            result = PaintDeserializer.deserialize(new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8));
-        } catch (final Exception e) {
-            if (loadExpected) {
-                Xm.LOG.info("Unable to load paint " + idIn.toString() + " due to exception " + e.toString());
-            }
-        }
+		XmPaintImpl.Value result = null;
+		try(Resource res = rm.getResource(id)) {
+			result = PaintDeserializer.deserialize(new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8));
+		} catch (final Exception e) {
+			if (loadExpected) {
+				Xm.LOG.info("Unable to load paint " + idIn.toString() + " due to exception " + e.toString());
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 }

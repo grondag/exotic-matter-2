@@ -26,29 +26,29 @@ import grondag.xm.api.primitive.surface.XmSurfaceListBuilder;
 
 @API(status = INTERNAL)
 public class XmSurfaceListBuilderImpl implements XmSurfaceListBuilder {
-    private final SimpleUnorderedArrayList<XmSurfaceImpl> surfaces = new SimpleUnorderedArrayList<>();
+	private final SimpleUnorderedArrayList<XmSurfaceImpl> surfaces = new SimpleUnorderedArrayList<>();
 
-    XmSurfaceListBuilderImpl() {
-    }
+	XmSurfaceListBuilderImpl() {
+	}
 
-    @Override
-    public XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, int flags) {
-        surfaces.add(new XmSurfaceImpl(surfaces.size(), nameKey, topology, flags));
-        return this;
-    }
+	@Override
+	public XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, int flags) {
+		surfaces.add(new XmSurfaceImpl(surfaces.size(), nameKey, topology, flags));
+		return this;
+	}
 
-    @Override
-    public XmSurfaceList build() {
-        final int size = surfaces.size();
-        final XmSurfaceImpl[] output = new XmSurfaceImpl[size];
-        for (int i = 0; i < size; i++) {
-            output[i] = surfaces.get(i);
-        }
-        surfaces.clear();
-        return new XmSurfaceListImpl(output);
-    }
+	@Override
+	public XmSurfaceList build() {
+		final int size = surfaces.size();
+		final XmSurfaceImpl[] output = new XmSurfaceImpl[size];
+		for (int i = 0; i < size; i++) {
+			output[i] = surfaces.get(i);
+		}
+		surfaces.clear();
+		return new XmSurfaceListImpl(output);
+	}
 
-    public static XmSurfaceListBuilder builder() {
-        return new XmSurfaceListBuilderImpl();
-    }
+	public static XmSurfaceListBuilder builder() {
+		return new XmSurfaceListBuilderImpl();
+	}
 }

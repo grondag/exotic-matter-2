@@ -29,25 +29,25 @@ import net.minecraft.world.BlockView;
 
 @API(status = STABLE)
 public interface BlockTestContext<T extends ModelState> {
-    BlockView world();
+	BlockView world();
 
-    BlockPos fromPos();
+	BlockPos fromPos();
 
-    BlockState fromBlockState();
+	BlockState fromBlockState();
 
-    @Nullable
-    BlockEntity fromBlockEntity();
+	@Nullable
+	BlockEntity fromBlockEntity();
 
-    @Nullable
-    T fromModelState();
+	@Nullable
+	T fromModelState();
 
-    BlockPos toPos();
+	BlockPos toPos();
 
-    BlockState toBlockState();
+	BlockState toBlockState();
 
-    @Nullable
-    BlockEntity toBlockEntity();
+	@Nullable
+	BlockEntity toBlockEntity();
 
-    @Nullable
-    T toModelState();
+	@Nullable
+	T toModelState();
 }

@@ -42,149 +42,149 @@ import net.minecraft.world.World;
  */
 @API(status = INTERNAL)
 public class TerrainWorldAdapter implements BlockView {
-    protected World world;
+	protected World world;
 
-    @SuppressWarnings("serial")
+	@SuppressWarnings("serial")
 
-    public static class FastMap<V> extends Long2ObjectOpenHashMap<V> {
-        /**
-         * DOES NOT SUPPORT ZERO-VALUED KEYS
-         * <p>
-         *
-         * Only computes key 1x and scans arrays 1x for a modest savings. Here because
-         * block updates are the on-tick performance bottleneck for lava sim.
-         */
-        private V computeFast(final long k, final Supplier<V> v) {
-            final long[] key = this.key;
-            int pos = (int) it.unimi.dsi.fastutil.HashCommon.mix(k) & mask;
-            long curr = key[pos];
+	public static class FastMap<V> extends Long2ObjectOpenHashMap<V> {
+		/**
+		 * DOES NOT SUPPORT ZERO-VALUED KEYS
+		 * <p>
+		 *
+		 * Only computes key 1x and scans arrays 1x for a modest savings. Here because
+		 * block updates are the on-tick performance bottleneck for lava sim.
+		 */
+		private V computeFast(final long k, final Supplier<V> v) {
+			final long[] key = this.key;
+			int pos = (int) it.unimi.dsi.fastutil.HashCommon.mix(k) & mask;
+			long curr = key[pos];
 
-            // The starting point.
-            if (curr != 0) {
-                if (curr == k)
-                    return value[pos];
-                while (!((curr = key[pos = (pos + 1) & mask]) == (0)))
-                    if (curr == k)
-                        return value[pos];
-            }
+			// The starting point.
+			if (curr != 0) {
+				if (curr == k)
+					return value[pos];
+				while (!((curr = key[pos = (pos + 1) & mask]) == (0)))
+					if (curr == k)
+						return value[pos];
+			}
 
-            final V result = v.get();
-            key[pos] = k;
-            value[pos] = result;
-            if (size++ >= maxFill) {
-                rehash(arraySize(size + 1, f));
-            }
-            return result;
-        }
-    }
+			final V result = v.get();
+			key[pos] = k;
+			value[pos] = result;
+			if (size++ >= maxFill) {
+				rehash(arraySize(size + 1, f));
+			}
+			return result;
+		}
+	}
 
-    protected FastMap<BlockState> blockStates = new FastMap<>();
-    protected FastMap<TerrainState> terrainStates = new FastMap<>();
+	protected FastMap<BlockState> blockStates = new FastMap<>();
+	protected FastMap<TerrainState> terrainStates = new FastMap<>();
 
-    public TerrainWorldAdapter() {
+	public TerrainWorldAdapter() {
 
-    }
+	}
 
-    public TerrainWorldAdapter(World world) {
-        prepare(world);
-    }
+	public TerrainWorldAdapter(World world) {
+		prepare(world);
+	}
 
-    public void prepare(World world) {
-        this.world = world;
-        blockStates.clear();
-        terrainStates.clear();
-    }
+	public void prepare(World world) {
+		this.world = world;
+		blockStates.clear();
+		terrainStates.clear();
+	}
 
-    public World wrapped() {
-        return world;
-    }
+	public World wrapped() {
+		return world;
+	}
 
-    @Override
-    public BlockState getBlockState(final BlockPos pos) {
-        final long packedBlockPos = PackedBlockPos.pack(pos);
-        return blockStates.computeFast(packedBlockPos, () -> world.getBlockState(pos));
-    }
+	@Override
+	public BlockState getBlockState(final BlockPos pos) {
+		final long packedBlockPos = PackedBlockPos.pack(pos);
+		return blockStates.computeFast(packedBlockPos, () -> world.getBlockState(pos));
+	}
 
-    private final BlockPos.Mutable getBlockPos = new BlockPos.Mutable();
+	private final BlockPos.Mutable getBlockPos = new BlockPos.Mutable();
 
-    public BlockState getBlockState(long packedBlockPos) {
-        return blockStates.computeFast(packedBlockPos, () -> {
-            PackedBlockPos.unpackTo(packedBlockPos, getBlockPos);
-            return world.getBlockState(getBlockPos);
-        });
-    }
+	public BlockState getBlockState(long packedBlockPos) {
+		return blockStates.computeFast(packedBlockPos, () -> {
+			PackedBlockPos.unpackTo(packedBlockPos, getBlockPos);
+			return world.getBlockState(getBlockPos);
+		});
+	}
 
-    private final BlockPos.Mutable getTerrainPos = new BlockPos.Mutable();
+	private final BlockPos.Mutable getTerrainPos = new BlockPos.Mutable();
 
-    public TerrainState terrainState(BlockState state, long packedBlockPos) {
-        return terrainStates.computeFast(packedBlockPos, () -> {
-            PackedBlockPos.unpackTo(packedBlockPos, getTerrainPos);
-            return TerrainState.terrainState(this, state, getTerrainPos);
-        });
-    }
+	public TerrainState terrainState(BlockState state, long packedBlockPos) {
+		return terrainStates.computeFast(packedBlockPos, () -> {
+			PackedBlockPos.unpackTo(packedBlockPos, getTerrainPos);
+			return TerrainState.terrainState(this, state, getTerrainPos);
+		});
+	}
 
-    public TerrainState terrainState(BlockState state, BlockPos pos) {
-        return terrainStates.computeFast(PackedBlockPos.pack(pos), () -> {
-            return TerrainState.terrainState(this, state, pos);
-        });
-    }
+	public TerrainState terrainState(BlockState state, BlockPos pos) {
+		return terrainStates.computeFast(PackedBlockPos.pack(pos), () -> {
+			return TerrainState.terrainState(this, state, pos);
+		});
+	}
 
-    public TerrainState terrainState(long packedBlockPos) {
-        return terrainState(getBlockState(packedBlockPos), packedBlockPos);
-    }
+	public TerrainState terrainState(long packedBlockPos) {
+		return terrainState(getBlockState(packedBlockPos), packedBlockPos);
+	}
 
-    /**
-     * Note this doesn't invalidate terrain state cache. Need to do that directly
-     * before using anything that needs it if changing terrain surface.
-     */
-    public void setBlockState(long packedBlockPos, BlockState newState) {
-        setBlockState(packedBlockPos, newState, true);
-    }
+	/**
+	 * Note this doesn't invalidate terrain state cache. Need to do that directly
+	 * before using anything that needs it if changing terrain surface.
+	 */
+	public void setBlockState(long packedBlockPos, BlockState newState) {
+		setBlockState(packedBlockPos, newState, true);
+	}
 
-    /**
-     * Use when you want to control
-     * {@link #onBlockStateChange(long, BlockState, BlockState)} call back.
-     */
-    protected void setBlockState(long packedBlockPos, BlockState newState, boolean callback) {
-        final BlockState oldState = getBlockState(packedBlockPos);
+	/**
+	 * Use when you want to control
+	 * {@link #onBlockStateChange(long, BlockState, BlockState)} call back.
+	 */
+	protected void setBlockState(long packedBlockPos, BlockState newState, boolean callback) {
+		final BlockState oldState = getBlockState(packedBlockPos);
 
-        if (newState == oldState)
-            return;
+		if (newState == oldState)
+			return;
 
-        blockStates.put(packedBlockPos, newState);
-        applyBlockState(packedBlockPos, oldState, newState);
+		blockStates.put(packedBlockPos, newState);
+		applyBlockState(packedBlockPos, oldState, newState);
 
-        if (callback) {
-            onBlockStateChange(packedBlockPos, oldState, newState);
-        }
-    }
+		if (callback) {
+			onBlockStateChange(packedBlockPos, oldState, newState);
+		}
+	}
 
-    /**
-     * Handles application of block state to world. Override for deferred updates or
-     * use cases where world should not be affected directly.
-     */
-    protected void applyBlockState(long packedBlockPos, BlockState oldState, BlockState newState) {
-        world.setBlockState(PackedBlockPos.unpack(packedBlockPos), newState);
-    }
+	/**
+	 * Handles application of block state to world. Override for deferred updates or
+	 * use cases where world should not be affected directly.
+	 */
+	protected void applyBlockState(long packedBlockPos, BlockState oldState, BlockState newState) {
+		world.setBlockState(PackedBlockPos.unpack(packedBlockPos), newState);
+	}
 
-    /**
-     * Called for all block state changes, even if not a terrain block.
-     */
-    protected void onBlockStateChange(long packedBlockPos, BlockState oldBlockState, BlockState newBlockState) {
+	/**
+	 * Called for all block state changes, even if not a terrain block.
+	 */
+	protected void onBlockStateChange(long packedBlockPos, BlockState oldBlockState, BlockState newBlockState) {
 
-    }
+	}
 
-    public void setBlockState(BlockPos blockPos, BlockState newState) {
-        this.setBlockState(PackedBlockPos.pack(blockPos), newState);
-    }
+	public void setBlockState(BlockPos blockPos, BlockState newState) {
+		this.setBlockState(PackedBlockPos.pack(blockPos), newState);
+	}
 
-    @Override
-    public BlockEntity getBlockEntity(BlockPos pos) {
-        return world.getBlockEntity(pos);
-    }
+	@Override
+	public BlockEntity getBlockEntity(BlockPos pos) {
+		return world.getBlockEntity(pos);
+	}
 
-    @Override
-    public FluidState getFluidState(BlockPos pos) {
-        return world.getFluidState(pos);
-    }
+	@Override
+	public FluidState getFluidState(BlockPos pos) {
+		return world.getFluidState(pos);
+	}
 }

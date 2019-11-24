@@ -28,45 +28,45 @@ import grondag.xm.api.primitive.surface.XmSurface;
 
 @API(status = INTERNAL)
 public class VertexProcessorDefault implements VertexProcessor {
-    private VertexProcessorDefault() {}
-    public final static VertexProcessor INSTANCE = new VertexProcessorDefault();
+	private VertexProcessorDefault() {}
+	public final static VertexProcessor INSTANCE = new VertexProcessorDefault();
 
-    @Override
-    @SuppressWarnings("rawtypes")
-    public final void process(MutablePolygon poly, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        final int color = paint.textureColor(textureIndex);
+	@Override
+	@SuppressWarnings("rawtypes")
+	public final void process(MutablePolygon poly, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+		final int color = paint.textureColor(textureIndex);
 
-        // If surface is a lamp gradient then glow bits are used
-        // to blend the lamp color/brighness with the nominal color/brightness.
-        // This does not apply with the lamp paint layer itself (makes no sense).
-        // (Generally gradient surfaces should not be painted by lamp color)
-        if (surface.isLampGradient()) {
-            @SuppressWarnings("unchecked")
-            final XmSurface lampSurface = modelState.primitive().lampSurface(modelState);
-            if (lampSurface != null) {
-                final XmPaint lampPaint = modelState.paint(lampSurface.ordinal());
-                if(lampPaint != null) {
-                    final int lampColor = lampPaint.textureColor(0);
-                    final int lampBrightness = lampPaint.emissive(0) ? 0xF0 : 0;
+		// If surface is a lamp gradient then glow bits are used
+		// to blend the lamp color/brighness with the nominal color/brightness.
+		// This does not apply with the lamp paint layer itself (makes no sense).
+		// (Generally gradient surfaces should not be painted by lamp color)
+		if (surface.isLampGradient()) {
+			@SuppressWarnings("unchecked")
+			final XmSurface lampSurface = modelState.primitive().lampSurface(modelState);
+			if (lampSurface != null) {
+				final XmPaint lampPaint = modelState.paint(lampSurface.ordinal());
+				if(lampPaint != null) {
+					final int lampColor = lampPaint.textureColor(0);
+					final int lampBrightness = lampPaint.emissive(0) ? 0xF0 : 0;
 
-                    // keep target surface alpha
-                    final int alpha = color & 0xFF000000;
+					// keep target surface alpha
+					final int alpha = color & 0xFF000000;
 
-                    for (int i = 0; i < poly.vertexCount(); i++) {
-                        final float w = poly.glow(i) / 255f;
-                        final int b = Math.round(lampBrightness * w);
-                        final int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
-                        poly.color(i, textureIndex, c | alpha);
-                        poly.glow(i, b);
-                    }
-                }
-            }
-        } else {
-            //normal shaded surface - tint existing colors, usually WHITE to start with
-            for (int i = 0; i < poly.vertexCount(); i++) {
-                final int c = ColorHelper.multiplyColor(color, poly.color(i, textureIndex));
-                poly.color(i, textureIndex, c);
-            }
-        }
-    }
+					for (int i = 0; i < poly.vertexCount(); i++) {
+						final float w = poly.glow(i) / 255f;
+						final int b = Math.round(lampBrightness * w);
+						final int c = ColorHelper.interpolate(color, lampColor, w) & 0xFFFFFF;
+						poly.color(i, textureIndex, c | alpha);
+						poly.glow(i, b);
+					}
+				}
+			}
+		} else {
+			//normal shaded surface - tint existing colors, usually WHITE to start with
+			for (int i = 0; i < poly.vertexCount(); i++) {
+				final int c = ColorHelper.multiplyColor(color, poly.color(i, textureIndex));
+				poly.color(i, textureIndex, c);
+			}
+		}
+	}
 }

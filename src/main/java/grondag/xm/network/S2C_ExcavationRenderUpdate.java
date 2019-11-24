@@ -40,97 +40,97 @@ import net.minecraft.util.math.BlockPos;
  */
 @API(status = INTERNAL)
 public abstract class S2C_ExcavationRenderUpdate {
-    private S2C_ExcavationRenderUpdate() {
-    }
+	private S2C_ExcavationRenderUpdate() {
+	}
 
-    public static final Identifier ID = new Identifier(Xm.MODID, "exru");
+	public static final Identifier ID = new Identifier(Xm.MODID, "exru");
 
-    /**
-     * Use this for new and changed.
-     */
-    public static Packet<?> toPacket(ExcavationRenderEntry entry) {
-        final IntegerBox aabb = entry.aabb();
-        final BlockPos[] positions = entry.renderPositions();
-        if (XmConfig.logExcavationRenderTracking) {
-            Xm.LOG.info("id %d New update packet position count = %d, aabb=%s", entry.id, positions == null ? 0 : positions.length,
-                    aabb == null ? "null" : aabb.toString());
-        }
-        return toPacket(entry.id, aabb, entry.task.isExchange(), positions);
-    }
+	/**
+	 * Use this for new and changed.
+	 */
+	public static Packet<?> toPacket(ExcavationRenderEntry entry) {
+		final IntegerBox aabb = entry.aabb();
+		final BlockPos[] positions = entry.renderPositions();
+		if (XmConfig.logExcavationRenderTracking) {
+			Xm.LOG.info("id %d New update packet position count = %d, aabb=%s", entry.id, positions == null ? 0 : positions.length,
+					aabb == null ? "null" : aabb.toString());
+		}
+		return toPacket(entry.id, aabb, entry.task.isExchange(), positions);
+	}
 
-    /**
-     *
-     * Use this for deleted.
-     */
-    public static Packet<?> toPacket(int deletedId) {
-        return toPacket(deletedId, null, false, null);
-    }
+	/**
+	 *
+	 * Use this for deleted.
+	 */
+	public static Packet<?> toPacket(int deletedId) {
+		return toPacket(deletedId, null, false, null);
+	}
 
-    private static Packet<?> toPacket(int id, IntegerBox aabb, boolean isExchange, BlockPos[] positions) {
-        final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
-        if (XmConfig.logExcavationRenderTracking) {
-            Xm.LOG.info("id %d Update toBytes position count = %d", id, positions == null ? 0 : positions.length);
-        }
+	private static Packet<?> toPacket(int id, IntegerBox aabb, boolean isExchange, BlockPos[] positions) {
+		final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
+		if (XmConfig.logExcavationRenderTracking) {
+			Xm.LOG.info("id %d Update toBytes position count = %d", id, positions == null ? 0 : positions.length);
+		}
 
-        pBuff.writeInt(id);
-        // deletion flag
-        pBuff.writeBoolean(aabb == null);
-        if (aabb != null) {
-            pBuff.writeLong(aabb.minPos().asLong());
-            pBuff.writeLong(aabb.maxPos().asLong());
-            pBuff.writeBoolean(isExchange);
+		pBuff.writeInt(id);
+		// deletion flag
+		pBuff.writeBoolean(aabb == null);
+		if (aabb != null) {
+			pBuff.writeLong(aabb.minPos().asLong());
+			pBuff.writeLong(aabb.maxPos().asLong());
+			pBuff.writeBoolean(isExchange);
 
-            pBuff.writeInt(positions == null ? 0 : positions.length);
-            if (positions != null) {
-                for (final BlockPos pos : positions) {
-                    pBuff.writeLong(pos.asLong());
-                }
-            }
-        }
-        return ServerSidePacketRegistry.INSTANCE.toPacket(ID, pBuff);
-    }
+			pBuff.writeInt(positions == null ? 0 : positions.length);
+			if (positions != null) {
+				for (final BlockPos pos : positions) {
+					pBuff.writeLong(pos.asLong());
+				}
+			}
+		}
+		return ServerSidePacketRegistry.INSTANCE.toPacket(ID, pBuff);
+	}
 
-    public static void accept(PacketContext context, PacketByteBuf pBuff) {
+	public static void accept(PacketContext context, PacketByteBuf pBuff) {
 
-        final int id = pBuff.readInt();
-        final IntegerBox aabb;
-        final BlockPos[] positions;
-        final boolean isExchange;
-        if (pBuff.readBoolean()) {
-            // deletion
-            aabb = null;
-            positions = null;
-            isExchange = false;
-        } else {
-            final BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
-            final BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
-            aabb = new IntegerBox(minPos, maxPos);
-            isExchange = pBuff.readBoolean();
+		final int id = pBuff.readInt();
+		final IntegerBox aabb;
+		final BlockPos[] positions;
+		final boolean isExchange;
+		if (pBuff.readBoolean()) {
+			// deletion
+			aabb = null;
+			positions = null;
+			isExchange = false;
+		} else {
+			final BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
+			final BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
+			aabb = new IntegerBox(minPos, maxPos);
+			isExchange = pBuff.readBoolean();
 
-            final int posCount = pBuff.readInt();
-            if (posCount == 0) {
-                positions = null;
-            } else {
-                positions = new BlockPos[posCount];
-                for (int i = 0; i < posCount; i++) {
-                    positions[i] = BlockPos.fromLong(pBuff.readLong());
-                }
-            }
-        }
+			final int posCount = pBuff.readInt();
+			if (posCount == 0) {
+				positions = null;
+			} else {
+				positions = new BlockPos[posCount];
+				for (int i = 0; i < posCount; i++) {
+					positions[i] = BlockPos.fromLong(pBuff.readLong());
+				}
+			}
+		}
 
-        if (XmConfig.logExcavationRenderTracking) {
-            Xm.LOG.info("id %d Update fromBytes position count = %d", id, positions == null ? 0 : positions.length);
-        }
+		if (XmConfig.logExcavationRenderTracking) {
+			Xm.LOG.info("id %d Update fromBytes position count = %d", id, positions == null ? 0 : positions.length);
+		}
 
-        if (XmConfig.logExcavationRenderTracking) {
-            Xm.LOG.info("id %d Update handler position count = %d, aabb=%s", id, positions == null ? 0 : positions.length,
-                    aabb == null ? "null" : aabb.toString());
-        }
+		if (XmConfig.logExcavationRenderTracking) {
+			Xm.LOG.info("id %d Update handler position count = %d, aabb=%s", id, positions == null ? 0 : positions.length,
+					aabb == null ? "null" : aabb.toString());
+		}
 
-        if (aabb == null) {
-            ExcavationRenderManager.remove(id);
-        } else {
-            ExcavationRenderManager.addOrUpdate(new ExcavationRenderer(id, aabb.toAABB(), isExchange, positions));
-        }
-    }
+		if (aabb == null) {
+			ExcavationRenderManager.remove(id);
+		} else {
+			ExcavationRenderManager.addOrUpdate(new ExcavationRenderer(id, aabb.toAABB(), isExchange, positions));
+		}
+	}
 }

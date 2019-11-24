@@ -26,16 +26,16 @@ import grondag.xm.surface.XmSurfaceListBuilderImpl;
 
 @API(status = EXPERIMENTAL)
 public interface XmSurfaceList {
-    static XmSurfaceListBuilder builder() {
-        return XmSurfaceListBuilderImpl.builder();
-    }
+	static XmSurfaceListBuilder builder() {
+		return XmSurfaceListBuilderImpl.builder();
+	}
 
-    int size();
+	int size();
 
-    XmSurface get(int index);
+	XmSurface get(int index);
 
-    @Nullable
-    XmSurface lamp();
+	@Nullable
+	XmSurface lamp();
 
-    XmSurfaceList ALL = builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+	XmSurfaceList ALL = builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 }

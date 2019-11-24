@@ -24,26 +24,26 @@ import grondag.xm.mesh.CsgMeshBuilderImpl;
 @API(status = Status.EXPERIMENTAL)
 public interface CsgMeshBuilder {
 
-    void push();
+	void push();
 
-    void pop();
+	void pop();
 
-    boolean hasOutputStack();
+	boolean hasOutputStack();
 
-    CsgMesh input();
+	CsgMesh input();
 
-    XmMesh build();
+	XmMesh build();
 
-    MutableMesh buildMutable();
+	MutableMesh buildMutable();
 
-    /** must be the first operation */
-    void union();
+	/** must be the first operation */
+	void union();
 
-    void intersect();
+	void intersect();
 
-    void difference();
+	void difference();
 
-    static CsgMeshBuilder threadLocal() {
-        return CsgMeshBuilderImpl.threadLocal();
-    }
+	static CsgMeshBuilder threadLocal() {
+		return CsgMeshBuilderImpl.threadLocal();
+	}
 }

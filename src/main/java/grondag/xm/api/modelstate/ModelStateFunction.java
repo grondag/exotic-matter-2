@@ -31,7 +31,7 @@ import net.minecraft.world.BlockView;
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface ModelStateFunction<T extends MutableModelState> {
-    @Nullable T apply(BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
+	@Nullable T apply(BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
 
-    ModelStateFunction<?> NULL = (s, w, p, r) -> null;
+	ModelStateFunction<?> NULL = (s, w, p, r) -> null;
 }

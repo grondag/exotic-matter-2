@@ -24,35 +24,35 @@ import grondag.xm.api.primitive.surface.XmSurface;
 
 @API(status = INTERNAL)
 class XmSurfaceImpl implements XmSurface {
-    final int ordinal;
-    final String nameKey;
-    final SurfaceTopology topology;
-    final int flags;
+	final int ordinal;
+	final String nameKey;
+	final SurfaceTopology topology;
+	final int flags;
 
-    XmSurfaceImpl(int ordinal, String nameKey, SurfaceTopology topology, int flags) {
-        this.ordinal = ordinal;
-        this.nameKey = nameKey;
-        this.topology = topology;
-        this.flags = flags;
-    }
+	XmSurfaceImpl(int ordinal, String nameKey, SurfaceTopology topology, int flags) {
+		this.ordinal = ordinal;
+		this.nameKey = nameKey;
+		this.topology = topology;
+		this.flags = flags;
+	}
 
-    @Override
-    public int ordinal() {
-        return ordinal;
-    }
+	@Override
+	public int ordinal() {
+		return ordinal;
+	}
 
-    @Override
-    public String nameKey() {
-        return nameKey;
-    }
+	@Override
+	public String nameKey() {
+		return nameKey;
+	}
 
-    @Override
-    public SurfaceTopology topology() {
-        return topology;
-    }
+	@Override
+	public SurfaceTopology topology() {
+		return topology;
+	}
 
-    @Override
-    public int flags() {
-        return flags;
-    }
+	@Override
+	public int flags() {
+		return flags;
+	}
 }

@@ -32,53 +32,53 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class XmProperties {
-    public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
-    public static final EnumProperty<HorizontalFace> HORIZONTAL_FACE = EnumProperty.of("xm_horiz_face", HorizontalFace.class);
-    public static final EnumProperty<HorizontalEdge> HORIZONTAL_EDGE = EnumProperty.of("xm_horiz_edge", HorizontalEdge.class);
-    public static final DirectionProperty FACE = Properties.FACING;
-    public static final EnumProperty<CubeCorner> CORNER = EnumProperty.of("xm_corner", CubeCorner.class);
-    public static final EnumProperty<CubeEdge> EDGE = EnumProperty.of("xm_edge", CubeEdge.class);
-    public static final EnumProperty<CubeRotation> ROTATION = EnumProperty.of("xm_rotation", CubeRotation.class);
+	public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
+	public static final EnumProperty<HorizontalFace> HORIZONTAL_FACE = EnumProperty.of("xm_horiz_face", HorizontalFace.class);
+	public static final EnumProperty<HorizontalEdge> HORIZONTAL_EDGE = EnumProperty.of("xm_horiz_edge", HorizontalEdge.class);
+	public static final DirectionProperty FACE = Properties.FACING;
+	public static final EnumProperty<CubeCorner> CORNER = EnumProperty.of("xm_corner", CubeCorner.class);
+	public static final EnumProperty<CubeEdge> EDGE = EnumProperty.of("xm_edge", CubeEdge.class);
+	public static final EnumProperty<CubeRotation> ROTATION = EnumProperty.of("xm_rotation", CubeRotation.class);
 
-    public static SimplePrimitiveStateMutator AXIS_MODIFIER = (modelState, blockState) -> {
-        final Direction.Axis axis = blockState.get(AXIS);
-        modelState.orientationIndex(axis.ordinal());
-        return modelState;
-    };
+	public static SimplePrimitiveStateMutator AXIS_MODIFIER = (modelState, blockState) -> {
+		final Direction.Axis axis = blockState.get(AXIS);
+		modelState.orientationIndex(axis.ordinal());
+		return modelState;
+	};
 
-    public static SimplePrimitiveStateMutator HORIZONTAL_FACE_MODIFIER = (modelState, blockState) -> {
-        final HorizontalFace face = blockState.get(HORIZONTAL_FACE);
-        modelState.orientationIndex(face.ordinal());
-        return modelState;
-    };
+	public static SimplePrimitiveStateMutator HORIZONTAL_FACE_MODIFIER = (modelState, blockState) -> {
+		final HorizontalFace face = blockState.get(HORIZONTAL_FACE);
+		modelState.orientationIndex(face.ordinal());
+		return modelState;
+	};
 
-    public static SimplePrimitiveStateMutator HORIZONTAL_EDGE_MODIFIER = (modelState, blockState) -> {
-        final HorizontalEdge edge = blockState.get(HORIZONTAL_EDGE);
-        modelState.orientationIndex(edge.ordinal());
-        return modelState;
-    };
+	public static SimplePrimitiveStateMutator HORIZONTAL_EDGE_MODIFIER = (modelState, blockState) -> {
+		final HorizontalEdge edge = blockState.get(HORIZONTAL_EDGE);
+		modelState.orientationIndex(edge.ordinal());
+		return modelState;
+	};
 
-    public static SimplePrimitiveStateMutator FACE_MODIFIER = (modelState, blockState) -> {
-        final Direction face = blockState.get(FACE);
-        modelState.orientationIndex(face.ordinal());
-        return modelState;
-    };
+	public static SimplePrimitiveStateMutator FACE_MODIFIER = (modelState, blockState) -> {
+		final Direction face = blockState.get(FACE);
+		modelState.orientationIndex(face.ordinal());
+		return modelState;
+	};
 
-    public static SimplePrimitiveStateMutator CORNER_MODIFIER = (modelState, blockState) -> {
-        final CubeCorner corner = blockState.get(CORNER);
-        modelState.orientationIndex(corner.ordinal());
-        return modelState;
-    };
+	public static SimplePrimitiveStateMutator CORNER_MODIFIER = (modelState, blockState) -> {
+		final CubeCorner corner = blockState.get(CORNER);
+		modelState.orientationIndex(corner.ordinal());
+		return modelState;
+	};
 
-    public static SimplePrimitiveStateMutator EDGE_MODIFIER = (modelState, blockState) -> {
-        final CubeEdge edge = blockState.get(EDGE);
-        modelState.orientationIndex(edge.ordinal());
-        return modelState;
-    };
+	public static SimplePrimitiveStateMutator EDGE_MODIFIER = (modelState, blockState) -> {
+		final CubeEdge edge = blockState.get(EDGE);
+		modelState.orientationIndex(edge.ordinal());
+		return modelState;
+	};
 
-    public static SimplePrimitiveStateMutator ROTATION_MODIFIER = (modelState, blockState) -> {
-        final CubeRotation edge = blockState.get(ROTATION);
-        modelState.orientationIndex(edge.ordinal());
-        return modelState;
-    };
+	public static SimplePrimitiveStateMutator ROTATION_MODIFIER = (modelState, blockState) -> {
+		final CubeRotation edge = blockState.get(ROTATION);
+		modelState.orientationIndex(edge.ordinal());
+		return modelState;
+	};
 }

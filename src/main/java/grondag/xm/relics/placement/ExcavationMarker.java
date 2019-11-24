@@ -53,15 +53,13 @@ public class ExcavationMarker extends Item implements PlacementItem {
 		// TODO: logic here is too elaborate for what this item does, and probably
 		// needed by Virtual Block
 
-		if (player == null) {
+		if (player == null)
 			return new TypedActionResult<>(ActionResult.PASS, null);
-		}
 
 		final ItemStack stackIn = player.getStackInHand(hand);
 
-		if (stackIn.isEmpty() || stackIn.getItem() != this) {
+		if (stackIn.isEmpty() || stackIn.getItem() != this)
 			return new TypedActionResult<>(ActionResult.PASS, stackIn);
-		}
 
 		final PlacementResult result = PlacementHandler.doRightClickBlock(player, null, null, null, stackIn, this);
 
@@ -98,14 +96,12 @@ public class ExcavationMarker extends Item implements PlacementItem {
 		final Hand hand = context.getHand();
 		final Direction facing = context.getSide();
 
-		if (playerIn == null) {
+		if (playerIn == null)
 			return ActionResult.FAIL;
-		}
 
 		final ItemStack stackIn = playerIn.getStackInHand(hand);
-		if (stackIn.isEmpty() || stackIn.getItem() != this) {
+		if (stackIn.isEmpty() || stackIn.getItem() != this)
 			return ActionResult.FAIL;
-		}
 
 		final PlacementResult result = PlacementHandler.doRightClickBlock(playerIn, context.getBlockPos(), facing, context.getHitPos(), stackIn, this);
 

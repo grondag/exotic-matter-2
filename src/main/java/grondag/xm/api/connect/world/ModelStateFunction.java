@@ -33,16 +33,16 @@ import net.minecraft.world.BlockView;
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface ModelStateFunction {
-    ModelState get(BlockView world, BlockState blockState, BlockPos pos);
+	ModelState get(BlockView world, BlockState blockState, BlockPos pos);
 
-    /**
-     * Use this as factory for model state block tests that DON'T need to refresh
-     * from world.
-     */
-    ModelStateFunction STATIC = (w, b, p) -> XmBlockState.modelState(b, w, p, false);
-    /**
-     * Use this as factory for model state block tests that DO need to refresh from
-     * world.
-     */
-    ModelStateFunction DYNAMIC = (w, b, p) -> XmBlockState.modelState(b, w, p, true);
+	/**
+	 * Use this as factory for model state block tests that DON'T need to refresh
+	 * from world.
+	 */
+	ModelStateFunction STATIC = (w, b, p) -> XmBlockState.modelState(b, w, p, false);
+	/**
+	 * Use this as factory for model state block tests that DO need to refresh from
+	 * world.
+	 */
+	ModelStateFunction DYNAMIC = (w, b, p) -> XmBlockState.modelState(b, w, p, true);
 }

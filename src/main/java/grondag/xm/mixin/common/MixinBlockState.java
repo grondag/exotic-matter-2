@@ -29,33 +29,33 @@ import net.minecraft.world.BlockView;
 
 @Mixin(BlockState.class)
 public class MixinBlockState implements XmBlockState, XmBlockStateAccess {
-    private ModelStateFunction<?> modelStateFunc = null;
+	private ModelStateFunction<?> modelStateFunc = null;
 
-    @Override
-    public BlockState blockState() {
-        return (BlockState)(Object)this;
-    }
+	@Override
+	public BlockState blockState() {
+		return (BlockState)(Object)this;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends MutableModelState> T modelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
-        final ModelStateFunction<?> func = modelStateFunc;
-        return func == null ? null : (T) func.apply((BlockState)(Object)this, world, pos, refreshFromWorld);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends MutableModelState> T modelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
+		final ModelStateFunction<?> func = modelStateFunc;
+		return func == null ? null : (T) func.apply((BlockState)(Object)this, world, pos, refreshFromWorld);
+	}
 
-    @Override
-    public void xm_modelStateFunc(ModelStateFunction<?> func) {
-        modelStateFunc = func;
-    }
+	@Override
+	public void xm_modelStateFunc(ModelStateFunction<?> func) {
+		modelStateFunc = func;
+	}
 
-    @Override
-    public ModelStateFunction<?> xm_modelStateFunc() {
-        return modelStateFunc;
-    }
+	@Override
+	public ModelStateFunction<?> xm_modelStateFunc() {
+		return modelStateFunc;
+	}
 
-    @Override
-    @Nullable
-    public XmBlockState xm_toXmBlockState() {
-        return modelStateFunc == null ? null : (XmBlockState)this;
-    }
+	@Override
+	@Nullable
+	public XmBlockState xm_toXmBlockState() {
+		return modelStateFunc == null ? null : (XmBlockState)this;
+	}
 }

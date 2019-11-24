@@ -30,34 +30,34 @@ import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
 public interface ModelPrimitiveRegistry {
-    ModelPrimitiveRegistry INSTANCE = ModelPrimitiveRegistryImpl.INSTANCE;
+	ModelPrimitiveRegistry INSTANCE = ModelPrimitiveRegistryImpl.INSTANCE;
 
-    <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> boolean register(ModelPrimitive<R, W> primitive);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> boolean register(ModelPrimitive<R, W> primitive);
 
-    <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(int primitiveIndex);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(int primitiveIndex);
 
-    default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(Identifier primitiveId) {
-        return get(primitiveId.toString());
-    }
+	default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(Identifier primitiveId) {
+		return get(primitiveId.toString());
+	}
 
-    <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(String idString);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(String idString);
 
-    @SuppressWarnings("rawtypes")
-    void forEach(Consumer<ModelPrimitive> consumer);
+	@SuppressWarnings("rawtypes")
+	void forEach(Consumer<ModelPrimitive> consumer);
 
-    int count();
+	int count();
 
-    int indexOf(String idString);
+	int indexOf(String idString);
 
-    default int indexOf(Identifier primitiveId) {
-        return indexOf(primitiveId.toString());
-    }
+	default int indexOf(Identifier primitiveId) {
+		return indexOf(primitiveId.toString());
+	}
 
-    default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> int indexOf(ModelPrimitive<R, W> primitive) {
-        return indexOf(primitive.id());
-    }
+	default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> int indexOf(ModelPrimitive<R, W> primitive) {
+		return indexOf(primitive.id());
+	}
 
-    <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag);
 
-    <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf);
 }

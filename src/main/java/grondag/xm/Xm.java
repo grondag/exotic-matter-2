@@ -31,23 +31,23 @@ import net.minecraft.util.Identifier;
 @API(status = INTERNAL)
 public class Xm implements ModInitializer {
 
-    @Override
-    public void onInitialize() {
-        XmConfig.init();
-        ServerStartCallback.EVENT.register(Simulator::start);
-        ServerTickCallback.EVENT.register(s -> Simulator.instance().tick(s));
-        Packets.initializeCommon();
-    }
+	@Override
+	public void onInitialize() {
+		XmConfig.init();
+		ServerStartCallback.EVENT.register(Simulator::start);
+		ServerTickCallback.EVENT.register(s -> Simulator.instance().tick(s));
+		Packets.initializeCommon();
+	}
 
-    public static Logger LOG = LogManager.getLogger("Exotic Matter");
+	public static Logger LOG = LogManager.getLogger("Exotic Matter");
 
-    public static final String MODID = "exotic-matter";
+	public static final String MODID = "exotic-matter";
 
-    public static String idString(String path) {
-        return MODID + ":" + path;
-    }
+	public static String idString(String path) {
+		return MODID + ":" + path;
+	}
 
-    public static Identifier id(String path) {
-        return new Identifier(MODID, path);
-    }
+	public static Identifier id(String path) {
+		return new Identifier(MODID, path);
+	}
 }

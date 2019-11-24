@@ -30,68 +30,68 @@ import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public class TextureSetBuilderImpl extends AbstractTextureSet implements TextureSetBuilder {
-    @Override
-    public TextureSetBuilder versionCount(int versionCount) {
-        this.versionCount = versionCount;
-        return this;
-    }
+	@Override
+	public TextureSetBuilder versionCount(int versionCount) {
+		this.versionCount = versionCount;
+		return this;
+	}
 
-    @Override
-    public TextureSetBuilder scale(TextureScale scale) {
-        this.scale = scale;
-        return this;
-    }
+	@Override
+	public TextureSetBuilder scale(TextureScale scale) {
+		this.scale = scale;
+		return this;
+	}
 
-    @Override
-    public TextureSetBuilder layout(TextureLayoutMap layout) {
-        layoutMap = (TextureLayoutMapImpl) layout;
-        return this;
-    }
+	@Override
+	public TextureSetBuilder layout(TextureLayoutMap layout) {
+		layoutMap = (TextureLayoutMapImpl) layout;
+		return this;
+	}
 
-    @Override
-    public TextureSetBuilder transform(TextureTransform rotation) {
-        transform = rotation;
-        return this;
-    }
+	@Override
+	public TextureSetBuilder transform(TextureTransform rotation) {
+		transform = rotation;
+		return this;
+	}
 
-    @Override
-    public TextureSetBuilder renderIntent(TextureRenderIntent renderIntent) {
-        this.renderIntent = renderIntent;
-        return this;
-    }
+	@Override
+	public TextureSetBuilder renderIntent(TextureRenderIntent renderIntent) {
+		this.renderIntent = renderIntent;
+		return this;
+	}
 
-    @Override
-    public TextureSetBuilder groups(TextureGroup... groups) {
-        textureGroupFlags = TextureGroup.makeTextureGroupFlags(groups);
-        return this;
-    }
+	@Override
+	public TextureSetBuilder groups(TextureGroup... groups) {
+		textureGroupFlags = TextureGroup.makeTextureGroupFlags(groups);
+		return this;
+	}
 
-    @Override
-    public TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile) {
-        this.renderNoBorderAsTile = renderNoBorderAsTile;
-        return this;
-    }
+	@Override
+	public TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile) {
+		this.renderNoBorderAsTile = renderNoBorderAsTile;
+		return this;
+	}
 
-    @Override
-    public TextureSetBuilder baseTextureName(String baseTextureName) {
-        rawBaseTextureName = baseTextureName;
-        return this;
-    }
+	@Override
+	public TextureSetBuilder baseTextureName(String baseTextureName) {
+		rawBaseTextureName = baseTextureName;
+		return this;
+	}
 
-    @Override
-    public TextureSetBuilder displayNameToken(String displayNameToken) {
-        this.displayNameToken = displayNameToken;
-        return this;
-    }
+	@Override
+	public TextureSetBuilder displayNameToken(String displayNameToken) {
+		this.displayNameToken = displayNameToken;
+		return this;
+	}
 
-    @Override
-    public TextureSet build(Identifier id) {
-        TextureSetImpl result;
-        if(TextureSetRegistryImpl.INSTANCE.contains(id)) {
-            result = TextureSetRegistryImpl.INSTANCE.get(id);
-        } else {
-            result = new TextureSetImpl(id, this);
-        }
-        return result;
-    }
+	@Override
+	public TextureSet build(Identifier id) {
+		TextureSetImpl result;
+		if(TextureSetRegistryImpl.INSTANCE.contains(id)) {
+			result = TextureSetRegistryImpl.INSTANCE.get(id);
+		} else {
+			result = new TextureSetImpl(id, this);
+		}
+		return result;
+	}
 }

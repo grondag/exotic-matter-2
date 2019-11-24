@@ -27,57 +27,57 @@ import grondag.xm.api.texture.TextureTransform;
 
 @API(status = INTERNAL)
 abstract class AbstractTextureSet {
-    TextureLayoutMapImpl layoutMap = (TextureLayoutMapImpl) TextureLayoutMap.SINGLE;
-    TextureTransform transform = TextureTransform.IDENTITY;
-    TextureScale scale = TextureScale.SINGLE;
-    TextureRenderIntent renderIntent = TextureRenderIntent.BASE_ONLY;
-    int textureGroupFlags = TextureGroup.ALWAYS_HIDDEN.bitFlag;
-    int versionCount = 1;
-    boolean renderNoBorderAsTile = false;
-    String rawBaseTextureName;
-    String displayNameToken;
+	TextureLayoutMapImpl layoutMap = (TextureLayoutMapImpl) TextureLayoutMap.SINGLE;
+	TextureTransform transform = TextureTransform.IDENTITY;
+	TextureScale scale = TextureScale.SINGLE;
+	TextureRenderIntent renderIntent = TextureRenderIntent.BASE_ONLY;
+	int textureGroupFlags = TextureGroup.ALWAYS_HIDDEN.bitFlag;
+	int versionCount = 1;
+	boolean renderNoBorderAsTile = false;
+	String rawBaseTextureName;
+	String displayNameToken;
 
-    protected void copyFrom(AbstractTextureSet template) {
-        layoutMap = template.layoutMap;
-        transform = template.transform;
-        scale = template.scale;
-        renderIntent = template.renderIntent;
-        versionCount = template.versionCount;
-        rawBaseTextureName = template.rawBaseTextureName;
-        renderNoBorderAsTile = template.renderNoBorderAsTile;
-        displayNameToken = template.displayNameToken;
-        textureGroupFlags = template.textureGroupFlags;
-    }
+	protected void copyFrom(AbstractTextureSet template) {
+		layoutMap = template.layoutMap;
+		transform = template.transform;
+		scale = template.scale;
+		renderIntent = template.renderIntent;
+		versionCount = template.versionCount;
+		rawBaseTextureName = template.rawBaseTextureName;
+		renderNoBorderAsTile = template.renderNoBorderAsTile;
+		displayNameToken = template.displayNameToken;
+		textureGroupFlags = template.textureGroupFlags;
+	}
 
-    public TextureLayoutMap map() {
-        return layoutMap;
-    }
+	public TextureLayoutMap map() {
+		return layoutMap;
+	}
 
-    public TextureTransform transform() {
-        return transform;
-    }
+	public TextureTransform transform() {
+		return transform;
+	}
 
-    public TextureScale scale() {
-        return scale;
-    }
+	public TextureScale scale() {
+		return scale;
+	}
 
-    public TextureRenderIntent renderIntent() {
-        return renderIntent;
-    }
+	public TextureRenderIntent renderIntent() {
+		return renderIntent;
+	}
 
-    public int versionCount() {
-        return versionCount;
-    }
+	public int versionCount() {
+		return versionCount;
+	}
 
-    public boolean renderNoBorderAsTile() {
-        return renderNoBorderAsTile;
-    }
+	public boolean renderNoBorderAsTile() {
+		return renderNoBorderAsTile;
+	}
 
-    public String displayNameToken() {
-        return displayNameToken;
-    }
+	public String displayNameToken() {
+		return displayNameToken;
+	}
 
-    public int textureGroupFlags() {
-        return textureGroupFlags;
-    }
+	public int textureGroupFlags() {
+		return textureGroupFlags;
+	}
 }

@@ -252,9 +252,9 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	public R toImmutable() {
-		if(isImmutable) {
+		if(isImmutable)
 			return (R)this;
-		} else {
+		else {
 			final V result = factoryImpl().claimInner((V)this);
 			result.isImmutable = true;
 			return (R)result;
@@ -334,9 +334,8 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	 */
 	@Override
 	public final boolean doShapeAndAppearanceMatch(ModelState other) {
-		if(other.getClass() != this.getClass()) {
+		if(other.getClass() != this.getClass())
 			return false;
-		}
 		return primitive.doesShapeMatch((R)this, (R)other) && doesAppearanceMatch(other);
 	}
 
@@ -499,9 +498,8 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 			final int[] paints = this.paints;
 			final int[] otherPaints = other.paints;
 			for (int i = 0; i < limit; i++) {
-				if (otherPaints[i] != paints[i]) {
+				if (otherPaints[i] != paints[i])
 					return false;
-				}
 			}
 			return true;
 		}
@@ -775,9 +773,8 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 			// if zero then probably requires lookup
 			particleSprite();
 			return particleColorARBG;
-		} else {
+		} else
 			return result;
-		}
 	}
 
 	@Environment(EnvType.CLIENT)

@@ -28,39 +28,39 @@ import net.minecraft.util.PacketByteBuf;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public enum BlockOrientationCorner {
-    DYNAMIC(null), MATCH_CLOSEST(null), UP_NORTH_EAST(CubeCorner.UP_NORTH_EAST), UP_NORTH_WEST(CubeCorner.UP_NORTH_WEST),
-    UP_SOUTH_EAST(CubeCorner.UP_SOUTH_EAST), UP_SOUTH_WEST(CubeCorner.UP_SOUTH_WEST), DOWN_NORTH_EAST(CubeCorner.DOWN_NORTH_EAST),
-    DOWN_NORTH_WEST(CubeCorner.DOWN_NORTH_WEST), DOWN_SOUTH_EAST(CubeCorner.DOWN_SOUTH_EAST), DOWN_SOUTH_WEST(CubeCorner.DOWN_SOUTH_WEST);
+	DYNAMIC(null), MATCH_CLOSEST(null), UP_NORTH_EAST(CubeCorner.UP_NORTH_EAST), UP_NORTH_WEST(CubeCorner.UP_NORTH_WEST),
+	UP_SOUTH_EAST(CubeCorner.UP_SOUTH_EAST), UP_SOUTH_WEST(CubeCorner.UP_SOUTH_WEST), DOWN_NORTH_EAST(CubeCorner.DOWN_NORTH_EAST),
+	DOWN_NORTH_WEST(CubeCorner.DOWN_NORTH_WEST), DOWN_SOUTH_EAST(CubeCorner.DOWN_SOUTH_EAST), DOWN_SOUTH_WEST(CubeCorner.DOWN_SOUTH_WEST);
 
-    public final CubeCorner corner;
+	public final CubeCorner corner;
 
-    private static final String TAG_NAME = NBTDictionary.claim("blockOrientCorner");
+	private static final String TAG_NAME = NBTDictionary.claim("blockOrientCorner");
 
-    private BlockOrientationCorner(CubeCorner corner) {
-        this.corner = corner;
-    }
+	private BlockOrientationCorner(CubeCorner corner) {
+		this.corner = corner;
+	}
 
-    public BlockOrientationCorner deserializeNBT(CompoundTag tag) {
-        return Useful.safeEnumFromTag(tag, TAG_NAME, this);
-    }
+	public BlockOrientationCorner deserializeNBT(CompoundTag tag) {
+		return Useful.safeEnumFromTag(tag, TAG_NAME, this);
+	}
 
-    public void serializeNBT(CompoundTag tag) {
-        Useful.saveEnumToTag(tag, TAG_NAME, this);
-    }
+	public void serializeNBT(CompoundTag tag) {
+		Useful.saveEnumToTag(tag, TAG_NAME, this);
+	}
 
-    public BlockOrientationCorner fromBytes(PacketByteBuf pBuff) {
-        return pBuff.readEnumConstant(BlockOrientationCorner.class);
-    }
+	public BlockOrientationCorner fromBytes(PacketByteBuf pBuff) {
+		return pBuff.readEnumConstant(BlockOrientationCorner.class);
+	}
 
-    public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeEnumConstant(this);
-    }
+	public void toBytes(PacketByteBuf pBuff) {
+		pBuff.writeEnumConstant(this);
+	}
 
-    public String localizedName() {
-        return I18n.translate("placement.orientation.corner." + name().toLowerCase());
-    }
+	public String localizedName() {
+		return I18n.translate("placement.orientation.corner." + name().toLowerCase());
+	}
 
-    public boolean isFixed() {
-        return !(this == DYNAMIC || this == MATCH_CLOSEST);
-    }
+	public boolean isFixed() {
+		return !(this == DYNAMIC || this == MATCH_CLOSEST);
+	}
 }

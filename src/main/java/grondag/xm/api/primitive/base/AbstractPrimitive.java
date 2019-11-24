@@ -34,74 +34,74 @@ import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
 public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> implements ModelPrimitive<R, W> {
-    private final R defaultState;
+	private final R defaultState;
 
-    private final BaseModelStateFactory<R, W> factory;
+	private final BaseModelStateFactory<R, W> factory;
 
-    private final Identifier id;
+	private final Identifier id;
 
-    private final Function<R, XmSurfaceList> surfaceFunc;
+	private final Function<R, XmSurfaceList> surfaceFunc;
 
-    /**
-     * bits flags used by ModelState to know which optional state elements are
-     * needed by this shape
-     */
-    private final int stateFlags;
+	/**
+	 * bits flags used by ModelState to know which optional state elements are
+	 * needed by this shape
+	 */
+	private final int stateFlags;
 
-    protected AbstractPrimitive(Identifier id, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
-        this.stateFlags = stateFlags;
-        this.id = id;
-        this.factory = factory;
-        this.surfaceFunc = surfaceFunc;
+	protected AbstractPrimitive(Identifier id, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
+		this.stateFlags = stateFlags;
+		this.id = id;
+		this.factory = factory;
+		this.surfaceFunc = surfaceFunc;
 
-        // we handle registration here because model state currently relies on it for
-        // serialization
-        if (!ModelPrimitiveRegistry.INSTANCE.register(this)) {
-            Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + id.toString());
-        }
+		// we handle registration here because model state currently relies on it for
+		// serialization
+		if (!ModelPrimitiveRegistry.INSTANCE.register(this)) {
+			Xm.LOG.warn("[XM2] Unable to register ModelPrimitive " + id.toString());
+		}
 
-        final W state = factory.claim(this);
-        updateDefaultState(state);
-        this.defaultState = state.releaseToImmutable();
-    }
+		final W state = factory.claim(this);
+		updateDefaultState(state);
+		this.defaultState = state.releaseToImmutable();
+	}
 
-    protected AbstractPrimitive(String idString, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
-        this(new Identifier(idString), stateFlags, factory, surfaceFunc);
-    }
+	protected AbstractPrimitive(String idString, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
+		this(new Identifier(idString), stateFlags, factory, surfaceFunc);
+	}
 
-    @Override
-    public final XmSurfaceList surfaces(R modelState) {
-        return surfaceFunc.apply(modelState);
-    }
+	@Override
+	public final XmSurfaceList surfaces(R modelState) {
+		return surfaceFunc.apply(modelState);
+	}
 
-    @Override
-    public R defaultState() {
-        return defaultState;
-    }
+	@Override
+	public R defaultState() {
+		return defaultState;
+	}
 
-    @Override
-    public int stateFlags(R modelState) {
-        return stateFlags;
-    }
+	@Override
+	public int stateFlags(R modelState) {
+		return stateFlags;
+	}
 
-    @Override
-    public Identifier id() {
-        return id;
-    }
+	@Override
+	public Identifier id() {
+		return id;
+	}
 
-    /**
-     * Override if default state should be something other than the, erm... default.
-     */
-    protected void updateDefaultState(W modelState) {
-    }
+	/**
+	 * Override if default state should be something other than the, erm... default.
+	 */
+	protected void updateDefaultState(W modelState) {
+	}
 
-    @Override
-    public final W fromBuffer(PacketByteBuf buf) {
-        return factory.fromBuffer(this, buf);
-    }
+	@Override
+	public final W fromBuffer(PacketByteBuf buf) {
+		return factory.fromBuffer(this, buf);
+	}
 
-    @Override
-    public final W fromTag(CompoundTag tag) {
-        return factory.fromTag(this, tag);
-    }
+	@Override
+	public final W fromTag(CompoundTag tag) {
+		return factory.fromTag(this, tag);
+	}
 }

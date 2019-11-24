@@ -41,13 +41,13 @@ import grondag.xm.api.modelstate.ModelState;
 @API(status = STABLE)
 @FunctionalInterface
 public interface BlockTest<T extends ModelState> {
-    boolean apply(BlockTestContext<T> context);
+	boolean apply(BlockTestContext<T> context);
 
-    @SuppressWarnings("rawtypes") BlockTest SAME_BLOCK = ctx -> ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock();
+	@SuppressWarnings("rawtypes") BlockTest SAME_BLOCK = ctx -> ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock();
 
-    /** True when blocks are same instance */
-    @SuppressWarnings("unchecked")
-    static <T extends ModelState> BlockTest<T> sameBlock() {
-        return SAME_BLOCK;
-    }
+	/** True when blocks are same instance */
+	@SuppressWarnings("unchecked")
+	static <T extends ModelState> BlockTest<T> sameBlock() {
+		return SAME_BLOCK;
+	}
 }

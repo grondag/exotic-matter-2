@@ -31,20 +31,20 @@ import net.minecraft.client.resource.language.I18n;
 
 @Environment(EnvType.CLIENT)
 public class ConfigScreen {
-    static Screen getScreen(Screen parent) {
+	static Screen getScreen(Screen parent) {
 
-        final ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle("config.xm.title").setSavingRunnable(ConfigScreen::saveUserInput);
+		final ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle("config.xm.title").setSavingRunnable(ConfigScreen::saveUserInput);
 
-        // DEBUG
-        final ConfigCategory blocks = builder.getOrCreateCategory("config.xm.category.debug");
+		// DEBUG
+		final ConfigCategory blocks = builder.getOrCreateCategory("config.xm.category.debug");
 
-        blocks.addEntry(new BooleanListEntry("config.xm.value.debug_collision_boxes", debugCollisionBoxes, "config.xm.reset", () -> DEFAULTS.debugCollisionBoxes,
-                b -> debugCollisionBoxes = b, () -> Optional.of(I18n.translate("config.xm.help.debug_collision_boxes").split(";"))));
+		blocks.addEntry(new BooleanListEntry("config.xm.value.debug_collision_boxes", debugCollisionBoxes, "config.xm.reset", () -> DEFAULTS.debugCollisionBoxes,
+				b -> debugCollisionBoxes = b, () -> Optional.of(I18n.translate("config.xm.help.debug_collision_boxes").split(";"))));
 
-        return builder.build();
-    }
+		return builder.build();
+	}
 
-    private static void saveUserInput() {
-        XmConfig.saveConfig();
-    }
+	private static void saveUserInput() {
+		XmConfig.saveConfig();
+	}
 }

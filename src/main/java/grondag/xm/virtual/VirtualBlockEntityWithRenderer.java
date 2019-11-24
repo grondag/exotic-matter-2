@@ -27,7 +27,7 @@ import net.minecraft.block.entity.BlockEntityType;
  */
 @API(status = INTERNAL)
 public class VirtualBlockEntityWithRenderer extends VirtualBlockEntity {
-    public VirtualBlockEntityWithRenderer(BlockEntityType<?> blockEntityType) {
-        super(blockEntityType);
-    }
+	public VirtualBlockEntityWithRenderer(BlockEntityType<?> blockEntityType) {
+		super(blockEntityType);
+	}
 }

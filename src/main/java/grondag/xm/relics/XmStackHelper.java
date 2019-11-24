@@ -31,36 +31,36 @@ import net.minecraft.nbt.CompoundTag;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public class XmStackHelper {
-    public static String NBT_SUPERMODEL_LIGHT_VALUE = NBTDictionary.claim("smLight");
+	public static String NBT_SUPERMODEL_LIGHT_VALUE = NBTDictionary.claim("smLight");
 
-    public static void setStackLightValue(ItemStack stack, int lightValue) {
-        // important that the tag used here matches that used in tile entity
-        Useful.getOrCreateTagCompound(stack).putByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE, (byte) lightValue);
-    }
+	public static void setStackLightValue(ItemStack stack, int lightValue) {
+		// important that the tag used here matches that used in tile entity
+		Useful.getOrCreateTagCompound(stack).putByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE, (byte) lightValue);
+	}
 
-    public static byte getStackLightValue(ItemStack stack) {
-        final CompoundTag tag = stack.getOrCreateTag();
-        // important that the tag used here matches that used in tile entity
-        return tag == null ? 0 : tag.getByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
-    }
+	public static byte getStackLightValue(ItemStack stack) {
+		final CompoundTag tag = stack.getOrCreateTag();
+		// important that the tag used here matches that used in tile entity
+		return tag == null ? 0 : tag.getByte(XmStackHelper.NBT_SUPERMODEL_LIGHT_VALUE);
+	}
 
-    public static void setStackSubstance(ItemStack stack, BlockSubstance substance) {
-        if (substance != null) {
-            substance.serializeNBT(Useful.getOrCreateTagCompound(stack));
-        }
-    }
+	public static void setStackSubstance(ItemStack stack, BlockSubstance substance) {
+		if (substance != null) {
+			substance.serializeNBT(Useful.getOrCreateTagCompound(stack));
+		}
+	}
 
-    public static BlockSubstance getStackSubstance(ItemStack stack) {
-        final CompoundTag tag = stack.getOrCreateTag();
-        return tag == null ? BlockSubstance.DEFAULT : BlockSubstance.deserializeNBT(tag);
-    }
+	public static BlockSubstance getStackSubstance(ItemStack stack) {
+		final CompoundTag tag = stack.getOrCreateTag();
+		return tag == null ? BlockSubstance.DEFAULT : BlockSubstance.deserializeNBT(tag);
+	}
 
-    public static void setStackModelState(ItemStack stack, ModelState modelState) {
-        final CompoundTag tag = stack.getOrCreateTag();
-        if (modelState == null) {
-            ModelStateTagHelper.clearNBTValues(tag);
-            return;
-        }
-        modelState.toTag(tag);
-    }
+	public static void setStackModelState(ItemStack stack, ModelState modelState) {
+		final CompoundTag tag = stack.getOrCreateTag();
+		if (modelState == null) {
+			ModelStateTagHelper.clearNBTValues(tag);
+			return;
+		}
+		modelState.toTag(tag);
+	}
 }

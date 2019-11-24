@@ -38,64 +38,64 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class CubeWithEdge  {
-    public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-            .add("front", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("side", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .build();
+	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
+			.add("front", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("side", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.build();
 
-    public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
-    public static final XmSurface SURFACE_BACK = SURFACES.get(1);
-    public static final XmSurface SURFACE_SIDE = SURFACES.get(2);
+	public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
+	public static final XmSurface SURFACE_BACK = SURFACES.get(1);
+	public static final XmSurface SURFACE_SIDE = SURFACES.get(2);
 
-    static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
-        final PolyTransform transform = PolyTransform.get(modelState);
+	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
+		final PolyTransform transform = PolyTransform.get(modelState);
 
-        final WritableMesh mesh = XmMeshes.claimWritable();
-        final MutablePolygon writer = mesh.writer();
-        writer.colorAll(0, 0xFFFFFFFF)
-        .lockUV(0, true)
-        .rotation(0, TextureOrientation.IDENTITY)
-        .sprite(0, "")
-        .saveDefaults();
+		final WritableMesh mesh = XmMeshes.claimWritable();
+		final MutablePolygon writer = mesh.writer();
+		writer.colorAll(0, 0xFFFFFFFF)
+		.lockUV(0, true)
+		.rotation(0, TextureOrientation.IDENTITY)
+		.sprite(0, "")
+		.saveDefaults();
 
-        writer.surface(SURFACE_BACK)
-        .setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH)
-        .apply(transform)
-        .append();
+		writer.surface(SURFACE_BACK)
+		.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH)
+		.apply(transform)
+		.append();
 
-        writer.surface(SURFACE_FRONT)
-        .setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH)
-        .apply(transform)
-        .append();
+		writer.surface(SURFACE_FRONT)
+		.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH)
+		.apply(transform)
+		.append();
 
-        writer.surface(SURFACE_SIDE)
-        .setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP)
-        .apply(transform)
-        .append();
+		writer.surface(SURFACE_SIDE)
+		.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP)
+		.apply(transform)
+		.append();
 
-        writer.surface(SURFACE_SIDE)
-        .setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP)
-        .apply(transform)
-        .append();
+		writer.surface(SURFACE_SIDE)
+		.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP)
+		.apply(transform)
+		.append();
 
-        writer.surface(SURFACE_FRONT)
-        .setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP)
-        .apply(transform)
-        .append();
+		writer.surface(SURFACE_FRONT)
+		.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP)
+		.apply(transform)
+		.append();
 
-        writer.surface(SURFACE_BACK)
-        .setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP)
-        .apply(transform)
-        .append();
+		writer.surface(SURFACE_BACK)
+		.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP)
+		.apply(transform)
+		.append();
 
-        return mesh.releaseToReader();
-    };
+		return mesh.releaseToReader();
+	};
 
-    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-            .surfaceList(SURFACES)
-            .polyFactory(POLY_FACTORY)
-            .orientationType(OrientationType.EDGE)
-            .build(Xm.idString("cube_edge"));
+	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+			.surfaceList(SURFACES)
+			.polyFactory(POLY_FACTORY)
+			.orientationType(OrientationType.EDGE)
+			.build(Xm.idString("cube_edge"));
 
 }

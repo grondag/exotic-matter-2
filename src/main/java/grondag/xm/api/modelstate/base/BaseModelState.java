@@ -43,103 +43,103 @@ import net.minecraft.util.math.Direction;
 @API(status = EXPERIMENTAL)
 public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> extends ModelState {
 
-    BaseModelStateFactory<R, W> factory();
+	BaseModelStateFactory<R, W> factory();
 
-    @Override
-    R toImmutable();
+	@Override
+	R toImmutable();
 
-    @Override
-    W mutableCopy();
+	@Override
+	W mutableCopy();
 
-    /**
-     * Does NOT consider isStatic in comparison.<p>
-     *
-     * {@inheritDoc}
-     */
-    @Override
-    boolean equals(Object obj);
+	/**
+	 * Does NOT consider isStatic in comparison.<p>
+	 *
+	 * {@inheritDoc}
+	 */
+	@Override
+	boolean equals(Object obj);
 
-    /**
-     * Returns true if visual elements and geometry match. Does not consider species
-     * in matching.
-     */
-    boolean doShapeAndAppearanceMatch(ModelState other);
+	/**
+	 * Returns true if visual elements and geometry match. Does not consider species
+	 * in matching.
+	 */
+	boolean doShapeAndAppearanceMatch(ModelState other);
 
-    /**
-     * Returns true if visual elements match. Does not consider species or geometry
-     * in matching.
-     */
-    boolean doesAppearanceMatch(ModelState other);
+	/**
+	 * Returns true if visual elements match. Does not consider species or geometry
+	 * in matching.
+	 */
+	boolean doesAppearanceMatch(ModelState other);
 
-    @Override
-    void toTag(CompoundTag tag);
+	@Override
+	void toTag(CompoundTag tag);
 
-    void fromBytes(PacketByteBuf pBuff);
+	void fromBytes(PacketByteBuf pBuff);
 
-    @Override
-    void toBytes(PacketByteBuf pBuff);
+	@Override
+	void toBytes(PacketByteBuf pBuff);
 
-    int stateFlags();
+	int stateFlags();
 
-    ModelPrimitive<R, W> primitive();
+	ModelPrimitive<R, W> primitive();
 
-    @Override
-    void emitPolygons(Consumer<Polygon> target);
+	@Override
+	void emitPolygons(Consumer<Polygon> target);
 
-    @Override
-    W geometricState();
+	@Override
+	W geometricState();
 
-    int orientationIndex();
+	int orientationIndex();
 
-    OrientationType orientationType();
+	OrientationType orientationType();
 
-    @Override
-    boolean isStatic();
+	@Override
+	boolean isStatic();
 
-    boolean doPaintsMatch(ModelState other);
+	boolean doPaintsMatch(ModelState other);
 
-    int paintIndex(int surfaceIndex);
+	int paintIndex(int surfaceIndex);
 
-    XmPaint paint(int surfaceIndex);
+	XmPaint paint(int surfaceIndex);
 
-    XmPaint paint(XmSurface surface);
+	XmPaint paint(XmSurface surface);
 
-    int posX();
+	int posX();
 
-    int posY();
+	int posY();
 
-    int posZ();
+	int posZ();
 
-    /**
-     * Means that one or more elements (like a texture) uses species. Does not mean
-     * that the shape or block actually capture or generate species other than 0.
-     */
-    boolean hasSpecies();
+	/**
+	 * Means that one or more elements (like a texture) uses species. Does not mean
+	 * that the shape or block actually capture or generate species other than 0.
+	 */
+	boolean hasSpecies();
 
-    /**
-     * Will return 0 if model state does not include species. This is more
-     * convenient than checking each place species is used.
-     *
-     * @return
-     */
-    int species();
+	/**
+	 * Will return 0 if model state does not include species. This is more
+	 * convenient than checking each place species is used.
+	 *
+	 * @return
+	 */
+	int species();
 
-    CornerJoinState cornerJoin();
+	CornerJoinState cornerJoin();
 
-    SimpleJoinState simpleJoin();
+	SimpleJoinState simpleJoin();
 
-    SimpleJoinState masonryJoin();
+	SimpleJoinState masonryJoin();
 
 
-    int primitiveBits();
+	int primitiveBits();
 
-    ////////////////////////////////////////// RENDERING //////////////////////////////////////////
+	////////////////////////////////////////// RENDERING //////////////////////////////////////////
 
-    @Override
-    @Environment(EnvType.CLIENT)
-    List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
+	@Override
+	@Environment(EnvType.CLIENT)
+	List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
 
-    @Override
-    @Environment(EnvType.CLIENT)
-    void emitQuads(RenderContext context);
+	@Override
+	@Environment(EnvType.CLIENT)
+	void emitQuads(RenderContext context);
 }

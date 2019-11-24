@@ -26,36 +26,36 @@ import net.minecraft.util.math.BlockPos;
 // For masonry, true result means border IS present
 @API(status = EXPERIMENTAL)
 public class MasonryHelper implements BlockTest<PrimitiveState> {
-    private MasonryHelper() {
-    }
+	private MasonryHelper() {
+	}
 
-    private static final ThreadLocal<MasonryHelper> POOL = ThreadLocal.withInitial(MasonryHelper::new);
+	private static final ThreadLocal<MasonryHelper> POOL = ThreadLocal.withInitial(MasonryHelper::new);
 
-    public static BlockTest<PrimitiveState> wrap(BlockTest<PrimitiveState> test) {
-        final MasonryHelper result = POOL.get();
-        result.test = test;
-        return result;
-    }
+	public static BlockTest<PrimitiveState> wrap(BlockTest<PrimitiveState> test) {
+		final MasonryHelper result = POOL.get();
+		result.test = test;
+		return result;
+	}
 
-    private BlockTest<PrimitiveState> test;
+	private BlockTest<PrimitiveState> test;
 
-    @Override
-    public boolean apply(BlockTestContext<PrimitiveState> context) {
+	@Override
+	public boolean apply(BlockTestContext<PrimitiveState> context) {
 
-        if (context.fromModelState() == null)
-            return false;
+		if (context.fromModelState() == null)
+			return false;
 
-        final BlockState toBlockState = context.toBlockState();
-        final BlockPos toPos = context.toPos();
+		final BlockState toBlockState = context.toBlockState();
+		final BlockPos toPos = context.toPos();
 
-        // if not a sibling, mortar if against full opaque
-        if (!test.apply(context))
-            return toBlockState.isFullOpaque(context.world(), toPos);
+		// if not a sibling, mortar if against full opaque
+		if (!test.apply(context))
+			return toBlockState.isFullOpaque(context.world(), toPos);
 
-        final BlockPos fromPos = context.fromPos();
+		final BlockPos fromPos = context.fromPos();
 
-        // between siblings, only mortar on three sides of cube
-        // (other sibling will do the mortar on other sides)
-        return (toPos.getX() == fromPos.getX() + 1 || toPos.getY() == fromPos.getY() - 1 || toPos.getZ() == fromPos.getZ() + 1);
-    }
+		// between siblings, only mortar on three sides of cube
+		// (other sibling will do the mortar on other sides)
+		return (toPos.getX() == fromPos.getX() + 1 || toPos.getY() == fromPos.getY() - 1 || toPos.getZ() == fromPos.getZ() + 1);
+	}
 }

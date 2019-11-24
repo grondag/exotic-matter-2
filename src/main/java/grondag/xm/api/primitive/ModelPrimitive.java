@@ -35,68 +35,68 @@ import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
 public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {
-    /**
-     * Used for registration and serialization of model state.
-     */
-    Identifier id();
+	/**
+	 * Used for registration and serialization of model state.
+	 */
+	Identifier id();
 
-    /**
-     * Used for fast, transient serialization. Recommended that implementations
-     * override this and cache value to avoid map lookups.
-     */
-    default int index() {
-        return ModelPrimitiveRegistry.INSTANCE.indexOf(this);
-    }
+	/**
+	 * Used for fast, transient serialization. Recommended that implementations
+	 * override this and cache value to avoid map lookups.
+	 */
+	default int index() {
+		return ModelPrimitiveRegistry.INSTANCE.indexOf(this);
+	}
 
-    /**
-     * This convention is used by XM2 but 3rd-party primitives can use a different
-     * one.
-     */
-    default String translationKey() {
-        return "xm2_primitive_name." + id().getNamespace() + "." + id().getPath();
-    }
+	/**
+	 * This convention is used by XM2 but 3rd-party primitives can use a different
+	 * one.
+	 */
+	default String translationKey() {
+		return "xm2_primitive_name." + id().getNamespace() + "." + id().getPath();
+	}
 
-    XmSurfaceList surfaces(R modelState);
+	XmSurfaceList surfaces(R modelState);
 
-    @Nullable
-    default XmSurface lampSurface(R modelState) {
-        final XmSurface lamp = surfaces(modelState).lamp();
-        return lamp == null ? null : modelState.paint(lamp).emissive(0) ? lamp : null;
-    }
+	@Nullable
+	default XmSurface lampSurface(R modelState) {
+		final XmSurface lamp = surfaces(modelState).lamp();
+		return lamp == null ? null : modelState.paint(lamp).emissive(0) ? lamp : null;
+	}
 
-    /**
-     * Override if shape has an orientation to be selected during placement.
-     */
-    default OrientationType orientationType(R modelState) {
-        return OrientationType.NONE;
-    }
+	/**
+	 * Override if shape has an orientation to be selected during placement.
+	 */
+	default OrientationType orientationType(R modelState) {
+		return OrientationType.NONE;
+	}
 
-    int stateFlags(R modelState);
+	int stateFlags(R modelState);
 
-    /**
-     * Output polygons must be quads or tris. Consumer MUST NOT hold references to
-     * any of the polys received.
-     */
-    void emitQuads(R modelState, Consumer<Polygon> target);
+	/**
+	 * Output polygons must be quads or tris. Consumer MUST NOT hold references to
+	 * any of the polys received.
+	 */
+	void emitQuads(R modelState, Consumer<Polygon> target);
 
-    R defaultState();
+	R defaultState();
 
-    W geometricState(R fromState);
+	W geometricState(R fromState);
 
-    default W newState() {
-        return defaultState().mutableCopy();
-    }
+	default W newState() {
+		return defaultState().mutableCopy();
+	}
 
-    W fromBuffer(PacketByteBuf buf);
+	W fromBuffer(PacketByteBuf buf);
 
 
-    W fromTag(CompoundTag tag);
+	W fromTag(CompoundTag tag);
 
-    boolean doesShapeMatch(R from, R to);
+	boolean doesShapeMatch(R from, R to);
 
-    default boolean isMultiBlock() {
-        return false;
-    }
+	default boolean isMultiBlock() {
+		return false;
+	}
 
-    default void invalidateCache() { }
+	default void invalidateCache() { }
 }

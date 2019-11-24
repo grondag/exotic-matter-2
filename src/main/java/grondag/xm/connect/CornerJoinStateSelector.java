@@ -24,88 +24,88 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public class CornerJoinStateSelector {
-    private static final Direction[] FACES = Direction.values();
-    public static final int BLOCK_JOIN_STATE_COUNT = 20115;
-    private static final CornerJoinStateImpl BLOCK_JOIN_STATES[] = new CornerJoinStateImpl[BLOCK_JOIN_STATE_COUNT];
-    private static final CornerJoinStateSelector BLOCK_JOIN_SELECTOR[] = new CornerJoinStateSelector[64];
+	private static final Direction[] FACES = Direction.values();
+	public static final int BLOCK_JOIN_STATE_COUNT = 20115;
+	private static final CornerJoinStateImpl BLOCK_JOIN_STATES[] = new CornerJoinStateImpl[BLOCK_JOIN_STATE_COUNT];
+	private static final CornerJoinStateSelector BLOCK_JOIN_SELECTOR[] = new CornerJoinStateSelector[64];
 
-    static {
-        int firstIndex = 0;
+	static {
+		int firstIndex = 0;
 
-        for (int i = 0; i < 64; i++) {
-            final SimpleJoinStateImpl baseJoin = SimpleJoinStateImpl.fromOrdinal(i);
-            BLOCK_JOIN_SELECTOR[i] = new CornerJoinStateSelector(baseJoin, firstIndex);
+		for (int i = 0; i < 64; i++) {
+			final SimpleJoinStateImpl baseJoin = SimpleJoinStateImpl.fromOrdinal(i);
+			BLOCK_JOIN_SELECTOR[i] = new CornerJoinStateSelector(baseJoin, firstIndex);
 
-            for (int j = 0; j < BLOCK_JOIN_SELECTOR[i].stateCount(); j++) {
-                BLOCK_JOIN_STATES[firstIndex + j] = BLOCK_JOIN_SELECTOR[i].createChildState(firstIndex + j);
-            }
+			for (int j = 0; j < BLOCK_JOIN_SELECTOR[i].stateCount(); j++) {
+				BLOCK_JOIN_STATES[firstIndex + j] = BLOCK_JOIN_SELECTOR[i].createChildState(firstIndex + j);
+			}
 
-            firstIndex += BLOCK_JOIN_SELECTOR[i].stateCount();
-        }
-    }
+			firstIndex += BLOCK_JOIN_SELECTOR[i].stateCount();
+		}
+	}
 
-    public static int ordinalFromWorld(BlockNeighbors tests) {
-        final SimpleJoinStateImpl baseJoin = SimpleJoinStateImpl.fromWorld(tests);
-        return BLOCK_JOIN_SELECTOR[baseJoin.ordinal()].indexFromNeighbors(tests);
-    }
+	public static int ordinalFromWorld(BlockNeighbors tests) {
+		final SimpleJoinStateImpl baseJoin = SimpleJoinStateImpl.fromWorld(tests);
+		return BLOCK_JOIN_SELECTOR[baseJoin.ordinal()].indexFromNeighbors(tests);
+	}
 
-    public static CornerJoinStateImpl fromWorld(BlockNeighbors tests) {
-        return fromOrdinal(ordinalFromWorld(tests));
-    }
+	public static CornerJoinStateImpl fromWorld(BlockNeighbors tests) {
+		return fromOrdinal(ordinalFromWorld(tests));
+	}
 
-    public static CornerJoinStateImpl fromOrdinal(int index) {
-        return BLOCK_JOIN_STATES[index];
-    }
+	public static CornerJoinStateImpl fromOrdinal(int index) {
+		return BLOCK_JOIN_STATES[index];
+	}
 
-    private final int firstIndex;
-    private final SimpleJoinStateImpl simpleJoin;
+	private final int firstIndex;
+	private final SimpleJoinStateImpl simpleJoin;
 
-    private final CornerJoinFaceSelector faceSelector[] = new CornerJoinFaceSelector[6];
+	private final CornerJoinFaceSelector faceSelector[] = new CornerJoinFaceSelector[6];
 
-    private CornerJoinStateSelector(SimpleJoinStateImpl baseJoinState, int firstIndex) {
-        this.firstIndex = firstIndex;
-        simpleJoin = baseJoinState;
-        for (int i = 0; i < 6; i++) {
-            faceSelector[i] = new CornerJoinFaceSelector(FACES[i], baseJoinState);
-        }
-    }
+	private CornerJoinStateSelector(SimpleJoinStateImpl baseJoinState, int firstIndex) {
+		this.firstIndex = firstIndex;
+		simpleJoin = baseJoinState;
+		for (int i = 0; i < 6; i++) {
+			faceSelector[i] = new CornerJoinFaceSelector(FACES[i], baseJoinState);
+		}
+	}
 
-    private CornerJoinStateImpl createChildState(int index) {
-        int shift = 1;
-        final int localIndex = index - firstIndex;
-        final byte[] faceJoinIndex = new byte[6];
+	private CornerJoinStateImpl createChildState(int index) {
+		int shift = 1;
+		final int localIndex = index - firstIndex;
+		final byte[] faceJoinIndex = new byte[6];
 
-        for (int i = 0; i < 6; i++) {
-            final Direction face = FACES[i];
-            if (faceSelector[i].faceCount == 1) {
-                faceJoinIndex[face.ordinal()] = (byte) faceSelector[i].getFaceJoinFromIndex(0).ordinal();
-            } else {
-                final int faceIndex = (localIndex / shift) % faceSelector[i].faceCount;
-                faceJoinIndex[face.ordinal()] = (byte) faceSelector[i].getFaceJoinFromIndex(faceIndex).ordinal();
-                shift *= faceSelector[i].faceCount;
-            }
-        }
+		for (int i = 0; i < 6; i++) {
+			final Direction face = FACES[i];
+			if (faceSelector[i].faceCount == 1) {
+				faceJoinIndex[face.ordinal()] = (byte) faceSelector[i].getFaceJoinFromIndex(0).ordinal();
+			} else {
+				final int faceIndex = (localIndex / shift) % faceSelector[i].faceCount;
+				faceJoinIndex[face.ordinal()] = (byte) faceSelector[i].getFaceJoinFromIndex(faceIndex).ordinal();
+				shift *= faceSelector[i].faceCount;
+			}
+		}
 
-        return new CornerJoinStateImpl(index, simpleJoin, faceJoinIndex);
-    }
+		return new CornerJoinStateImpl(index, simpleJoin, faceJoinIndex);
+	}
 
-    private int stateCount() {
-        int count = 1;
-        for (int i = 0; i < 6; i++) {
-            count *= faceSelector[i].faceCount;
-        }
-        return count;
-    }
+	private int stateCount() {
+		int count = 1;
+		for (int i = 0; i < 6; i++) {
+			count *= faceSelector[i].faceCount;
+		}
+		return count;
+	}
 
-    private int indexFromNeighbors(BlockNeighbors tests) {
-        int index = 0;
-        int shift = 1;
-        for (int i = 0; i < 6; i++) {
-            if (faceSelector[i].faceCount > 1) {
-                index += shift * faceSelector[i].getIndexFromNeighbors(tests);
-                shift *= faceSelector[i].faceCount;
-            }
-        }
-        return index + firstIndex;
-    }
+	private int indexFromNeighbors(BlockNeighbors tests) {
+		int index = 0;
+		int shift = 1;
+		for (int i = 0; i < 6; i++) {
+			if (faceSelector[i].faceCount > 1) {
+				index += shift * faceSelector[i].getIndexFromNeighbors(tests);
+				shift *= faceSelector[i].faceCount;
+			}
+		}
+		return index + firstIndex;
+	}
 }

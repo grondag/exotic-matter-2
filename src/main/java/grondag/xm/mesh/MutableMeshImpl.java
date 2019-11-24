@@ -25,64 +25,64 @@ import grondag.xm.api.mesh.polygon.Polygon;
 
 @API(status = INTERNAL)
 class MutableMeshImpl extends WritableMeshImpl implements MutableMesh {
-    protected final StreamBackedMutablePolygon editor = new StreamBackedMutablePolygon();
+	protected final StreamBackedMutablePolygon editor = new StreamBackedMutablePolygon();
 
-    protected MutableMeshImpl() {
-        super();
-        editor.mesh = this;
-    }
+	protected MutableMeshImpl() {
+		super();
+		editor.mesh = this;
+	}
 
-    @Override
-    protected void prepare(int formatFlags) {
-        super.prepare(formatFlags);
-        editor.stream = stream;
-    }
+	@Override
+	protected void prepare(int formatFlags) {
+		super.prepare(formatFlags);
+		editor.stream = stream;
+	}
 
-    @Override
-    public void clear() {
-        super.clear();
-        editor.invalidate();
-    }
+	@Override
+	public void clear() {
+		super.clear();
+		editor.invalidate();
+	}
 
-    @Override
-    protected void doRelease() {
-        super.doRelease();
-        editor.stream = null;
-    }
+	@Override
+	protected void doRelease() {
+		super.doRelease();
+		editor.stream = null;
+	}
 
-    @Override
-    protected void returnToPool() {
-        XmMeshesImpl.release(this);
-    }
+	@Override
+	protected void returnToPool() {
+		XmMeshesImpl.release(this);
+	}
 
-    @Override
-    public MutablePolygon editor() {
-        return editor;
-    }
+	@Override
+	public MutablePolygon editor() {
+		return editor;
+	}
 
-    @Override
-    public MutablePolygon editor(int address) {
-        validateAddress(address);
-        editor.moveTo(address);
-        return editor;
-    }
+	@Override
+	public MutablePolygon editor(int address) {
+		validateAddress(address);
+		editor.moveTo(address);
+		return editor;
+	}
 
-    @Override
-    protected void appendCopy(Polygon polyIn, int withFormat) {
-        final boolean needReaderLoad = reader.baseAddress == writeAddress;
+	@Override
+	protected void appendCopy(Polygon polyIn, int withFormat) {
+		final boolean needReaderLoad = reader.baseAddress == writeAddress;
 
-        // formatFlags for writer poly should already include mutable
-        assert MeshFormat.isMutable(withFormat);
+		// formatFlags for writer poly should already include mutable
+		assert MeshFormat.isMutable(withFormat);
 
-        int newFormat = MeshFormat.setLayerCount(withFormat, polyIn.spriteDepth());
-        newFormat = MeshFormat.setVertexCount(newFormat, polyIn.vertexCount());
-        stream.set(writeAddress, newFormat);
-        internal.moveTo(writeAddress);
-        internal.copyFrom(polyIn, true);
-        writeAddress += MeshFormat.polyStride(newFormat, true);
+		int newFormat = MeshFormat.setLayerCount(withFormat, polyIn.spriteDepth());
+		newFormat = MeshFormat.setVertexCount(newFormat, polyIn.vertexCount());
+		stream.set(writeAddress, newFormat);
+		internal.moveTo(writeAddress);
+		internal.copyFrom(polyIn, true);
+		writeAddress += MeshFormat.polyStride(newFormat, true);
 
-        if (needReaderLoad) {
-            reader.loadFormat();
-        }
-    }
+		if (needReaderLoad) {
+			reader.loadFormat();
+		}
+	}
 }

@@ -23,15 +23,15 @@ import grondag.xm.api.texture.TextureOrientation;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public class FaceQuadInputs {
-    public final int textureOffset;
-    public final TextureOrientation rotation;
-    public final boolean flipU;
-    public final boolean flipV;
+	public final int textureOffset;
+	public final TextureOrientation rotation;
+	public final boolean flipU;
+	public final boolean flipV;
 
-    public FaceQuadInputs(int textureOffset, TextureOrientation rotation, boolean flipU, boolean flipV) {
-        this.textureOffset = textureOffset;
-        this.rotation = rotation;
-        this.flipU = flipU;
-        this.flipV = flipV;
-    }
+	public FaceQuadInputs(int textureOffset, TextureOrientation rotation, boolean flipU, boolean flipV) {
+		this.textureOffset = textureOffset;
+		this.rotation = rotation;
+		this.flipU = flipU;
+		this.flipV = flipV;
+	}
 }

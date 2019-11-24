@@ -28,28 +28,28 @@ import net.minecraft.state.property.IntProperty;
 
 @API(status = Status.EXPERIMENTAL)
 public class SpeciesProperty {
-    private SpeciesProperty() {}
+	private SpeciesProperty() {}
 
-    public static final IntProperty SPECIES = IntProperty.of("xm_species", 0, 15);
+	public static final IntProperty SPECIES = IntProperty.of("xm_species", 0, 15);
 
-    public static SimplePrimitiveStateMutator SPECIES_MODIFIER = (modelState, blockState) -> {
-        final int species = blockState.get(SPECIES);
-        modelState.species(species);
-        return modelState;
-    };
+	public static SimplePrimitiveStateMutator SPECIES_MODIFIER = (modelState, blockState) -> {
+		final int species = blockState.get(SPECIES);
+		modelState.species(species);
+		return modelState;
+	};
 
-    public static SpeciesFunction speciesForBlock(final Block block) {
-        return (world, blockState, pos) -> {
-            if(blockState.getBlock() == block) {
-                final Comparable<?> result = blockState.getEntries().get(SPECIES);
-                return result == null ? SpeciesFunction.NO_SPECIES : (Integer)result;
-            } else
-                return SpeciesFunction.NO_SPECIES;
-        };
-    }
+	public static SpeciesFunction speciesForBlock(final Block block) {
+		return (world, blockState, pos) -> {
+			if(blockState.getBlock() == block) {
+				final Comparable<?> result = blockState.getEntries().get(SPECIES);
+				return result == null ? SpeciesFunction.NO_SPECIES : (Integer)result;
+			} else
+				return SpeciesFunction.NO_SPECIES;
+		};
+	}
 
-    /** True when blocks are same block and same species property */
-    public static <T extends ModelState> BlockTest<T> matchBlockAndSpecies() {
-        return SpeciesImpl.sameBlockAndSpecies();
-    }
+	/** True when blocks are same block and same species property */
+	public static <T extends ModelState> BlockTest<T> matchBlockAndSpecies() {
+		return SpeciesImpl.sameBlockAndSpecies();
+	}
 }

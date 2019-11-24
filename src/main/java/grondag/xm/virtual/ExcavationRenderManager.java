@@ -56,13 +56,11 @@ public class ExcavationRenderManager {
 
 	@Environment(EnvType.CLIENT)
 	public static void render(float tickDelta, ClientPlayerEntity player) {
-		if (player == null) {
+		if (player == null)
 			return;
-		}
 
-		if (renderCopy == null || renderCopy.length == 0) {
+		if (renderCopy == null || renderCopy.length == 0)
 			return;
-		}
 
 		//		GlStateManager.enableBlend();
 		//		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,

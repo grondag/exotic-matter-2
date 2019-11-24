@@ -26,22 +26,22 @@ import net.minecraft.item.ItemStack;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public abstract class PlacementPreviewRenderer {
-    private PlacementPreviewRenderer() {
-    }
+	private PlacementPreviewRenderer() {
+	}
 
-    public static void renderPreview(float tickDelta) {
-        final ClientPlayerEntity player = MinecraftClient.getInstance().player;
-        final ItemStack stack = PlacementItem.getHeldPlacementItem(player);
+	public static void renderPreview(float tickDelta) {
+		final ClientPlayerEntity player = MinecraftClient.getInstance().player;
+		final ItemStack stack = PlacementItem.getHeldPlacementItem(player);
 
-        if (player.isSneaking())
-            if (stack != null) {
-                final PlacementItem placer = (PlacementItem) stack.getItem();
-                final PlacementResult result = PlacementHandler.predictPlacementResults(player, stack, placer);
-                if (result.builder() != null) {
-                    result.builder().renderPreview(tickDelta, player);
-                }
-            }
+		if (player.isSneaking())
+			if (stack != null) {
+				final PlacementItem placer = (PlacementItem) stack.getItem();
+				final PlacementResult result = PlacementHandler.predictPlacementResults(player, stack, placer);
+				if (result.builder() != null) {
+					result.builder().renderPreview(tickDelta, player);
+				}
+			}
 
-        ExcavationRenderManager.render(tickDelta, player);
-    }
+		ExcavationRenderManager.render(tickDelta, player);
+	}
 }

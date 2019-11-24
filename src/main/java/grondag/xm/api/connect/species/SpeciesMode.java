@@ -26,45 +26,45 @@ import net.minecraft.util.PacketByteBuf;
 
 @API(status = Status.EXPERIMENTAL)
 public enum SpeciesMode {
-    MATCH_CLICKED,
-    MATCH_MOST,
-    COUNTER_MOST;
+	MATCH_CLICKED,
+	MATCH_MOST,
+	COUNTER_MOST;
 
-    private static final String TAG_NAME = NBTDictionary.claim("speciesMode");
+	private static final String TAG_NAME = NBTDictionary.claim("speciesMode");
 
-    public SpeciesMode deserializeNBT(CompoundTag tag) {
-        return Useful.safeEnumFromTag(tag, TAG_NAME, this);
-    }
+	public SpeciesMode deserializeNBT(CompoundTag tag) {
+		return Useful.safeEnumFromTag(tag, TAG_NAME, this);
+	}
 
-    public void serializeNBT(CompoundTag tag) {
-        Useful.saveEnumToTag(tag, TAG_NAME, this);
-    }
+	public void serializeNBT(CompoundTag tag) {
+		Useful.saveEnumToTag(tag, TAG_NAME, this);
+	}
 
-    public SpeciesMode fromBytes(PacketByteBuf pBuff) {
-        return pBuff.readEnumConstant(SpeciesMode.class);
-    }
+	public SpeciesMode fromBytes(PacketByteBuf pBuff) {
+		return pBuff.readEnumConstant(SpeciesMode.class);
+	}
 
-    public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeEnumConstant(this);
-    }
+	public void toBytes(PacketByteBuf pBuff) {
+		pBuff.writeEnumConstant(this);
+	}
 
-    public String localizedName() {
-        return I18n.translate("placement.species_mode." + name().toLowerCase());
-    }
+	public String localizedName() {
+		return I18n.translate("placement.species_mode." + name().toLowerCase());
+	}
 
-    /** mode to use if player holding modifier key */
-    public SpeciesMode alternate() {
-        switch (this) {
-        case COUNTER_MOST:
-        default:
-            return MATCH_CLICKED;
+	/** mode to use if player holding modifier key */
+	public SpeciesMode alternate() {
+		switch (this) {
+		case COUNTER_MOST:
+		default:
+			return MATCH_CLICKED;
 
-        case MATCH_CLICKED:
-            return COUNTER_MOST;
+		case MATCH_CLICKED:
+			return COUNTER_MOST;
 
-        case MATCH_MOST:
-            return COUNTER_MOST;
+		case MATCH_MOST:
+			return COUNTER_MOST;
 
-        }
-    }
+		}
+	}
 }

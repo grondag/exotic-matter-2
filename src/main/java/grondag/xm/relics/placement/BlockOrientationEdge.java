@@ -28,39 +28,39 @@ import net.minecraft.util.PacketByteBuf;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public enum BlockOrientationEdge {
-    DYNAMIC(null), MATCH_CLOSEST(null), UP_EAST(CubeEdge.UP_EAST), UP_WEST(CubeEdge.UP_WEST), UP_NORTH(CubeEdge.UP_NORTH), UP_SOUTH(CubeEdge.UP_SOUTH),
-    NORTH_EAST(CubeEdge.NORTH_EAST), NORTH_WEST(CubeEdge.NORTH_WEST), SOUTH_EAST(CubeEdge.SOUTH_EAST), SOUTH_WEST(CubeEdge.SOUTH_WEST),
-    DOWN_EAST(CubeEdge.DOWN_EAST), DOWN_WEST(CubeEdge.DOWN_WEST), DOWN_NORTH(CubeEdge.DOWN_NORTH), DOWN_SOUTH(CubeEdge.DOWN_SOUTH);
+	DYNAMIC(null), MATCH_CLOSEST(null), UP_EAST(CubeEdge.UP_EAST), UP_WEST(CubeEdge.UP_WEST), UP_NORTH(CubeEdge.UP_NORTH), UP_SOUTH(CubeEdge.UP_SOUTH),
+	NORTH_EAST(CubeEdge.NORTH_EAST), NORTH_WEST(CubeEdge.NORTH_WEST), SOUTH_EAST(CubeEdge.SOUTH_EAST), SOUTH_WEST(CubeEdge.SOUTH_WEST),
+	DOWN_EAST(CubeEdge.DOWN_EAST), DOWN_WEST(CubeEdge.DOWN_WEST), DOWN_NORTH(CubeEdge.DOWN_NORTH), DOWN_SOUTH(CubeEdge.DOWN_SOUTH);
 
-    public final CubeEdge edge;
+	public final CubeEdge edge;
 
-    private static final String TAG_NAME = NBTDictionary.claim("blockOrientEdge");
+	private static final String TAG_NAME = NBTDictionary.claim("blockOrientEdge");
 
-    private BlockOrientationEdge(CubeEdge edge) {
-        this.edge = edge;
-    }
+	private BlockOrientationEdge(CubeEdge edge) {
+		this.edge = edge;
+	}
 
-    public BlockOrientationEdge deserializeNBT(CompoundTag tag) {
-        return Useful.safeEnumFromTag(tag, TAG_NAME, this);
-    }
+	public BlockOrientationEdge deserializeNBT(CompoundTag tag) {
+		return Useful.safeEnumFromTag(tag, TAG_NAME, this);
+	}
 
-    public void serializeNBT(CompoundTag tag) {
-        Useful.saveEnumToTag(tag, TAG_NAME, this);
-    }
+	public void serializeNBT(CompoundTag tag) {
+		Useful.saveEnumToTag(tag, TAG_NAME, this);
+	}
 
-    public BlockOrientationEdge fromBytes(PacketByteBuf pBuff) {
-        return pBuff.readEnumConstant(BlockOrientationEdge.class);
-    }
+	public BlockOrientationEdge fromBytes(PacketByteBuf pBuff) {
+		return pBuff.readEnumConstant(BlockOrientationEdge.class);
+	}
 
-    public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeEnumConstant(this);
-    }
+	public void toBytes(PacketByteBuf pBuff) {
+		pBuff.writeEnumConstant(this);
+	}
 
-    public String localizedName() {
-        return I18n.translate("placement.orientation.edge." + name().toLowerCase());
-    }
+	public String localizedName() {
+		return I18n.translate("placement.orientation.edge." + name().toLowerCase());
+	}
 
-    public boolean isFixed() {
-        return !(this == DYNAMIC || this == MATCH_CLOSEST);
-    }
+	public boolean isFixed() {
+		return !(this == DYNAMIC || this == MATCH_CLOSEST);
+	}
 }

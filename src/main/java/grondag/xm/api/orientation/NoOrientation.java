@@ -21,5 +21,5 @@ import org.apiguardian.api.API;
 
 @API(status = EXPERIMENTAL)
 public enum NoOrientation {
-    NONE
+	NONE
 }

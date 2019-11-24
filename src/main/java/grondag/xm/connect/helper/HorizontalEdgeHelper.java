@@ -27,47 +27,47 @@ import net.minecraft.util.math.MathHelper;
 
 @API(status = INTERNAL)
 public abstract class HorizontalEdgeHelper {
-    private HorizontalEdgeHelper() {
-    }
+	private HorizontalEdgeHelper() {
+	}
 
-    private static final HorizontalEdge[] VALUES = HorizontalEdge.values();
-    public static final int COUNT = VALUES.length;
+	private static final HorizontalEdge[] VALUES = HorizontalEdge.values();
+	public static final int COUNT = VALUES.length;
 
-    private static final HorizontalEdge[][] HORIZONTAL_CORNER_LOOKUP = new HorizontalEdge[4][4];
+	private static final HorizontalEdge[][] HORIZONTAL_CORNER_LOOKUP = new HorizontalEdge[4][4];
 
-    static {
-        for (final HorizontalEdge corner : HorizontalEdge.values()) {
-            HORIZONTAL_CORNER_LOOKUP[corner.left.ordinal()][corner.right.ordinal()] = corner;
-            HORIZONTAL_CORNER_LOOKUP[corner.right.ordinal()][corner.left.ordinal()] = corner;
-        }
-    }
+	static {
+		for (final HorizontalEdge corner : HorizontalEdge.values()) {
+			HORIZONTAL_CORNER_LOOKUP[corner.left.ordinal()][corner.right.ordinal()] = corner;
+			HORIZONTAL_CORNER_LOOKUP[corner.right.ordinal()][corner.left.ordinal()] = corner;
+		}
+	}
 
-    public static HorizontalEdge find(HorizontalFace face1, HorizontalFace face2) {
-        return HORIZONTAL_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
-    }
+	public static HorizontalEdge find(HorizontalFace face1, HorizontalFace face2) {
+		return HORIZONTAL_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
+	}
 
-    public static HorizontalEdge fromOrdinal(int ordinal) {
-        return VALUES[ordinal];
-    }
+	public static HorizontalEdge fromOrdinal(int ordinal) {
+		return VALUES[ordinal];
+	}
 
-    public static void forEach(Consumer<HorizontalEdge> consumer) {
-        for (final HorizontalEdge val : VALUES) {
-            consumer.accept(val);
-        }
-    }
+	public static void forEach(Consumer<HorizontalEdge> consumer) {
+		for (final HorizontalEdge val : VALUES) {
+			consumer.accept(val);
+		}
+	}
 
-    public static HorizontalEdge fromRotation(double yawDegrees) {
-        final int ordinal = MathHelper.floor(yawDegrees / 90.0D) & 3;
+	public static HorizontalEdge fromRotation(double yawDegrees) {
+		final int ordinal = MathHelper.floor(yawDegrees / 90.0D) & 3;
 
-        switch(ordinal) {
-        case 0:
-            return HorizontalEdge.SOUTH_WEST;
-        case 1:
-            return HorizontalEdge.NORTH_WEST;
-        case 2:
-            return HorizontalEdge.NORTH_EAST;
-        default:
-            return HorizontalEdge.SOUTH_EAST;
-        }
-    }
+		switch(ordinal) {
+		case 0:
+			return HorizontalEdge.SOUTH_WEST;
+		case 1:
+			return HorizontalEdge.NORTH_WEST;
+		case 2:
+			return HorizontalEdge.NORTH_EAST;
+		default:
+			return HorizontalEdge.SOUTH_EAST;
+		}
+	}
 }

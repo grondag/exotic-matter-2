@@ -21,27 +21,27 @@ import org.apiguardian.api.API;
 
 @API(status = EXPERIMENTAL)
 public enum TextureGroup {
-    STATIC_TILES,
-    STATIC_BORDERS,
-    STATIC_DETAILS,
-    DYNAMIC_TILES,
-    DYNAMIC_BORDERS,
-    DYNAMIC_DETAILS,
-    HIDDEN_TILES, HIDDEN_BORDERS,
-    HIDDEN_DETAILS, ALWAYS_HIDDEN;
+	STATIC_TILES,
+	STATIC_BORDERS,
+	STATIC_DETAILS,
+	DYNAMIC_TILES,
+	DYNAMIC_BORDERS,
+	DYNAMIC_DETAILS,
+	HIDDEN_TILES, HIDDEN_BORDERS,
+	HIDDEN_DETAILS, ALWAYS_HIDDEN;
 
-    /** used as a fast way to filter textures from a list */
-    public final int bitFlag;
+	/** used as a fast way to filter textures from a list */
+	public final int bitFlag;
 
-    private TextureGroup() {
-        bitFlag = (1 << ordinal());
-    }
+	private TextureGroup() {
+		bitFlag = (1 << ordinal());
+	}
 
-    public static int makeTextureGroupFlags(TextureGroup... groups) {
-        int flags = 0;
-        for (final TextureGroup group : groups) {
-            flags |= group.bitFlag;
-        }
-        return flags;
-    }
+	public static int makeTextureGroupFlags(TextureGroup... groups) {
+		int flags = 0;
+		for (final TextureGroup group : groups) {
+			flags |= group.bitFlag;
+		}
+		return flags;
+	}
 }

@@ -28,48 +28,48 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public abstract class FaceEdgeHelper {
-    private FaceEdgeHelper() {
-    }
+	private FaceEdgeHelper() {
+	}
 
-    private static final FaceEdge[] VALUES = FaceEdge.values();
+	private static final FaceEdge[] VALUES = FaceEdge.values();
 
-    public static final int COUNT = VALUES.length;
+	public static final int COUNT = VALUES.length;
 
-    public static final FaceEdge fromOrdinal(int ordinal) {
-        return VALUES[ordinal];
-    }
+	public static final FaceEdge fromOrdinal(int ordinal) {
+		return VALUES[ordinal];
+	}
 
-    // find the side for a given face orthogonal to a face
-    private final static FaceEdge FACE_LOOKUP[][] = new FaceEdge[6][6];
+	// find the side for a given face orthogonal to a face
+	private final static FaceEdge FACE_LOOKUP[][] = new FaceEdge[6][6];
 
-    static {
-        for (final Direction onFace : Direction.values()) {
-            for (final Direction edgeFace : Direction.values()) {
-                FaceEdge match = null;
+	static {
+		for (final Direction onFace : Direction.values()) {
+			for (final Direction edgeFace : Direction.values()) {
+				FaceEdge match = null;
 
-                for (final FaceEdge side : FaceEdge.values()) {
-                    if (side.toWorld(onFace) == edgeFace) {
-                        match = side;
-                    }
-                }
-                FACE_LOOKUP[onFace.ordinal()][edgeFace.ordinal()] = match;
-            }
-        }
-    }
+				for (final FaceEdge side : FaceEdge.values()) {
+					if (side.toWorld(onFace) == edgeFace) {
+						match = side;
+					}
+				}
+				FACE_LOOKUP[onFace.ordinal()][edgeFace.ordinal()] = match;
+			}
+		}
+	}
 
-    /**
-     * Determines if the given sideFace is TOP, BOTTOM, DEFAULT_LEFT or
-     * DEFAULT_RIGHT of onFace. If none (sideFace on same orthogonalAxis as onFace),
-     * return null;
-     */
-    @Nullable
-    public static FaceEdge fromWorld(Direction edgeFace, Direction onFace) {
-        return FACE_LOOKUP[onFace.ordinal()][edgeFace.ordinal()];
-    }
+	/**
+	 * Determines if the given sideFace is TOP, BOTTOM, DEFAULT_LEFT or
+	 * DEFAULT_RIGHT of onFace. If none (sideFace on same orthogonalAxis as onFace),
+	 * return null;
+	 */
+	@Nullable
+	public static FaceEdge fromWorld(Direction edgeFace, Direction onFace) {
+		return FACE_LOOKUP[onFace.ordinal()][edgeFace.ordinal()];
+	}
 
-    public static void forEach(Consumer<FaceEdge> consumer) {
-        for (final FaceEdge val : VALUES) {
-            consumer.accept(val);
-        }
-    }
+	public static void forEach(Consumer<FaceEdge> consumer) {
+		for (final FaceEdge val : VALUES) {
+			consumer.accept(val);
+		}
+	}
 }

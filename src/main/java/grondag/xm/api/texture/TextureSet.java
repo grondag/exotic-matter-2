@@ -28,114 +28,114 @@ import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface TextureSet {
-    static TextureSetBuilder builder() {
-        return TextureSetImpl.builder();
-    }
+	static TextureSetBuilder builder() {
+		return TextureSetImpl.builder();
+	}
 
-    static TextureSetBuilder builder(TextureSet template) {
-        return TextureSetImpl.builder(template);
-    }
+	static TextureSetBuilder builder(TextureSet template) {
+		return TextureSetImpl.builder(template);
+	}
 
-    static TextureSet none() {
-        return TextureSetRegistry.instance().get(TextureSetRegistry.NONE_ID);
-    }
+	static TextureSet none() {
+		return TextureSetRegistry.instance().get(TextureSetRegistry.NONE_ID);
+	}
 
-    /** Registration ID */
-    Identifier id();
+	/** Registration ID */
+	Identifier id();
 
-    /**
-     * Transient id for temporary serialization. Client values may not match server
-     * values.
-     */
-    int index();
+	/**
+	 * Transient id for temporary serialization. Client values may not match server
+	 * values.
+	 */
+	int index();
 
-    /**
-     * Passes strings to consumer for all textures to be included in texture stitch.
-     */
-    void prestitch(Consumer<Identifier> stitcher);
+	/**
+	 * Passes strings to consumer for all textures to be included in texture stitch.
+	 */
+	void prestitch(Consumer<Identifier> stitcher);
 
-    /**
-     * For use by TESR and GUI to conveniently and quickly access default sprite
-     */
-    Sprite sampleSprite();
+	/**
+	 * For use by TESR and GUI to conveniently and quickly access default sprite
+	 */
+	Sprite sampleSprite();
 
-    /**
-     * Returns the actual texture name for purpose of finding a texture sprite. For
-     * palettes with a single texture per version.
-     */
-    String textureName(int version);
+	/**
+	 * Returns the actual texture name for purpose of finding a texture sprite. For
+	 * palettes with a single texture per version.
+	 */
+	String textureName(int version);
 
-    /**
-     * Returns the actual texture name for purpose of finding a texture sprite. For
-     * palettes with multiple textures per version.
-     */
-    String textureName(int version, int index);
+	/**
+	 * Returns the actual texture name for purpose of finding a texture sprite. For
+	 * palettes with multiple textures per version.
+	 */
+	String textureName(int version, int index);
 
-    /**
-     * Masks the version number provided by consumers - alternators that drive
-     * number generation may support larger number of values. Implies number of
-     * texture versions must be a power of 2
-     */
-    int versionMask();
+	/**
+	 * Masks the version number provided by consumers - alternators that drive
+	 * number generation may support larger number of values. Implies number of
+	 * texture versions must be a power of 2
+	 */
+	int versionMask();
 
-    // UGLY: rename after fixing breaks
-    TextureLayoutMap map();
+	// UGLY: rename after fixing breaks
+	TextureLayoutMap map();
 
-    TextureTransform transform();
+	TextureTransform transform();
 
-    TextureScale scale();
+	TextureScale scale();
 
-    /**
-     * Determines layer that should be used for rendering this texture.
-     */
-    TextureRenderIntent renderIntent();
+	/**
+	 * Determines layer that should be used for rendering this texture.
+	 */
+	TextureRenderIntent renderIntent();
 
-    /** number of alternate versions available - must be a power of 2 */
-    int versionCount();
+	/** number of alternate versions available - must be a power of 2 */
+	int versionCount();
 
-    /**
-     * Base texture file name - used to construct other text name methods. Exposed
-     * to enable programmatic construction of semantically different palates that
-     * use the same underlying texture file(s). Should include namespace.
-     */
-    String baseTextureName();
+	/**
+	 * Base texture file name - used to construct other text name methods. Exposed
+	 * to enable programmatic construction of semantically different palates that
+	 * use the same underlying texture file(s). Should include namespace.
+	 */
+	String baseTextureName();
 
-    /** for border-layout textures, controls if "no border" texture is rendered */
-    boolean renderNoBorderAsTile();
+	/** for border-layout textures, controls if "no border" texture is rendered */
+	boolean renderNoBorderAsTile();
 
-    String displayNameToken();
+	String displayNameToken();
 
-    /**
-     * Player-friendly, localized name for this texture palette
-     */
-    default String displayName() {
-        return I18n.translate(displayNameToken());
-    }
+	/**
+	 * Player-friendly, localized name for this texture palette
+	 */
+	default String displayName() {
+		return I18n.translate(displayNameToken());
+	}
 
-    /**
-     * Use {@link #sampleSprite()} when possible, not all texture formats work well
-     * without specific UV mapping.
-     */
-    String sampleTextureName();
+	/**
+	 * Use {@link #sampleSprite()} when possible, not all texture formats work well
+	 * without specific UV mapping.
+	 */
+	String sampleTextureName();
 
-    /**
-     * Used by modelstate to know which world state must be retrieved to drive this
-     * texture (rotation and block version)
-     */
-    int stateFlags();
+	/**
+	 * Used by modelstate to know which world state must be retrieved to drive this
+	 * texture (rotation and block version)
+	 */
+	int stateFlags();
 
-    int textureGroupFlags();
+	int textureGroupFlags();
 
-    /**
-     * Call to force textures to be loaded into memory. Will be called automatically
-     * for textures referenced in statically-defined models but must be called
-     * explicitly for any texture sets that may be referenced dynamically at run
-     * time.
-     */
-    void use();
+	/**
+	 * Call to force textures to be loaded into memory. Will be called automatically
+	 * for textures referenced in statically-defined models but must be called
+	 * explicitly for any texture sets that may be referenced dynamically at run
+	 * time.
+	 */
+	void use();
 
-    /**
-     * True if {@link #use()} has been called.
-     */
-    boolean used();
+	/**
+	 * True if {@link #use()} has been called.
+	 */
+	boolean used();
 }

@@ -27,18 +27,18 @@ import net.minecraft.item.Items;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public abstract class SingleStackPlacementSpec extends AbstractPlacementSpec {
-    /**
-     * Stack that should be placed in the world. Populated during
-     * {@link #doValidate()} Default is AIR (for excavations) if not set.
-     */
-    protected ItemStack outputStack = Items.AIR.getStackForRender();
+	/**
+	 * Stack that should be placed in the world. Populated during
+	 * {@link #doValidate()} Default is AIR (for excavations) if not set.
+	 */
+	protected ItemStack outputStack = Items.AIR.getStackForRender();
 
-    protected SingleStackPlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos) {
-        super(placedStack, player, pPos);
-    }
+	protected SingleStackPlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos) {
+		super(placedStack, player, pPos);
+	}
 
-    @Override
-    protected ModelState previewModelState() {
-        return outputStack == null ? super.previewModelState() : XmItem.modelState(outputStack);
-    }
+	@Override
+	protected ModelState previewModelState() {
+		return outputStack == null ? super.previewModelState() : XmItem.modelState(outputStack);
+	}
 }

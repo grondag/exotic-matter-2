@@ -33,250 +33,250 @@ import grondag.xm.api.orientation.FaceCorner;
 @API(status = INTERNAL)
 public class QuadrantSplitter {
 
-    public final static FaceCorner uvQuadrant(MutablePolygon quad, int layerIndex) {
-        final int vCount = quad.vertexCount();
+	public final static FaceCorner uvQuadrant(MutablePolygon quad, int layerIndex) {
+		final int vCount = quad.vertexCount();
 
-        float uMin = quad.u(0, layerIndex);
-        float uMax = uMin;
-        float vMin = quad.v(0, layerIndex);
-        float vMax = vMin;
+		float uMin = quad.u(0, layerIndex);
+		float uMax = uMin;
+		float vMin = quad.v(0, layerIndex);
+		float vMax = vMin;
 
-        for (int i = 1; i < vCount; i++) {
-            final float u = quad.u(i, layerIndex);
-            final float v = quad.v(i, layerIndex);
-            if (u < uMin) {
-                uMin = u;
-            } else if (u > uMax) {
-                uMax = u;
-            }
+		for (int i = 1; i < vCount; i++) {
+			final float u = quad.u(i, layerIndex);
+			final float v = quad.v(i, layerIndex);
+			if (u < uMin) {
+				uMin = u;
+			} else if (u > uMax) {
+				uMax = u;
+			}
 
-            if (v < vMin) {
-                vMin = v;
-            } else if (v > vMax) {
-                vMax = v;
-            }
-        }
+			if (v < vMin) {
+				vMin = v;
+			} else if (v > vMax) {
+				vMax = v;
+			}
+		}
 
-        // note that v is inverted from FaceCorner semantics.
-        // (high v = bottom, low v = top)
-        if (vertexType(uMin) == LOW) {
-            // u is left
-            if (vertexType(uMax) == HIGH)
-                // spanning
-                return null;
+		// note that v is inverted from FaceCorner semantics.
+		// (high v = bottom, low v = top)
+		if (vertexType(uMin) == LOW) {
+			// u is left
+			if (vertexType(uMax) == HIGH)
+				// spanning
+				return null;
 
-            else if (vertexType(vMin) == LOW) {
-                // v is low
+			else if (vertexType(vMin) == LOW) {
+				// v is low
 
-                if (vertexType(vMax) == HIGH)
-                    // spanning
-                    return null;
-                else
-                    return FaceCorner.TOP_LEFT;
-            } else
-                // v is high
-                return FaceCorner.BOTTOM_LEFT;
-        } else {
-            // u is right
-            if (vertexType(vMin) == LOW) {
-                // v is low
+				if (vertexType(vMax) == HIGH)
+					// spanning
+					return null;
+				else
+					return FaceCorner.TOP_LEFT;
+			} else
+				// v is high
+				return FaceCorner.BOTTOM_LEFT;
+		} else {
+			// u is right
+			if (vertexType(vMin) == LOW) {
+				// v is low
 
-                if (vertexType(vMax) == HIGH)
-                    // spanning
-                    return null;
-                else
-                    return FaceCorner.TOP_RIGHT;
-            } else
-                // v is high
-                return FaceCorner.BOTTOM_RIGHT;
-        }
-    }
+				if (vertexType(vMax) == HIGH)
+					// spanning
+					return null;
+				else
+					return FaceCorner.TOP_RIGHT;
+			} else
+				// v is high
+				return FaceCorner.BOTTOM_RIGHT;
+		}
+	}
 
-    /**
-     * Stream editor must be at split position. <br>
-     * May move editor but returns editor to position at call time if it does
-     * so.<br>
-     * If split occurs, poly at editor position will be marked deleted.
-     * <p>
-     *
-     * May also move reader, and does not restore reader position if it does so.
-     */
-    public static final void split(MutableMesh stream, int layerIndex) {
-        final MutablePolygon editor = stream.editor();
-        final int editorAddress = editor.address();
-        final Polygon reader = stream.reader(editorAddress);
+	/**
+	 * Stream editor must be at split position. <br>
+	 * May move editor but returns editor to position at call time if it does
+	 * so.<br>
+	 * If split occurs, poly at editor position will be marked deleted.
+	 * <p>
+	 *
+	 * May also move reader, and does not restore reader position if it does so.
+	 */
+	public static final void split(MutableMesh stream, int layerIndex) {
+		final MutablePolygon editor = stream.editor();
+		final int editorAddress = editor.address();
+		final Polygon reader = stream.reader(editorAddress);
 
-        int lowCount = 0;
-        int highCount = 0;
-        final int vCount = reader.vertexCount();
+		int lowCount = 0;
+		int highCount = 0;
+		final int vCount = reader.vertexCount();
 
-        for (int i = 0; i < vCount; i++) {
-            final int t = vertexType(reader.u(i, layerIndex));
-            if (t == HIGH) {
-                highCount++;
-            } else if (t == LOW) {
-                lowCount++;
-            }
-        }
+		for (int i = 0; i < vCount; i++) {
+			final int t = vertexType(reader.u(i, layerIndex));
+			if (t == HIGH) {
+				highCount++;
+			} else if (t == LOW) {
+				lowCount++;
+			}
+		}
 
-        if (lowCount == 0) {
-            // all on on high side
-            splitV(stream, editorAddress, true, layerIndex);
-        } else if (highCount == 0) {
-            // all on low side
-            splitV(stream, editorAddress, false, layerIndex);
-        } else {
-            // spanning
-            final MutablePolygon writer = stream.writer();
+		if (lowCount == 0) {
+			// all on on high side
+			splitV(stream, editorAddress, true, layerIndex);
+		} else if (highCount == 0) {
+			// all on low side
+			splitV(stream, editorAddress, false, layerIndex);
+		} else {
+			// spanning
+			final MutablePolygon writer = stream.writer();
 
-            final int highAddress = stream.writerAddress();
-            int iHighVertex = 0;
-            writer.vertexCount(highCount + 2)
-            .copyFrom(reader, false)
-            .append();
+			final int highAddress = stream.writerAddress();
+			int iHighVertex = 0;
+			writer.vertexCount(highCount + 2)
+			.copyFrom(reader, false)
+			.append();
 
-            final int lowAddress = stream.writerAddress();
-            int iLowVertex = 0;
-            writer.vertexCount(lowCount + 2)
-            .copyFrom(reader, false)
-            .append();
+			final int lowAddress = stream.writerAddress();
+			int iLowVertex = 0;
+			writer.vertexCount(lowCount + 2)
+			.copyFrom(reader, false)
+			.append();
 
-            int iThis = vCount - 1;
-            float uThis = reader.u(iThis, layerIndex);
-            int thisType = vertexType(uThis);
+			int iThis = vCount - 1;
+			float uThis = reader.u(iThis, layerIndex);
+			int thisType = vertexType(uThis);
 
-            for (int iNext = 0; iNext < vCount; iNext++) {
-                final float uNext = reader.u(iNext, layerIndex);
-                final int nextType = vertexType(uNext);
+			for (int iNext = 0; iNext < vCount; iNext++) {
+				final float uNext = reader.u(iNext, layerIndex);
+				final int nextType = vertexType(uNext);
 
-                if (thisType == EDGE) {
-                    stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
-                    stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
-                } else if (thisType == HIGH) {
-                    stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
-                    if (nextType == LOW) {
-                        final float dist = (0.5f - uThis) / (uNext - uThis);
-                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
-                        stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
-                        iLowVertex++;
-                        iHighVertex++;
-                    }
-                } else {
-                    stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
-                    if (nextType == HIGH) {
-                        final float dist = (0.5f - uThis) / (uNext - uThis);
-                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
-                        stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
-                        iLowVertex++;
-                        iHighVertex++;
-                    }
-                }
-                iThis = iNext;
-                uThis = uNext;
-                thisType = nextType;
-            }
+				if (thisType == EDGE) {
+					stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
+					stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
+				} else if (thisType == HIGH) {
+					stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
+					if (nextType == LOW) {
+						final float dist = (0.5f - uThis) / (uNext - uThis);
+						stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
+						stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
+						iLowVertex++;
+						iHighVertex++;
+					}
+				} else {
+					stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
+					if (nextType == HIGH) {
+						final float dist = (0.5f - uThis) / (uNext - uThis);
+						stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
+						stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
+						iLowVertex++;
+						iHighVertex++;
+					}
+				}
+				iThis = iNext;
+				uThis = uNext;
+				thisType = nextType;
+			}
 
-            reader.delete();
+			reader.delete();
 
-            splitV(stream, highAddress, true, layerIndex);
-            splitV(stream, lowAddress, false, layerIndex);
+			splitV(stream, highAddress, true, layerIndex);
+			splitV(stream, lowAddress, false, layerIndex);
 
-            // restore editor position if we moved it
-            if (editor.address() != editorAddress) {
-                editor.moveTo(editorAddress);
-            }
-        }
-    }
+			// restore editor position if we moved it
+			if (editor.address() != editorAddress) {
+				editor.moveTo(editorAddress);
+			}
+		}
+	}
 
-    private static final void splitV(MutableMesh stream, int polyAddress, boolean isHighU, int layerIndex) {
-        final Polygon reader = stream.reader(polyAddress);
+	private static final void splitV(MutableMesh stream, int polyAddress, boolean isHighU, int layerIndex) {
+		final Polygon reader = stream.reader(polyAddress);
 
-        int lowCount = 0;
-        int highCount = 0;
-        final int vCount = reader.vertexCount();
+		int lowCount = 0;
+		int highCount = 0;
+		final int vCount = reader.vertexCount();
 
-        for (int i = 0; i < vCount; i++) {
-            final int t = vertexType(reader.v(i, layerIndex));
-            if (t == HIGH) {
-                highCount++;
-            } else if (t == LOW) {
-                lowCount++;
-            }
-        }
+		for (int i = 0; i < vCount; i++) {
+			final int t = vertexType(reader.v(i, layerIndex));
+			if (t == HIGH) {
+				highCount++;
+			} else if (t == LOW) {
+				lowCount++;
+			}
+		}
 
-        if (lowCount == 0)
-            // all on on high side
-            return;
-        else if (highCount == 0)
-            // all on low side
-            return;
-        else {
-            // spanning
-            final MutablePolygon writer = stream.writer();
+		if (lowCount == 0)
+			// all on on high side
+			return;
+		else if (highCount == 0)
+			// all on low side
+			return;
+		else {
+			// spanning
+			final MutablePolygon writer = stream.writer();
 
-            final int highAddress = stream.writerAddress();
-            int iHighVertex = 0;
-            writer.vertexCount(highCount + 2)
-            .copyFrom(reader, false)
-            .append();
+			final int highAddress = stream.writerAddress();
+			int iHighVertex = 0;
+			writer.vertexCount(highCount + 2)
+			.copyFrom(reader, false)
+			.append();
 
-            final int lowAddress = stream.writerAddress();
-            int iLowVertex = 0;
-            writer.vertexCount(lowCount + 2)
-            .copyFrom(reader, false)
-            .append();
+			final int lowAddress = stream.writerAddress();
+			int iLowVertex = 0;
+			writer.vertexCount(lowCount + 2)
+			.copyFrom(reader, false)
+			.append();
 
-            int iThis = vCount - 1;
-            float vThis = reader.v(iThis, layerIndex);
-            int thisType = vertexType(vThis);
+			int iThis = vCount - 1;
+			float vThis = reader.v(iThis, layerIndex);
+			int thisType = vertexType(vThis);
 
-            for (int iNext = 0; iNext < vCount; iNext++) {
-                final float vNext = reader.v(iNext, layerIndex);
-                final int nextType = vertexType(vNext);
+			for (int iNext = 0; iNext < vCount; iNext++) {
+				final float vNext = reader.v(iNext, layerIndex);
+				final int nextType = vertexType(vNext);
 
-                if (thisType == EDGE) {
-                    stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
-                    stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
-                } else if (thisType == HIGH) {
-                    stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
-                    if (nextType == LOW) {
-                        final float dist = (0.5f - vThis) / (vNext - vThis);
-                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
-                        stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
-                        iLowVertex++;
-                        iHighVertex++;
-                    }
-                } else {
-                    stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
-                    if (nextType == HIGH) {
-                        final float dist = (0.5f - vThis) / (vNext - vThis);
-                        stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
-                        stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
-                        iLowVertex++;
-                        iHighVertex++;
-                    }
-                }
-                iThis = iNext;
-                vThis = vNext;
-                thisType = nextType;
-            }
+				if (thisType == EDGE) {
+					stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
+					stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
+				} else if (thisType == HIGH) {
+					stream.editor(highAddress).copyVertexFrom(iHighVertex++, reader, iThis);
+					if (nextType == LOW) {
+						final float dist = (0.5f - vThis) / (vNext - vThis);
+						stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
+						stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
+						iLowVertex++;
+						iHighVertex++;
+					}
+				} else {
+					stream.editor(lowAddress).copyVertexFrom(iLowVertex++, reader, iThis);
+					if (nextType == HIGH) {
+						final float dist = (0.5f - vThis) / (vNext - vThis);
+						stream.editor(lowAddress).copyInterpolatedVertexFrom(iLowVertex, reader, iThis, reader, iNext, dist);
+						stream.editor(highAddress).copyVertexFrom(iHighVertex, stream.polyA(lowAddress), iLowVertex);
+						iLowVertex++;
+						iHighVertex++;
+					}
+				}
+				iThis = iNext;
+				vThis = vNext;
+				thisType = nextType;
+			}
 
-            reader.delete();
-        }
-    }
+			reader.delete();
+		}
+	}
 
-    private static final int EDGE = 0;
-    private static final int HIGH = 1;
-    private static final int LOW = 2;
+	private static final int EDGE = 0;
+	private static final int HIGH = 1;
+	private static final int LOW = 2;
 
-    private final static int vertexType(float uvCoord) {
-        if (uvCoord >= 0.5f - PolyHelper.EPSILON) {
-            if (uvCoord <= 0.5f + PolyHelper.EPSILON)
-                return EDGE;
-            else
-                return HIGH;
-        } else
-            // < 0.5f - QuadHelper.EPSILON
-            return LOW;
-    }
+	private final static int vertexType(float uvCoord) {
+		if (uvCoord >= 0.5f - PolyHelper.EPSILON) {
+			if (uvCoord <= 0.5f + PolyHelper.EPSILON)
+				return EDGE;
+			else
+				return HIGH;
+		} else
+			// < 0.5f - QuadHelper.EPSILON
+			return LOW;
+	}
 }

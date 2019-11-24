@@ -40,24 +40,24 @@ import net.minecraft.util.math.Direction;
 @API(status = STABLE)
 public interface CornerJoinFaceState {
 
-    int ordinal();
+	int ordinal();
 
-    boolean isJoined(FaceEdge side);
+	boolean isJoined(FaceEdge side);
 
-    boolean isJoined(Direction toFace, Direction onFace);
+	boolean isJoined(Direction toFace, Direction onFace);
 
-    /**
-     * True if connected-texture/shape blocks need to render corner due to
-     * missing/covered block in adjacent corner.
-     */
-    boolean needsCorner(FaceCorner corner);
+	/**
+	 * True if connected-texture/shape blocks need to render corner due to
+	 * missing/covered block in adjacent corner.
+	 */
+	boolean needsCorner(FaceCorner corner);
 
-    /**
-     * True if connected-texture/shape blocks need to render corner due to
-     * missing/covered block in adjacent corner.
-     *
-     * Note that to use this version you must know which block face this state is
-     * on.
-     */
-    boolean needsCorner(Direction face1, Direction face2, Direction onFace);
+	/**
+	 * True if connected-texture/shape blocks need to render corner due to
+	 * missing/covered block in adjacent corner.
+	 *
+	 * Note that to use this version you must know which block face this state is
+	 * on.
+	 */
+	boolean needsCorner(Direction face1, Direction face2, Direction onFace);
 }

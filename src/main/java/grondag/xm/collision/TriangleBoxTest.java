@@ -71,13 +71,11 @@ class TriangleBoxTest {
 			maxZ = -boxHalfSize - vZ;
 		}
 
-		if (normX * minX + normY * minY + normZ * minZ > 0.0f) {
+		if (normX * minX + normY * minY + normZ * minZ > 0.0f)
 			return false;
-		}
 
-		if (normX * maxX + normY * maxY + normZ * maxZ >= -EPSILON) {
+		if (normX * maxX + normY * maxY + normZ * maxZ >= -EPSILON)
 			return true;
-		}
 
 		return false;
 	}
@@ -156,10 +154,10 @@ class TriangleBoxTest {
 				polyData[POLY_MAX_X] = x0;
 				polyData[POLY_MIN_X] = x1 < x2 ? x1 : x2;
 			} else // x1 < x0 <= x2
-					{
+			{
 				polyData[POLY_MAX_X] = x2;
 				polyData[POLY_MIN_X] = x1;
-					}
+			}
 		} else // x0 <= x1
 		{
 			if (x1 > x2) {
@@ -177,10 +175,10 @@ class TriangleBoxTest {
 				polyData[POLY_MAX_Y] = y0;
 				polyData[POLY_MIN_Y] = y1 < y2 ? y1 : y2;
 			} else // y1 < y0 <= y2
-					{
+			{
 				polyData[POLY_MAX_Y] = y2;
 				polyData[POLY_MIN_Y] = y1;
-					}
+			}
 		} else // y0 <= y1
 		{
 			if (y1 > y2) {
@@ -198,10 +196,10 @@ class TriangleBoxTest {
 				polyData[POLY_MAX_Z] = z0;
 				polyData[POLY_MIN_Z] = z1 < z2 ? z1 : z2;
 			} else // z1 < z0 <= z2
-					{
+			{
 				polyData[POLY_MAX_Z] = z2;
 				polyData[POLY_MIN_Z] = z1;
-					}
+			}
 		} else // z0 <= z1
 		{
 			if (z1 > z2) {
@@ -267,27 +265,23 @@ class TriangleBoxTest {
 			final float boxMax = boxCenter + boxHalfSize;
 			final float dMax = triVal - boxMax;
 
-			if (PolyHelper.epsilonZero(dMax)) {
+			if (PolyHelper.epsilonZero(dMax))
 				return triNormal < 0;
-			} else if (dMax > 0) {
+			else if (dMax > 0)
 				return true;
-			}
 
 			final float boxMin = boxCenter - boxHalfSize;
 			final float dMin = triVal - boxMin;
 
-			if (PolyHelper.epsilonZero(dMin)) {
+			if (PolyHelper.epsilonZero(dMin))
 				return triNormal > 0;
-			} else if (dMin < 0) {
-				return true;
-			}
+				else if (dMin < 0)
+					return true;
 		} else {
-			if (triMin >= boxCenter + boxHalfSize - EPSILON) {
+			if (triMin >= boxCenter + boxHalfSize - EPSILON)
 				return true;
-			}
-			if (triMax <= boxCenter - boxHalfSize + EPSILON) {
+			if (triMax <= boxCenter - boxHalfSize + EPSILON)
 				return true;
-			}
 		}
 		return false;
 	}
@@ -298,17 +292,14 @@ class TriangleBoxTest {
 	 */
 	public static boolean triBoxOverlap(float boxCenterX, float boxCenterY, float boxCenterZ, float boxHalfSize, float[] polyData) {
 		// bounding box tests
-		if (isTriExcluded(polyData[POLY_MIN_X], polyData[POLY_MAX_X], polyData[POLY_NORM_X], boxCenterX, boxHalfSize)) {
+		if (isTriExcluded(polyData[POLY_MIN_X], polyData[POLY_MAX_X], polyData[POLY_NORM_X], boxCenterX, boxHalfSize))
 			return false;
-		}
 
-		if (isTriExcluded(polyData[POLY_MIN_Y], polyData[POLY_MAX_Y], polyData[POLY_NORM_Y], boxCenterY, boxHalfSize)) {
+		if (isTriExcluded(polyData[POLY_MIN_Y], polyData[POLY_MAX_Y], polyData[POLY_NORM_Y], boxCenterY, boxHalfSize))
 			return false;
-		}
 
-		if (isTriExcluded(polyData[POLY_MIN_Z], polyData[POLY_MAX_Z], polyData[POLY_NORM_Z], boxCenterZ, boxHalfSize)) {
+		if (isTriExcluded(polyData[POLY_MIN_Z], polyData[POLY_MAX_Z], polyData[POLY_NORM_Z], boxCenterZ, boxHalfSize))
 			return false;
-		}
 
 		// offset coordinate so that the boxcenter is in (0,0,0)
 		final float v0x = polyData[POLY_V0_X] - boxCenterX;
@@ -316,9 +307,8 @@ class TriangleBoxTest {
 		final float v0z = polyData[POLY_V0_Z] - boxCenterZ;
 
 		// do plane/box before rest of offsets - is relatively simple
-		if (!planeBoxOverlap(polyData[POLY_NORM_X], polyData[POLY_NORM_Y], polyData[POLY_NORM_Z], v0x, v0y, v0z, boxHalfSize)) {
+		if (!planeBoxOverlap(polyData[POLY_NORM_X], polyData[POLY_NORM_Y], polyData[POLY_NORM_Z], v0x, v0y, v0z, boxHalfSize))
 			return false;
-		}
 
 		// continue with offsets
 		final float v1x = polyData[POLY_V1_X] - boxCenterX;
@@ -341,12 +331,10 @@ class TriangleBoxTest {
 				//                final float rad = (Math.abs(ez) + Math.abs(ey)) * boxHalfSize; //fez + fey;
 				final float rad = polyData[ASL_0_YZ] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 
 			{
@@ -355,12 +343,10 @@ class TriangleBoxTest {
 				//                final float rad = (Math.abs(ez) + Math.abs(ex)) * boxHalfSize; //fez + fex;
 				final float rad = polyData[ASL_0_XZ] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 
 			{
@@ -369,12 +355,10 @@ class TriangleBoxTest {
 				//                final float rad = (Math.abs(ey) + Math.abs(ex)) * boxHalfSize; //fey + fex;
 				final float rad = polyData[ASL_0_XY] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 		}
 
@@ -388,12 +372,10 @@ class TriangleBoxTest {
 				final float b = ez * v2y - ey * v2z;
 				final float rad = polyData[ASL_1_YZ] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 
 			{
@@ -401,12 +383,10 @@ class TriangleBoxTest {
 				final float b = -ez * v2x + ex * v2z;
 				final float rad = polyData[ASL_1_XZ] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 
 			{
@@ -414,12 +394,10 @@ class TriangleBoxTest {
 				final float b = ey * v1x - ex * v1y;
 				final float rad = polyData[ASL_1_XY] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 		}
 
@@ -433,12 +411,10 @@ class TriangleBoxTest {
 				final float b = ez * v1y - ey * v1z;
 				final float rad = polyData[ASL_2_YZ] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 
 			{
@@ -446,12 +422,10 @@ class TriangleBoxTest {
 				final float b = -ez * v1x + ex * v1z;
 				final float rad = polyData[ASL_2_XZ] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 
 			{
@@ -459,12 +433,10 @@ class TriangleBoxTest {
 				final float b = ey * v2x - ex * v2y;
 				final float rad = polyData[ASL_2_XY] * boxHalfSize + EPSILON;
 				if (a < b) {
-					if (a > rad || b < -rad) {
+					if (a > rad || b < -rad)
 						return false;
-					}
-				} else if (b > rad || a < -rad) {
+				} else if (b > rad || a < -rad)
 					return false;
-				}
 			}
 		}
 

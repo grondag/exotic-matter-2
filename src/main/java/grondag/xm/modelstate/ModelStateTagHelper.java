@@ -24,26 +24,26 @@ import net.minecraft.nbt.CompoundTag;
 
 @API(status = INTERNAL)
 public abstract class ModelStateTagHelper {
-    private ModelStateTagHelper() {
-    }
+	private ModelStateTagHelper() {
+	}
 
-    public static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
+	public static final String NBT_MODEL_BITS = NBTDictionary.claim("modelState");
 
-    public static final String NBT_SHAPE = NBTDictionary.claim("shape");
+	public static final String NBT_SHAPE = NBTDictionary.claim("shape");
 
-    /**
-     * Stores string containing registry names of textures, vertex processors
-     */
-    public static final String NBT_LAYERS = NBTDictionary.claim("layers");
+	/**
+	 * Stores string containing registry names of textures, vertex processors
+	 */
+	public static final String NBT_LAYERS = NBTDictionary.claim("layers");
 
-    /**
-     * Removes model state from the tag if present.
-     */
-    public static final void clearNBTValues(CompoundTag tag) {
-        if (tag == null)
-            return;
-        tag.remove(NBT_MODEL_BITS);
-        tag.remove(NBT_SHAPE);
-        tag.remove(NBT_LAYERS);
-    }
+	/**
+	 * Removes model state from the tag if present.
+	 */
+	public static final void clearNBTValues(CompoundTag tag) {
+		if (tag == null)
+			return;
+		tag.remove(NBT_MODEL_BITS);
+		tag.remove(NBT_SHAPE);
+		tag.remove(NBT_LAYERS);
+	}
 }

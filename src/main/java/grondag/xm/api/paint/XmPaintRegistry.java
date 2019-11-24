@@ -24,11 +24,11 @@ import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface XmPaintRegistry {
-    XmPaintRegistry INSTANCE = XmPaintRegistryImpl.INSTANCE;
+	XmPaintRegistry INSTANCE = XmPaintRegistryImpl.INSTANCE;
 
-    XmPaint register(Identifier id, XmPaint paint);
+	XmPaint register(Identifier id, XmPaint paint);
 
-    XmPaint get(int paintIndex);
+	XmPaint get(int paintIndex);
 
-    XmPaint get(Identifier paintId);
+	XmPaint get(Identifier paintId);
 }

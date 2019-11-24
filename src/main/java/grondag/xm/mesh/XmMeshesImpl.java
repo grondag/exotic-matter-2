@@ -33,102 +33,102 @@ import grondag.xm.api.mesh.polygon.Polygon;
 
 @API(status = INTERNAL)
 public class XmMeshesImpl {
-    static final int FORMAT_TAGS = MeshFormat.HAS_TAG_FLAG;
-    static final int FORMAT_LINKS = MeshFormat.HAS_LINK_FLAG;
+	static final int FORMAT_TAGS = MeshFormat.HAS_TAG_FLAG;
+	static final int FORMAT_LINKS = MeshFormat.HAS_LINK_FLAG;
 
-    private static final ArrayBlockingQueue<WritableMeshImpl> writables = new ArrayBlockingQueue<>(256);
-    private static final ArrayBlockingQueue<MutableMeshImpl> mutables = new ArrayBlockingQueue<>(128);
-    private static final ArrayBlockingQueue<CsgMeshImpl> csgStreams = new ArrayBlockingQueue<>(128);
-    private static final ArrayBlockingQueue<ReadOnlyMeshImpl> readables = new ArrayBlockingQueue<>(256);
+	private static final ArrayBlockingQueue<WritableMeshImpl> writables = new ArrayBlockingQueue<>(256);
+	private static final ArrayBlockingQueue<MutableMeshImpl> mutables = new ArrayBlockingQueue<>(128);
+	private static final ArrayBlockingQueue<CsgMeshImpl> csgStreams = new ArrayBlockingQueue<>(128);
+	private static final ArrayBlockingQueue<ReadOnlyMeshImpl> readables = new ArrayBlockingQueue<>(256);
 
-    public static WritableMesh claimWritable() {
-        return claimWritable(0);
-    }
+	public static WritableMesh claimWritable() {
+		return claimWritable(0);
+	}
 
-    static WritableMesh claimWritable(int formatFlags) {
-        WritableMeshImpl result = writables.poll();
-        if (result == null) {
-            result = new WritableMeshImpl();
-        }
-        result.prepare(formatFlags);
-        return result;
-    }
+	static WritableMesh claimWritable(int formatFlags) {
+		WritableMeshImpl result = writables.poll();
+		if (result == null) {
+			result = new WritableMeshImpl();
+		}
+		result.prepare(formatFlags);
+		return result;
+	}
 
-    static void release(WritableMeshImpl freeStream) {
-        writables.offer(freeStream);
-    }
+	static void release(WritableMeshImpl freeStream) {
+		writables.offer(freeStream);
+	}
 
-    public static MutableMesh claimMutable() {
-        return claimMutable(0);
-    }
+	public static MutableMesh claimMutable() {
+		return claimMutable(0);
+	}
 
-    static MutableMesh claimMutable(int formatFlags) {
-        MutableMeshImpl result = mutables.poll();
-        if (result == null) {
-            result = new MutableMeshImpl();
-        }
-        result.prepare(formatFlags);
-        return result;
-    }
+	static MutableMesh claimMutable(int formatFlags) {
+		MutableMeshImpl result = mutables.poll();
+		if (result == null) {
+			result = new MutableMeshImpl();
+		}
+		result.prepare(formatFlags);
+		return result;
+	}
 
-    static void release(MutableMeshImpl freeStream) {
-        mutables.offer(freeStream);
-    }
+	static void release(MutableMeshImpl freeStream) {
+		mutables.offer(freeStream);
+	}
 
-    static ReadOnlyMesh claimReadOnly(WritableMeshImpl writablePolyStream, int formatFlags) {
-        ReadOnlyMeshImpl result = readables.poll();
-        if (result == null) {
-            result = new ReadOnlyMeshImpl();
-        }
-        result.load(writablePolyStream, formatFlags);
-        return result;
-    }
+	static ReadOnlyMesh claimReadOnly(WritableMeshImpl writablePolyStream, int formatFlags) {
+		ReadOnlyMeshImpl result = readables.poll();
+		if (result == null) {
+			result = new ReadOnlyMeshImpl();
+		}
+		result.load(writablePolyStream, formatFlags);
+		return result;
+	}
 
-    /**
-     * Creates a stream with randomly recolored copies of the input stream.
-     * <p>
-     *
-     * Does not modify or release the input stream.
-     */
-    public static ReadOnlyMesh claimRecoloredCopy(XmMesh input) {
-        final WritableMesh result = claimWritable();
-        final Polygon reader = input.reader();
-        if (reader.origin()) {
-            final Random r = ThreadLocalRandom.current();
+	/**
+	 * Creates a stream with randomly recolored copies of the input stream.
+	 * <p>
+	 *
+	 * Does not modify or release the input stream.
+	 */
+	public static ReadOnlyMesh claimRecoloredCopy(XmMesh input) {
+		final WritableMesh result = claimWritable();
+		final Polygon reader = input.reader();
+		if (reader.origin()) {
+			final Random r = ThreadLocalRandom.current();
 
-            final MutablePolygon writer = result.writer();
-            do {
-                writer.vertexCount(reader.vertexCount());
-                writer.spriteDepth(reader.spriteDepth());
-                writer.copyFrom(reader, true);
-                writer.colorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
-                writer.append();
-            } while (reader.next());
-        }
+			final MutablePolygon writer = result.writer();
+			do {
+				writer.vertexCount(reader.vertexCount());
+				writer.spriteDepth(reader.spriteDepth());
+				writer.copyFrom(reader, true);
+				writer.colorAll(0, (r.nextInt(0x1000000) & 0xFFFFFF) | 0xFF000000);
+				writer.append();
+			} while (reader.next());
+		}
 
-        return result.releaseToReader();
-    }
+		return result.releaseToReader();
+	}
 
-    static void release(ReadOnlyMeshImpl freeStream) {
-        readables.offer(freeStream);
-    }
+	static void release(ReadOnlyMeshImpl freeStream) {
+		readables.offer(freeStream);
+	}
 
-    public static CsgMeshImpl claimCsg() {
-        CsgMeshImpl result = csgStreams.poll();
-        if (result == null) {
-            result = new CsgMeshImpl();
-        }
-        result.prepare();
-        return result;
-    }
+	public static CsgMeshImpl claimCsg() {
+		CsgMeshImpl result = csgStreams.poll();
+		if (result == null) {
+			result = new CsgMeshImpl();
+		}
+		result.prepare();
+		return result;
+	}
 
-    public static CsgMesh claimCsg(XmMesh stream) {
-        final CsgMeshImpl result = claimCsg();
-        result.appendAll(stream);
-        return result;
-    }
+	public static CsgMesh claimCsg(XmMesh stream) {
+		final CsgMeshImpl result = claimCsg();
+		result.appendAll(stream);
+		return result;
+	}
 
-    static void release(CsgMeshImpl freeStream) {
-        csgStreams.offer(freeStream);
-    }
+	static void release(CsgMeshImpl freeStream) {
+		csgStreams.offer(freeStream);
+	}
 }

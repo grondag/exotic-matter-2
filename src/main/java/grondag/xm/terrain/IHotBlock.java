@@ -21,24 +21,24 @@ import org.apiguardian.api.API;
 
 @API(status = INTERNAL)
 public interface IHotBlock {
-    /**
-     * Highest heat value that can be returned from {@link #heatLevel()}.
-     * Corresponds to molten lava.
-     */
-    int MAX_HEAT = 5;
+	/**
+	 * Highest heat value that can be returned from {@link #heatLevel()}.
+	 * Corresponds to molten lava.
+	 */
+	int MAX_HEAT = 5;
 
-    /**
-     * Count of allowed values returned from {@link #heatLevel()}, including zero.
-     * Equivalently, {@link #MAX_HEAT} + 1;
-     */
-    int HEAT_LEVEL_COUNT = MAX_HEAT + 1;
+	/**
+	 * Count of allowed values returned from {@link #heatLevel()}, including zero.
+	 * Equivalently, {@link #MAX_HEAT} + 1;
+	 */
+	int HEAT_LEVEL_COUNT = MAX_HEAT + 1;
 
-    default int heatLevel() {
-        return 0;
-    }
+	default int heatLevel() {
+		return 0;
+	}
 
-    default boolean isHot() {
-        return heatLevel() != 0;
-    }
+	default boolean isHot() {
+		return heatLevel() != 0;
+	}
 
 }

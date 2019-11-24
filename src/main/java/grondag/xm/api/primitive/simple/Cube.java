@@ -37,53 +37,53 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class Cube {
-    private Cube() {}
+	private Cube() {}
 
-    public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-            .add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .build();
+	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
+			.add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.build();
 
-    public static final XmSurface SURFACE_ALL = SURFACES.get(0);
+	public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
-    static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
-        final WritableMesh mesh = XmMeshes.claimWritable();
-        final MutablePolygon writer = mesh.writer();
-        writer.colorAll(0, 0xFFFFFFFF);
-        writer.lockUV(0, true);
-        writer.rotation(0, TextureOrientation.IDENTITY);
-        writer.sprite(0, "");
-        writer.saveDefaults();
+	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
+		final WritableMesh mesh = XmMeshes.claimWritable();
+		final MutablePolygon writer = mesh.writer();
+		writer.colorAll(0, 0xFFFFFFFF);
+		writer.lockUV(0, true);
+		writer.rotation(0, TextureOrientation.IDENTITY);
+		writer.sprite(0, "");
+		writer.saveDefaults();
 
-        writer.surface(SURFACE_ALL);
-        writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
-        writer.append();
+		writer.surface(SURFACE_ALL);
+		writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
+		writer.append();
 
-        writer.surface(SURFACE_ALL);
-        writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
-        writer.append();
+		writer.surface(SURFACE_ALL);
+		writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 0, Direction.NORTH);
+		writer.append();
 
-        writer.surface(SURFACE_ALL);
-        writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
-        writer.append();
+		writer.surface(SURFACE_ALL);
+		writer.setupFaceQuad(Direction.EAST, 0, 0, 1, 1, 0, Direction.UP);
+		writer.append();
 
-        writer.surface(SURFACE_ALL);
-        writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
-        writer.append();
+		writer.surface(SURFACE_ALL);
+		writer.setupFaceQuad(Direction.WEST, 0, 0, 1, 1, 0, Direction.UP);
+		writer.append();
 
-        writer.surface(SURFACE_ALL);
-        writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
-        writer.append();
+		writer.surface(SURFACE_ALL);
+		writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, 1, 0, Direction.UP);
+		writer.append();
 
-        writer.surface(SURFACE_ALL);
-        writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
-        writer.append();
+		writer.surface(SURFACE_ALL);
+		writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, 1, 0, Direction.UP);
+		writer.append();
 
-        return mesh.releaseToReader();
-    };
+		return mesh.releaseToReader();
+	};
 
-    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-            .surfaceList(SURFACES)
-            .polyFactory(POLY_FACTORY)
-            .orientationType(OrientationType.NONE)
-            .build(Xm.idString("cube"));
+	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+			.surfaceList(SURFACES)
+			.polyFactory(POLY_FACTORY)
+			.orientationType(OrientationType.NONE)
+			.build(Xm.idString("cube"));
 }

@@ -33,42 +33,42 @@ import net.minecraft.world.World;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public class SurfacePlacementSpec extends SingleStackPlacementSpec {
-    public SurfacePlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos) {
-        super(placedStack, player, pPos);
-    }
+	public SurfacePlacementSpec(ItemStack placedStack, PlayerEntity player, PlacementPosition pPos) {
+		super(placedStack, player, pPos);
+	}
 
-    @Override
-    protected boolean doValidate() {
-        // excavation doesn't make sense with this mode
-        if (isExcavation)
-            return false;
+	@Override
+	protected boolean doValidate() {
+		// excavation doesn't make sense with this mode
+		if (isExcavation)
+			return false;
 
-        return World.isValid(pPos.inPos) && player.world.getBlockState(pPos.inPos).getMaterial().isReplaceable();
-    }
+		return World.isValid(pPos.inPos) && player.world.getBlockState(pPos.inPos).getMaterial().isReplaceable();
+	}
 
-    @Environment(EnvType.CLIENT)
-    @Override
-    protected void drawSelection(Tessellator tessellator, BufferBuilder bufferBuilder) {
-        // TODO Auto-generated method stub
+	@Environment(EnvType.CLIENT)
+	@Override
+	protected void drawSelection(Tessellator tessellator, BufferBuilder bufferBuilder) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    @Environment(EnvType.CLIENT)
-    @Override
-    protected void drawPlacement(Tessellator tessellator, BufferBuilder bufferBuilder, PlacementPreviewRenderMode previewMode) {
-        // TODO Auto-generated method stub
+	@Environment(EnvType.CLIENT)
+	@Override
+	protected void drawPlacement(Tessellator tessellator, BufferBuilder bufferBuilder, PlacementPreviewRenderMode previewMode) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    @Override
-    public BooleanSupplier worldTask(ServerPlayerEntity player) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public BooleanSupplier worldTask(ServerPlayerEntity player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    public BlockRegion region() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	public BlockRegion region() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

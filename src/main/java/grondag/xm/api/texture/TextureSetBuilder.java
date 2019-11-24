@@ -24,34 +24,34 @@ import net.minecraft.util.Identifier;
 // TODO: add fallback texture specification
 @API(status = EXPERIMENTAL)
 public interface TextureSetBuilder {
-    TextureSetBuilder versionCount(int versionCount);
+	TextureSetBuilder versionCount(int versionCount);
 
-    TextureSetBuilder scale(TextureScale scale);
+	TextureSetBuilder scale(TextureScale scale);
 
-    TextureSetBuilder layout(TextureLayoutMap layout);
+	TextureSetBuilder layout(TextureLayoutMap layout);
 
-    TextureSetBuilder transform(TextureTransform rotation);
+	TextureSetBuilder transform(TextureTransform rotation);
 
-    TextureSetBuilder renderIntent(TextureRenderIntent renderIntent);
+	TextureSetBuilder renderIntent(TextureRenderIntent renderIntent);
 
-    TextureSetBuilder groups(TextureGroup... groups);
+	TextureSetBuilder groups(TextureGroup... groups);
 
-    TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile);
+	TextureSetBuilder renderNoBorderAsTile(boolean renderNoBorderAsTile);
 
-    /**
-     * Include namespace!
-     */
-    TextureSetBuilder baseTextureName(String baseTextureName);
+	/**
+	 * Include namespace!
+	 */
+	TextureSetBuilder baseTextureName(String baseTextureName);
 
-    TextureSetBuilder displayNameToken(String displayNameToken);
+	TextureSetBuilder displayNameToken(String displayNameToken);
 
-    TextureSet build(Identifier id);
+	TextureSet build(Identifier id);
 
-    default TextureSet build(String nameSpace, String path) {
-        return build(new Identifier(nameSpace, path));
-    }
+	default TextureSet build(String nameSpace, String path) {
+		return build(new Identifier(nameSpace, path));
+	}
 
-    default TextureSet build(String idString) {
-        return build(new Identifier(idString));
-    }
+	default TextureSet build(String idString) {
+		return build(new Identifier(idString));
+	}
 }

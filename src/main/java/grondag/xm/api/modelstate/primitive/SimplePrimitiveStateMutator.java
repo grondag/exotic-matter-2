@@ -14,11 +14,11 @@ import net.minecraft.world.BlockView;
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface SimplePrimitiveStateMutator extends PrimitiveStateMutator {
-    @Override
-    MutablePrimitiveState mutate(MutablePrimitiveState modelState, BlockState blockState);
+	@Override
+	MutablePrimitiveState mutate(MutablePrimitiveState modelState, BlockState blockState);
 
-    @Override
-    default void mutate(MutablePrimitiveState modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
-        mutate(modelState, blockState);
-    }
+	@Override
+	default void mutate(MutablePrimitiveState modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld) {
+		mutate(modelState, blockState);
+	}
 }

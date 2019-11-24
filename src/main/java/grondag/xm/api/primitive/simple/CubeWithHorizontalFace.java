@@ -22,14 +22,14 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 
 public class CubeWithHorizontalFace  {
-    public static final XmSurfaceList SURFACES = CubeWithFace.SURFACES;
+	public static final XmSurfaceList SURFACES = CubeWithFace.SURFACES;
 
-    public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
-    public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
+	public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
+	public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
 
-    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-            .surfaceList(SURFACES)
-            .polyFactory(CubeWithFace.POLY_FACTORY)
-            .orientationType(OrientationType.HORIZONTAL_FACE)
-            .build(Xm.idString("cube_horizontal"));
+	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+			.surfaceList(SURFACES)
+			.polyFactory(CubeWithFace.POLY_FACTORY)
+			.orientationType(OrientationType.HORIZONTAL_FACE)
+			.build(Xm.idString("cube_horizontal"));
 }

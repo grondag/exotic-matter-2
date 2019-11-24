@@ -42,19 +42,17 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
 
 	@Override
 	protected boolean doValidate() {
-		if (!player.world.isChunkLoaded(pPos.inPos) || World.isHeightInvalid(pPos.inPos)) {
+		if (!player.world.isChunkLoaded(pPos.inPos) || World.isHeightInvalid(pPos.inPos))
 			return false;
-		}
 
-		if (isExcavation) {
+		if (isExcavation)
 			return !player.world.isAir(pPos.inPos);
-		} else {
+		else {
 			if (player.world.getBlockState(pPos.inPos).getMaterial().isReplaceable()) {
 				outputStack = PlacementHandler.cubicPlacementStack(this);
 				return true;
-			} else {
+			} else
 				return false;
-			}
 		}
 	}
 
@@ -104,80 +102,75 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
 
 	@Override
 	public BooleanSupplier worldTask(ServerPlayerEntity player) {
-		if (isExcavation) {
+		if (isExcavation)
 			return new BooleanSupplier() {
 
-				@Override
-				public boolean getAsBoolean() {
+			@Override
+			public boolean getAsBoolean() {
 
-					final World world = player.world;
+				final World world = player.world;
 
-					final BlockPos pos = SingleBlockPlacementSpec.this.pPos.inPos;
-					if (pos == null) {
-						return false;
-					}
-
-					// is the position inside the world?
-					if (World.isValid(pos) || !world.isChunkLoaded(pos)) {
-						return false;
-					}
-
-					final BlockState blockState = world.getBlockState(pos);
-
-					// is the block at the position affected
-					// by this excavation?
-					if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
-							SingleBlockPlacementSpec.this.isVirtual)) {
-						//                        Job job = new Job(RequestPriority.MEDIUM, player);
-						//                        job.setDimension(world.dimension);
-						//                        job.addTask(new ExcavationTask(pos));
-						//                        IDomain domain = DomainManager.instance().getActiveDomain(player);
-						//                        if (domain != null) {
-						//                            domain.getCapability(JobManager.class).addJob(job);
-						//                        }
-					}
+				final BlockPos pos = SingleBlockPlacementSpec.this.pPos.inPos;
+				if (pos == null)
 					return false;
-				}
 
-			};
-		} else {
+				// is the position inside the world?
+				if (World.isValid(pos) || !world.isChunkLoaded(pos))
+					return false;
+
+				final BlockState blockState = world.getBlockState(pos);
+
+				// is the block at the position affected
+				// by this excavation?
+				if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
+						SingleBlockPlacementSpec.this.isVirtual)) {
+					//                        Job job = new Job(RequestPriority.MEDIUM, player);
+					//                        job.setDimension(world.dimension);
+					//                        job.addTask(new ExcavationTask(pos));
+					//                        IDomain domain = DomainManager.instance().getActiveDomain(player);
+					//                        if (domain != null) {
+					//                            domain.getCapability(JobManager.class).addJob(job);
+					//                        }
+				}
+				return false;
+			}
+
+		};
+		else
 			// Placement world task places virtual blocks in the currently active build
 			return new BooleanSupplier() {
 
-				@Override
-				public boolean getAsBoolean() {
+			@Override
+			public boolean getAsBoolean() {
 
-					//                    Build build = BuildManager.getActiveBuildForPlayer(player);
-					//                    if (build == null || !build.isOpen()) {
-					//                        String chatMessage = I18n.translate("placement.message.no_build");
-					//                        player.sendMessage(new TranslatableText(chatMessage));
-					//                        return false;
-					//                    }
+				//                    Build build = BuildManager.getActiveBuildForPlayer(player);
+				//                    if (build == null || !build.isOpen()) {
+				//                        String chatMessage = I18n.translate("placement.message.no_build");
+				//                        player.sendMessage(new TranslatableText(chatMessage));
+				//                        return false;
+				//                    }
 
-					final World world = player.world;
+				final World world = player.world;
 
-					final BlockPos pos = SingleBlockPlacementSpec.this.pPos.inPos;
-					if (pos == null) {
-						return false;
-					}
-
-					// is the position inside the world?
-					if (World.isValid(pos) || !world.isChunkLoaded(pos)) {
-						return false;
-					}
-
-					final BlockState blockState = world.getBlockState(pos);
-
-					// is the block at the position affected
-					// by this excavation?
-					if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
-							SingleBlockPlacementSpec.this.isVirtual)) {
-						PlacementHandler.placeVirtualBlock(world, SingleBlockPlacementSpec.this.outputStack, player, pos); //, build);
-					}
+				final BlockPos pos = SingleBlockPlacementSpec.this.pPos.inPos;
+				if (pos == null)
 					return false;
+
+				// is the position inside the world?
+				if (World.isValid(pos) || !world.isChunkLoaded(pos))
+					return false;
+
+				final BlockState blockState = world.getBlockState(pos);
+
+				// is the block at the position affected
+				// by this excavation?
+				if (SingleBlockPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, SingleBlockPlacementSpec.this.placedStack(),
+						SingleBlockPlacementSpec.this.isVirtual)) {
+					PlacementHandler.placeVirtualBlock(world, SingleBlockPlacementSpec.this.outputStack, player, pos); //, build);
 				}
-			};
-		}
+				return false;
+			}
+		};
 	}
 
 	@Override

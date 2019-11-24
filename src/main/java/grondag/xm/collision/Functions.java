@@ -21,15 +21,15 @@ import org.apiguardian.api.API;
 
 @API(status = INTERNAL)
 interface Functions {
-    @FunctionalInterface interface Int3Consumer {
-        void accept(int x, int y, int z);
-    }
+	@FunctionalInterface interface Int3Consumer {
+		void accept(int x, int y, int z);
+	}
 
-    @FunctionalInterface interface Float3Test {
-        boolean apply(float x, float y, float z);
-    }
+	@FunctionalInterface interface Float3Test {
+		boolean apply(float x, float y, float z);
+	}
 
-    @FunctionalInterface interface Float3Consumer {
-        void accept(float x, float y, float z);
-    }
+	@FunctionalInterface interface Float3Consumer {
+		void accept(float x, float y, float z);
+	}
 }

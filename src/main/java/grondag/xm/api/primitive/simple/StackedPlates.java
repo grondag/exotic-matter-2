@@ -40,80 +40,80 @@ import net.minecraft.util.math.MathHelper;
 
 @API(status = EXPERIMENTAL)
 public class StackedPlates {
-    private StackedPlates() {}
+	private StackedPlates() {}
 
-    public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-            .add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-            .add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-            .add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
+			.add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+			.add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
 
-    public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
-    public static final XmSurface SURFACE_TOP = SURFACES.get(1);
-    public static final XmSurface SURFACE_SIDES = SURFACES.get(2);
+	public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
+	public static final XmSurface SURFACE_TOP = SURFACES.get(1);
+	public static final XmSurface SURFACE_SIDES = SURFACES.get(2);
 
-    static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
-        final PolyTransform transform = PolyTransform.get(modelState);
+	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
+		final PolyTransform transform = PolyTransform.get(modelState);
 
-        final WritableMesh mesh = XmMeshes.claimWritable();
-        final MutablePolygon writer = mesh.writer();
-        writer.colorAll(0, 0xFFFFFFFF);
-        writer.lockUV(0, true);
-        writer.rotation(0, TextureOrientation.IDENTITY);
-        writer.sprite(0, "");
-        writer.saveDefaults();
+		final WritableMesh mesh = XmMeshes.claimWritable();
+		final MutablePolygon writer = mesh.writer();
+		writer.colorAll(0, 0xFFFFFFFF);
+		writer.lockUV(0, true);
+		writer.rotation(0, TextureOrientation.IDENTITY);
+		writer.sprite(0, "");
+		writer.saveDefaults();
 
-        final float height = getHeight(modelState) / 16;
+		final float height = getHeight(modelState) / 16;
 
-        writer.surface(SURFACE_BOTTOM);
-        writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_BOTTOM);
+		writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, 0, Direction.NORTH);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_TOP);
-        writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 1 - height, Direction.NORTH);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_TOP);
+		writer.setupFaceQuad(Direction.UP, 0, 0, 1, 1, 1 - height, Direction.NORTH);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_SIDES);
-        writer.setupFaceQuad(Direction.EAST, 0, 0, 1, height, 0, Direction.UP);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_SIDES);
+		writer.setupFaceQuad(Direction.EAST, 0, 0, 1, height, 0, Direction.UP);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_SIDES);
-        writer.setupFaceQuad(Direction.WEST, 0, 0, 1, height, 0, Direction.UP);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_SIDES);
+		writer.setupFaceQuad(Direction.WEST, 0, 0, 1, height, 0, Direction.UP);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_SIDES);
-        writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, height, 0, Direction.UP);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_SIDES);
+		writer.setupFaceQuad(Direction.NORTH, 0, 0, 1, height, 0, Direction.UP);
+		transform.accept(writer);
+		writer.append();
 
-        writer.surface(SURFACE_SIDES);
-        writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, height, 0, Direction.UP);
-        transform.accept(writer);
-        writer.append();
+		writer.surface(SURFACE_SIDES);
+		writer.setupFaceQuad(Direction.SOUTH, 0, 0, 1, height, 0, Direction.UP);
+		transform.accept(writer);
+		writer.append();
 
-        return mesh.releaseToReader();
-    };
+		return mesh.releaseToReader();
+	};
 
-    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-            .surfaceList(SURFACES)
-            .polyFactory(POLY_FACTORY)
-            .orientationType(OrientationType.FACE)
-            .primitiveBitCount(4)
-            .build(Xm.idString("stacked_plates"));
+	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+			.surfaceList(SURFACES)
+			.polyFactory(POLY_FACTORY)
+			.orientationType(OrientationType.FACE)
+			.primitiveBitCount(4)
+			.build(Xm.idString("stacked_plates"));
 
-    /**
-     *
-     * @param height  1-16
-     * @param modelState
-     */
-    public static void setHeight(int height, MutablePrimitiveState modelState) {
-        modelState.primitiveBits(MathHelper.clamp(height, 1, 16) - 1);
-    }
+	/**
+	 *
+	 * @param height  1-16
+	 * @param modelState
+	 */
+	public static void setHeight(int height, MutablePrimitiveState modelState) {
+		modelState.primitiveBits(MathHelper.clamp(height, 1, 16) - 1);
+	}
 
-    public static int getHeight(PrimitiveState modelState) {
-        return modelState.primitiveBits() + 1;
-    }
+	public static int getHeight(PrimitiveState modelState) {
+		return modelState.primitiveBits() + 1;
+	}
 }

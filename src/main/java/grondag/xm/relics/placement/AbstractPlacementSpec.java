@@ -143,9 +143,8 @@ abstract class AbstractPlacementSpec implements IPlacementSpec {
 	 */
 	@Environment(EnvType.CLIENT)
 	protected void drawPlacementPreview(Tessellator tessellator, BufferBuilder bufferBuilder) {
-		if (previewPos() == null || isExcavation) {
+		if (previewPos() == null || isExcavation)
 			return;
-		}
 
 		GlStateManager.disableDepthTest();
 

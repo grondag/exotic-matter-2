@@ -6,10 +6,10 @@ import net.minecraft.util.PacketByteBuf;
 
 public interface BaseModelStateFactory<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {
 
-    W claim(ModelPrimitive<R, W> primitive);
+	W claim(ModelPrimitive<R, W> primitive);
 
-    W fromBuffer(ModelPrimitive<R, W> primitive, PacketByteBuf buf);
+	W fromBuffer(ModelPrimitive<R, W> primitive, PacketByteBuf buf);
 
-    W fromTag(ModelPrimitive<R, W> primitive, CompoundTag tag);
+	W fromTag(ModelPrimitive<R, W> primitive, CompoundTag tag);
 
 }

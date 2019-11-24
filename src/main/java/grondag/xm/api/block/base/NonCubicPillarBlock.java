@@ -38,39 +38,39 @@ import net.minecraft.world.IWorld;
 @API(status = EXPERIMENTAL)
 public class NonCubicPillarBlock extends PillarBlock {
 
-    public NonCubicPillarBlock(Settings settings) {
-        super(settings);
-    }
+	public NonCubicPillarBlock(Settings settings) {
+		super(settings);
+	}
 
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        final FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-        return getDefaultState()
-                .with(AXIS, ctx.getSide().getAxis())
-                .with(Properties.WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
-    }
+	@Override
+	public BlockState getPlacementState(ItemPlacementContext ctx) {
+		final FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+		return getDefaultState()
+				.with(AXIS, ctx.getSide().getAxis())
+				.with(Properties.WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+	}
 
-    @Override
-    protected void appendProperties(Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(Properties.WATERLOGGED);
-    }
+	@Override
+	protected void appendProperties(Builder<Block, BlockState> builder) {
+		super.appendProperties(builder);
+		builder.add(Properties.WATERLOGGED);
+	}
 
-    @Override
-    public boolean hasSidedTransparency(BlockState blockState_1) {
-        return true;
-    }
+	@Override
+	public boolean hasSidedTransparency(BlockState blockState_1) {
+		return true;
+	}
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState blockState, Direction face, BlockState blockState2, IWorld world, BlockPos pos, BlockPos pos2) {
-        if (blockState.get(Properties.WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
-        return super.getStateForNeighborUpdate(blockState, face, blockState2, world, pos, pos2);
-    }
+	@Override
+	public BlockState getStateForNeighborUpdate(BlockState blockState, Direction face, BlockState blockState2, IWorld world, BlockPos pos, BlockPos pos2) {
+		if (blockState.get(Properties.WATERLOGGED)) {
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		}
+		return super.getStateForNeighborUpdate(blockState, face, blockState2, world, pos, pos2);
+	}
 
-    @Override
-    public FluidState getFluidState(BlockState blockState) {
-        return blockState.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(blockState);
-    }
+	@Override
+	public FluidState getFluidState(BlockState blockState) {
+		return blockState.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(blockState);
+	}
 }

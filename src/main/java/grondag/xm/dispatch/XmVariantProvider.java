@@ -30,19 +30,19 @@ import net.minecraft.util.registry.Registry;
 
 @API(status = INTERNAL)
 public class XmVariantProvider implements ModelVariantProvider {
-    private final ObjectOpenHashSet<String> targets = new ObjectOpenHashSet<>();
+	private final ObjectOpenHashSet<String> targets = new ObjectOpenHashSet<>();
 
-    public XmVariantProvider() {
-        targets.clear();
-        Registry.BLOCK.forEach(b -> {
-            if (XmBlockState.get(b) != null) {
-                targets.add(Registry.BLOCK.getId(b).toString());
-            }
-        });
-    }
+	public XmVariantProvider() {
+		targets.clear();
+		Registry.BLOCK.forEach(b -> {
+			if (XmBlockState.get(b) != null) {
+				targets.add(Registry.BLOCK.getId(b).toString());
+			}
+		});
+	}
 
-    @Override
-    public UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) throws ModelProviderException {
-        return targets.contains(modelId.getNamespace() + ":" + modelId.getPath()) ? XmModelProxy.INSTANCE : null;
-    }
+	@Override
+	public UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) throws ModelProviderException {
+		return targets.contains(modelId.getNamespace() + ":" + modelId.getPath()) ? XmModelProxy.INSTANCE : null;
+	}
 }

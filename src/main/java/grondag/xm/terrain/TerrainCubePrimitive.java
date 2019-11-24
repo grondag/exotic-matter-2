@@ -37,60 +37,60 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
-    public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
+	public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
 
-    public static final XmSurface SURFACE_ALL = SURFACES.get(0);
+	public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
-    public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.idString("terrain_cube"));
+	public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.idString("terrain_cube"));
 
-    /** never changes so may as well save it */
-    private final XmMesh cachedQuads;
+	/** never changes so may as well save it */
+	private final XmMesh cachedQuads;
 
-    protected TerrainCubePrimitive(String idString) {
-        super(idString, NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
-        cachedQuads = getCubeQuads();
-    }
+	protected TerrainCubePrimitive(String idString) {
+		super(idString, NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
+		cachedQuads = getCubeQuads();
+	}
 
-    @Override
-    public void emitQuads(TerrainModelState modelState, Consumer<Polygon> target) {
-        cachedQuads.forEach(target);
-    }
+	@Override
+	public void emitQuads(TerrainModelState modelState, Consumer<Polygon> target) {
+		cachedQuads.forEach(target);
+	}
 
-    private XmMesh getCubeQuads() {
-        final CubeInputs cube = new CubeInputs();
-        cube.color = 0xFFFFFFFF;
-        cube.textureRotation = TextureOrientation.IDENTITY;
-        cube.isFullBrightness = false;
-        cube.u0 = 0;
-        cube.v0 = 0;
-        cube.u1 = 1;
-        cube.v1 = 1;
-        cube.isOverlay = false;
-        cube.surface = SURFACE_ALL;
+	private XmMesh getCubeQuads() {
+		final CubeInputs cube = new CubeInputs();
+		cube.color = 0xFFFFFFFF;
+		cube.textureRotation = TextureOrientation.IDENTITY;
+		cube.isFullBrightness = false;
+		cube.u0 = 0;
+		cube.v0 = 0;
+		cube.u1 = 1;
+		cube.v1 = 1;
+		cube.isOverlay = false;
+		cube.surface = SURFACE_ALL;
 
-        final WritableMesh stream = XmMeshes.claimWritable();
-        cube.appendFace(stream, Direction.DOWN);
-        cube.appendFace(stream, Direction.UP);
-        cube.appendFace(stream, Direction.EAST);
-        cube.appendFace(stream, Direction.WEST);
-        cube.appendFace(stream, Direction.NORTH);
-        cube.appendFace(stream, Direction.SOUTH);
+		final WritableMesh stream = XmMeshes.claimWritable();
+		cube.appendFace(stream, Direction.DOWN);
+		cube.appendFace(stream, Direction.UP);
+		cube.appendFace(stream, Direction.EAST);
+		cube.appendFace(stream, Direction.WEST);
+		cube.appendFace(stream, Direction.NORTH);
+		cube.appendFace(stream, Direction.SOUTH);
 
-        final XmMesh result = stream.releaseToReader();
+		final XmMesh result = stream.releaseToReader();
 
-        result.reader().origin();
-        assert result.reader().vertexCount() == 4;
+		result.reader().origin();
+		assert result.reader().vertexCount() == 4;
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    public TerrainModelState.Mutable geometricState(TerrainModelState fromState) {
-        return defaultState().mutableCopy();
-    }
+	@Override
+	public TerrainModelState.Mutable geometricState(TerrainModelState fromState) {
+		return defaultState().mutableCopy();
+	}
 
-    @Override
-    public boolean doesShapeMatch(TerrainModelState from, TerrainModelState to) {
-        return from.primitive() == to.primitive();
-    }
+	@Override
+	public boolean doesShapeMatch(TerrainModelState from, TerrainModelState to) {
+		return from.primitive() == to.primitive();
+	}
 }

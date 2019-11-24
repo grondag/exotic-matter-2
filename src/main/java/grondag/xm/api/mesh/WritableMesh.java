@@ -29,53 +29,53 @@ import grondag.xm.api.mesh.polygon.Polygon;
 @API(status = EXPERIMENTAL)
 public interface WritableMesh extends XmMesh {
 
-    /**
-     * Holds WIP poly data that will be appended by next call to {@link #append()}.
-     * Is reset to defaults when append is called.
-     * <p>
-     *
-     * DO NOT HOLD A NON-LOCAL REFERENCE TO THIS.
-     */
-    MutablePolygon writer();
+	/**
+	 * Holds WIP poly data that will be appended by next call to {@link #append()}.
+	 * Is reset to defaults when append is called.
+	 * <p>
+	 *
+	 * DO NOT HOLD A NON-LOCAL REFERENCE TO THIS.
+	 */
+	MutablePolygon writer();
 
-    /**
-     * Address that will be used for next appended polygon when append is
-     * called.<br>
-     * Cannot be used with move... methods until writer is appended.
-     */
-    int writerAddress();
+	/**
+	 * Address that will be used for next appended polygon when append is
+	 * called.<br>
+	 * Cannot be used with move... methods until writer is appended.
+	 */
+	int writerAddress();
 
-    /**
-     * Releases this stream and returns an immutable reader stream. The reader strip
-     * will use non-pooled heap memory and thus should only be used for streams with
-     * a significant lifetime to prevent needless garbage collection.
-     * <p>
-     *
-     * The reader stream will not include deleted polygons, and will only include
-     * tag, link or bounds metadata if those flags are specified.
-     */
-    ReadOnlyMesh releaseToReader();
+	/**
+	 * Releases this stream and returns an immutable reader stream. The reader strip
+	 * will use non-pooled heap memory and thus should only be used for streams with
+	 * a significant lifetime to prevent needless garbage collection.
+	 * <p>
+	 *
+	 * The reader stream will not include deleted polygons, and will only include
+	 * tag, link or bounds metadata if those flags are specified.
+	 */
+	ReadOnlyMesh releaseToReader();
 
-    /** Creates a read-only copy without releasing allocation */
-    ReadOnlyMesh toReader();
+	/** Creates a read-only copy without releasing allocation */
+	ReadOnlyMesh toReader();
 
-    /**
-     * Makes no change to writer state, except address.
-     */
-    void appendCopy(Polygon poly);
+	/**
+	 * Makes no change to writer state, except address.
+	 */
+	void appendCopy(Polygon poly);
 
-    default void appendAll(XmMesh stream) {
-        final Polygon reader = stream.reader();
-        if (reader.origin()) {
-            do {
-                assert !reader.isDeleted();
-                appendCopy(reader);
-            } while (reader.next());
-        }
-    }
+	default void appendAll(XmMesh stream) {
+		final Polygon reader = stream.reader();
+		if (reader.origin()) {
+			do {
+				assert !reader.isDeleted();
+				appendCopy(reader);
+			} while (reader.next());
+		}
+	}
 
-    void clear();
+	void clear();
 
-    void splitAsNeeded();
+	void splitAsNeeded();
 
 }

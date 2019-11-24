@@ -26,30 +26,30 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public abstract class CubeRotationHelper {
-    private CubeRotationHelper() {
-    }
+	private CubeRotationHelper() {
+	}
 
-    private static final CubeRotation[] VALUES = CubeRotation.values();
-    public static final int COUNT = VALUES.length;
-    private static final CubeRotation[][] CORNER_LOOKUP = new CubeRotation[6][6];
+	private static final CubeRotation[] VALUES = CubeRotation.values();
+	public static final int COUNT = VALUES.length;
+	private static final CubeRotation[][] CORNER_LOOKUP = new CubeRotation[6][6];
 
-    static {
-        for (final CubeRotation edge : VALUES) {
-            CORNER_LOOKUP[edge.bottom.ordinal()][edge.back.ordinal()] = edge;
-        }
-    }
+	static {
+		for (final CubeRotation edge : VALUES) {
+			CORNER_LOOKUP[edge.bottom.ordinal()][edge.back.ordinal()] = edge;
+		}
+	}
 
-    public static CubeRotation find(Direction face1, Direction face2) {
-        return CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
-    }
+	public static CubeRotation find(Direction face1, Direction face2) {
+		return CORNER_LOOKUP[face1.ordinal()][face2.ordinal()];
+	}
 
-    public static final CubeRotation fromOrdinal(int ordinal) {
-        return VALUES[ordinal];
-    }
+	public static final CubeRotation fromOrdinal(int ordinal) {
+		return VALUES[ordinal];
+	}
 
-    public static void forEach(Consumer<CubeRotation> consumer) {
-        for (final CubeRotation val : VALUES) {
-            consumer.accept(val);
-        }
-    }
+	public static void forEach(Consumer<CubeRotation> consumer) {
+		for (final CubeRotation val : VALUES) {
+			consumer.accept(val);
+		}
+	}
 }

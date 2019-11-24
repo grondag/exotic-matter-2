@@ -75,62 +75,62 @@ import grondag.xm.api.connect.state.CornerJoinFaceState;
  */
 @API(status = EXPERIMENTAL)
 public class ConnectedShapeHelper {
-    private static void spec(float[][] target, CornerJoinFaceState state, float... values) {
-        target[state.ordinal()] = values;
-    }
+	private static void spec(float[][] target, CornerJoinFaceState state, float... values) {
+		target[state.ordinal()] = values;
+	}
 
-    /** generates CSG cuts needed for a simple even-margin panel */
-    public static float[][] panelspec(final float margin) {
-        final float far = 1 - margin;
-        final float[][] result = new float[COUNT][];
+	/** generates CSG cuts needed for a simple even-margin panel */
+	public static float[][] panelspec(final float margin) {
+		final float far = 1 - margin;
+		final float[][] result = new float[COUNT][];
 
-        spec(result, ALL_NO_CORNERS, 0, 0, 1, 1);
-        spec(result, NONE, margin, margin, far, far);
-        spec(result, TOP, margin, margin, far, 1);
-        spec(result, BOTTOM, margin, 0, far, far);
-        spec(result, LEFT, 0, margin, far, far);
-        spec(result, RIGHT, margin, margin, 1, far);
-        spec(result, TOP_BOTTOM, margin, 0, far, 1);
-        spec(result, LEFT_RIGHT, 0, margin, 1, far);
-        spec(result, ALL_TL_TR_BL_BR, margin, 0, far, 1, 0, margin, 1, far);
-        spec(result, BOTTOM_LEFT_NO_CORNER, 0, 0, far, far);
-        spec(result, TOP_LEFT_NO_CORNER, 0, margin, far, 1);
-        spec(result, TOP_RIGHT_NO_CORNER, margin, margin, 1, 1);
-        spec(result, BOTTOM_RIGHT_NO_CORNER, margin, 0, 1, far);
-        spec(result, BOTTOM_LEFT_RIGHT_NO_CORNERS, 0, 0, 1, far);
-        spec(result, TOP_BOTTOM_LEFT_NO_CORNERS, 0, 0, far, 1);
-        spec(result, TOP_LEFT_RIGHT_NO_CORNERS, 0, margin, 1, 1);
-        spec(result, TOP_BOTTOM_RIGHT_NO_CORNERS, margin, 0, 1, 1);
-        spec(result, ALL_TR, 0, 0, far, 1, 0, 0, 1, far);
-        spec(result, ALL_BR, 0, 0, far, 1, 0, margin, 1, 1);
-        spec(result, ALL_BL, margin, 0, 1, 1, 0, margin, 1, 1);
-        spec(result, ALL_TL, margin, 0, 1, 1, 0, 0, 1, far);
-        spec(result, ALL_TL_TR, margin, 0, far, 1, 0, 0, 1, far);
-        spec(result, ALL_TR_BR, 0, 0, far, 1, 0, margin, 1, far);
-        spec(result, ALL_TL_BL, margin, 0, 1, 1, 0, margin, 1, far);
-        spec(result, ALL_TR_BL, margin, 0, 1, far, 0, margin, far, 1);
-        spec(result, ALL_TL_BR, 0, 0, far, far, margin, margin, 1, 1);
-        spec(result, ALL_BL_BR, 0, margin, 1, 1, margin, 0, far, 1);
-        spec(result, ALL_TR_BL_BR, margin, 0, far, 1, 0, margin, 1, far, 0, far, margin, 1);
-        spec(result, ALL_TL_BL_BR, margin, 0, far, 1, 0, margin, 1, far, far, far, 1, 1);
-        spec(result, ALL_TL_TR_BL, margin, 0, far, 1, 0, margin, 1, far, far, 0, 1, margin);
-        spec(result, ALL_TL_TR_BR, margin, 0, far, 1, 0, margin, 1, far, 0, 0, margin, margin);
-        spec(result, BOTTOM_LEFT_RIGHT_BR, 0, margin, 1, far, 0, 0, far, margin);
-        spec(result, BOTTOM_LEFT_RIGHT_BL, 0, margin, 1, far, margin, 0, 1, margin);
-        spec(result, TOP_LEFT_RIGHT_TL, 0, margin, 1, far, margin, far, 1, 1);
-        spec(result, TOP_LEFT_RIGHT_TR, 0, margin, 1, far, 0, far, far, 1);
-        spec(result, TOP_BOTTOM_LEFT_BL, margin, 0, far, 1, 0, margin, margin, 1);
-        spec(result, TOP_BOTTOM_LEFT_TL, margin, 0, far, 1, 0, 0, margin, far);
-        spec(result, TOP_BOTTOM_RIGHT_TR, margin, 0, far, 1, far, 0, 1, far);
-        spec(result, TOP_BOTTOM_RIGHT_BR, margin, 0, far, 1, far, margin, 1, 1);
-        spec(result, BOTTOM_LEFT_BL, margin, 0, far, far, 0, margin, margin, far);
-        spec(result, TOP_LEFT_TL, margin, margin, far, 1, 0, margin, margin, far);
-        spec(result, TOP_RIGHT_TR, margin, margin, far, 1, far, margin, 1, far);
-        spec(result, BOTTOM_RIGHT_BR, margin, 0, far, far, far, margin, 1, far);
-        spec(result, BOTTOM_LEFT_RIGHT_BL_BR, margin, 0, far, margin, 0, margin, 1, far);
-        spec(result, TOP_BOTTOM_LEFT_TL_BL, margin, 0, far, 1, 0, margin, margin, far);
-        spec(result, TOP_LEFT_RIGHT_TL_TR, 0, margin, 1, far, margin, far, far, 1);
-        spec(result, TOP_BOTTOM_RIGHT_TR_BR, margin, 0, far, 1, far, margin, 1, far);
-        return result;
-    }
+		spec(result, ALL_NO_CORNERS, 0, 0, 1, 1);
+		spec(result, NONE, margin, margin, far, far);
+		spec(result, TOP, margin, margin, far, 1);
+		spec(result, BOTTOM, margin, 0, far, far);
+		spec(result, LEFT, 0, margin, far, far);
+		spec(result, RIGHT, margin, margin, 1, far);
+		spec(result, TOP_BOTTOM, margin, 0, far, 1);
+		spec(result, LEFT_RIGHT, 0, margin, 1, far);
+		spec(result, ALL_TL_TR_BL_BR, margin, 0, far, 1, 0, margin, 1, far);
+		spec(result, BOTTOM_LEFT_NO_CORNER, 0, 0, far, far);
+		spec(result, TOP_LEFT_NO_CORNER, 0, margin, far, 1);
+		spec(result, TOP_RIGHT_NO_CORNER, margin, margin, 1, 1);
+		spec(result, BOTTOM_RIGHT_NO_CORNER, margin, 0, 1, far);
+		spec(result, BOTTOM_LEFT_RIGHT_NO_CORNERS, 0, 0, 1, far);
+		spec(result, TOP_BOTTOM_LEFT_NO_CORNERS, 0, 0, far, 1);
+		spec(result, TOP_LEFT_RIGHT_NO_CORNERS, 0, margin, 1, 1);
+		spec(result, TOP_BOTTOM_RIGHT_NO_CORNERS, margin, 0, 1, 1);
+		spec(result, ALL_TR, 0, 0, far, 1, 0, 0, 1, far);
+		spec(result, ALL_BR, 0, 0, far, 1, 0, margin, 1, 1);
+		spec(result, ALL_BL, margin, 0, 1, 1, 0, margin, 1, 1);
+		spec(result, ALL_TL, margin, 0, 1, 1, 0, 0, 1, far);
+		spec(result, ALL_TL_TR, margin, 0, far, 1, 0, 0, 1, far);
+		spec(result, ALL_TR_BR, 0, 0, far, 1, 0, margin, 1, far);
+		spec(result, ALL_TL_BL, margin, 0, 1, 1, 0, margin, 1, far);
+		spec(result, ALL_TR_BL, margin, 0, 1, far, 0, margin, far, 1);
+		spec(result, ALL_TL_BR, 0, 0, far, far, margin, margin, 1, 1);
+		spec(result, ALL_BL_BR, 0, margin, 1, 1, margin, 0, far, 1);
+		spec(result, ALL_TR_BL_BR, margin, 0, far, 1, 0, margin, 1, far, 0, far, margin, 1);
+		spec(result, ALL_TL_BL_BR, margin, 0, far, 1, 0, margin, 1, far, far, far, 1, 1);
+		spec(result, ALL_TL_TR_BL, margin, 0, far, 1, 0, margin, 1, far, far, 0, 1, margin);
+		spec(result, ALL_TL_TR_BR, margin, 0, far, 1, 0, margin, 1, far, 0, 0, margin, margin);
+		spec(result, BOTTOM_LEFT_RIGHT_BR, 0, margin, 1, far, 0, 0, far, margin);
+		spec(result, BOTTOM_LEFT_RIGHT_BL, 0, margin, 1, far, margin, 0, 1, margin);
+		spec(result, TOP_LEFT_RIGHT_TL, 0, margin, 1, far, margin, far, 1, 1);
+		spec(result, TOP_LEFT_RIGHT_TR, 0, margin, 1, far, 0, far, far, 1);
+		spec(result, TOP_BOTTOM_LEFT_BL, margin, 0, far, 1, 0, margin, margin, 1);
+		spec(result, TOP_BOTTOM_LEFT_TL, margin, 0, far, 1, 0, 0, margin, far);
+		spec(result, TOP_BOTTOM_RIGHT_TR, margin, 0, far, 1, far, 0, 1, far);
+		spec(result, TOP_BOTTOM_RIGHT_BR, margin, 0, far, 1, far, margin, 1, 1);
+		spec(result, BOTTOM_LEFT_BL, margin, 0, far, far, 0, margin, margin, far);
+		spec(result, TOP_LEFT_TL, margin, margin, far, 1, 0, margin, margin, far);
+		spec(result, TOP_RIGHT_TR, margin, margin, far, 1, far, margin, 1, far);
+		spec(result, BOTTOM_RIGHT_BR, margin, 0, far, far, far, margin, 1, far);
+		spec(result, BOTTOM_LEFT_RIGHT_BL_BR, margin, 0, far, margin, 0, margin, 1, far);
+		spec(result, TOP_BOTTOM_LEFT_TL_BL, margin, 0, far, 1, 0, margin, margin, far);
+		spec(result, TOP_LEFT_RIGHT_TL_TR, 0, margin, 1, far, margin, far, far, 1);
+		spec(result, TOP_BOTTOM_RIGHT_TR_BR, margin, 0, far, 1, far, margin, 1, far);
+		return result;
+	}
 }

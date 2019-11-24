@@ -28,36 +28,36 @@ import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface XmPaint {
-    static XmPaintFinder finder() {
-        return XmPaintImpl.finder();
-    }
+	static XmPaintFinder finder() {
+		return XmPaintImpl.finder();
+	}
 
-    int MAX_TEXTURE_DEPTH = 3;
+	int MAX_TEXTURE_DEPTH = 3;
 
-    int index();
+	int index();
 
-    @Nullable
-    BlendMode blendMode(int textureIndex);
+	@Nullable
+	BlendMode blendMode(int textureIndex);
 
-    boolean disableColorIndex(int textureIndex);
+	boolean disableColorIndex(int textureIndex);
 
-    TextureSet texture(int textureIndex);
+	TextureSet texture(int textureIndex);
 
-    int textureColor(int textureIndex);
+	int textureColor(int textureIndex);
 
-    int textureDepth();
+	int textureDepth();
 
-    boolean emissive(int textureIndex);
+	boolean emissive(int textureIndex);
 
-    boolean disableDiffuse(int textureIndex);
+	boolean disableDiffuse(int textureIndex);
 
-    boolean disableAo(int textureIndex);
+	boolean disableAo(int textureIndex);
 
-    @Nullable
-    Identifier shader();
+	@Nullable
+	Identifier shader();
 
-    @Nullable
-    Identifier condition();
+	@Nullable
+	Identifier condition();
 
-    VertexProcessor vertexProcessor(int textureIndex);
+	VertexProcessor vertexProcessor(int textureIndex);
 }

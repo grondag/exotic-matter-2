@@ -26,45 +26,45 @@ import grondag.xm.api.texture.TextureOrientation;
 
 @API(status = INTERNAL)
 public class TextureOrientationHelper {
-    private TextureOrientationHelper() {
-    }
+	private TextureOrientationHelper() {
+	}
 
-    private static final TextureOrientation[] VALUES = TextureOrientation.values();
-    public static final int COUNT = VALUES.length;
-    private static final TextureOrientation[] LOOKUP = new TextureOrientation[4 * 2 * 2];
+	private static final TextureOrientation[] VALUES = TextureOrientation.values();
+	public static final int COUNT = VALUES.length;
+	private static final TextureOrientation[] LOOKUP = new TextureOrientation[4 * 2 * 2];
 
-    static {
-        for (final TextureOrientation o : VALUES) {
-            LOOKUP[index(o)] = o;
-        }
-    }
+	static {
+		for (final TextureOrientation o : VALUES) {
+			LOOKUP[index(o)] = o;
+		}
+	}
 
-    private static int index(TextureOrientation o) {
-        return index(o.rotation, o.flipU, o.flipV);
-    }
+	private static int index(TextureOrientation o) {
+		return index(o.rotation, o.flipU, o.flipV);
+	}
 
-    private static int index(Rotation r, boolean flipU, boolean flipV) {
-        return (r.ordinal() << 2) | (flipU ? 1 : 0) | (flipV ? 2 : 0);
-    }
+	private static int index(Rotation r, boolean flipU, boolean flipV) {
+		return (r.ordinal() << 2) | (flipU ? 1 : 0) | (flipV ? 2 : 0);
+	}
 
-    public static TextureOrientation find(Rotation rotation, boolean flipU, boolean flipV) {
-        if(rotation == null) {
-            rotation = Rotation.ROTATE_NONE;
-        }
-        return LOOKUP[index(rotation, flipU, flipV)];
-    }
+	public static TextureOrientation find(Rotation rotation, boolean flipU, boolean flipV) {
+		if(rotation == null) {
+			rotation = Rotation.ROTATE_NONE;
+		}
+		return LOOKUP[index(rotation, flipU, flipV)];
+	}
 
-    public static final TextureOrientation fromOrdinal(int ordinal) {
-        return VALUES[ordinal];
-    }
+	public static final TextureOrientation fromOrdinal(int ordinal) {
+		return VALUES[ordinal];
+	}
 
-    public static void forEach(Consumer<TextureOrientation> consumer) {
-        for (final TextureOrientation val : VALUES) {
-            consumer.accept(val);
-        }
-    }
+	public static void forEach(Consumer<TextureOrientation> consumer) {
+		for (final TextureOrientation val : VALUES) {
+			consumer.accept(val);
+		}
+	}
 
-    public static TextureOrientation clockwise(TextureOrientation o) {
-        return find(o.rotation.clockwise(), o.flipU, o.flipV);
-    }
+	public static TextureOrientation clockwise(TextureOrientation o) {
+		return find(o.rotation.clockwise(), o.flipU, o.flipV);
+	}
 }

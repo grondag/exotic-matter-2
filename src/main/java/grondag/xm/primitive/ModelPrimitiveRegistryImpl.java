@@ -35,70 +35,70 @@ import net.minecraft.util.PacketByteBuf;
 @SuppressWarnings("rawtypes")
 @API(status = INTERNAL)
 public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
-    public static ModelPrimitiveRegistryImpl INSTANCE = new ModelPrimitiveRegistryImpl();
+	public static ModelPrimitiveRegistryImpl INSTANCE = new ModelPrimitiveRegistryImpl();
 
-    private final Object2ObjectOpenHashMap<String, ModelPrimitive> map = new Object2ObjectOpenHashMap<>();
-    private final ObjectArrayList<ModelPrimitive> list = new ObjectArrayList<>();
-    private final Object2IntOpenHashMap<String> reverseMap = new Object2IntOpenHashMap<>();
+	private final Object2ObjectOpenHashMap<String, ModelPrimitive> map = new Object2ObjectOpenHashMap<>();
+	private final ObjectArrayList<ModelPrimitive> list = new ObjectArrayList<>();
+	private final Object2IntOpenHashMap<String> reverseMap = new Object2IntOpenHashMap<>();
 
-    private ModelPrimitiveRegistryImpl() {
-    }
+	private ModelPrimitiveRegistryImpl() {
+	}
 
-    @Override
-    public synchronized <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> boolean register(ModelPrimitive<R, W> primitive) {
-        final boolean result = map.putIfAbsent(primitive.id().toString(), primitive) == null;
-        if (result) {
-            final int index = list.size();
-            list.add(primitive);
-            reverseMap.put(primitive.id().toString(), index);
-        }
-        return result;
-    }
+	@Override
+	public synchronized <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> boolean register(ModelPrimitive<R, W> primitive) {
+		final boolean result = map.putIfAbsent(primitive.id().toString(), primitive) == null;
+		if (result) {
+			final int index = list.size();
+			list.add(primitive);
+			reverseMap.put(primitive.id().toString(), index);
+		}
+		return result;
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(int primitiveIndex) {
-        return list.get(primitiveIndex);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(int primitiveIndex) {
+		return list.get(primitiveIndex);
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>>  ModelPrimitive<R, W> get(String idString) {
-        return map.get(idString);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>>  ModelPrimitive<R, W> get(String idString) {
+		return map.get(idString);
+	}
 
-    @Override
-    public synchronized void forEach(Consumer<ModelPrimitive> consumer) {
-        list.forEach(consumer);
-    }
+	@Override
+	public synchronized void forEach(Consumer<ModelPrimitive> consumer) {
+		list.forEach(consumer);
+	}
 
-    @Override
-    public int count() {
-        return list.size();
-    }
+	@Override
+	public int count() {
+		return list.size();
+	}
 
-    @Override
-    public int indexOf(String idString) {
-        return reverseMap.getInt(idString);
-    }
+	@Override
+	public int indexOf(String idString) {
+		return reverseMap.getInt(idString);
+	}
 
-    @Override
-    public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag) {
-        final ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
-        if (shape == null)
-            return null;
-        return shape.fromTag(tag);
-    }
+	@Override
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag) {
+		final ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
+		if (shape == null)
+			return null;
+		return shape.fromTag(tag);
+	}
 
-    @Override
-    public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf) {
-        final ModelPrimitive<R, W> shape = get(buf.readVarInt());
-        if (shape == null)
-            return null;
-        return shape.fromBuffer(buf);
-    }
+	@Override
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf) {
+		final ModelPrimitive<R, W> shape = get(buf.readVarInt());
+		if (shape == null)
+			return null;
+		return shape.fromBuffer(buf);
+	}
 
-    public void invalidateCache() {
-        list.forEach(p -> p.invalidateCache());
-    }
+	public void invalidateCache() {
+		list.forEach(p -> p.invalidateCache());
+	}
 }

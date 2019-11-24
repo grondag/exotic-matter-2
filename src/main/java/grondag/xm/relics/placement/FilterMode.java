@@ -37,71 +37,71 @@ import net.minecraft.world.World;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public enum FilterMode {
-    FILL_REPLACEABLE(false), REPLACE_SOLID(false), REPLACE_ALL(false), REPLACE_ONLY(true), REPLACE_ALL_EXCEPT(true);
+	FILL_REPLACEABLE(false), REPLACE_SOLID(false), REPLACE_ALL(false), REPLACE_ONLY(true), REPLACE_ALL_EXCEPT(true);
 
-    private static String NBT_TAG = NBTDictionary.claim("filterMode");
+	private static String NBT_TAG = NBTDictionary.claim("filterMode");
 
-    /**
-     * True if this mode uses the list of specific blocks configured in the
-     * placement item as filters.
-     */
-    public final boolean usesFilterBlock;
+	/**
+	 * True if this mode uses the list of specific blocks configured in the
+	 * placement item as filters.
+	 */
+	public final boolean usesFilterBlock;
 
-    private FilterMode(boolean usesFilterBlock) {
-        this.usesFilterBlock = usesFilterBlock;
-    }
+	private FilterMode(boolean usesFilterBlock) {
+		this.usesFilterBlock = usesFilterBlock;
+	}
 
-    public FilterMode deserializeNBT(CompoundTag tag) {
-        return Useful.safeEnumFromTag(tag, NBT_TAG, this);
-    }
+	public FilterMode deserializeNBT(CompoundTag tag) {
+		return Useful.safeEnumFromTag(tag, NBT_TAG, this);
+	}
 
-    public void serializeNBT(CompoundTag tag) {
-        Useful.saveEnumToTag(tag, NBT_TAG, this);
-    }
+	public void serializeNBT(CompoundTag tag) {
+		Useful.saveEnumToTag(tag, NBT_TAG, this);
+	}
 
-    public FilterMode fromBytes(PacketByteBuf pBuff) {
-        return pBuff.readEnumConstant(FilterMode.class);
-    }
+	public FilterMode fromBytes(PacketByteBuf pBuff) {
+		return pBuff.readEnumConstant(FilterMode.class);
+	}
 
-    public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeEnumConstant(this);
-    }
+	public void toBytes(PacketByteBuf pBuff) {
+		pBuff.writeEnumConstant(this);
+	}
 
-    public String localizedName() {
-        return I18n.translate("placement.filter_mode." + name().toLowerCase());
-    }
+	public String localizedName() {
+		return I18n.translate("placement.filter_mode." + name().toLowerCase());
+	}
 
-    /**
-     * If isVirtual then will only affect virtual blocks and empty space.
-     */
-    public boolean shouldAffectBlock(BlockState blockState, World world, BlockPos pos, ItemStack stack, boolean isVirtual) {
-        final Block block = blockState.getBlock();
+	/**
+	 * If isVirtual then will only affect virtual blocks and empty space.
+	 */
+	public boolean shouldAffectBlock(BlockState blockState, World world, BlockPos pos, ItemStack stack, boolean isVirtual) {
+		final Block block = blockState.getBlock();
 
-        switch (this) {
-        case FILL_REPLACEABLE:
-            return block.getMaterial(blockState).isReplaceable() && !VirtualBlock.isVirtualBlock(block);
+		switch (this) {
+		case FILL_REPLACEABLE:
+			return block.getMaterial(blockState).isReplaceable() && !VirtualBlock.isVirtualBlock(block);
 
-        case REPLACE_ALL:
-            if (isVirtual)
-                return block.getMaterial(blockState).isReplaceable() || VirtualBlock.isVirtualBlock(block);
-            else
-                return !VirtualBlock.isVirtualBlock(block);
+		case REPLACE_ALL:
+			if (isVirtual)
+				return block.getMaterial(blockState).isReplaceable() || VirtualBlock.isVirtualBlock(block);
+			else
+				return !VirtualBlock.isVirtualBlock(block);
 
-        case REPLACE_ALL_EXCEPT:
-            // TODO
-            return true;
+		case REPLACE_ALL_EXCEPT:
+			// TODO
+			return true;
 
-        case REPLACE_ONLY:
-            // TODO
-            return false;
+		case REPLACE_ONLY:
+			// TODO
+			return false;
 
-        case REPLACE_SOLID:
-            // test for non-virtual relies on fact that all virtual blocks are replaceable
-            return isVirtual ? VirtualBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
+		case REPLACE_SOLID:
+			// test for non-virtual relies on fact that all virtual blocks are replaceable
+			return isVirtual ? VirtualBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
 
-        default:
-            return false;
+		default:
+			return false;
 
-        }
-    }
+		}
+	}
 }

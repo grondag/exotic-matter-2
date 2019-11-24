@@ -29,37 +29,37 @@ import net.minecraft.util.math.Direction;
 @Deprecated
 public enum BlockOrientationAxis {
 
-    DYNAMIC(null), MATCH_CLOSEST(null), X(Direction.Axis.X), Y(Direction.Axis.Y), Z(Direction.Axis.Z);
+	DYNAMIC(null), MATCH_CLOSEST(null), X(Direction.Axis.X), Y(Direction.Axis.Y), Z(Direction.Axis.Z);
 
-    private static final String TAG_ORIENTATION = NBTDictionary.claim("plcmnt_orient");
+	private static final String TAG_ORIENTATION = NBTDictionary.claim("plcmnt_orient");
 
-    public final Direction.Axis axis;
+	public final Direction.Axis axis;
 
-    private BlockOrientationAxis(Direction.Axis axis) {
-        this.axis = axis;
-    }
+	private BlockOrientationAxis(Direction.Axis axis) {
+		this.axis = axis;
+	}
 
-    public BlockOrientationAxis deserializeNBT(CompoundTag tag) {
-        return Useful.safeEnumFromTag(tag, TAG_ORIENTATION, this);
-    }
+	public BlockOrientationAxis deserializeNBT(CompoundTag tag) {
+		return Useful.safeEnumFromTag(tag, TAG_ORIENTATION, this);
+	}
 
-    public void serializeNBT(CompoundTag tag) {
-        Useful.saveEnumToTag(tag, TAG_ORIENTATION, this);
-    }
+	public void serializeNBT(CompoundTag tag) {
+		Useful.saveEnumToTag(tag, TAG_ORIENTATION, this);
+	}
 
-    public BlockOrientationAxis fromBytes(PacketByteBuf pBuff) {
-        return pBuff.readEnumConstant(BlockOrientationAxis.class);
-    }
+	public BlockOrientationAxis fromBytes(PacketByteBuf pBuff) {
+		return pBuff.readEnumConstant(BlockOrientationAxis.class);
+	}
 
-    public void toBytes(PacketByteBuf pBuff) {
-        pBuff.writeEnumConstant(this);
-    }
+	public void toBytes(PacketByteBuf pBuff) {
+		pBuff.writeEnumConstant(this);
+	}
 
-    public String localizedName() {
-        return I18n.translate("placement.orientation.axis." + name().toLowerCase());
-    }
+	public String localizedName() {
+		return I18n.translate("placement.orientation.axis." + name().toLowerCase());
+	}
 
-    public boolean isFixed() {
-        return !(this == DYNAMIC || this == MATCH_CLOSEST);
-    }
+	public boolean isFixed() {
+		return !(this == DYNAMIC || this == MATCH_CLOSEST);
+	}
 }

@@ -29,37 +29,37 @@ import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public class TextureLayoutMapImpl implements TextureLayoutMap {
-    public static TextureLayoutMapImpl create(TextureLayout layout, TextureNameFunction nameFunc) {
-        return new TextureLayoutMapImpl(layout, nameFunc);
-    }
+	public static TextureLayoutMapImpl create(TextureLayout layout, TextureNameFunction nameFunc) {
+		return new TextureLayoutMapImpl(layout, nameFunc);
+	}
 
-    public final TextureLayout layout;
+	public final TextureLayout layout;
 
-    public final TextureNameFunction nameFunc;
+	public final TextureNameFunction nameFunc;
 
-    private TextureLayoutMapImpl(TextureLayout layout, TextureNameFunction nameFunc) {
-        this.layout = layout;
-        this.nameFunc = nameFunc;
-    }
+	private TextureLayoutMapImpl(TextureLayout layout, TextureNameFunction nameFunc) {
+		this.layout = layout;
+		this.nameFunc = nameFunc;
+	}
 
-    @Override
-    public TextureLayout layout() {
-        return layout;
-    }
+	@Override
+	public TextureLayout layout() {
+		return layout;
+	}
 
-    public final void prestitch(TextureSet texture, Consumer<Identifier> stitcher) {
-        for (int i = 0; i < texture.versionCount(); i++) {
-            for (int j = 0; j < layout.textureCount; j++) {
-                stitcher.accept(new Identifier(nameFunc.apply(texture.baseTextureName(), i, j)));
-            }
-        }
-    }
+	public final void prestitch(TextureSet texture, Consumer<Identifier> stitcher) {
+		for (int i = 0; i < texture.versionCount(); i++) {
+			for (int j = 0; j < layout.textureCount; j++) {
+				stitcher.accept(new Identifier(nameFunc.apply(texture.baseTextureName(), i, j)));
+			}
+		}
+	}
 
-    public final String buildTextureName(TextureSet texture, int version, int index) {
-        return nameFunc.apply(texture.baseTextureName(), version, index);
-    }
+	public final String buildTextureName(TextureSet texture, int version, int index) {
+		return nameFunc.apply(texture.baseTextureName(), version, index);
+	}
 
-    public final String sampleTextureName(TextureSet texture) {
-        return nameFunc.apply(texture.baseTextureName(), 0, 0);
-    }
+	public final String sampleTextureName(TextureSet texture) {
+		return nameFunc.apply(texture.baseTextureName(), 0, 0);
+	}
 }

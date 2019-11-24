@@ -28,40 +28,40 @@ import net.minecraft.block.Block;
 /** tracks which terrain blocks can be frozen or thawed from each other */
 @API(status = INTERNAL)
 public class TerrainBlockRegistry {
-    private final HashBiMap<Block, Block> stateMap = HashBiMap.create(16);
-    private final HashBiMap<Block, Block> fillerMap = HashBiMap.create(16);
-    private final HashMap<Block, Block> cubicMap = new HashMap<Block, Block>(16);
-    public static final TerrainBlockRegistry TERRAIN_STATE_REGISTRY = new TerrainBlockRegistry();
+	private final HashBiMap<Block, Block> stateMap = HashBiMap.create(16);
+	private final HashBiMap<Block, Block> fillerMap = HashBiMap.create(16);
+	private final HashMap<Block, Block> cubicMap = new HashMap<>(16);
+	public static final TerrainBlockRegistry TERRAIN_STATE_REGISTRY = new TerrainBlockRegistry();
 
-    public void registerStateTransition(Block dynamicBlock, Block staticBlock) {
-        stateMap.put(dynamicBlock, staticBlock);
-    }
+	public void registerStateTransition(Block dynamicBlock, Block staticBlock) {
+		stateMap.put(dynamicBlock, staticBlock);
+	}
 
-    public TerrainStaticBlock getStaticBlock(Block dynamicBlock) {
-        return (TerrainStaticBlock) stateMap.get(dynamicBlock);
-    }
+	public TerrainStaticBlock getStaticBlock(Block dynamicBlock) {
+		return (TerrainStaticBlock) stateMap.get(dynamicBlock);
+	}
 
-    public Block getDynamicBlock(Block staticBlock) {
-        return stateMap.inverse().get(staticBlock);
-    }
+	public Block getDynamicBlock(Block staticBlock) {
+		return stateMap.inverse().get(staticBlock);
+	}
 
-    public void registerFiller(Block heightBlock, Block fillerBlock) {
-        fillerMap.put(heightBlock, fillerBlock);
-    }
+	public void registerFiller(Block heightBlock, Block fillerBlock) {
+		fillerMap.put(heightBlock, fillerBlock);
+	}
 
-    public Block getFillerBlock(Block hieghtBlock) {
-        return fillerMap.get(hieghtBlock);
-    }
+	public Block getFillerBlock(Block hieghtBlock) {
+		return fillerMap.get(hieghtBlock);
+	}
 
-    public Block getHeightBlock(Block fillerBlock) {
-        return fillerMap.inverse().get(fillerBlock);
-    }
+	public Block getHeightBlock(Block fillerBlock) {
+		return fillerMap.inverse().get(fillerBlock);
+	}
 
-    public void registerCubic(Block flowBlock, Block cubicBlock) {
-        cubicMap.put(flowBlock, cubicBlock);
-    }
+	public void registerCubic(Block flowBlock, Block cubicBlock) {
+		cubicMap.put(flowBlock, cubicBlock);
+	}
 
-    public Block getCubicBlock(Block flowBlock) {
-        return cubicMap.get(flowBlock);
-    }
+	public Block getCubicBlock(Block flowBlock) {
+		return cubicMap.get(flowBlock);
+	}
 }

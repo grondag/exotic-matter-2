@@ -24,18 +24,18 @@ import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
 public interface MutableModelState extends ModelState {
-    void release();
+	void release();
 
-    void retain();
+	void retain();
 
-    /**
-     * Copies what it can, excluding the primitive, and returns self.
-     */
-    MutableModelState copyFrom(ModelState template);
+	/**
+	 * Copies what it can, excluding the primitive, and returns self.
+	 */
+	MutableModelState copyFrom(ModelState template);
 
-    MutableModelState setStatic(boolean isStatic);
+	MutableModelState setStatic(boolean isStatic);
 
-    ModelState releaseToImmutable();
+	ModelState releaseToImmutable();
 
-    void fromBytes(PacketByteBuf pBuff);
+	void fromBytes(PacketByteBuf pBuff);
 }

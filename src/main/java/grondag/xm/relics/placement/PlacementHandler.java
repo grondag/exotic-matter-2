@@ -126,17 +126,15 @@ public abstract class PlacementHandler {
 		if (onPos == null && !item.isFloatingSelectionEnabled(stack)) {
 			// don't force player to be in placement range to see big region selections
 			// but note this doesn't work for selection in progress
-			if (item.isFixedRegionEnabled(stack) && !item.isFixedRegionSelectionInProgress(stack)) {
+			if (item.isFixedRegionEnabled(stack) && !item.isFixedRegionSelectionInProgress(stack))
 				return new PlacementResult(pPos.inPos, PlacementEvent.NO_OPERATION_CONTINUE, PlacementSpecHelper.placementBuilder(player, pPos, stack));
-			} else {
+			else
 				return PlacementResult.EMPTY_RESULT_CONTINUE;
-			}
 		}
 
 		// nothing to do if no position
-		if (pPos.inPos == null) {
+		if (pPos.inPos == null)
 			return PlacementResult.EMPTY_RESULT_CONTINUE;
-		}
 
 		// only virtual blocks support advanced placement behavior
 		// so emulate vanilla right-click behavior if we have non-virtual block
@@ -209,9 +207,8 @@ public abstract class PlacementHandler {
 		// break with everything - need to know adjacent species
 		// match with most - need to know adjacent species
 
-		if (!PlacementItem.isPlacementItem(stack)) {
+		if (!PlacementItem.isPlacementItem(stack))
 			return 0;
-		}
 		final PlacementItem item = (PlacementItem) stack.getItem();
 
 		SpeciesMode mode = item.getSpeciesMode(stack);
@@ -224,13 +221,11 @@ public abstract class PlacementHandler {
 		@SuppressWarnings("rawtypes")
 		final
 		MutableBaseModelState withModelState = XmItem.modelState(stack);
-		if (withModelState == null || !withModelState.hasSpecies()) {
+		if (withModelState == null || !withModelState.hasSpecies())
 			return 0;
-		}
 
-		if (player.world == null) {
+		if (player.world == null)
 			return 0;
-		}
 
 		final World world = player.world;
 
@@ -244,13 +239,11 @@ public abstract class PlacementHandler {
 
 			// if no region, then return something different than what is clicked,
 			// unless didn't get a species - will return 0 in that case.
-			if (region == null) {
+			if (region == null)
 				return shouldBreak || clickedSpecies < 0 ? clickedSpecies + 1 : clickedSpecies;
-			}
 
-			if (clickedSpecies >= 0) {
+			if (clickedSpecies >= 0)
 				return clickedSpecies;
-			}
 		}
 
 		final int[] adjacentCount = new int[16];
@@ -346,13 +339,12 @@ public abstract class PlacementHandler {
 			}
 		}
 
-		if (player.getHorizontalFacing().getAxis() == Direction.Axis.X) {
+		if (player.getHorizontalFacing().getAxis() == Direction.Axis.X)
 			return startPos.add((offsetPos.getX() - 1) * xFactor * offset.depthFactor, (offsetPos.getY() - 1) * offset.heightFactor,
 					(offsetPos.getZ() - 1) * zFactor * offset.widthFactor);
-		} else {
+		else
 			return startPos.add((offsetPos.getZ() - 1) * xFactor * offset.widthFactor, (offsetPos.getY() - 1) * offset.heightFactor,
 					(offsetPos.getX() - 1) * zFactor * offset.depthFactor);
-		}
 	}
 
 	/**
@@ -401,16 +393,14 @@ public abstract class PlacementHandler {
 	}
 
 	public static void placeVirtualBlock(World world, ItemStack stack, PlayerEntity player, BlockPos pos) { //, Build build) {
-		if (!player.canModifyWorld()) {
+		if (!player.canModifyWorld())
 			return;
-		}
 
 		final BlockSoundGroup soundtype = XmStackHelper.getStackSubstance(stack).soundType;
 
 		final PlacementItem item = PlacementItem.getPlacementItem(stack);
-		if (item == null) {
+		if (item == null)
 			return;
-		}
 
 		final BlockState placedState = item.getPlacementBlockStateFromStack(stack);
 
@@ -434,9 +424,8 @@ public abstract class PlacementHandler {
 		// opposite of OK
 		final boolean wasUpdated = world.setBlockState(pos, newState, 3) || world.getBlockState(pos) == newState;
 
-		if (!wasUpdated) {
+		if (!wasUpdated)
 			return false;
-		}
 
 		newState.getBlock().onPlaced(world, pos, newState, player, stack);
 		return true;

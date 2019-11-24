@@ -21,15 +21,15 @@ import org.apiguardian.api.API.Status;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public enum PlacementPreviewRenderMode {
-    SELECT(0x91BFBD), PLACE(0xA0FFFF), EXCAVATE(0xFC8D59), OBSTRUCTED(0xFFFFBF);
+	SELECT(0x91BFBD), PLACE(0xA0FFFF), EXCAVATE(0xFC8D59), OBSTRUCTED(0xFFFFBF);
 
-    public final float red;
-    public final float green;
-    public final float blue;
+	public final float red;
+	public final float green;
+	public final float blue;
 
-    private PlacementPreviewRenderMode(int rgbColor) {
-        red = ((rgbColor >> 16) & 0xFF) / 255f;
-        green = ((rgbColor >> 8) & 0xFF) / 255f;
-        blue = (rgbColor & 0xFF) / 255f;
-    }
+	private PlacementPreviewRenderMode(int rgbColor) {
+		red = ((rgbColor >> 16) & 0xFF) / 255f;
+		green = ((rgbColor >> 8) & 0xFF) / 255f;
+		blue = (rgbColor & 0xFF) / 255f;
+	}
 }

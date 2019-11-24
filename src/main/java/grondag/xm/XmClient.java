@@ -36,20 +36,20 @@ import net.minecraft.resource.ResourceType;
 
 @API(status = INTERNAL)
 public class XmClient implements ClientModInitializer {
-    @Override
-    public void onInitializeClient() {
-        XmTexturesImpl.init();
-        ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
-        InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
-        Packets.initializeClient();
-        AbstractPrimitiveModelState.useClientHandler();
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(XmPaintRegistryImpl.INSTANCE);
-    }
+	@Override
+	public void onInitializeClient() {
+		XmTexturesImpl.init();
+		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
+		InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
+		Packets.initializeClient();
+		AbstractPrimitiveModelState.useClientHandler();
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(XmPaintRegistryImpl.INSTANCE);
+	}
 
-    public static void invalidate() {
-        PolyTransformImpl.invalidateCache();
-        XmDispatcher.INSTANCE.clear();
-        CollisionDispatcherImpl.clear();
-        ModelPrimitiveRegistryImpl.INSTANCE.invalidateCache();
-    }
+	public static void invalidate() {
+		PolyTransformImpl.invalidateCache();
+		XmDispatcher.INSTANCE.clear();
+		CollisionDispatcherImpl.clear();
+		ModelPrimitiveRegistryImpl.INSTANCE.invalidateCache();
+	}
 }

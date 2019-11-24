@@ -25,9 +25,9 @@ import net.minecraft.util.shape.VoxelShape;
 
 @API(status = EXPERIMENTAL)
 public class CollisionDispatcher {
-    private CollisionDispatcher() {}
+	private CollisionDispatcher() {}
 
-    public static VoxelShape shapeFor(ModelState modelState) {
-        return CollisionDispatcherImpl.shapeFor(modelState);
-    }
+	public static VoxelShape shapeFor(ModelState modelState) {
+		return CollisionDispatcherImpl.shapeFor(modelState);
+	}
 }

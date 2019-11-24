@@ -29,70 +29,70 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 
 class PaintDeserializer {
-    public static XmPaintImpl.Value deserialize(Reader reader) {
-        final XmPaintImpl.Finder finder = XmPaintImpl.finder();
-        final JsonObject json = JsonHelper.deserialize(reader);
+	public static XmPaintImpl.Value deserialize(Reader reader) {
+		final XmPaintImpl.Finder finder = XmPaintImpl.finder();
+		final JsonObject json = JsonHelper.deserialize(reader);
 
-        if (json.has("layers")) {
-            final JsonArray layers = JsonHelper.asArray(json.get("layers"), "layers");
-            if(!layers.isJsonNull()) {
-                final int depth = layers.size();
-                if(depth > 3) return null;
-                finder.textureDepth(depth);
-                for(int i = 0; i < depth; i++) {
-                    readLayer(layers.get(i).getAsJsonObject(), finder, i);
-                }
-            }
-        }
-        return finder.find();
-    }
+		if (json.has("layers")) {
+			final JsonArray layers = JsonHelper.asArray(json.get("layers"), "layers");
+			if(!layers.isJsonNull()) {
+				final int depth = layers.size();
+				if(depth > 3) return null;
+				finder.textureDepth(depth);
+				for(int i = 0; i < depth; i++) {
+					readLayer(layers.get(i).getAsJsonObject(), finder, i);
+				}
+			}
+		}
+		return finder.find();
+	}
 
-    private static void readLayer(JsonObject layer, XmPaintFinder finder, int spriteIndex) {
-        if (layer.has("disableAo")) {
-            finder.disableAo(spriteIndex, JsonHelper.getBoolean(layer, "disableAo", true));
-        }
+	private static void readLayer(JsonObject layer, XmPaintFinder finder, int spriteIndex) {
+		if (layer.has("disableAo")) {
+			finder.disableAo(spriteIndex, JsonHelper.getBoolean(layer, "disableAo", true));
+		}
 
-        if (layer.has("disableColorIndex")) {
-            finder.disableColorIndex(spriteIndex, JsonHelper.getBoolean(layer, "disableColorIndex", true));
-        }
+		if (layer.has("disableColorIndex")) {
+			finder.disableColorIndex(spriteIndex, JsonHelper.getBoolean(layer, "disableColorIndex", true));
+		}
 
-        if (layer.has("disableDiffuse")) {
-            finder.disableDiffuse(spriteIndex, JsonHelper.getBoolean(layer, "disableDiffuse", true));
-        }
+		if (layer.has("disableDiffuse")) {
+			finder.disableDiffuse(spriteIndex, JsonHelper.getBoolean(layer, "disableDiffuse", true));
+		}
 
-        if (layer.has("emissive")) {
-            finder.emissive(spriteIndex, JsonHelper.getBoolean(layer, "emissive", true));
-        }
+		if (layer.has("emissive")) {
+			finder.emissive(spriteIndex, JsonHelper.getBoolean(layer, "emissive", true));
+		}
 
-        if (layer.has("blendMode")) {
-            finder.blendMode(spriteIndex, readBlendMode(JsonHelper.getString(layer, "blendMode")));
-        }
+		if (layer.has("blendMode")) {
+			finder.blendMode(spriteIndex, readBlendMode(JsonHelper.getString(layer, "blendMode")));
+		}
 
-        if (layer.has("color")) {
-            finder.textureColor(spriteIndex, color(JsonHelper.getString(layer, "color")));
-        }
+		if (layer.has("color")) {
+			finder.textureColor(spriteIndex, color(JsonHelper.getString(layer, "color")));
+		}
 
-        if (layer.has("texture")) {
-            finder.texture(spriteIndex, TextureSetRegistry.instance().get(new Identifier(JsonHelper.getString(layer, "texture"))));
-        }
-    }
+		if (layer.has("texture")) {
+			finder.texture(spriteIndex, TextureSetRegistry.instance().get(new Identifier(JsonHelper.getString(layer, "texture"))));
+		}
+	}
 
-    private static BlendMode readBlendMode(String val) {
-        val = val.toLowerCase(Locale.ROOT);
-        switch(val) {
-        case "solid":
-        default:
-            return BlendMode.SOLID;
-        case "cutout":
-            return BlendMode.CUTOUT;
-        case "cutout_mipped":
-            return BlendMode.CUTOUT_MIPPED;
-        case "translucent":
-            return BlendMode.TRANSLUCENT;
-        }
-    }
+	private static BlendMode readBlendMode(String val) {
+		val = val.toLowerCase(Locale.ROOT);
+		switch(val) {
+		case "solid":
+		default:
+			return BlendMode.SOLID;
+		case "cutout":
+			return BlendMode.CUTOUT;
+		case "cutout_mipped":
+			return BlendMode.CUTOUT_MIPPED;
+		case "translucent":
+			return BlendMode.TRANSLUCENT;
+		}
+	}
 
-    private static int color(String str) {
-        return str.startsWith("0x") ? Integer.parseUnsignedInt(str.substring(2), 16) : Integer.parseInt(str);
-    }
+	private static int color(String str) {
+		return str.startsWith("0x") ? Integer.parseUnsignedInt(str.substring(2), 16) : Integer.parseInt(str);
+	}
 }

@@ -34,26 +34,26 @@ import net.minecraft.util.math.Direction;
  */
 @API(status = STABLE)
 public interface CornerJoinState {
-    int STATE_COUNT = CornerJoinStateSelector.BLOCK_JOIN_STATE_COUNT;
+	int STATE_COUNT = CornerJoinStateSelector.BLOCK_JOIN_STATE_COUNT;
 
-    int ordinal();
+	int ordinal();
 
-    CornerJoinFaceState faceState(Direction face);
+	CornerJoinFaceState faceState(Direction face);
 
-    /**
-     * Access to underlying simple 6-sides join.
-     */
-    SimpleJoinState simpleJoin();
+	/**
+	 * Access to underlying simple 6-sides join.
+	 */
+	SimpleJoinState simpleJoin();
 
-    static int ordinalFromWorld(BlockNeighbors tests) {
-        return CornerJoinStateSelector.ordinalFromWorld(tests);
-    }
+	static int ordinalFromWorld(BlockNeighbors tests) {
+		return CornerJoinStateSelector.ordinalFromWorld(tests);
+	}
 
-    static CornerJoinState fromWorld(BlockNeighbors tests) {
-        return CornerJoinStateSelector.fromWorld(tests);
-    }
+	static CornerJoinState fromWorld(BlockNeighbors tests) {
+		return CornerJoinStateSelector.fromWorld(tests);
+	}
 
-    static CornerJoinState fromOrdinal(int ordinal) {
-        return CornerJoinStateSelector.fromOrdinal(ordinal);
-    }
+	static CornerJoinState fromOrdinal(int ordinal) {
+		return CornerJoinStateSelector.fromOrdinal(ordinal);
+	}
 }

@@ -23,53 +23,53 @@ import org.apiguardian.api.API;
 
 @API(status = EXPERIMENTAL)
 public enum TextureScale {
-    /** 1x1 */
-    SINGLE(0, NONE),
+	/** 1x1 */
+	SINGLE(0, NONE),
 
-    /** 2x2 */
-    TINY(1, POSITION),
+	/** 2x2 */
+	TINY(1, POSITION),
 
-    /** 4x4 */
-    SMALL(2, POSITION),
+	/** 4x4 */
+	SMALL(2, POSITION),
 
-    /** 8x8 */
-    MEDIUM(3, POSITION),
+	/** 8x8 */
+	MEDIUM(3, POSITION),
 
-    /** 16x16 */
-    LARGE(4, POSITION),
+	/** 16x16 */
+	LARGE(4, POSITION),
 
-    /** 32x32 */
-    GIANT(5, POSITION);
+	/** 32x32 */
+	GIANT(5, POSITION);
 
-    /**
-     * UV length for each subdivision of the texture. Used by BigTex painter. Is
-     * simply 1/{@link #sliceCount}.
-     */
-    public final float sliceIncrement;
+	/**
+	 * UV length for each subdivision of the texture. Used by BigTex painter. Is
+	 * simply 1/{@link #sliceCount}.
+	 */
+	public final float sliceIncrement;
 
-    /**
-     * Number of texture subdivisions for BigTex (each division is one block face).
-     * Equivalently, the uv width/block faces covered by the texture if rendered at
-     * 1:1 blockface:uv-distance scale.
-     */
-    public final int sliceCount;
+	/**
+	 * Number of texture subdivisions for BigTex (each division is one block face).
+	 * Equivalently, the uv width/block faces covered by the texture if rendered at
+	 * 1:1 blockface:uv-distance scale.
+	 */
+	public final int sliceCount;
 
-    /** mask to derive a value within the number of slice counts (sliceCount - 1) */
-    public final int sliceCountMask;
+	/** mask to derive a value within the number of slice counts (sliceCount - 1) */
+	public final int sliceCountMask;
 
-    /** number of texture subdivisions as an exponent of 2 */
-    public final int power;
+	/** number of texture subdivisions as an exponent of 2 */
+	public final int power;
 
-    /**
-     * identifies the world state needed to drive texture random rotation/selection
-     */
-    public final int modelStateFlag;
+	/**
+	 * identifies the world state needed to drive texture random rotation/selection
+	 */
+	public final int modelStateFlag;
 
-    private TextureScale(int power, int modelStateFlag) {
-        this.power = power;
-        sliceCount = 1 << power;
-        sliceCountMask = sliceCount - 1;
-        sliceIncrement = 1f / sliceCount;
-        this.modelStateFlag = modelStateFlag;
-    }
+	private TextureScale(int power, int modelStateFlag) {
+		this.power = power;
+		sliceCount = 1 << power;
+		sliceCountMask = sliceCount - 1;
+		sliceIncrement = 1f / sliceCount;
+		this.modelStateFlag = modelStateFlag;
+	}
 }

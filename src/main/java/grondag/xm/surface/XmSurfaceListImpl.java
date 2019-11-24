@@ -24,35 +24,35 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 
 @API(status = INTERNAL)
 class XmSurfaceListImpl implements XmSurfaceList {
-    private final int size;
-    private final XmSurfaceImpl[] surfaces;
+	private final int size;
+	private final XmSurfaceImpl[] surfaces;
 
-    private final XmSurface lamp;
+	private final XmSurface lamp;
 
-    XmSurfaceListImpl(XmSurfaceImpl[] surfaces) {
-        this.surfaces = surfaces;
-        size = surfaces.length;
-        XmSurface lamp = null;
-        for (final XmSurfaceImpl surface : surfaces) {
-            if (surface.isLamp()) {
-                lamp = surface;
-            }
-        }
-        this.lamp = lamp;
-    }
+	XmSurfaceListImpl(XmSurfaceImpl[] surfaces) {
+		this.surfaces = surfaces;
+		size = surfaces.length;
+		XmSurface lamp = null;
+		for (final XmSurfaceImpl surface : surfaces) {
+			if (surface.isLamp()) {
+				lamp = surface;
+			}
+		}
+		this.lamp = lamp;
+	}
 
-    @Override
-    public XmSurface get(int index) {
-        return surfaces[index];
-    }
+	@Override
+	public XmSurface get(int index) {
+		return surfaces[index];
+	}
 
-    @Override
-    public int size() {
-        return size;
-    }
+	@Override
+	public int size() {
+		return size;
+	}
 
-    @Override
-    public XmSurface lamp() {
-        return lamp;
-    }
+	@Override
+	public XmSurface lamp() {
+		return lamp;
+	}
 }

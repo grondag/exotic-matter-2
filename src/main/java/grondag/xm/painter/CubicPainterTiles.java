@@ -32,33 +32,33 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public abstract class CubicPainterTiles extends AbstractQuadPainter {
-    @SuppressWarnings("rawtypes")
-    public static void paintQuads(MutableMesh stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-        final MutablePolygon editor = stream.editor();
-        do {
-            editor.lockUV(textureIndex, true);
-            editor.assignLockedUVCoordinates(textureIndex);
+	@SuppressWarnings("rawtypes")
+	public static void paintQuads(MutableMesh stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
+		final MutablePolygon editor = stream.editor();
+		do {
+			editor.lockUV(textureIndex, true);
+			editor.assignLockedUVCoordinates(textureIndex);
 
-            final Direction nominalFace = editor.nominalFace();
-            final TextureSet tex = paint.texture(textureIndex);
+			final Direction nominalFace = editor.nominalFace();
+			final TextureSet tex = paint.texture(textureIndex);
 
-            TextureOrientation rotation = textureRotationForFace(nominalFace, tex, modelState);
+			TextureOrientation rotation = textureRotationForFace(nominalFace, tex, modelState);
 
-            int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
+			int textureVersion = textureVersionForFace(nominalFace, tex, modelState);
 
-            final int salt = editor.textureSalt();
-            if (salt != 0 && tex.transform().hasRandom) {
-                final int saltHash = HashCommon.mix(salt);
-                rotation = Useful.offsetEnumValue(rotation, saltHash & 3);
-                textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();
-            }
+			final int salt = editor.textureSalt();
+			if (salt != 0 && tex.transform().hasRandom) {
+				final int saltHash = HashCommon.mix(salt);
+				rotation = Useful.offsetEnumValue(rotation, saltHash & 3);
+				textureVersion = (textureVersion + (saltHash >> 2)) & tex.versionMask();
+			}
 
-            editor.rotation(textureIndex, rotation);
-            editor.sprite(textureIndex, tex.textureName(textureVersion));
-            editor.contractUV(textureIndex, true);
+			editor.rotation(textureIndex, rotation);
+			editor.sprite(textureIndex, tex.textureName(textureVersion));
+			editor.contractUV(textureIndex, true);
 
-            commonPostPaint(editor, modelState, surface, paint, textureIndex);
+			commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
-        } while (editor.next());
-    }
+		} while (editor.next());
+	}
 }

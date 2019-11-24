@@ -39,39 +39,39 @@ import grondag.xm.api.texture.TextureOrientation;
 
 @API(status = EXPERIMENTAL)
 public class CylinderWithAxis  {
-    private CylinderWithAxis() {}
+	private CylinderWithAxis() {}
 
-    public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-            .add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-            .add("sides", SurfaceTopology.TILED, XmSurface.FLAG_NONE)
-            .build();
+	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
+			.add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+			.add("sides", SurfaceTopology.TILED, XmSurface.FLAG_NONE)
+			.build();
 
-    public static final XmSurface SURFACE_ENDS = SURFACES.get(0);
-    public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
+	public static final XmSurface SURFACE_ENDS = SURFACES.get(0);
+	public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
 
-    static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
-        final PolyTransform pt = PolyTransform.get(modelState);
+	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
+		final PolyTransform pt = PolyTransform.get(modelState);
 
-        final WritableMesh mesh = XmMeshes.claimWritable();
-        final MutablePolygon writer = mesh.writer();
-        writer.colorAll(0, 0xFFFFFFFF);
-        writer.lockUV(0, false);
-        writer.rotation(0, TextureOrientation.IDENTITY);
-        writer.sprite(0, "");
-        writer.saveDefaults();
+		final WritableMesh mesh = XmMeshes.claimWritable();
+		final MutablePolygon writer = mesh.writer();
+		writer.colorAll(0, 0xFFFFFFFF);
+		writer.lockUV(0, false);
+		writer.rotation(0, TextureOrientation.IDENTITY);
+		writer.sprite(0, "");
+		writer.saveDefaults();
 
-        final Consumer<MutablePolygon> transform = p -> {
-            p.nominalFace(p.lightFace()).apply(pt);
-        };
+		final Consumer<MutablePolygon> transform = p -> {
+			p.nominalFace(p.lightFace()).apply(pt);
+		};
 
-        MeshHelper.unitCylinder(mesh.writer(), 16, transform, SURFACE_SIDES, SURFACE_ENDS, SURFACE_ENDS, 3);
+		MeshHelper.unitCylinder(mesh.writer(), 16, transform, SURFACE_SIDES, SURFACE_ENDS, SURFACE_ENDS, 3);
 
-        return mesh.releaseToReader();
-    };
+		return mesh.releaseToReader();
+	};
 
-    public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-            .surfaceList(SURFACES)
-            .polyFactory(POLY_FACTORY)
-            .orientationType(OrientationType.AXIS)
-            .build(Xm.idString("cylinder_axis"));
+	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+			.surfaceList(SURFACES)
+			.polyFactory(POLY_FACTORY)
+			.orientationType(OrientationType.AXIS)
+			.build(Xm.idString("cylinder_axis"));
 }

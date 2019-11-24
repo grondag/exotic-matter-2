@@ -26,12 +26,12 @@ import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 @API(status = INTERNAL)
 public class Packets {
 
-    public static void initializeCommon() {
-        ServerSidePacketRegistry.INSTANCE.register(S2C_ExcavationRenderUpdate.ID, S2C_ExcavationRenderUpdate::accept);
-        ServerSidePacketRegistry.INSTANCE.register(S2C_PacketExcavationRenderRefresh.ID, S2C_PacketExcavationRenderRefresh::accept);
-    }
+	public static void initializeCommon() {
+		ServerSidePacketRegistry.INSTANCE.register(S2C_ExcavationRenderUpdate.ID, S2C_ExcavationRenderUpdate::accept);
+		ServerSidePacketRegistry.INSTANCE.register(S2C_PacketExcavationRenderRefresh.ID, S2C_PacketExcavationRenderRefresh::accept);
+	}
 
-    @Environment(EnvType.CLIENT)
-    public static void initializeClient() {
-    }
+	@Environment(EnvType.CLIENT)
+	public static void initializeClient() {
+	}
 }

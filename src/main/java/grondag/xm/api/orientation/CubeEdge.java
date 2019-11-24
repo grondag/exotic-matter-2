@@ -41,89 +41,89 @@ import net.minecraft.util.math.Vec3i;
  */
 @API(status = EXPERIMENTAL)
 public enum CubeEdge implements StringIdentifiable {
-    DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180),
-    DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
-    DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE),
-    DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90),
-    UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180),
-    UP_EAST(Direction.UP, Direction.EAST, ROTATE_90),
-    UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE),
-    UP_WEST(Direction.UP, Direction.WEST, ROTATE_270),
-    NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90),
-    NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270),
-    SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_270),
-    SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_90);
+	DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180),
+	DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
+	DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE),
+	DOWN_EAST(Direction.DOWN, Direction.EAST, ROTATE_90),
+	UP_NORTH(Direction.UP, Direction.NORTH, ROTATE_180),
+	UP_EAST(Direction.UP, Direction.EAST, ROTATE_90),
+	UP_SOUTH(Direction.UP, Direction.SOUTH, ROTATE_NONE),
+	UP_WEST(Direction.UP, Direction.WEST, ROTATE_270),
+	NORTH_EAST(Direction.NORTH, Direction.EAST, ROTATE_90),
+	NORTH_WEST(Direction.NORTH, Direction.WEST, ROTATE_270),
+	SOUTH_EAST(Direction.SOUTH, Direction.EAST, ROTATE_270),
+	SOUTH_WEST(Direction.SOUTH, Direction.WEST, ROTATE_90);
 
-    public final Direction face1;
-    public final Direction face2;
-    public final String name;
+	public final Direction face1;
+	public final Direction face2;
+	public final String name;
 
-    /**
-     * Used to position models like stairs/wedges. Representation rotation around
-     * the parallel axis such that face1 and face2 are most occluded. Based on
-     * "default" model occluding north and down faces. Use the axis implied by
-     * face1.
-     */
+	/**
+	 * Used to position models like stairs/wedges. Representation rotation around
+	 * the parallel axis such that face1 and face2 are most occluded. Based on
+	 * "default" model occluding north and down faces. Use the axis implied by
+	 * face1.
+	 */
 
-    public final ClockwiseRotation rotation;
+	public final ClockwiseRotation rotation;
 
-    public final Vec3i vector;
+	public final Vec3i vector;
 
-    /**
-     * Ordinal sequence that includes all faces, corner and far corners. Used to
-     * index them in a mixed array.
-     */
-    @API(status = INTERNAL)
-    public final int superOrdinal;
+	/**
+	 * Ordinal sequence that includes all faces, corner and far corners. Used to
+	 * index them in a mixed array.
+	 */
+	@API(status = INTERNAL)
+	public final int superOrdinal;
 
-    @API(status = INTERNAL)
-    public final int superOrdinalBit;
+	@API(status = INTERNAL)
+	public final int superOrdinalBit;
 
-    /**
-     * Will be null if not a horizontal edge.
-     */
-    @Nullable
-    public final HorizontalEdge horizontalEdge;
+	/**
+	 * Will be null if not a horizontal edge.
+	 */
+	@Nullable
+	public final HorizontalEdge horizontalEdge;
 
-    private CubeEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
-        name = name().toLowerCase();
-        this.face1 = face1;
-        this.face2 = face2;
-        this.rotation = rotation;
-        superOrdinal = 6 + ordinal();
-        superOrdinalBit = 1 << superOrdinal;
+	private CubeEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
+		name = name().toLowerCase();
+		this.face1 = face1;
+		this.face2 = face2;
+		this.rotation = rotation;
+		superOrdinal = 6 + ordinal();
+		superOrdinalBit = 1 << superOrdinal;
 
-        final Vec3i v1 = face1.getVector();
-        final Vec3i v2 = face2.getVector();
-        vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
+		final Vec3i v1 = face1.getVector();
+		final Vec3i v2 = face2.getVector();
+		vector = new Vec3i(v1.getX() + v2.getX(), v1.getY() + v2.getY(), v1.getZ() + v2.getZ());
 
-        if (face1.getAxis() == Axis.Y || face2.getAxis() == Axis.Y) {
-            horizontalEdge = null;
-        } else {
-            horizontalEdge = HorizontalEdge.find(HorizontalFace.find(face1), HorizontalFace.find(face2));
-        }
-    }
+		if (face1.getAxis() == Axis.Y || face2.getAxis() == Axis.Y) {
+			horizontalEdge = null;
+		} else {
+			horizontalEdge = HorizontalEdge.find(HorizontalFace.find(face1), HorizontalFace.find(face2));
+		}
+	}
 
-    public static final int COUNT = CubeEdgeHelper.COUNT;
+	public static final int COUNT = CubeEdgeHelper.COUNT;
 
-    /**
-     * Will be null if the inputs do not specify an edge.
-     */
-    @Nullable
-    public static CubeEdge find(Direction face1, Direction face2) {
-        return CubeEdgeHelper.find(face1, face2);
-    }
+	/**
+	 * Will be null if the inputs do not specify an edge.
+	 */
+	@Nullable
+	public static CubeEdge find(Direction face1, Direction face2) {
+		return CubeEdgeHelper.find(face1, face2);
+	}
 
-    public static final CubeEdge fromOrdinal(int ordinal) {
-        return CubeEdgeHelper.fromOrdinal(ordinal);
-    }
+	public static final CubeEdge fromOrdinal(int ordinal) {
+		return CubeEdgeHelper.fromOrdinal(ordinal);
+	}
 
-    public static void forEach(Consumer<CubeEdge> consumer) {
-        CubeEdgeHelper.forEach(consumer);
-    }
+	public static void forEach(Consumer<CubeEdge> consumer) {
+		CubeEdgeHelper.forEach(consumer);
+	}
 
-    @Override
-    public String asString() {
-        return name;
-    }
+	@Override
+	public String asString() {
+		return name;
+	}
 }

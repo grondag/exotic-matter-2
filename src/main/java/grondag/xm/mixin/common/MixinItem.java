@@ -26,16 +26,16 @@ import net.minecraft.item.ItemStack;
 
 @Mixin(Item.class)
 public class MixinItem implements XmItemAccess {
-    private Function<ItemStack, MutableModelState> modelStateFunc = null;
+	private Function<ItemStack, MutableModelState> modelStateFunc = null;
 
-    @Override
-    public void xm_modelStateFunc(Function<ItemStack, MutableModelState> func) {
-        modelStateFunc = func;
-    }
+	@Override
+	public void xm_modelStateFunc(Function<ItemStack, MutableModelState> func) {
+		modelStateFunc = func;
+	}
 
-    @Override
-    public Function<ItemStack, MutableModelState> xm_modelStateFunc() {
-        return modelStateFunc;
-    }
+	@Override
+	public Function<ItemStack, MutableModelState> xm_modelStateFunc() {
+		return modelStateFunc;
+	}
 
 }

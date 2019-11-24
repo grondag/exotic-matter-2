@@ -31,11 +31,11 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
  */
 @API(status = EXPERIMENTAL)
 public interface MutableMesh extends WritableMesh {
-    MutablePolygon editor();
+	MutablePolygon editor();
 
-    /**
-     * Combo of {@link #moveEditor(int)} and {@link #editor()}.<br>
-     * Moves editor to given address and returns the editor cursor for concision.
-     */
-    MutablePolygon editor(int address);
+	/**
+	 * Combo of {@link #moveEditor(int)} and {@link #editor()}.<br>
+	 * Moves editor to given address and returns the editor cursor for concision.
+	 */
+	MutablePolygon editor(int address);
 }

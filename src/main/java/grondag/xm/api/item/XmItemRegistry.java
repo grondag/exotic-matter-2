@@ -28,9 +28,9 @@ import net.minecraft.item.ItemStack;
 
 @API(status = EXPERIMENTAL)
 public class XmItemRegistry {
-    private XmItemRegistry() {}
+	private XmItemRegistry() {}
 
-    public static void addItem(Item item, Function<ItemStack, MutableModelState> modelFunction) {
-        XmRegistryImpl.register(item, modelFunction);
-    }
+	public static void addItem(Item item, Function<ItemStack, MutableModelState> modelFunction) {
+		XmRegistryImpl.register(item, modelFunction);
+	}
 }

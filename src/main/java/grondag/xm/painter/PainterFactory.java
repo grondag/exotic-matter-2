@@ -29,52 +29,52 @@ import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
 @SuppressWarnings("rawtypes")
 @API(status = INTERNAL)
 public class PainterFactory {
-    public static PaintMethod getPainter(BaseModelState modelState, XmSurface surface, XmPaint paint, int textureDepth) {
+	public static PaintMethod getPainter(BaseModelState modelState, XmSurface surface, XmPaint paint, int textureDepth) {
 
-        final TextureSet texture = paint.texture(textureDepth);
+		final TextureSet texture = paint.texture(textureDepth);
 
-        switch (surface.topology()) {
+		switch (surface.topology()) {
 
-        case TILED:
-            switch (texture.map().layout()) {
-            case SIMPLE:
-            case BIGTEX_ANIMATED:
-            case SPLIT_X_8:
-                return SurfacePainterTiled::paintQuads;
+		case TILED:
+			switch (texture.map().layout()) {
+			case SIMPLE:
+			case BIGTEX_ANIMATED:
+			case SPLIT_X_8:
+				return SurfacePainterTiled::paintQuads;
 
-            case BORDER_13:
-                return null;
+			case BORDER_13:
+				return null;
 
-            case MASONRY_5:
-                return null;
+			case MASONRY_5:
+				return null;
 
-            default:
-                return null;
-            }
+			default:
+				return null;
+			}
 
-        case CUBIC:
-            switch (texture.map().layout()) {
-            case SIMPLE:
-            case BIGTEX_ANIMATED:
-            case SPLIT_X_8:
-                return (texture.scale() == TextureScale.SINGLE) ? CubicPainterTiles::paintQuads : CubicPainterBigTex::paintQuads;
+		case CUBIC:
+			switch (texture.map().layout()) {
+			case SIMPLE:
+			case BIGTEX_ANIMATED:
+			case SPLIT_X_8:
+				return (texture.scale() == TextureScale.SINGLE) ? CubicPainterTiles::paintQuads : CubicPainterBigTex::paintQuads;
 
-            case BORDER_13:
-            case BORDER_14:
-                return surface.allowBorders() ? CubicPainterBorders::paintQuads : null;
+			case BORDER_13:
+			case BORDER_14:
+				return surface.allowBorders() ? CubicPainterBorders::paintQuads : null;
 
-            case MASONRY_5:
-                return surface.allowBorders() ? CubicPainterMasonry::paintQuads : null;
+			case MASONRY_5:
+				return surface.allowBorders() ? CubicPainterMasonry::paintQuads : null;
 
-            case QUADRANT_CONNECTED:
-                return surface.allowBorders() ? CubicPainterQuadrants::paintQuads : null;
+			case QUADRANT_CONNECTED:
+				return surface.allowBorders() ? CubicPainterQuadrants::paintQuads : null;
 
-            default:
-                return null;
-            }
+			default:
+				return null;
+			}
 
-        default:
-            return null;
-        }
-    }
+		default:
+			return null;
+		}
+	}
 }

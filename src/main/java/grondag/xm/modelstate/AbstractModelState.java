@@ -24,90 +24,90 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL)
 abstract class AbstractModelState {
 
-    /////// REFERENCE COUNTING /////////
+	/////// REFERENCE COUNTING /////////
 
-    private static final AtomicIntegerFieldUpdater<AbstractModelState> retainCountUpdater = AtomicIntegerFieldUpdater.newUpdater(AbstractModelState.class,
-            "refCount");
+	private static final AtomicIntegerFieldUpdater<AbstractModelState> retainCountUpdater = AtomicIntegerFieldUpdater.newUpdater(AbstractModelState.class,
+			"refCount");
 
-    private volatile int refCount = 0;
+	private volatile int refCount = 0;
 
-    public final int refCount() {
-        return refCount;
-    }
+	public final int refCount() {
+		return refCount;
+	}
 
-    protected abstract void onLastRelease();
+	protected abstract void onLastRelease();
 
-    public void release() {
-        confirmMutable();
-        final int oldCount = retainCountUpdater.getAndDecrement(this);
-        if (oldCount == 1) {
-            onLastRelease();
-        } else if (oldCount <= 0) {
-            retainCountUpdater.getAndIncrement(this);
-            throw new IllegalStateException("Encountered attempt to release an unreferenced ModelState instance.");
-        }
-    }
+	public void release() {
+		confirmMutable();
+		final int oldCount = retainCountUpdater.getAndDecrement(this);
+		if (oldCount == 1) {
+			onLastRelease();
+		} else if (oldCount <= 0) {
+			retainCountUpdater.getAndIncrement(this);
+			throw new IllegalStateException("Encountered attempt to release an unreferenced ModelState instance.");
+		}
+	}
 
-    public void retain() {
-        confirmMutable();
-        retainCountUpdater.getAndIncrement(this);
-    }
+	public void retain() {
+		confirmMutable();
+		retainCountUpdater.getAndIncrement(this);
+	}
 
-    /////// HASH CODE /////////
+	/////// HASH CODE /////////
 
-    private int hashCode = -1;
+	private int hashCode = -1;
 
-    protected abstract int computeHashCode();
-
-
-    @Override
-    public final int hashCode() {
-        int result = hashCode;
-        if (result == -1) {
-            result = computeHashCode();
-            hashCode = result;
-        }
-        return result;
-    }
-
-    protected final void invalidateHashCode() {
-        if (hashCode != -1) {
-            hashCode = -1;
-        }
-    }
-
-    /////// MUTABILITY /////////
-
-    protected boolean isImmutable = true;
-
-    public final boolean isImmutable() {
-        return isImmutable;
-    }
-
-    protected final void confirmMutable() {
-        if (isImmutable)
-            throw new UnsupportedOperationException("Encounted attempt to modify immutable model state.");
-    }
-
-    /////// INT ARRAY SERIALIZATION /////////
-
-    protected abstract int intSize();
-
-    protected abstract void doDeserializeFromInts(int[] data, int startAt);
-
-    protected abstract void doSerializeToInts(int[] data, int startAt);
-
-    /**
-     * Note does not reset state flag - do that if calling on an existing instance.
-     */
-    protected final void deserializeFromInts(int[] bits) {
-        doDeserializeFromInts(bits, 0);
-    }
+	protected abstract int computeHashCode();
 
 
-    protected final int[] serializeToInts() {
-        final int[] result = new int[intSize()];
-        doSerializeToInts(result, 0);
-        return result;
-    }
+	@Override
+	public final int hashCode() {
+		int result = hashCode;
+		if (result == -1) {
+			result = computeHashCode();
+			hashCode = result;
+		}
+		return result;
+	}
+
+	protected final void invalidateHashCode() {
+		if (hashCode != -1) {
+			hashCode = -1;
+		}
+	}
+
+	/////// MUTABILITY /////////
+
+	protected boolean isImmutable = true;
+
+	public final boolean isImmutable() {
+		return isImmutable;
+	}
+
+	protected final void confirmMutable() {
+		if (isImmutable)
+			throw new UnsupportedOperationException("Encounted attempt to modify immutable model state.");
+	}
+
+	/////// INT ARRAY SERIALIZATION /////////
+
+	protected abstract int intSize();
+
+	protected abstract void doDeserializeFromInts(int[] data, int startAt);
+
+	protected abstract void doSerializeToInts(int[] data, int startAt);
+
+	/**
+	 * Note does not reset state flag - do that if calling on an existing instance.
+	 */
+	protected final void deserializeFromInts(int[] bits) {
+		doDeserializeFromInts(bits, 0);
+	}
+
+
+	protected final int[] serializeToInts() {
+		final int[] result = new int[intSize()];
+		doSerializeToInts(result, 0);
+		return result;
+	}
 }

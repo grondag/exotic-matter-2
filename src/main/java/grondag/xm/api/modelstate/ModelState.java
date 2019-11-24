@@ -36,49 +36,49 @@ import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public interface ModelState {
-    MutableModelState mutableCopy();
+	MutableModelState mutableCopy();
 
-    /**
-     * Persisted but not part of hash nor included in equals comparison. If true,
-     * refreshFromWorldState does nothing.
-     */
-    boolean isStatic();
+	/**
+	 * Persisted but not part of hash nor included in equals comparison. If true,
+	 * refreshFromWorldState does nothing.
+	 */
+	boolean isStatic();
 
-    boolean isImmutable();
+	boolean isImmutable();
 
-    ModelState toImmutable();
+	ModelState toImmutable();
 
-    /**
-     * Returns a copy of this model state with only the bits that matter for
-     * geometry. Used as lookup key for block damage models.
-     */
-    MutableModelState geometricState();
+	/**
+	 * Returns a copy of this model state with only the bits that matter for
+	 * geometry. Used as lookup key for block damage models.
+	 */
+	MutableModelState geometricState();
 
-    void toTag(CompoundTag tag);
+	void toTag(CompoundTag tag);
 
-    void toBytes(PacketByteBuf pBuff);
+	void toBytes(PacketByteBuf pBuff);
 
-    default CompoundTag toTag() {
-        final CompoundTag result = new CompoundTag();
-        toTag(result);
-        return result;
-    }
+	default CompoundTag toTag() {
+		final CompoundTag result = new CompoundTag();
+		toTag(result);
+		return result;
+	}
 
-    /**
-     * Output polygons must be quads or tris. Consumer MUST NOT hold references to
-     * any of the polys received.
-     */
-    void emitPolygons(Consumer<Polygon> target);
+	/**
+	 * Output polygons must be quads or tris. Consumer MUST NOT hold references to
+	 * any of the polys received.
+	 */
+	void emitPolygons(Consumer<Polygon> target);
 
-    @Environment(EnvType.CLIENT)
-    List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
+	@Environment(EnvType.CLIENT)
+	List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
 
-    @Environment(EnvType.CLIENT)
-    void emitQuads(RenderContext context);
+	@Environment(EnvType.CLIENT)
+	void emitQuads(RenderContext context);
 
-    @Environment(EnvType.CLIENT)
-    Sprite particleSprite();
+	@Environment(EnvType.CLIENT)
+	Sprite particleSprite();
 
-    @Environment(EnvType.CLIENT)
-    int particleColorARBG();
+	@Environment(EnvType.CLIENT)
+	int particleColorARBG();
 }

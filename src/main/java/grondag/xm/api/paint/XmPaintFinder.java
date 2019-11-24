@@ -25,31 +25,31 @@ import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface XmPaintFinder {
-    XmPaint find();
+	XmPaint find();
 
-    XmPaintFinder clear();
+	XmPaintFinder clear();
 
-    XmPaintFinder copy(XmPaint paint);
+	XmPaintFinder copy(XmPaint paint);
 
-    XmPaintFinder textureDepth(int depth);
+	XmPaintFinder textureDepth(int depth);
 
-    XmPaintFinder textureColor(int textureIndex, int colorARBG);
+	XmPaintFinder textureColor(int textureIndex, int colorARBG);
 
-    XmPaintFinder texture(int textureIndex, TextureSet sprite);
+	XmPaintFinder texture(int textureIndex, TextureSet sprite);
 
-    XmPaintFinder blendMode(int textureIndex, BlendMode blendMode);
+	XmPaintFinder blendMode(int textureIndex, BlendMode blendMode);
 
-    XmPaintFinder disableColorIndex(int textureIndex, boolean disable);
+	XmPaintFinder disableColorIndex(int textureIndex, boolean disable);
 
-    XmPaintFinder disableDiffuse(int textureIndex, boolean disable);
+	XmPaintFinder disableDiffuse(int textureIndex, boolean disable);
 
-    XmPaintFinder disableAo(int textureIndex, boolean disable);
+	XmPaintFinder disableAo(int textureIndex, boolean disable);
 
-    XmPaintFinder emissive(int textureIndex, boolean isEmissive);
+	XmPaintFinder emissive(int textureIndex, boolean isEmissive);
 
-    XmPaintFinder shader(Identifier shader);
+	XmPaintFinder shader(Identifier shader);
 
-    XmPaintFinder condition(Identifier condition);
+	XmPaintFinder condition(Identifier condition);
 
-    XmPaintFinder vertexProcessor(int textureIndex, VertexProcessor vp);
+	XmPaintFinder vertexProcessor(int textureIndex, VertexProcessor vp);
 }

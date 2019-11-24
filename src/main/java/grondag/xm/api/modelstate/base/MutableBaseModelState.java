@@ -17,48 +17,48 @@ import net.minecraft.util.math.BlockPos;
 
 @API(status = EXPERIMENTAL)
 public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> extends BaseModelState<R, W>, MutableModelState {
-    @Override
-    W copyFrom(ModelState template);
+	@Override
+	W copyFrom(ModelState template);
 
-    @Override
-    R releaseToImmutable();
+	@Override
+	R releaseToImmutable();
 
-    @Override
-    W setStatic(boolean isStatic);
+	@Override
+	W setStatic(boolean isStatic);
 
-    W paint(int surfaceIndex, int paintIndex);
+	W paint(int surfaceIndex, int paintIndex);
 
-    W paint(int surfaceIndex, XmPaint paint);
+	W paint(int surfaceIndex, XmPaint paint);
 
-    W paint(XmSurface surface, XmPaint paint);
+	W paint(XmSurface surface, XmPaint paint);
 
-    W paint(XmSurface surface, int paintIndex);
+	W paint(XmSurface surface, int paintIndex);
 
-    W paintAll(XmPaint paint);
+	W paintAll(XmPaint paint);
 
-    W paintAll(int paintIndex);
+	W paintAll(int paintIndex);
 
-    W posX(int index);
+	W posX(int index);
 
-    W posY(int index);
+	W posY(int index);
 
-    W posZ(int index);
+	W posZ(int index);
 
-    W pos(BlockPos pos);
+	W pos(BlockPos pos);
 
-    W species(int species);
+	W species(int species);
 
-    W orientationIndex(int index);
+	W orientationIndex(int index);
 
-    W cornerJoin(CornerJoinState join);
+	W cornerJoin(CornerJoinState join);
 
-    W simpleJoin(SimpleJoinState join);
+	W simpleJoin(SimpleJoinState join);
 
-    W masonryJoin(SimpleJoinState join);
+	W masonryJoin(SimpleJoinState join);
 
-    W primitiveBits(int bits);
+	W primitiveBits(int bits);
 
-    <T> T applyAndRelease(Function<ModelState, T> func);
+	<T> T applyAndRelease(Function<ModelState, T> func);
 
-    W apply(Consumer<W> consumer);
+	W apply(Consumer<W> consumer);
 }

@@ -21,41 +21,41 @@ import org.apiguardian.api.API;
 
 @API(status = EXPERIMENTAL)
 public class ModelStateFlags {
-    private ModelStateFlags() {}
-    /**
-     * For readability.
-     */
-    public static final int NONE = 0;
+	private ModelStateFlags() {}
+	/**
+	 * For readability.
+	 */
+	public static final int NONE = 0;
 
-    /*
-     * Enables lazy derivation - set after derivation is complete. NB - check logic
-     * assumes that ALL bits are zero for simplicity.
-     */
-    public static final int IS_POPULATED = 1;
+	/*
+	 * Enables lazy derivation - set after derivation is complete. NB - check logic
+	 * assumes that ALL bits are zero for simplicity.
+	 */
+	public static final int IS_POPULATED = 1;
 
-    /**
-     * Applies to block-type states. True if is a block type state and requires full
-     * join state.
-     */
-    public static final int CORNER_JOIN = IS_POPULATED << 1;
+	/**
+	 * Applies to block-type states. True if is a block type state and requires full
+	 * join state.
+	 */
+	public static final int CORNER_JOIN = IS_POPULATED << 1;
 
-    /**
-     * Applies to block-type states. True if is a block type state and requires full
-     * join state.
-     */
-    public static final int SIMPLE_JOIN = CORNER_JOIN << 1;
+	/**
+	 * Applies to block-type states. True if is a block type state and requires full
+	 * join state.
+	 */
+	public static final int SIMPLE_JOIN = CORNER_JOIN << 1;
 
-    /**
-     * Applies to block-type states. True if is a block type state and requires
-     * masonry join info.
-     */
-    public static final int MASONRY_JOIN = SIMPLE_JOIN << 1;
+	/**
+	 * Applies to block-type states. True if is a block type state and requires
+	 * masonry join info.
+	 */
+	public static final int MASONRY_JOIN = SIMPLE_JOIN << 1;
 
-    /**
-     * True if position (big-tex) world state is needed. Applies for block and flow
-     * state formats.
-     */
-    public static final int POSITION = MASONRY_JOIN << 1;
+	/**
+	 * True if position (big-tex) world state is needed. Applies for block and flow
+	 * state formats.
+	 */
+	public static final int POSITION = MASONRY_JOIN << 1;
 
-    public static final int BLOCK_SPECIES = POSITION << 1;
+	public static final int BLOCK_SPECIES = POSITION << 1;
 }

@@ -27,72 +27,72 @@ import grondag.xm.api.mesh.polygon.Polygon;
 
 @API(status = EXPERIMENTAL)
 public interface XmMesh {
-    boolean isEmpty();
+	boolean isEmpty();
 
-    /**
-     * Reference to poly at current read address.<br>
-     * When stream first created will point to the first poly in the stream.<br>
-     * Returns null if at end or first poly has not been written.<br>
-     *
-     * THIS READ IS NOT THREAD-SAFE and should only be used the allocating thread.
-     */
-    Polygon reader();
+	/**
+	 * Reference to poly at current read address.<br>
+	 * When stream first created will point to the first poly in the stream.<br>
+	 * Returns null if at end or first poly has not been written.<br>
+	 *
+	 * THIS READ IS NOT THREAD-SAFE and should only be used the allocating thread.
+	 */
+	Polygon reader();
 
-    /**
-     * Moves reader and returns it.
-     */
-    Polygon reader(int address);
+	/**
+	 * Moves reader and returns it.
+	 */
+	Polygon reader(int address);
 
-    /**
-     * Claims a reader appropriate for concurrent access. Will fail for streams that
-     * are mutable.
-     * <p>
-     *
-     * Reader must be released after use or stream can never be recycled to the pool
-     * when released.
-     */
-    default Polygon threadSafeReader() {
-        throw new UnsupportedOperationException();
-    }
+	/**
+	 * Claims a reader appropriate for concurrent access. Will fail for streams that
+	 * are mutable.
+	 * <p>
+	 *
+	 * Reader must be released after use or stream can never be recycled to the pool
+	 * when released.
+	 */
+	default Polygon threadSafeReader() {
+		throw new UnsupportedOperationException();
+	}
 
-    /** always returns null as convenience */
-    @Nullable <T> T release();
+	/** always returns null as convenience */
+	@Nullable <T> T release();
 
-    /**
-     * Virtual read-only reference to an existing poly in this stream. Use for
-     * interpolation and other poly-poly operations. Does not affect and not
-     * affected by read/write/update cursors.
-     * <p>
-     *
-     * DO NOT STORE A REFERENCE. Meant only for use in a local operation. Calls to
-     * {@link #movePolyA(int)} will produce new values.
-     */
-    Polygon polyA();
+	/**
+	 * Virtual read-only reference to an existing poly in this stream. Use for
+	 * interpolation and other poly-poly operations. Does not affect and not
+	 * affected by read/write/update cursors.
+	 * <p>
+	 *
+	 * DO NOT STORE A REFERENCE. Meant only for use in a local operation. Calls to
+	 * {@link #movePolyA(int)} will produce new values.
+	 */
+	Polygon polyA();
 
-    /**
-     * Sets address for {@link #polyA()} and returns same as convenience.
-     */
-    Polygon polyA(int address);
+	/**
+	 * Sets address for {@link #polyA()} and returns same as convenience.
+	 */
+	Polygon polyA(int address);
 
-    /**
-     * Secondary instance of {@link #polyA()}. For interpolation.
-     */
-    Polygon polyB();
+	/**
+	 * Secondary instance of {@link #polyA()}. For interpolation.
+	 */
+	Polygon polyB();
 
-    /**
-     * Secondary instance of {@link #polyA(int)}. For interpolation.
-     */
-    Polygon polyB(int address);
+	/**
+	 * Secondary instance of {@link #polyA(int)}. For interpolation.
+	 */
+	Polygon polyB(int address);
 
-    /** Moves reader! */
-    default void forEach(Consumer<Polygon> target) {
-        final Polygon reader = reader();
-        if (reader.origin()) {
-            do {
-                target.accept(reader);
-            } while (reader.next());
-        }
-    }
+	/** Moves reader! */
+	default void forEach(Consumer<Polygon> target) {
+		final Polygon reader = reader();
+		if (reader.origin()) {
+			do {
+				target.accept(reader);
+			} while (reader.next());
+		}
+	}
 
-    XmMesh EMPTY = XmMeshes.claimWritable().releaseToReader();
+	XmMesh EMPTY = XmMeshes.claimWritable().releaseToReader();
 }

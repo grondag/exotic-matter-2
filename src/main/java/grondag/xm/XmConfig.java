@@ -27,73 +27,73 @@ import blue.endless.jankson.JsonObject;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class XmConfig {
-    @SuppressWarnings("hiding")
-    public static class ConfigData {
+	@SuppressWarnings("hiding")
+	public static class ConfigData {
 
-        // DEBUG
-        @Comment("Draw detailed collision boxes normally rendered by vanilla. Can be ugly - useful for debugging.")
-        public boolean debugCollisionBoxes = false;
+		// DEBUG
+		@Comment("Draw detailed collision boxes normally rendered by vanilla. Can be ugly - useful for debugging.")
+		public boolean debugCollisionBoxes = false;
 
-    }
+	}
 
-    public static final ConfigData DEFAULTS = new ConfigData();
-    private static final Gson GSON = new GsonBuilder().create();
-    private static final Jankson JANKSON = Jankson.builder().build();
-    private static File configFile;
+	public static final ConfigData DEFAULTS = new ConfigData();
+	private static final Gson GSON = new GsonBuilder().create();
+	private static final Jankson JANKSON = Jankson.builder().build();
+	private static File configFile;
 
-    // DEBUG
-    public static boolean debugCollisionBoxes = DEFAULTS.debugCollisionBoxes;
+	// DEBUG
+	public static boolean debugCollisionBoxes = DEFAULTS.debugCollisionBoxes;
 
-    // reserved
-    public static int maxPlacementCheckCount = 32;
-    public static boolean logExcavationRenderTracking;
+	// reserved
+	public static int maxPlacementCheckCount = 32;
+	public static boolean logExcavationRenderTracking;
 
 
-    public static void init() {
-        configFile = new File(FabricLoader.getInstance().getConfigDirectory(), "exotic-matter.json5");
-        if (configFile.exists()) {
-            loadConfig();
-        } else {
-            saveConfig();
-        }
-    }
+	public static void init() {
+		configFile = new File(FabricLoader.getInstance().getConfigDirectory(), "exotic-matter.json5");
+		if (configFile.exists()) {
+			loadConfig();
+		} else {
+			saveConfig();
+		}
+	}
 
-    private static void loadConfig() {
-        ConfigData config = new ConfigData();
-        try {
-            final JsonObject configJson = JANKSON.load(configFile);
-            final String regularized = configJson.toJson(false, false, 0);
-            config = GSON.fromJson(regularized, ConfigData.class);
-        } catch (final Exception e) {
-            e.printStackTrace();
-            Xm.LOG.error("Unable to load config. Using default values.");
-        }
+	private static void loadConfig() {
+		ConfigData config = new ConfigData();
+		try {
+			final JsonObject configJson = JANKSON.load(configFile);
+			final String regularized = configJson.toJson(false, false, 0);
+			config = GSON.fromJson(regularized, ConfigData.class);
+		} catch (final Exception e) {
+			e.printStackTrace();
+			Xm.LOG.error("Unable to load config. Using default values.");
+		}
 
-        // DEBUG
-        debugCollisionBoxes = config.debugCollisionBoxes;
-    }
+		// DEBUG
+		debugCollisionBoxes = config.debugCollisionBoxes;
+	}
 
-    public static void saveConfig() {
-        final ConfigData config = new ConfigData();
+	public static void saveConfig() {
+		final ConfigData config = new ConfigData();
 
-        // DEBUG
-        config.debugCollisionBoxes = debugCollisionBoxes;
+		// DEBUG
+		config.debugCollisionBoxes = debugCollisionBoxes;
 
-        try {
-            final String result = JANKSON.toJson(config).toJson(true, true, 0);
-            if (!configFile.exists()) {
-                configFile.createNewFile();
-            }
+		try {
+			final String result = JANKSON.toJson(config).toJson(true, true, 0);
+			if (!configFile.exists()) {
+				configFile.createNewFile();
+			}
 
-            try (FileOutputStream out = new FileOutputStream(configFile, false);) {
-                out.write(result.getBytes());
-                out.flush();
-                out.close();
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-            Xm.LOG.error("Unable to save config.");
-            return;
-        }
-    }
+			try (FileOutputStream out = new FileOutputStream(configFile, false);) {
+				out.write(result.getBytes());
+				out.flush();
+				out.close();
+			}
+		} catch (final Exception e) {
+			e.printStackTrace();
+			Xm.LOG.error("Unable to save config.");
+			return;
+		}
+	}
 }

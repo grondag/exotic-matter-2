@@ -31,25 +31,25 @@ import net.minecraft.util.math.Direction.Axis;
  */
 @API(status = STABLE)
 public interface SimpleJoinState {
-    int STATE_COUNT = 64; // 2^6
-    SimpleJoinState NO_JOINS = SimpleJoinStateImpl.NO_JOINS;
-    SimpleJoinState ALL_JOINS = SimpleJoinStateImpl.ALL_JOINS;
+	int STATE_COUNT = 64; // 2^6
+	SimpleJoinState NO_JOINS = SimpleJoinStateImpl.NO_JOINS;
+	SimpleJoinState ALL_JOINS = SimpleJoinStateImpl.ALL_JOINS;
 
-    boolean isJoined(Direction face);
+	boolean isJoined(Direction face);
 
-    boolean hasJoins(Axis axis);
+	boolean hasJoins(Axis axis);
 
-    int ordinal();
+	int ordinal();
 
-    static SimpleJoinState fromOrdinal(int ordinal) {
-        return SimpleJoinStateImpl.fromOrdinal(ordinal);
-    }
+	static SimpleJoinState fromOrdinal(int ordinal) {
+		return SimpleJoinStateImpl.fromOrdinal(ordinal);
+	}
 
-    static SimpleJoinState fromWorld(BlockNeighbors neighbors) {
-        return SimpleJoinStateImpl.fromWorld(neighbors);
-    }
+	static SimpleJoinState fromWorld(BlockNeighbors neighbors) {
+		return SimpleJoinStateImpl.fromWorld(neighbors);
+	}
 
-    static int ordinalFromWorld(BlockNeighbors neighbors) {
-        return SimpleJoinStateImpl.ordinalFromWorld(neighbors);
-    }
+	static int ordinalFromWorld(BlockNeighbors neighbors) {
+		return SimpleJoinStateImpl.ordinalFromWorld(neighbors);
+	}
 }

@@ -26,23 +26,23 @@ import grondag.xm.modelstate.WorldToModelStateImpl;
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface PrimitiveStateFunction extends ModelStateFunction<MutablePrimitiveState> {
-    static PrimitiveStateFunction ofDefaultState(PrimitiveState defaultState) {
-        return builder().withDefaultState(defaultState).build();
-    }
+	static PrimitiveStateFunction ofDefaultState(PrimitiveState defaultState) {
+		return builder().withDefaultState(defaultState).build();
+	}
 
-    static Builder builder() {
-        return WorldToModelStateImpl.builder();
-    }
+	static Builder builder() {
+		return WorldToModelStateImpl.builder();
+	}
 
-    public interface Builder {
-        Builder withJoin(BlockTest<PrimitiveState> joinTest);
+	public interface Builder {
+		Builder withJoin(BlockTest<PrimitiveState> joinTest);
 
-        Builder withUpdate(PrimitiveStateMutator update);
+		Builder withUpdate(PrimitiveStateMutator update);
 
-        PrimitiveStateFunction build();
+		PrimitiveStateFunction build();
 
-        Builder clear();
+		Builder clear();
 
-        Builder withDefaultState(PrimitiveState defaultState);
-    }
+		Builder withDefaultState(PrimitiveState defaultState);
+	}
 }

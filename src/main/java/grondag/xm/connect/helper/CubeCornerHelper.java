@@ -26,35 +26,35 @@ import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public abstract class CubeCornerHelper {
-    private CubeCornerHelper() {
-    }
+	private CubeCornerHelper() {
+	}
 
-    private static final CubeCorner[] VALUES = CubeCorner.values();
-    public static final int COUNT = VALUES.length;
-    private static final CubeCorner[][][] FAR_CORNER_LOOKUP = new CubeCorner[6][6][6];
+	private static final CubeCorner[] VALUES = CubeCorner.values();
+	public static final int COUNT = VALUES.length;
+	private static final CubeCorner[][][] FAR_CORNER_LOOKUP = new CubeCorner[6][6][6];
 
-    static {
-        for (final CubeCorner corner : VALUES) {
-            FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()][corner.face3.ordinal()] = corner;
-            FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face3.ordinal()][corner.face2.ordinal()] = corner;
-            FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()][corner.face3.ordinal()] = corner;
-            FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face3.ordinal()][corner.face1.ordinal()] = corner;
-            FAR_CORNER_LOOKUP[corner.face3.ordinal()][corner.face2.ordinal()][corner.face1.ordinal()] = corner;
-            FAR_CORNER_LOOKUP[corner.face3.ordinal()][corner.face1.ordinal()][corner.face2.ordinal()] = corner;
-        }
-    }
+	static {
+		for (final CubeCorner corner : VALUES) {
+			FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face2.ordinal()][corner.face3.ordinal()] = corner;
+			FAR_CORNER_LOOKUP[corner.face1.ordinal()][corner.face3.ordinal()][corner.face2.ordinal()] = corner;
+			FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face1.ordinal()][corner.face3.ordinal()] = corner;
+			FAR_CORNER_LOOKUP[corner.face2.ordinal()][corner.face3.ordinal()][corner.face1.ordinal()] = corner;
+			FAR_CORNER_LOOKUP[corner.face3.ordinal()][corner.face2.ordinal()][corner.face1.ordinal()] = corner;
+			FAR_CORNER_LOOKUP[corner.face3.ordinal()][corner.face1.ordinal()][corner.face2.ordinal()] = corner;
+		}
+	}
 
-    public static CubeCorner find(Direction face1, Direction face2, Direction face3) {
-        return FAR_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()][face3.ordinal()];
-    }
+	public static CubeCorner find(Direction face1, Direction face2, Direction face3) {
+		return FAR_CORNER_LOOKUP[face1.ordinal()][face2.ordinal()][face3.ordinal()];
+	}
 
-    public static final CubeCorner fromOrdinal(int ordinal) {
-        return VALUES[ordinal];
-    }
+	public static final CubeCorner fromOrdinal(int ordinal) {
+		return VALUES[ordinal];
+	}
 
-    public static void forEach(Consumer<CubeCorner> consumer) {
-        for (final CubeCorner val : VALUES) {
-            consumer.accept(val);
-        }
-    }
+	public static void forEach(Consumer<CubeCorner> consumer) {
+		for (final CubeCorner val : VALUES) {
+			consumer.accept(val);
+		}
+	}
 }

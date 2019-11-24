@@ -32,24 +32,24 @@ import net.minecraft.world.World;
 
 @Mixin(BlockCrackParticle.class)
 public abstract class MixinBlockCrackParticle extends SpriteBillboardParticle {
-    // not used
-    protected MixinBlockCrackParticle(World world_1, double double_1, double double_2, double double_3) {
-        super(world_1, double_1, double_2, double_3);
-    }
+	// not used
+	protected MixinBlockCrackParticle(World world_1, double double_1, double double_2, double double_3) {
+		super(world_1, double_1, double_2, double_3);
+	}
 
-    private static ThreadLocal<BlockPos.Mutable> POS = ThreadLocal.withInitial(BlockPos.Mutable::new);
+	private static ThreadLocal<BlockPos.Mutable> POS = ThreadLocal.withInitial(BlockPos.Mutable::new);
 
-    @Inject(method = "<init>", at = @At(value = "RETURN"), cancellable = false, require = 0)
-    void onNew(World world, double double_1, double double_2, double double_3, double double_4, double double_5, double double_6, BlockState blockState, CallbackInfo ci) {
-        final MutableModelState lookupState = XmBlockState.modelState(blockState, world, POS.get().set(x, y, z), false);
-        if(lookupState != null) {
-            final ModelState renderState = XmDispatcher.INSTANCE.get(lookupState);
-            lookupState.release();
-            this.setSprite(renderState.particleSprite());
-            final int color = renderState.particleColorARBG();
-            colorRed = ((color >> 16) & 0xFF) / 255f;
-            colorGreen = ((color >> 8) & 0xFF) / 255f;
-            colorBlue = (color& 0xFF) / 255f;
-        }
-    }
+	@Inject(method = "<init>", at = @At(value = "RETURN"), cancellable = false, require = 0)
+	void onNew(World world, double double_1, double double_2, double double_3, double double_4, double double_5, double double_6, BlockState blockState, CallbackInfo ci) {
+		final MutableModelState lookupState = XmBlockState.modelState(blockState, world, POS.get().set(x, y, z), false);
+		if(lookupState != null) {
+			final ModelState renderState = XmDispatcher.INSTANCE.get(lookupState);
+			lookupState.release();
+			this.setSprite(renderState.particleSprite());
+			final int color = renderState.particleColorARBG();
+			colorRed = ((color >> 16) & 0xFF) / 255f;
+			colorGreen = ((color >> 8) & 0xFF) / 255f;
+			colorBlue = (color& 0xFF) / 255f;
+		}
+	}
 }

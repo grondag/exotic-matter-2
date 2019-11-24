@@ -43,54 +43,54 @@ import net.minecraft.util.math.Vec3d;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public class PlacementPosition {
-    public final Direction onFace;
-    public final BlockPos onPos;
-    public final BlockPos inPos;
-    public final double hitX;
-    public final double hitY;
-    public final double hitZ;
-    public final boolean isFloating;
+	public final Direction onFace;
+	public final BlockPos onPos;
+	public final BlockPos inPos;
+	public final double hitX;
+	public final double hitY;
+	public final double hitZ;
+	public final boolean isFloating;
 
-    /**
-     *
-     * @param player
-     * @param onPos
-     * @param onFace
-     * @param hitVec
-     * @param floatingSelectionRange zero means non-floating
-     * @param isExcavation           if true will select *in* starting block vs *on*
-     *                               it
-     */
-    public PlacementPosition(PlayerEntity player, BlockPos onPos, Direction onFace, Vec3d hitVec, int floatingSelectionRange, boolean isExcavation) {
+	/**
+	 *
+	 * @param player
+	 * @param onPos
+	 * @param onFace
+	 * @param hitVec
+	 * @param floatingSelectionRange zero means non-floating
+	 * @param isExcavation           if true will select *in* starting block vs *on*
+	 *                               it
+	 */
+	public PlacementPosition(PlayerEntity player, BlockPos onPos, Direction onFace, Vec3d hitVec, int floatingSelectionRange, boolean isExcavation) {
 
-        isFloating = floatingSelectionRange > 0;
-        if (isFloating || onPos == null || onFace == null || hitVec == null) {
+		isFloating = floatingSelectionRange > 0;
+		if (isFloating || onPos == null || onFace == null || hitVec == null) {
 
-            final Vec3d start = player.getCameraPosVec(1);
-            final Vec3d end = start.add(player.getRotationVector().multiply(floatingSelectionRange));
+			final Vec3d start = player.getCameraPosVec(1);
+			final Vec3d end = start.add(player.getRotationVector().multiply(floatingSelectionRange));
 
-            inPos = new BlockPos(end);
+			inPos = new BlockPos(end);
 
-            // have the position, now emulate which pos/face are we targeting
-            // Do this by tracing towards the viewer from other side of block
-            // to get the far-side hit. Hit coordinates are same irrespective
-            // of face but need to the flip the face we get.
-            final BlockHitResult hit = Blocks.DIRT.getDefaultState().getRayTraceShape(player.world, inPos)
-                    .rayTrace(start.add(player.getRotationVector().multiply(10)), start, inPos);
+			// have the position, now emulate which pos/face are we targeting
+			// Do this by tracing towards the viewer from other side of block
+			// to get the far-side hit. Hit coordinates are same irrespective
+			// of face but need to the flip the face we get.
+			final BlockHitResult hit = Blocks.DIRT.getDefaultState().getRayTraceShape(player.world, inPos)
+					.rayTrace(start.add(player.getRotationVector().multiply(10)), start, inPos);
 
-            this.onPos = isExcavation ? inPos : inPos.offset(hit.getSide());
-            this.onFace = hit.getSide().getOpposite();
-            final Vec3d hitPos = hit.getPos();
-            hitX = hitPos.x;
-            hitY = hitPos.y;
-            hitZ = hitPos.z;
-        } else {
-            this.onFace = onFace;
-            this.onPos = onPos;
-            hitX = hitVec.x;
-            hitY = hitVec.y;
-            hitZ = hitVec.z;
-            inPos = isExcavation ? this.onPos : this.onPos.offset(this.onFace);
-        }
-    }
+			this.onPos = isExcavation ? inPos : inPos.offset(hit.getSide());
+			this.onFace = hit.getSide().getOpposite();
+			final Vec3d hitPos = hit.getPos();
+			hitX = hitPos.x;
+			hitY = hitPos.y;
+			hitZ = hitPos.z;
+		} else {
+			this.onFace = onFace;
+			this.onPos = onPos;
+			hitX = hitVec.x;
+			hitY = hitVec.y;
+			hitZ = hitVec.z;
+			inPos = isExcavation ? this.onPos : this.onPos.offset(this.onFace);
+		}
+	}
 }

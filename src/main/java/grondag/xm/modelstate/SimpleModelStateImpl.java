@@ -24,17 +24,17 @@ import grondag.xm.api.modelstate.primitive.PrimitiveState;
 
 @API(status = INTERNAL)
 public class SimpleModelStateImpl extends AbstractPrimitiveModelState<SimpleModelStateImpl, PrimitiveState, MutablePrimitiveState> implements MutablePrimitiveState {
-    public static final int MAX_SURFACES = 8;
+	public static final int MAX_SURFACES = 8;
 
-    public static final ModelStateFactoryImpl<SimpleModelStateImpl, PrimitiveState, MutablePrimitiveState> FACTORY = new ModelStateFactoryImpl<>(SimpleModelStateImpl::new);
+	public static final ModelStateFactoryImpl<SimpleModelStateImpl, PrimitiveState, MutablePrimitiveState> FACTORY = new ModelStateFactoryImpl<>(SimpleModelStateImpl::new);
 
-    @Override
-    public final ModelStateFactoryImpl<SimpleModelStateImpl, PrimitiveState, MutablePrimitiveState> factoryImpl() {
-        return FACTORY;
-    }
+	@Override
+	public final ModelStateFactoryImpl<SimpleModelStateImpl, PrimitiveState, MutablePrimitiveState> factoryImpl() {
+		return FACTORY;
+	}
 
-    @Override
-    protected int maxSurfaces() {
-        return MAX_SURFACES;
-    }
+	@Override
+	protected int maxSurfaces() {
+		return MAX_SURFACES;
+	}
 }

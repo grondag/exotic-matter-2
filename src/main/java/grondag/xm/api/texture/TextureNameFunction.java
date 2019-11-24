@@ -25,46 +25,46 @@ import org.apiguardian.api.API;
 @FunctionalInterface
 @API(status = EXPERIMENTAL)
 public interface TextureNameFunction {
-    String apply(String baseName, int versionIndex, int positionIndex);
+	String apply(String baseName, int versionIndex, int positionIndex);
 
-    TextureNameFunction SINGLE = (baseName, version, index) -> baseName;
+	TextureNameFunction SINGLE = (baseName, version, index) -> baseName;
 
-    TextureNameFunction VERSIONED = (baseName, version, index) -> baseName + "_" + version;
+	TextureNameFunction VERSIONED = (baseName, version, index) -> baseName + "_" + version;
 
-    TextureNameFunction VERSION_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version);
+	TextureNameFunction VERSION_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version);
 
-    TextureNameFunction INDEX_X_8 = (baseName, version, index) -> gimpNameX8(baseName, index);
+	TextureNameFunction INDEX_X_8 = (baseName, version, index) -> gimpNameX8(baseName, index);
 
-    /** 16 because two GIMP output rows per border, w/ 8 textures each */
-    int GIMP_BORDER_SPOTS_PER_VARIANT = 16;
+	/** 16 because two GIMP output rows per border, w/ 8 textures each */
+	int GIMP_BORDER_SPOTS_PER_VARIANT = 16;
 
-    // Texture sequence expected by index map functions for BORDER_13 and BORDER_14
-    int BORDER_SIDES_ALL = 0;
-    int BORDER_SIDE_TOP = 1;
-    int BORDER_SIDES_TOP_RIGHT = 2;
-    int BORDER_SIDES_TOP_BOTTOM = 3;
-    int BORDER_SIDES_TOP_LEFT_RIGHT = 4;
-    int BORDER_MIXED_TOP_BR = 5;
-    int BORDER_MIXED_TOP_BL_BR = 6;
-    int BORDER_MIXED_TOP_RIGHT_BL = 7;
-    int BORDER_CORNER_TR = 8;
-    int BORDER_CORNERS_TL_TR = 9;
-    int BORDER_CORNERS_BL_TR = 10;
-    int BORDER_CORNERS_BL_TR_BR = 11;
-    int BORDER_CORNERS_ALL = 12;
-    int BORDER_NONE = 13;
+	// Texture sequence expected by index map functions for BORDER_13 and BORDER_14
+	int BORDER_SIDES_ALL = 0;
+	int BORDER_SIDE_TOP = 1;
+	int BORDER_SIDES_TOP_RIGHT = 2;
+	int BORDER_SIDES_TOP_BOTTOM = 3;
+	int BORDER_SIDES_TOP_LEFT_RIGHT = 4;
+	int BORDER_MIXED_TOP_BR = 5;
+	int BORDER_MIXED_TOP_BL_BR = 6;
+	int BORDER_MIXED_TOP_RIGHT_BL = 7;
+	int BORDER_CORNER_TR = 8;
+	int BORDER_CORNERS_TL_TR = 9;
+	int BORDER_CORNERS_BL_TR = 10;
+	int BORDER_CORNERS_BL_TR_BR = 11;
+	int BORDER_CORNERS_ALL = 12;
+	int BORDER_NONE = 13;
 
-    // Order used by existing XM GIMP-layout border textures
-    int[] GIMP_BORDER_SEQUENCE = { 4, 0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
+	// Order used by existing XM GIMP-layout border textures
+	int[] GIMP_BORDER_SEQUENCE = { 4, 0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 
-    TextureNameFunction BORDER_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version * GIMP_BORDER_SPOTS_PER_VARIANT + GIMP_BORDER_SEQUENCE[index]);
+	TextureNameFunction BORDER_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version * GIMP_BORDER_SPOTS_PER_VARIANT + GIMP_BORDER_SEQUENCE[index]);
 
-    /** 8 because one GIMP output rows per border, w/ 8 textures each */
-    int GIMP_MASONRY_SPOTS_PER_VARIANT = 8;
+	/** 8 because one GIMP output rows per border, w/ 8 textures each */
+	int GIMP_MASONRY_SPOTS_PER_VARIANT = 8;
 
-    TextureNameFunction MASONRY_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version * GIMP_MASONRY_SPOTS_PER_VARIANT + index);
+	TextureNameFunction MASONRY_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version * GIMP_MASONRY_SPOTS_PER_VARIANT + index);
 
-    static String gimpNameX8(String baseName, int offset) {
-        return baseName + "_" + (offset >> 3) + "_" + (offset & 7);
-    }
+	static String gimpNameX8(String baseName, int offset) {
+		return baseName + "_" + (offset >> 3) + "_" + (offset & 7);
+	}
 }

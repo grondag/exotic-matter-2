@@ -26,37 +26,37 @@ import net.minecraft.util.shape.VoxelShapes;
 
 @API(status = INTERNAL)
 public class CollisionDispatcherImpl {
-    private static final ObjectSimpleLoadingCache<ModelState, VoxelShape> modelCache = new ObjectSimpleLoadingCache<ModelState, VoxelShape>(
-            CollisionDispatcherImpl::load, k -> k.toImmutable(), 0xFFF);
+	private static final ObjectSimpleLoadingCache<ModelState, VoxelShape> modelCache = new ObjectSimpleLoadingCache<>(
+			CollisionDispatcherImpl::load, k -> k.toImmutable(), 0xFFF);
 
-    private static final ObjectSimpleLoadingCache<VoxelVolumeKey, VoxelShape> volCache = new ObjectSimpleLoadingCache<VoxelVolumeKey, VoxelShape>(
-            k -> k.build(), k -> k.toImmutable(), 0xFFF);
+	private static final ObjectSimpleLoadingCache<VoxelVolumeKey, VoxelShape> volCache = new ObjectSimpleLoadingCache<>(
+			k -> k.build(), k -> k.toImmutable(), 0xFFF);
 
-    private static ThreadLocal<MeshVoxelizer> fastBoxGen = new ThreadLocal<MeshVoxelizer>() {
-        @Override
-        protected MeshVoxelizer initialValue() {
-            return new MeshVoxelizer();
-        }
-    };
+	private static ThreadLocal<MeshVoxelizer> fastBoxGen = new ThreadLocal<MeshVoxelizer>() {
+		@Override
+		protected MeshVoxelizer initialValue() {
+			return new MeshVoxelizer();
+		}
+	};
 
-    public static VoxelShape shapeFor(ModelState modelState) {
-        return modelState == null ? VoxelShapes.fullCube() : modelCache.get(modelState.geometricState());
-    }
+	public static VoxelShape shapeFor(ModelState modelState) {
+		return modelState == null ? VoxelShapes.fullCube() : modelCache.get(modelState.geometricState());
+	}
 
-    /**
-     * Clears the cache.
-     */
-    public static void clear() {
-        modelCache.clear();
-        volCache.clear();
-    }
+	/**
+	 * Clears the cache.
+	 */
+	public static void clear() {
+		modelCache.clear();
+		volCache.clear();
+	}
 
-    private static VoxelShape load(ModelState key) {
-        final MeshVoxelizer generator = fastBoxGen.get();
-        key.emitPolygons(generator);
+	private static VoxelShape load(ModelState key) {
+		final MeshVoxelizer generator = fastBoxGen.get();
+		key.emitPolygons(generator);
 
-        final VoxelVolumeKey vKey = generator.build();
+		final VoxelVolumeKey vKey = generator.build();
 
-        return volCache.get(vKey);
-    }
+		return volCache.get(vKey);
+	}
 }

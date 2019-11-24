@@ -323,9 +323,8 @@ public class StairLike extends Block implements Waterloggable {
 
 	public static SimplePrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
 		final Block rawBlock = blockState.getBlock();
-		if(!(rawBlock instanceof StairLike)) {
+		if(!(rawBlock instanceof StairLike))
 			return modelState;
-		}
 
 		final StairLike block = (StairLike)rawBlock;
 		Stair.setCorner(block.shape != Shape.STRAIGHT, modelState);

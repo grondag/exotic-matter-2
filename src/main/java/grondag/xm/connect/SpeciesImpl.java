@@ -34,104 +34,104 @@ import net.minecraft.world.BlockView;
 
 @API(status = INTERNAL)
 public class SpeciesImpl {
-    private SpeciesImpl() {}
+	private SpeciesImpl() {}
 
-    public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
-        // ways this can happen:
-        // have a species we want to match because we clicked on a face
-        // break with everything - need to know adjacent species
-        // match with most - need to know adjacent species
+	public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
+		// ways this can happen:
+		// have a species we want to match because we clicked on a face
+		// break with everything - need to know adjacent species
+		// match with most - need to know adjacent species
 
-        final boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
+		final boolean shouldBreak = mode != SpeciesMode.MATCH_MOST;
 
-        // if no region provided or species mode used clicked block then
-        // result is based on the clicked face
-        if (((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
-            final int clickedSpecies = func.species(world, onPos);
+		// if no region provided or species mode used clicked block then
+		// result is based on the clicked face
+		if (((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
+			final int clickedSpecies = func.species(world, onPos);
 
-            if (clickedSpecies >= 0)
-                return clickedSpecies;
-        }
+			if (clickedSpecies >= 0)
+				return clickedSpecies;
+		}
 
-        // PERF: avoid allocation - but not urgent; not hot
-        if(region == null) {
-            region = BlockRegion.of(onPos.offset(onFace));
-        }
-        final int[] adjacentCount = new int[16];
-        final int[] surfaceCount = new int[16];
+		// PERF: avoid allocation - but not urgent; not hot
+		if(region == null) {
+			region = BlockRegion.of(onPos.offset(onFace));
+		}
+		final int[] adjacentCount = new int[16];
+		final int[] surfaceCount = new int[16];
 
-        /** limit block positions checked for very large regions */
-        int checkCount = 0;
+		/** limit block positions checked for very large regions */
+		int checkCount = 0;
 
-        for (final BlockPos pos : region.adjacentPositions()) {
-            final int adjacentSpecies = func.species(world, pos);
-            if (adjacentSpecies >= 0 && adjacentSpecies <= 15) {
-                adjacentCount[adjacentSpecies]++;
-            }
-            if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
-                break;
-            }
-        }
+		for (final BlockPos pos : region.adjacentPositions()) {
+			final int adjacentSpecies = func.species(world, pos);
+			if (adjacentSpecies >= 0 && adjacentSpecies <= 15) {
+				adjacentCount[adjacentSpecies]++;
+			}
+			if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
+				break;
+			}
+		}
 
-        for (final BlockPos pos : region.surfacePositions()) {
-            final int interiorSpecies = func.species(world, pos);
-            if (interiorSpecies >= 0 && interiorSpecies <= 15) {
-                surfaceCount[interiorSpecies]++;
-            }
-            if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
-                break;
-            }
-        }
+		for (final BlockPos pos : region.surfacePositions()) {
+			final int interiorSpecies = func.species(world, pos);
+			if (interiorSpecies >= 0 && interiorSpecies <= 15) {
+				surfaceCount[interiorSpecies]++;
+			}
+			if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
+				break;
+			}
+		}
 
-        if (shouldBreak) {
-            // find a species that matches as few things as possible
-            int bestSpecies = 0;
-            int bestCount = adjacentCount[0] + surfaceCount[0];
+		if (shouldBreak) {
+			// find a species that matches as few things as possible
+			int bestSpecies = 0;
+			int bestCount = adjacentCount[0] + surfaceCount[0];
 
-            for (int i = 1; i < 16; i++) {
-                final int tryCount = adjacentCount[i] + surfaceCount[i];
-                if (tryCount < bestCount) {
-                    bestCount = tryCount;
-                    bestSpecies = i;
-                }
-            }
-            return bestSpecies;
-        } else {
-            // find the most common species and match with that
-            // give preference to species that are included in the region surface if any
-            int bestSpecies = 0;
-            int bestCount = surfaceCount[0];
+			for (int i = 1; i < 16; i++) {
+				final int tryCount = adjacentCount[i] + surfaceCount[i];
+				if (tryCount < bestCount) {
+					bestCount = tryCount;
+					bestSpecies = i;
+				}
+			}
+			return bestSpecies;
+		} else {
+			// find the most common species and match with that
+			// give preference to species that are included in the region surface if any
+			int bestSpecies = 0;
+			int bestCount = surfaceCount[0];
 
-            for (int i = 1; i < 16; i++) {
-                if (surfaceCount[i] > bestCount) {
-                    bestCount = surfaceCount[i];
-                    bestSpecies = i;
-                }
-            }
+			for (int i = 1; i < 16; i++) {
+				if (surfaceCount[i] > bestCount) {
+					bestCount = surfaceCount[i];
+					bestSpecies = i;
+				}
+			}
 
-            if (bestCount == 0) {
-                for (int i = 1; i < 16; i++) {
-                    if (adjacentCount[i] > bestCount) {
-                        bestCount = adjacentCount[i];
-                        bestSpecies = i;
-                    }
-                }
-            }
-            return bestSpecies;
-        }
-    }
+			if (bestCount == 0) {
+				for (int i = 1; i < 16; i++) {
+					if (adjacentCount[i] > bestCount) {
+						bestCount = adjacentCount[i];
+						bestSpecies = i;
+					}
+				}
+			}
+			return bestSpecies;
+		}
+	}
 
-    @SuppressWarnings("rawtypes")
-    private static boolean blockAndSpeciesTest(BlockTestContext ctx) {
-        return ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock()
-                && ctx.fromBlockState().get(SpeciesProperty.SPECIES) == ctx.toBlockState().get(SpeciesProperty.SPECIES);
-    }
+	@SuppressWarnings("rawtypes")
+	private static boolean blockAndSpeciesTest(BlockTestContext ctx) {
+		return ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock()
+				&& ctx.fromBlockState().get(SpeciesProperty.SPECIES) == ctx.toBlockState().get(SpeciesProperty.SPECIES);
+	}
 
-    @SuppressWarnings("rawtypes")
-    private static final BlockTest SAME_BLOCK_AND_SPECIES = SpeciesImpl::blockAndSpeciesTest;
+	@SuppressWarnings("rawtypes")
+	private static final BlockTest SAME_BLOCK_AND_SPECIES = SpeciesImpl::blockAndSpeciesTest;
 
-    @SuppressWarnings("unchecked")
-    public static <T extends ModelState> BlockTest<T> sameBlockAndSpecies() {
-        return SAME_BLOCK_AND_SPECIES;
-    }
+	@SuppressWarnings("unchecked")
+	public static <T extends ModelState> BlockTest<T> sameBlockAndSpecies() {
+		return SAME_BLOCK_AND_SPECIES;
+	}
 }

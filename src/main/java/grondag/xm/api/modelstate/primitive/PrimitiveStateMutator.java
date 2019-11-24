@@ -29,10 +29,10 @@ import net.minecraft.world.BlockView;
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
 public interface PrimitiveStateMutator {
-    void mutate(MutablePrimitiveState modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
+	void mutate(MutablePrimitiveState modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
 
-    default MutablePrimitiveState mutate(MutablePrimitiveState modelState, BlockState blockState) {
-        mutate(modelState, blockState, null, null, null, false);
-        return modelState;
-    }
+	default MutablePrimitiveState mutate(MutablePrimitiveState modelState, BlockState blockState) {
+		mutate(modelState, blockState, null, null, null, false);
+		return modelState;
+	}
 }

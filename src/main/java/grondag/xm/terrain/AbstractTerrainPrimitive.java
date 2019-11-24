@@ -30,11 +30,11 @@ import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public abstract class AbstractTerrainPrimitive extends AbstractPrimitive<TerrainModelState, TerrainModelState.Mutable> implements TerrainPrimitive {
-    protected AbstractTerrainPrimitive(Identifier id, int stateFlags, BaseModelStateFactory<TerrainModelState, TerrainModelState.Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
-        super(id, stateFlags, factory, surfaceFunc);
-    }
+	protected AbstractTerrainPrimitive(Identifier id, int stateFlags, BaseModelStateFactory<TerrainModelState, TerrainModelState.Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
+		super(id, stateFlags, factory, surfaceFunc);
+	}
 
-    protected AbstractTerrainPrimitive(String idString, int stateFlags, BaseModelStateFactory<TerrainModelState, TerrainModelState.Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
-        super(idString, stateFlags, factory, surfaceFunc);
-    }
+	protected AbstractTerrainPrimitive(String idString, int stateFlags, BaseModelStateFactory<TerrainModelState, TerrainModelState.Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
+		super(idString, stateFlags, factory, surfaceFunc);
+	}
 }
