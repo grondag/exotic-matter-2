@@ -21,20 +21,25 @@ import org.apiguardian.api.API;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 
 @Environment(EnvType.CLIENT)
 @API(status = INTERNAL)
 public class VirtualBlockEntityRenderer extends BlockEntityRenderer<VirtualBlockEntityWithRenderer> {
 
-    public static final VirtualBlockEntityRenderer INSTANCE = new VirtualBlockEntityRenderer();
+	public VirtualBlockEntityRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher) {
+		super(blockEntityRenderDispatcher);
+	}
 
-    @Override
-    public void render(VirtualBlockEntityWithRenderer be, double double_1, double double_2, double double_3, float float_1, int int_1) {
-        if (!be.isVirtual() || !((VirtualBlockEntity) be).isVisible())
-            return;
+	@Override
+	public void render(VirtualBlockEntityWithRenderer be, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+		if (!be.isVirtual() || !((VirtualBlockEntity) be).isVisible()) {
+			return;
+		}
 
-        // TODO: actually render - use 1.12 SuperBlockTESR as starting point
-        super.render(be, double_1, double_2, double_3, float_1, int_1);
-    }
+		// TODO: actually render - use 1.12 SuperBlockTESR as starting point
+	}
 }

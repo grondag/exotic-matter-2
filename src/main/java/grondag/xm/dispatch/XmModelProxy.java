@@ -27,6 +27,8 @@ import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 
+import com.mojang.datafixers.util.Pair;
+
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.MutableModelState;
@@ -34,6 +36,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.SpriteIdentifier;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -49,47 +52,47 @@ import net.minecraft.world.BlockRenderView;
 @API(status = INTERNAL)
 @Environment(EnvType.CLIENT)
 public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
-    private XmModelProxy() {
-    }
+	private XmModelProxy() {
+	}
 
-    public static final XmModelProxy INSTANCE = new XmModelProxy();
+	public static final XmModelProxy INSTANCE = new XmModelProxy();
 
-    @Override
-    public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand) {
-        final XmBlockState xmState = XmBlockState.get(state);
-        return xmState == null ? Collections.emptyList() : XmDispatcher.INSTANCE.get(xmState.defaultModelState()).bakedQuads(state, face, rand);
-    }
+	@Override
+	public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand) {
+		final XmBlockState xmState = XmBlockState.get(state);
+		return xmState == null ? Collections.emptyList() : XmDispatcher.INSTANCE.get(xmState.defaultModelState()).bakedQuads(state, face, rand);
+	}
 
-    @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        final MutableModelState modelState = XmBlockState.modelState(state, blockView, pos, true);
-        if (modelState != null) {
-            XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
-        }
-        modelState.release();
-    }
+	@Override
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		final MutableModelState modelState = XmBlockState.modelState(state, blockView, pos, true);
+		if (modelState != null) {
+			XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
+		}
+		modelState.release();
+	}
 
-    @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        final MutableModelState modelState = XmItem.modelState(stack);
-        if (modelState != null) {
-            XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
-        }
-        modelState.release();
-    }
+	@Override
+	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+		final MutableModelState modelState = XmItem.modelState(stack);
+		if (modelState != null) {
+			XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
+		}
+		modelState.release();
+	}
 
-    @Override
-    public Collection<Identifier> getModelDependencies() {
-        return Collections.emptyList();
-    }
+	@Override
+	public Collection<Identifier> getModelDependencies() {
+		return Collections.emptyList();
+	}
 
-    @Override
-    public Collection<Identifier> getTextureDependencies(Function<Identifier, UnbakedModel> var1, Set<String> var2) {
-        return Collections.emptyList();
-    }
+	@Override
+	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> var1, Set<Pair<String, String>> var2) {
+		return Collections.emptyList();
+	}
 
-    @Override
-    public BakedModel bake(ModelLoader var1, Function<Identifier, Sprite> var2, ModelBakeSettings var3, Identifier modelId) {
-        return this;
-    }
+	@Override
+	public BakedModel bake(ModelLoader var1, Function<SpriteIdentifier, Sprite> var2, ModelBakeSettings var3, Identifier modelId) {
+		return this;
+	}
 }

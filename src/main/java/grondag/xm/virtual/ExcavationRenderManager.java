@@ -32,127 +32,130 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.VisibleRegion;
 
 @API(status = INTERNAL)
 public class ExcavationRenderManager {
-    private static final Int2ObjectOpenHashMap<ExcavationRenderer> excavations = new Int2ObjectOpenHashMap<ExcavationRenderer>();
+	private static final Int2ObjectOpenHashMap<ExcavationRenderer> excavations = new Int2ObjectOpenHashMap<>();
 
-    /**
-     * Updated whenever map changes. Can be accessed safely from render thread
-     * without causing any concurrency problems because setting/accessing array
-     * value is safe. Could make volatile but not really a problem if a couple
-     * frames use stale data.
-     */
-    private static ExcavationRenderer[] renderCopy = new ExcavationRenderer[0];
+	/**
+	 * Updated whenever map changes. Can be accessed safely from render thread
+	 * without causing any concurrency problems because setting/accessing array
+	 * value is safe. Could make volatile but not really a problem if a couple
+	 * frames use stale data.
+	 */
+	private static ExcavationRenderer[] renderCopy = new ExcavationRenderer[0];
 
-    /**
-     * Keep reference to avoid garbage creation
-     */
-    @Environment(EnvType.CLIENT)
-    private static final ArrayList<ExcavationRenderer> secondPass = new ArrayList<ExcavationRenderer>();
+	/**
+	 * Keep reference to avoid garbage creation
+	 */
+	@Environment(EnvType.CLIENT)
+	private static final ArrayList<ExcavationRenderer> secondPass = new ArrayList<>();
 
-    @Environment(EnvType.CLIENT)
-    public static void render(float tickDelta, ClientPlayerEntity player) {
-        if (player == null)
-            return;
+	@Environment(EnvType.CLIENT)
+	public static void render(float tickDelta, ClientPlayerEntity player) {
+		if (player == null) {
+			return;
+		}
 
-        if (renderCopy == null || renderCopy.length == 0)
-            return;
+		if (renderCopy == null || renderCopy.length == 0) {
+			return;
+		}
 
-        GlStateManager.enableBlend();
-        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
-                GlStateManager.DestFactor.ZERO);
-        GlStateManager.disableTexture();
-        GlStateManager.depthMask(false);
-        GlStateManager.disableDepthTest();
-        GlStateManager.lineWidth(2);
+		//		GlStateManager.enableBlend();
+		//		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+		//				GlStateManager.DestFactor.ZERO);
+		//		GlStateManager.disableTexture();
+		//		GlStateManager.depthMask(false);
+		//		GlStateManager.disableDepthTest();
+		//		GlStateManager.lineWidth(2);
 
-        final Tessellator tessellator = Tessellator.getInstance();
-        final BufferBuilder bufferbuilder = tessellator.getBufferBuilder();
-        bufferbuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+		// TODO: reimplement for new rendering - this likely won't work
+		final Tessellator tessellator = Tessellator.getInstance();
+		final BufferBuilder bufferbuilder = tessellator.getBuffer();
+		bufferbuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-        secondPass.clear();
+		secondPass.clear();
 
-        final VisibleRegion visibleRegion = XmRenderHelper.visibleRegion();
+		final Frustum visibleRegion = XmRenderHelper.frustum();
 
-        final double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
-        final double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
-        final double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
+		final double d0 = player.prevRenderX + (player.getX() - player.prevRenderX) * tickDelta;
+		final double d1 = player.prevRenderY + (player.getY() - player.prevRenderY) * tickDelta;
+		final double d2 = player.prevRenderZ + (player.getZ() - player.prevRenderZ) * tickDelta;
 
-        // TODO: needed?
-        // bufferBuilder.setOffset(-d0, -d1, -d2);
+		// TODO: needed?
+		// bufferBuilder.setOffset(-d0, -d1, -d2);
 
-        for (final ExcavationRenderer ex : renderCopy) {
-            if (ex.bounds() != null && visibleRegion.intersects(ex.bounds())) {
-                if (ex.drawBounds(bufferbuilder, player, d0, d1, d2, tickDelta)) {
-                    secondPass.add(ex);
-                }
-            }
-        }
+		for (final ExcavationRenderer ex : renderCopy) {
+			if (ex.bounds() != null && visibleRegion.isVisible(ex.bounds())) {
+				if (ex.drawBounds(bufferbuilder, player, d0, d1, d2, tickDelta)) {
+					secondPass.add(ex);
+				}
+			}
+		}
 
-        tessellator.draw();
+		tessellator.draw();
 
-        if (!secondPass.isEmpty()) {
+		if (!secondPass.isEmpty()) {
 
-            GlStateManager.lineWidth(1);
-            bufferbuilder.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
-            for (final ExcavationRenderer ex : secondPass) {
-                ex.drawGrid(bufferbuilder, d0, d1, d2);
-            }
-            tessellator.draw();
+			GlStateManager.lineWidth(1);
+			bufferbuilder.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
+			for (final ExcavationRenderer ex : secondPass) {
+				ex.drawGrid(bufferbuilder, d0, d1, d2);
+			}
+			tessellator.draw();
 
-            GlStateManager.enableDepthTest();
+			GlStateManager.enableDepthTest();
 
-            // prevent z-fighting
-            GlStateManager.enablePolygonOffset();
-            GlStateManager.polygonOffset(-1, -1);
+			// prevent z-fighting
+			GlStateManager.enablePolygonOffset();
+			GlStateManager.polygonOffset(-1, -1);
 
-            bufferbuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-            for (final ExcavationRenderer ex : secondPass) {
-                ex.drawBox(bufferbuilder, d0, d1, d2);
-            }
-            tessellator.draw();
+			bufferbuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+			for (final ExcavationRenderer ex : secondPass) {
+				ex.drawBox(bufferbuilder, d0, d1, d2);
+			}
+			tessellator.draw();
 
-            GlStateManager.disablePolygonOffset();
-        }
+			GlStateManager.disablePolygonOffset();
+		}
 
-        GlStateManager.depthMask(true);
-        GlStateManager.enableTexture();
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlphaTest();
-    }
+		GlStateManager.depthMask(true);
+		GlStateManager.enableTexture();
+		GlStateManager.disableBlend();
+		GlStateManager.enableAlphaTest();
+	}
 
-    public static void clear() {
-        excavations.clear();
-        renderCopy = new ExcavationRenderer[0];
-    }
+	public static void clear() {
+		excavations.clear();
+		renderCopy = new ExcavationRenderer[0];
+	}
 
-    public static void addOrUpdate(ExcavationRenderer... renders) {
-        for (final ExcavationRenderer render : renders) {
-            excavations.put(render.id, render);
-        }
-        renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
-        if (XmConfig.logExcavationRenderTracking) {
-            Xm.LOG.info("mass update, excavationSize = %d, renderSize = %d", excavations.size(), renderCopy.length);
-        }
-    }
+	public static void addOrUpdate(ExcavationRenderer... renders) {
+		for (final ExcavationRenderer render : renders) {
+			excavations.put(render.id, render);
+		}
+		renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
+		if (XmConfig.logExcavationRenderTracking) {
+			Xm.LOG.info("mass update, excavationSize = %d, renderSize = %d", excavations.size(), renderCopy.length);
+		}
+	}
 
-    public static void addOrUpdate(ExcavationRenderer render) {
-        excavations.put(render.id, render);
-        renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
-        if (XmConfig.logExcavationRenderTracking) {
-            Xm.LOG.info("addOrUpdate id = %d, excavationSize = %d, renderSize = %d", render.id, excavations.size(), renderCopy.length);
-        }
-    }
+	public static void addOrUpdate(ExcavationRenderer render) {
+		excavations.put(render.id, render);
+		renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
+		if (XmConfig.logExcavationRenderTracking) {
+			Xm.LOG.info("addOrUpdate id = %d, excavationSize = %d, renderSize = %d", render.id, excavations.size(), renderCopy.length);
+		}
+	}
 
-    public static void remove(int id) {
-        excavations.remove(id);
-        renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
-        if (XmConfig.logExcavationRenderTracking) {
-            Xm.LOG.info("remove id = %d, excavationSize = %d, renderSize = %d", id, excavations.size(), renderCopy.length);
-        }
-    }
+	public static void remove(int id) {
+		excavations.remove(id);
+		renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
+		if (XmConfig.logExcavationRenderTracking) {
+			Xm.LOG.info("remove id = %d, excavationSize = %d, renderSize = %d", id, excavations.size(), renderCopy.length);
+		}
+	}
 }

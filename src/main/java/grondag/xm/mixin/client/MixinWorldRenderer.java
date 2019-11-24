@@ -24,36 +24,40 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import grondag.xm.XmConfig;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.relics.placement.PlacementPreviewRenderer;
 import grondag.xm.render.RenderUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
 
 @Mixin(WorldRenderer.class)
 public class MixinWorldRenderer {
-    @Shadow private ClientWorld world;
+	@Shadow private ClientWorld world;
 
-    private static ModelState modelState;
+	@Inject(method = "drawBlockOutline", at = @At(value = "HEAD"), cancellable = false, require = 1)
+	private void onDrawBlockOutline(MatrixStack matrixStack, VertexConsumer vertexConsumer, Entity entity, double x, double y, double z, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
+		final ModelState modelState = XmBlockState.modelState(blockState, world, blockPos, true);
 
-    @Inject(method = "drawHighlightedBlockOutline", at = @At(value = "HEAD"), cancellable = false, require = 1)
-    private void onBlockHighlight(Camera camera, HitResult hit, int zero, CallbackInfo ci) {
-        if (hit.getType() == HitResult.Type.BLOCK) {
-            final BlockPos pos = ((BlockHitResult)hit).getBlockPos();
-            final BlockState blockState = world.getBlockState(pos);
-            modelState = XmBlockState.modelState(blockState, world, pos, true);
-        }
-    }
+		if(modelState != null && !XmConfig.debugCollisionBoxes) {
+			RenderUtil.drawModelOutline(matrixStack, vertexConsumer, modelState, blockPos.getX() - x, blockPos.getY() - y, blockPos.getZ() - z, 0.0F, 0.0F, 0.0F, 0.4f);
+			ci.cancel();
+		}
+	}
 
-    @Inject(method = "drawShapeOutline", at = @At(value = "HEAD"), cancellable = true, require = 1)
-    private static void onDrawShapeOutline(VoxelShape voxelShape_1, double x, double y, double z, float r, float g, float b, float a, CallbackInfo ci) {
-        if(modelState != null && !XmConfig.debugCollisionBoxes) {
-            RenderUtil.drawModelOutline(modelState, x, y, z, r, g, b, a);
-            ci.cancel();
-        }
-    }
+	// TODO: reimplement placement preview
+	@SuppressWarnings({ "unused", "deprecation" })
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderWorldBorder(Lnet/minecraft/client/render/Camera;)V"), cancellable = false, require = 1)
+	void blockHighlightHook(MatrixStack matrixStack, float tickDelta, long l, boolean blockOutlineEnabled, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
+		if (blockOutlineEnabled && false) {
+			PlacementPreviewRenderer.renderPreview(tickDelta);
+		}
+	}
 }

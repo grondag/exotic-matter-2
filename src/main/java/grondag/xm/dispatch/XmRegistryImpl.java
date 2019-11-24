@@ -33,36 +33,40 @@ import net.minecraft.item.ItemStack;
 
 @API(status = INTERNAL)
 public class XmRegistryImpl {
-    private XmRegistryImpl() {
-    }
+	private XmRegistryImpl() {
+	}
 
-    public static void register(Block block, Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap, Function<ItemStack, MutableModelState> itemModelFunction) {
-        for (final BlockState blockState : block.getStateFactory().getStates()) {
-            if (XmBlockState.get(blockState) != null) {
-                // TODO: localize
-                Xm.LOG.warn(String.format("[%s] BlockState %s already associated with an XmBlockState. Skipping.", Xm.MODID, blockState.toString()));
-                return;
-            }
-            ((XmBlockStateAccess) blockState).xm_modelStateFunc(modelFunctionMap.apply(blockState));
+	public static void register(Block block, Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap, Function<ItemStack, MutableModelState> itemModelFunction) {
+		for (final BlockState blockState : block.getStateManager().getStates()) {
+			if (XmBlockState.get(blockState) != null) {
+				// TODO: localize
+				Xm.LOG.warn(String.format("[%s] BlockState %s already associated with an XmBlockState. Skipping.", Xm.MODID, blockState.toString()));
+				return;
+			}
 
-            if(itemModelFunction != null) {
-                final Item item = BlockItem.fromBlock(block);
-                if(item != null) {
-                    register(item, itemModelFunction);
-                }
-            }
-        }
-    }
+			((XmBlockStateAccess) blockState).xm_modelStateFunc(modelFunctionMap.apply(blockState));
 
-    public static void register(Item item, Function<ItemStack, MutableModelState> modelFunction) {
-        final XmItemAccess access = (XmItemAccess)item;
-        final Function<ItemStack, MutableModelState> oldFunc = access.xm_modelStateFunc();
-        if(oldFunc != null) {
-            if(oldFunc != modelFunction) {
-                Xm.LOG.warn(String.format("[%s] Item %s already associated with a model function. Skipping.", Xm.MODID, item.toString()));
-                return;
-            }
-        }
-        access.xm_modelStateFunc(modelFunction);
-    }
+			if(itemModelFunction != null) {
+				final Item item = BlockItem.fromBlock(block);
+
+				if(item != null) {
+					register(item, itemModelFunction);
+				}
+			}
+		}
+	}
+
+	public static void register(Item item, Function<ItemStack, MutableModelState> modelFunction) {
+		final XmItemAccess access = (XmItemAccess)item;
+		final Function<ItemStack, MutableModelState> oldFunc = access.xm_modelStateFunc();
+
+		if(oldFunc != null) {
+			if(oldFunc != modelFunction) {
+				Xm.LOG.warn(String.format("[%s] Item %s already associated with a model function. Skipping.", Xm.MODID, item.toString()));
+				return;
+			}
+		}
+
+		access.xm_modelStateFunc(modelFunction);
+	}
 }

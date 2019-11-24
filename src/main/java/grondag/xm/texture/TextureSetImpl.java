@@ -24,115 +24,114 @@ import org.apiguardian.api.API;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetBuilder;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
-    public static TextureSetBuilder builder() {
-        return new TextureSetBuilderImpl();
-    }
+	public static TextureSetBuilder builder() {
+		return new TextureSetBuilderImpl();
+	}
 
-    public static TextureSetBuilder builder(TextureSet template) {
-        final TextureSetBuilderImpl result = new TextureSetBuilderImpl();
-        result.copyFrom((AbstractTextureSet) template);
-        return result;
-    }
+	public static TextureSetBuilder builder(TextureSet template) {
+		final TextureSetBuilderImpl result = new TextureSetBuilderImpl();
+		result.copyFrom((AbstractTextureSet) template);
+		return result;
+	}
 
-    public final Identifier id;
-    public final int versionMask;
-    public final int stateFlags;
-    public final String baseTextureName;
-    private boolean used = false;
+	public final Identifier id;
+	public final int versionMask;
+	public final int stateFlags;
+	public final String baseTextureName;
+	private boolean used = false;
 
-    TextureSetImpl(Identifier id, AbstractTextureSet template) {
-        this.id = id;
-        baseTextureName = template.rawBaseTextureName;
-        copyFrom(template);
-        versionMask = Math.max(0, template.versionCount - 1);
-        layoutMap = template.layoutMap;
+	TextureSetImpl(Identifier id, AbstractTextureSet template) {
+		this.id = id;
+		baseTextureName = template.rawBaseTextureName;
+		copyFrom(template);
+		versionMask = Math.max(0, template.versionCount - 1);
+		layoutMap = template.layoutMap;
 
-        int flags = template.scale.modelStateFlag | template.layoutMap.layout.modelStateFlag;
+		int flags = template.scale.modelStateFlag | template.layoutMap.layout.modelStateFlag;
 
-        // textures with randomization options also require position information
-        if (template.transform.hasRandom) {
-            flags |= ModelStateFlags.POSITION;
-        }
+		// textures with randomization options also require position information
+		if (template.transform.hasRandom) {
+			flags |= ModelStateFlags.POSITION;
+		}
 
-        if (template.versionCount > 1) {
-            flags |= ModelStateFlags.POSITION;
-        }
+		if (template.versionCount > 1) {
+			flags |= ModelStateFlags.POSITION;
+		}
 
-        stateFlags = flags;
+		stateFlags = flags;
 
-        TextureSetRegistryImpl.INSTANCE.add(this);
-    }
+		TextureSetRegistryImpl.INSTANCE.add(this);
+	}
 
-    @Override
-    public Identifier id() {
-        return id;
-    }
+	@Override
+	public Identifier id() {
+		return id;
+	}
 
-    @Override
-    public int index() {
-        return TextureSetRegistryImpl.INSTANCE.indexOf(this);
-    }
+	@Override
+	public int index() {
+		return TextureSetRegistryImpl.INSTANCE.indexOf(this);
+	}
 
-    @Override
-    public int stateFlags() {
-        return stateFlags;
-    }
+	@Override
+	public int stateFlags() {
+		return stateFlags;
+	}
 
-    @Override
-    public void prestitch(Consumer<Identifier> stitcher) {
-        layoutMap.prestitch(this, stitcher);
-    }
+	@Override
+	public void prestitch(Consumer<Identifier> stitcher) {
+		layoutMap.prestitch(this, stitcher);
+	}
 
-    @Override
-    public String sampleTextureName() {
-        return layoutMap.sampleTextureName(this);
-    }
+	@Override
+	public String sampleTextureName() {
+		return layoutMap.sampleTextureName(this);
+	}
 
-    private Sprite sampleSprite;
+	private Sprite sampleSprite;
 
-    @Override
-    public Sprite sampleSprite() {
-        Sprite result = sampleSprite;
-        if (result == null) {
-            result = MinecraftClient.getInstance().getSpriteAtlas().getSprite(sampleTextureName());
-            sampleSprite = result;
-        }
-        return result;
-    }
+	@Override
+	public Sprite sampleSprite() {
+		Sprite result = sampleSprite;
+		if (result == null) {
+			result = TextureSetHelper.blockAtas().getSprite(new Identifier(sampleTextureName()));
+			sampleSprite = result;
+		}
+		return result;
+	}
 
-    @Override
-    public String textureName(int version) {
-        return layoutMap.buildTextureName(this, version & versionMask, 0);
-    }
+	@Override
+	public String textureName(int version) {
+		return layoutMap.buildTextureName(this, version & versionMask, 0);
+	}
 
-    @Override
-    public String textureName(int version, int index) {
-        return layoutMap.buildTextureName(this, version & versionMask, index);
-    }
+	@Override
+	public String textureName(int version, int index) {
+		return layoutMap.buildTextureName(this, version & versionMask, index);
+	}
 
-    @Override
-    public int versionMask() {
-        return versionMask;
-    }
+	@Override
+	public int versionMask() {
+		return versionMask;
+	}
 
-    @Override
-    public String baseTextureName() {
-        return baseTextureName;
-    }
+	@Override
+	public String baseTextureName() {
+		return baseTextureName;
+	}
 
-    @Override
-    public void use() {
-        used = true;
-    }
+	@Override
+	public void use() {
+		used = true;
+	}
 
-    @Override
-    public boolean used() {
-        return used;
-    }
+	@Override
+	public boolean used() {
+		return used;
+	}
 }

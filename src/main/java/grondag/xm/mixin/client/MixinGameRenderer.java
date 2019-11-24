@@ -16,38 +16,18 @@
 package grondag.xm.mixin.client;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import grondag.xm.render.XmRenderHelper;
-import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer {
-    @Shadow
-    private boolean blockOutlineEnabled;
-    @Shadow
-    private Camera camera;
-
-    @Inject(method = "renderCenter", at = @At(value = "HEAD"), cancellable = false, require = 1)
-    void renderCenterHook(float partialTick, long nanos, CallbackInfo ci) {
-        XmRenderHelper.tickDelta(partialTick);
-    }
-
-    //TODO: capture class_4604 in WorldRenderer as the new VisibleRegion
-//    @ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/FrustumWithOrigin;<init>(Lnet/minecraft/client/render/Frustum;)V"), method = "renderCenter", require = 1)
-//    private VisibleRegion visibleRegionHook(VisibleRegion original) {
-//        XmRenderHelper.visibleRegion(original);
-//        return original;
-//    }
-//
-//    @Inject(method = "renderCenter", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/debug/DebugRenderer;shouldRender()Z"), cancellable = false, require = 1)
-//    void blockHighlightHook(float tickDelta, long nanos, CallbackInfo ci) {
-//        if (blockOutlineEnabled && false) {
-//            PlacementPreviewRenderer.renderPreview(tickDelta);
-//        }
-//    }
+	@Inject(method = "renderWorld", at = @At(value = "HEAD"), cancellable = false, require = 1)
+	void renderCenterHook(float partialTick, long nanos, MatrixStack matrixStack, CallbackInfo ci) {
+		XmRenderHelper.tickDelta(partialTick);
+	}
 }

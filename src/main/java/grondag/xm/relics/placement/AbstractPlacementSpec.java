@@ -41,175 +41,176 @@ import net.minecraft.util.math.BlockPos;
 @API(status = Status.DEPRECATED)
 @Deprecated
 abstract class AbstractPlacementSpec implements IPlacementSpec {
-    /**
-     * Stack player is holding to do the placement.
-     */
-    private final ItemStack heldStack;
+	/**
+	 * Stack player is holding to do the placement.
+	 */
+	private final ItemStack heldStack;
 
-    protected final PlacementItem placementItem;
-    protected final PlayerEntity player;
-    protected final PlacementPosition pPos;
-    protected @Nullable Boolean isValid = null;
-    protected final TargetMode selectionMode;
-    protected final boolean isExcavation;
-    protected final boolean isVirtual;
-    protected final boolean isSelectionInProgress;
+	protected final PlacementItem placementItem;
+	protected final PlayerEntity player;
+	protected final PlacementPosition pPos;
+	protected @Nullable Boolean isValid = null;
+	protected final TargetMode selectionMode;
+	protected final boolean isExcavation;
+	protected final boolean isVirtual;
+	protected final boolean isSelectionInProgress;
 
-    /**
-     * From stack but adjusted to a value that makes sense if we are excavating.
-     */
-    protected final FilterMode effectiveFilterMode;
+	/**
+	 * From stack but adjusted to a value that makes sense if we are excavating.
+	 */
+	protected final FilterMode effectiveFilterMode;
 
-    protected AbstractPlacementSpec(ItemStack heldStack, PlayerEntity player, PlacementPosition pPos) {
-        this.heldStack = heldStack;
-        this.player = player;
-        this.pPos = pPos;
-        placementItem = (PlacementItem) heldStack.getItem();
-        isSelectionInProgress = placementItem.isFixedRegionSelectionInProgress(heldStack);
-        selectionMode = placementItem.getTargetMode(heldStack);
-        isExcavation = placementItem.isExcavator(heldStack);
-        isVirtual = placementItem.isVirtual(heldStack);
+	protected AbstractPlacementSpec(ItemStack heldStack, PlayerEntity player, PlacementPosition pPos) {
+		this.heldStack = heldStack;
+		this.player = player;
+		this.pPos = pPos;
+		placementItem = (PlacementItem) heldStack.getItem();
+		isSelectionInProgress = placementItem.isFixedRegionSelectionInProgress(heldStack);
+		selectionMode = placementItem.getTargetMode(heldStack);
+		isExcavation = placementItem.isExcavator(heldStack);
+		isVirtual = placementItem.isVirtual(heldStack);
 
-        FilterMode filterMode = placementItem.getFilterMode(heldStack);
+		FilterMode filterMode = placementItem.getFilterMode(heldStack);
 
-        // if excavating, adjust filter mode if needed so that it does something
-        if (isExcavation && filterMode == FilterMode.FILL_REPLACEABLE) {
-            filterMode = FilterMode.REPLACE_SOLID;
-        }
-        effectiveFilterMode = filterMode;
-    }
+		// if excavating, adjust filter mode if needed so that it does something
+		if (isExcavation && filterMode == FilterMode.FILL_REPLACEABLE) {
+			filterMode = FilterMode.REPLACE_SOLID;
+		}
+		effectiveFilterMode = filterMode;
+	}
 
-    /**
-     * Type-specific logic for {@link #validate()}. Populate obstacles if
-     * applicable.
-     *
-     * @return Same semantics as {@link #validate()}
-     */
-    protected abstract boolean doValidate();
+	/**
+	 * Type-specific logic for {@link #validate()}. Populate obstacles if
+	 * applicable.
+	 *
+	 * @return Same semantics as {@link #validate()}
+	 */
+	protected abstract boolean doValidate();
 
-    @Override
-    public final boolean validate() {
-        if (isValid == null) {
-            isValid = doValidate();
-        }
-        return isValid;
-    }
+	@Override
+	public final boolean validate() {
+		if (isValid == null) {
+			isValid = doValidate();
+		}
+		return isValid;
+	}
 
-    @Override
-    public boolean isExcavation() {
-        return isExcavation;
-    }
+	@Override
+	public boolean isExcavation() {
+		return isExcavation;
+	}
 
-    @Environment(EnvType.CLIENT)
-    protected abstract void drawSelection(Tessellator tessellator, BufferBuilder bufferBuilder);
+	@Environment(EnvType.CLIENT)
+	protected abstract void drawSelection(Tessellator tessellator, BufferBuilder bufferBuilder);
 
-    @Environment(EnvType.CLIENT)
-    protected abstract void drawPlacement(Tessellator tessellator, BufferBuilder bufferBuilder, PlacementPreviewRenderMode previewMode);
+	@Environment(EnvType.CLIENT)
+	protected abstract void drawPlacement(Tessellator tessellator, BufferBuilder bufferBuilder, PlacementPreviewRenderMode previewMode);
 
-    /**
-     * Location used for {@link #drawPlacementPreview(Tessellator, BufferBuilder)}.
-     * Override if the placement region does not include target position in
-     * {@link #pPos}. Will generally not be used for excavations.
-     */
-    @Environment(EnvType.CLIENT)
-    protected BlockPos previewPos() {
-        return pPos.inPos;
-    }
+	/**
+	 * Location used for {@link #drawPlacementPreview(Tessellator, BufferBuilder)}.
+	 * Override if the placement region does not include target position in
+	 * {@link #pPos}. Will generally not be used for excavations.
+	 */
+	@Environment(EnvType.CLIENT)
+	protected BlockPos previewPos() {
+		return pPos.inPos;
+	}
 
-    /**
-     * The model state (if applies) that should be used to render placement preview.
-     * Override with context-dependent version if available.
-     */
-    @Nullable
-    protected ModelState previewModelState() {
-        return XmItem.modelState(heldStack);
-    }
+	/**
+	 * The model state (if applies) that should be used to render placement preview.
+	 * Override with context-dependent version if available.
+	 */
+	@Nullable
+	protected ModelState previewModelState() {
+		return XmItem.modelState(heldStack);
+	}
 
-    public ItemStack placedStack() {
-        return heldStack;
-    }
+	public ItemStack placedStack() {
+		return heldStack;
+	}
 
-    public PlacementPosition placementPosition() {
-        return pPos;
-    }
+	public PlacementPosition placementPosition() {
+		return pPos;
+	}
 
-    public PlayerEntity player() {
-        return player;
-    }
+	public PlayerEntity player() {
+		return player;
+	}
 
-    /**
-     * Draw single-block sample to show shape/orientation of block to be be placed.
-     * Does not render for excavations.
-     */
-    @Environment(EnvType.CLIENT)
-    protected void drawPlacementPreview(Tessellator tessellator, BufferBuilder bufferBuilder) {
-        if (previewPos() == null || isExcavation)
-            return;
+	/**
+	 * Draw single-block sample to show shape/orientation of block to be be placed.
+	 * Does not render for excavations.
+	 */
+	@Environment(EnvType.CLIENT)
+	protected void drawPlacementPreview(Tessellator tessellator, BufferBuilder bufferBuilder) {
+		if (previewPos() == null || isExcavation) {
+			return;
+		}
 
-        GlStateManager.disableDepthTest();
+		GlStateManager.disableDepthTest();
 
-        final ModelState placementModelState = previewModelState();
-        if (placementModelState == null) {
-            // No model state, draw generic box
-            final BlockPos pos = previewPos();
-            bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-            WorldRenderer.buildBoxOutline(bufferBuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, OBSTRUCTED.red,
-                    OBSTRUCTED.green, OBSTRUCTED.blue, 1f);
-            tessellator.draw();
-        } else {
-            //TODO: use voxelshap instead
-            // Draw collision boxes
-            //            GlStateManager.lineWidth(1.0F);
-            //            for (Box blockAABB : CollisionDispatcher.boxesFor(placementModelState)) {
-            //                bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-            //                WorldRenderer.buildBoxOutline(bufferBuilder, blockAABB.minX, blockAABB.minY, blockAABB.minZ, blockAABB.maxX, blockAABB.maxY, blockAABB.maxZ, 1f,
-            //                        1f, 1f, 1f);
-            //                tessellator.draw();
-            //            }
-        }
-    }
+		final ModelState placementModelState = previewModelState();
+		if (placementModelState == null) {
+			// No model state, draw generic box
+			final BlockPos pos = previewPos();
+			bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+			WorldRenderer.drawBox(bufferBuilder, pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, OBSTRUCTED.red,
+					OBSTRUCTED.green, OBSTRUCTED.blue, 1f);
+			tessellator.draw();
+		} else {
+			//TODO: use voxelshap instead
+			// Draw collision boxes
+			//            GlStateManager.lineWidth(1.0F);
+			//            for (Box blockAABB : CollisionDispatcher.boxesFor(placementModelState)) {
+			//                bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+			//                WorldRenderer.buildBoxOutline(bufferBuilder, blockAABB.minX, blockAABB.minY, blockAABB.minZ, blockAABB.maxX, blockAABB.maxY, blockAABB.maxZ, 1f,
+			//                        1f, 1f, 1f);
+			//                tessellator.draw();
+			//            }
+		}
+	}
 
-    @Environment(EnvType.CLIENT)
-    @Override
-    public final void renderPreview(float tickDelta, ClientPlayerEntity player) {
-        this.validate();
-// TODO: reimplement with new render methods
-//        Tessellator tessellator = Tessellator.getInstance();
-//        BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
-//
-//        double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
-//        double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
-//        double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
-//
-//        bufferBuilder.setOffset(-d0, -d1, -d2);
-//
-//        GlStateManager.enableBlend();
-//        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
-//                GlStateManager.DestFactor.ZERO);
-//        GlStateManager.disableTexture();
-//        GlStateManager.depthMask(false);
-//
-//        // prevent z-fighting
-//        GlStateManager.enablePolygonOffset();
-//        GlStateManager.polygonOffset(-1, -1);
-//
-//        if (this.isSelectionInProgress) {
-//            this.drawSelection(tessellator, bufferBuilder);
-//        } else if (this.isExcavation) {
-//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.EXCAVATE);
-//        } else if (this.isValid) {
-//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.PLACE);
-//        } else {
-//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.OBSTRUCTED);
-//        }
-//
-//        bufferBuilder.setOffset(0, 0, 0);
-//
-//        GlStateManager.disablePolygonOffset();
-//        GlStateManager.enableDepthTest();
-//        GlStateManager.depthMask(true);
-//        GlStateManager.enableTexture();
-//        GlStateManager.disableBlend();
-//        GlStateManager.enableAlphaTest();
-    }
+	@Environment(EnvType.CLIENT)
+	@Override
+	public final void renderPreview(float tickDelta, ClientPlayerEntity player) {
+		validate();
+		// TODO: reimplement with new render methods
+		//        Tessellator tessellator = Tessellator.getInstance();
+		//        BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
+		//
+		//        double d0 = player.prevRenderX + (player.x - player.prevRenderX) * tickDelta;
+		//        double d1 = player.prevRenderY + (player.y - player.prevRenderY) * tickDelta;
+		//        double d2 = player.prevRenderZ + (player.z - player.prevRenderZ) * tickDelta;
+		//
+		//        bufferBuilder.setOffset(-d0, -d1, -d2);
+		//
+		//        GlStateManager.enableBlend();
+		//        GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+		//                GlStateManager.DestFactor.ZERO);
+		//        GlStateManager.disableTexture();
+		//        GlStateManager.depthMask(false);
+		//
+		//        // prevent z-fighting
+		//        GlStateManager.enablePolygonOffset();
+		//        GlStateManager.polygonOffset(-1, -1);
+		//
+		//        if (this.isSelectionInProgress) {
+		//            this.drawSelection(tessellator, bufferBuilder);
+		//        } else if (this.isExcavation) {
+		//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.EXCAVATE);
+		//        } else if (this.isValid) {
+		//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.PLACE);
+		//        } else {
+		//            this.drawPlacement(tessellator, bufferBuilder, PlacementPreviewRenderMode.OBSTRUCTED);
+		//        }
+		//
+		//        bufferBuilder.setOffset(0, 0, 0);
+		//
+		//        GlStateManager.disablePolygonOffset();
+		//        GlStateManager.enableDepthTest();
+		//        GlStateManager.depthMask(true);
+		//        GlStateManager.enableTexture();
+		//        GlStateManager.disableBlend();
+		//        GlStateManager.enableAlphaTest();
+	}
 }

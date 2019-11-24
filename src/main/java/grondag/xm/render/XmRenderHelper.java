@@ -19,29 +19,30 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import net.minecraft.class_4604;
+import net.minecraft.client.render.Frustum;
+
 
 @API(status = INTERNAL)
 public abstract class XmRenderHelper {
-    private XmRenderHelper() {
-    }
+	private XmRenderHelper() {
+	}
 
-    private static class_4604 visibleRegion;
-    private static float tickDelta;
+	private static Frustum frustum;
+	private static float tickDelta;
 
-    public static void visibleRegion(class_4604 region) {
-        visibleRegion = region;
-    }
+	public static void frustum(Frustum region) {
+		frustum = region;
+	}
 
-    public static class_4604 visibleRegion() {
-        return visibleRegion;
-    }
+	public static Frustum frustum() {
+		return frustum;
+	}
 
-    public static void tickDelta(float tickDeltaIn) {
-        tickDelta = tickDeltaIn;
-    }
+	public static void tickDelta(float tickDeltaIn) {
+		tickDelta = tickDeltaIn;
+	}
 
-    public static float tickDelta() {
-        return tickDelta;
-    }
+	public static float tickDelta() {
+		return tickDelta;
+	}
 }

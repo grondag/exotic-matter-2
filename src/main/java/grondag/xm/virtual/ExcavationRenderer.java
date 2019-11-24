@@ -35,97 +35,97 @@ import net.minecraft.util.math.Vec3d;
 
 @API(status = INTERNAL)
 public class ExcavationRenderer {
-    public final int id;
+	public final int id;
 
-    /**
-     * If true, is replacement instead of straight excavation.
-     */
-    public final boolean isExchange;
+	/**
+	 * If true, is replacement instead of straight excavation.
+	 */
+	public final boolean isExchange;
 
-    private Box aabb;
+	private Box aabb;
 
-    private Box visibilityBounds;
+	private Box visibilityBounds;
 
-    private boolean didDrawBoundsLastTime = false;
+	private boolean didDrawBoundsLastTime = false;
 
-    private Vec3d lastEyePosition;
+	private Vec3d lastEyePosition;
 
-    /**
-     * If non-null, then we should render individual positions instead of AABB.
-     */
-    private BlockPos[] positions;
+	/**
+	 * If non-null, then we should render individual positions instead of AABB.
+	 */
+	private BlockPos[] positions;
 
-    public ExcavationRenderer(int id, Box aabb, boolean isExchange, @Nullable BlockPos[] positions) {
-        this.id = id;
-        this.isExchange = isExchange;
-        setBounds(aabb, positions);
-    }
+	public ExcavationRenderer(int id, Box aabb, boolean isExchange, @Nullable BlockPos[] positions) {
+		this.id = id;
+		this.isExchange = isExchange;
+		setBounds(aabb, positions);
+	}
 
-    public void setBounds(Box bounds, @Nullable BlockPos[] positions) {
-        aabb = bounds;
-        visibilityBounds = bounds.expand(192);
-        this.positions = positions;
+	public void setBounds(Box bounds, @Nullable BlockPos[] positions) {
+		aabb = bounds;
+		visibilityBounds = bounds.expand(192);
+		this.positions = positions;
 
-        if (XmConfig.logExcavationRenderTracking) {
-            Xm.LOG.info("id %d Renderer setBounds position count = %d", id, positions == null ? 0 : positions.length);
-        }
-    }
+		if (XmConfig.logExcavationRenderTracking) {
+			Xm.LOG.info("id %d Renderer setBounds position count = %d", id, positions == null ? 0 : positions.length);
+		}
+	}
 
-    public Box bounds() {
-        return aabb;
-    }
+	public Box bounds() {
+		return aabb;
+	}
 
-    public Box visibilityBounds() {
-        return visibilityBounds;
-    }
+	public Box visibilityBounds() {
+		return visibilityBounds;
+	}
 
-    /** return true if something was drawn */
-    @Environment(EnvType.CLIENT)
-    public boolean drawBounds(BufferBuilder bufferbuilder, Entity viewEntity, double d0, double d1, double d2, float partialTicks) {
-        lastEyePosition = viewEntity.getCameraPosVec(partialTicks);
-        if (visibilityBounds.contains(lastEyePosition)) {
-            if (positions == null) {
-                final Box box = aabb;
-                WorldRenderer.buildBox(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f, 0.3f,
-                        1f);
-            } else {
-                for (final BlockPos pos : positions) {
-                    final double x = pos.getX() - d0;
-                    final double y = pos.getY() - d1;
-                    final double z = pos.getZ() - d2;
-                    WorldRenderer.buildBox(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 1f);
-                }
-            }
-            didDrawBoundsLastTime = true;
-            return true;
-        } else {
-            didDrawBoundsLastTime = false;
-            return false;
-        }
-    }
+	/** return true if something was drawn */
+	@Environment(EnvType.CLIENT)
+	public boolean drawBounds(BufferBuilder bufferbuilder, Entity viewEntity, double d0, double d1, double d2, float partialTicks) {
+		lastEyePosition = viewEntity.getCameraPosVec(partialTicks);
+		if (visibilityBounds.contains(lastEyePosition)) {
+			if (positions == null) {
+				final Box box = aabb;
+				WorldRenderer.drawBox(bufferbuilder, box.x1 - d0, box.y1 - d1, box.z1 - d2, box.x2 - d0, box.y2 - d1, box.z2 - d2, 1f, 0.3f, 0.3f,
+						1f);
+			} else {
+				for (final BlockPos pos : positions) {
+					final double x = pos.getX() - d0;
+					final double y = pos.getY() - d1;
+					final double z = pos.getZ() - d2;
+					WorldRenderer.drawBox(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 1f);
+				}
+			}
+			didDrawBoundsLastTime = true;
+			return true;
+		} else {
+			didDrawBoundsLastTime = false;
+			return false;
+		}
+	}
 
-    @Environment(EnvType.CLIENT)
-    public void drawGrid(BufferBuilder buffer, double d0, double d1, double d2) {
-        if (didDrawBoundsLastTime && positions == null) {
-            RenderUtil.drawGrid(buffer, aabb, lastEyePosition, d0, d1, d2, 1f, 0.3f, 0.3f, 0.5F);
-        }
-    }
+	@Environment(EnvType.CLIENT)
+	public void drawGrid(BufferBuilder buffer, double d0, double d1, double d2) {
+		if (didDrawBoundsLastTime && positions == null) {
+			RenderUtil.drawGrid(buffer, aabb, lastEyePosition, d0, d1, d2, 1f, 0.3f, 0.3f, 0.5F);
+		}
+	}
 
-    @Environment(EnvType.CLIENT)
-    public void drawBox(BufferBuilder bufferbuilder, double d0, double d1, double d2) {
-        if (didDrawBoundsLastTime) {
-            if (positions == null) {
-                final Box box = aabb;
-                WorldRenderer.buildBoxOutline(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f,
-                        0.3f, 0.3f);
-            } else {
-                for (final BlockPos pos : positions) {
-                    final double x = pos.getX() - d0;
-                    final double y = pos.getY() - d1;
-                    final double z = pos.getZ() - d2;
-                    WorldRenderer.buildBoxOutline(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 0.3f);
-                }
-            }
-        }
-    }
+	@Environment(EnvType.CLIENT)
+	public void drawBox(BufferBuilder bufferbuilder, double d0, double d1, double d2) {
+		if (didDrawBoundsLastTime) {
+			if (positions == null) {
+				final Box box = aabb;
+				WorldRenderer.drawBox(bufferbuilder, box.x1 - d0, box.y1 - d1, box.z1 - d2, box.x2 - d0, box.y2 - d1, box.z2 - d2, 1f, 0.3f,
+						0.3f, 0.3f);
+			} else {
+				for (final BlockPos pos : positions) {
+					final double x = pos.getX() - d0;
+					final double y = pos.getY() - d1;
+					final double z = pos.getZ() - d2;
+					WorldRenderer.drawBox(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 0.3f);
+				}
+			}
+		}
+	}
 }

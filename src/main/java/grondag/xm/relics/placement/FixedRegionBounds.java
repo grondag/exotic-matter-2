@@ -32,36 +32,36 @@ import net.minecraft.util.math.BlockPos;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public class FixedRegionBounds {
-    private static final String TAG_START = NBTDictionary.claim("fixedRegionStart");
-    private static final String TAG_END = NBTDictionary.claim("fixedRegionEnd");
+	private static final String TAG_START = NBTDictionary.claim("fixedRegionStart");
+	private static final String TAG_END = NBTDictionary.claim("fixedRegionEnd");
 
-    public final BlockPos fromPos;
-    public final boolean fromIsCentered;
-    public final BlockPos toPos;
-    public final boolean toIsCentered;
+	public final BlockPos fromPos;
+	public final boolean fromIsCentered;
+	public final BlockPos toPos;
+	public final boolean toIsCentered;
 
-    public FixedRegionBounds(BlockPos fromPos, boolean fromIsCentered, BlockPos toPos, boolean toIsCentered) {
-        this.fromPos = fromPos;
-        this.fromIsCentered = fromIsCentered;
-        this.toPos = toPos;
-        this.toIsCentered = toIsCentered;
-    }
+	public FixedRegionBounds(BlockPos fromPos, boolean fromIsCentered, BlockPos toPos, boolean toIsCentered) {
+		this.fromPos = fromPos;
+		this.fromIsCentered = fromIsCentered;
+		this.toPos = toPos;
+		this.toIsCentered = toIsCentered;
+	}
 
-    public FixedRegionBounds(CompoundTag tag) {
-        final long from = tag.getLong(TAG_START);
-        fromPos = PackedBlockPos.unpack(from);
-        fromIsCentered = PackedBlockPos.getExtra(from) == 1;
-        final long to = tag.getLong(TAG_END);
-        toPos = PackedBlockPos.unpack(to);
-        toIsCentered = PackedBlockPos.getExtra(to) == 1;
-    }
+	public FixedRegionBounds(CompoundTag tag) {
+		final long from = tag.getLong(TAG_START);
+		fromPos = PackedBlockPos.unpack(from);
+		fromIsCentered = PackedBlockPos.getExtra(from) == 1;
+		final long to = tag.getLong(TAG_END);
+		toPos = PackedBlockPos.unpack(to);
+		toIsCentered = PackedBlockPos.getExtra(to) == 1;
+	}
 
-    public void saveToNBT(CompoundTag tag) {
-        tag.putLong(TAG_START, PackedBlockPos.pack(fromPos, fromIsCentered ? 1 : 0));
-        tag.putLong(TAG_END, PackedBlockPos.pack(toPos, toIsCentered ? 1 : 0));
-    }
+	public void saveToNBT(CompoundTag tag) {
+		tag.putLong(TAG_START, PackedBlockPos.pack(fromPos, fromIsCentered ? 1 : 0));
+		tag.putLong(TAG_END, PackedBlockPos.pack(toPos, toIsCentered ? 1 : 0));
+	}
 
-    public static boolean isPresentInTag(CompoundTag tag) {
-        return tag.containsKey(TAG_START) && tag.containsKey(TAG_END);
-    }
+	public static boolean isPresentInTag(CompoundTag tag) {
+		return tag.contains(TAG_START) && tag.contains(TAG_END);
+	}
 }

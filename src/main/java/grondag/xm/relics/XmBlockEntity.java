@@ -38,46 +38,46 @@ import net.minecraft.nbt.Tag;
 @API(status = Status.DEPRECATED)
 @Deprecated
 public class XmBlockEntity { //extends BlockEntity implements BlockEntityClientSerializable {
-    ////////////////////////////////////////////////////////////////////////
-    // STATIC MEMBERS
-    ////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
+	// STATIC MEMBERS
+	////////////////////////////////////////////////////////////////////////
 
-    //    public XmBlockEntity(BlockEntityType<?> blockEntityType) {
-    //        super(blockEntityType);
-    //    }
+	//    public XmBlockEntity(BlockEntityType<?> blockEntityType) {
+	//        super(blockEntityType);
+	//    }
 
-    /**
-     * Anything stored in this tag will not be sent to clients.
-     */
-    public static final String NBT_SERVER_SIDE_TAG = NBTDictionary.claim("serverOnly");
+	/**
+	 * Anything stored in this tag will not be sent to clients.
+	 */
+	public static final String NBT_SERVER_SIDE_TAG = NBTDictionary.claim("serverOnly");
 
-    /** Returns server-side tag if one is present, creating it if not. */
-    public static CompoundTag getServerTag(CompoundTag fromTag) {
-        Tag result = fromTag.getTag(NBT_SERVER_SIDE_TAG);
-        if (result == null || result.getType() != 10) {
-            result = new CompoundTag();
-            fromTag.put(NBT_SERVER_SIDE_TAG, result);
-        }
-        return (CompoundTag) result;
-    }
+	/** Returns server-side tag if one is present, creating it if not. */
+	public static CompoundTag getServerTag(CompoundTag fromTag) {
+		Tag result = fromTag.get(NBT_SERVER_SIDE_TAG);
+		if (result == null || result.getType() != 10) {
+			result = new CompoundTag();
+			fromTag.put(NBT_SERVER_SIDE_TAG, result);
+		}
+		return (CompoundTag) result;
+	}
 
-    /**
-     * Returns tag stripped of server-side tag if it is present. If the tag must be
-     * stripped, returns a modified copy. Otherwise returns input tag. Will return
-     * null if a null tag is passed in.
-     */
-    public static CompoundTag withoutServerTag(CompoundTag inputTag) {
-        if (inputTag != null && inputTag.containsKey(NBT_SERVER_SIDE_TAG)) {
-            inputTag = (CompoundTag) inputTag.copy();
-            inputTag.remove(NBT_SERVER_SIDE_TAG);
-        }
-        return inputTag;
-    }
+	/**
+	 * Returns tag stripped of server-side tag if it is present. If the tag must be
+	 * stripped, returns a modified copy. Otherwise returns input tag. Will return
+	 * null if a null tag is passed in.
+	 */
+	public static CompoundTag withoutServerTag(CompoundTag inputTag) {
+		if (inputTag != null && inputTag.contains(NBT_SERVER_SIDE_TAG)) {
+			inputTag = (CompoundTag) inputTag.copy();
+			inputTag.remove(NBT_SERVER_SIDE_TAG);
+		}
+		return inputTag;
+	}
 
-    //    /**
-    //     * Will be updated to actual game render distance on client side.
-    //     */
-    //    private static int maxSuperBlockRenderDistanceSq = 4096;
+	//    /**
+	//     * Will be updated to actual game render distance on client side.
+	//     */
+	//    private static int maxSuperBlockRenderDistanceSq = 4096;
 }
 //
 //    ////////////////////////////////////////////////////////////////////////

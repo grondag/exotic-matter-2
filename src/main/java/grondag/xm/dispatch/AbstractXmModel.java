@@ -19,56 +19,55 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import grondag.xm.texture.TextureSetHelper;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 
 @API(status = INTERNAL)
 public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
-    protected ItemProxy itemProxy = null;
+	protected ItemProxy itemProxy = null;
 
-    @Override
-    public ModelItemPropertyOverrideList getItemPropertyOverrides() {
-        ItemProxy result = itemProxy;
-        if (result == null) {
-            result = new ItemProxy(this);
-            itemProxy = result;
-        }
-        return result;
-    }
+	@Override
+	public ModelItemPropertyOverrideList getItemPropertyOverrides() {
+		ItemProxy result = itemProxy;
+		if (result == null) {
+			result = new ItemProxy(this);
+			itemProxy = result;
+		}
+		return result;
+	}
 
-    @Override
-    public ModelTransformation getTransformation() {
-        return ModelHelper.MODEL_TRANSFORM_BLOCK;
-    }
+	@Override
+	public ModelTransformation getTransformation() {
+		return ModelHelper.MODEL_TRANSFORM_BLOCK;
+	}
 
-    @Override
-    public boolean useAmbientOcclusion() {
-        return true;
-    }
+	@Override
+	public boolean useAmbientOcclusion() {
+		return true;
+	}
 
-    @Override
-    public boolean hasDepthInGui() {
-        return true;
-    }
+	@Override
+	public boolean hasDepthInGui() {
+		return true;
+	}
 
-    @Override
-    public boolean isBuiltin() {
-        return false;
-    }
+	@Override
+	public boolean isBuiltin() {
+		return false;
+	}
 
-    @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
+	@Override
+	public boolean isVanillaAdapter() {
+		return false;
+	}
 
-    @Override
-    public Sprite getSprite() {
-        return MissingSprite.getMissingSprite();
-    }
-
+	@Override
+	public Sprite getSprite() {
+		return TextureSetHelper.missingSprite();
+	}
 }
