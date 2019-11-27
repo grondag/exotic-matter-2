@@ -38,6 +38,7 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.XmTextures;
 import grondag.xm.paint.XmPaintRegistryImpl;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback.Registry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 
@@ -54,17 +55,17 @@ public class XmTexturesImpl {
 		final
 		TextureSet dummy = XmTextures.TILE_COBBLE;
 
-		ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((atlas, registry) -> {
-			if (atlas == TextureSetHelper.blockAtas()) {
-				// need to resolve/use texture names at this point
-				XmPaintRegistryImpl.INSTANCE.apply(MinecraftClient.getInstance().getResourceManager());
-				final TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
+		ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register(XmTexturesImpl::registerTextures);
+	}
 
-				texReg.forEach(set -> {
-					if (set.used()) {
-						set.prestitch(id -> registry.register(id));
-					}
-				});
+	private static void registerTextures(SpriteAtlasTexture atlas, Registry registry) {
+		// need to resolve/use texture names at this point
+		XmPaintRegistryImpl.INSTANCE.apply(MinecraftClient.getInstance().getResourceManager());
+		final TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
+
+		texReg.forEach(set -> {
+			if (set.used()) {
+				set.prestitch(id -> registry.register(id));
 			}
 		});
 	}

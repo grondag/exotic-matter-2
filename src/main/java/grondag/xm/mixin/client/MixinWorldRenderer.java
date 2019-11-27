@@ -21,11 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import grondag.xm.XmConfig;
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.relics.placement.PlacementPreviewRenderer;
-import grondag.xm.render.RenderUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
@@ -38,11 +33,17 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 
+import grondag.xm.XmConfig;
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.relics.placement.PlacementPreviewRenderer;
+import grondag.xm.render.RenderUtil;
+
 @Mixin(WorldRenderer.class)
 public class MixinWorldRenderer {
 	@Shadow private ClientWorld world;
 
-	@Inject(method = "drawBlockOutline", at = @At(value = "HEAD"), cancellable = false, require = 1)
+	@Inject(method = "drawBlockOutline", at = @At(value = "HEAD"), cancellable = true, require = 1)
 	private void onDrawBlockOutline(MatrixStack matrixStack, VertexConsumer vertexConsumer, Entity entity, double x, double y, double z, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
 		final ModelState modelState = XmBlockState.modelState(blockState, world, blockPos, true);
 

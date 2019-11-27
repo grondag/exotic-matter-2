@@ -19,15 +19,18 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.mesh.WritableMesh;
-import grondag.xm.api.mesh.XmMeshes;
-import grondag.xm.api.modelstate.ModelState;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
+import grondag.xm.api.mesh.WritableMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.modelstate.ModelState;
 
 @API(status = INTERNAL)
 public class RenderUtil {
@@ -107,10 +110,12 @@ public class RenderUtil {
 	}
 
 	public static void drawModelOutline(MatrixStack matrixStack, VertexConsumer vertexConsumer, ModelState modelState, double x, double y, double z, float r, float g, float b, float a) {
-		if (modelState == null)
+		if (modelState == null) {
 			return;
+		}
 
 		final WritableMesh mesh = outlineMesh;
+		final Matrix4f matrix4f = matrixStack.peek().getModel();
 
 		if(outlineModelState == null || !modelState.equals(outlineModelState)) {
 			outlineModelState = modelState.toImmutable();
@@ -122,8 +127,8 @@ public class RenderUtil {
 			final int limit = p.vertexCount() - 1;
 
 			for(int i = 0; i < limit; i++) {
-				vertexConsumer.vertex(p.x(i) + x, p.y(i) + y, p.z(i) + z).color(r, g, b, a).next();
-				vertexConsumer.vertex(p.x(i + 1) + x, p.y(i + 1) + y, p.z(i + 1) + z).color(r, g, b, a).next();
+				vertexConsumer.vertex(matrix4f, (float) (p.x(i) + x), (float) (p.y(i) + y), (float) (p.z(i) + z)).color(r, g, b, a).next();
+				vertexConsumer.vertex(matrix4f, (float) (p.x(i + 1) + x), (float) (p.y(i + 1) + y), (float) (p.z(i + 1) + z)).color(r, g, b, a).next();
 			}
 		});
 	}

@@ -28,182 +28,182 @@ import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
 @API(status = INTERNAL)
 class StaticEncoder {
-    private static final BitPacker32<StaticEncoder> BITPACKER = new BitPacker32<StaticEncoder>(null, null);
-    private static final BitPacker32<StaticEncoder> BITPACKER_2 = new BitPacker32<StaticEncoder>(null, null);
+	private static final BitPacker32<StaticEncoder> BITPACKER = new BitPacker32<>(null, null);
+	private static final BitPacker32<StaticEncoder> BITPACKER_2 = new BitPacker32<>(null, null);
 
-    private static final IndexedInterner<XmSurface> xmSurfaces = new IndexedInterner<>(XmSurface.class);
+	private static final IndexedInterner<XmSurface> xmSurfaces = new IndexedInterner<>(XmSurface.class);
 
-    private static final int BIT_OFFSET = 1;
-    private static final int BIT_OFFSET_2 = 2;
-    private static final int TEXTURE_PIPELINE_OFFSET = 3;
-    private static final int SURFACE_OFFSET = 4;
-    private static final int UV_WRAP_DIST_OFFSET = 5;
+	private static final int BIT_OFFSET = 1;
+	private static final int BIT_OFFSET_2 = 2;
+	private static final int TEXTURE_PIPELINE_OFFSET = 3;
+	private static final int SURFACE_OFFSET = 4;
+	private static final int UV_WRAP_DIST_OFFSET = 5;
 
-    /**
-     * How many integers in the stream are needed for static encoding. This is in
-     * addition to the format header.
-     */
-    public static final int INTEGER_WIDTH = 5;
+	/**
+	 * How many integers in the stream are needed for static encoding. This is in
+	 * addition to the format header.
+	 */
+	public static final int INTEGER_WIDTH = 5;
 
-    public static XmSurface surface(IntStream stream, int baseAddress) {
-        return xmSurfaces.fromHandle(stream.get(baseAddress + SURFACE_OFFSET));
-    }
+	public static XmSurface surface(IntStream stream, int baseAddress) {
+		return xmSurfaces.fromHandle(stream.get(baseAddress + SURFACE_OFFSET));
+	}
 
-    public static void surface(IntStream stream, int baseAddress, XmSurface surface) {
-        stream.set(baseAddress + SURFACE_OFFSET, xmSurfaces.toHandle(surface));
-    }
+	public static void surface(IntStream stream, int baseAddress, XmSurface surface) {
+		stream.set(baseAddress + SURFACE_OFFSET, xmSurfaces.toHandle(surface));
+	}
 
-    public static float uvWrapDistance(IntStream stream, int baseAddress) {
-        return Float.intBitsToFloat(stream.get(baseAddress + UV_WRAP_DIST_OFFSET));
-    }
+	public static float uvWrapDistance(IntStream stream, int baseAddress) {
+		return Float.intBitsToFloat(stream.get(baseAddress + UV_WRAP_DIST_OFFSET));
+	}
 
-    public static void uvWrapDistance(IntStream stream, int baseAddress, float uvWrapDistance) {
-        stream.set(baseAddress + UV_WRAP_DIST_OFFSET, Float.floatToRawIntBits(uvWrapDistance));
-    }
+	public static void uvWrapDistance(IntStream stream, int baseAddress, float uvWrapDistance) {
+		stream.set(baseAddress + UV_WRAP_DIST_OFFSET, Float.floatToRawIntBits(uvWrapDistance));
+	}
 
-    public static int getPipelineIndex(IntStream stream, int baseAddress) {
-        return stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) >>> 16;
-    }
+	public static int getPipelineIndex(IntStream stream, int baseAddress) {
+		return stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) >>> 16;
+	}
 
-    public static void setPipelineIndex(IntStream stream, int baseAddress, int pipelineIndex) {
-        final int surfaceVal = stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) & 0x0000FFFF;
-        stream.set(baseAddress + TEXTURE_PIPELINE_OFFSET, surfaceVal | (pipelineIndex << 16));
-    }
+	public static void setPipelineIndex(IntStream stream, int baseAddress, int pipelineIndex) {
+		final int surfaceVal = stream.get(baseAddress + TEXTURE_PIPELINE_OFFSET) & 0x0000FFFF;
+		stream.set(baseAddress + TEXTURE_PIPELINE_OFFSET, surfaceVal | (pipelineIndex << 16));
+	}
 
-    @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.BooleanElement[] CONTRACT_UV = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
+	@SuppressWarnings("unchecked")
+	private static final BitPacker32<StaticEncoder>.BooleanElement[] CONTRACT_UV = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
 
-    static {
-        CONTRACT_UV[0] = BITPACKER.createBooleanElement();
-        CONTRACT_UV[1] = BITPACKER.createBooleanElement();
-        CONTRACT_UV[2] = BITPACKER.createBooleanElement();
-    }
+	static {
+		CONTRACT_UV[0] = BITPACKER_2.createBooleanElement();
+		CONTRACT_UV[1] = BITPACKER_2.createBooleanElement();
+		CONTRACT_UV[2] = BITPACKER_2.createBooleanElement();
+	}
 
-    public static boolean shouldContractUVs(IntStream stream, int baseAddress, int layerIndex) {
-        // want default to be true - easiest way is to flip here so that 0 bit gives
-        // right default
-        return !CONTRACT_UV[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
-    }
+	public static boolean shouldContractUVs(IntStream stream, int baseAddress, int layerIndex) {
+		// want default to be true - easiest way is to flip here so that 0 bit gives
+		// right default
+		return !CONTRACT_UV[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET_2));
+	}
 
-    public static void setContractUVs(IntStream stream, int baseAddress, int layerIndex, boolean shouldContract) {
-        // want default to be true - easiest way is to flip here so that 0 bit gives
-        // right default
-        final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, CONTRACT_UV[layerIndex].setValue(!shouldContract, bits));
-    }
+	public static void setContractUVs(IntStream stream, int baseAddress, int layerIndex, boolean shouldContract) {
+		// want default to be true - easiest way is to flip here so that 0 bit gives
+		// right default
+		final int bits = stream.get(baseAddress + BIT_OFFSET_2);
+		stream.set(baseAddress + BIT_OFFSET_2, CONTRACT_UV[layerIndex].setValue(!shouldContract, bits));
+	}
 
-    @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.EnumElement<TextureOrientation>[] ROTATION = (BitPacker32<StaticEncoder>.EnumElement<TextureOrientation>[]) new BitPacker32<?>.EnumElement<?>[3];
+	@SuppressWarnings("unchecked")
+	private static final BitPacker32<StaticEncoder>.EnumElement<TextureOrientation>[] ROTATION = (BitPacker32<StaticEncoder>.EnumElement<TextureOrientation>[]) new BitPacker32<?>.EnumElement<?>[3];
 
-    static {
-        ROTATION[0] = BITPACKER.createEnumElement(TextureOrientation.class);
-        ROTATION[1] = BITPACKER.createEnumElement(TextureOrientation.class);
-        ROTATION[2] = BITPACKER.createEnumElement(TextureOrientation.class);
-    }
+	static {
+		ROTATION[0] = BITPACKER.createEnumElement(TextureOrientation.class);
+		ROTATION[1] = BITPACKER.createEnumElement(TextureOrientation.class);
+		ROTATION[2] = BITPACKER.createEnumElement(TextureOrientation.class);
+	}
 
-    public static TextureOrientation getRotation(IntStream stream, int baseAddress, int layerIndex) {
-        return ROTATION[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
-    }
+	public static TextureOrientation getRotation(IntStream stream, int baseAddress, int layerIndex) {
+		return ROTATION[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+	}
 
-    public static void setRotation(IntStream stream, int baseAddress, int layerIndex, TextureOrientation rotation) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, ROTATION[layerIndex].setValue(rotation, bits));
-    }
+	public static void setRotation(IntStream stream, int baseAddress, int layerIndex, TextureOrientation rotation) {
+		final int bits = stream.get(baseAddress + BIT_OFFSET);
+		stream.set(baseAddress + BIT_OFFSET, ROTATION[layerIndex].setValue(rotation, bits));
+	}
 
-    private static final BitPacker32<StaticEncoder>.IntElement SALT = BITPACKER_2.createIntElement(256);
+	private static final BitPacker32<StaticEncoder>.IntElement SALT = BITPACKER_2.createIntElement(256);
 
-    public static int getTextureSalt(IntStream stream, int baseAddress) {
-        return SALT.getValue(stream.get(baseAddress + BIT_OFFSET_2));
-    }
+	public static int getTextureSalt(IntStream stream, int baseAddress) {
+		return SALT.getValue(stream.get(baseAddress + BIT_OFFSET_2));
+	}
 
-    public static void setTextureSalt(IntStream stream, int baseAddress, int salt) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET_2);
-        stream.set(baseAddress + BIT_OFFSET_2, SALT.setValue(salt, bits));
-    }
+	public static void setTextureSalt(IntStream stream, int baseAddress, int salt) {
+		final int bits = stream.get(baseAddress + BIT_OFFSET_2);
+		stream.set(baseAddress + BIT_OFFSET_2, SALT.setValue(salt, bits));
+	}
 
-    @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.BooleanElement[] LOCK_UV = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
+	@SuppressWarnings("unchecked")
+	private static final BitPacker32<StaticEncoder>.BooleanElement[] LOCK_UV = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
 
-    static {
-        LOCK_UV[0] = BITPACKER_2.createBooleanElement();
-        LOCK_UV[1] = BITPACKER_2.createBooleanElement();
-        LOCK_UV[2] = BITPACKER_2.createBooleanElement();
-    }
+	static {
+		LOCK_UV[0] = BITPACKER_2.createBooleanElement();
+		LOCK_UV[1] = BITPACKER_2.createBooleanElement();
+		LOCK_UV[2] = BITPACKER_2.createBooleanElement();
+	}
 
-    public static boolean isLockUV(IntStream stream, int baseAddress, int layerIndex) {
-        return LOCK_UV[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET_2));
-    }
+	public static boolean isLockUV(IntStream stream, int baseAddress, int layerIndex) {
+		return LOCK_UV[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET_2));
+	}
 
-    public static void setLockUV(IntStream stream, int baseAddress, int layerIndex, boolean lockUV) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET_2);
-        stream.set(baseAddress + BIT_OFFSET_2, LOCK_UV[layerIndex].setValue(lockUV, bits));
-    }
+	public static void setLockUV(IntStream stream, int baseAddress, int layerIndex, boolean lockUV) {
+		final int bits = stream.get(baseAddress + BIT_OFFSET_2);
+		stream.set(baseAddress + BIT_OFFSET_2, LOCK_UV[layerIndex].setValue(lockUV, bits));
+	}
 
-    //PERF: improve LOR
-    @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.BooleanElement[] EMISSIVE = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
-    @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.BooleanElement[] AO = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
-    @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.BooleanElement[] DIFFUSE = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
+	//PERF: improve LOR
+	@SuppressWarnings("unchecked")
+	private static final BitPacker32<StaticEncoder>.BooleanElement[] EMISSIVE = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
+	@SuppressWarnings("unchecked")
+	private static final BitPacker32<StaticEncoder>.BooleanElement[] AO = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
+	@SuppressWarnings("unchecked")
+	private static final BitPacker32<StaticEncoder>.BooleanElement[] DIFFUSE = (BitPacker32<StaticEncoder>.BooleanElement[]) new BitPacker32<?>.BooleanElement[3];
 
-    static {
-        EMISSIVE[0] = BITPACKER.createBooleanElement();
-        EMISSIVE[1] = BITPACKER.createBooleanElement();
-        EMISSIVE[2] = BITPACKER.createBooleanElement();
-        AO[0] = BITPACKER.createBooleanElement();
-        AO[1] = BITPACKER.createBooleanElement();
-        AO[2] = BITPACKER.createBooleanElement();
-        DIFFUSE[0] = BITPACKER.createBooleanElement();
-        DIFFUSE[1] = BITPACKER.createBooleanElement();
-        DIFFUSE[2] = BITPACKER.createBooleanElement();
-    }
+	static {
+		EMISSIVE[0] = BITPACKER.createBooleanElement();
+		EMISSIVE[1] = BITPACKER.createBooleanElement();
+		EMISSIVE[2] = BITPACKER.createBooleanElement();
+		AO[0] = BITPACKER.createBooleanElement();
+		AO[1] = BITPACKER.createBooleanElement();
+		AO[2] = BITPACKER.createBooleanElement();
+		DIFFUSE[0] = BITPACKER.createBooleanElement();
+		DIFFUSE[1] = BITPACKER.createBooleanElement();
+		DIFFUSE[2] = BITPACKER.createBooleanElement();
+	}
 
-    public static boolean isEmissive(IntStream stream, int baseAddress, int layerIndex) {
-        return EMISSIVE[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
-    }
+	public static boolean isEmissive(IntStream stream, int baseAddress, int layerIndex) {
+		return EMISSIVE[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+	}
 
-    public static void setEmissive(IntStream stream, int baseAddress, int layerIndex, boolean disable) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, EMISSIVE[layerIndex].setValue(disable, bits));
-    }
+	public static void setEmissive(IntStream stream, int baseAddress, int layerIndex, boolean disable) {
+		final int bits = stream.get(baseAddress + BIT_OFFSET);
+		stream.set(baseAddress + BIT_OFFSET, EMISSIVE[layerIndex].setValue(disable, bits));
+	}
 
-    public static boolean disableAo(IntStream stream, int baseAddress, int layerIndex) {
-        return AO[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
-    }
+	public static boolean disableAo(IntStream stream, int baseAddress, int layerIndex) {
+		return AO[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+	}
 
-    public static void disableAo(IntStream stream, int baseAddress, int layerIndex, boolean disable) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, AO[layerIndex].setValue(disable, bits));
-    }
+	public static void disableAo(IntStream stream, int baseAddress, int layerIndex, boolean disable) {
+		final int bits = stream.get(baseAddress + BIT_OFFSET);
+		stream.set(baseAddress + BIT_OFFSET, AO[layerIndex].setValue(disable, bits));
+	}
 
-    public static boolean disableDiffuse(IntStream stream, int baseAddress, int layerIndex) {
-        return DIFFUSE[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
-    }
+	public static boolean disableDiffuse(IntStream stream, int baseAddress, int layerIndex) {
+		return DIFFUSE[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+	}
 
-    public static void disableDiffuse(IntStream stream, int baseAddress, int layerIndex, boolean isEmissive) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, DIFFUSE[layerIndex].setValue(isEmissive, bits));
-    }
+	public static void disableDiffuse(IntStream stream, int baseAddress, int layerIndex, boolean isEmissive) {
+		final int bits = stream.get(baseAddress + BIT_OFFSET);
+		stream.set(baseAddress + BIT_OFFSET, DIFFUSE[layerIndex].setValue(isEmissive, bits));
+	}
 
-    @SuppressWarnings("unchecked")
-    private static final BitPacker32<StaticEncoder>.EnumElement<BlendMode>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<BlendMode>[]) new BitPacker32<?>.EnumElement<?>[3];
+	@SuppressWarnings("unchecked")
+	private static final BitPacker32<StaticEncoder>.EnumElement<BlendMode>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<BlendMode>[]) new BitPacker32<?>.EnumElement<?>[3];
 
-    static {
-        RENDER_LAYER[0] = BITPACKER.createEnumElement(BlendMode.class);
-        RENDER_LAYER[1] = BITPACKER.createEnumElement(BlendMode.class);
-        RENDER_LAYER[2] = BITPACKER.createEnumElement(BlendMode.class);
+	static {
+		RENDER_LAYER[0] = BITPACKER.createEnumElement(BlendMode.class);
+		RENDER_LAYER[1] = BITPACKER.createEnumElement(BlendMode.class);
+		RENDER_LAYER[2] = BITPACKER.createEnumElement(BlendMode.class);
 
-        assert BITPACKER.bitLength() <= 32;
-        assert BITPACKER_2.bitLength() <= 32;
-    }
+		assert BITPACKER.bitLength() <= 32;
+		assert BITPACKER_2.bitLength() <= 32;
+	}
 
-    public static BlendMode getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {
-        return RENDER_LAYER[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
-    }
+	public static BlendMode getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {
+		return RENDER_LAYER[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+	}
 
-    public static void setRenderLayer(IntStream stream, int baseAddress, int layerIndex, BlendMode layer) {
-        final int bits = stream.get(baseAddress + BIT_OFFSET);
-        stream.set(baseAddress + BIT_OFFSET, RENDER_LAYER[layerIndex].setValue(layer, bits));
-    }
+	public static void setRenderLayer(IntStream stream, int baseAddress, int layerIndex, BlendMode layer) {
+		final int bits = stream.get(baseAddress + BIT_OFFSET);
+		stream.set(baseAddress + BIT_OFFSET, RENDER_LAYER[layerIndex].setValue(layer, bits));
+	}
 }

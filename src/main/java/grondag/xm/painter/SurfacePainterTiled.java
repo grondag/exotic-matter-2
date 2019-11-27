@@ -53,12 +53,14 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 	 */
 	private static float tilingDistance(float uvWrapDistance, int textureScale) {
 		// if wrap disabled use texture scale and paint at 1:1
-		if (uvWrapDistance <= PolyHelper.EPSILON)
+		if (uvWrapDistance <= PolyHelper.EPSILON) {
 			return textureScale;
+		}
 
 		// if texture is larger than wrap distance, must scale down to the wrap distance
-		if (textureScale > uvWrapDistance)
+		if (textureScale > uvWrapDistance) {
 			return uvWrapDistance;
+		}
 
 		/*
 		 * Examples Wrap = 6, texScale = 2, divisor = 3, -> 2 Wrap = 7, texScale = 2,
@@ -229,13 +231,15 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
 	private static final int vertexType(float uvCoord) {
 		if (uvCoord >= 1 - PolyHelper.EPSILON) {
-			if (uvCoord <= 1 + PolyHelper.EPSILON)
+			if (uvCoord <= 1 + PolyHelper.EPSILON) {
 				return EDGE;
-			else
+			} else {
 				return REMAINDER;
-		} else
+			}
+		} else {
 			// < 1-QuadHelper.EPSILON
 			return SLICE;
+		}
 	}
 
 	/**
@@ -271,7 +275,8 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
 		// if nothing to slice return unmodified; no output to consumer
 		if (sliceCount == 0) {
-			assert false;
+			// TODO: put back?
+			//assert false;
 			return Polygon.NO_LINK_OR_TAG;
 		}
 

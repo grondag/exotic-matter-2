@@ -103,7 +103,7 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 
 			if (offsetPos.getZ() > 1) {
 				// depth
-				endPos = endPos.method_10079(pPos.onFace.getOpposite(), offsetPos.getZ() - 1);
+				endPos = endPos.offset(pPos.onFace.getOpposite(), offsetPos.getZ() - 1);
 			}
 
 			final Pair<Direction, Direction> nearestCorner = WorldHelper.closestAdjacentFaces(pPos.onFace, (float) pPos.hitX, (float) pPos.hitY,
@@ -120,8 +120,8 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 				final boolean fullUp = (h & 1) == 1 || isUpclosest;
 				final boolean fullDown = (h & 1) == 1 || !isUpclosest;
 
-				startPos = startPos.method_10079(relativeUp, fullUp ? half_h : half_h - 1);
-				endPos = endPos.method_10079(relativeUp.getOpposite(), fullDown ? half_h : half_h - 1);
+				startPos = startPos.offset(relativeUp, fullUp ? half_h : half_h - 1);
+				endPos = endPos.offset(relativeUp.getOpposite(), fullDown ? half_h : half_h - 1);
 			}
 
 			// width
@@ -135,8 +135,8 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 				final boolean fullLeft = (w & 1) == 1 || isLeftclosest;
 				final boolean fullRight = (w & 1) == 1 || !isLeftclosest;
 
-				startPos = startPos.method_10079(relativeLeft, fullLeft ? half_w : half_w - 1);
-				endPos = endPos.method_10079(relativeLeft.getOpposite(), fullRight ? half_w : half_w - 1);
+				startPos = startPos.offset(relativeLeft, fullLeft ? half_w : half_w - 1);
+				endPos = endPos.offset(relativeLeft.getOpposite(), fullRight ? half_w : half_w - 1);
 			}
 
 			region = new CubicBlockRegion(startPos, endPos, false);
@@ -208,8 +208,9 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 	@Environment(EnvType.CLIENT)
 	@Override
 	protected void drawSelection(Tessellator tessellator, BufferBuilder bufferBuilder) {
-		if (region == null)
+		if (region == null) {
 			return;
+		}
 
 		final Box box = region.toAABB();
 		// draw edge without depth to show extent of region
@@ -231,15 +232,17 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 	@Environment(EnvType.CLIENT)
 	@Override
 	protected void drawPlacement(Tessellator tessellator, BufferBuilder bufferBuilder, PlacementPreviewRenderMode previewMode) {
-		if (region == null)
+		if (region == null) {
 			return;
+		}
 
 		final Box box = region.toAABB();
 
 		// fixed regions could be outside of view
 		final Frustum visible = XmRenderHelper.frustum();
-		if (!visible.isVisible(box))
+		if (!visible.isVisible(box)) {
 			return;
+		}
 
 		// draw edges without depth to show extent of region
 		GlStateManager.disableDepthTest();
@@ -283,146 +286,149 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 
 	@Override
 	public BooleanSupplier worldTask(ServerPlayerEntity player) {
-		if (isExcavation)
+		if (isExcavation) {
 			// excavation world task sequences entries using
 			// a flood fill starting with the block last clicked
 			// by the player.
 			return new BooleanSupplier() {
-			//                private CuboidPlacementSpec spec = (CuboidPlacementSpec) buildSpec();
-			//                private Job job = new Job(RequestPriority.MEDIUM, player);
-			//                IDomain domain = DomainManager.instance().getActiveDomain(player);
+				//                private CuboidPlacementSpec spec = (CuboidPlacementSpec) buildSpec();
+				//                private Job job = new Job(RequestPriority.MEDIUM, player);
+				//                IDomain domain = DomainManager.instance().getActiveDomain(player);
 
-			/**
-			 * Block positions to be checked. Will initially contain only the starting
-			 * (user-clicked) position. Entry is antecedent, or null if no dependency.
-			 */
-			//ArrayDeque<Pair<BlockPos, ExcavationTask>> queue = new ArrayDeque<Pair<BlockPos, ExcavationTask>>();
-			ArrayDeque<BlockPos> queue = new ArrayDeque<>();
+				/**
+				 * Block positions to be checked. Will initially contain only the starting
+				 * (user-clicked) position. Entry is antecedent, or null if no dependency.
+				 */
+				//ArrayDeque<Pair<BlockPos, ExcavationTask>> queue = new ArrayDeque<Pair<BlockPos, ExcavationTask>>();
+				ArrayDeque<BlockPos> queue = new ArrayDeque<>();
 
-			/**
-			 * Block positions that have been tested.
-			 */
-			HashSet<BlockPos> checked = new HashSet<>();
+				/**
+				 * Block positions that have been tested.
+				 */
+				HashSet<BlockPos> checked = new HashSet<>();
 
-			World world = player.world;
+				World world = player.world;
 
-			{
-				scheduleVisitIfNotAlreadyVisited(pPos.inPos); //, null);
-			}
+				{
+					scheduleVisitIfNotAlreadyVisited(pPos.inPos); //, null);
+				}
 
-			@Override
-			public boolean getAsBoolean() {
-				if (!queue.isEmpty()) {
-					//Pair<BlockPos, ExcavationTask> visit = queue.poll();
-					final BlockPos pos = queue.poll();
-					if (pos != null) {
-						//BlockPos pos = visit.getLeft();
+				@Override
+				public boolean getAsBoolean() {
+					if (!queue.isEmpty()) {
+						//Pair<BlockPos, ExcavationTask> visit = queue.poll();
+						final BlockPos pos = queue.poll();
+						if (pos != null) {
+							//BlockPos pos = visit.getLeft();
 
-						// is the position inside our region?
+							// is the position inside our region?
+							// is the position inside the world?
+							if (region.contains(pos) && World.isValid(pos)) {
+								boolean canPassThrough = false;
+
+								final BlockState blockState = world.getBlockState(pos);
+
+								// will be antecedent for any branches from here
+								// if this is empty space, then will be antecedent for this visit
+								//                                ExcavationTask branchAntecedent = visit.getRight();
+
+								// is the block at the position affected
+								// by this excavation?
+								if (effectiveFilterMode.shouldAffectBlock(blockState, world, pos, outputStack, isVirtual)) {
+									//                                    branchAntecedent = new ExcavationTask(pos);
+									//                                    job.addTask(branchAntecedent);
+									//                                    if (visit.getRight() != null) {
+									//                                        AbstractTask.link(visit.getRight(), branchAntecedent);
+									//                                    }
+									canPassThrough = true;
+								}
+
+								// even if we can't excavate the block,
+								// can we move through it to check others?
+								canPassThrough = canPassThrough || !blockState.getMaterial().blocksMovement();
+
+								// check adjacent blocks if are or will
+								// be accessible and haven't already been
+								// checked.
+								if (canPassThrough) {
+									// PERF: allocation
+									scheduleVisitIfNotAlreadyVisited(pos.up()); //, branchAntecedent);
+									scheduleVisitIfNotAlreadyVisited(pos.down(1)); //, branchAntecedent);
+									scheduleVisitIfNotAlreadyVisited(pos.east()); //, branchAntecedent);
+									scheduleVisitIfNotAlreadyVisited(pos.west()); //, branchAntecedent);
+									scheduleVisitIfNotAlreadyVisited(pos.north()); //, branchAntecedent);
+									scheduleVisitIfNotAlreadyVisited(pos.south()); //, branchAntecedent);
+								}
+							}
+						}
+					}
+
+					if (queue.isEmpty()) {
+						// when done, finalize entries list and submit job
+						checked.clear();
+						//                        if (domain != null)
+						//                            domain.getCapability(JobManager.class).addJob(job);
+						return false;
+					} else {
+						return true;
+					}
+				}
+
+				private void scheduleVisitIfNotAlreadyVisited(BlockPos pos) { //, ExcavationTask task) {
+					if (checked.contains(pos)) {
+						return;
+					}
+					checked.add(pos);
+					queue.addLast(pos.toImmutable());
+					//                    this.queue.addLast(Pair.of(pos, task));
+				}
+			};
+		} else {
+			// Placement world task places virtual blocks in the currently active build
+			return new BooleanSupplier() {
+				/**
+				 * Block positions to be checked.
+				 */
+				private final Iterator<BlockPos> positionIterator = region.includedPositions().iterator();
+
+				private final World world = player.world;
+
+				//                private Build build = BuildManager.getActiveBuildForPlayer(player);
+				//
+				//                {
+				//                    if (build == null) {
+				//                        String chatMessage = I18n.translate("placement.message.no_build");
+				//                        player.sendMessage(new TranslatableText(chatMessage));
+				//                    }
+				//                }
+
+				@Override
+				public boolean getAsBoolean() {
+					//                    if (build == null)
+					//                        return false;
+
+					if (positionIterator.hasNext()) { // && build.isOpen()) {
+						final BlockPos pos = positionIterator.next().toImmutable();
+
 						// is the position inside the world?
-						if (region.contains(pos) && World.isValid(pos)) {
-							boolean canPassThrough = false;
+						if (World.isValid(pos)) {
 
 							final BlockState blockState = world.getBlockState(pos);
 
-							// will be antecedent for any branches from here
-							// if this is empty space, then will be antecedent for this visit
-							//                                ExcavationTask branchAntecedent = visit.getRight();
-
 							// is the block at the position affected
 							// by this excavation?
-							if (effectiveFilterMode.shouldAffectBlock(blockState, world, pos, outputStack, isVirtual)) {
-								//                                    branchAntecedent = new ExcavationTask(pos);
-								//                                    job.addTask(branchAntecedent);
-								//                                    if (visit.getRight() != null) {
-								//                                        AbstractTask.link(visit.getRight(), branchAntecedent);
-								//                                    }
-								canPassThrough = true;
-							}
-
-							// even if we can't excavate the block,
-							// can we move through it to check others?
-							canPassThrough = canPassThrough || !blockState.getMaterial().blocksMovement();
-
-							// check adjacent blocks if are or will
-							// be accessible and haven't already been
-							// checked.
-							if (canPassThrough) {
-								// PERF: allocation
-								scheduleVisitIfNotAlreadyVisited(pos.up()); //, branchAntecedent);
-								scheduleVisitIfNotAlreadyVisited(pos.down(1)); //, branchAntecedent);
-								scheduleVisitIfNotAlreadyVisited(pos.east()); //, branchAntecedent);
-								scheduleVisitIfNotAlreadyVisited(pos.west()); //, branchAntecedent);
-								scheduleVisitIfNotAlreadyVisited(pos.north()); //, branchAntecedent);
-								scheduleVisitIfNotAlreadyVisited(pos.south()); //, branchAntecedent);
+							if (CuboidPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, CuboidPlacementSpec.this.placedStack(),
+									CuboidPlacementSpec.this.isVirtual)) {
+								PlacementHandler.placeVirtualBlock(world, CuboidPlacementSpec.this.outputStack, player, pos); //, build);
 							}
 						}
+
 					}
+					return positionIterator.hasNext();
+					//                    return build != null && build.isOpen() && this.positionIterator.hasNext();
 				}
-
-				if (queue.isEmpty()) {
-					// when done, finalize entries list and submit job
-					checked.clear();
-					//                        if (domain != null)
-					//                            domain.getCapability(JobManager.class).addJob(job);
-					return false;
-				} else
-					return true;
-			}
-
-			private void scheduleVisitIfNotAlreadyVisited(BlockPos pos) { //, ExcavationTask task) {
-				if (checked.contains(pos))
-					return;
-				checked.add(pos);
-				queue.addLast(pos.toImmutable());
-				//                    this.queue.addLast(Pair.of(pos, task));
-			}
-		};
-		else
-			// Placement world task places virtual blocks in the currently active build
-			return new BooleanSupplier() {
-			/**
-			 * Block positions to be checked.
-			 */
-			private final Iterator<BlockPos> positionIterator = region.includedPositions().iterator();
-
-			private final World world = player.world;
-
-			//                private Build build = BuildManager.getActiveBuildForPlayer(player);
-			//
-			//                {
-			//                    if (build == null) {
-			//                        String chatMessage = I18n.translate("placement.message.no_build");
-			//                        player.sendMessage(new TranslatableText(chatMessage));
-			//                    }
-			//                }
-
-			@Override
-			public boolean getAsBoolean() {
-				//                    if (build == null)
-				//                        return false;
-
-				if (positionIterator.hasNext()) { // && build.isOpen()) {
-					final BlockPos pos = positionIterator.next().toImmutable();
-
-					// is the position inside the world?
-					if (World.isValid(pos)) {
-
-						final BlockState blockState = world.getBlockState(pos);
-
-						// is the block at the position affected
-						// by this excavation?
-						if (CuboidPlacementSpec.this.effectiveFilterMode.shouldAffectBlock(blockState, world, pos, CuboidPlacementSpec.this.placedStack(),
-								CuboidPlacementSpec.this.isVirtual)) {
-							PlacementHandler.placeVirtualBlock(world, CuboidPlacementSpec.this.outputStack, player, pos); //, build);
-						}
-					}
-
-				}
-				return positionIterator.hasNext();
-				//                    return build != null && build.isOpen() && this.positionIterator.hasNext();
-			}
-		};
+			};
+		}
 	}
 
 	@Override
