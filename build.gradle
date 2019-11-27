@@ -1,5 +1,5 @@
 plugins {
-	id "fabric-loom" version "0.2.5-SNAPSHOT"
+	id "fabric-loom" version "0.2.6-SNAPSHOT"
 	id "eclipse"
 	id "maven-publish"
 	id "com.github.breadmoirai.github-release" version "2.2.9"
@@ -93,7 +93,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 sourceSets {
 	main {
 	        java {
-	            include 'grondag/fermion/Fermion.java'
+	            include 'grondag/**/*'
 	            exclude '*.DS_Store'
 	        }
 	        resources

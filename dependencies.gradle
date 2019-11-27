@@ -13,6 +13,14 @@ repositories {
             password ""
 		}
     }
+    maven {
+      name = "Cotton"
+      url = "http://server.bbkr.space:8081/artifactory/libs-release/"
+    }
+	maven {
+		name = "CurseForge"
+		url = "https://minecraft.curseforge.com/api/maven"
+	}
 }
 
 dependencies {
@@ -25,4 +33,46 @@ dependencies {
 	// dev env annotation support
 	compileOnly "org.apiguardian:apiguardian-api:1.0.0"
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+	
+	modApi ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") {
+		transitive = false
+	}
+	
+	modImplementation ("grondag:fermion-modkeys-${project.mc_tag}:${project.fermion_modkeys_version}.+") { transitive = false }
+    modImplementation ("grondag:fermion-varia-${project.mc_tag}:${project.fermion_varia_version}.+") { transitive = false }
+    modImplementation ("grondag:fermion-simulator-${project.mc_tag}:${project.fermion_simulator_version}.+") { transitive = false }
+    modImplementation ("grondag:special-circumstances-${project.mc_tag}:${project.special_circumstances_version}.+") { transitive = false }
+  	modImplementation ("grondag:fermion-gui-${project.mc_tag}:${project.fermion_gui_version}.+") { transitive = false }
+	modImplementation ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false }
+	modImplementation ("grondag:fonthack-${project.mc_tag}:${project.fonthack_version}.+") { transitive = false }
+	modImplementation ("grondag:mcmarkdown-${project.mc_tag}:${project.mcmarkdown_version}.+") { transitive = false }
+    	
+	modImplementation ("grondag:joml-mod:${joml_version}+") { transitive = false }
+	
+	modImplementation ("io.github.cottonmc:Jankson-Fabric:${jankson_version}") {
+        exclude group :"net.fabricmc.fabric-api"
+    }
+	
+	modImplementation ("me.shedaniel.cloth:config-2:${clothconfig_version}") {
+        exclude group :"io.github.prospector.modmenu"
+        exclude group :"net.fabricmc.fabric-api"
+    }
+	
+	modImplementation ("io.github.prospector:modmenu:${project.modmenu_version}") {
+        exclude group :"net.fabricmc.fabric-api"
+    }
+	
+	if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {
+		include "grondag:fermion-modkeys-${project.mc_tag}:${project.fermion_modkeys_version}.+"
+	    include "grondag:fermion-varia-${project.mc_tag}:${project.fermion_varia_version}.+"
+	    include "grondag:fermion-simulator-${project.mc_tag}:${project.fermion_simulator_version}.+"
+	    include "grondag:special-circumstances-${project.mc_tag}:${project.special_circumstances_version}.+"
+	  	include "grondag:fermion-gui-${project.mc_tag}:${project.fermion_gui_version}.+"
+		include "grondag:frex-${project.mc_tag}:${project.frex_version}.+"
+    	include "grondag:fonthack-${project.mc_tag}:${project.fonthack_version}.+"
+    	include "grondag:mcmarkdown-${project.mc_tag}:${project.mcmarkdown_version}.+"
+    	include "grondag:joml-mod:${joml_version}+"
+		include "io.github.cottonmc:Jankson-Fabric:${jankson_version}"
+		include "me.shedaniel.cloth:config-2:${clothconfig_version}"
+ 	}
 }
