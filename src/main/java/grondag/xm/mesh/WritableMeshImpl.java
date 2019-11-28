@@ -181,8 +181,9 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
 	int splitIfNeeded(int targetAddress) {
 		internal.moveTo(targetAddress);
 		final int inCount = internal.vertexCount();
-		if (inCount == 3 || (inCount == 4 && internal.isConvex()))
+		if (inCount == 3 || (inCount == 4 && internal.isConvex())) {
 			return Polygon.NO_LINK_OR_TAG;
+		}
 
 		final int firstSplitAddress = writerAddress();
 

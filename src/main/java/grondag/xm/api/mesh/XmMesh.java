@@ -51,6 +51,7 @@ public interface XmMesh {
 	 * Reader must be released after use or stream can never be recycled to the pool
 	 * when released.
 	 */
+	// FIXME: make these autoclosable and use try with resources when acquired
 	default Polygon threadSafeReader() {
 		throw new UnsupportedOperationException();
 	}

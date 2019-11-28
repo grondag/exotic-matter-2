@@ -81,6 +81,8 @@ public class PaintManager implements Consumer<Polygon> {
 		final MutableMesh mesh = work;
 		final MutablePolygon editor = mesh.editor();
 
+		mesh.clear();
+
 		XmSurface surface = poly.surface();
 		if(surface == null) {
 			//TODO: remove
@@ -133,6 +135,9 @@ public class PaintManager implements Consumer<Polygon> {
 		}
 
 		for (int i = 0; i < depth; i++) {
+			final int limit = mesh.writerAddress();
+			editor.origin();
+
 			do {
 				final PaintMethod painter = PainterFactory.getPainter(modelState, surface, paint, i);
 				if(painter != null) {
@@ -141,9 +146,10 @@ public class PaintManager implements Consumer<Polygon> {
 					//TODO: put back
 					//assert false : "Missing paint method";
 				}
-			} while (editor.next());
-			editor.origin();
+			} while (editor.next() && editor.address() < limit);
 		}
+
+		editor.origin();
 
 		do {
 			// omit layers that weren't textured by any painter
@@ -153,8 +159,6 @@ public class PaintManager implements Consumer<Polygon> {
 				polyToMesh(editor, emitter);
 			}
 		} while (editor.next());
-
-		mesh.clear();
 	}
 
 	private void polyToMesh(MutablePolygon poly, QuadEmitter emitter) {

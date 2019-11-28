@@ -68,8 +68,9 @@ abstract class AbstractXmMesh implements XmMesh {
 	}
 
 	protected final void validateAddress(int address) {
-		if (!isValidAddress(address))
+		if (!isValidAddress(address)) {
 			throw new IndexOutOfBoundsException(Integer.toString(address));
+		}
 	}
 
 	@Override
@@ -84,12 +85,14 @@ abstract class AbstractXmMesh implements XmMesh {
 
 	protected boolean moveReaderToNext(StreamBackedPolygon targetReader) {
 		int currentAddress = targetReader.baseAddress;
-		if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS)
+		if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS) {
 			return false;
+		}
 
 		currentAddress += targetReader.stride();
-		if (currentAddress >= writeAddress)
+		if (currentAddress >= writeAddress) {
 			return false;
+		}
 
 		targetReader.moveTo(currentAddress);
 
@@ -182,20 +185,23 @@ abstract class AbstractXmMesh implements XmMesh {
 	//TODO: remove?
 	protected boolean moveReaderToNextLink(StreamBackedPolygon targetReader) {
 		int currentAddress = targetReader.baseAddress;
-		if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS)
+		if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS) {
 			return false;
+		}
 
 		int nextAddress = targetReader.link();
-		if (nextAddress == Polygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
+		if (nextAddress == Polygon.NO_LINK_OR_TAG || nextAddress >= writeAddress) {
 			return false;
+		}
 
 		targetReader.moveTo(nextAddress);
 		currentAddress = nextAddress;
 
 		while (currentAddress < writeAddress && targetReader.isDeleted()) {
 			nextAddress = targetReader.link();
-			if (nextAddress == Polygon.NO_LINK_OR_TAG || nextAddress >= writeAddress)
+			if (nextAddress == Polygon.NO_LINK_OR_TAG || nextAddress >= writeAddress) {
 				return false;
+			}
 
 			targetReader.moveTo(nextAddress);
 			currentAddress = nextAddress;

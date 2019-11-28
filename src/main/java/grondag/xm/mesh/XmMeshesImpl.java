@@ -50,6 +50,7 @@ public class XmMeshesImpl {
 		if (result == null) {
 			result = new WritableMeshImpl();
 		}
+
 		result.prepare(formatFlags);
 		return result;
 	}

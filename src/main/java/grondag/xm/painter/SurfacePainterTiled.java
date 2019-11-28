@@ -54,12 +54,14 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 	 */
 	private static float tilingDistance(float uvWrapDistance, int textureScale) {
 		// if wrap disabled use texture scale and paint at 1:1
-		if (uvWrapDistance <= PolyHelper.EPSILON)
+		if (uvWrapDistance <= PolyHelper.EPSILON) {
 			return textureScale;
+		}
 
 		// if texture is larger than wrap distance, must scale down to the wrap distance
-		if (textureScale > uvWrapDistance)
+		if (textureScale > uvWrapDistance) {
 			return uvWrapDistance;
+		}
 
 		/*
 		 * Examples Wrap = 6, texScale = 2, divisor = 3, -> 2 Wrap = 7, texScale = 2,
@@ -230,13 +232,15 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
 	private static final int vertexType(float uvCoord) {
 		if (uvCoord >= 1 - PolyHelper.EPSILON) {
-			if (uvCoord <= 1 + PolyHelper.EPSILON)
+			if (uvCoord <= 1 + PolyHelper.EPSILON) {
 				return EDGE;
-			else
+			} else {
 				return REMAINDER;
-		} else
+			}
+		} else {
 			// < 1-QuadHelper.EPSILON
 			return SLICE;
+		}
 	}
 
 	/**
@@ -271,10 +275,11 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 		}
 
 		// if nothing to slice return unmodified; no output to consumer
-		if (sliceCount == 0)
+		if (sliceCount == 0) {
 			// TODO: put back?
 			//assert false;
 			return Polygon.NO_LINK_OR_TAG;
+		}
 
 		// if this is the last slice, bring into 0-1 min/max and send to output
 		if (remainderCount == 0) {
@@ -373,6 +378,10 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
 		final MutablePolygon editor = stream.editor();
 
+		if (!editor.origin()) {
+			return;
+		}
+
 		do {
 			// may move editor so save address and restore at end
 			final int editorAddress = editor.address();
@@ -464,6 +473,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 							// be more complicated and might force us to do additional splits on some models
 							// (would it?)
 							// For now, always use uv 0,0 as tiling origin.
+							editor.moveTo(outputAddress);
 
 							final int salt = HashCommon.mix(baseSalt | (uIndexFinal << 16) | (vIndexFinal << 22));
 							final int textureVersion = tex.versionMask() & (salt >> 4);
