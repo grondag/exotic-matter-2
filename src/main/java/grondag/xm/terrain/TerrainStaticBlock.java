@@ -19,8 +19,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
@@ -30,6 +28,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
 
 @API(status = INTERNAL)
 public class TerrainStaticBlock extends Block implements IHotBlock {

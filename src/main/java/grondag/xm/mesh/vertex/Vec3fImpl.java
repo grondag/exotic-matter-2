@@ -17,10 +17,10 @@ package grondag.xm.mesh.vertex;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import it.unimi.dsi.fastutil.HashCommon;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.polygon.Vec3f;
-import it.unimi.dsi.fastutil.HashCommon;
 
 @API(status = INTERNAL)
 class Vec3fImpl implements Vec3f {

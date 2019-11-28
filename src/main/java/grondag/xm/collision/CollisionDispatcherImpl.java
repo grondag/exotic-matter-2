@@ -19,10 +19,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.sc.cache.ObjectSimpleLoadingCache;
-import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+
+import grondag.fermion.sc.cache.ObjectSimpleLoadingCache;
+import grondag.xm.api.modelstate.ModelState;
 
 @API(status = INTERNAL)
 public class CollisionDispatcherImpl {

@@ -20,17 +20,6 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.modkeys.api.ModKeys;
-import grondag.fermion.varia.Useful;
-import grondag.xm.XmConfig;
-import grondag.xm.api.connect.species.SpeciesMode;
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.api.orientation.HorizontalFace;
-import grondag.xm.relics.XmStackHelper;
-import grondag.xm.virtual.VirtualBlock;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -45,6 +34,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+import grondag.fermion.modkeys.api.ModKeys;
+import grondag.fermion.varia.Useful;
+import grondag.xm.XmConfig;
+import grondag.xm.api.connect.species.SpeciesMode;
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.api.orientation.HorizontalFace;
+import grondag.xm.relics.XmStackHelper;
+import grondag.xm.virtual.VirtualBlock;
 
 @API(status = Status.DEPRECATED)
 @Deprecated

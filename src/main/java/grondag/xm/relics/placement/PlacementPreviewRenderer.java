@@ -18,10 +18,11 @@ package grondag.xm.relics.placement;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.xm.virtual.ExcavationRenderManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
+
+import grondag.xm.virtual.ExcavationRenderManager;
 
 @API(status = Status.DEPRECATED)
 @Deprecated

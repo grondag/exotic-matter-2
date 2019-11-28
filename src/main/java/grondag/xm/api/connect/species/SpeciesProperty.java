@@ -19,12 +19,13 @@ package grondag.xm.api.connect.species;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
+import net.minecraft.block.Block;
+import net.minecraft.state.property.IntProperty;
+
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.connect.SpeciesImpl;
-import net.minecraft.block.Block;
-import net.minecraft.state.property.IntProperty;
 
 @API(status = Status.EXPERIMENTAL)
 public class SpeciesProperty {

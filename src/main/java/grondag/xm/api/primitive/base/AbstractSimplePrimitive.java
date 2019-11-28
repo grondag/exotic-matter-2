@@ -21,12 +21,13 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public abstract class AbstractSimplePrimitive extends AbstractPrimitive<PrimitiveState, MutablePrimitiveState> implements SimplePrimitive {

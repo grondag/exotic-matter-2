@@ -21,15 +21,16 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.Xm;
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ModelStateFunction;
-import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import grondag.xm.Xm;
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.modelstate.ModelStateFunction;
+import grondag.xm.api.modelstate.MutableModelState;
 
 @API(status = INTERNAL)
 public class XmRegistryImpl {

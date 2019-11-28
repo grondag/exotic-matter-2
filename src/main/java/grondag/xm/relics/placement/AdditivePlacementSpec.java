@@ -20,13 +20,14 @@ import java.util.function.BooleanSupplier;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 @API(status = Status.DEPRECATED)
 @Deprecated

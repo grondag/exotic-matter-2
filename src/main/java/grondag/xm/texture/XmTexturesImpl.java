@@ -32,15 +32,17 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+
+import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback.Registry;
+
 import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.XmTextures;
 import grondag.xm.paint.XmPaintRegistryImpl;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback.Registry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 
 @API(status = INTERNAL)
 public class XmTexturesImpl {

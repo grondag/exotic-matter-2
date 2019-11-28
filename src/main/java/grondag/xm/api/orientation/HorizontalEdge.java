@@ -24,11 +24,12 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.HorizontalEdgeHelper;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
+
+import grondag.xm.connect.helper.HorizontalEdgeHelper;
 
 /**
  * A subset of {@link CubeEdge}, includes only the edges in the horizontal

@@ -18,15 +18,15 @@ package grondag.xm.mesh;
 import static grondag.xm.api.mesh.polygon.PolyHelper.epsilonEquals;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongComparators;
 import org.apiguardian.api.API;
 
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongComparators;
 
 @API(status = INTERNAL)
 class CsgPolyRecombinator {

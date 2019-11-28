@@ -23,8 +23,9 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.orientation.FaceEdge;
 import net.minecraft.util.math.Direction;
+
+import grondag.xm.api.orientation.FaceEdge;
 
 @API(status = INTERNAL)
 public abstract class FaceEdgeHelper {

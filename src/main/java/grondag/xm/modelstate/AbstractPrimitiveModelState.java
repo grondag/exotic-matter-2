@@ -27,9 +27,25 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.HashCommon;
 import org.apiguardian.api.API;
 
-import com.google.common.collect.ImmutableList;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
+import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.varia.Useful;
@@ -52,21 +68,6 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
 import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
-import it.unimi.dsi.fastutil.HashCommon;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 
 @SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
 @API(status = INTERNAL)

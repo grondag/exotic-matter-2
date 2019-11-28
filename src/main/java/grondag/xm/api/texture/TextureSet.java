@@ -21,10 +21,11 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.texture.TextureSetImpl;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
+
+import grondag.xm.texture.TextureSetImpl;
 
 @API(status = EXPERIMENTAL)
 public interface TextureSet {

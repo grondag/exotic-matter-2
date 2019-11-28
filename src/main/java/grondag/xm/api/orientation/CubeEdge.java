@@ -28,11 +28,12 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.CubeEdgeHelper;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
+
+import grondag.xm.connect.helper.CubeEdgeHelper;
 
 /**
  * Defines the twelve edges of a block and the relative position of neighboring

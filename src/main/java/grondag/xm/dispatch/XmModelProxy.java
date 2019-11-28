@@ -25,16 +25,9 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import com.mojang.datafixers.util.Pair;
 import org.apiguardian.api.API;
 
-import com.mojang.datafixers.util.Pair;
-
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.MutableModelState;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -48,6 +41,14 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.MutableModelState;
 
 @API(status = INTERNAL)
 @Environment(EnvType.CLIENT)

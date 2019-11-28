@@ -21,10 +21,12 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.paint.XmPaintImpl;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface XmPaint {

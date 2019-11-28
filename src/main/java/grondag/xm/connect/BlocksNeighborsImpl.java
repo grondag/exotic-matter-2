@@ -23,6 +23,13 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.BlockView;
+
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
@@ -30,12 +37,6 @@ import grondag.xm.api.connect.world.ModelStateFunction;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.orientation.CubeCorner;
 import grondag.xm.api.orientation.CubeEdge;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.BlockView;
 
 /**
  * Convenient way to gather and test block states for blocks adjacent to a given

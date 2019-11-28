@@ -19,10 +19,11 @@ import java.util.function.Function;
 
 import org.spongepowered.asm.mixin.Mixin;
 
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.dispatch.XmItemAccess;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.dispatch.XmItemAccess;
 
 @Mixin(Item.class)
 public class MixinItem implements XmItemAccess {

@@ -21,6 +21,8 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -33,7 +35,6 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class Cube {

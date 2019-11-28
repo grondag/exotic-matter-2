@@ -20,13 +20,14 @@ import java.util.HashSet;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.position.CubicBlockRegion;
-import grondag.xm.XmConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import grondag.fermion.position.CubicBlockRegion;
+import grondag.xm.XmConfig;
 
 @API(status = Status.DEPRECATED)
 @Deprecated

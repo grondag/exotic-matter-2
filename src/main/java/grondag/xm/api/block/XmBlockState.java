@@ -21,13 +21,14 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.dispatch.XmBlockStateAccess;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.dispatch.XmBlockStateAccess;
 
 @API(status = EXPERIMENTAL)
 public interface XmBlockState {

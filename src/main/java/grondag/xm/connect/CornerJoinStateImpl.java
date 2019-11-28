@@ -19,8 +19,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.state.CornerJoinState;
 import net.minecraft.util.math.Direction;
+
+import grondag.xm.api.connect.state.CornerJoinState;
 
 @API(status = INTERNAL)
 class CornerJoinStateImpl implements CornerJoinState {

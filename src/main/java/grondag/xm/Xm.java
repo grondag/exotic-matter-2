@@ -21,12 +21,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apiguardian.api.API;
 
-import grondag.fermion.simulator.Simulator;
-import grondag.xm.network.Packets;
+import net.minecraft.util.Identifier;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
-import net.minecraft.util.Identifier;
+
+import grondag.fermion.simulator.Simulator;
+import grondag.xm.network.Packets;
 
 @API(status = INTERNAL)
 public class Xm implements ModInitializer {

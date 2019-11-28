@@ -19,11 +19,12 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+
+import grondag.xm.api.modelstate.ModelState;
 
 @API(status = INTERNAL)
 public interface VirtualBlock {

@@ -21,6 +21,19 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.Renderer;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+
 import grondag.frex.Frex;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.MutableMesh;
@@ -33,17 +46,6 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
 import grondag.xm.texture.TextureSetHelper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("rawtypes")

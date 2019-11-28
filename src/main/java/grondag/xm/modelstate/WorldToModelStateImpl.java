@@ -25,6 +25,10 @@ import java.util.ArrayList;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
+
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
@@ -36,9 +40,6 @@ import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateFunction;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.primitive.simple.CubeWithRotation;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
 @API(status = EXPERIMENTAL)
 public class WorldToModelStateImpl implements PrimitiveStateFunction {

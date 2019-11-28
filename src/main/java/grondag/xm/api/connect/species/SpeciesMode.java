@@ -18,11 +18,12 @@ package grondag.xm.api.connect.species;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.varia.NBTDictionary;
-import grondag.fermion.varia.Useful;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
+
+import grondag.fermion.varia.NBTDictionary;
+import grondag.fermion.varia.Useful;
 
 @API(status = Status.EXPERIMENTAL)
 public enum SpeciesMode {

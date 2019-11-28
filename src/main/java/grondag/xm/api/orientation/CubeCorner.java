@@ -25,11 +25,12 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.CubeCornerHelper;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
+
+import grondag.xm.connect.helper.CubeCornerHelper;
 
 /**
  * Defines the eight corners of a block and the relative positions of the

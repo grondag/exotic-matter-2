@@ -19,16 +19,17 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.orientation.CubeCorner;
-import grondag.xm.api.orientation.CubeEdge;
-import grondag.xm.api.orientation.HorizontalEdge;
-import grondag.xm.api.orientation.HorizontalFace;
-import grondag.xm.connect.BlocksNeighborsImpl;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+
+import grondag.xm.api.orientation.CubeCorner;
+import grondag.xm.api.orientation.CubeEdge;
+import grondag.xm.api.orientation.HorizontalEdge;
+import grondag.xm.api.orientation.HorizontalFace;
+import grondag.xm.connect.BlocksNeighborsImpl;
 
 /**
  * Provides lazy, cached access to the block state for a single block position

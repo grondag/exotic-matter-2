@@ -19,10 +19,11 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.FaceEdge;
-import net.minecraft.util.math.Direction;
 
 @API(status = STABLE)
 public enum SimpleJoinFaceState {

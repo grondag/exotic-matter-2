@@ -18,11 +18,12 @@ package grondag.xm.relics.placement;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.varia.NBTDictionary;
-import grondag.fermion.varia.Useful;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
+
+import grondag.fermion.varia.NBTDictionary;
+import grondag.fermion.varia.Useful;
 
 /**
  * Determines how blocks are to be selected for operation of the placement item.

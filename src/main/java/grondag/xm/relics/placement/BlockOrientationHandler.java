@@ -18,13 +18,6 @@ package grondag.xm.relics.placement;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.world.WorldHelper;
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.api.orientation.CubeCorner;
-import grondag.xm.api.orientation.CubeEdge;
-import grondag.xm.relics.XmStackHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -35,6 +28,14 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import grondag.fermion.world.WorldHelper;
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.api.orientation.CubeCorner;
+import grondag.xm.api.orientation.CubeEdge;
+import grondag.xm.relics.XmStackHelper;
 
 /**
  * Handles configuration of block orientation before placement based on stack

@@ -1,11 +1,12 @@
 package grondag.xm.api.mesh.generator;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.util.math.Direction;
 
 public class StairMesh {
 	public static void build(

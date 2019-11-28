@@ -19,14 +19,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.bits.EnumBitSet;
-import grondag.fermion.position.PackedBlockPos;
-import grondag.fermion.varia.NBTDictionary;
-import grondag.fermion.varia.Useful;
-import grondag.xm.api.connect.species.SpeciesMode;
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.orientation.ClockwiseRotation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -42,6 +34,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+
+import grondag.fermion.bits.EnumBitSet;
+import grondag.fermion.position.PackedBlockPos;
+import grondag.fermion.varia.NBTDictionary;
+import grondag.fermion.varia.Useful;
+import grondag.xm.api.connect.species.SpeciesMode;
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.orientation.ClockwiseRotation;
 
 @SuppressWarnings("rawtypes")
 @API(status = Status.DEPRECATED)

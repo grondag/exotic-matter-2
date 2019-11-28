@@ -21,8 +21,9 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.orientation.CubeEdge;
 import net.minecraft.util.math.Direction;
+
+import grondag.xm.api.orientation.CubeEdge;
 
 @API(status = INTERNAL)
 public abstract class CubeEdgeHelper {

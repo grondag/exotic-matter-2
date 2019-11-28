@@ -18,12 +18,12 @@ package grondag.xm;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import net.fabricmc.loader.api.FabricLoader;
 
 public class XmConfig {

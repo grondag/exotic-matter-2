@@ -26,16 +26,17 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.MissingSprite;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureTransform;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 
 @API(status = INTERNAL)
 public enum TextureSetHelper {

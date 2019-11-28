@@ -21,12 +21,13 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
+
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 
 @API(status = EXPERIMENTAL)
 public interface ModelPrimitiveRegistry {

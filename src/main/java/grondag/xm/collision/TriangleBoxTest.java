@@ -20,9 +20,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.MathHelper;
+
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Vec3f;
-import net.minecraft.util.math.MathHelper;
 
 /**
  * Ported to Java from Tomas Akenine-Möller

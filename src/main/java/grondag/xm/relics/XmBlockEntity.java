@@ -20,7 +20,6 @@ package grondag.xm.relics;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.varia.NBTDictionary;
 //import grondag.xm.api.modelstate.ModelState;
 //import grondag.xm.api.modelstate.MutableModelState;
 //import grondag.xm.block.XmBlockRegistryImpl.XmBlockStateImpl;
@@ -34,6 +33,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.world.BlockView;
+
+import grondag.fermion.varia.NBTDictionary;
 
 @API(status = Status.DEPRECATED)
 @Deprecated
@@ -68,7 +69,7 @@ public class XmBlockEntity { //extends BlockEntity implements BlockEntityClientS
 	 */
 	public static CompoundTag withoutServerTag(CompoundTag inputTag) {
 		if (inputTag != null && inputTag.contains(NBT_SERVER_SIDE_TAG)) {
-			inputTag = (CompoundTag) inputTag.copy();
+			inputTag = inputTag.copy();
 			inputTag.remove(NBT_SERVER_SIDE_TAG);
 		}
 		return inputTag;

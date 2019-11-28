@@ -23,9 +23,10 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.primitive.surface.XmSurface;
-import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class MeshHelper {

@@ -18,9 +18,6 @@ package grondag.xm.relics.placement;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.varia.NBTDictionary;
-import grondag.fermion.varia.Useful;
-import grondag.xm.virtual.VirtualBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resource.language.I18n;
@@ -29,6 +26,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import grondag.fermion.varia.NBTDictionary;
+import grondag.fermion.varia.Useful;
+import grondag.xm.virtual.VirtualBlock;
 
 /**
  * For selection modes that use a region, determines which blocks in the region

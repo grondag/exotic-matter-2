@@ -30,9 +30,10 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.FaceEdgeHelper;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
+
+import grondag.xm.connect.helper.FaceEdgeHelper;
 
 @API(status = EXPERIMENTAL)
 public enum FaceEdge implements StringIdentifiable {

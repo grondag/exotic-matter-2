@@ -24,21 +24,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apiguardian.api.API;
 
-import grondag.fermion.modkeys.impl.ModKeysAccess;
-import grondag.fermion.spatial.DirectionHelper;
-import grondag.fermion.world.WorldHelper;
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.block.XmProperties;
-import grondag.xm.api.collision.CollisionDispatcher;
-import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
-import grondag.xm.api.orientation.CubeRotation;
-import grondag.xm.api.orientation.FaceEdge;
-import grondag.xm.api.orientation.HorizontalEdge;
-import grondag.xm.api.primitive.simple.Stair;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockState;
@@ -69,6 +54,23 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.explosion.Explosion;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+
+import grondag.fermion.modkeys.impl.ModKeysAccess;
+import grondag.fermion.spatial.DirectionHelper;
+import grondag.fermion.world.WorldHelper;
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.block.XmProperties;
+import grondag.xm.api.collision.CollisionDispatcher;
+import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
+import grondag.xm.api.orientation.CubeRotation;
+import grondag.xm.api.orientation.FaceEdge;
+import grondag.xm.api.orientation.HorizontalEdge;
+import grondag.xm.api.primitive.simple.Stair;
 
 @API(status = EXPERIMENTAL)
 public class StairLike extends Block implements Waterloggable {

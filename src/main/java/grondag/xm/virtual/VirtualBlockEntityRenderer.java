@@ -19,12 +19,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 @API(status = INTERNAL)

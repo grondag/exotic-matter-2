@@ -19,11 +19,12 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.position.BlockRegion;
-import grondag.xm.connect.SpeciesImpl;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+
+import grondag.fermion.position.BlockRegion;
+import grondag.xm.connect.SpeciesImpl;
 
 @API(status = EXPERIMENTAL)
 public class Species {

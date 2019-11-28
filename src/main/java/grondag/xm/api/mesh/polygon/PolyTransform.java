@@ -21,11 +21,12 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
+
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.mesh.helper.PolyTransformImpl;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface

@@ -19,6 +19,8 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.WritableMesh;
@@ -31,7 +33,6 @@ import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class Wedge extends AbstractWedge {
@@ -102,7 +103,7 @@ public class Wedge extends AbstractWedge {
 			quad.append();
 		}
 		//        } else {
-			//            quad.setupFaceQuad(Direction.EAST,
+		//            quad.setupFaceQuad(Direction.EAST,
 		//                    new FaceVertex(0, 0, 0),
 		//                    new FaceVertex(1, 0, 0),
 		//                    new FaceVertex(0.5f, 0.5f, 0.5f),

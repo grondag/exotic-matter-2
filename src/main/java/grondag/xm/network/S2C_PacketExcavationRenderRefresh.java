@@ -19,7 +19,16 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Collection;
 
+import io.netty.buffer.Unpooled;
 import org.apiguardian.api.API;
+
+import net.minecraft.network.Packet;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.BlockPos;
+
+import net.fabricmc.fabric.api.network.PacketContext;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 
 import grondag.fermion.position.IntegerBox;
 import grondag.xm.Xm;
@@ -27,13 +36,6 @@ import grondag.xm.XmConfig;
 import grondag.xm.virtual.ExcavationRenderEntry;
 import grondag.xm.virtual.ExcavationRenderManager;
 import grondag.xm.virtual.ExcavationRenderer;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.network.Packet;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Replaces all excavation render entries. Sent when players logs in, changes

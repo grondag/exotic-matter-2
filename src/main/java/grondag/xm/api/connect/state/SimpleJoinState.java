@@ -19,10 +19,11 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.world.BlockNeighbors;
-import grondag.xm.connect.SimpleJoinStateImpl;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
+
+import grondag.xm.api.connect.world.BlockNeighbors;
+import grondag.xm.connect.SimpleJoinStateImpl;
 
 /**
  * Describes the state of a block model with connected textures/shapes that

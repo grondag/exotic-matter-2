@@ -21,8 +21,9 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.item.ItemStack;
+
+import grondag.xm.api.modelstate.MutableModelState;
 
 @API(status = INTERNAL)
 public interface XmItemAccess {

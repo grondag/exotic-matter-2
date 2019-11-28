@@ -17,6 +17,11 @@ package grondag.xm.texture;
 
 import java.util.function.Consumer;
 
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.DefaultedRegistry;
+import net.minecraft.util.registry.MutableRegistry;
+import net.minecraft.util.registry.Registry;
+
 import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
@@ -25,10 +30,6 @@ import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetRegistry;
 import grondag.xm.api.texture.TextureTransform;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.DefaultedRegistry;
-import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class TextureSetRegistryImpl implements TextureSetRegistry {

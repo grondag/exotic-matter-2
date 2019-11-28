@@ -23,10 +23,11 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.HorizontalFaceHelper;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
+
+import grondag.xm.connect.helper.HorizontalFaceHelper;
 
 /**
  * A subset of {@link Direction}, includes only the face in the horizontal

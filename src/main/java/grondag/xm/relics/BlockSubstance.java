@@ -24,18 +24,19 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.color.Chroma;
-import grondag.fermion.color.ColorAtlas;
-import grondag.fermion.color.Hue;
-import grondag.fermion.color.Luminance;
-import grondag.fermion.varia.NBTDictionary;
-import grondag.xm.Xm;
 import net.minecraft.block.Material;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.PacketByteBuf;
+
+import grondag.fermion.color.Chroma;
+import grondag.fermion.color.ColorAtlas;
+import grondag.fermion.color.Hue;
+import grondag.fermion.color.Luminance;
+import grondag.fermion.varia.NBTDictionary;
+import grondag.xm.Xm;
 
 /**
  * Similar to Minecraft Material. Didn't want to tie to that implementation.

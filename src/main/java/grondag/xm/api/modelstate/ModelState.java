@@ -23,16 +23,18 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.mesh.polygon.Polygon;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Direction;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import grondag.xm.api.mesh.polygon.Polygon;
 
 @API(status = EXPERIMENTAL)
 public interface ModelState {

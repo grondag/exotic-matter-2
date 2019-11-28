@@ -21,9 +21,10 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.xm.Xm;
 import grondag.xm.texture.TextureSetRegistryImpl;
-import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface TextureSetRegistry {

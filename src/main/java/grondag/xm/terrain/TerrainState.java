@@ -17,19 +17,20 @@ package grondag.xm.terrain;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import it.unimi.dsi.fastutil.HashCommon;
 import org.apiguardian.api.API;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.Mutable;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BlockView;
 
 import grondag.fermion.bits.BitPacker64;
 import grondag.fermion.position.PackedBlockPos;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
-import it.unimi.dsi.fastutil.HashCommon;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.Mutable;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BlockView;
 
 @API(status = INTERNAL)
 public class TerrainState {

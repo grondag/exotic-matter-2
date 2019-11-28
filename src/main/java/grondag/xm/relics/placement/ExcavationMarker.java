@@ -18,7 +18,6 @@ package grondag.xm.relics.placement;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.xm.virtual.VirtualBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -32,6 +31,8 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+
+import grondag.xm.virtual.VirtualBlock;
 
 /**
  * Base class for generic tool to mark real-world blocks for removal. Has

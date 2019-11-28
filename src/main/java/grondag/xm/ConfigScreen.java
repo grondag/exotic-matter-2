@@ -24,10 +24,12 @@ import java.util.Optional;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class ConfigScreen {

@@ -22,8 +22,9 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.connect.helper.FaceCornerHelper;
 import net.minecraft.util.StringIdentifiable;
+
+import grondag.xm.connect.helper.FaceCornerHelper;
 
 @API(status = EXPERIMENTAL)
 public enum FaceCorner implements StringIdentifiable {

@@ -21,11 +21,12 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+
+import grondag.xm.api.modelstate.ModelState;
 
 @API(status = STABLE)
 public interface BlockTestContext<T extends ModelState> {

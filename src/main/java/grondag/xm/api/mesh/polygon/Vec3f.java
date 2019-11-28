@@ -20,11 +20,12 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.varia.Useful;
-import grondag.xm.mesh.vertex.Vec3fFactory;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
+
+import grondag.fermion.varia.Useful;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 
 @API(status = EXPERIMENTAL)
 public interface Vec3f {

@@ -19,15 +19,16 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.terrain.TerrainModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.terrain.TerrainModelState;
 
 @API(status = INTERNAL)
 public class TerrainDynamicBlock extends TerrainBlock {

@@ -21,11 +21,12 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.xm.api.texture.TextureLayout;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureNameFunction;
 import grondag.xm.api.texture.TextureSet;
-import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public class TextureLayoutMapImpl implements TextureLayoutMap {

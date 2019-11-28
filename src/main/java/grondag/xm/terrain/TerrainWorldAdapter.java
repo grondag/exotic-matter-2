@@ -20,16 +20,17 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Supplier;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.apiguardian.api.API;
 
-import grondag.fermion.position.PackedBlockPos;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import grondag.fermion.position.PackedBlockPos;
 
 /**
  * Caches expensive world state lookups until next prepare() call. For

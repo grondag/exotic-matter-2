@@ -22,6 +22,10 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.Direction.AxisDirection;
+
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.mesh.CsgMeshBuilder;
@@ -37,9 +41,6 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Direction.AxisDirection;
 
 @API(status = EXPERIMENTAL)
 public class CappedRoundColumn  {

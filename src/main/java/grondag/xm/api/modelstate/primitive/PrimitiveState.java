@@ -19,14 +19,15 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.orientation.CubeRotation;
-import grondag.xm.api.primitive.simple.Stair;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.util.math.Direction;
+
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.orientation.CubeRotation;
+import grondag.xm.api.primitive.simple.Stair;
 
 @API(status = EXPERIMENTAL)
 public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePrimitiveState>  {

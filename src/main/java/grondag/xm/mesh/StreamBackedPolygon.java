@@ -21,13 +21,15 @@ import java.util.function.IntUnaryOperator;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 class StreamBackedPolygon implements Polygon {

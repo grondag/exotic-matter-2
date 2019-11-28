@@ -21,6 +21,10 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.Vec3i;
+
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.color.Color;
 import grondag.xm.Xm;
@@ -44,9 +48,6 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
 import grondag.xm.modelstate.SimpleModelStateImpl;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Vec3i;
 
 @API(status = EXPERIMENTAL)
 public class SquareColumn extends AbstractSimplePrimitive {

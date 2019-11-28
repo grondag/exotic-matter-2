@@ -110,9 +110,8 @@ public class RenderUtil {
 	}
 
 	public static void drawModelOutline(MatrixStack matrixStack, VertexConsumer vertexConsumer, ModelState modelState, double x, double y, double z, float r, float g, float b, float a) {
-		if (modelState == null) {
+		if (modelState == null)
 			return;
-		}
 
 		final WritableMesh mesh = outlineMesh;
 		final Matrix4f matrix4f = matrixStack.peek().getModel();

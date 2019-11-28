@@ -21,13 +21,6 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.relics.placement.FilterMode;
-import grondag.xm.relics.placement.PlacementItem;
-import grondag.xm.relics.placement.PlacementItemFeature;
-import grondag.xm.relics.placement.XmBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -36,6 +29,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.relics.placement.FilterMode;
+import grondag.xm.relics.placement.PlacementItem;
+import grondag.xm.relics.placement.PlacementItemFeature;
+import grondag.xm.relics.placement.XmBlockItem;
 
 @API(status = INTERNAL)
 public class VirtualItemBlock extends XmBlockItem implements PlacementItem {

@@ -19,15 +19,17 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
 import grondag.fermion.color.ColorHelper;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 
 @API(status = INTERNAL)
 class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutablePolygon {

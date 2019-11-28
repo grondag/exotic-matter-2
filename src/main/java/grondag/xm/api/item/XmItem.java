@@ -21,9 +21,10 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.item.ItemStack;
+
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmItemAccess;
-import net.minecraft.item.ItemStack;
 
 @API(status = EXPERIMENTAL)
 public class XmItem {

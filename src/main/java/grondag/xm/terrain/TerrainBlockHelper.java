@@ -23,9 +23,6 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.position.PackedBlockPos;
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.terrain.TerrainModelState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -33,6 +30,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import grondag.fermion.position.PackedBlockPos;
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.terrain.TerrainModelState;
 
 @API(status = INTERNAL)
 public class TerrainBlockHelper {

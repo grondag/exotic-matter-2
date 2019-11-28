@@ -21,8 +21,9 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.orientation.HorizontalFace;
 import net.minecraft.util.math.Direction;
+
+import grondag.xm.api.orientation.HorizontalFace;
 
 @API(status = INTERNAL)
 public abstract class HorizontalFaceHelper {

@@ -20,6 +20,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+
 import grondag.fermion.position.BlockRegion;
 import grondag.xm.XmConfig;
 import grondag.xm.api.connect.species.SpeciesFunction;
@@ -28,9 +32,6 @@ import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.modelstate.ModelState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 
 @API(status = INTERNAL)
 public class SpeciesImpl {

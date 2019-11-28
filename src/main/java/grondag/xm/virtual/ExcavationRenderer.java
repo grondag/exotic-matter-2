@@ -21,17 +21,19 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.Xm;
-import grondag.xm.XmConfig;
-import grondag.xm.render.RenderUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+import grondag.xm.Xm;
+import grondag.xm.XmConfig;
+import grondag.xm.render.RenderUtil;
 
 @API(status = INTERNAL)
 public class ExcavationRenderer {

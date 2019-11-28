@@ -6,10 +6,11 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.world.BlockNeighbors;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+
+import grondag.xm.api.connect.world.BlockNeighbors;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface

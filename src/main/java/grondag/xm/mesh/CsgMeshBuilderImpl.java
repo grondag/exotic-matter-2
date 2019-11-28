@@ -16,6 +16,7 @@
 
 package grondag.xm.mesh;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
@@ -27,7 +28,6 @@ import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 @API(status = Status.EXPERIMENTAL)
 public class CsgMeshBuilderImpl implements CsgMeshBuilder {

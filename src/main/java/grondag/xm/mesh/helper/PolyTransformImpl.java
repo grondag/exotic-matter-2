@@ -21,6 +21,10 @@ import org.apiguardian.api.API;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.Vec3i;
+
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.PolyTransform;
@@ -31,9 +35,6 @@ import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
 import grondag.xm.api.orientation.OrientationType;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Vec3i;
 
 @API(status = INTERNAL)
 @SuppressWarnings("rawtypes")
@@ -189,72 +190,72 @@ public class PolyTransformImpl implements PolyTransform {
 		case DOWN_SOUTH:
 			// default state
 			break;
-			case DOWN_WEST:
-				matrix.rotate((float) Math.toRadians(270), 0, 1, 0);
-				break;
-			case UP_EAST:
-				matrix.rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(180), 0, 0, 1);
-				break;
-			case UP_NORTH:
-				matrix.rotate((float) Math.toRadians(0), 0, 1, 0).rotate((float) Math.toRadians(180), 1, 0, 0);
-				break;
-			case UP_SOUTH:
-				matrix.rotate((float) Math.toRadians(180), 0, 0, 1);
-				break;
-			case UP_WEST:
-				matrix.rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(180), 1, 0, 0);
-				break;
-			case EAST_DOWN:
-				matrix.rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
-				break;
-			case EAST_NORTH:
-				matrix.rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(180), 0, 1, 0);
-				break;
-			case EAST_SOUTH:
-				matrix.rotate((float) Math.toRadians(90), 0, 0, 1);
-				break;
-			case EAST_UP:
-				matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 0, 1);
-				break;
-			case WEST_DOWN:
-				matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(90), 0, 1, 0);
-				break;
-			case WEST_NORTH:
-				matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(180), 0, 1, 0);
-				break;
-			case WEST_SOUTH:
-				matrix.rotate((float) Math.toRadians(270), 0, 0, 1);
-				break;
-			case WEST_UP:
-				matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
-				break;
-			case NORTH_DOWN:
-				matrix.rotate((float) Math.toRadians(90), 1, 0, 0);
-				break;
-			case NORTH_EAST:
-				matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 1, 0);
-				break;
-			case NORTH_UP:
-				matrix.rotate((float) Math.toRadians(180), 0, 0, 1).rotate((float) Math.toRadians(90), 1, 0, 0);
-				break;
-			case NORTH_WEST:
-				matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 1, 0);
-				break;
-			case SOUTH_DOWN:
-				matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(180), 0, 1, 0);
-				break;
-			case SOUTH_EAST:
-				matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 1, 0);
-				break;
-			case SOUTH_UP:
-				matrix.rotate((float) Math.toRadians(270), 1, 0, 0);
-				break;
-			case SOUTH_WEST:
-				matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 1, 0);
-				break;
+		case DOWN_WEST:
+			matrix.rotate((float) Math.toRadians(270), 0, 1, 0);
+			break;
+		case UP_EAST:
+			matrix.rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(180), 0, 0, 1);
+			break;
+		case UP_NORTH:
+			matrix.rotate((float) Math.toRadians(0), 0, 1, 0).rotate((float) Math.toRadians(180), 1, 0, 0);
+			break;
+		case UP_SOUTH:
+			matrix.rotate((float) Math.toRadians(180), 0, 0, 1);
+			break;
+		case UP_WEST:
+			matrix.rotate((float) Math.toRadians(90), 0, 1, 0).rotate((float) Math.toRadians(180), 1, 0, 0);
+			break;
+		case EAST_DOWN:
+			matrix.rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
+			break;
+		case EAST_NORTH:
+			matrix.rotate((float) Math.toRadians(90), 0, 0, 1).rotate((float) Math.toRadians(180), 0, 1, 0);
+			break;
+		case EAST_SOUTH:
+			matrix.rotate((float) Math.toRadians(90), 0, 0, 1);
+			break;
+		case EAST_UP:
+			matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 0, 1);
+			break;
+		case WEST_DOWN:
+			matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(90), 0, 1, 0);
+			break;
+		case WEST_NORTH:
+			matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(180), 0, 1, 0);
+			break;
+		case WEST_SOUTH:
+			matrix.rotate((float) Math.toRadians(270), 0, 0, 1);
+			break;
+		case WEST_UP:
+			matrix.rotate((float) Math.toRadians(270), 0, 0, 1).rotate((float) Math.toRadians(270), 0, 1, 0);
+			break;
+		case NORTH_DOWN:
+			matrix.rotate((float) Math.toRadians(90), 1, 0, 0);
+			break;
+		case NORTH_EAST:
+			matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 1, 0);
+			break;
+		case NORTH_UP:
+			matrix.rotate((float) Math.toRadians(180), 0, 0, 1).rotate((float) Math.toRadians(90), 1, 0, 0);
+			break;
+		case NORTH_WEST:
+			matrix.rotate((float) Math.toRadians(90), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 1, 0);
+			break;
+		case SOUTH_DOWN:
+			matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(180), 0, 1, 0);
+			break;
+		case SOUTH_EAST:
+			matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(90), 0, 1, 0);
+			break;
+		case SOUTH_UP:
+			matrix.rotate((float) Math.toRadians(270), 1, 0, 0);
+			break;
+		case SOUTH_WEST:
+			matrix.rotate((float) Math.toRadians(270), 1, 0, 0).rotate((float) Math.toRadians(270), 0, 1, 0);
+			break;
 
-			default:
-				break;
+		default:
+			break;
 
 		}
 		return new PolyTransformImpl(matrix);

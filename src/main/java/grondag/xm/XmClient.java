@@ -19,6 +19,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.resource.ResourceType;
+
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.render.InvalidateRenderStateCallback;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
 import grondag.xm.collision.CollisionDispatcherImpl;
 import grondag.xm.dispatch.XmDispatcher;
 import grondag.xm.dispatch.XmVariantProvider;
@@ -28,11 +35,6 @@ import grondag.xm.network.Packets;
 import grondag.xm.paint.XmPaintRegistryImpl;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import grondag.xm.texture.XmTexturesImpl;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.fabricmc.fabric.api.client.render.InvalidateRenderStateCallback;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.resource.ResourceType;
 
 @API(status = INTERNAL)
 public class XmClient implements ClientModInitializer {

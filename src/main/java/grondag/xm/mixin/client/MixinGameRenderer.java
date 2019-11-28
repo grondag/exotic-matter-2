@@ -20,9 +20,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import grondag.xm.render.XmRenderHelper;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+
+import grondag.xm.render.XmRenderHelper;
 
 @Mixin(GameRenderer.class)
 public abstract class MixinGameRenderer {

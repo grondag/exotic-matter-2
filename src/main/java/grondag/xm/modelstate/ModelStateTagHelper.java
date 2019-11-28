@@ -19,8 +19,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.varia.NBTDictionary;
 import net.minecraft.nbt.CompoundTag;
+
+import grondag.fermion.varia.NBTDictionary;
 
 @API(status = INTERNAL)
 public abstract class ModelStateTagHelper {

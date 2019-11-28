@@ -17,9 +17,9 @@ package grondag.xm.collision;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import it.unimi.dsi.fastutil.HashCommon;
 import org.apiguardian.api.API;
 
-import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 

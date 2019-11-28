@@ -23,15 +23,16 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
+
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
 public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {

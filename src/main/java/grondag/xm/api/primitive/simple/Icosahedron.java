@@ -21,6 +21,8 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Vec3d;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -32,7 +34,6 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import net.minecraft.util.math.Vec3d;
 
 @API(status = EXPERIMENTAL)
 public class Icosahedron {

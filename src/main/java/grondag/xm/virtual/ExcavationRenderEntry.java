@@ -25,19 +25,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.apiguardian.api.API;
+
+import net.minecraft.network.Packet;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
+
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 
 import grondag.fermion.position.IntegerBox;
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
 import grondag.xm.network.S2C_ExcavationRenderUpdate;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.network.Packet;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Class exists on server but render methods do not. Server instantiates (and

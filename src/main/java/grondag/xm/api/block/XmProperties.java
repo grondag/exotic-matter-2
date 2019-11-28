@@ -19,16 +19,17 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.api.orientation.CubeCorner;
 import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class XmProperties {

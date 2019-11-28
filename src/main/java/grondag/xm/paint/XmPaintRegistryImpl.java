@@ -21,17 +21,19 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map.Entry;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.apiguardian.api.API;
+
+import net.minecraft.resource.Resource;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.util.Identifier;
+
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 
 import grondag.xm.Xm;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.paint.XmPaintImpl.Value;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
 
 /**
  *

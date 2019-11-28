@@ -21,9 +21,10 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.MathHelper;
+
 import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.orientation.HorizontalFace;
-import net.minecraft.util.math.MathHelper;
 
 @API(status = INTERNAL)
 public abstract class HorizontalEdgeHelper {

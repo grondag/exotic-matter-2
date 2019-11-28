@@ -19,10 +19,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.MutableModelState;
 import net.minecraft.block.Block;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.IntProperty;
+
+import grondag.xm.api.modelstate.MutableModelState;
 
 @API(status = INTERNAL)
 public class TerrainBlock extends Block implements IHotBlock {

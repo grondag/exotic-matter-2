@@ -18,11 +18,12 @@ package grondag.xm.relics;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.util.math.Direction;
 
 @API(status = Status.DEPRECATED)
 @Deprecated

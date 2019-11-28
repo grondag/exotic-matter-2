@@ -179,7 +179,7 @@ abstract class AbstractXmMesh implements XmMesh {
 	}
 
 
-
+	//TODO: remove?
 	protected boolean moveReaderToNextLink(StreamBackedPolygon targetReader) {
 		int currentAddress = targetReader.baseAddress;
 		if (currentAddress >= writeAddress || currentAddress == EncoderFunctions.BAD_ADDRESS)

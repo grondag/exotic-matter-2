@@ -21,11 +21,12 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.util.Identifier;
+
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetBuilder;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public class TextureSetImpl extends AbstractTextureSet implements TextureSet {

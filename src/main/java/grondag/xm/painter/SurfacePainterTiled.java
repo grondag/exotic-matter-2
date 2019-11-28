@@ -20,7 +20,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
+import it.unimi.dsi.fastutil.HashCommon;
 import org.apiguardian.api.API;
+
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
@@ -35,9 +39,6 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureTransform;
-import it.unimi.dsi.fastutil.HashCommon;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 
 /**
  *
@@ -53,14 +54,12 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 	 */
 	private static float tilingDistance(float uvWrapDistance, int textureScale) {
 		// if wrap disabled use texture scale and paint at 1:1
-		if (uvWrapDistance <= PolyHelper.EPSILON) {
+		if (uvWrapDistance <= PolyHelper.EPSILON)
 			return textureScale;
-		}
 
 		// if texture is larger than wrap distance, must scale down to the wrap distance
-		if (textureScale > uvWrapDistance) {
+		if (textureScale > uvWrapDistance)
 			return uvWrapDistance;
-		}
 
 		/*
 		 * Examples Wrap = 6, texScale = 2, divisor = 3, -> 2 Wrap = 7, texScale = 2,
@@ -231,15 +230,13 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
 	private static final int vertexType(float uvCoord) {
 		if (uvCoord >= 1 - PolyHelper.EPSILON) {
-			if (uvCoord <= 1 + PolyHelper.EPSILON) {
+			if (uvCoord <= 1 + PolyHelper.EPSILON)
 				return EDGE;
-			} else {
+			else
 				return REMAINDER;
-			}
-		} else {
+		} else
 			// < 1-QuadHelper.EPSILON
 			return SLICE;
-		}
 	}
 
 	/**
@@ -274,11 +271,10 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 		}
 
 		// if nothing to slice return unmodified; no output to consumer
-		if (sliceCount == 0) {
+		if (sliceCount == 0)
 			// TODO: put back?
 			//assert false;
 			return Polygon.NO_LINK_OR_TAG;
-		}
 
 		// if this is the last slice, bring into 0-1 min/max and send to output
 		if (remainderCount == 0) {

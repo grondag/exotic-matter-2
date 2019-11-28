@@ -19,9 +19,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.xm.Xm;
 import grondag.xm.paint.VertexProcessorRegistryImpl;
-import net.minecraft.util.Identifier;
 
 @API(status = EXPERIMENTAL)
 public interface VertexProcessorRegistry {

@@ -20,15 +20,17 @@ import java.util.function.BooleanSupplier;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.position.BlockRegion;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+import grondag.fermion.position.BlockRegion;
 
 @API(status = Status.DEPRECATED)
 @Deprecated

@@ -17,6 +17,8 @@ package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -30,7 +32,6 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.util.math.Direction;
 
 public class WedgeCap  {
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()

@@ -20,17 +20,19 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import javax.annotation.Nullable;
 
+import it.unimi.dsi.fastutil.HashCommon;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apiguardian.api.API;
+
+import net.minecraft.util.Identifier;
+
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSet;
-import it.unimi.dsi.fastutil.HashCommon;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public class XmPaintImpl {

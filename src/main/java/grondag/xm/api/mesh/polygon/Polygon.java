@@ -19,15 +19,17 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.Xm;
-import grondag.xm.api.paint.SurfaceTopology;
-import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.api.texture.TextureOrientation;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
+
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
+import grondag.xm.Xm;
+import grondag.xm.api.paint.SurfaceTopology;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 
 @API(status = EXPERIMENTAL)
 public interface Polygon {

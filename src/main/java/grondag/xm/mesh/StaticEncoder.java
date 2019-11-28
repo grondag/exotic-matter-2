@@ -19,12 +19,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.varia.IndexedInterner;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 
 @API(status = INTERNAL)
 class StaticEncoder {

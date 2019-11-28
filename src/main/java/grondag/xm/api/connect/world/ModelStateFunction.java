@@ -19,11 +19,12 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ModelState;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.modelstate.ModelState;
 
 /**
  * Provide an instance to {@link BlockNeighbors} when it is retrieved in order

@@ -22,11 +22,13 @@ import java.util.Locale;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import grondag.xm.api.paint.XmPaintFinder;
-import grondag.xm.api.texture.TextureSetRegistry;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
+import grondag.xm.api.paint.XmPaintFinder;
+import grondag.xm.api.texture.TextureSetRegistry;
 
 class PaintDeserializer {
 	public static XmPaintImpl.Value deserialize(Reader reader) {

@@ -18,12 +18,13 @@ package grondag.xm.relics;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.modelstate.ModelStateTagHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 
 /**
  * Item stack serialization handlers

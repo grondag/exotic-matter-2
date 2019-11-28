@@ -17,16 +17,18 @@ package grondag.xm.dispatch;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.apiguardian.api.API;
 
-import grondag.xm.api.block.XmBlockState;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.fabricmc.fabric.api.client.model.ModelProviderContext;
-import net.fabricmc.fabric.api.client.model.ModelProviderException;
-import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.registry.Registry;
+
+import net.fabricmc.fabric.api.client.model.ModelProviderContext;
+import net.fabricmc.fabric.api.client.model.ModelProviderException;
+import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
+
+import grondag.xm.api.block.XmBlockState;
 
 @API(status = INTERNAL)
 public class XmVariantProvider implements ModelVariantProvider {

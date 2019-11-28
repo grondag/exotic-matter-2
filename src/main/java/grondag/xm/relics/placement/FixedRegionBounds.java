@@ -18,10 +18,11 @@ package grondag.xm.relics.placement;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.position.PackedBlockPos;
-import grondag.fermion.varia.NBTDictionary;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
+
+import grondag.fermion.position.PackedBlockPos;
+import grondag.fermion.varia.NBTDictionary;
 
 /**
  * Data carrier for fixed region definition to reduce number of methods and

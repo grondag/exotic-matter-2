@@ -273,7 +273,7 @@ public class PointInPolygonTest {
 			if (absX > absY)
 				return absX > Math.abs(normal.z()) ? X : Z;
 				else // y >= x
-						return absY > Math.abs(normal.z()) ? Y : Z;
+					return absY > Math.abs(normal.z()) ? Y : Z;
 		}
 
 		/**

@@ -19,13 +19,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.texture.TextureSetHelper;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
+
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
+
+import grondag.xm.texture.TextureSetHelper;
 
 @API(status = INTERNAL)
 public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {

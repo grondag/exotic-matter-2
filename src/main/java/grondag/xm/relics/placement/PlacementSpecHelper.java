@@ -18,11 +18,12 @@ package grondag.xm.relics.placement;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.base.BaseModelState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.base.BaseModelState;
 
 /**
  * Knows how to get the appropriate placement builder for a given stack.

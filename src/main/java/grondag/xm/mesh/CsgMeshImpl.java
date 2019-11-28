@@ -19,6 +19,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.apiguardian.api.API;
 
 import grondag.fermion.intstream.IntStream;
@@ -28,7 +29,6 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * Implements a BSP tree for CSG operations as part of mutable mesh/stream.

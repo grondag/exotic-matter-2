@@ -21,12 +21,13 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
 import grondag.xm.api.primitive.base.AbstractPrimitive;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.api.terrain.TerrainPrimitive;
-import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public abstract class AbstractTerrainPrimitive extends AbstractPrimitive<TerrainModelState, TerrainModelState.Mutable> implements TerrainPrimitive {

@@ -19,13 +19,14 @@ import javax.annotation.Nullable;
 
 import org.spongepowered.asm.mixin.Mixin;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
+
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelStateFunction;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmBlockStateAccess;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
 @Mixin(BlockState.class)
 public class MixinBlockState implements XmBlockState, XmBlockStateAccess {

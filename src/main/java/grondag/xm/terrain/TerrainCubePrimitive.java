@@ -22,6 +22,8 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -33,7 +35,6 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.relics.CubeInputs;
-import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public class TerrainCubePrimitive extends AbstractTerrainPrimitive {

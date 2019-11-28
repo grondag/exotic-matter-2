@@ -17,7 +17,11 @@ package grondag.xm.painter;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import it.unimi.dsi.fastutil.HashCommon;
 import org.apiguardian.api.API;
+
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 
 import grondag.fermion.spatial.Rotation;
 import grondag.fermion.varia.Useful;
@@ -30,9 +34,6 @@ import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureTransform;
-import it.unimi.dsi.fastutil.HashCommon;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
 
 @API(status = INTERNAL)
 public abstract class CubicPainterBigTex extends AbstractQuadPainter {

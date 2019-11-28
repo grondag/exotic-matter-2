@@ -20,11 +20,12 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.world.WorldTaskManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+
+import grondag.fermion.world.WorldTaskManager;
 
 @API(status = Status.DEPRECATED)
 @Deprecated

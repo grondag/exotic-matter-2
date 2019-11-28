@@ -19,12 +19,13 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.terrain.TerrainModelState;
-import grondag.xm.modelstate.AbstractPrimitiveModelState;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
+
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.terrain.TerrainModelState;
+import grondag.xm.modelstate.AbstractPrimitiveModelState;
 
 @API(status = INTERNAL)
 public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> implements TerrainModelState.Mutable {

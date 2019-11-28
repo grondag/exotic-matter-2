@@ -21,11 +21,13 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.api.texture.TextureOrientation;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
 
 @API(status = EXPERIMENTAL)
 public interface MutablePolygon extends Polygon {

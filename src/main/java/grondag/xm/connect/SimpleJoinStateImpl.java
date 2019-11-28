@@ -19,10 +19,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.connect.state.SimpleJoinState;
-import grondag.xm.api.connect.world.BlockNeighbors;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
+
+import grondag.xm.api.connect.state.SimpleJoinState;
+import grondag.xm.api.connect.world.BlockNeighbors;
 
 @API(status = INTERNAL)
 public class SimpleJoinStateImpl implements SimpleJoinState {

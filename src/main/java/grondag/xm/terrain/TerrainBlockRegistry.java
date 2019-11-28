@@ -19,9 +19,8 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.HashMap;
 
-import org.apiguardian.api.API;
-
 import com.google.common.collect.HashBiMap;
+import org.apiguardian.api.API;
 
 import net.minecraft.block.Block;
 

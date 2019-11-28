@@ -33,6 +33,8 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.mesh.MutableMesh;
@@ -43,7 +45,6 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.relics.placement.FaceQuadInputs;
-import net.minecraft.util.math.Direction;
 
 @API(status = INTERNAL)
 public abstract class CubicPainterBorders extends AbstractQuadPainter {

@@ -19,9 +19,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.shape.VoxelShape;
+
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.collision.CollisionDispatcherImpl;
-import net.minecraft.util.shape.VoxelShape;
 
 @API(status = EXPERIMENTAL)
 public class CollisionDispatcher {

@@ -20,9 +20,10 @@ import java.util.function.BooleanSupplier;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-import grondag.fermion.position.BlockRegion;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+
+import grondag.fermion.position.BlockRegion;
 
 @API(status = Status.DEPRECATED)
 @Deprecated

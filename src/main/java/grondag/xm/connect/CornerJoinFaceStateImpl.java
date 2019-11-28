@@ -30,13 +30,14 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.Direction;
+
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.orientation.CubeEdge;
 import grondag.xm.api.orientation.FaceCorner;
 import grondag.xm.api.orientation.FaceEdge;
 import grondag.xm.connect.helper.FaceEdgeHelper;
-import net.minecraft.util.math.Direction;
 
 /**
  * Corner bits indicate that a corner is needed, not that the corner is present.

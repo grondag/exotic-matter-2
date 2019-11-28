@@ -21,10 +21,11 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.dispatch.XmRegistryImpl;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.dispatch.XmRegistryImpl;
 
 @API(status = EXPERIMENTAL)
 public class XmItemRegistry {

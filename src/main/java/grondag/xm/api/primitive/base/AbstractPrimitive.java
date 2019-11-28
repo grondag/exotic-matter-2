@@ -21,6 +21,10 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
+
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
@@ -28,9 +32,6 @@ import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
 public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> implements ModelPrimitive<R, W> {

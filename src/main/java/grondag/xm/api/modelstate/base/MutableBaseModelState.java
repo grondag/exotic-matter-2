@@ -7,13 +7,14 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.math.BlockPos;
+
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
-import net.minecraft.util.math.BlockPos;
 
 @API(status = EXPERIMENTAL)
 public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> extends BaseModelState<R, W>, MutableModelState {

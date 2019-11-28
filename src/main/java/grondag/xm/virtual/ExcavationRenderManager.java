@@ -19,22 +19,23 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.apiguardian.api.API;
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import grondag.xm.Xm;
-import grondag.xm.XmConfig;
-import grondag.xm.render.XmRenderHelper;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+
+import grondag.xm.Xm;
+import grondag.xm.XmConfig;
+import grondag.xm.render.XmRenderHelper;
 
 @API(status = INTERNAL)
 public class ExcavationRenderManager {
