@@ -53,6 +53,7 @@ class MeshFormat {
 		return VERTEX_COUNT.setValue(vertexCount, formatIn);
 	}
 
+	// TODO: should  be nullable and should be computed from light face when retrieved if null
 	private static final BitPacker32<MeshFormat>.EnumElement<Direction> NOMINAL_FACE = BITPACKER.createEnumElement(Direction.class);
 
 	public static Direction getNominalFace(int formatIn) {

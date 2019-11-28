@@ -191,6 +191,7 @@ public class Icosahedron {
 		}
 		// clear face normal if has been set somehow
 		writer.clearFaceNormal();
+		writer.nominalFace(writer.lightFace());
 		writer.append();
 	}
 }
