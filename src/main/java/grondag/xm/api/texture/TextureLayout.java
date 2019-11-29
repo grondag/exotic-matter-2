@@ -78,7 +78,19 @@ public enum TextureLayout {
 	 * connect with other quadrants in any (connecting) rotation or texture
 	 * variation.
 	 */
-	QUADRANT_CONNECTED(CORNER_JOIN | BLOCK_SPECIES);
+	QUADRANT_ROTATED(CORNER_JOIN | BLOCK_SPECIES),
+
+	/**
+	 * Similar to format used by CTM.  Four textures - first is 1x1 fully-enclosed,
+	 * second is horizontal borders, third is vertical borders, fourth is corners.
+	 * Most faces are rendered as quadrants.
+	 */
+	QUADRANT_ORIENTED_BORDER(CORNER_JOIN | BLOCK_SPECIES, 4),
+
+	/**
+	 * Like {@code QUADRANT_ORIENTED_BORDER} but includes fifth texture for unbordered faces.
+	 */
+	QUADRANT_ORIENTED_TILE(CORNER_JOIN | BLOCK_SPECIES, 5);
 
 	private TextureLayout(int stateFlags) {
 		this(stateFlags, 1);

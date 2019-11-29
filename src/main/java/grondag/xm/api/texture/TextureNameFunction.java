@@ -31,6 +31,12 @@ public interface TextureNameFunction {
 
 	TextureNameFunction VERSIONED = (baseName, version, index) -> baseName + "_" + version;
 
+	TextureNameFunction INDEXED = (baseName, version, index) -> baseName + "_" + index;
+
+	TextureNameFunction VERSIONED_INDEXED = (baseName, version, index) -> {
+		return baseName + "_" + version + "_" + index;
+	};
+
 	TextureNameFunction VERSION_X_8 = (baseName, version, index) -> gimpNameX8(baseName, version);
 
 	TextureNameFunction INDEX_X_8 = (baseName, version, index) -> gimpNameX8(baseName, index);

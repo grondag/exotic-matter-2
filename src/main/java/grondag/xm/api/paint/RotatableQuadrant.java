@@ -30,7 +30,7 @@ import grondag.xm.api.texture.TextureOrientation;
  * left.
  */
 @API(status = EXPERIMENTAL)
-public enum TextureQuadrant {
+public enum RotatableQuadrant {
 	/**
 	 * Will position texture to display no border. Should not be used unless texture
 	 * is configured to render no border as a tile.
@@ -72,7 +72,7 @@ public enum TextureQuadrant {
 	 */
 	public final int rotation;
 
-	private TextureQuadrant(int rotation) {
+	private RotatableQuadrant(int rotation) {
 		this.rotation = rotation;
 	}
 

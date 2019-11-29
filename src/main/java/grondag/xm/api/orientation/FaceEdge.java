@@ -116,4 +116,12 @@ public enum FaceEdge implements StringIdentifiable {
 	public String asString() {
 		return name;
 	}
+
+	public boolean isHorizontal() {
+		return this == LEFT_EDGE || this == RIGHT_EDGE;
+	}
+
+	public boolean isVertical() {
+		return this == TOP_EDGE || this == BOTTOM_EDGE;
+	}
 }

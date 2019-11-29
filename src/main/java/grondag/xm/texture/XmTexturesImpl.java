@@ -53,9 +53,8 @@ public class XmTexturesImpl {
 	public static void init() {
 		Xm.LOG.debug("Registering Exotic Matter textures");
 
-		@SuppressWarnings("unused")
-		final
-		TextureSet dummy = XmTextures.TILE_COBBLE;
+		// Force registration
+		XmTextures.EMPTY.use();
 
 		ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register(XmTexturesImpl::registerTextures);
 	}

@@ -68,19 +68,9 @@ public enum TextureSetHelper {
 	}
 
 	public static TextureSet addBigTex(String modId, String name) {
-		return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(1).scale(TextureScale.MEDIUM)
+		return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(1).scale(TextureScale.GIANT)
 				.layout(TextureLayoutMap.SINGLE).transform(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.STATIC_TILES)
 				.build(modId + ":" + name);
-	}
-
-	public static TextureSet addZoom(TextureSet template) {
-		return TextureSet.builder(template).scale(TextureScale.LARGE).displayNameToken(template.displayNameToken() + "_zoom")
-				.build(template.id().toString() + "_zoom");
-	}
-
-	public static TextureSet addZoom2(TextureSet template) {
-		return TextureSet.builder(template).scale(TextureScale.GIANT).displayNameToken(template.displayNameToken() + "_zoom2")
-				.build(template.id().toString() + "_zoom2");
 	}
 
 	public static TextureSet addDecal(String modId, String idName, String fileName, TextureTransform rotation) {

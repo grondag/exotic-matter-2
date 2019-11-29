@@ -41,9 +41,17 @@ public interface TextureLayoutMap {
 
 	TextureLayoutMap BIGTEX_ANIMATED = create(TextureLayout.BIGTEX_ANIMATED, TextureNameFunction.SINGLE);
 
-	TextureLayoutMap QUADRANT_CONNECTED_SINGLE = create(TextureLayout.QUADRANT_CONNECTED, TextureNameFunction.SINGLE);
+	TextureLayoutMap QUADRANT_ROTATED_SINGLE = create(TextureLayout.QUADRANT_ROTATED, TextureNameFunction.SINGLE);
 
-	TextureLayoutMap QUADRANT_CONNECTED_VERSIONED = create(TextureLayout.QUADRANT_CONNECTED, TextureNameFunction.SINGLE);
+	TextureLayoutMap QUADRANT_ROTATED_VERSIONED = create(TextureLayout.QUADRANT_ROTATED, TextureNameFunction.SINGLE);
+
+	TextureLayoutMap QUADRANT_ORIENTED_BORDER_SINGLE = create(TextureLayout.QUADRANT_ORIENTED_BORDER, TextureNameFunction.INDEXED);
+
+	TextureLayoutMap QUADRANT_ORIENTED_BORDER_VERSIONED = create(TextureLayout.QUADRANT_ORIENTED_BORDER, TextureNameFunction.VERSIONED_INDEXED);
+
+	TextureLayoutMap QUADRANT_ORIENTED_TILE_SINGLE = create(TextureLayout.QUADRANT_ORIENTED_TILE, TextureNameFunction.INDEXED);
+
+	TextureLayoutMap QUADRANT_ORIENTED_TILE_VERSIONED = create(TextureLayout.QUADRANT_ORIENTED_TILE, TextureNameFunction.VERSIONED_INDEXED);
 
 	TextureLayout layout();
 }

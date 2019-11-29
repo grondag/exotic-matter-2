@@ -27,7 +27,7 @@ import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.orientation.FaceCorner;
-import grondag.xm.api.paint.TextureQuadrant;
+import grondag.xm.api.paint.RotatableQuadrant;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
@@ -37,19 +37,19 @@ import grondag.xm.api.texture.TextureSet;
  * split quads that span quadrants.
  */
 @API(status = INTERNAL)
-public abstract class CubicPainterQuadrants extends AbstractQuadPainter {
-	private static final TextureQuadrant[][] TEXTURE_MAP = new TextureQuadrant[FaceCorner.values().length][CornerJoinFaceStates.COUNT];
+public abstract class QuadPainterRotated extends AbstractQuadPainter {
+	private static final RotatableQuadrant[][] TEXTURE_MAP = new RotatableQuadrant[FaceCorner.values().length][CornerJoinFaceStates.COUNT];
 
-	private static TextureQuadrant textureMap(FaceCorner corner, CornerJoinFaceState faceState) {
+	private static RotatableQuadrant textureMap(FaceCorner corner, CornerJoinFaceState faceState) {
 		if (faceState.isJoined(corner.leftSide)) {
 			if (faceState.isJoined(corner.rightSide))
-				return faceState.needsCorner(corner) ? TextureQuadrant.CORNER : TextureQuadrant.FULL;
+				return faceState.needsCorner(corner) ? RotatableQuadrant.CORNER : RotatableQuadrant.FULL;
 			else
-				return TextureQuadrant.SIDE_RIGHT;
+				return RotatableQuadrant.SIDE_RIGHT;
 		} else if (faceState.isJoined(corner.rightSide))
-			return TextureQuadrant.SIDE_LEFT;
+			return RotatableQuadrant.SIDE_LEFT;
 		else
-			return TextureQuadrant.ROUND;
+			return RotatableQuadrant.ROUND;
 	}
 
 	static {

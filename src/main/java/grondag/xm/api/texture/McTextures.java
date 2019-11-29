@@ -97,6 +97,8 @@ public class McTextures {
 	public static final TextureSet WHITE_CONCRETE = single("white_concrete");
 	public static final TextureSet YELLOW_CONCRETE = single("yellow_concrete");
 
+	public static final TextureSet SNOW = single("snow");
+
 	public static TextureSet single(String name) {
 		return TextureSet.builder()
 				.displayNameToken("mc_" + name).baseTextureName("minecraft:block/" + name)

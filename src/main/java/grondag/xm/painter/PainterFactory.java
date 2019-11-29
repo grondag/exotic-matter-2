@@ -66,8 +66,14 @@ public class PainterFactory {
 			case MASONRY_5:
 				return surface.allowBorders() ? CubicPainterMasonry::paintQuads : null;
 
-			case QUADRANT_CONNECTED:
-				return surface.allowBorders() ? CubicPainterQuadrants::paintQuads : null;
+			case QUADRANT_ROTATED:
+				return surface.allowBorders() ? QuadPainterRotated::paintQuads : null;
+
+			case QUADRANT_ORIENTED_BORDER:
+				return surface.allowBorders() ? QuadPainterOriented::paintBorders : null;
+
+			case QUADRANT_ORIENTED_TILE:
+				return QuadPainterOriented::paintTiles;
 
 			default:
 				return null;

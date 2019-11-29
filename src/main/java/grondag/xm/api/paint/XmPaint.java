@@ -62,4 +62,13 @@ public interface XmPaint {
 	Identifier condition();
 
 	VertexProcessor vertexProcessor(int textureIndex);
+
+	// TODO: enable copy/transformation of externally defined paints
+	/**
+	 * True when this paint is externally defined in a JSON file.
+	 * Paints like this aren't loaded during registration and thus cannot
+	 * be copied or transformed during registration. This limitation
+	 * is probably temporary.
+	 */
+	boolean external();
 }

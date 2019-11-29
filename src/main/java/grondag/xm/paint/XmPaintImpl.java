@@ -133,8 +133,9 @@ public class XmPaintImpl {
 					&& vertexProcessor0 == other.vertexProcessor0
 					&& vertexProcessor1 == other.vertexProcessor1
 					&& vertexProcessor2 == other.vertexProcessor2;
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	@Override
@@ -259,6 +260,11 @@ public class XmPaintImpl {
 		public int index() {
 			return index;
 		}
+
+		@Override
+		public boolean external() {
+			return placeholder;
+		}
 	}
 
 	public static class Finder extends XmPaintImpl implements XmPaintFinder {
@@ -304,8 +310,9 @@ public class XmPaintImpl {
 
 		@Override
 		public XmPaintFinder textureDepth(int depth) {
-			if (depth < 1 || depth > MAX_TEXTURE_DEPTH)
+			if (depth < 1 || depth > MAX_TEXTURE_DEPTH) {
 				throw new IndexOutOfBoundsException("Invalid texture depth: " + depth);
+			}
 			TEXTURE_DEPTH.setValue(depth, this);
 			return this;
 		}

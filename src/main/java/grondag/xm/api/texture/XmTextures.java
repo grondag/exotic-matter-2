@@ -15,10 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
+import static grondag.xm.api.texture.TextureGroup.ALWAYS_HIDDEN;
 import static grondag.xm.api.texture.TextureGroup.STATIC_BORDERS;
 import static grondag.xm.api.texture.TextureGroup.STATIC_TILES;
-import static grondag.xm.api.texture.TextureLayoutMap.BORDER_13;
-import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_CONNECTED_SINGLE;
+import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_ORIENTED_BORDER_SINGLE;
+import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_ROTATED_SINGLE;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_ONLY;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_CUTOUT_OKAY;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT;
@@ -39,8 +40,8 @@ import org.apiguardian.api.API;
 import grondag.xm.Xm;
 
 @API(status = EXPERIMENTAL)
-public class XmTextures {
-	private XmTextures() {}
+public enum XmTextures {
+	;
 
 	public static final TextureSet TILE_COBBLE = TextureSet.builder()
 			.displayNameToken("cobble").baseTextureName("exotic-matter:block/cobble")
@@ -67,17 +68,20 @@ public class XmTextures {
 	public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white").baseTextureName("exotic-matter:block/white").versionCount(1).scale(SINGLE)
 			.layout(TextureLayoutMap.VERSION_X_8).transform(IDENTITY).groups(STATIC_TILES).build("exotic-matter:white");
 
+	/** Used as filler in mixed quadrants */
+	public static final TextureSet EMPTY = TextureSet.builder().displayNameToken("empty").baseTextureName("exotic-matter:block/empty").versionCount(1).scale(SINGLE)
+			.layout(TextureLayoutMap.SINGLE).transform(IDENTITY).groups(ALWAYS_HIDDEN).build("exotic-matter:empty");
+
 	public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
-			.baseTextureName("exotic-matter:block/border_smooth_blended").versionCount(1).scale(SINGLE).layout(BORDER_13).transform(IDENTITY)
+			.baseTextureName("exotic-matter:block/border_smooth_blended").versionCount(1).scale(SINGLE).layout(QUADRANT_ROTATED_SINGLE).transform(IDENTITY)
 			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_smooth_blended");
 
-	//TODO: remove
-	public static final TextureSet BORDER_QUADRANT_TEST = TextureSet.builder().displayNameToken("simple_quadrant_test")
-			.baseTextureName("exotic-matter:block/simple_quadrant_test").versionCount(1).scale(SINGLE).layout(QUADRANT_CONNECTED_SINGLE).transform(IDENTITY)
-			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:simple_quadrant_test");
+	public static final TextureSet BORDER_BEVEL = TextureSet.builder().displayNameToken("bevel")
+			.baseTextureName("exotic-matter:block/border_bevel").versionCount(1).scale(SINGLE).layout(QUADRANT_ORIENTED_BORDER_SINGLE).transform(IDENTITY)
+			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:bevel");
 
 	public static final TextureSet BORDER_SINGLE_LINE = TextureSet.builder().displayNameToken("border_single_line")
-			.baseTextureName("exotic-matter:block/border_single_line").versionCount(1).scale(SINGLE).layout(BORDER_13).transform(IDENTITY)
+			.baseTextureName("exotic-matter:block/border_single_line").versionCount(1).scale(SINGLE).layout(QUADRANT_ROTATED_SINGLE).transform(IDENTITY)
 			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_single_line");
 
 	public static final TextureSet BIGTEX_SANDSTONE = TextureSet.builder().displayNameToken("sandstone").baseTextureName("exotic-matter:block/sandstone").versionCount(1)
@@ -111,7 +115,7 @@ public class XmTextures {
 	public static final TextureSet BIGTEX_SLATE = addBigTex(Xm.MODID, "slate");
 	public static final TextureSet BIGTEX_ROUGH_ROCK = addBigTex(Xm.MODID, "rough_rock");
 	public static final TextureSet BIGTEX_CRACKED_EARTH = addBigTex(Xm.MODID, "cracked_earth");
-
+	public static final TextureSet BIGTEX_SNOW = addBigTex(Xm.MODID, "snow");
 
 	public static final TextureSet MASONRY_SIMPLE = TextureSet.builder().displayNameToken("masonry_simple").baseTextureName(Xm.MODID + ":blocks/masonry_simple")
 			.versionCount(1).scale(TextureScale.SINGLE).layout(TextureLayoutMap.MASONRY_5).transform(IDENTITY).renderIntent(TextureRenderIntent.OVERLAY_ONLY)
