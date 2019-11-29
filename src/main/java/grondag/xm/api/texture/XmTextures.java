@@ -20,6 +20,7 @@ import static grondag.xm.api.texture.TextureGroup.STATIC_BORDERS;
 import static grondag.xm.api.texture.TextureGroup.STATIC_TILES;
 import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_ORIENTED_BORDER_SINGLE;
 import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_ROTATED_SINGLE;
+import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_ROTATED_VERSIONED;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_ONLY;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_CUTOUT_OKAY;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT;
@@ -75,6 +76,10 @@ public enum XmTextures {
 	public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
 			.baseTextureName("exotic-matter:block/border_smooth_blended").versionCount(1).scale(SINGLE).layout(QUADRANT_ROTATED_SINGLE).transform(IDENTITY)
 			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_smooth_blended");
+
+	public static final TextureSet BORDER_WEATHERED_BLEND = TextureSet.builder().displayNameToken("border_weathered_blend")
+			.baseTextureName("exotic-matter:block/border_weathered_blended").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
+			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_weathered_blend");
 
 	public static final TextureSet BORDER_BEVEL = TextureSet.builder().displayNameToken("bevel")
 			.baseTextureName("exotic-matter:block/border_bevel").versionCount(1).scale(SINGLE).layout(QUADRANT_ORIENTED_BORDER_SINGLE).transform(IDENTITY)

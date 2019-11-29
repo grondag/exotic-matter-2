@@ -43,7 +43,7 @@ public interface TextureLayoutMap {
 
 	TextureLayoutMap QUADRANT_ROTATED_SINGLE = create(TextureLayout.QUADRANT_ROTATED, TextureNameFunction.SINGLE);
 
-	TextureLayoutMap QUADRANT_ROTATED_VERSIONED = create(TextureLayout.QUADRANT_ROTATED, TextureNameFunction.SINGLE);
+	TextureLayoutMap QUADRANT_ROTATED_VERSIONED = create(TextureLayout.QUADRANT_ROTATED, TextureNameFunction.VERSIONED);
 
 	TextureLayoutMap QUADRANT_ORIENTED_BORDER_SINGLE = create(TextureLayout.QUADRANT_ORIENTED_BORDER, TextureNameFunction.INDEXED);
 
