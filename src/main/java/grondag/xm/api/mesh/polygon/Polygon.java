@@ -86,8 +86,9 @@ public interface Polygon {
 	default int indexOf(Vec3f v) {
 		final int limit = vertexCount();
 		for (int i = 0; i < limit; i++) {
-			if (v.equals(getPos(i)))
+			if (v.equals(getPos(i))) {
 				return i;
+			}
 		}
 		return VERTEX_NOT_FOUND;
 	}
@@ -103,8 +104,9 @@ public interface Polygon {
 	}
 
 	default boolean isOnSinglePlane() {
-		if (vertexCount() == 3)
+		if (vertexCount() == 3) {
 			return true;
+		}
 
 		final Vec3f fn = faceNormal();
 
@@ -121,19 +123,22 @@ public interface Polygon {
 			final float dy = v.y() - first.y();
 			final float dz = v.z() - first.z();
 
-			if (Math.abs(faceX * dx + faceY * dy + faceZ * dz) > PolyHelper.EPSILON)
+			if (Math.abs(faceX * dx + faceY * dy + faceZ * dz) > PolyHelper.EPSILON) {
 				return false;
+			}
 		}
 
 		return true;
 	}
 
 	default boolean isOnFace(Direction face, float tolerance) {
-		if (face == null)
+		if (face == null) {
 			return false;
+		}
 		for (int i = 0; i < vertexCount(); i++) {
-			if (!getPos(i).isOnFacePlane(face, tolerance))
+			if (!getPos(i).isOnFacePlane(face, tolerance)) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -185,7 +190,9 @@ public interface Polygon {
 		final Vec3f N = faceNormal();
 
 		if (n < 3)
+		{
 			return 0; // a degenerate polygon
+		}
 
 		// select largest abs coordinate to ignore for projection
 		ax = (N.x() > 0 ? N.x() : -N.x()); // abs x-coord
@@ -275,13 +282,15 @@ public interface Polygon {
 		final Direction nominalFace = nominalFace();
 
 		// semantic face will be right most of the time
-		if (isOnFace(nominalFace, PolyHelper.EPSILON))
+		if (isOnFace(nominalFace, PolyHelper.EPSILON)) {
 			return nominalFace;
+		}
 
 		for (int i = 0; i < 6; i++) {
 			final Direction f = Direction.byId(i);
-			if (f != nominalFace && isOnFace(f, PolyHelper.EPSILON))
+			if (f != nominalFace && isOnFace(f, PolyHelper.EPSILON)) {
 				return f;
+			}
 		}
 
 		return null;

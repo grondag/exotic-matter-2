@@ -27,7 +27,6 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class XmConfig {
-	@SuppressWarnings("hiding")
 	public static class ConfigData {
 
 		// DEBUG
@@ -47,6 +46,9 @@ public class XmConfig {
 	// reserved
 	public static int maxPlacementCheckCount = 32;
 	public static boolean logExcavationRenderTracking;
+
+	//TODO: implement and make default = true
+	public static boolean simplifyTerrainBlockGeometry = false;
 
 
 	public static void init() {

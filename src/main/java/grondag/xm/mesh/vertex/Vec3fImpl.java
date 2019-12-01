@@ -23,13 +23,13 @@ import org.apiguardian.api.API;
 import grondag.xm.api.mesh.polygon.Vec3f;
 
 @API(status = INTERNAL)
-class Vec3fImpl implements Vec3f {
+public class Vec3fImpl implements Vec3f {
 
 	static final Vec3fImpl ZERO = new Vec3fImpl(0, 0, 0);
 
-	protected final float x;
-	protected final float y;
-	protected final float z;
+	protected float x;
+	protected float y;
+	protected float z;
 
 	Vec3fImpl(float x, float y, float z) {
 		this.x = x;
@@ -56,99 +56,102 @@ class Vec3fImpl implements Vec3f {
 		return z;
 	}
 
-	//    public Mutable mutableCopy() {
-	//        return new Mutable(x, y, z);
-	//    }
-	//
-	//    public static class Mutable extends Vec3fImpl {
-	//        public Mutable(float x, float y, float z) {
-	//            super(x, y, z);
-	//        }
-	//
-	//        public Mutable load(float x, float y, float z) {
-	//            this.x = x;
-	//            this.y = y;
-	//            this.z = z;
-	//            return this;
-	//        }
-	//
-	//        public final Mutable load(Vec3fImpl fromVec) {
-	//            this.x = fromVec.x;
-	//            this.y = fromVec.y;
-	//            this.z = fromVec.z;
-	//            return this;
-	//        }
-	//
-	//        @Override
-	//        public boolean isMutable() {
-	//            return true;
-	//        }
-	//
-	//        public final Vec3f toImmutable() {
-	//            return Vec3f.create(x, y, z);
-	//        }
-	//
-	//        public final Mutable subtract(Vec3fImpl vec) {
-	//            return this.subtract(vec.x, vec.y, vec.z);
-	//        }
-	//
-	//        public final Mutable subtract(float x, float y, float z) {
-	//            return this.addVector(-x, -y, -z);
-	//        }
-	//
-	//        public final Mutable add(Vec3fImpl vec) {
-	//            return this.addVector(vec.x, vec.y, vec.z);
-	//        }
-	//
-	//        public final Mutable addVector(float x, float y, float z) {
-	//            this.x += x;
-	//            this.y += y;
-	//            this.z += z;
-	//            return this;
-	//        }
-	//
-	//        public final Mutable scale(float factor) {
-	//            this.x *= factor;
-	//            this.y *= factor;
-	//            this.z *= factor;
-	//            return this;
-	//        }
-	//
-	//        public final Mutable invert() {
-	//            this.x = -this.x;
-	//            this.y = -this.y;
-	//            this.z = -this.z;
-	//            return this;
-	//        }
-	//
-	//        public final Mutable normalize() {
-	//            final float mag = length();
-	//            if (mag < 1.0E-4F) {
-	//                x = 0;
-	//                y = 0;
-	//                z = 0;
-	//            } else {
-	//                this.x /= mag;
-	//                this.y /= mag;
-	//                this.z /= mag;
-	//            }
-	//            return this;
-	//        }
-	//    }
+	public Mutable mutableCopy() {
+		return new Mutable(x, y, z);
+	}
+
+	public static class Mutable extends Vec3fImpl {
+		public Mutable(float x, float y, float z) {
+			super(x, y, z);
+		}
+
+		public Mutable load(float x, float y, float z) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			return this;
+		}
+
+		public final Mutable load(Vec3fImpl fromVec) {
+			x = fromVec.x;
+			y = fromVec.y;
+			z = fromVec.z;
+			return this;
+		}
+
+		@Override
+		public boolean isMutable() {
+			return true;
+		}
+
+		public final Vec3fImpl toImmutable() {
+			return (Vec3fImpl) Vec3f.create(x, y, z);
+		}
+
+		public final Mutable subtract(Vec3fImpl vec) {
+			return this.subtract(vec.x, vec.y, vec.z);
+		}
+
+		public final Mutable subtract(float x, float y, float z) {
+			return addVector(-x, -y, -z);
+		}
+
+		public final Mutable add(Vec3fImpl vec) {
+			return addVector(vec.x, vec.y, vec.z);
+		}
+
+		public final Mutable addVector(float x, float y, float z) {
+			this.x += x;
+			this.y += y;
+			this.z += z;
+			return this;
+		}
+
+		public final Mutable scale(float factor) {
+			x *= factor;
+			y *= factor;
+			z *= factor;
+			return this;
+		}
+
+		public final Mutable invert() {
+			x = -x;
+			y = -y;
+			z = -z;
+			return this;
+		}
+
+		public final Mutable normalize() {
+			final float mag = length();
+			if (mag < 1.0E-4F) {
+				x = 0;
+				y = 0;
+				z = 0;
+			} else {
+				x /= mag;
+				y /= mag;
+				z /= mag;
+			}
+			return this;
+		}
+	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == this)
+		if (obj == this) {
 			return true;
+		}
 
-		if (obj == null)
+		if (obj == null) {
 			return false;
+		}
 
 		if (obj instanceof Vec3fImpl) {
 			final Vec3fImpl v = (Vec3fImpl) obj;
 			return v.x == x && v.y == y && v.z == z;
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	@Override
