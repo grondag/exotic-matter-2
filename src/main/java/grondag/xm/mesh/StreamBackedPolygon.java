@@ -23,11 +23,10 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.math.Direction;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
+import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
@@ -193,9 +192,9 @@ class StreamBackedPolygon implements Polygon {
 	 */
 	private boolean checkFaceNormal() {
 		final int normalFormat = MeshFormat.getFaceNormalFormat(format());
-		if (normalFormat == MeshFormat.FACE_NORMAL_FORMAT_NOMINAL)
+		if (normalFormat == MeshFormat.FACE_NORMAL_FORMAT_NOMINAL) {
 			return true;
-		else if (normalFormat == MeshFormat.FACE_NORMAL_FORMAT_COMPUTED && Float.isNaN(polyEncoder.getFaceNormalX(stream, baseAddress))) {
+		} else if (normalFormat == MeshFormat.FACE_NORMAL_FORMAT_COMPUTED && Float.isNaN(polyEncoder.getFaceNormalX(stream, baseAddress))) {
 			final Vec3f normal = computeFaceNormal();
 			polyEncoder.setFaceNormal(stream, baseAddress, normal);
 		}
@@ -363,7 +362,7 @@ class StreamBackedPolygon implements Polygon {
 	}
 
 	@Override
-	public BlendMode blendMode(int layerIndex) {
+	public PaintBlendMode blendMode(int layerIndex) {
 		return StaticEncoder.getRenderLayer(stream, baseAddress, layerIndex);
 	}
 

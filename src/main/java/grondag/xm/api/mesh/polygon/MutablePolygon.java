@@ -24,8 +24,7 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
+import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
@@ -65,7 +64,7 @@ public interface MutablePolygon extends Polygon {
 
 	MutablePolygon contractUV(int layerIndex, boolean contractUVs);
 
-	MutablePolygon blendMode(int layerIndex, BlendMode layer);
+	MutablePolygon blendMode(int layerIndex, PaintBlendMode layer);
 
 	MutablePolygon spriteDepth(int layerCount);
 

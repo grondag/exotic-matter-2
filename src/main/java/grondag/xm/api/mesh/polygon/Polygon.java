@@ -24,9 +24,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
 import grondag.xm.Xm;
+import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
@@ -351,7 +350,7 @@ public interface Polygon {
 
 	boolean lockUV(int layerIndex);
 
-	BlendMode blendMode(int layerIndex);
+	PaintBlendMode blendMode(int layerIndex);
 
 	boolean emissive(int layerIndex);
 

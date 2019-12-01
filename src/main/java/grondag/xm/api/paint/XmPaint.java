@@ -23,8 +23,6 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.paint.XmPaintImpl;
 
@@ -39,7 +37,7 @@ public interface XmPaint {
 	int index();
 
 	@Nullable
-	BlendMode blendMode(int textureIndex);
+	PaintBlendMode blendMode(int textureIndex);
 
 	boolean disableColorIndex(int textureIndex);
 

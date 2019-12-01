@@ -22,12 +22,11 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
 import grondag.fermion.color.ColorHelper;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
+import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
@@ -115,7 +114,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 	}
 
 	@Override
-	public final MutablePolygon blendMode(int layerIndex, BlendMode layer) {
+	public final MutablePolygon blendMode(int layerIndex, PaintBlendMode layer) {
 		StaticEncoder.setRenderLayer(stream, baseAddress, layerIndex, layer);
 		return this;
 	}
@@ -126,8 +125,9 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 	@Override
 	public final MutablePolygon spriteDepth(int layerCount) {
 		final int format = format();
-		if (!MeshFormat.isMutable(format))
+		if (!MeshFormat.isMutable(format)) {
 			throw new UnsupportedOperationException("Cannot change layer count on immutable polygon");
+		}
 		setFormat(MeshFormat.setLayerCount(format, layerCount));
 		return this;
 	}
@@ -413,8 +413,9 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 				for (int i = 0; i < vertexCount; i++) {
 					copyVertexFrom(i, polyIn, i);
 				}
-			} else
+			} else {
 				throw new UnsupportedOperationException("Polygon vertex counts must match when copying vertex data.");
+			}
 		}
 		return this;
 	}

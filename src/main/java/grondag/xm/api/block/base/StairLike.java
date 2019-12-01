@@ -29,7 +29,6 @@ import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Waterloggable;
-import net.minecraft.client.render.RenderLayers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -58,11 +57,11 @@ import net.minecraft.world.explosion.Explosion;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 
 import grondag.fermion.modkeys.impl.ModKeysAccess;
 import grondag.fermion.spatial.DirectionHelper;
 import grondag.fermion.world.WorldHelper;
+import grondag.xm.SidedHelper;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.collision.CollisionDispatcher;
@@ -92,7 +91,7 @@ public class StairLike extends Block implements Waterloggable {
 		baseBlock = blockState.getBlock();
 		baseBlockState = blockState;
 		this.shape = shape;
-		BlockRenderLayerMap.INSTANCE.putBlock(this, RenderLayers.getBlockLayer(baseBlockState));
+		SidedHelper.mapRenderLayerLike(this, baseBlockState);
 	}
 
 	@Override
@@ -325,8 +324,9 @@ public class StairLike extends Block implements Waterloggable {
 
 	public static SimplePrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
 		final Block rawBlock = blockState.getBlock();
-		if(!(rawBlock instanceof StairLike))
+		if(!(rawBlock instanceof StairLike)) {
 			return modelState;
+		}
 
 		final StairLike block = (StairLike)rawBlock;
 		Stair.setCorner(block.shape != Shape.STRAIGHT, modelState);

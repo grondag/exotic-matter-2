@@ -26,9 +26,8 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
 import grondag.fermion.bits.BitPacker32;
+import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintFinder;
@@ -52,7 +51,7 @@ public class XmPaintImpl {
 	private static final BitPacker32<XmPaintImpl>.BooleanElement[] FLAGS = new BitPacker32.BooleanElement[COLOR_DISABLE_INDEX_START + MAX_TEXTURE_DEPTH];
 
 	@SuppressWarnings("unchecked")
-	private static final BitPacker32<XmPaintImpl>.NullableEnumElement<BlendMode> BLEND_MODES[] = new BitPacker32.NullableEnumElement[MAX_TEXTURE_DEPTH];
+	private static final BitPacker32<XmPaintImpl>.NullableEnumElement<PaintBlendMode> BLEND_MODES[] = new BitPacker32.NullableEnumElement[MAX_TEXTURE_DEPTH];
 
 	private static final BitPacker32<XmPaintImpl>.IntElement TEXTURE_DEPTH;
 
@@ -76,9 +75,9 @@ public class XmPaintImpl {
 		FLAGS[COLOR_DISABLE_INDEX_START + 1] = PAINT_BITS.createBooleanElement();
 		FLAGS[COLOR_DISABLE_INDEX_START + 2] = PAINT_BITS.createBooleanElement();
 
-		BLEND_MODES[0] = PAINT_BITS.createNullableEnumElement(BlendMode.class);
-		BLEND_MODES[1] = PAINT_BITS.createNullableEnumElement(BlendMode.class);
-		BLEND_MODES[2] = PAINT_BITS.createNullableEnumElement(BlendMode.class);
+		BLEND_MODES[0] = PAINT_BITS.createNullableEnumElement(PaintBlendMode.class);
+		BLEND_MODES[1] = PAINT_BITS.createNullableEnumElement(PaintBlendMode.class);
+		BLEND_MODES[2] = PAINT_BITS.createNullableEnumElement(PaintBlendMode.class);
 
 		assert PAINT_BITS.bitLength() <= 32;
 
@@ -164,7 +163,7 @@ public class XmPaintImpl {
 		return result;
 	}
 
-	public @Nullable BlendMode blendMode(int textureIndex) {
+	public @Nullable PaintBlendMode blendMode(int textureIndex) {
 		return BLEND_MODES[textureIndex].getValue(this);
 	}
 
@@ -355,7 +354,7 @@ public class XmPaintImpl {
 		}
 
 		@Override
-		public XmPaintFinder blendMode(int textureIndex, BlendMode blendMode) {
+		public XmPaintFinder blendMode(int textureIndex, PaintBlendMode blendMode) {
 			BLEND_MODES[textureIndex].setValue(blendMode, this);
 			return this;
 		}

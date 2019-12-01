@@ -19,11 +19,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.varia.IndexedInterner;
+import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
@@ -188,22 +187,22 @@ class StaticEncoder {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static final BitPacker32<StaticEncoder>.EnumElement<BlendMode>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<BlendMode>[]) new BitPacker32<?>.EnumElement<?>[3];
+	private static final BitPacker32<StaticEncoder>.EnumElement<PaintBlendMode>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<PaintBlendMode>[]) new BitPacker32<?>.EnumElement<?>[3];
 
 	static {
-		RENDER_LAYER[0] = BITPACKER.createEnumElement(BlendMode.class);
-		RENDER_LAYER[1] = BITPACKER.createEnumElement(BlendMode.class);
-		RENDER_LAYER[2] = BITPACKER.createEnumElement(BlendMode.class);
+		RENDER_LAYER[0] = BITPACKER.createEnumElement(PaintBlendMode.class);
+		RENDER_LAYER[1] = BITPACKER.createEnumElement(PaintBlendMode.class);
+		RENDER_LAYER[2] = BITPACKER.createEnumElement(PaintBlendMode.class);
 
 		assert BITPACKER.bitLength() <= 32;
 		assert BITPACKER_2.bitLength() <= 32;
 	}
 
-	public static BlendMode getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {
+	public static PaintBlendMode getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {
 		return RENDER_LAYER[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
 	}
 
-	public static void setRenderLayer(IntStream stream, int baseAddress, int layerIndex, BlendMode layer) {
+	public static void setRenderLayer(IntStream stream, int baseAddress, int layerIndex, PaintBlendMode layer) {
 		final int bits = stream.get(baseAddress + BIT_OFFSET);
 		stream.set(baseAddress + BIT_OFFSET, RENDER_LAYER[layerIndex].setValue(layer, bits));
 	}

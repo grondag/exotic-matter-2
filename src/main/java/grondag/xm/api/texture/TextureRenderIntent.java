@@ -19,7 +19,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+import grondag.xm.api.paint.PaintBlendMode;
 
 /**
  * Describes if/how this texture can be rendered in alpha or cutout modes. Used
@@ -69,7 +69,7 @@ public enum TextureRenderIntent {
 		canRenderAsBaseInCutoutLayer = flexible;
 	}
 
-	public boolean isCompatibleWith(BlendMode blendMode) {
+	public boolean isCompatibleWith(PaintBlendMode blendMode) {
 		switch (blendMode) {
 		case CUTOUT:
 			return false;

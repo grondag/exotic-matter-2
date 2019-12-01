@@ -13,15 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
+
 package grondag.xm;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.resource.ResourceType;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.render.InvalidateRenderStateCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -46,6 +49,10 @@ public class XmClient implements ClientModInitializer {
 		Packets.initializeClient();
 		AbstractPrimitiveModelState.useClientHandler();
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(XmPaintRegistryImpl.INSTANCE);
+
+		SidedHelper.RENDER_LAYER_REMAPPER  = (b, s) -> BlockRenderLayerMap.INSTANCE.putBlock(b, RenderLayers.getBlockLayer(s));
+		SidedHelper.RENDER_LAYER_REMAPS.forEach(SidedHelper.RENDER_LAYER_REMAPPER);
+		SidedHelper.RENDER_LAYER_REMAPS.clear();
 	}
 
 	public static void invalidate() {

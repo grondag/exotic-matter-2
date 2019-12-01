@@ -25,8 +25,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
+import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSetRegistry;
 
@@ -39,7 +38,9 @@ class PaintDeserializer {
 			final JsonArray layers = JsonHelper.asArray(json.get("layers"), "layers");
 			if(!layers.isJsonNull()) {
 				final int depth = layers.size();
-				if(depth > 3) return null;
+				if(depth > 3) {
+					return null;
+				}
 				finder.textureDepth(depth);
 				for(int i = 0; i < depth; i++) {
 					readLayer(layers.get(i).getAsJsonObject(), finder, i);
@@ -79,18 +80,18 @@ class PaintDeserializer {
 		}
 	}
 
-	private static BlendMode readBlendMode(String val) {
+	private static PaintBlendMode readBlendMode(String val) {
 		val = val.toLowerCase(Locale.ROOT);
 		switch(val) {
 		case "solid":
 		default:
-			return BlendMode.SOLID;
+			return PaintBlendMode.SOLID;
 		case "cutout":
-			return BlendMode.CUTOUT;
+			return PaintBlendMode.CUTOUT;
 		case "cutout_mipped":
-			return BlendMode.CUTOUT_MIPPED;
+			return PaintBlendMode.CUTOUT_MIPPED;
 		case "translucent":
-			return BlendMode.TRANSLUCENT;
+			return PaintBlendMode.TRANSLUCENT;
 		}
 	}
 

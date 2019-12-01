@@ -13,43 +13,45 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
+
 package grondag.xm.api.paint;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import net.minecraft.util.Identifier;
-
-import grondag.xm.api.texture.TextureSet;
-
+/**
+ * Server-safe copy of BlendMode used in rendering.
+ */
 @API(status = EXPERIMENTAL)
-public interface XmPaintFinder {
-	XmPaint find();
+public enum PaintBlendMode {
+	/**
+	 * Emulate blending behavior associated with the block.
+	 */
+	DEFAULT,
 
-	XmPaintFinder clear();
+	/**
+	 * Fully opaque with depth test, no blending. Used for most normal blocks.
+	 */
+	SOLID,
 
-	XmPaintFinder copy(XmPaint paint);
+	/**
+	 * Pixels with alpha > 0.5 are rendered as if {@code SOLID}. Other pixels are not rendered.
+	 * Texture mip-map enabled.  Used for leaves.
+	 */
+	CUTOUT_MIPPED,
 
-	XmPaintFinder textureDepth(int depth);
+	/**
+	 * Pixels with alpha > 0.5 are rendered as if {@code SOLID}. Other pixels are not rendered.
+	 * Texture mip-map disabled.  Used for iron bars, glass and other cutout sprites with hard edges.
+	 */
+	CUTOUT,
 
-	XmPaintFinder textureColor(int textureIndex, int colorARBG);
+	/**
+	 * Pixels are blended with the background according to alpha color values. Some performance cost,
+	 * use in moderation. Texture mip-map enabled.  Used for stained glass.
+	 */
+	TRANSLUCENT;
 
-	XmPaintFinder texture(int textureIndex, TextureSet sprite);
 
-	XmPaintFinder blendMode(int textureIndex, PaintBlendMode blendMode);
-
-	XmPaintFinder disableColorIndex(int textureIndex, boolean disable);
-
-	XmPaintFinder disableDiffuse(int textureIndex, boolean disable);
-
-	XmPaintFinder disableAo(int textureIndex, boolean disable);
-
-	XmPaintFinder emissive(int textureIndex, boolean isEmissive);
-
-	XmPaintFinder shader(Identifier shader);
-
-	XmPaintFinder condition(Identifier condition);
-
-	XmPaintFinder vertexProcessor(int textureIndex, VertexProcessor vp);
 }
