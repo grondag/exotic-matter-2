@@ -19,6 +19,7 @@ import static net.minecraft.block.StairsBlock.WATERLOGGED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Random;
+import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -58,7 +59,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 
-import grondag.fermion.modkeys.impl.ModKeysAccess;
 import grondag.fermion.spatial.DirectionHelper;
 import grondag.fermion.world.WorldHelper;
 import grondag.xm.SidedHelper;
@@ -84,7 +84,10 @@ public class StairLike extends Block implements Waterloggable {
 
 	public final Shape shape;
 
-	public StairLike(BlockState blockState, Settings settings, Shape shape) {
+	protected final Predicate<PlayerEntity> modKeyTest;
+	protected final Predicate<PlayerEntity> forceKeyTest;
+
+	public StairLike(BlockState blockState, Settings settings, Shape shape, Predicate<PlayerEntity> modKeyTest, Predicate<PlayerEntity> forceKeyTest) {
 		super(FabricBlockSettings.copyOf(settings).dynamicBounds().build());
 		setDefaultState(stateManager.getDefaultState()
 				.with(WATERLOGGED, false));
@@ -92,6 +95,8 @@ public class StairLike extends Block implements Waterloggable {
 		baseBlockState = blockState;
 		this.shape = shape;
 		SidedHelper.mapRenderLayerLike(this, baseBlockState);
+		this.modKeyTest = modKeyTest;
+		this.forceKeyTest = forceKeyTest;
 	}
 
 	@Override
@@ -167,7 +172,6 @@ public class StairLike extends Block implements Waterloggable {
 
 	//UGLY: It was bad in the previous versions, too.  There must be a better model for this, but I haven't found it yet.
 	//TODO: consider splitting this mess into a utility class for reuse - like it was in prior version
-	//TODO: make modifier key mappings configurable
 	@Override
 	public BlockState getPlacementState(ItemPlacementContext context) {
 		final BlockPos pos = context.getBlockPos();
@@ -184,8 +188,8 @@ public class StairLike extends Block implements Waterloggable {
 			final int yIndex = faces[0].getAxis() == Axis.Y ? 0 : (faces[1].getAxis() == Axis.Y ? 1 : 2);
 			final int zIndex = faces[0].getAxis() == Axis.Z ? 0 : (faces[1].getAxis() == Axis.Z ? 1 : 2);
 
-			final boolean modKey = ModKeysAccess.isSuperPressed(player);
-			final boolean forceKey = ModKeysAccess.isControlPressed(player);
+			final boolean modKey = modKeyTest.test(player);
+			final boolean forceKey = forceKeyTest.test(player);
 
 			final Vec3d hit = context.getHitPos();
 			if(shape == Shape.STRAIGHT) {
