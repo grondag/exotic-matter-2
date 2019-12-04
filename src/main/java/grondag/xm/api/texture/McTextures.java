@@ -99,6 +99,13 @@ public class McTextures {
 
 	public static final TextureSet SNOW = single("snow");
 
+	public static final TextureSet ACACIA_PLANKS = single("acacia_planks");
+	public static final TextureSet OAK_PLANKS = single("oak_planks");
+	public static final TextureSet SPRUCE_PLANKS = single("spruce_planks");
+	public static final TextureSet BIRCH_PLANKS = single("birch_planks");
+	public static final TextureSet DARK_OAK_PLANKS = single("dark_oak_planks");
+	public static final TextureSet JUNGLE_PLANKS = single("jungle_planks");
+
 	public static TextureSet single(String name) {
 		return TextureSet.builder()
 				.displayNameToken("mc_" + name).baseTextureName("minecraft:block/" + name)
