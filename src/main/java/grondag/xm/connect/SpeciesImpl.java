@@ -50,8 +50,9 @@ public class SpeciesImpl {
 		if (((mode == SpeciesMode.MATCH_CLICKED || mode == SpeciesMode.MATCH_MOST) && onPos != null && onFace != null)) {
 			final int clickedSpecies = func.species(world, onPos);
 
-			if (clickedSpecies >= 0)
+			if (clickedSpecies >= 0) {
 				return clickedSpecies;
+			}
 		}
 
 		// PERF: avoid allocation - but not urgent; not hot
@@ -125,6 +126,7 @@ public class SpeciesImpl {
 	@SuppressWarnings("rawtypes")
 	private static boolean blockAndSpeciesTest(BlockTestContext ctx) {
 		return ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock()
+				&& ctx.fromBlockState().contains(SpeciesProperty.SPECIES)
 				&& ctx.fromBlockState().get(SpeciesProperty.SPECIES) == ctx.toBlockState().get(SpeciesProperty.SPECIES);
 	}
 
