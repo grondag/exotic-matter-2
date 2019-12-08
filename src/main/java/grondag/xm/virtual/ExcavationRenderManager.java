@@ -57,11 +57,13 @@ public class ExcavationRenderManager {
 
 	@Environment(EnvType.CLIENT)
 	public static void render(float tickDelta, ClientPlayerEntity player) {
-		if (player == null)
+		if (player == null) {
 			return;
+		}
 
-		if (renderCopy == null || renderCopy.length == 0)
+		if (renderCopy == null || renderCopy.length == 0) {
 			return;
+		}
 
 		//		GlStateManager.enableBlend();
 		//		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
@@ -80,9 +82,9 @@ public class ExcavationRenderManager {
 
 		final Frustum visibleRegion = XmRenderHelper.frustum();
 
-		final double d0 = player.prevRenderX + (player.getX() - player.prevRenderX) * tickDelta;
-		final double d1 = player.prevRenderY + (player.getY() - player.prevRenderY) * tickDelta;
-		final double d2 = player.prevRenderZ + (player.getZ() - player.prevRenderZ) * tickDelta;
+		final double d0 = player.lastRenderX + (player.getX() - player.lastRenderX) * tickDelta;
+		final double d1 = player.lastRenderY + (player.getY() - player.lastRenderY) * tickDelta;
+		final double d2 = player.lastRenderZ + (player.getZ() - player.lastRenderZ) * tickDelta;
 
 		// TODO: needed?
 		// bufferBuilder.setOffset(-d0, -d1, -d2);
