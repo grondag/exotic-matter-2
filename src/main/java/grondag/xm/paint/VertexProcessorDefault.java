@@ -45,7 +45,7 @@ public class VertexProcessorDefault implements VertexProcessor {
 			final XmSurface lampSurface = modelState.primitive().lampSurface(modelState);
 			if (lampSurface != null) {
 				final XmPaint lampPaint = modelState.paint(lampSurface.ordinal());
-				if(lampPaint != null) {
+				if(lampPaint != null && lampPaint.emissive(0)) {
 					final int lampColor = lampPaint.textureColor(0);
 					final int lampBrightness = lampPaint.emissive(0) ? 0xF0 : 0;
 
@@ -59,14 +59,17 @@ public class VertexProcessorDefault implements VertexProcessor {
 						poly.color(i, textureIndex, c | alpha);
 						poly.glow(i, b);
 					}
+
+					return;
 				}
 			}
-		} else {
-			//normal shaded surface - tint existing colors, usually WHITE to start with
-			for (int i = 0; i < poly.vertexCount(); i++) {
-				final int c = ColorHelper.multiplyColor(color, poly.color(i, textureIndex));
-				poly.color(i, textureIndex, c);
-			}
 		}
+
+		//normal shaded surface - tint existing colors, usually WHITE to start with
+		for (int i = 0; i < poly.vertexCount(); i++) {
+			final int c = ColorHelper.multiplyColor(color, poly.color(i, textureIndex));
+			poly.color(i, textureIndex, c);
+		}
+
 	}
 }

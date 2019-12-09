@@ -81,6 +81,10 @@ public enum XmTextures {
 			.baseTextureName("exotic-matter:block/border_weathered_blended").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
 			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_weathered_blend");
 
+	public static final TextureSet BORDER_COBBLE = TextureSet.builder().displayNameToken("border_cobble")
+			.baseTextureName("exotic-matter:block/border_cobble").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
+			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_cobble");
+
 	public static final TextureSet BORDER_BEVEL = TextureSet.builder().displayNameToken("bevel")
 			.baseTextureName("exotic-matter:block/border_bevel").versionCount(1).scale(SINGLE).layout(QUADRANT_ORIENTED_BORDER_SINGLE).transform(IDENTITY)
 			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:bevel");
@@ -121,6 +125,8 @@ public enum XmTextures {
 	public static final TextureSet BIGTEX_ROUGH_ROCK = addBigTex(Xm.MODID, "rough_rock");
 	public static final TextureSet BIGTEX_CRACKED_EARTH = addBigTex(Xm.MODID, "cracked_earth");
 	public static final TextureSet BIGTEX_SNOW = addBigTex(Xm.MODID, "snow");
+	public static final TextureSet BIGTEX_RAMMED_EARTH = addBigTex(Xm.MODID, "rammed_earth", TextureScale.LARGE, TextureTransform.IDENTITY);
+	public static final TextureSet BIGTEX_COBBLE_SQUARES = addBigTex(Xm.MODID, "cobble_squares", TextureScale.LARGE, TextureTransform.IDENTITY);
 
 	public static final TextureSet MASONRY_SIMPLE = TextureSet.builder().displayNameToken("masonry_simple").baseTextureName(Xm.MODID + ":blocks/masonry_simple")
 			.versionCount(1).scale(TextureScale.SINGLE).layout(TextureLayoutMap.MASONRY_5).transform(IDENTITY).renderIntent(TextureRenderIntent.OVERLAY_ONLY)

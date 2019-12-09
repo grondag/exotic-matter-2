@@ -21,7 +21,6 @@ import static grondag.xm.api.texture.TextureLayoutMap.BORDER_14;
 import static grondag.xm.api.texture.TextureRenderIntent.OVERLAY_ONLY;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
-import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
@@ -68,8 +67,16 @@ public enum TextureSetHelper {
 	}
 
 	public static TextureSet addBigTex(String modId, String name) {
-		return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(1).scale(TextureScale.GIANT)
-				.layout(TextureLayoutMap.SINGLE).transform(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.STATIC_TILES)
+		return addBigTex(modId, name, TextureScale.GIANT);
+	}
+
+	public static TextureSet addBigTex(String modId, String name, TextureScale scale) {
+		return addBigTex(modId, name, TextureScale.GIANT, TextureTransform.ROTATE_BIGTEX);
+	}
+
+	public static TextureSet addBigTex(String modId, String name, TextureScale scale, TextureTransform transform) {
+		return TextureSet.builder().displayNameToken(name).baseTextureName(modId + ":block/" + name).versionCount(1).scale(scale)
+				.layout(TextureLayoutMap.SINGLE).transform(transform).renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.STATIC_TILES)
 				.build(modId + ":" + name);
 	}
 
