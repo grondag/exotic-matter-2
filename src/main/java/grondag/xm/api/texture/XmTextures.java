@@ -109,6 +109,14 @@ public enum XmTextures {
 			.transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
 			.groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_b");
 
+	public static final TextureLayoutMap NOISE_LAYOUT = TextureLayoutMap.create(TextureLayout.SIMPLE, (s, v, i) -> s + (v < 4 ? "_0_" + v : "_1_" + (v - 4)));
+
+	public static final TextureSet TILE_NOISE_BLUE = TextureSet.builder().displayNameToken("blue_noise")
+			.baseTextureName("exotic-matter:block/noise_blue").versionCount(8)
+			.scale(TextureScale.SINGLE).layout(NOISE_LAYOUT)
+			.transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
+			.groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_b");
+
 	public static final TextureSet BORDER_GRITTY_SINGLE_LINE = addBorderRandom("exotic-matter", "border_gritty_single_line", false, false);
 
 	public static final TextureSet BIGTEX_MARBLE = addBigTex(Xm.MODID, "marble");
@@ -120,7 +128,7 @@ public enum XmTextures {
 			.groups(TextureGroup.STATIC_TILES).build("exotic-art:wood");
 	public static final TextureSet BIGTEX_WOOD_FLIP = TextureSet.builder(BIGTEX_WOOD).displayNameToken("wood_flip").transform(ROTATE_90)
 			.build("exotic-art:wood_flip");
-	public static final TextureSet BIGTEX_GRANITE = addBigTex(Xm.MODID, "granite");
+	public static final TextureSet BIGTEX_GRANITE = addBigTex(Xm.MODID, "granite", TextureScale.LARGE);
 	public static final TextureSet BIGTEX_SLATE = addBigTex(Xm.MODID, "slate");
 	public static final TextureSet BIGTEX_ROUGH_ROCK = addBigTex(Xm.MODID, "rough_rock");
 	public static final TextureSet BIGTEX_CRACKED_EARTH = addBigTex(Xm.MODID, "cracked_earth");

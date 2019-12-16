@@ -71,7 +71,7 @@ public enum TextureSetHelper {
 	}
 
 	public static TextureSet addBigTex(String modId, String name, TextureScale scale) {
-		return addBigTex(modId, name, TextureScale.GIANT, TextureTransform.ROTATE_BIGTEX);
+		return addBigTex(modId, name, scale, TextureTransform.ROTATE_BIGTEX);
 	}
 
 	public static TextureSet addBigTex(String modId, String name, TextureScale scale, TextureTransform transform) {
