@@ -81,6 +81,10 @@ public enum XmTextures {
 			.baseTextureName("exotic-matter:block/border_weathered_blended").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
 			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_weathered_blend");
 
+	public static final TextureSet BORDER_WEATHERED_LINE = TextureSet.builder().displayNameToken("border_weathered_line")
+			.baseTextureName("exotic-matter:block/border_weathered_line").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
+			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_weathered_line");
+
 	public static final TextureSet BORDER_COBBLE = TextureSet.builder().displayNameToken("border_cobble")
 			.baseTextureName("exotic-matter:block/border_cobble").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
 			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_cobble");
@@ -123,11 +127,11 @@ public enum XmTextures {
 	public static final TextureSet BIGTEX_WEATHERED_STONE = addBigTex(Xm.MODID, "weathered_smooth_stone");
 	public static final TextureSet BIGTEX_ASPHALT = addBigTex(Xm.MODID, "asphalt");
 	public static final TextureSet BIGTEX_WORN_ASPHALT = addBigTex(Xm.MODID, "worn_asphalt");
-	public static final TextureSet BIGTEX_WOOD = TextureSet.builder().displayNameToken("wood").baseTextureName("exotic-art:blocks/wood").versionCount(1)
-			.scale(TextureScale.MEDIUM).layout(TextureLayoutMap.SINGLE).transform(IDENTITY).renderIntent(TextureRenderIntent.BASE_ONLY)
-			.groups(TextureGroup.STATIC_TILES).build("exotic-art:wood");
+	public static final TextureSet BIGTEX_WOOD = TextureSet.builder().displayNameToken("wood").baseTextureName("exotic-matter:block/wood").versionCount(1)
+			.scale(TextureScale.GIANT).layout(TextureLayoutMap.SINGLE).transform(IDENTITY).renderIntent(TextureRenderIntent.BASE_ONLY)
+			.groups(TextureGroup.STATIC_TILES).build("exotic-matter:wood");
 	public static final TextureSet BIGTEX_WOOD_FLIP = TextureSet.builder(BIGTEX_WOOD).displayNameToken("wood_flip").transform(ROTATE_90)
-			.build("exotic-art:wood_flip");
+			.build("exotic-matter:wood_flip");
 	public static final TextureSet BIGTEX_GRANITE = addBigTex(Xm.MODID, "granite", TextureScale.LARGE);
 	public static final TextureSet BIGTEX_SLATE = addBigTex(Xm.MODID, "slate");
 	public static final TextureSet BIGTEX_ROUGH_ROCK = addBigTex(Xm.MODID, "rough_rock");
