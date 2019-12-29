@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.particle.BlockCrackParticle;
+import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.client.particle.SpriteBillboardParticle;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -31,10 +31,10 @@ import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmDispatcher;
 
-@Mixin(BlockCrackParticle.class)
-public abstract class MixinBlockCrackParticle extends SpriteBillboardParticle {
+@Mixin(BlockDustParticle.class)
+public abstract class MixinBlockDustParticle extends SpriteBillboardParticle {
 	// not used
-	protected MixinBlockCrackParticle(World world_1, double double_1, double double_2, double double_3) {
+	protected MixinBlockDustParticle(World world_1, double double_1, double double_2, double double_3) {
 		super(world_1, double_1, double_2, double_3);
 	}
 

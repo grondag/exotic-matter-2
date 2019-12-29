@@ -3,7 +3,7 @@
   "package": "grondag.xm.mixin.client",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinBlockCrackParticle",
+    "MixinBlockDustParticle",
     "MixinFrustum",
     "MixinGameRenderer",
     "MixinWorldRenderer"
