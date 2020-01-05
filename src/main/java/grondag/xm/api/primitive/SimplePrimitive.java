@@ -21,6 +21,8 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
@@ -35,7 +37,14 @@ public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutableP
 	}
 
 	public interface Builder {
+		default SimplePrimitive build(Identifier id) {
+			return build(id.toString());
+		}
 
+		/**
+		 * @deprecated Use version that takes ID.
+		 */
+		@Deprecated
 		SimplePrimitive build(String idString);
 
 		Builder surfaceList(XmSurfaceList list);

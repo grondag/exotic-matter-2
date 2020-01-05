@@ -66,6 +66,7 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
 		this.defaultState = state.releaseToImmutable();
 	}
 
+	//TODO: accept an identifier here and clean up builder interface
 	protected AbstractPrimitive(String idString, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
 		this(new Identifier(idString), stateFlags, factory, surfaceFunc);
 	}
