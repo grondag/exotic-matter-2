@@ -35,6 +35,9 @@ public interface SimpleJoinState {
 	int STATE_COUNT = 64; // 2^6
 	SimpleJoinState NO_JOINS = SimpleJoinStateImpl.NO_JOINS;
 	SimpleJoinState ALL_JOINS = SimpleJoinStateImpl.ALL_JOINS;
+	SimpleJoinState X_JOINS = SimpleJoinStateImpl.X_JOINS;
+	SimpleJoinState Y_JOINS = SimpleJoinStateImpl.Y_JOINS;
+	SimpleJoinState Z_JOINS = SimpleJoinStateImpl.Z_JOINS;
 
 	boolean isJoined(Direction face);
 

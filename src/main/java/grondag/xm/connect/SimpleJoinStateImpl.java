@@ -29,6 +29,9 @@ import grondag.xm.api.connect.world.BlockNeighbors;
 public class SimpleJoinStateImpl implements SimpleJoinState {
 	public static final SimpleJoinState NO_JOINS;
 	public static final SimpleJoinState ALL_JOINS;
+	public static final SimpleJoinState X_JOINS;
+	public static final SimpleJoinState Y_JOINS;
+	public static final SimpleJoinState Z_JOINS;
 
 	private static final int X_MASK = (1 << Direction.EAST.ordinal()) | (1 << Direction.WEST.ordinal());
 	private static final int Y_MASK = (1 << Direction.UP.ordinal()) | (1 << Direction.DOWN.ordinal());
@@ -61,6 +64,9 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 		}
 		NO_JOINS = JOINS[0];
 		ALL_JOINS = JOINS[0b111111];
+		X_JOINS = JOINS[X_MASK];
+		Y_JOINS = JOINS[Y_MASK];
+		Z_JOINS = JOINS[Z_MASK];
 	}
 
 	public static SimpleJoinStateImpl fromOrdinal(int index) {
