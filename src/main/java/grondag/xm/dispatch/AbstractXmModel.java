@@ -54,7 +54,12 @@ public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 	}
 
 	@Override
-	public boolean hasDepthInGui() {
+	public boolean isSideLit() {
+		return true;
+	}
+
+	@Override
+	public boolean hasDepth() {
 		return true;
 	}
 
