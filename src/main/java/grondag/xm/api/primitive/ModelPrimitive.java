@@ -17,15 +17,26 @@ package grondag.xm.api.primitive;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Random;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockRenderView;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
@@ -100,4 +111,14 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 	}
 
 	default void invalidateCache() { }
+
+	@Environment(EnvType.CLIENT)
+	default void emitBlockMesh(Mesh mesh, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		context.meshConsumer().accept(mesh);
+	}
+
+	@Environment(EnvType.CLIENT)
+	default void emitItemMesh(Mesh mesh, ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+		context.meshConsumer().accept(mesh);
+	}
 }

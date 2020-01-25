@@ -36,9 +36,16 @@ public class XmVariantProvider implements ModelVariantProvider {
 
 	public XmVariantProvider() {
 		targets.clear();
+
 		Registry.BLOCK.forEach(b -> {
 			if (XmBlockState.get(b) != null) {
 				targets.add(Registry.BLOCK.getId(b).toString());
+			}
+		});
+
+		Registry.ITEM.forEach(i -> {
+			if (((XmItemAccess) i).xm_modelStateFunc() != null) {
+				targets.add(Registry.ITEM.getId(i).toString());
 			}
 		});
 	}

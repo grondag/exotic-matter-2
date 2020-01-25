@@ -20,15 +20,19 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockRenderView;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -76,11 +80,14 @@ public interface ModelState {
 	List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
 
 	@Environment(EnvType.CLIENT)
-	void emitQuads(RenderContext context);
-
-	@Environment(EnvType.CLIENT)
 	Sprite particleSprite();
 
 	@Environment(EnvType.CLIENT)
 	int particleColorARBG();
+
+	@Environment(EnvType.CLIENT)
+	void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context);
+
+	@Environment(EnvType.CLIENT)
+	void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context);
 }

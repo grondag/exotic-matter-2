@@ -67,19 +67,21 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 	@Override
 	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		final MutableModelState modelState = XmBlockState.modelState(state, blockView, pos, true);
+
 		if (modelState != null) {
-			XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
+			XmDispatcher.INSTANCE.get(modelState).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+			modelState.release();
 		}
-		modelState.release();
 	}
 
 	@Override
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
 		final MutableModelState modelState = XmItem.modelState(stack);
+
 		if (modelState != null) {
-			XmDispatcher.INSTANCE.get(modelState).emitQuads(context);
+			XmDispatcher.INSTANCE.get(modelState).emitItemQuads(stack, randomSupplier, context);
+			modelState.release();
 		}
-		modelState.release();
 	}
 
 	@Override

@@ -34,11 +34,13 @@ import org.apiguardian.api.API;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BlockRenderView;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -253,9 +255,9 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	public R toImmutable() {
-		if(isImmutable)
+		if(isImmutable) {
 			return (R)this;
-		else {
+		} else {
 			final V result = factoryImpl().claimInner((V)this);
 			result.isImmutable = true;
 			return (R)result;
@@ -335,8 +337,9 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	 */
 	@Override
 	public final boolean doShapeAndAppearanceMatch(ModelState other) {
-		if(other.getClass() != this.getClass())
+		if(other.getClass() != this.getClass()) {
 			return false;
+		}
 		return primitive.doesShapeMatch((R)this, (R)other) && doesAppearanceMatch(other);
 	}
 
@@ -499,8 +502,9 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 			final int[] paints = this.paints;
 			final int[] otherPaints = other.paints;
 			for (int i = 0; i < limit; i++) {
-				if (otherPaints[i] != paints[i])
+				if (otherPaints[i] != paints[i]) {
 					return false;
+				}
 			}
 			return true;
 		}
@@ -737,8 +741,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public final void emitQuads(RenderContext context) {
-		context.meshConsumer().accept(mesh());
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+		primitive.emitBlockMesh(mesh(), blockView, state, pos, randomSupplier, context);
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+		primitive.emitItemMesh(mesh(), stack, randomSupplier, context);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -774,8 +784,9 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 			// if zero then probably requires lookup
 			particleSprite();
 			return particleColorARBG;
-		} else
+		} else {
 			return result;
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
