@@ -39,7 +39,7 @@ class OctreeCoordinates {
 	/**
 	 * Indexes to face voxels in division level 3
 	 */
-	static final int[] EXTERIOR_INDEX_3 = new int[1352];
+	static final int[] EXTERIOR_INDEX_3 = new int[1352]; //FIXME: why not 296?
 
 	static {
 		Arrays.fill(ALL_FULL, FULL_BITS);
