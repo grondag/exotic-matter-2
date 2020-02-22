@@ -413,4 +413,6 @@ public class XmPaintImpl {
 			return this;
 		}
 	}
+
+	public static final XmPaintImpl.Value DEFAULT_PAINT = finder().find();
 }

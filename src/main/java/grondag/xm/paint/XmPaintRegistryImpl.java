@@ -51,7 +51,7 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 
 	private XmPaintRegistryImpl() {
 		// see header notes
-		register(Xm.id("default"), XmPaintImpl.finder().find());
+		register(Xm.id("default"), XmPaintImpl.DEFAULT_PAINT);
 	}
 
 	private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
