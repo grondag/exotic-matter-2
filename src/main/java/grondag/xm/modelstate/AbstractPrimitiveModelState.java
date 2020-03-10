@@ -71,7 +71,7 @@ import grondag.xm.connect.CornerJoinStateSelector;
 import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
 
-@SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @API(status = INTERNAL)
 public abstract class AbstractPrimitiveModelState
 <V extends AbstractPrimitiveModelState<V, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>>
