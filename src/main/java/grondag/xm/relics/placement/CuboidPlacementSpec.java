@@ -321,7 +321,7 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 
 						// is the position inside our region?
 						// is the position inside the world?
-						if (region.contains(pos) && World.isValid(pos)) {
+						if (region.contains(pos) && World.method_24794(pos)) {
 							boolean canPassThrough = false;
 
 							final BlockState blockState = world.getBlockState(pos);
@@ -407,7 +407,7 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 					final BlockPos pos = positionIterator.next().toImmutable();
 
 					// is the position inside the world?
-					if (World.isValid(pos)) {
+					if (World.method_24794(pos)) {
 
 						final BlockState blockState = world.getBlockState(pos);
 

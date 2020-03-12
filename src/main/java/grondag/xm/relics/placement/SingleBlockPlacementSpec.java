@@ -117,7 +117,7 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
 					return false;
 
 				// is the position inside the world?
-				if (World.isValid(pos) || !world.isChunkLoaded(pos))
+				if (World.method_24794(pos) || !world.isChunkLoaded(pos))
 					return false;
 
 				final BlockState blockState = world.getBlockState(pos);
@@ -159,7 +159,7 @@ public class SingleBlockPlacementSpec extends SingleStackPlacementSpec {
 					return false;
 
 				// is the position inside the world?
-				if (World.isValid(pos) || !world.isChunkLoaded(pos))
+				if (World.method_24794(pos) || !world.isChunkLoaded(pos))
 					return false;
 
 				final BlockState blockState = world.getBlockState(pos);

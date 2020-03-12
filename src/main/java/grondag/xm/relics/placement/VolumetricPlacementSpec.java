@@ -76,7 +76,7 @@ abstract class VolumetricPlacementSpec extends SingleStackPlacementSpec {
 
 		if (isExcavation) {
 			for (final BlockPos pos : region.positions()) {
-				if (!World.isValid(pos)) {
+				if (!World.method_24794(pos)) {
 					set.add(pos.toImmutable());
 					if (foundCount++ == 16) {
 						break;
@@ -96,7 +96,7 @@ abstract class VolumetricPlacementSpec extends SingleStackPlacementSpec {
 			}
 		} else {
 			for (final BlockPos pos : region.includedPositions()) {
-				if (!World.isValid(pos)) {
+				if (!World.method_24794(pos)) {
 					set.add(pos.toImmutable());
 					if (foundCount++ == 16) {
 						break;

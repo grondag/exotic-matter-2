@@ -45,7 +45,7 @@ public class SurfacePlacementSpec extends SingleStackPlacementSpec {
 		if (isExcavation)
 			return false;
 
-		return World.isValid(pPos.inPos) && player.world.getBlockState(pPos.inPos).getMaterial().isReplaceable();
+		return World.method_24794(pPos.inPos) && player.world.getBlockState(pPos.inPos).getMaterial().isReplaceable();
 	}
 
 	@Environment(EnvType.CLIENT)
