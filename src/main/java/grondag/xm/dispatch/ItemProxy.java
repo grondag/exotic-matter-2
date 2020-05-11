@@ -22,13 +22,13 @@ import java.util.Collections;
 import org.apiguardian.api.API;
 
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
+import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 @API(status = INTERNAL)
-public class ItemProxy extends ModelItemPropertyOverrideList {
+public class ItemProxy extends ModelOverrideList {
 	private final BakedModel owner;
 
 	public ItemProxy(BakedModel owner) {

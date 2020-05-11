@@ -20,7 +20,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
+import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 
@@ -34,7 +34,7 @@ public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 	protected ItemProxy itemProxy = null;
 
 	@Override
-	public ModelItemPropertyOverrideList getItemPropertyOverrides() {
+	public ModelOverrideList getOverrides() {
 		ItemProxy result = itemProxy;
 		if (result == null) {
 			result = new ItemProxy(this);

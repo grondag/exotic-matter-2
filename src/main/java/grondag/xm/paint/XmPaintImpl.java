@@ -27,6 +27,9 @@ import org.apiguardian.api.API;
 import net.minecraft.util.Identifier;
 
 import grondag.fermion.bits.BitPacker32;
+import grondag.fermion.bits.BitPacker32.BooleanElement;
+import grondag.fermion.bits.BitPacker32.IntElement;
+import grondag.fermion.bits.BitPacker32.NullableEnumElement;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;

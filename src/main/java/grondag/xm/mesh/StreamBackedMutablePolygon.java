@@ -29,6 +29,7 @@ import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
+import grondag.xm.mesh.StreamBackedMutablePolygon.UVLocker;
 
 @API(status = INTERNAL)
 class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutablePolygon {

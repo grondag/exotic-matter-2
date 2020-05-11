@@ -50,6 +50,7 @@ import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import grondag.fermion.bits.BitPacker32;
+import grondag.fermion.bits.BitPacker32.IntElement;
 import grondag.fermion.varia.Useful;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinState;
