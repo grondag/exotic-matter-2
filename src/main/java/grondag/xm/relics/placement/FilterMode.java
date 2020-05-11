@@ -23,7 +23,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -80,11 +80,11 @@ public enum FilterMode {
 
 		switch (this) {
 		case FILL_REPLACEABLE:
-			return block.getMaterial(blockState).isReplaceable() && !VirtualBlock.isVirtualBlock(block);
+			return blockState.getMaterial().isReplaceable() && !VirtualBlock.isVirtualBlock(block);
 
 		case REPLACE_ALL:
 			if (isVirtual)
-				return block.getMaterial(blockState).isReplaceable() || VirtualBlock.isVirtualBlock(block);
+				return blockState.getMaterial().isReplaceable() || VirtualBlock.isVirtualBlock(block);
 			else
 				return !VirtualBlock.isVirtualBlock(block);
 
@@ -98,7 +98,7 @@ public enum FilterMode {
 
 		case REPLACE_SOLID:
 			// test for non-virtual relies on fact that all virtual blocks are replaceable
-			return isVirtual ? VirtualBlock.isVirtualBlock(block) : !block.getMaterial(blockState).isReplaceable();
+			return isVirtual ? VirtualBlock.isVirtualBlock(block) : !blockState.getMaterial().isReplaceable();
 
 		default:
 			return false;

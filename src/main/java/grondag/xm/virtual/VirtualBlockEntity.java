@@ -19,6 +19,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
@@ -120,8 +121,8 @@ public class VirtualBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	public void fromTag(CompoundTag compound) {
-		super.fromTag(compound);
+	public void fromTag(BlockState blockState, CompoundTag compound) {
+		super.fromTag(blockState, compound);
 
 		//        this.domainID = compound.containsKey(NBT_DOMAIN_ID) ? compound.getInt(NBT_DOMAIN_ID) : IIdentified.UNASSIGNED_ID;
 		//

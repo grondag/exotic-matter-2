@@ -51,7 +51,7 @@ public class MasonryHelper implements BlockTest<PrimitiveState> {
 
 		// if not a sibling, mortar if against full opaque
 		if (!test.apply(context))
-			return toBlockState.isFullOpaque(context.world(), toPos);
+			return toBlockState.isOpaqueFullCube(context.world(), toPos);
 
 		final BlockPos fromPos = context.fromPos();
 

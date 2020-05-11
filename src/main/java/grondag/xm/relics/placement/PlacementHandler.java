@@ -395,7 +395,7 @@ public abstract class PlacementHandler {
 	}
 
 	public static void placeVirtualBlock(World world, ItemStack stack, PlayerEntity player, BlockPos pos) { //, Build build) {
-		if (!player.canModifyWorld())
+		if (!player.canModifyBlocks())
 			return;
 
 		final BlockSoundGroup soundtype = XmStackHelper.getStackSubstance(stack).soundType;

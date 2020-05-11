@@ -20,7 +20,7 @@ import org.apiguardian.api.API.Status;
 
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
 import grondag.fermion.varia.NBTDictionary;

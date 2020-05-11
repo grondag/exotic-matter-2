@@ -28,9 +28,8 @@ import net.minecraft.block.Material;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.PacketByteBuf;
-
 import grondag.fermion.color.Chroma;
 import grondag.fermion.color.ColorAtlas;
 import grondag.fermion.color.Hue;

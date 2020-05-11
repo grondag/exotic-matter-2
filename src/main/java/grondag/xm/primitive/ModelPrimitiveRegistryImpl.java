@@ -25,8 +25,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apiguardian.api.API;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.PacketByteBuf;
-
+import net.minecraft.network.PacketByteBuf;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.primitive.ModelPrimitive;

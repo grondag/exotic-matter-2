@@ -18,9 +18,8 @@ package grondag.xm.api.modelstate;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import net.minecraft.network.PacketByteBuf;
 import org.apiguardian.api.API;
-
-import net.minecraft.util.PacketByteBuf;
 
 @API(status = EXPERIMENTAL)
 public interface MutableModelState extends ModelState {

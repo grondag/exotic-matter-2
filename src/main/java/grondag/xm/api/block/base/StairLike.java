@@ -26,12 +26,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apiguardian.api.API;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPlacementEnvironment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.Waterloggable;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityContext;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -52,7 +52,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import net.minecraft.world.explosion.Explosion;
 
 import net.fabricmc.api.EnvType;
@@ -105,24 +104,24 @@ public class StairLike extends Block implements Waterloggable {
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos pos, EntityContext entityContext) {
+	public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos pos, ShapeContext entityContext) {
 		return CollisionDispatcher.shapeFor(XmBlockState.modelState(blockState, blockView, pos, true));
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void randomDisplayTick(BlockState blockState_1, World world_1, BlockPos blockPos_1, Random random_1) {
-		baseBlock.randomDisplayTick(blockState_1, world_1, blockPos_1, random_1);
+	public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
+		baseBlock.randomDisplayTick(blockState, world, blockPos, random);
 	}
 
 	@Override
-	public void onBlockBreakStart(BlockState blockState_1, World world_1, BlockPos blockPos_1, PlayerEntity playerEntity_1) {
-		baseBlockState.onBlockBreakStart(world_1, blockPos_1, playerEntity_1);
+	public void onBlockBreakStart(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity) {
+		baseBlockState.onBlockBreakStart(world, blockPos, playerEntity);
 	}
 
 	@Override
-	public void onBroken(IWorld iWorld_1, BlockPos blockPos_1, BlockState blockState_1) {
-		baseBlock.onBroken(iWorld_1, blockPos_1, blockState_1);
+	public void onBroken(IWorld iWorld, BlockPos blockPos, BlockState blockState) {
+		baseBlock.onBroken(iWorld, blockPos, blockState);
 	}
 
 	@Override
@@ -131,43 +130,48 @@ public class StairLike extends Block implements Waterloggable {
 	}
 
 	@Override
-	public int getTickRate(WorldView world) {
-		return baseBlock.getTickRate(world);
-	}
-
-	@Override
-	public void onBlockAdded(BlockState blockState, World world, BlockPos pos, BlockState blockStateOther, boolean notify) {
-		if (blockState.getBlock() != blockStateOther.getBlock()) {
-			baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
-			baseBlock.onBlockAdded(baseBlockState, world, pos, blockStateOther, false);
+	public void onBlockAdded(BlockState blockState, World world, BlockPos blockPos, BlockState blockState2, boolean bl) {
+		if (blockState.getBlock() != blockState.getBlock()) {
+			baseBlockState.neighborUpdate(world, blockPos, Blocks.AIR, blockPos, false);
+			baseBlock.onBlockAdded(baseBlockState, world, blockPos, blockState2, false);
 		}
 	}
 
 	@Override
-	public void onBlockRemoved(BlockState oldState, World world, BlockPos pos, BlockState newState, boolean notify) {
-		if (newState.getBlock() != oldState.getBlock()) {
-			baseBlockState.onBlockRemoved(world, pos, oldState, notify);
+	public void onBlockRemoved(BlockState blockState, World world, BlockPos blockPos, BlockState blockState2, boolean bl) {
+		if (blockState.getBlock() != blockState2.getBlock()) {
+			baseBlockState.onBlockRemoved(world, blockPos, blockState2, bl);
 		}
 	}
 
 	@Override
-	public void onSteppedOn(World world_1, BlockPos blockPos_1, Entity entity_1) {
-		baseBlock.onSteppedOn(world_1, blockPos_1, entity_1);
+	public void onSteppedOn(World world, BlockPos blockPos, Entity entity) {
+		baseBlock.onSteppedOn(world, blockPos, entity);
 	}
 
 	@Override
-	public void scheduledTick(BlockState blockState_1, ServerWorld world_1, BlockPos blockPos_1, Random random_1) {
-		baseBlock.scheduledTick(blockState_1, world_1, blockPos_1, random_1);
+	public boolean hasRandomTicks(BlockState blockState) {
+		return baseBlock.hasRandomTicks(blockState);
 	}
 
 	@Override
-	public ActionResult onUse(BlockState blockState_1, World world_1, BlockPos blockPos_1, PlayerEntity playerEntity_1, Hand hand_1, BlockHitResult blockHitResult_1) {
-		return baseBlockState.onUse(world_1, playerEntity_1, hand_1, blockHitResult_1);
+	public void randomTick(BlockState blockState, ServerWorld serverWorld, BlockPos blockPos, Random random) {
+		baseBlock.randomTick(blockState, serverWorld, blockPos, random);
 	}
 
 	@Override
-	public void onDestroyedByExplosion(World world_1, BlockPos blockPos_1, Explosion explosion_1) {
-		baseBlock.onDestroyedByExplosion(world_1, blockPos_1, explosion_1);
+	public void scheduledTick(BlockState blockState, ServerWorld serverWorld, BlockPos blockPos, Random random) {
+		baseBlock.scheduledTick(blockState, serverWorld, blockPos, random);
+	}
+
+	@Override
+	public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+		return baseBlockState.onUse(world, playerEntity, hand, blockHitResult);
+	}
+
+	@Override
+	public void onDestroyedByExplosion(World world, BlockPos blockPos, Explosion explosion) {
+		baseBlock.onDestroyedByExplosion(world, blockPos, explosion);
 	}
 
 	//UGLY: It was bad in the previous versions, too.  There must be a better model for this, but I haven't found it yet.
@@ -312,7 +316,7 @@ public class StairLike extends Block implements Waterloggable {
 	}
 
 	@Override
-	public boolean canPlaceAtSide(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, BlockPlacementEnvironment blockPlacementEnvironment_1) {
+	public boolean canPathfindThrough(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, NavigationType blockPlacementEnvironment_1) {
 		return false;
 	}
 

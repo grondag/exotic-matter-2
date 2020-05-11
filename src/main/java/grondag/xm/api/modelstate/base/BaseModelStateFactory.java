@@ -1,8 +1,7 @@
 package grondag.xm.api.modelstate.base;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.PacketByteBuf;
-
+import net.minecraft.network.PacketByteBuf;
 import grondag.xm.api.primitive.ModelPrimitive;
 
 public interface BaseModelStateFactory<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {

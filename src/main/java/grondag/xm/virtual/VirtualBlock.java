@@ -33,7 +33,7 @@ public interface VirtualBlock {
 	 * virtual and visible to the given player.
 	 */
 	default boolean isVirtuallySolid(BlockPos pos, PlayerEntity player) {
-		return !((Block) this).getMaterial(player.world.getBlockState(pos)).isReplaceable();
+		return !player.world.getBlockState(pos).getMaterial().isReplaceable();
 	}
 
 	/**
@@ -67,7 +67,7 @@ public interface VirtualBlock {
 	 */
 	static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, PlayerEntity player) {
 		final Block block = state.getBlock();
-		return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player) : !block.getMaterial(state).isReplaceable();
+		return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player) : !state.getMaterial().isReplaceable();
 	}
 
 	static BlockState findAppropriateVirtualBlock(ModelState modelState) {

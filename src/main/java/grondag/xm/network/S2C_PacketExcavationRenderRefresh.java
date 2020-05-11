@@ -23,8 +23,8 @@ import io.netty.buffer.Unpooled;
 import org.apiguardian.api.API;
 
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
 import net.fabricmc.fabric.api.network.PacketContext;
