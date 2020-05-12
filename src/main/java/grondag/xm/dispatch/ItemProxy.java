@@ -19,13 +19,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Collections;
 
+import javax.annotation.Nullable;
+
 import org.apiguardian.api.API;
 
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 @API(status = INTERNAL)
 public class ItemProxy extends ModelOverrideList {
@@ -37,7 +39,7 @@ public class ItemProxy extends ModelOverrideList {
 	}
 
 	@Override
-	public BakedModel apply(BakedModel bakedModel_1, ItemStack itemStack_1, World world_1, LivingEntity livingEntity_1) {
+	public BakedModel apply(BakedModel bakedModel_1, ItemStack itemStack_1, @Nullable ClientWorld world_1, LivingEntity livingEntity_1) {
 		return owner;
 	}
 }

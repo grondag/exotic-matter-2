@@ -19,29 +19,42 @@ package grondag.xm;
 import static grondag.xm.XmConfig.DEFAULTS;
 import static grondag.xm.XmConfig.debugCollisionBoxes;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public class ConfigScreen {
+	private static ConfigEntryBuilder ENTRY_BUILDER = ConfigEntryBuilder.create();
+
+	static Text[] parse(String key) {
+		return Arrays.stream(I18n.translate("config.xblocks.help.force_key").split(";")).map(s ->  new LiteralText(s)).collect(Collectors.toList()).toArray(new Text[0]);
+	}
+
 	static Screen getScreen(Screen parent) {
 
-		final ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle("config.xm.title").setSavingRunnable(ConfigScreen::saveUserInput);
+		final ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(new TranslatableText("config.xm.title")).setSavingRunnable(ConfigScreen::saveUserInput);
 
 		// DEBUG
-		final ConfigCategory blocks = builder.getOrCreateCategory("config.xm.category.debug");
+		final ConfigCategory blocks = builder.getOrCreateCategory(new TranslatableText("config.xm.category.debug"));
 
-		blocks.addEntry(new BooleanListEntry("config.xm.value.debug_collision_boxes", debugCollisionBoxes, "config.xm.reset", () -> DEFAULTS.debugCollisionBoxes,
-				b -> debugCollisionBoxes = b, () -> Optional.of(I18n.translate("config.xm.help.debug_collision_boxes").split(";"))));
+		blocks.addEntry(ENTRY_BUILDER.startBooleanToggle(new TranslatableText("config.xm.value.debug_collision_boxes"), debugCollisionBoxes)
+				.setDefaultValue(DEFAULTS.debugCollisionBoxes)
+				.setSaveConsumer(b -> debugCollisionBoxes = b)
+				.setTooltip(parse("config.xm.help.debug_collision_boxes"))
+				.build());
 
 		return builder.build();
 	}

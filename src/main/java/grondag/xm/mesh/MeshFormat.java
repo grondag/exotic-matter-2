@@ -22,10 +22,6 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 
 import grondag.fermion.bits.BitPacker32;
-import grondag.fermion.bits.BitPacker32.BooleanElement;
-import grondag.fermion.bits.BitPacker32.EnumElement;
-import grondag.fermion.bits.BitPacker32.IntElement;
-import grondag.fermion.bits.BitPacker32.NullableEnumElement;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 

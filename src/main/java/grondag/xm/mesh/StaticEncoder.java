@@ -20,9 +20,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 
 import grondag.fermion.bits.BitPacker32;
-import grondag.fermion.bits.BitPacker32.BooleanElement;
-import grondag.fermion.bits.BitPacker32.EnumElement;
-import grondag.fermion.bits.BitPacker32.IntElement;
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.varia.IndexedInterner;
 import grondag.xm.api.paint.PaintBlendMode;

@@ -26,8 +26,6 @@ import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
 
 import grondag.fermion.bits.BitPacker32;
-import grondag.fermion.bits.BitPacker32.BooleanElement;
-import grondag.fermion.bits.BitPacker32.IntElement;
 import grondag.fermion.color.Color;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinFaceState;

@@ -27,7 +27,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 
 import grondag.fermion.bits.BitPacker64;
-import grondag.fermion.bits.BitPacker64.IntElement;
 import grondag.fermion.position.PackedBlockPos;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.orientation.HorizontalEdge;
