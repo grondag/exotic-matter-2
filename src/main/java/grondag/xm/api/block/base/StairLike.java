@@ -50,8 +50,8 @@ import net.minecraft.util.math.Direction.AxisDirection;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.explosion.Explosion;
 
 import net.fabricmc.api.EnvType;
@@ -120,7 +120,7 @@ public class StairLike extends Block implements Waterloggable {
 	}
 
 	@Override
-	public void onBroken(IWorld iWorld, BlockPos blockPos, BlockState blockState) {
+	public void onBroken(WorldAccess iWorld, BlockPos blockPos, BlockState blockState) {
 		baseBlock.onBroken(iWorld, blockPos, blockState);
 	}
 
@@ -298,7 +298,7 @@ public class StairLike extends Block implements Waterloggable {
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState blockState_1, Direction direction_1, BlockState blockState_2, IWorld iWorld_1, BlockPos blockPos_1, BlockPos blockPos_2) {
+	public BlockState getStateForNeighborUpdate(BlockState blockState_1, Direction direction_1, BlockState blockState_2, WorldAccess iWorld_1, BlockPos blockPos_1, BlockPos blockPos_2) {
 		if (blockState_1.get(WATERLOGGED)) {
 			iWorld_1.getFluidTickScheduler().schedule(blockPos_1, Fluids.WATER, Fluids.WATER.getTickRate(iWorld_1));
 		}

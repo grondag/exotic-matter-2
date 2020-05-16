@@ -30,7 +30,7 @@ import net.minecraft.state.StateManager.Builder;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 
 /**
  * Handles waterlogging.
@@ -64,7 +64,7 @@ public class NonCubicFacingBlock extends FacingBlock {
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState blockState, Direction face, BlockState blockState2, IWorld world, BlockPos pos, BlockPos pos2) {
+	public BlockState getStateForNeighborUpdate(BlockState blockState, Direction face, BlockState blockState2, WorldAccess world, BlockPos pos, BlockPos pos2) {
 		if (blockState.get(Properties.WATERLOGGED)) {
 			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 		}

@@ -30,6 +30,7 @@ import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.sound.BlockSoundGroup;
+
 import grondag.fermion.color.Chroma;
 import grondag.fermion.color.ColorAtlas;
 import grondag.fermion.color.Hue;
@@ -58,7 +59,7 @@ public class BlockSubstance {
 
 	private static int nextOrdinal = 0;
 
-	public static final BlockSubstance DEFAULT = create("default", new SubstanceConfig(1, BlockHarvestTool.ANY, 0, 10, 1.0), Material.EARTH,
+	public static final BlockSubstance DEFAULT = create("default", new SubstanceConfig(1, BlockHarvestTool.ANY, 0, 10, 1.0), Material.SOIL,
 			BlockSoundGroup.WOOL, ColorAtlas.INSTANCE.getColorMap(Hue.AZURE, Chroma.WHITE, Luminance.MEDIUM_LIGHT).ordinal);
 
 	public static BlockSubstance deserializeNBT(CompoundTag tag) {

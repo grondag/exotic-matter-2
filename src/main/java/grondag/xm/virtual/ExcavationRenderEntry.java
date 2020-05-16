@@ -142,7 +142,7 @@ public class ExcavationRenderEntry {
 	 */
 	public ExcavationRenderEntry(ExcavationRenderTask task) {
 		id = nextID++;
-		rawDimensionId = task.world().dimension.getType().getRawId();
+		rawDimensionId = task.world().getDimension().getType().getRawId();
 		this.task = task;
 
 		if (XmConfig.logExcavationRenderTracking) {
