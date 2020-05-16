@@ -25,7 +25,6 @@ import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.client.particle.SpriteBillboardParticle;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
@@ -42,8 +41,9 @@ public abstract class MixinBlockDustParticle extends SpriteBillboardParticle {
 	private static ThreadLocal<BlockPos.Mutable> POS = ThreadLocal.withInitial(BlockPos.Mutable::new);
 
 	@Inject(method = "<init>", at = @At(value = "RETURN"), cancellable = false, require = 0)
-	void onNew(World world, double double_1, double double_2, double double_3, double double_4, double double_5, double double_6, BlockState blockState, CallbackInfo ci) {
+	void onNew(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState blockState, CallbackInfo ci) {
 		final MutableModelState lookupState = XmBlockState.modelState(blockState, world, POS.get().set(x, y, z), false);
+
 		if(lookupState != null) {
 			final ModelState renderState = XmDispatcher.INSTANCE.get(lookupState);
 			lookupState.release();
