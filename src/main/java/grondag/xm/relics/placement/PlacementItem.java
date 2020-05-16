@@ -65,6 +65,7 @@ public interface PlacementItem {
 	 * in primary hand.
 	 */
 
+	@SuppressWarnings("resource")
 	static ItemStack getHeldPlacementItem(PlayerEntity player) {
 		ItemStack stack = MinecraftClient.getInstance().player.getMainHandStack();
 

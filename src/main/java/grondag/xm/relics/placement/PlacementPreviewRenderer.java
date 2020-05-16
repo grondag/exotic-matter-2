@@ -31,6 +31,7 @@ public abstract class PlacementPreviewRenderer {
 	}
 
 	public static void renderPreview(float tickDelta) {
+		@SuppressWarnings("resource")
 		final ClientPlayerEntity player = MinecraftClient.getInstance().player;
 		final ItemStack stack = PlacementItem.getHeldPlacementItem(player);
 

@@ -250,6 +250,7 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 				previewMode.blue, 1f);
 		tessellator.draw();
 
+		@SuppressWarnings("resource")
 		final Entity entity = MinecraftClient.getInstance().cameraEntity;
 		if (entity != null) {
 			GlStateManager.lineWidth(1.0F);

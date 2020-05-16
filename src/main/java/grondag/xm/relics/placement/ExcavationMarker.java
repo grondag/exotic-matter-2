@@ -71,6 +71,7 @@ public class ExcavationMarker extends Item implements PlacementItem {
 		}
 
 		if (world.isClient) {
+			@SuppressWarnings("resource")
 			final HitResult hit = MinecraftClient.getInstance().crosshairTarget;
 			if(hit.getType() == HitResult.Type.BLOCK) {
 				final BlockPos blockpos = ((BlockHitResult)hit).getBlockPos();
