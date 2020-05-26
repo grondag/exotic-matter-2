@@ -13,20 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.texture;
+package grondag.xm.api.texture.content;
 
-import static grondag.xm.api.texture.TextureGroup.ALWAYS_HIDDEN;
-import static grondag.xm.api.texture.TextureGroup.STATIC_BORDERS;
-import static grondag.xm.api.texture.TextureGroup.STATIC_TILES;
-import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_ORIENTED_BORDER_SINGLE;
-import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_ROTATED_SINGLE;
-import static grondag.xm.api.texture.TextureLayoutMap.QUADRANT_ROTATED_VERSIONED;
-import static grondag.xm.api.texture.TextureRenderIntent.BASE_ONLY;
-import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_CUTOUT_OKAY;
-import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT;
-import static grondag.xm.api.texture.TextureRenderIntent.OVERLAY_ONLY;
-import static grondag.xm.api.texture.TextureScale.GIANT;
-import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_90;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
@@ -39,88 +27,15 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 
 import grondag.xm.Xm;
+import grondag.xm.api.texture.TextureGroup;
+import grondag.xm.api.texture.TextureLayoutMap;
+import grondag.xm.api.texture.TextureRenderIntent;
+import grondag.xm.api.texture.TextureScale;
+import grondag.xm.api.texture.TextureSet;
 
 @API(status = EXPERIMENTAL)
-public enum XmTextures {
+public enum UnstableTextures {
 	;
-
-	public static final TextureSet TILE_COBBLE = TextureSet.builder()
-			.displayNameToken("cobble").baseTextureName("exotic-matter:block/cobble")
-			.versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM)
-			.renderIntent(BASE_ONLY).groups(STATIC_TILES).build("exotic-matter:cobble");
-
-	public static final TextureSet TILE_NOISE_STRONG = TextureSet.builder(TILE_COBBLE).displayNameToken("noise_strong")
-			.baseTextureName("exotic-matter:block/noise_strong").build("exotic-matter:noise_strong");
-
-	public static final TextureSet TILE_NOISE_MODERATE = TextureSet.builder(TILE_COBBLE).displayNameToken("noise_moderate")
-			.baseTextureName("exotic-matter:block/noise_moderate").build("exotic-matter:noise_moderate");
-
-	public static final TextureSet TILE_NOISE_LIGHT = TextureSet.builder(TILE_COBBLE).displayNameToken("noise_light")
-			.baseTextureName("exotic-matter:block/noise_light").build("exotic-matter:noise_light");
-
-	public static final TextureSet TILE_NOISE_SUBTLE = TextureSet.builder(TILE_COBBLE).displayNameToken("noise_subtle")
-			.baseTextureName("exotic-matter:block/noise_subtle").build("exotic-matter:noise_subtle");
-
-	public static final TextureSet TILE_NOISE_EXTREME = TextureSet.builder()
-			.displayNameToken("noise_extreme").baseTextureName("exotic-matter:block/noise_extreme")
-			.versionCount(4).scale(SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM)
-			.renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY).groups(STATIC_TILES).build("exotic-matter:noise_extreme");
-
-	public static final TextureSet WHITE = TextureSet.builder().displayNameToken("white").baseTextureName("exotic-matter:block/white").versionCount(1).scale(SINGLE)
-			.layout(TextureLayoutMap.VERSION_X_8).transform(IDENTITY).groups(STATIC_TILES).build("exotic-matter:white");
-
-	/** Used as filler in mixed quadrants */
-	public static final TextureSet EMPTY = TextureSet.builder().displayNameToken("empty").baseTextureName("exotic-matter:block/empty").versionCount(1).scale(SINGLE)
-			.layout(TextureLayoutMap.SINGLE).transform(IDENTITY).groups(ALWAYS_HIDDEN).build("exotic-matter:empty");
-
-	public static final TextureSet BORDER_SMOOTH_BLEND = TextureSet.builder().displayNameToken("border_smooth_blended")
-			.baseTextureName("exotic-matter:block/border_smooth_blended").versionCount(1).scale(SINGLE).layout(QUADRANT_ROTATED_SINGLE).transform(IDENTITY)
-			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_smooth_blended");
-
-	public static final TextureSet BORDER_WEATHERED_BLEND = TextureSet.builder().displayNameToken("border_weathered_blend")
-			.baseTextureName("exotic-matter:block/border_weathered_blended").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
-			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_weathered_blend");
-
-	public static final TextureSet BORDER_WEATHERED_LINE = TextureSet.builder().displayNameToken("border_weathered_line")
-			.baseTextureName("exotic-matter:block/border_weathered_line").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
-			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_weathered_line");
-
-	public static final TextureSet BORDER_COBBLE = TextureSet.builder().displayNameToken("border_cobble")
-			.baseTextureName("exotic-matter:block/border_cobble").versionCount(4).scale(SINGLE).layout(QUADRANT_ROTATED_VERSIONED).transform(IDENTITY)
-			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_cobble");
-
-	public static final TextureSet BORDER_BEVEL = TextureSet.builder().displayNameToken("bevel")
-			.baseTextureName("exotic-matter:block/border_bevel").versionCount(1).scale(SINGLE).layout(QUADRANT_ORIENTED_BORDER_SINGLE).transform(IDENTITY)
-			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:bevel");
-
-	public static final TextureSet BORDER_SINGLE_LINE = TextureSet.builder().displayNameToken("border_single_line")
-			.baseTextureName("exotic-matter:block/border_single_line").versionCount(1).scale(SINGLE).layout(QUADRANT_ROTATED_SINGLE).transform(IDENTITY)
-			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_single_line");
-
-	public static final TextureSet BIGTEX_SANDSTONE = TextureSet.builder().displayNameToken("sandstone").baseTextureName("exotic-matter:block/sandstone").versionCount(1)
-			.scale(GIANT).layout(TextureLayoutMap.SINGLE).transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_NO_CUTOUT)
-			.groups(STATIC_TILES).build("exotic-matter:sandstone");
-
-	public static final TextureSet TILE_NOISE_BLUE_A = TextureSet.builder().displayNameToken("blue_noise_a")
-			.baseTextureName("exotic-matter:block/noise_blue_0").versionCount(4)
-			.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSIONED)
-			.transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
-			.groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_a");
-
-	public static final TextureSet TILE_NOISE_BLUE_B = TextureSet.builder().displayNameToken("blue_noise_b")
-			.baseTextureName("exotic-matter:block/noise_blue_1").versionCount(4)
-			.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSIONED)
-			.transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
-			.groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_b");
-
-	public static final TextureLayoutMap NOISE_LAYOUT = TextureLayoutMap.create(TextureLayout.SIMPLE, (s, v, i) -> s + (v < 4 ? "_0_" + v : "_1_" + (v - 4)));
-
-	public static final TextureSet TILE_NOISE_BLUE = TextureSet.builder().displayNameToken("blue_noise")
-			.baseTextureName("exotic-matter:block/noise_blue").versionCount(8)
-			.scale(TextureScale.SINGLE).layout(NOISE_LAYOUT)
-			.transform(ROTATE_RANDOM).renderIntent(BASE_OR_OVERLAY_CUTOUT_OKAY)
-			.groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:blue_noise_b");
-
 	public static final TextureSet BORDER_GRITTY_SINGLE_LINE = addBorderRandom("exotic-matter", "border_gritty_single_line", false, false);
 
 	public static final TextureSet BIGTEX_MARBLE = addBigTex(Xm.MODID, "marble");
@@ -132,13 +47,12 @@ public enum XmTextures {
 			.groups(TextureGroup.STATIC_TILES).build("exotic-matter:wood");
 	public static final TextureSet BIGTEX_WOOD_FLIP = TextureSet.builder(BIGTEX_WOOD).displayNameToken("wood_flip").transform(ROTATE_90)
 			.build("exotic-matter:wood_flip");
-	public static final TextureSet BIGTEX_GRANITE = addBigTex(Xm.MODID, "granite", TextureScale.LARGE);
+
 	public static final TextureSet BIGTEX_SLATE = addBigTex(Xm.MODID, "slate");
 	public static final TextureSet BIGTEX_ROUGH_ROCK = addBigTex(Xm.MODID, "rough_rock");
 	public static final TextureSet BIGTEX_CRACKED_EARTH = addBigTex(Xm.MODID, "cracked_earth");
-	public static final TextureSet BIGTEX_SNOW = addBigTex(Xm.MODID, "snow");
-	public static final TextureSet BIGTEX_RAMMED_EARTH = addBigTex(Xm.MODID, "rammed_earth", TextureScale.LARGE, TextureTransform.IDENTITY);
-	public static final TextureSet BIGTEX_COBBLE_SQUARES = addBigTex(Xm.MODID, "cobble_squares", TextureScale.LARGE, TextureTransform.IDENTITY);
+
+
 
 	public static final TextureSet MASONRY_SIMPLE = TextureSet.builder().displayNameToken("masonry_simple").baseTextureName(Xm.MODID + ":blocks/masonry_simple")
 			.versionCount(1).scale(TextureScale.SINGLE).layout(TextureLayoutMap.MASONRY_5).transform(IDENTITY).renderIntent(TextureRenderIntent.OVERLAY_ONLY)
@@ -292,4 +206,5 @@ public enum XmTextures {
 
 	public static final TextureSet TILE_DOTS_INVERSE_SUBTLE = TextureSet.builder(TILE_DOTS_SUBTLE).displayNameToken("dots_inverse_subtle")
 			.baseTextureName("exotic-matter:blocks/dots_inverse_subtle").build("exotic-matter:dots_inverse_subtle");
+
 }

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
-package grondag.xm.api.texture;
+package grondag.xm.api.texture.content;
 
 import static grondag.xm.api.texture.TextureGroup.STATIC_TILES;
 import static grondag.xm.api.texture.TextureRenderIntent.BASE_ONLY;
@@ -23,6 +23,9 @@ import static grondag.xm.api.texture.TextureTransform.STONE_LIKE;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
+
+import grondag.xm.api.texture.TextureLayoutMap;
+import grondag.xm.api.texture.TextureSet;
 
 @API(status = EXPERIMENTAL)
 public class McTextures {

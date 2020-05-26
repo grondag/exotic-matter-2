@@ -30,7 +30,7 @@ import grondag.xm.api.orientation.FaceCorner;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.api.texture.XmTextures;
+import grondag.xm.api.texture.content.XmTextures;
 
 /**
  * Applies quadrant-style border textures. Quads must have a nominal face. Will

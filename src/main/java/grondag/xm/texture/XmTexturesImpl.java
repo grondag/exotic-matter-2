@@ -41,7 +41,7 @@ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback.Registr
 import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.api.texture.XmTextures;
+import grondag.xm.api.texture.content.XmTextures;
 import grondag.xm.paint.XmPaintRegistryImpl;
 
 @API(status = INTERNAL)
