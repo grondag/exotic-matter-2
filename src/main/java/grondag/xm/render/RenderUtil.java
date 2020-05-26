@@ -47,15 +47,15 @@ public class RenderUtil {
 	@SuppressWarnings("unused")
 	public static void drawGrid(BufferBuilder buffer, Box aabb, Vec3d viewFrom, double offsetX, double offsetY, double offsetZ, float red, float green,
 			float blue, float alpha) {
-		final double minX = aabb.x1 - offsetX;
-		final double minY = aabb.y1 - offsetY;
-		final double minZ = aabb.z1 - offsetZ;
-		final double maxX = aabb.x2 - offsetX;
-		final double maxY = aabb.y2 - offsetY;
-		final double maxZ = aabb.z2 - offsetZ;
-		final int xSpan = (int) (aabb.x2 + 0.0001 - aabb.x1);
-		final int ySpan = (int) (aabb.y2 + 0.0001 - aabb.y1);
-		final int zSpan = (int) (aabb.z2 + 0.0001 - aabb.z1);
+		final double minX = aabb.minX - offsetX;
+		final double minY = aabb.minY - offsetY;
+		final double minZ = aabb.minZ - offsetZ;
+		final double maxX = aabb.maxX - offsetX;
+		final double maxY = aabb.maxY - offsetY;
+		final double maxZ = aabb.maxZ - offsetZ;
+		final int xSpan = (int) (aabb.maxX + 0.0001 - aabb.minX);
+		final int ySpan = (int) (aabb.maxY + 0.0001 - aabb.minY);
+		final int zSpan = (int) (aabb.maxZ + 0.0001 - aabb.minZ);
 
 		//TODO: reimplement for new rendering system
 		//        if (xSpan > 1 && zSpan > 1) {

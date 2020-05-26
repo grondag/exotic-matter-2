@@ -17,36 +17,39 @@ package grondag.xm.paint;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import com.mojang.serialization.Lifecycle;
 import org.apiguardian.api.API;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 
 import grondag.xm.Xm;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.VertexProcessorRegistry;
 
 @API(status = INTERNAL)
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class VertexProcessorRegistryImpl extends DefaultedRegistry<VertexProcessor> implements VertexProcessorRegistry {
 
 	public static final VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorDefault.INSTANCE;
 
+	private static final RegistryKey REGISTRY_KEY = RegistryKey.ofRegistry(Xm.id("vertex_proc"));
 	public static final VertexProcessorRegistryImpl INSTANCE;
 
 	static {
-		INSTANCE = (VertexProcessorRegistryImpl) Registry.REGISTRIES.add(Xm.id("vertex_proc"),
-				(MutableRegistry<?>) new VertexProcessorRegistryImpl(NONE_ID.toString()));
+		INSTANCE = (VertexProcessorRegistryImpl) ((MutableRegistry) Registry.REGISTRIES).add(REGISTRY_KEY,
+				new VertexProcessorRegistryImpl(NONE_ID.toString()));
 	}
 
 	VertexProcessorRegistryImpl(String defaultIdString) {
-		super(defaultIdString);
+		super(defaultIdString, REGISTRY_KEY, Lifecycle.experimental());
 	}
 
 	@Override
 	public VertexProcessor add(Identifier id, VertexProcessor processor) {
-		return super.add(id, processor);
+		return Registry.register(this, id, processor);
 	}
 }

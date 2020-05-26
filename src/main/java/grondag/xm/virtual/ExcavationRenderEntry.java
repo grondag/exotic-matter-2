@@ -32,6 +32,7 @@ import org.apiguardian.api.API;
 import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 
@@ -51,7 +52,7 @@ public class ExcavationRenderEntry {
 
 	public final int id;
 
-	public final int rawDimensionId;
+	public final World world;
 
 	public final ExcavationRenderTask task;
 
@@ -142,7 +143,7 @@ public class ExcavationRenderEntry {
 	 */
 	public ExcavationRenderEntry(ExcavationRenderTask task) {
 		id = nextID++;
-		rawDimensionId = task.world().getDimension().getType().getRawId();
+		world = task.world();
 		this.task = task;
 
 		if (XmConfig.logExcavationRenderTracking) {

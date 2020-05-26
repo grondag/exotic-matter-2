@@ -88,7 +88,7 @@ public class ExcavationRenderer {
 		if (visibilityBounds.contains(lastEyePosition)) {
 			if (positions == null) {
 				final Box box = aabb;
-				WorldRenderer.drawBox(bufferbuilder, box.x1 - d0, box.y1 - d1, box.z1 - d2, box.x2 - d0, box.y2 - d1, box.z2 - d2, 1f, 0.3f, 0.3f,
+				WorldRenderer.drawBox(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f, 0.3f,
 						1f);
 			} else {
 				for (final BlockPos pos : positions) {
@@ -118,7 +118,7 @@ public class ExcavationRenderer {
 		if (didDrawBoundsLastTime) {
 			if (positions == null) {
 				final Box box = aabb;
-				WorldRenderer.drawBox(bufferbuilder, box.x1 - d0, box.y1 - d1, box.z1 - d2, box.x2 - d0, box.y2 - d1, box.z2 - d2, 1f, 0.3f,
+				WorldRenderer.drawBox(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f,
 						0.3f, 0.3f);
 			} else {
 				for (final BlockPos pos : positions) {

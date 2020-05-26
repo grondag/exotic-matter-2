@@ -217,7 +217,7 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 		GlStateManager.disableDepthTest();
 		GlStateManager.lineWidth(2.0F);
 		bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-		WorldRenderer.drawBox(bufferBuilder, box.x1, box.y1, box.z1, box.x2, box.y2, box.z2, SELECT.red, SELECT.green, SELECT.blue, 1f);
+		WorldRenderer.drawBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, SELECT.red, SELECT.green, SELECT.blue, 1f);
 		tessellator.draw();
 
 		// draw sides with depth to better show what parts are unobstructed
@@ -246,7 +246,7 @@ public class CuboidPlacementSpec extends VolumetricPlacementSpec {
 		GlStateManager.disableDepthTest();
 		GlStateManager.lineWidth(2.0F);
 		bufferBuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-		WorldRenderer.drawBox(bufferBuilder, box.x1, box.y1, box.z1, box.x2, box.y2, box.z2, previewMode.red, previewMode.green,
+		WorldRenderer.drawBox(bufferBuilder, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, previewMode.red, previewMode.green,
 				previewMode.blue, 1f);
 		tessellator.draw();
 

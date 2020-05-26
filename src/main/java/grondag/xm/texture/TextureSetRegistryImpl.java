@@ -17,10 +17,13 @@ package grondag.xm.texture;
 
 import java.util.function.Consumer;
 
+import com.mojang.serialization.Lifecycle;
+
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 
 import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureGroup;
@@ -35,6 +38,7 @@ import grondag.xm.api.texture.TextureTransform;
 public class TextureSetRegistryImpl implements TextureSetRegistry {
 	public static final TextureSetImpl DEFAULT_TEXTURE_SET;
 
+	private static final RegistryKey REGISTRY_KEY = RegistryKey.ofRegistry(Xm.id("texture_sets"));
 	private static final MutableRegistry<TextureSetImpl> REGISTRY;
 
 	public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
@@ -67,8 +71,8 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 	}
 
 	static {
-		REGISTRY = (MutableRegistry<TextureSetImpl>) Registry.REGISTRIES.add(Xm.id("texture_sets"),
-				(MutableRegistry<?>) new DefaultedRegistry(NONE_ID.toString()));
+		REGISTRY = (MutableRegistry<TextureSetImpl>) ((MutableRegistry) Registry.REGISTRIES).add(REGISTRY_KEY,
+				new DefaultedRegistry(NONE_ID.toString(), REGISTRY_KEY, Lifecycle.experimental()));
 
 		DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)
 				.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
@@ -78,6 +82,6 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 	}
 
 	void add(TextureSetImpl set) {
-		REGISTRY.add(set.id, set);
+		Registry.register(REGISTRY, set.id, set);
 	}
 }

@@ -56,7 +56,7 @@ import net.minecraft.world.explosion.Explosion;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
 import grondag.fermion.spatial.DirectionHelper;
 import grondag.fermion.world.WorldHelper;
@@ -87,7 +87,7 @@ public class StairLike extends Block implements Waterloggable {
 	protected final Predicate<PlayerEntity> forceKeyTest;
 
 	public StairLike(BlockState blockState, Settings settings, Shape shape, Predicate<PlayerEntity> modKeyTest, Predicate<PlayerEntity> forceKeyTest) {
-		super(FabricBlockSettings.copyOf(settings).dynamicBounds().build());
+		super(FabricBlockSettings.copyOf(settings).dynamicBounds());
 		setDefaultState(stateManager.getDefaultState()
 				.with(WATERLOGGED, false));
 		baseBlock = blockState.getBlock();
@@ -130,17 +130,17 @@ public class StairLike extends Block implements Waterloggable {
 	}
 
 	@Override
-	public void onBlockAdded(BlockState blockState, World world, BlockPos blockPos, BlockState blockState2, boolean bl) {
-		if (blockState.getBlock() != blockState.getBlock()) {
-			baseBlockState.neighborUpdate(world, blockPos, Blocks.AIR, blockPos, false);
-			baseBlock.onBlockAdded(baseBlockState, world, blockPos, blockState2, false);
+	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+		if (!state.isOf(state.getBlock())) {
+			baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
+			baseBlock.onBlockAdded(baseBlockState, world, pos, oldState, false);
 		}
 	}
 
 	@Override
-	public void onBlockRemoved(BlockState blockState, World world, BlockPos blockPos, BlockState blockState2, boolean bl) {
-		if (blockState.getBlock() != blockState2.getBlock()) {
-			baseBlockState.onBlockRemoved(world, blockPos, blockState2, bl);
+	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean notify) {
+		if (!state.isOf(newState.getBlock())) {
+			baseBlockState.onStateReplaced(world, pos, newState, notify);
 		}
 	}
 
