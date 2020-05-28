@@ -24,12 +24,12 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 
+import grondag.fermion.orientation.api.CubeCorner;
+import grondag.fermion.orientation.api.CubeEdge;
+import grondag.fermion.orientation.api.CubeRotation;
+import grondag.fermion.orientation.api.HorizontalEdge;
+import grondag.fermion.orientation.api.HorizontalFace;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
-import grondag.xm.api.orientation.CubeCorner;
-import grondag.xm.api.orientation.CubeEdge;
-import grondag.xm.api.orientation.CubeRotation;
-import grondag.xm.api.orientation.HorizontalEdge;
-import grondag.xm.api.orientation.HorizontalFace;
 
 @API(status = EXPERIMENTAL)
 public class XmProperties {

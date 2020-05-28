@@ -94,6 +94,9 @@ sourceSets {
 	main {
 	        java {
 	            include 'grondag/**/*'
+	            exclude 'grondag/xm/api/texture/unstable/**/*'
+	            exclude 'grondag/xm/api/texture/core/**/*'
+	            exclude 'grondag/xm/api/texture/test/**/*'
 	            exclude '*.DS_Store'
 	        }
 	        resources

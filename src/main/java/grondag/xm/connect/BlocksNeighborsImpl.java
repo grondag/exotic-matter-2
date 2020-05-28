@@ -30,13 +30,13 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.BlockView;
 
+import grondag.fermion.orientation.api.CubeCorner;
+import grondag.fermion.orientation.api.CubeEdge;
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.connect.world.ModelStateFunction;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.orientation.CubeCorner;
-import grondag.xm.api.orientation.CubeEdge;
 
 /**
  * Convenient way to gather and test block states for blocks adjacent to a given

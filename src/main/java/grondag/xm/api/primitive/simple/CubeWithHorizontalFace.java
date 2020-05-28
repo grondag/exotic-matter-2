@@ -15,8 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
+import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;

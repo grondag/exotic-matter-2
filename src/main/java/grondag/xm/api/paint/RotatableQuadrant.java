@@ -19,10 +19,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
+import grondag.fermion.orientation.api.ClockwiseRotation;
+import grondag.fermion.orientation.api.FaceCorner;
+import grondag.fermion.orientation.api.FaceEdge;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.orientation.FaceCorner;
-import grondag.xm.api.orientation.FaceEdge;
 import grondag.xm.api.texture.TextureOrientation;
 
 /**
@@ -93,10 +93,10 @@ public enum RotatableQuadrant {
 	private static final float RIGHT_SIDE_V_SHIFT[] = new float[FaceEdge.values().length];
 
 	static {
-		FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_LEFT.ordinal()] = Rotation.ROTATE_NONE.ordinal();
-		FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_RIGHT.ordinal()] = Rotation.ROTATE_90.ordinal();
-		FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_RIGHT.ordinal()] = Rotation.ROTATE_180.ordinal();
-		FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_LEFT.ordinal()] = Rotation.ROTATE_270.ordinal();
+		FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_LEFT.ordinal()] = ClockwiseRotation.ROTATE_NONE.ordinal();
+		FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_RIGHT.ordinal()] = ClockwiseRotation.ROTATE_90.ordinal();
+		FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_RIGHT.ordinal()] = ClockwiseRotation.ROTATE_180.ordinal();
+		FACE_CORNER_ROTATION_MAP[FaceCorner.BOTTOM_LEFT.ordinal()] = ClockwiseRotation.ROTATE_270.ordinal();
 
 		RIGHT_SIDE_U_SHIFT[FaceEdge.BOTTOM_EDGE.ordinal()] = -0.5f;
 		RIGHT_SIDE_U_SHIFT[FaceEdge.TOP_EDGE.ordinal()] = 0.5f;
@@ -105,11 +105,10 @@ public enum RotatableQuadrant {
 	}
 
 	/**
-	 * Applies the texture rotation needed to position this texture in the quadrant
-	 * identified by the given corner.
-	 * <p>
+	 * Applies the texture rotation needed to position this texture in
+	 * the quadrant identified by the given corner.
 	 */
 	public void applyForQuadrant(MutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
-		polygon.rotation(layerIndex, TextureOrientation.find(Rotation.VALUES[(4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - rotation) & 3], false, false));
+		polygon.rotation(layerIndex, TextureOrientation.find(ClockwiseRotation.fromOrdinal((4 + FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - rotation) & 3), false, false));
 	}
 }

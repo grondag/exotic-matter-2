@@ -21,12 +21,12 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.math.Direction;
 
+import grondag.fermion.orientation.api.FaceCorner;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.orientation.FaceCorner;
 import grondag.xm.api.paint.RotatableQuadrant;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;

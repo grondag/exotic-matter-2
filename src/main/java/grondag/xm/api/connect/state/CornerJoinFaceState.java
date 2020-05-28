@@ -21,8 +21,8 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.math.Direction;
 
-import grondag.xm.api.orientation.FaceCorner;
-import grondag.xm.api.orientation.FaceEdge;
+import grondag.fermion.orientation.api.FaceCorner;
+import grondag.fermion.orientation.api.FaceEdge;
 
 /**
  * Describes the connected-texture state of a block face for a face within a

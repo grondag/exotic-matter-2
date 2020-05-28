@@ -28,13 +28,12 @@ import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
-import grondag.xm.api.texture.TextureOrientation;
-import grondag.xm.relics.CubeInputs;
 
 @API(status = INTERNAL)
 public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
@@ -58,24 +57,13 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 	}
 
 	private XmMesh getCubeQuads() {
-		final CubeInputs cube = new CubeInputs();
-		cube.color = 0xFFFFFFFF;
-		cube.textureRotation = TextureOrientation.IDENTITY;
-		cube.isFullBrightness = false;
-		cube.u0 = 0;
-		cube.v0 = 0;
-		cube.u1 = 1;
-		cube.v1 = 1;
-		cube.isOverlay = false;
-		cube.surface = SURFACE_ALL;
-
 		final WritableMesh stream = XmMeshes.claimWritable();
-		cube.appendFace(stream, Direction.DOWN);
-		cube.appendFace(stream, Direction.UP);
-		cube.appendFace(stream, Direction.EAST);
-		cube.appendFace(stream, Direction.WEST);
-		cube.appendFace(stream, Direction.NORTH);
-		cube.appendFace(stream, Direction.SOUTH);
+		appendCubeFace(stream, Direction.DOWN);
+		appendCubeFace(stream, Direction.UP);
+		appendCubeFace(stream, Direction.EAST);
+		appendCubeFace(stream, Direction.WEST);
+		appendCubeFace(stream, Direction.NORTH);
+		appendCubeFace(stream, Direction.SOUTH);
 
 		final XmMesh result = stream.releaseToReader();
 
@@ -85,6 +73,59 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 		return result;
 	}
 
+	private void appendCubeFace(WritableMesh stream, Direction side) {
+		final MutablePolygon q = stream.writer();
+
+		q.lockUV(0, true);
+		q.surface(SURFACE_ALL);
+		q.nominalFace(side);
+
+		switch (side) {
+		case UP:
+			q.vertex(0, 0, 1, 0, 0, 0, 0xFFFFFFFF);
+			q.vertex(1, 0, 1, 1, 0, 1, 0xFFFFFFFF);
+			q.vertex(2, 1, 1, 1, 1, 1, 0xFFFFFFFF);
+			q.vertex(3, 1, 1, 0, 1, 0, 0xFFFFFFFF);
+			break;
+
+		case DOWN:
+			q.vertex(0, 0, 0, 1, 1, 1, 0xFFFFFFFF);
+			q.vertex(1, 0, 0, 0, 1, 0, 0xFFFFFFFF);
+			q.vertex(2, 1, 0, 0, 0, 0, 0xFFFFFFFF);
+			q.vertex(3, 1, 0, 1, 0, 1, 0xFFFFFFFF);
+			break;
+
+		case WEST:
+			q.vertex(0, 0, 1, 0, 0, 0, 0xFFFFFFFF);
+			q.vertex(1, 0, 0, 0, 0, 1, 0xFFFFFFFF);
+			q.vertex(2, 0, 0, 1, 1, 1, 0xFFFFFFFF);
+			q.vertex(3, 0, 1, 1, 1, 0, 0xFFFFFFFF);
+			break;
+
+		case EAST:
+			q.vertex(0, 1, 1, 1, 0, 0, 0xFFFFFFFF);
+			q.vertex(1, 1, 0, 1, 0, 1, 0xFFFFFFFF);
+			q.vertex(2, 1, 0, 0, 1, 1, 0xFFFFFFFF);
+			q.vertex(3, 1, 1, 0, 1, 0, 0xFFFFFFFF);
+			break;
+
+		case NORTH:
+			q.vertex(0, 1, 1, 0, 0, 0, 0xFFFFFFFF);
+			q.vertex(1, 1, 0, 0, 0, 1, 0xFFFFFFFF);
+			q.vertex(2, 0, 0, 0, 1, 1, 0xFFFFFFFF);
+			q.vertex(3, 0, 1, 0, 1, 0, 0xFFFFFFFF);
+			break;
+
+		case SOUTH:
+			q.vertex(0, 0, 1, 1, 0, 0, 0xFFFFFFFF);
+			q.vertex(1, 0, 0, 1, 0, 1, 0xFFFFFFFF);
+			q.vertex(2, 1, 0, 1, 1, 1, 0xFFFFFFFF);
+			q.vertex(3, 1, 1, 1, 1, 0, 0xFFFFFFFF);
+			break;
+		}
+
+		q.append();
+	}
 	@Override
 	public TerrainModelState.Mutable geometricState(TerrainModelState fromState) {
 		return defaultState().mutableCopy();

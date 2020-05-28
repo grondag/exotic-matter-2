@@ -24,8 +24,8 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
+import grondag.fermion.orientation.api.CubeRotation;
 import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.mesh.helper.PolyTransformImpl;
 
 @API(status = EXPERIMENTAL)

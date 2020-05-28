@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
-import grondag.fermion.spatial.Rotation;
+import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -81,7 +81,7 @@ public abstract class CubicPainterBigTex extends AbstractQuadPainter {
 						: HashCommon.mix(Math.abs(surfaceVec.getZ()) | (modelState.species() << 8) | (editor.textureSalt() << 12));
 
 				// rotation
-				final Rotation rot = allowTexRotation ? Useful.offsetEnumValue(tex.transform().baseRotation, depthAndSpeciesHash & 3) : tex.transform().baseRotation;
+				final ClockwiseRotation rot = allowTexRotation ? Useful.offsetEnumValue(tex.transform().baseRotation, depthAndSpeciesHash & 3) : tex.transform().baseRotation;
 				editor.rotation(textureIndex,TextureOrientation.find(rot, false, false));
 
 				surfaceVec = rotateFacePerspective(surfaceVec, rot, scale);

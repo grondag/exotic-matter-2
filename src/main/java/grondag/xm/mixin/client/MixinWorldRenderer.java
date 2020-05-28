@@ -22,21 +22,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Matrix4f;
+
 import grondag.xm.XmConfig;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.relics.placement.PlacementPreviewRenderer;
-import grondag.xm.render.RenderUtil;
+import grondag.xm.render.OutlineRenderer;
 
 @Mixin(WorldRenderer.class)
 public class MixinWorldRenderer {
@@ -47,17 +43,17 @@ public class MixinWorldRenderer {
 		final ModelState modelState = XmBlockState.modelState(blockState, world, blockPos, true);
 
 		if(modelState != null && !XmConfig.debugCollisionBoxes) {
-			RenderUtil.drawModelOutline(matrixStack, vertexConsumer, modelState, blockPos.getX() - x, blockPos.getY() - y, blockPos.getZ() - z, 0.0F, 0.0F, 0.0F, 0.4f);
+			OutlineRenderer.drawModelOutline(matrixStack, vertexConsumer, modelState, blockPos.getX() - x, blockPos.getY() - y, blockPos.getZ() - z, 0.0F, 0.0F, 0.0F, 0.4f);
 			ci.cancel();
 		}
 	}
 
 	// TODO: reimplement placement preview
-	@SuppressWarnings({ "unused", "deprecation" })
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderWorldBorder(Lnet/minecraft/client/render/Camera;)V"), cancellable = false, require = 1)
-	void blockHighlightHook(MatrixStack matrixStack, float tickDelta, long l, boolean blockOutlineEnabled, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
-		if (blockOutlineEnabled && false) {
-			PlacementPreviewRenderer.renderPreview(tickDelta);
-		}
-	}
+	//	@SuppressWarnings({ "unused", "deprecation" })
+	//	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderWorldBorder(Lnet/minecraft/client/render/Camera;)V"), cancellable = false, require = 1)
+	//	void blockHighlightHook(MatrixStack matrixStack, float tickDelta, long l, boolean blockOutlineEnabled, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
+	//		if (blockOutlineEnabled && false) {
+	//			PlacementPreviewRenderer.renderPreview(tickDelta);
+	//		}
+	//	}
 }

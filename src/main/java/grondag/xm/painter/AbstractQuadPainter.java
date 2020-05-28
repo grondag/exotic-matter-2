@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
-import grondag.fermion.spatial.Rotation;
+import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -128,7 +128,7 @@ public abstract class AbstractQuadPainter {
 	 * degree.
 	 *
 	 */
-	protected static Vec3i rotateFacePerspective(Vec3i vec, Rotation rotation, TextureScale scale) {
+	protected static Vec3i rotateFacePerspective(Vec3i vec, ClockwiseRotation rotation, TextureScale scale) {
 		// PERF - reuse instances?
 		switch (rotation) {
 		case ROTATE_90:
@@ -202,16 +202,16 @@ public abstract class AbstractQuadPainter {
 
 		case ROTATE_BIGTEX: {
 			final int species = modelState.hasSpecies() ? modelState.species() : 0;
-			final Rotation rot =  species == 0 ? Rotation.ROTATE_NONE : Useful.offsetEnumValue(Rotation.ROTATE_NONE, HashCommon.mix(species) & 3);
+			final ClockwiseRotation rot =  species == 0 ? ClockwiseRotation.ROTATE_NONE : Useful.offsetEnumValue(ClockwiseRotation.ROTATE_NONE, HashCommon.mix(species) & 3);
 			return TextureOrientation.find(rot, false, false);
 		}
 
 		case ROTATE_RANDOM:
-			return TextureOrientation.find(Useful.offsetEnumValue(Rotation.ROTATE_NONE, (textureHashForFace(face, tex, modelState) >> 8) & 3), false, false);
+			return TextureOrientation.find(Useful.offsetEnumValue(ClockwiseRotation.ROTATE_NONE, (textureHashForFace(face, tex, modelState) >> 8) & 3), false, false);
 
 		case STONE_LIKE: {
 			final int hash = textureHashForFace(face, tex, modelState);
-			final Rotation rot = (hash & 0b100000000) == 0 ? Rotation.ROTATE_NONE : Rotation.ROTATE_180;
+			final ClockwiseRotation rot = (hash & 0b100000000) == 0 ? ClockwiseRotation.ROTATE_NONE : ClockwiseRotation.ROTATE_180;
 			return TextureOrientation.find(rot, (hash & 0b1000000000) == 0, false);
 		}
 

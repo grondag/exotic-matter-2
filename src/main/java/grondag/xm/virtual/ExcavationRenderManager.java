@@ -26,7 +26,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 
@@ -35,7 +34,6 @@ import net.fabricmc.api.Environment;
 
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
-import grondag.xm.render.XmRenderHelper;
 
 @API(status = INTERNAL)
 public class ExcavationRenderManager {
@@ -80,7 +78,7 @@ public class ExcavationRenderManager {
 
 		secondPass.clear();
 
-		final Frustum visibleRegion = XmRenderHelper.frustum();
+		//		final Frustum visibleRegion = XmRenderHelper.frustum();
 
 		final double d0 = player.lastRenderX + (player.getX() - player.lastRenderX) * tickDelta;
 		final double d1 = player.lastRenderY + (player.getY() - player.lastRenderY) * tickDelta;
@@ -90,7 +88,8 @@ public class ExcavationRenderManager {
 		// bufferBuilder.setOffset(-d0, -d1, -d2);
 
 		for (final ExcavationRenderer ex : renderCopy) {
-			if (ex.bounds() != null && visibleRegion.isVisible(ex.bounds())) {
+			// FIX: add back visibility test using supported API
+			if (ex.bounds() != null) { // && visibleRegion.isVisible(ex.bounds())) {
 				if (ex.drawBounds(bufferbuilder, player, d0, d1, d2, tickDelta)) {
 					secondPass.add(ex);
 				}

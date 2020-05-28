@@ -25,8 +25,8 @@ import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.util.math.Direction;
 
+import grondag.fermion.orientation.api.CubeRotation;
 import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.orientation.CubeRotation;
 import grondag.xm.api.primitive.simple.Stair;
 
 @API(status = EXPERIMENTAL)

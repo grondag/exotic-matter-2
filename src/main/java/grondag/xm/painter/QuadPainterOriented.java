@@ -21,16 +21,16 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.math.Direction;
 
+import grondag.fermion.orientation.api.FaceCorner;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.orientation.FaceCorner;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.api.texture.content.XmTextures;
+import grondag.xm.api.texture.XmTextures;
 
 /**
  * Applies quadrant-style border textures. Quads must have a nominal face. Will

@@ -23,10 +23,10 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.Identifier;
 
+import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.primitive.SimplePrimitiveBuilderImpl;
 

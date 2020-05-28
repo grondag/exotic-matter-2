@@ -50,6 +50,7 @@ import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import grondag.fermion.bits.BitPacker32;
+import grondag.fermion.orientation.api.OrientationType;
 import grondag.fermion.varia.Useful;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinState;
@@ -61,7 +62,6 @@ import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.api.primitive.ModelPrimitive;

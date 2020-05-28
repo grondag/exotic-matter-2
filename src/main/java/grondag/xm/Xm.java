@@ -24,10 +24,7 @@ import org.apiguardian.api.API;
 import net.minecraft.util.Identifier;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.server.ServerStartCallback;
-import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 
-import grondag.fermion.simulator.Simulator;
 import grondag.xm.network.Packets;
 
 @API(status = INTERNAL)
@@ -36,8 +33,6 @@ public class Xm implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		XmConfig.init();
-		ServerStartCallback.EVENT.register(Simulator::start);
-		ServerTickCallback.EVENT.register(s -> Simulator.instance().tick(s));
 		Packets.initializeCommon();
 	}
 

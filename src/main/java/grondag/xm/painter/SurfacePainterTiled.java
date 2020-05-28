@@ -26,7 +26,7 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 
-import grondag.fermion.spatial.Rotation;
+import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -480,7 +480,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 							editor.sprite(textureIndex, tex.textureName(textureVersion));
 
 							//TODO: honor additional transform types
-							final Rotation rot = tex.transform() == TextureTransform.ROTATE_RANDOM
+							final ClockwiseRotation rot = tex.transform() == TextureTransform.ROTATE_RANDOM
 									? Useful.offsetEnumValue(tex.transform().baseRotation, (salt >> 16) & 3)
 											: tex.transform().baseRotation;
 

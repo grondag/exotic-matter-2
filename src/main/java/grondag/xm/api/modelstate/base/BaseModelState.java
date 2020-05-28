@@ -37,11 +37,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
+import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;

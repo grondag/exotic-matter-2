@@ -19,11 +19,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import grondag.fermion.orientation.api.FaceCorner;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.orientation.FaceCorner;
 
 /**
  * Helper class to splits UV-locked quads into four quadrants at the u,v = 0.5,

@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
-import grondag.fermion.spatial.Rotation;
+import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.xm.api.texture.TextureOrientation;
 
 @API(status = INTERNAL)
@@ -43,13 +43,13 @@ public class TextureOrientationHelper {
 		return index(o.rotation, o.flipU, o.flipV);
 	}
 
-	private static int index(Rotation r, boolean flipU, boolean flipV) {
+	private static int index(ClockwiseRotation r, boolean flipU, boolean flipV) {
 		return (r.ordinal() << 2) | (flipU ? 1 : 0) | (flipV ? 2 : 0);
 	}
 
-	public static TextureOrientation find(Rotation rotation, boolean flipU, boolean flipV) {
+	public static TextureOrientation find(ClockwiseRotation rotation, boolean flipU, boolean flipV) {
 		if(rotation == null) {
-			rotation = Rotation.ROTATE_NONE;
+			rotation = ClockwiseRotation.ROTATE_NONE;
 		}
 		return LOOKUP[index(rotation, flipU, flipV)];
 	}

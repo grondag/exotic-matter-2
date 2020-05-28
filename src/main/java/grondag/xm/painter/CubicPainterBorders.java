@@ -44,7 +44,6 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
-import grondag.xm.relics.placement.FaceQuadInputs;
 
 @API(status = INTERNAL)
 public abstract class CubicPainterBorders extends AbstractQuadPainter {

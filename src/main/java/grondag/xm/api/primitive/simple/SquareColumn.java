@@ -27,6 +27,8 @@ import net.minecraft.util.math.Vec3i;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.color.Color;
+import grondag.fermion.orientation.api.FaceEdge;
+import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
@@ -40,8 +42,6 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.orientation.FaceEdge;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;

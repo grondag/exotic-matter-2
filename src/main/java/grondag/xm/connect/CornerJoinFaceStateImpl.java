@@ -15,14 +15,14 @@
  ******************************************************************************/
 package grondag.xm.connect;
 
-import static grondag.xm.api.orientation.FaceCorner.BOTTOM_LEFT;
-import static grondag.xm.api.orientation.FaceCorner.BOTTOM_RIGHT;
-import static grondag.xm.api.orientation.FaceCorner.TOP_LEFT;
-import static grondag.xm.api.orientation.FaceCorner.TOP_RIGHT;
-import static grondag.xm.api.orientation.FaceEdge.BOTTOM_EDGE;
-import static grondag.xm.api.orientation.FaceEdge.LEFT_EDGE;
-import static grondag.xm.api.orientation.FaceEdge.RIGHT_EDGE;
-import static grondag.xm.api.orientation.FaceEdge.TOP_EDGE;
+import static grondag.fermion.orientation.api.FaceCorner.BOTTOM_LEFT;
+import static grondag.fermion.orientation.api.FaceCorner.BOTTOM_RIGHT;
+import static grondag.fermion.orientation.api.FaceCorner.TOP_LEFT;
+import static grondag.fermion.orientation.api.FaceCorner.TOP_RIGHT;
+import static grondag.fermion.orientation.api.FaceEdge.BOTTOM_EDGE;
+import static grondag.fermion.orientation.api.FaceEdge.LEFT_EDGE;
+import static grondag.fermion.orientation.api.FaceEdge.RIGHT_EDGE;
+import static grondag.fermion.orientation.api.FaceEdge.TOP_EDGE;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
@@ -32,12 +32,11 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.math.Direction;
 
+import grondag.fermion.orientation.api.CubeEdge;
+import grondag.fermion.orientation.api.FaceCorner;
+import grondag.fermion.orientation.api.FaceEdge;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.world.BlockNeighbors;
-import grondag.xm.api.orientation.CubeEdge;
-import grondag.xm.api.orientation.FaceCorner;
-import grondag.xm.api.orientation.FaceEdge;
-import grondag.xm.connect.helper.FaceEdgeHelper;
 
 /**
  * Corner bits indicate that a corner is needed, not that the corner is present.
@@ -193,8 +192,8 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
 		if (join.isJoined(face)) {
 			fjs = CornerJoinFaceStateImpl.NO_FACE;
 		} else {
-			for (int i = 0; i < FaceEdgeHelper.COUNT; i++) {
-				final FaceEdge fside = FaceEdgeHelper.fromOrdinal(i);
+			for (int i = 0; i < FaceEdge.COUNT; i++) {
+				final FaceEdge fside = FaceEdge.fromOrdinal(i);
 				if (join.isJoined(fside.toWorld(face))) {
 					faceFlags |= fside.ordinalBit;
 				}
@@ -214,8 +213,8 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
 		if (tests.result(face)) {
 			fjs = CornerJoinFaceStateImpl.NO_FACE;
 		} else {
-			for (int i = 0; i < FaceEdgeHelper.COUNT; i++) {
-				final FaceEdge fside = FaceEdgeHelper.fromOrdinal(i);
+			for (int i = 0; i < FaceEdge.COUNT; i++) {
+				final FaceEdge fside = FaceEdge.fromOrdinal(i);
 				final Direction joinFace = fside.toWorld(face);
 				if (tests.result(joinFace) && !tests.result(CubeEdge.find(face, joinFace))) {
 					faceFlags |= fside.ordinalBit;

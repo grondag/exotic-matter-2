@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
-import grondag.fermion.simulator.domain.DomainManager;
 import grondag.fermion.world.WorldMap;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
@@ -163,7 +162,8 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 		private final World world;
 
 		private PlayerData(ServerPlayerEntity player) {
-			domainID = DomainManager.instance().getActiveDomain(player).getAssignedNumber();
+			// FIX: put back when Domains are moved out of Simulator
+			domainID = 1; //DomainManager.instance().getActiveDomain(player).getAssignedNumber();
 			world = player.world;
 		}
 	}

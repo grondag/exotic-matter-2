@@ -33,7 +33,7 @@ import net.fabricmc.api.Environment;
 
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
-import grondag.xm.render.RenderUtil;
+import grondag.xm.render.OutlineRenderer;
 
 @API(status = INTERNAL)
 public class ExcavationRenderer {
@@ -109,7 +109,7 @@ public class ExcavationRenderer {
 	@Environment(EnvType.CLIENT)
 	public void drawGrid(BufferBuilder buffer, double d0, double d1, double d2) {
 		if (didDrawBoundsLastTime && positions == null) {
-			RenderUtil.drawGrid(buffer, aabb, lastEyePosition, d0, d1, d2, 1f, 0.3f, 0.3f, 0.5F);
+			OutlineRenderer.drawGrid(buffer, aabb, lastEyePosition, d0, d1, d2, 1f, 0.3f, 0.3f, 0.5F);
 		}
 	}
 

@@ -18,7 +18,6 @@ package grondag.xm.api.mesh.polygon;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
-import org.joml.Vector4f;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -61,10 +60,6 @@ public class PolyHelper {
 
 	public static Direction faceForNormal(Vec3f normal) {
 		return faceForNormal(normal.x(), normal.y(), normal.z());
-	}
-
-	public static Direction faceForNormal(Vector4f normal) {
-		return faceForNormal(normal.x, normal.y, normal.z);
 	}
 
 	/** returns the face that is normally the "top" of the given face */

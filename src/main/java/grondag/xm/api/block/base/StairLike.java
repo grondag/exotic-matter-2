@@ -58,16 +58,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 
-import grondag.fermion.spatial.DirectionHelper;
+import grondag.fermion.orientation.api.CubeRotation;
+import grondag.fermion.orientation.api.DirectionHelper;
+import grondag.fermion.orientation.api.FaceEdge;
+import grondag.fermion.orientation.api.HorizontalEdge;
 import grondag.fermion.world.WorldHelper;
 import grondag.xm.SidedHelper;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.block.XmProperties;
 import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
-import grondag.xm.api.orientation.CubeRotation;
-import grondag.xm.api.orientation.FaceEdge;
-import grondag.xm.api.orientation.HorizontalEdge;
 import grondag.xm.api.primitive.simple.Stair;
 
 @API(status = EXPERIMENTAL)

@@ -38,10 +38,10 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
+import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 

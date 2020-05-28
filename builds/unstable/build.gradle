@@ -93,7 +93,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 sourceSets {
 	main {
 	        java {
-	            include 'grondag/**/*'
+	        	srcDirs = ['../../src/main/java/grondag/xm']
+	            include 'grondag/xm/api/texture/unstable/**/*'
 	            exclude '*.DS_Store'
 	        }
 	        resources

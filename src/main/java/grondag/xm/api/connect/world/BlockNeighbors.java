@@ -25,10 +25,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-import grondag.xm.api.orientation.CubeCorner;
-import grondag.xm.api.orientation.CubeEdge;
-import grondag.xm.api.orientation.HorizontalEdge;
-import grondag.xm.api.orientation.HorizontalFace;
+import grondag.fermion.orientation.api.CubeCorner;
+import grondag.fermion.orientation.api.CubeEdge;
+import grondag.fermion.orientation.api.HorizontalEdge;
+import grondag.fermion.orientation.api.HorizontalFace;
 import grondag.xm.connect.BlocksNeighborsImpl;
 
 /**

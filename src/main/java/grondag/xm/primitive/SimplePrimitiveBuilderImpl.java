@@ -26,12 +26,12 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.SimplePrimitive.Builder;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;

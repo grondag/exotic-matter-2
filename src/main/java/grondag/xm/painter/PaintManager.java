@@ -35,7 +35,6 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 
-import grondag.frex.Frex;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.XmMeshes;
@@ -46,6 +45,7 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
+import grondag.xm.target.RenderTarget;
 import grondag.xm.texture.TextureSetHelper;
 
 @Environment(EnvType.CLIENT)
@@ -56,7 +56,7 @@ public class PaintManager implements Consumer<Polygon> {
 
 	private static final Renderer RENDERER = RendererAccess.INSTANCE.getRenderer();
 
-	private static final boolean FREX_ACTIVE = Frex.isAvailable();
+	private static final boolean FREX_ACTIVE = RenderTarget.instance().isFrex();
 
 	private static final BlendMode[] BLEND_MODES = BlendMode.values();
 

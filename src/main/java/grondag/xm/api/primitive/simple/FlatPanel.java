@@ -24,6 +24,7 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 
 import grondag.fermion.color.Color;
+import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinState;
@@ -35,7 +36,6 @@ import grondag.xm.api.mesh.polygon.FaceVertex;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.orientation.OrientationType;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.base.ConnectedShapeHelper;
