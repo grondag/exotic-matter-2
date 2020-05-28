@@ -34,10 +34,7 @@ dependencies {
 	compileOnly "org.apiguardian:apiguardian-api:1.0.0"
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 	
-	modApi ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") {
-		transitive = false
-	}
-	
+	modImplementation ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false }
 	modImplementation ("grondag:fermion-${project.mc_tag}:${project.fermion_version}.+") { transitive = false }
 	modImplementation ("grondag:fermion-modkeys-${project.mc_tag}:${project.fermion_modkeys_version}.+") { transitive = false }
     modImplementation ("grondag:fermion-varia-${project.mc_tag}:${project.fermion_varia_version}.+") { transitive = false }
@@ -47,15 +44,18 @@ dependencies {
     	
 	modImplementation ("io.github.cottonmc:Jankson-Fabric:${jankson_version}") {
         exclude group :"net.fabricmc.fabric-api"
+        exclude group :"net.fabricmc.fabric-loader"
     }
 	
 	modImplementation ("me.shedaniel.cloth:config-2:${clothconfig_version}") {
         exclude group :"io.github.prospector.modmenu"
         exclude group :"net.fabricmc.fabric-api"
+        exclude group :"net.fabricmc.fabric-loader"
     }
 	
 	modImplementation ("io.github.prospector:modmenu:${project.modmenu_version}") {
         exclude group :"net.fabricmc.fabric-api"
+        exclude group :"net.fabricmc.fabric-loader"
     }
 	
 	if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {

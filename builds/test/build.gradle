@@ -94,7 +94,7 @@ sourceSets {
 	main {
 	        java {
 	        	srcDirs = ['../../src/main/java/grondag/xm']
-	            include 'grondag/xm/api/texture/test/**/*'
+	            include 'api/texture/test/*'
 	            exclude '*.DS_Store'
 	        }
 	        resources
