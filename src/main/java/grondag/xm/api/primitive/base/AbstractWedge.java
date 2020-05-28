@@ -24,6 +24,8 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.fermion.orientation.api.CubeRotation;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.mesh.ReadOnlyMesh;
@@ -44,8 +46,8 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 
 	protected final ReadOnlyMesh[] CACHE = new ReadOnlyMesh[KEY_COUNT];
 
-	public AbstractWedge(String idString, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
-		super(idString, NONE, SimpleModelStateImpl.FACTORY, surfaceFunc);
+	public AbstractWedge(Identifier id, Function<PrimitiveState, XmSurfaceList> surfaceFunc) {
+		super(id, NONE, SimpleModelStateImpl.FACTORY, surfaceFunc);
 	}
 
 	// mainly for run-time testing

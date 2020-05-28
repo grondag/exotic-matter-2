@@ -15,6 +15,8 @@
  ******************************************************************************/
 package grondag.xm.primitive;
 
+import static grondag.xm.api.connect.state.SimpleJoinState.AXIS_JOIN_BIT_COUNT;
+import static grondag.xm.api.modelstate.ModelStateFlags.AXIS_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
@@ -26,6 +28,8 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
@@ -36,6 +40,7 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.SimplePrimitive.Builder;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
+import grondag.xm.connect.SimpleJoinStateImpl;
 import grondag.xm.modelstate.SimpleModelStateImpl;
 import grondag.xm.paint.XmPaintImpl;
 
@@ -46,12 +51,13 @@ public class SimplePrimitiveBuilderImpl {
 		private XmSurfaceList list = XmSurfaceList.ALL;
 		private Function<PrimitiveState, XmMesh> polyFactory;
 		private int bitCount = 0;
+		private boolean axisJoin;
 		private boolean simpleJoin;
 		private boolean cornerJoin;
 
 		@Override
-		public SimplePrimitive build(String idString) {
-			return new Primitive(idString, this);
+		public SimplePrimitive build(Identifier id) {
+			return new Primitive(id, this);
 		}
 
 		@Override
@@ -79,6 +85,12 @@ public class SimplePrimitiveBuilderImpl {
 		}
 
 		@Override
+		public Builder axisJoin(boolean needsJoin) {
+			axisJoin = needsJoin;
+			return this;
+		}
+
+		@Override
 		public Builder simpleJoin(boolean needsJoin) {
 			simpleJoin = needsJoin;
 			return this;
@@ -90,6 +102,7 @@ public class SimplePrimitiveBuilderImpl {
 			return this;
 		}
 	}
+
 	protected static class Primitive extends AbstractSimplePrimitive {
 		private final XmMesh[] cachedQuads;
 
@@ -101,6 +114,8 @@ public class SimplePrimitiveBuilderImpl {
 
 		private final int bitShift;
 
+		/** true when needs only per-axis connections */
+		private final boolean axisJoin;
 		private final boolean simpleJoin;
 		private final boolean cornerJoin;
 
@@ -108,17 +123,22 @@ public class SimplePrimitiveBuilderImpl {
 			return s -> list;
 		}
 
-		public Primitive(String idString, BuilderImpl builder) {
-			super(idString, (builder.cornerJoin ? CORNER_JOIN : NONE) | (builder.simpleJoin ? SIMPLE_JOIN : NONE), SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
-			simpleJoin = builder.simpleJoin;
+		public Primitive(Identifier id, BuilderImpl builder) {
+			super(id, (builder.cornerJoin ? CORNER_JOIN : NONE) | (builder.simpleJoin ? SIMPLE_JOIN : NONE) | (builder.axisJoin ? AXIS_JOIN : NONE), SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
+			axisJoin = builder.axisJoin & !builder.simpleJoin & builder.cornerJoin;
+			simpleJoin = builder.simpleJoin | axisJoin;
 			cornerJoin = builder.cornerJoin;
 			orientationType = builder.orientationType;
 			polyFactory = builder.polyFactory;
 			bitShift = builder.bitCount + 1; // + 1 for lamp
 			int count = orientationType.enumClass.getEnumConstants().length << bitShift;
+
 			if(simpleJoin) {
 				count <<= 6;
+			} else if (axisJoin) {
+				count <<= AXIS_JOIN_BIT_COUNT;
 			}
+
 			cachedQuads = cornerJoin ? null : new XmMesh[count];
 			invalidateCache();
 		}
@@ -146,13 +166,19 @@ public class SimplePrimitiveBuilderImpl {
 
 				} else {
 					int index = (modelState.orientationIndex() << bitShift) | (modelState.primitiveBits() << 1);
+
 					if (modelState.primitive().lampSurface(modelState) != null) {
 						index |= 1;
 					}
+
 					if(simpleJoin) {
 						index = (index << 6) | modelState.simpleJoin().ordinal();
+					} else if (axisJoin) {
+						index = (index << AXIS_JOIN_BIT_COUNT) | SimpleJoinStateImpl.toAxisJoinIndex(modelState.simpleJoin());
 					}
+
 					mesh =  cachedQuads[index];
+
 					if(mesh == null) {
 						mesh = polyFactory.apply(modelState);
 						cachedQuads[index] = mesh;
@@ -165,6 +191,7 @@ public class SimplePrimitiveBuilderImpl {
 						target.accept(reader);
 					} while (reader.next());
 				}
+
 				reader.release();
 
 			} catch (final Exception e) {

@@ -40,7 +40,7 @@ public class ModelStateFlags {
 	public static final int CORNER_JOIN = IS_POPULATED << 1;
 
 	/**
-	 * Applies to block-type states. True if is a block type state and requires full
+	 * Applies to block-type states. True if is a block type state and requires simple
 	 * join state.
 	 */
 	public static final int SIMPLE_JOIN = CORNER_JOIN << 1;
@@ -58,4 +58,6 @@ public class ModelStateFlags {
 	public static final int POSITION = MASONRY_JOIN << 1;
 
 	public static final int BLOCK_SPECIES = POSITION << 1;
+
+	public static final int AXIS_JOIN = BLOCK_SPECIES << 1;
 }

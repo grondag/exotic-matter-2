@@ -143,13 +143,12 @@ public class CappedRoundColumn  {
 		writer.setupFaceQuad(Direction.SOUTH, 0, min, 1, max, 0, Direction.UP);
 		pt.accept(writer);
 		writer.append();
-
 	}
+
 	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
-			// PERF: doesn't actually need 64 states, only axis joins. Maybe add a simpler join variant?
-			.simpleJoin(true)
+			.axisJoin(true)
 			.orientationType(OrientationType.AXIS)
-			.build(Xm.idString("capped_round_column"));
+			.build(Xm.id("capped_round_column"));
 }

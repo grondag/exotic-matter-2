@@ -257,8 +257,7 @@ public class CappedSquareInsetColumn  {
 	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
 			.surfaceList(SURFACES)
 			.polyFactory( CappedSquareInsetColumn::factory)
-			// PERF: doesn't actually need 64 states, only axis joins. Maybe add a simpler join variant?
-			.simpleJoin(true)
+			.axisJoin(true)
 			.orientationType(OrientationType.AXIS)
-			.build(Xm.idString("capped_square_inset_column"));
+			.build(Xm.id("capped_square_inset_column"));
 }

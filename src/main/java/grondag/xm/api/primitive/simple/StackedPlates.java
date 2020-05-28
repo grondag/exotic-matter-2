@@ -103,7 +103,7 @@ public class StackedPlates {
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.FACE)
 			.primitiveBitCount(4)
-			.build(Xm.idString("stacked_plates"));
+			.build(Xm.id("stacked_plates"));
 
 	/**
 	 *

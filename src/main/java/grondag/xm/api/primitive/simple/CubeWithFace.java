@@ -93,6 +93,6 @@ public class CubeWithFace  {
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.FACE)
-			.build(Xm.idString("cube_face"));
+			.build(Xm.id("cube_face"));
 
 }

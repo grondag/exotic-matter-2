@@ -37,7 +37,11 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 	private static final int Y_MASK = (1 << Direction.UP.ordinal()) | (1 << Direction.DOWN.ordinal());
 	private static final int Z_MASK = (1 << Direction.NORTH.ordinal()) | (1 << Direction.SOUTH.ordinal());
 
+	private static int nextAxisJoinIndex = 0;
+
 	private final int joins;
+
+	private final int axisJoinIndex;
 
 	@Override
 	public boolean isJoined(Direction face) {
@@ -52,16 +56,40 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 
 	private SimpleJoinStateImpl(int joins) {
 		this.joins = joins;
+
+		int axisCount = 0;
+
+		if(hasJoins(Axis.X)) {
+			++axisCount;
+		}
+		if(hasJoins(Axis.Y)) {
+			++axisCount;
+		}
+
+		if(hasJoins(Axis.Z)) {
+			++axisCount;
+		}
+
+		if (axisCount <= 1) {
+			axisJoinIndex = nextAxisJoinIndex++;
+			AXIS_JOIN_LOOKUP[axisJoinIndex] = this;
+			assert axisJoinIndex <  AXIS_JOIN_STATE_COUNT;
+		} else {
+			axisJoinIndex = -1;
+		}
 	}
 
 	private static final Direction[] FACES = Direction.values();
 
 	private static final SimpleJoinStateImpl JOINS[] = new SimpleJoinStateImpl[STATE_COUNT];
 
+	private static final SimpleJoinStateImpl AXIS_JOIN_LOOKUP[] = new SimpleJoinStateImpl[AXIS_JOIN_STATE_COUNT];
+
 	static {
 		for (int i = 0; i < 64; i++) {
 			JOINS[i] = new SimpleJoinStateImpl(i);
 		}
+
 		NO_JOINS = JOINS[0];
 		ALL_JOINS = JOINS[0b111111];
 		X_JOINS = JOINS[X_MASK];
@@ -99,5 +127,13 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 		default:
 			return false;
 		}
+	}
+
+	public static int toAxisJoinIndex(SimpleJoinState fromJoin) {
+		return ((SimpleJoinStateImpl) fromJoin).axisJoinIndex ;
+	}
+
+	public static SimpleJoinState fromAxisJoinIndex(int fromIndex) {
+		return AXIS_JOIN_LOOKUP[fromIndex];
 	}
 }

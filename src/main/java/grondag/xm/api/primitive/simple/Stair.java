@@ -19,6 +19,8 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.WritableMesh;
@@ -47,10 +49,10 @@ public class Stair extends AbstractWedge {
 	public static final XmSurface SURFACE_LEFT = CubeWithRotation.SURFACE_LEFT;
 	public static final XmSurface SURFACE_RIGHT = CubeWithRotation.SURFACE_RIGHT;
 
-	public static final Stair INSTANCE = new Stair(Xm.idString("stair"));
+	public static final Stair INSTANCE = new Stair(Xm.id("stair"));
 
-	protected Stair(String idString) {
-		super(idString, s -> SURFACES);
+	protected Stair(Identifier id) {
+		super(id, s -> SURFACES);
 	}
 
 	@Override

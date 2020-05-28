@@ -26,6 +26,8 @@ import java.util.function.Function;
 //import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
+
 //import net.minecraft.util.math.Box;
 //import net.minecraft.util.math.Direction;
 
@@ -54,8 +56,8 @@ import grondag.xm.api.terrain.TerrainModelState.Mutable;
 @API(status = INTERNAL)
 public abstract class TerrainSurface extends AbstractTerrainPrimitive {
 
-	protected TerrainSurface(String idString, int stateFlags, BaseModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
-		super(idString, stateFlags | ModelStateFlags.POSITION, factory, surfaceFunc);
+	protected TerrainSurface(Identifier id, int stateFlags, BaseModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
+		super(id, stateFlags | ModelStateFlags.POSITION, factory, surfaceFunc);
 	}
 
 	public static final TerrainSurface FILLER = null; // ModelShapes.create("terrain_filler",

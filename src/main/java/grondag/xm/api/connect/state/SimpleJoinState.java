@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
+import net.minecraft.util.math.MathHelper;
 
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.connect.SimpleJoinStateImpl;
@@ -33,6 +34,8 @@ import grondag.xm.connect.SimpleJoinStateImpl;
 @API(status = STABLE)
 public interface SimpleJoinState {
 	int STATE_COUNT = 64; // 2^6
+	int AXIS_JOIN_STATE_COUNT = 1 + 3 * 3; // No joins, plus +/-/both states for each axis
+	int AXIS_JOIN_BIT_COUNT = Integer.bitCount(MathHelper.smallestEncompassingPowerOfTwo(AXIS_JOIN_STATE_COUNT) - 1);
 	SimpleJoinState NO_JOINS = SimpleJoinStateImpl.NO_JOINS;
 	SimpleJoinState ALL_JOINS = SimpleJoinStateImpl.ALL_JOINS;
 	SimpleJoinState X_JOINS = SimpleJoinStateImpl.X_JOINS;
@@ -55,5 +58,13 @@ public interface SimpleJoinState {
 
 	static int ordinalFromWorld(BlockNeighbors neighbors) {
 		return SimpleJoinStateImpl.ordinalFromWorld(neighbors);
+	}
+
+	static int toAxisJoinIndex(SimpleJoinState fromJoin) {
+		return SimpleJoinStateImpl.toAxisJoinIndex(fromJoin);
+	}
+
+	static SimpleJoinState fromAxisJoinIndex(int fromIndex) {
+		return SimpleJoinStateImpl.fromAxisJoinIndex(fromIndex);
 	}
 }

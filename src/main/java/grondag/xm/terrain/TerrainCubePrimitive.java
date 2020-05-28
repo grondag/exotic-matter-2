@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import grondag.xm.Xm;
@@ -41,13 +42,13 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 
 	public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
-	public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.idString("terrain_cube"));
+	public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.id("terrain_cube"));
 
 	/** never changes so may as well save it */
 	private final XmMesh cachedQuads;
 
-	protected TerrainCubePrimitive(String idString) {
-		super(idString, NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
+	protected TerrainCubePrimitive(Identifier id) {
+		super(id, NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
 		cachedQuads = getCubeQuads();
 	}
 

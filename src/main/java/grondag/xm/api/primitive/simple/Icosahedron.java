@@ -56,7 +56,7 @@ public class Icosahedron {
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.NONE)
-			.build(Xm.idString("icosahedron"));
+			.build(Xm.id("icosahedron"));
 
 	/**
 	 * Makes a regular icosahedron, which is a very close approximation to a sphere

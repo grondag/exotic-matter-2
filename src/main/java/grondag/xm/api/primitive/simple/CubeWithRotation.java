@@ -112,5 +112,5 @@ public class CubeWithRotation {
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.ROTATION)
-			.build(Xm.idString("cube_with_rotation"));
+			.build(Xm.id("cube_with_rotation"));
 }

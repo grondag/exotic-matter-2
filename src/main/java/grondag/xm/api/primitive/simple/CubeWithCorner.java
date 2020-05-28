@@ -96,6 +96,6 @@ public class CubeWithCorner  {
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.CORNER)
-			.build(Xm.idString("cube_corner"));
+			.build(Xm.id("cube_corner"));
 
 }

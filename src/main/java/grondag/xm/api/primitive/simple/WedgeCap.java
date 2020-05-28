@@ -102,11 +102,9 @@ public class WedgeCap  {
 		return mesh.releaseToReader();
 	};
 
-
 	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.FACE)
-			.build(Xm.idString("wedge_cap"));
-
+			.build(Xm.id("wedge_cap"));
 }

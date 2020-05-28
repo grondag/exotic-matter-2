@@ -60,7 +60,7 @@ public class IcosahedralSphere {
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.NONE)
-			.build(Xm.idString("ico_sphere"));
+			.build(Xm.id("ico_sphere"));
 
 	public static void sphere(WritableMesh mesh) {
 		final WritableMesh icoMesh = XmMeshes.claimWritable();

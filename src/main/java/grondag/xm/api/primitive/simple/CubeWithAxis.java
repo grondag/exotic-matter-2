@@ -97,5 +97,5 @@ public class CubeWithAxis  {
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.AXIS)
-			.build(Xm.idString("cube_axis"));
+			.build(Xm.id("cube_axis"));
 }

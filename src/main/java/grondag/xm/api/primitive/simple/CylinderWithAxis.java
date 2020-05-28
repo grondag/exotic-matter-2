@@ -73,5 +73,5 @@ public class CylinderWithAxis  {
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.AXIS)
-			.build(Xm.idString("cylinder_axis"));
+			.build(Xm.id("cylinder_axis"));
 }

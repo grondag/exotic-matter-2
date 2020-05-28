@@ -191,5 +191,5 @@ public class FlatPanel {
 			.cornerJoin(true)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.NONE)
-			.build(Xm.idString("flat_panel"));
+			.build(Xm.id("flat_panel"));
 }

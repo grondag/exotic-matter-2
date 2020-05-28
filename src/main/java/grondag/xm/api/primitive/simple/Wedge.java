@@ -19,6 +19,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import grondag.xm.Xm;
@@ -47,10 +48,10 @@ public class Wedge extends AbstractWedge {
 	public static final XmSurface SURFACE_TOP = SURFACES.get(2);
 	public static final XmSurface SURFACE_SIDES = SURFACES.get(3);
 
-	public static final Wedge INSTANCE = new Wedge(Xm.idString("wedge"));
+	public static final Wedge INSTANCE = new Wedge(Xm.id("wedge"));
 
-	protected Wedge(String idString) {
-		super(idString, s -> SURFACES);
+	protected Wedge(Identifier id) {
+		super(id, s -> SURFACES);
 	}
 
 	@Override

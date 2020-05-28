@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.Vec3i;
@@ -100,7 +101,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 		}
 	}
 
-	public static final SquareColumn INSTANCE = new SquareColumn(Xm.idString("column_square"));
+	public static final SquareColumn INSTANCE = new SquareColumn(Xm.id("column_square"));
 
 	@Override
 	protected void updateDefaultState(MutablePrimitiveState modelState) {
@@ -108,8 +109,8 @@ public class SquareColumn extends AbstractSimplePrimitive {
 		setCutsOnEdge(true, modelState);
 	}
 
-	protected SquareColumn(String idString) {
-		super(idString, ModelStateFlags.CORNER_JOIN, SimpleModelStateImpl.FACTORY, s -> SURFACES);
+	protected SquareColumn(Identifier id) {
+		super(id, ModelStateFlags.CORNER_JOIN, SimpleModelStateImpl.FACTORY, s -> SURFACES);
 	}
 
 	@Override

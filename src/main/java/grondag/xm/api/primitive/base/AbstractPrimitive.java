@@ -24,6 +24,7 @@ import org.apiguardian.api.API;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
@@ -63,11 +64,6 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
 		final W state = factory.claim(this);
 		updateDefaultState(state);
 		this.defaultState = state.releaseToImmutable();
-	}
-
-	//TODO: accept an identifier here and clean up builder interface
-	protected AbstractPrimitive(String idString, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
-		this(new Identifier(idString), stateFlags, factory, surfaceFunc);
 	}
 
 	@Override

@@ -31,5 +31,5 @@ public class CubeWithHorizontalFace  {
 			.surfaceList(SURFACES)
 			.polyFactory(CubeWithFace.POLY_FACTORY)
 			.orientationType(OrientationType.HORIZONTAL_FACE)
-			.build(Xm.idString("cube_horizontal"));
+			.build(Xm.id("cube_horizontal"));
 }

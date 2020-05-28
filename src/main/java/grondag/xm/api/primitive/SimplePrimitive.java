@@ -38,14 +38,8 @@ public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutableP
 
 	public interface Builder {
 		default SimplePrimitive build(Identifier id) {
-			return build(id.toString());
+			return build(id);
 		}
-
-		/**
-		 * @deprecated Use version that takes ID.
-		 */
-		@Deprecated
-		SimplePrimitive build(String idString);
 
 		Builder surfaceList(XmSurfaceList list);
 
@@ -58,6 +52,8 @@ public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutableP
 		Builder simpleJoin(boolean needsJoin);
 
 		Builder cornerJoin(boolean needsJoin);
+
+		Builder axisJoin(boolean needsJoin);
 
 	}
 }

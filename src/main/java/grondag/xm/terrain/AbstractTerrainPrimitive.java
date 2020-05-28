@@ -34,8 +34,4 @@ public abstract class AbstractTerrainPrimitive extends AbstractPrimitive<Terrain
 	protected AbstractTerrainPrimitive(Identifier id, int stateFlags, BaseModelStateFactory<TerrainModelState, TerrainModelState.Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
 		super(id, stateFlags, factory, surfaceFunc);
 	}
-
-	protected AbstractTerrainPrimitive(String idString, int stateFlags, BaseModelStateFactory<TerrainModelState, TerrainModelState.Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
-		super(idString, stateFlags, factory, surfaceFunc);
-	}
 }

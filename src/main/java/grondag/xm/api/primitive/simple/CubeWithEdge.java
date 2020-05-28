@@ -97,6 +97,6 @@ public class CubeWithEdge  {
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.EDGE)
-			.build(Xm.idString("cube_edge"));
+			.build(Xm.id("cube_edge"));
 
 }

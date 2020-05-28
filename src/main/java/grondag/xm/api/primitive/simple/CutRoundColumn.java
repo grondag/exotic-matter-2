@@ -155,8 +155,7 @@ public class CutRoundColumn  {
 	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
-			// PERF: doesn't actually need 64 states, only axis joins. Maybe add a simpler join variant?
-			.simpleJoin(true)
+			.axisJoin(true)
 			.orientationType(OrientationType.AXIS)
-			.build(Xm.idString("cut_round_column"));
+			.build(Xm.id("cut_round_column"));
 }

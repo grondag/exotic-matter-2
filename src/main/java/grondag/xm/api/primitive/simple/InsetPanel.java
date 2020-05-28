@@ -205,5 +205,5 @@ public class InsetPanel {
 			.cornerJoin(true)
 			.polyFactory(POLY_FACTORY)
 			.orientationType(OrientationType.NONE)
-			.build(Xm.idString("inset_panel"));
+			.build(Xm.id("inset_panel"));
 }
