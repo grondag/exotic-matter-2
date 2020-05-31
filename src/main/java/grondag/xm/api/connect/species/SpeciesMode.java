@@ -21,6 +21,7 @@ import org.apiguardian.api.API.Status;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
+
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 
@@ -30,7 +31,7 @@ public enum SpeciesMode {
 	MATCH_MOST,
 	COUNTER_MOST;
 
-	private static final String TAG_NAME = NBTDictionary.claim("speciesMode");
+	private static final String TAG_NAME = NBTDictionary.GLOBAL.claim("speciesMode");
 
 	public SpeciesMode deserializeNBT(CompoundTag tag) {
 		return Useful.safeEnumFromTag(tag, TAG_NAME, this);

@@ -28,7 +28,7 @@ import grondag.xm.api.mesh.polygon.Vec3f;
 
 @API(status = INTERNAL)
 public class Vec3fCache {
-	static final Vec3fCache INSTANCE = new Vec3fCache(0x80000);
+	static final Vec3fCache INSTANCE = new Vec3fCache(0x10000);
 
 	public final int capacity;
 	public final int maxFill;

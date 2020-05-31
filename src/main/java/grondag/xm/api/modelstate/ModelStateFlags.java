@@ -58,6 +58,4 @@ public class ModelStateFlags {
 	public static final int POSITION = MASONRY_JOIN << 1;
 
 	public static final int BLOCK_SPECIES = POSITION << 1;
-
-	public static final int AXIS_JOIN = BLOCK_SPECIES << 1;
 }

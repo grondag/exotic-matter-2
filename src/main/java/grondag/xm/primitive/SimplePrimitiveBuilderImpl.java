@@ -16,7 +16,6 @@
 package grondag.xm.primitive;
 
 import static grondag.xm.api.connect.state.SimpleJoinState.AXIS_JOIN_BIT_COUNT;
-import static grondag.xm.api.modelstate.ModelStateFlags.AXIS_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
@@ -124,9 +123,9 @@ public class SimplePrimitiveBuilderImpl {
 		}
 
 		public Primitive(Identifier id, BuilderImpl builder) {
-			super(id, (builder.cornerJoin ? CORNER_JOIN : NONE) | (builder.simpleJoin ? SIMPLE_JOIN : NONE) | (builder.axisJoin ? AXIS_JOIN : NONE), SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
-			axisJoin = builder.axisJoin & !builder.simpleJoin & builder.cornerJoin;
-			simpleJoin = builder.simpleJoin | axisJoin;
+			super(id, (builder.cornerJoin ? CORNER_JOIN : NONE) | (builder.simpleJoin || builder.axisJoin ? SIMPLE_JOIN : NONE), SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
+			axisJoin = builder.axisJoin & !builder.simpleJoin & !builder.cornerJoin;
+			simpleJoin = builder.simpleJoin;
 			cornerJoin = builder.cornerJoin;
 			orientationType = builder.orientationType;
 			polyFactory = builder.polyFactory;
@@ -226,7 +225,7 @@ public class SimplePrimitiveBuilderImpl {
 				return false;
 			if (cornerJoin)
 				return from.cornerJoin() == to.cornerJoin();
-			else if (simpleJoin)
+			else if (simpleJoin || axisJoin)
 				return from.simpleJoin() == to.simpleJoin();
 			else
 				return true;
