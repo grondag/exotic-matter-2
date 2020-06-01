@@ -91,7 +91,6 @@ dependencies {
     modImplementation ("grondag:fermion-varia-${project.mc_tag}:${project.fermion_varia_version}.+") { transitive = false }
     modImplementation ("grondag:fermion-orientation-${project.mc_tag}:${project.fermion_orientation_version}.+") { transitive = false }
     modImplementation ("grondag:special-circumstances-${project.mc_tag}:${project.special_circumstances_version}.+") { transitive = false }
-    modImplementation ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false }
 	
     if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {
         include "grondag:exotic-matter-${project.mc_tag}:${project.exotic_matter_version}.+"
