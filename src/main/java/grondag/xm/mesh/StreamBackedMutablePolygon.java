@@ -113,9 +113,15 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		return this;
 	}
 
+	@Deprecated
 	@Override
 	public final MutablePolygon blendMode(int layerIndex, PaintBlendMode layer) {
-		StaticEncoder.setRenderLayer(stream, baseAddress, layerIndex, layer);
+		return layerIndex == 0 ? blendMode(layer) : this;
+	}
+
+	@Override
+	public final MutablePolygon blendMode(PaintBlendMode layer) {
+		StaticEncoder.setRenderLayer(stream, baseAddress, layer);
 		return this;
 	}
 
@@ -400,7 +406,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 			minU(l, polyIn.minU(l));
 			minV(l, polyIn.minV(l));
 			emissive(l, polyIn.emissive(l));
-			blendMode(l, polyIn.blendMode(l));
+			blendMode(polyIn.blendMode());
 			lockUV(l, polyIn.lockUV(l));
 			contractUV(l, polyIn.shouldContractUVs(l));
 			rotation(l, polyIn.rotation(l));

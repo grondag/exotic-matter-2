@@ -397,6 +397,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		shapeBits = pBuff.readInt();
 		worldBits = pBuff.readInt();
 		final int limit = primitive.surfaces((R)this).size();
+
 		for (int i = 0; i < limit; i++) {
 			this.paints[i] = pBuff.readVarInt();
 		}
@@ -408,6 +409,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		pBuff.writeInt(shapeBits);
 		pBuff.writeInt(worldBits);
 		final int limit = primitive.surfaces((R)this).size();
+
 		for (int i = 0; i < limit; i++) {
 			pBuff.writeVarInt(paints[i]);
 		}

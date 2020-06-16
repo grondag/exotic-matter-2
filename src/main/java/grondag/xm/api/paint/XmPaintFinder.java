@@ -37,7 +37,10 @@ public interface XmPaintFinder {
 
 	XmPaintFinder texture(int textureIndex, TextureSet sprite);
 
+	@Deprecated
 	XmPaintFinder blendMode(int textureIndex, PaintBlendMode blendMode);
+
+	XmPaintFinder blendMode(PaintBlendMode blendMode);
 
 	XmPaintFinder disableColorIndex(int textureIndex, boolean disable);
 

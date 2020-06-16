@@ -362,8 +362,14 @@ class StreamBackedPolygon implements Polygon {
 	}
 
 	@Override
+	public PaintBlendMode blendMode() {
+		return StaticEncoder.getRenderLayer(stream, baseAddress);
+	}
+
+	@Deprecated
+	@Override
 	public PaintBlendMode blendMode(int layerIndex) {
-		return StaticEncoder.getRenderLayer(stream, baseAddress, layerIndex);
+		return layerIndex == 0 ? blendMode() : PaintBlendMode.TRANSLUCENT;
 	}
 
 	@Override

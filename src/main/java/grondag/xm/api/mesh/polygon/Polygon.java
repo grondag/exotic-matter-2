@@ -350,7 +350,10 @@ public interface Polygon {
 
 	boolean lockUV(int layerIndex);
 
+	@Deprecated
 	PaintBlendMode blendMode(int layerIndex);
+
+	PaintBlendMode blendMode();
 
 	boolean emissive(int layerIndex);
 

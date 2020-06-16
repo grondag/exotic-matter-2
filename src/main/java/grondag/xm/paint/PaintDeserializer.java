@@ -30,7 +30,7 @@ import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSetRegistry;
 
 class PaintDeserializer {
-	public static XmPaintImpl.Value deserialize(Reader reader) {
+	public static XmPaintImpl.Finder deserialize(Reader reader) {
 		final XmPaintImpl.Finder finder = XmPaintImpl.finder();
 		final JsonObject json = JsonHelper.deserialize(reader);
 
@@ -47,7 +47,8 @@ class PaintDeserializer {
 				}
 			}
 		}
-		return finder.find();
+
+		return finder;
 	}
 
 	private static void readLayer(JsonObject layer, XmPaintFinder finder, int spriteIndex) {
@@ -67,8 +68,8 @@ class PaintDeserializer {
 			finder.emissive(spriteIndex, JsonHelper.getBoolean(layer, "emissive", true));
 		}
 
-		if (layer.has("blendMode")) {
-			finder.blendMode(spriteIndex, readBlendMode(JsonHelper.getString(layer, "blendMode")));
+		if (spriteIndex == 0 && layer.has("blendMode")) {
+			finder.blendMode(readBlendMode(JsonHelper.getString(layer, "blendMode")));
 		}
 
 		if (layer.has("color")) {

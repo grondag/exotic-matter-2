@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2019 grondag
+ * Copyright 2020 grondag
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -17,29 +17,25 @@ package grondag.xm.api.paint;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import it.unimi.dsi.fastutil.HashCommon;
 import org.apiguardian.api.API;
 
-import net.minecraft.util.Identifier;
+import grondag.fermion.color.ColorHelper;
 
-import grondag.xm.Xm;
-import grondag.xm.paint.VertexProcessorRegistryImpl;
-
+/**
+ * Vertex processors to support common use cases.
+ */
 @API(status = EXPERIMENTAL)
-public interface VertexProcessorRegistry {
-	VertexProcessorRegistry INSTANCE = VertexProcessorRegistryImpl.INSTANCE;
+public interface VertexProcessors {
+	VertexProcessor SPECIES_VARIATION = (poly, modelState, surface, paint, textureIndex) -> {
+		final int mix = HashCommon.mix(modelState.species());
+		final int value = mix & 0xF;
+		final int mixColor = 0xFFFFFFFF - (mix & 0x0F0000) - value - (value << 8);
+		final int color = ColorHelper.multiplyColor(mixColor, paint.textureColor(textureIndex));
 
-	/**
-	 * Will always be associated with index 0.
-	 */
-	Identifier NONE_ID = new Identifier(Xm.MODID, "none");
-
-	VertexProcessor get(Identifier id);
-
-	VertexProcessor get(int index);
-
-	VertexProcessor add(Identifier id, VertexProcessor set);
-
-	Identifier getId(VertexProcessor value);
-
-	boolean containsId(Identifier id);
+		for (int i = 0; i < poly.vertexCount(); i++) {
+			final int c = ColorHelper.multiplyColor(color, poly.color(i, textureIndex));
+			poly.color(i, textureIndex, c);
+		}
+	};
 }

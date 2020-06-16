@@ -47,11 +47,12 @@ import grondag.xm.paint.XmPaintImpl.Value;
 public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousResourceReloadListener {
 	public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
 
+	private final Identifier DEFAULT_PAINT_ID = Xm.id("default");
 	private final Identifier id = Xm.id("paint_registry");
 
 	private XmPaintRegistryImpl() {
 		// see header notes
-		register(Xm.id("default"), XmPaintImpl.DEFAULT_PAINT);
+		register(DEFAULT_PAINT_ID, XmPaintImpl.DEFAULT_PAINT);
 	}
 
 	private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
@@ -59,6 +60,7 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 	@Override
 	public synchronized XmPaint register(Identifier id, XmPaint paint) {
 		final XmPaintImpl.Value prior = paints.get(id);
+
 		if(prior != null) {
 			prior.copyFrom((XmPaintImpl) paint);
 			return prior;
@@ -80,18 +82,27 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 	@Override
 	public XmPaintImpl.Value get(Identifier paintId) {
 		XmPaintImpl.Value result = paints.get(paintId);
+
 		if(result == null) {
-			result = XmPaintImpl.finder().find();
-			result.placeholder = true;
+			result = XmPaintImpl.finder().id(paintId).find();
+			result.external = true;
 			register(paintId, result);
 		}
+
 		return result;
 	}
 
 	@Override
 	public void apply(ResourceManager resourceManager) {
 		for( final Entry<Identifier, Value> e : paints.entrySet()) {
-			final Value newVal = loadPaint(e.getKey(), resourceManager, e.getValue().placeholder);
+			final Identifier key = e.getKey();
+
+			if (key.equals(DEFAULT_PAINT_ID)) {
+				continue;
+			}
+
+			final XmPaintImpl newVal = loadPaint(key, resourceManager, e.getValue().external);
+
 			if(newVal != null) {
 				e.getValue().copyFrom(newVal);
 			}
@@ -103,10 +114,11 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 		return id;
 	}
 
-	private XmPaintImpl.Value loadPaint(Identifier idIn, ResourceManager rm, boolean loadExpected) {
+	private XmPaintImpl loadPaint(Identifier idIn, ResourceManager rm, boolean loadExpected) {
 		final Identifier id = new Identifier(idIn.getNamespace(), "paints/" + idIn.getPath() + ".json");
 
-		XmPaintImpl.Value result = null;
+		XmPaintImpl result = XmPaintImpl.DEFAULT_PAINT;
+
 		try(Resource res = rm.getResource(id)) {
 			result = PaintDeserializer.deserialize(new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8));
 		} catch (final Exception e) {

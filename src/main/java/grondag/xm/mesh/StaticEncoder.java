@@ -186,24 +186,19 @@ class StaticEncoder {
 		stream.set(baseAddress + BIT_OFFSET, DIFFUSE[layerIndex].setValue(isEmissive, bits));
 	}
 
-	@SuppressWarnings("unchecked")
-	private static final BitPacker32<StaticEncoder>.EnumElement<PaintBlendMode>[] RENDER_LAYER = (BitPacker32<StaticEncoder>.EnumElement<PaintBlendMode>[]) new BitPacker32<?>.EnumElement<?>[3];
+	private static final BitPacker32<StaticEncoder>.EnumElement<PaintBlendMode> RENDER_LAYER = BITPACKER.createEnumElement(PaintBlendMode.class);
 
 	static {
-		RENDER_LAYER[0] = BITPACKER.createEnumElement(PaintBlendMode.class);
-		RENDER_LAYER[1] = BITPACKER.createEnumElement(PaintBlendMode.class);
-		RENDER_LAYER[2] = BITPACKER.createEnumElement(PaintBlendMode.class);
-
 		assert BITPACKER.bitLength() <= 32;
 		assert BITPACKER_2.bitLength() <= 32;
 	}
 
-	public static PaintBlendMode getRenderLayer(IntStream stream, int baseAddress, int layerIndex) {
-		return RENDER_LAYER[layerIndex].getValue(stream.get(baseAddress + BIT_OFFSET));
+	public static PaintBlendMode getRenderLayer(IntStream stream, int baseAddress) {
+		return RENDER_LAYER.getValue(stream.get(baseAddress + BIT_OFFSET));
 	}
 
-	public static void setRenderLayer(IntStream stream, int baseAddress, int layerIndex, PaintBlendMode layer) {
+	public static void setRenderLayer(IntStream stream, int baseAddress, PaintBlendMode layer) {
 		final int bits = stream.get(baseAddress + BIT_OFFSET);
-		stream.set(baseAddress + BIT_OFFSET, RENDER_LAYER[layerIndex].setValue(layer, bits));
+		stream.set(baseAddress + BIT_OFFSET, RENDER_LAYER.setValue(layer, bits));
 	}
 }

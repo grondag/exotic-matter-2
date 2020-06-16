@@ -68,7 +68,10 @@ public abstract class AbstractQuadPainter {
 	 * then adds to the output list.
 	 */
 	protected static void commonPostPaint(MutablePolygon editor, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
-		editor.blendMode(textureIndex, paint.blendMode(textureIndex));
+		if (textureIndex == 0) {
+			editor.blendMode(paint.blendMode());
+		}
+
 		editor.emissive(textureIndex, paint.emissive(textureIndex));
 		editor.disableAo(textureIndex, paint.disableAo(textureIndex));
 		editor.disableDiffuse(textureIndex, paint.disableDiffuse(textureIndex));

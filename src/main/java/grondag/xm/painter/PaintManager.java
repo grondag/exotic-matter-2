@@ -178,7 +178,7 @@ public class PaintManager implements Consumer<Polygon> {
 
 		finder.clear()
 		.spriteDepth(depth)
-		.blendMode(0, BLEND_MODES[poly.blendMode(0).ordinal()])
+		.blendMode(0, BLEND_MODES[poly.blendMode().ordinal()])
 		.emissive(0, poly.emissive(0))
 		.disableAo(0, poly.disableAo(0))
 		.disableDiffuse(0, poly.disableDiffuse(0));
@@ -187,15 +187,13 @@ public class PaintManager implements Consumer<Polygon> {
 
 		if (depth > 1) {
 			bakeSprite(1, poly);
-			finder.blendMode(1, BLEND_MODES[poly.blendMode(1).ordinal()])
-			.emissive(1, poly.emissive(1))
+			finder.emissive(1, poly.emissive(1))
 			.disableAo(1, poly.disableAo(1))
 			.disableDiffuse(1, poly.disableDiffuse(1));
 
 			if (depth == 3) {
 				bakeSprite(2, poly);
-				finder.blendMode(2, BLEND_MODES[poly.blendMode(2).ordinal()])
-				.emissive(2, poly.emissive(2))
+				finder.emissive(2, poly.emissive(2))
 				.disableAo(2, poly.disableAo(2))
 				.disableDiffuse(2, poly.disableDiffuse(2));
 			}
@@ -241,7 +239,7 @@ public class PaintManager implements Consumer<Polygon> {
 		final MaterialFinder finder = this.finder;
 
 		finder.clear()
-		.blendMode(0, BLEND_MODES[poly.blendMode(0).ordinal()])
+		.blendMode(0, BLEND_MODES[poly.blendMode().ordinal()])
 		.emissive(0, poly.emissive(0))
 		.disableAo(0, poly.disableAo(0))
 		.disableDiffuse(0, poly.disableDiffuse(0));
@@ -254,7 +252,7 @@ public class PaintManager implements Consumer<Polygon> {
 			bakeSprite(1, poly);
 
 			finder.clear()
-			.blendMode(0, BLEND_MODES[poly.blendMode(1).ordinal()])
+			.blendMode(0, BlendMode.TRANSLUCENT)
 			.emissive(0, poly.emissive(1))
 			.disableAo(0, poly.disableAo(1))
 			.disableDiffuse(0, poly.disableDiffuse(1));
@@ -266,7 +264,7 @@ public class PaintManager implements Consumer<Polygon> {
 				bakeSprite(2, poly);
 
 				finder.clear()
-				.blendMode(0, BLEND_MODES[poly.blendMode(2).ordinal()])
+				.blendMode(0, BlendMode.TRANSLUCENT)
 				.emissive(0, poly.emissive(2))
 				.disableAo(0, poly.disableAo(2))
 				.disableDiffuse(0, poly.disableDiffuse(2));

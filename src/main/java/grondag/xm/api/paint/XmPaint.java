@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 
 import grondag.xm.api.texture.TextureSet;
@@ -36,8 +37,11 @@ public interface XmPaint {
 
 	int index();
 
+	@Deprecated
 	@Nullable
 	PaintBlendMode blendMode(int textureIndex);
+
+	PaintBlendMode blendMode();
 
 	boolean disableColorIndex(int textureIndex);
 
@@ -61,12 +65,27 @@ public interface XmPaint {
 
 	VertexProcessor vertexProcessor(int textureIndex);
 
-	// TODO: enable copy/transformation of externally defined paints
 	/**
-	 * True when this paint is externally defined in a JSON file.
+	 * True when this paint is registered defined in a JSON file.
 	 * Paints like this aren't loaded during registration and thus cannot
-	 * be copied or transformed during registration. This limitation
-	 * is probably temporary.
+	 * be copied or transformed during registration.
 	 */
 	boolean external();
+
+	/**
+	 * Non-null if paint is registered.
+	 * @return
+	 */
+	@Nullable
+	Identifier id();
+
+	/**
+	 * If paint is registered, will serialized based on registered ID instead of paint configuration.
+	 */
+	CompoundTag toTag();
+
+	/**
+	 * Serializes paint configuration, discarding registered identity if present.
+	 */
+	CompoundTag toFixedTag();
 }

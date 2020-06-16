@@ -64,7 +64,10 @@ public interface MutablePolygon extends Polygon {
 
 	MutablePolygon contractUV(int layerIndex, boolean contractUVs);
 
+	@Deprecated
 	MutablePolygon blendMode(int layerIndex, PaintBlendMode layer);
+
+	MutablePolygon blendMode(PaintBlendMode layer);
 
 	MutablePolygon spriteDepth(int layerCount);
 

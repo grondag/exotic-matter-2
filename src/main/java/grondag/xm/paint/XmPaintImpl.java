@@ -21,17 +21,21 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import javax.annotation.Nullable;
 
 import it.unimi.dsi.fastutil.HashCommon;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apiguardian.api.API;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.VertexProcessor;
+import grondag.xm.api.paint.VertexProcessorRegistry;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSet;
+import grondag.xm.api.texture.TextureSetRegistry;
 
 @API(status = INTERNAL)
 public class XmPaintImpl {
@@ -50,14 +54,15 @@ public class XmPaintImpl {
 	@SuppressWarnings("unchecked")
 	private static final BitPacker32<XmPaintImpl>.BooleanElement[] FLAGS = new BitPacker32.BooleanElement[COLOR_DISABLE_INDEX_START + MAX_TEXTURE_DEPTH];
 
-	@SuppressWarnings("unchecked")
-	private static final BitPacker32<XmPaintImpl>.NullableEnumElement<PaintBlendMode> BLEND_MODES[] = new BitPacker32.NullableEnumElement[MAX_TEXTURE_DEPTH];
+	private static final BitPacker32<XmPaintImpl>.EnumElement<PaintBlendMode> BLEND_MODE = PAINT_BITS.createEnumElement(PaintBlendMode.class);
 
 	private static final BitPacker32<XmPaintImpl>.IntElement TEXTURE_DEPTH;
 
 	private static final int DEFAULT_PAINT_BITS;
 
 	private static final ObjectArrayList<Value> LIST = new ObjectArrayList<>();
+
+	private static final Object2ObjectOpenHashMap<XmPaintImpl, Value> MAP = new Object2ObjectOpenHashMap<>();
 
 	static {
 		TEXTURE_DEPTH = PAINT_BITS.createIntElement(1, MAX_TEXTURE_DEPTH);
@@ -75,23 +80,18 @@ public class XmPaintImpl {
 		FLAGS[COLOR_DISABLE_INDEX_START + 1] = PAINT_BITS.createBooleanElement();
 		FLAGS[COLOR_DISABLE_INDEX_START + 2] = PAINT_BITS.createBooleanElement();
 
-		BLEND_MODES[0] = PAINT_BITS.createNullableEnumElement(PaintBlendMode.class);
-		BLEND_MODES[1] = PAINT_BITS.createNullableEnumElement(PaintBlendMode.class);
-		BLEND_MODES[2] = PAINT_BITS.createNullableEnumElement(PaintBlendMode.class);
 
 		assert PAINT_BITS.bitLength() <= 32;
 
-		final int defaultBits = 0;
-		BLEND_MODES[0].setValue(null, defaultBits);
-		BLEND_MODES[1].setValue(null, defaultBits);
-		BLEND_MODES[2].setValue(null, defaultBits);
-		DEFAULT_PAINT_BITS = defaultBits;
+		DEFAULT_PAINT_BITS = BLEND_MODE.setValue(PaintBlendMode.DEFAULT, 0);
 	}
 
 	public static Value byIndex(int index) {
 		return LIST.get(index);
 	}
 
+	/** null for anonymous */
+	@Nullable protected Identifier id;
 	protected int paintBits = DEFAULT_PAINT_BITS;
 	protected int color0 = 0xFFFFFFFF;
 	protected int color1 = 0xFFFFFFFF;
@@ -122,16 +122,22 @@ public class XmPaintImpl {
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof XmPaintImpl) {
 			final XmPaintImpl other = (XmPaintImpl) obj;
-			return paintBits == other.paintBits
-					&& color0 == other.color0
-					&& color1 == other.color1
-					&& color2 == other.color2
-					&& textureSet0 == other.textureSet0
-					&& textureSet1 == other.textureSet1
-					&& textureSet2 == other.textureSet2
-					&& vertexProcessor0 == other.vertexProcessor0
-					&& vertexProcessor1 == other.vertexProcessor1
-					&& vertexProcessor2 == other.vertexProcessor2;
+
+			if (id == null) {
+				return other.id == null
+						&& paintBits == other.paintBits
+						&& color0 == other.color0
+						&& color1 == other.color1
+						&& color2 == other.color2
+						&& textureSet0 == other.textureSet0
+						&& textureSet1 == other.textureSet1
+						&& textureSet2 == other.textureSet2
+						&& vertexProcessor0 == other.vertexProcessor0
+						&& vertexProcessor1 == other.vertexProcessor1
+						&& vertexProcessor2 == other.vertexProcessor2;
+			} else {
+				return id.equals(other.id);
+			}
 		} else {
 			return false;
 		}
@@ -139,32 +145,46 @@ public class XmPaintImpl {
 
 	@Override
 	public int hashCode() {
+		if (id != null) {
+			return id.hashCode();
+		}
+
 		int result = HashCommon.mix(paintBits);
-		result ^= HashCommon.mix(color0);
-		result ^= vertexProcessor0.hashCode();
-		result ^= textureSet0.hashCode();
+		result = result * 31 + HashCommon.mix(color0);
+		result = result * 31 + vertexProcessor0.hashCode();
+		result = result * 31 + textureSet0.hashCode();
 		final int depth = textureDepth();
+
 		if (depth > 1) {
-			result ^= HashCommon.mix(color1);
-			result ^= vertexProcessor1.hashCode();
-			result ^= textureSet1.hashCode();
+			result = result * 31 + HashCommon.mix(color1);
+			result = result * 31 + vertexProcessor1.hashCode();
+			result = result * 31 + textureSet1.hashCode();
+
 			if (depth == 3) {
-				result ^= HashCommon.mix(color2);
-				result ^= vertexProcessor2.hashCode();
-				result ^= textureSet2.hashCode();
+				result = result * 31 + HashCommon.mix(color2);
+				result = result * 31 + vertexProcessor2.hashCode();
+				result = result * 31 + textureSet2.hashCode();
 			}
 		}
+
 		if (shader != null) {
-			result ^= shader.hashCode();
+			result = result * 31 + shader.hashCode();
 		}
+
 		if (condition != null) {
-			result ^= condition.hashCode();
+			result = result * 31 + condition.hashCode();
 		}
+
 		return result;
 	}
 
+	public @Nullable PaintBlendMode blendMode() {
+		return BLEND_MODE.getValue(this);
+	}
+
+	@Deprecated
 	public @Nullable PaintBlendMode blendMode(int textureIndex) {
-		return BLEND_MODES[textureIndex].getValue(this);
+		return textureIndex == 0 ? blendMode() : PaintBlendMode.TRANSLUCENT;
 	}
 
 	public boolean disableColorIndex(int textureIndex) {
@@ -221,6 +241,10 @@ public class XmPaintImpl {
 		return shader;
 	}
 
+	public Identifier id() {
+		return id;
+	}
+
 	public VertexProcessor vertexProcessor(int textureIndex) {
 		switch (textureIndex) {
 		case 0:
@@ -237,10 +261,11 @@ public class XmPaintImpl {
 	public static class Value extends XmPaintImpl implements XmPaint {
 		private final int index;
 		private int hashCode;
-		boolean placeholder = false;
+		boolean external = false;
 
 		protected Value(int index, XmPaintImpl template) {
 			this.index = index;
+			id = template.id;
 			copyFrom(template);
 		}
 
@@ -262,7 +287,70 @@ public class XmPaintImpl {
 
 		@Override
 		public boolean external() {
-			return placeholder;
+			return external;
+		}
+
+		@Override
+		public CompoundTag toTag() {
+			if (id == null) {
+				return toFixedTag();
+			}
+
+			final CompoundTag result = new CompoundTag();
+			result.putString(TAG_ID, id.toString());
+			return result;
+		}
+
+		@Override
+		public CompoundTag toFixedTag() {
+			final CompoundTag result = new CompoundTag();
+			final int depth = textureDepth();
+			final int[] words = new int[TAG_INDEX_COLOR_0 + depth];
+			words[TAG_INDEX_PAINT_BITS] = paintBits;
+			words[TAG_INDEX_COLOR_0] = color0;
+			result.putString(TAG_TEX_0, textureSet0.id().toString());
+
+			int header = 0;
+
+			if (shader != null) {
+				result.putString(TAG_SHADER, shader.toString());
+				header |= FLAG_HAS_SHADER;
+			}
+
+			if (condition != null) {
+				result.putString(TAG_CONDITION, condition.toString());
+				header |= FLAG_HAS_CONDITION;
+			}
+
+			if (vertexProcessor0 != VertexProcessorDefault.INSTANCE) {
+				result.putString(TAG_VP_0, VertexProcessorRegistry.INSTANCE.getId(vertexProcessor0).toString());
+				header |= FLAG_HAS_VP0;
+			}
+
+			if (depth > 1) {
+				words[TAG_INDEX_COLOR_1] = color1;
+				result.putString(TAG_TEX_1, textureSet1.id().toString());
+
+				if (vertexProcessor1 != VertexProcessorDefault.INSTANCE) {
+					result.putString(TAG_VP_1, VertexProcessorRegistry.INSTANCE.getId(vertexProcessor1).toString());
+					header |= FLAG_HAS_VP1;
+				}
+
+				if (depth == 3) {
+					words[TAG_INDEX_COLOR_2] = color2;
+					result.putString(TAG_TEX_2, textureSet2.id().toString());
+
+					if (vertexProcessor2 != VertexProcessorDefault.INSTANCE) {
+						result.putString(TAG_VP_2, VertexProcessorRegistry.INSTANCE.getId(vertexProcessor2).toString());
+						header |= FLAG_HAS_VP2;
+					}
+				}
+			}
+
+			words[TAG_INDEX_HEADER_BITS] = header;
+			result.putIntArray(TAG_BITS, words);
+
+			return result;
 		}
 	}
 
@@ -271,16 +359,22 @@ public class XmPaintImpl {
 			clear();
 		}
 
-		@Override
-		public synchronized Value find() {
-			final Value result = new Value(LIST.size(), this);
-			LIST.add(result);
-			return result;
+		public Finder id(Identifier id) {
+			this.id = id;
+			return this;
 		}
 
-		synchronized Value replace(Value target) {
-			final Value result = new Value(target.index, this);
-			LIST.set(target.index, result);
+		@Override
+		public synchronized Value find() {
+			Value result = MAP.get(this);
+
+			if (result == null) {
+				result = new Value(LIST.size(), this);
+				MAP.put(result, result);
+				LIST.add(result);
+			}
+
+			id = null;
 			return result;
 		}
 
@@ -292,6 +386,7 @@ public class XmPaintImpl {
 
 		@Override
 		public XmPaintFinder clear() {
+			id = null;
 			paintBits = DEFAULT_PAINT_BITS;
 			color0 = 0xFFFFFFFF;
 			color1 = 0xFFFFFFFF;
@@ -354,9 +449,15 @@ public class XmPaintImpl {
 		}
 
 		@Override
-		public XmPaintFinder blendMode(int textureIndex, PaintBlendMode blendMode) {
-			BLEND_MODES[textureIndex].setValue(blendMode, this);
+		public XmPaintFinder blendMode(PaintBlendMode blendMode) {
+			BLEND_MODE.setValue(blendMode, this);
 			return this;
+		}
+
+		@Deprecated
+		@Override
+		public XmPaintFinder blendMode(int textureIndex, PaintBlendMode blendMode) {
+			return textureIndex == 0 ? blendMode(blendMode) : this;
 		}
 
 		@Override
@@ -414,5 +515,95 @@ public class XmPaintImpl {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static final BitPacker32 TAG_PACKER = new BitPacker32(null, null);
+
+	@SuppressWarnings({ "rawtypes", "unused" }) // For future use
+	private static final BitPacker32.IntElement TAG_VERSION = TAG_PACKER.createIntElement(1024);
+
+	@SuppressWarnings("rawtypes")
+	private static final BitPacker32.BooleanElement TAG_HAS_SHADER = TAG_PACKER.createBooleanElement();
+	private static final int FLAG_HAS_SHADER = TAG_HAS_SHADER.comparisonMask();
+	@SuppressWarnings("rawtypes")
+	private static final BitPacker32.BooleanElement TAG_HAS_CONDITION = TAG_PACKER.createBooleanElement();
+	private static final int FLAG_HAS_CONDITION = TAG_HAS_CONDITION.comparisonMask();
+	@SuppressWarnings("rawtypes")
+	private static final BitPacker32.BooleanElement TAG_HAS_VP0 = TAG_PACKER.createBooleanElement();
+	private static final int FLAG_HAS_VP0 =  TAG_HAS_VP0.comparisonMask();
+	@SuppressWarnings("rawtypes")
+	private static final BitPacker32.BooleanElement TAG_HAS_VP1 = TAG_PACKER.createBooleanElement();
+	private static final int FLAG_HAS_VP1 =  TAG_HAS_VP1.comparisonMask();
+	@SuppressWarnings("rawtypes")
+	private static final BitPacker32.BooleanElement TAG_HAS_VP2 = TAG_PACKER.createBooleanElement();
+	private static final int FLAG_HAS_VP2 =  TAG_HAS_VP2.comparisonMask();
+
+	private static final int TAG_INDEX_HEADER_BITS = 0;
+	private static final int TAG_INDEX_PAINT_BITS = 1;
+	private static final int TAG_INDEX_COLOR_0 = 2;
+	private static final int TAG_INDEX_COLOR_1 = 3;
+	private static final int TAG_INDEX_COLOR_2 = 4;
+
+	private static final String TAG_ID = "id";
+	private static final String TAG_SHADER = "sh";
+	private static final String TAG_CONDITION = "cn";
+	private static final String TAG_BITS = "bt";
+	private static final String TAG_TEX_0 = "t0";
+	private static final String TAG_TEX_1 = "t1";
+	private static final String TAG_TEX_2 = "t2";
+
+	private static final String TAG_VP_0 = "v0";
+	private static final String TAG_VP_1 = "v1";
+	private static final String TAG_VP_2 = "v2";
+
+	public static XmPaintImpl.Value fromTag(CompoundTag tag) {
+		if (tag.contains(TAG_ID)) {
+			return XmPaintRegistryImpl.INSTANCE.get(new Identifier(tag.getString(TAG_ID)));
+		}
+
+		final Finder finder = finder();
+
+		final int[] words = tag.getIntArray(TAG_BITS);
+		final int header  = words[TAG_INDEX_HEADER_BITS];
+		finder.paintBits = words[TAG_INDEX_PAINT_BITS];
+		finder.color0 = words[TAG_INDEX_COLOR_0];
+		finder.textureSet0 = TextureSetRegistry.instance().get(new Identifier(tag.getString(TAG_TEX_0)));
+
+		if ((header & FLAG_HAS_SHADER) == FLAG_HAS_SHADER) {
+			finder.shader =  new Identifier(tag.getString(TAG_SHADER));
+		}
+
+		if ((header & FLAG_HAS_CONDITION) == FLAG_HAS_CONDITION) {
+			finder.condition =  new Identifier(tag.getString(TAG_CONDITION));
+		}
+
+		if ((header & FLAG_HAS_VP0) == FLAG_HAS_VP0) {
+			finder.vertexProcessor0 =  VertexProcessorRegistry.INSTANCE.get(new Identifier(tag.getString(TAG_VP_0)));
+		}
+
+		final int depth = finder.textureDepth();
+
+		if (depth > 1) {
+			finder.color1 = words[TAG_INDEX_COLOR_1];
+			finder.textureSet1 = TextureSetRegistry.instance().get(new Identifier(tag.getString(TAG_TEX_1)));
+
+			if ((header & FLAG_HAS_VP1) == FLAG_HAS_VP1) {
+				finder.vertexProcessor1 =  VertexProcessorRegistry.INSTANCE.get(new Identifier(tag.getString(TAG_VP_1)));
+			}
+
+			if (depth == 3) {
+				finder.color2 = words[TAG_INDEX_COLOR_2];
+				finder.textureSet2 = TextureSetRegistry.instance().get(new Identifier(tag.getString(TAG_TEX_2)));
+
+				if ((header & FLAG_HAS_VP2) == FLAG_HAS_VP2) {
+					finder.vertexProcessor1 =  VertexProcessorRegistry.INSTANCE.get(new Identifier(tag.getString(TAG_VP_2)));
+				}
+			}
+		}
+
+		return finder.find();
+	}
+
 	public static final XmPaintImpl.Value DEFAULT_PAINT = finder().find();
+
+
 }
