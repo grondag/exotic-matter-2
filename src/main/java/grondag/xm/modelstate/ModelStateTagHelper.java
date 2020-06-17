@@ -19,8 +19,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
-import net.minecraft.nbt.CompoundTag;
-
 import grondag.fermion.varia.NBTDictionary;
 
 @API(status = INTERNAL)
@@ -28,23 +26,11 @@ public abstract class ModelStateTagHelper {
 	private ModelStateTagHelper() {
 	}
 
-	public static final String NBT_MODEL_BITS = NBTDictionary.GLOBAL.claim("xmm");
-
 	public static final String NBT_SHAPE = NBTDictionary.GLOBAL.claim("xms");
+	static final String NBT_SHAPE_BITS = NBTDictionary.GLOBAL.claim("xsb");
+	static final String NBT_WORLD_BITS = NBTDictionary.GLOBAL.claim("xwb");
+	static final String NBT_PAINTS = NBTDictionary.GLOBAL.claim("xmp");
 
-	/**
-	 * Stores sub-tag containing textures, vertex processors
-	 */
-	public static final String NBT_LAYERS = NBTDictionary.GLOBAL.claim("xmp");
 
-	/**
-	 * Removes model state from the tag if present.
-	 */
-	public static final void clearNBTValues(CompoundTag tag) {
-		if (tag == null)
-			return;
-		tag.remove(NBT_MODEL_BITS);
-		tag.remove(NBT_SHAPE);
-		tag.remove(NBT_LAYERS);
-	}
+
 }

@@ -36,6 +36,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -52,7 +53,6 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.fermion.varia.Useful;
-import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -63,11 +63,12 @@ import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.paint.XmPaint;
-import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
+import grondag.xm.network.PaintSynchronizer;
+import grondag.xm.paint.XmPaintImpl;
 import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
 
@@ -125,12 +126,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 		public final T claimInner(ModelPrimitive<R, W> primitive) {
 			T result = POOL.poll();
+
 			if (result == null) {
 				result = factory.get();
 				result.isImmutable = false;
 			} else {
 				result.clear();
 			}
+
 			result.primitive = primitive;
 			result.retain();
 			return result;
@@ -169,48 +172,28 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		public final W fromTag(ModelPrimitive<R, W> shape, CompoundTag tag) {
 			final T result = claimInner(shape);
 
-			if (tag.contains(ModelStateTagHelper.NBT_MODEL_BITS)) {
-				final int[] stateBits = tag.getIntArray(ModelStateTagHelper.NBT_MODEL_BITS);
-				if (stateBits.length != 22) {
-					Xm.LOG.warn("Bad or missing data encounter during ModelState NBT deserialization.");
-				} else {
-					result.deserializeFromInts(stateBits);
-				}
-			}
+			final int worldBits = tag.getInt(ModelStateTagHelper.NBT_WORLD_BITS);
+			// sign on world bits is used to store static indicator
+			result.isStatic = (Useful.INT_SIGN_BIT & worldBits) == Useful.INT_SIGN_BIT;
+			result.worldBits = Useful.INT_SIGN_BIT_INVERSE & worldBits;
+			result.shapeBits = tag.getInt(ModelStateTagHelper.NBT_SHAPE_BITS);
 
-			// textures and vertex processors serialized by name because registered can
-			// change if mods/config change
-			//        String layers = tag.getString(NBT_LAYERS);
-			//        if (layers.isEmpty()) {
-			//            String[] names = layers.split(",");
-			//            if (names.length != 0) {
-			//                int i = 0;
-			//                for (PaintLayer l : PaintLayer.VALUES) {
-			//                    if (ModelStateData.PAINT_TEXTURE[l.ordinal()].getValue(this) != 0) {
-			//                        TextureSet tex = TextureSetRegistryImpl.INSTANCE.getById(new Identifier(names[i++]));
-			//                        ModelStateData.PAINT_TEXTURE[l.ordinal()].setValue(tex.index(), this);
-			//                        if (i == names.length)
-			//                            break;
-			//                    }
-			//
-			//                    if (ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].getValue(this) != 0) {
-			//                        VertexProcessor vp = VertexProcessors.get(names[i++]);
-			//                        ModelStateData.PAINT_VERTEX_PROCESSOR[l.ordinal()].setValue(vp.ordinal, this);
-			//                        if (i == names.length)
-			//                            break;
-			//                    }
-			//                }
-			//            }
-			//        }
+			final ListTag paints = tag.getList(ModelStateTagHelper.NBT_PAINTS, 10); // 10 is compound
+
+			final int limit = Math.min(paints.size(), result.paints.length);
+
+			for (int i = 0; i < limit; ++i) {
+				result.paints[i] = XmPaint.fromTag(paints.getCompound(i));
+			}
 
 			result.clearStateFlags();
 			return (W) result;
 		}
 
 		@Override
-		public final W fromBuffer(ModelPrimitive<R, W> shape, PacketByteBuf buf) {
+		public final W fromBuffer(ModelPrimitive<R, W> shape, PacketByteBuf buf, PaintSynchronizer sync) {
 			final T result = claimInner(shape);
-			result.fromBytes(buf);
+			result.fromBytes(buf, sync);
 			return (W) result;
 		}
 	}
@@ -221,10 +204,16 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	protected int computeHashCode() {
 		int result = 0;
 		final int limit = this.surfaceCount();
+
 		for (int i = 0; i < limit; i++) {
-			result ^= paints[i];
+			final XmPaint p = paints[i];
+
+			if (p != null) {
+				result = result * 31 + p.hashCode();
+			}
 		}
-		return result ^ HashCommon.mix(this.shapeBits | (this.worldBits << 32));
+
+		return (result * 31 + HashCommon.mix(this.shapeBits) * 31) + HashCommon.mix(this.worldBits);
 	}
 
 	protected abstract ModelStateFactoryImpl<V, R, W> factoryImpl();
@@ -272,7 +261,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	}
 
 	protected void clear() {
-		Arrays.fill(paints, 0);
+		Arrays.fill(paints, XmPaintImpl.DEFAULT_PAINT);
 		worldBits = 0;
 		shapeBits = 0;
 		clearStateFlags();
@@ -355,63 +344,44 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	////////////////////////////////////////// SERIALIZATION //////////////////////////////////////////
 
 	@Override
-	protected int intSize() {
-		return surfaceCount() + 3;
-	}
-
-	@Override
-	protected void doSerializeToInts(int[] data, int startAt) {
-		data[startAt++] = this.isStatic ? (worldBits | Useful.INT_SIGN_BIT) : worldBits;
-		data[startAt++] = shapeBits;
-		System.arraycopy(paints, 0, data, startAt, surfaceCount());
-	}
-
-	@Override
-	protected void doDeserializeFromInts(int[] data, int startAt) {
-		// sign on first long word is used to store static indicator
-		this.isStatic = (Useful.INT_SIGN_BIT & data[startAt]) == Useful.INT_SIGN_BIT;
-		this.worldBits = Useful.INT_SIGN_BIT_INVERSE & data[startAt++];
-		this.shapeBits = data[startAt++];
-		System.arraycopy(data, startAt, paints, 0, surfaceCount());
-	}
-
-	@Override
 	public void toTag(CompoundTag tag) {
-		tag.putIntArray(ModelStateTagHelper.NBT_MODEL_BITS, serializeToInts());
 
 		// shape is serialized by name because registered shapes can change if
 		// mods/config change
 		tag.putString(ModelStateTagHelper.NBT_SHAPE, this.primitive().id().toString());
 
-		// TODO: serialization for paint/surface map
-		// textures and vertex processors serialized by name because registered can
-		// change if mods/config change
-		//        StringBuilder layers = new StringBuilder();
-		//
-		//        if (layers.length() != 0)
-		//            tag.putString(NBT_LAYERS, layers.toString());
+		tag.putInt(ModelStateTagHelper.NBT_WORLD_BITS, this.isStatic ? (worldBits | Useful.INT_SIGN_BIT) : worldBits);
+		tag.putInt(ModelStateTagHelper.NBT_SHAPE_BITS, shapeBits);
+
+		final int limit = paints.length;
+		final ListTag list = new ListTag();
+
+		for (int i = 0; i < limit; ++i) {
+			final XmPaint paint = paints[i];
+			list.add(paint == null ?  XmPaintImpl.DEFAULT_PAINT.toTag() : paint.toTag());
+		}
 	}
 
 	@Override
-	public void fromBytes(PacketByteBuf pBuff) {
+	public void fromBytes(PacketByteBuf pBuff, PaintSynchronizer sync) {
 		shapeBits = pBuff.readInt();
 		worldBits = pBuff.readInt();
 		final int limit = primitive.surfaces((R)this).size();
 
 		for (int i = 0; i < limit; i++) {
-			this.paints[i] = pBuff.readVarInt();
+			this.paints[i] = sync.fromInt(pBuff.readVarInt());
 		}
 	}
 
 	@Override
-	public void toBytes(PacketByteBuf pBuff) {
+	public void toBytes(PacketByteBuf pBuff, PaintSynchronizer sync) {
 		pBuff.writeVarInt(primitive.index());
 		pBuff.writeInt(shapeBits);
 		pBuff.writeInt(worldBits);
 		final int limit = primitive.surfaces((R)this).size();
 
 		for (int i = 0; i < limit; i++) {
-			pBuff.writeVarInt(paints[i]);
+			pBuff.writeVarInt(sync.toInt(paints[i]));
 		}
 	}
 
@@ -491,7 +461,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	protected abstract int maxSurfaces();
 
-	protected final int[] paints = new int[maxSurfaces()];
+	protected final XmPaint[] paints = new XmPaint[maxSurfaces()];
 
 	@Override
 	public final boolean doPaintsMatch(ModelState other) {
@@ -501,71 +471,53 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	protected final boolean doPaintsMatchNative(AbstractPrimitiveModelState other) {
 		final int limit = surfaceCount();
 		if (limit == other.surfaceCount()) {
-			final int[] paints = this.paints;
-			final int[] otherPaints = other.paints;
+			final XmPaint[] paints = this.paints;
+			final XmPaint[] otherPaints = other.paints;
+
 			for (int i = 0; i < limit; i++) {
 				if (otherPaints[i] != paints[i]) {
 					return false;
 				}
 			}
+
 			return true;
 		}
+
 		return false;
-	}
-
-	protected final void paintInner(int surfaceIndex, int paintIndex) {
-		paints[surfaceIndex] = paintIndex;
-	}
-
-	@Override
-	public final int paintIndex(int surfaceIndex) {
-		return paints[surfaceIndex];
 	}
 
 	@Override
 	public final XmPaint paint(int surfaceIndex) {
-		return XmPaintRegistry.INSTANCE.get(paintIndex(surfaceIndex));
+		final XmPaint result = paints[surfaceIndex];
+		return result == null ? XmPaintImpl.DEFAULT_PAINT : result;
 	}
 
 	@Override
 	public final XmPaint paint(XmSurface surface) {
-		return XmPaintRegistry.INSTANCE.get(paintIndex(surface.ordinal()));
-	}
-
-	@Override
-	public final W paint(int surfaceIndex, int paintIndex) {
-		paintInner(surfaceIndex, paintIndex);
-		return (W)this;
+		return paint(surface.ordinal());
 	}
 
 	@Override
 	public final W paint(int surfaceIndex, XmPaint paint) {
-		return paint(surfaceIndex, paint.index());
+		paints[surfaceIndex] = paint;
+		return (W) this;
 	}
 
 	@Override
 	public final W paint(XmSurface surface, XmPaint paint) {
-		return paint(surface.ordinal(), paint.index());
-	}
-
-	@Override
-	public final W paint(XmSurface surface, int paintIndex) {
-		return paint(surface.ordinal(), paintIndex);
+		return paint(surface.ordinal(), paint);
 	}
 
 	@Override
 	public final W paintAll(XmPaint paint) {
-		return paintAll(paint.index());
-	}
-
-	@Override
-	public final W paintAll(int paintIndex) {
 		final XmSurfaceList slist = primitive().surfaces((R)this);
 		final int limit = slist.size();
+
 		for (int i = 0; i < limit; i++) {
-			paint(i, paintIndex);
+			paint(i, paint);
 		}
-		return (W)this;
+
+		return (W) this;
 	}
 
 

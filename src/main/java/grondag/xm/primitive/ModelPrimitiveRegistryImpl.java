@@ -26,11 +26,13 @@ import org.apiguardian.api.API;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
+
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import grondag.xm.modelstate.ModelStateTagHelper;
+import grondag.xm.network.PaintSynchronizer;
 
 @SuppressWarnings("rawtypes")
 @API(status = INTERNAL)
@@ -85,17 +87,13 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	@Override
 	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag) {
 		final ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
-		if (shape == null)
-			return null;
-		return shape.fromTag(tag);
+		return shape == null ? null : shape.fromTag(tag);
 	}
 
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf, PaintSynchronizer sync) {
 		final ModelPrimitive<R, W> shape = get(buf.readVarInt());
-		if (shape == null)
-			return null;
-		return shape.fromBuffer(buf);
+		return shape == null ? null : shape.fromBuffer(buf, sync);
 	}
 
 	public void invalidateCache() {

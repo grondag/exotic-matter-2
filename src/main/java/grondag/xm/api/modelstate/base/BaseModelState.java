@@ -45,6 +45,7 @@ import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.network.PaintSynchronizer;
 
 @API(status = EXPERIMENTAL)
 public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> extends ModelState {
@@ -80,10 +81,10 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	@Override
 	void toTag(CompoundTag tag);
 
-	void fromBytes(PacketByteBuf pBuff);
+	void fromBytes(PacketByteBuf pBuff, PaintSynchronizer sync);
 
 	@Override
-	void toBytes(PacketByteBuf pBuff);
+	void toBytes(PacketByteBuf pBuff, PaintSynchronizer sync);
 
 	int stateFlags();
 
@@ -103,8 +104,6 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	boolean isStatic();
 
 	boolean doPaintsMatch(ModelState other);
-
-	int paintIndex(int surfaceIndex);
 
 	XmPaint paint(int surfaceIndex);
 

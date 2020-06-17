@@ -18,8 +18,11 @@ package grondag.xm.api.modelstate;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import net.minecraft.network.PacketByteBuf;
 import org.apiguardian.api.API;
+
+import net.minecraft.network.PacketByteBuf;
+
+import grondag.xm.network.PaintSynchronizer;
 
 @API(status = EXPERIMENTAL)
 public interface MutableModelState extends ModelState {
@@ -36,5 +39,5 @@ public interface MutableModelState extends ModelState {
 
 	ModelState releaseToImmutable();
 
-	void fromBytes(PacketByteBuf pBuff);
+	void fromBytes(PacketByteBuf pBuff, PaintSynchronizer sync);
 }

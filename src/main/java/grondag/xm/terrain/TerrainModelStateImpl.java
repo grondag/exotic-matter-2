@@ -18,6 +18,7 @@ package grondag.xm.terrain;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
+
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -25,6 +26,7 @@ import net.minecraft.world.BlockView;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
+import grondag.xm.network.PaintSynchronizer;
 
 @API(status = INTERNAL)
 public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> implements TerrainModelState.Mutable {
@@ -32,11 +34,6 @@ public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainMo
 
 	private long flowBits;
 	private int glowBits;
-
-	@Override
-	protected int intSize() {
-		return super.intSize() + 3;
-	}
 
 	public void doRefreshFromWorld(XmBlockState xmState, BlockView world, BlockPos pos) {
 		//TODO: restore super state retrieval and move whole thing to external helper
@@ -86,15 +83,15 @@ public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainMo
 	}
 
 	@Override
-	public void fromBytes(PacketByteBuf pBuff) {
-		super.fromBytes(pBuff);
+	public void fromBytes(PacketByteBuf pBuff, PaintSynchronizer sync) {
+		super.fromBytes(pBuff, sync);
 		flowBits = pBuff.readLong();
 		glowBits = pBuff.readVarInt();
 	}
 
 	@Override
-	public void toBytes(PacketByteBuf pBuff) {
-		super.toBytes(pBuff);
+	public void toBytes(PacketByteBuf pBuff, PaintSynchronizer sync) {
+		super.toBytes(pBuff, sync);
 		pBuff.writeLong(flowBits);
 		pBuff.writeVarInt(glowBits);
 	}

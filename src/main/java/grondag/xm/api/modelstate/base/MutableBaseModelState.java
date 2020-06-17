@@ -27,17 +27,11 @@ public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends
 	@Override
 	W setStatic(boolean isStatic);
 
-	W paint(int surfaceIndex, int paintIndex);
-
 	W paint(int surfaceIndex, XmPaint paint);
 
 	W paint(XmSurface surface, XmPaint paint);
 
-	W paint(XmSurface surface, int paintIndex);
-
 	W paintAll(XmPaint paint);
-
-	W paintAll(int paintIndex);
 
 	W posX(int index);
 

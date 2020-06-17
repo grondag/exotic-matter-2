@@ -88,4 +88,8 @@ public interface XmPaint {
 	 * Serializes paint configuration, discarding registered identity if present.
 	 */
 	CompoundTag toFixedTag();
+
+	static XmPaint fromTag(CompoundTag tag) {
+		return XmPaintImpl.fromTag(tag);
+	}
 }

@@ -39,6 +39,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.network.PaintSynchronizer;
 
 @API(status = EXPERIMENTAL)
 public interface ModelState {
@@ -62,7 +63,7 @@ public interface ModelState {
 
 	void toTag(CompoundTag tag);
 
-	void toBytes(PacketByteBuf pBuff);
+	void toBytes(PacketByteBuf pBuff, PaintSynchronizer sync);
 
 	default CompoundTag toTag() {
 		final CompoundTag result = new CompoundTag();

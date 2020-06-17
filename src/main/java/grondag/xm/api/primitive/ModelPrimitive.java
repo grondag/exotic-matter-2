@@ -44,6 +44,7 @@ import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
+import grondag.xm.network.PaintSynchronizer;
 
 @API(status = EXPERIMENTAL)
 public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {
@@ -99,7 +100,7 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 		return defaultState().mutableCopy();
 	}
 
-	W fromBuffer(PacketByteBuf buf);
+	W fromBuffer(PacketByteBuf buf, PaintSynchronizer sync);
 
 
 	W fromTag(CompoundTag tag);

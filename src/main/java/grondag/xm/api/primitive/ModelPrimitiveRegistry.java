@@ -24,8 +24,10 @@ import org.apiguardian.api.API;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.network.PaintSynchronizer;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 
 @API(status = EXPERIMENTAL)
@@ -59,5 +61,5 @@ public interface ModelPrimitiveRegistry {
 
 	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag);
 
-	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf, PaintSynchronizer sync);
 }

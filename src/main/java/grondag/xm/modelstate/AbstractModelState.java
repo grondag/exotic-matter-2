@@ -88,26 +88,4 @@ abstract class AbstractModelState {
 		if (isImmutable)
 			throw new UnsupportedOperationException("Encounted attempt to modify immutable model state.");
 	}
-
-	/////// INT ARRAY SERIALIZATION /////////
-
-	protected abstract int intSize();
-
-	protected abstract void doDeserializeFromInts(int[] data, int startAt);
-
-	protected abstract void doSerializeToInts(int[] data, int startAt);
-
-	/**
-	 * Note does not reset state flag - do that if calling on an existing instance.
-	 */
-	protected final void deserializeFromInts(int[] bits) {
-		doDeserializeFromInts(bits, 0);
-	}
-
-
-	protected final int[] serializeToInts() {
-		final int[] result = new int[intSize()];
-		doSerializeToInts(result, 0);
-		return result;
-	}
 }
