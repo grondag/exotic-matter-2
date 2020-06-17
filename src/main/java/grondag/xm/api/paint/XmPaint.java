@@ -35,8 +35,6 @@ public interface XmPaint {
 
 	int MAX_TEXTURE_DEPTH = 3;
 
-	int index();
-
 	@Deprecated
 	@Nullable
 	PaintBlendMode blendMode(int textureIndex);

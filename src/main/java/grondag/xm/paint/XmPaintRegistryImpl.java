@@ -70,15 +70,6 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 		}
 	}
 
-	public static Value byIndex(int index) {
-		return XmPaintImpl.byIndex(index);
-	}
-
-	@Override
-	public XmPaintImpl.Value get(int paintIndex) {
-		return XmPaintImpl.byIndex(paintIndex);
-	}
-
 	@Override
 	public XmPaintImpl.Value get(Identifier paintId) {
 		XmPaintImpl.Value result = paints.get(paintId);

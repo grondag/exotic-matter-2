@@ -22,7 +22,6 @@ import javax.annotation.Nullable;
 
 import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.apiguardian.api.API;
 
 import net.minecraft.nbt.CompoundTag;
@@ -60,8 +59,6 @@ public class XmPaintImpl {
 
 	private static final int DEFAULT_PAINT_BITS;
 
-	private static final ObjectArrayList<Value> LIST = new ObjectArrayList<>();
-
 	private static final Object2ObjectOpenHashMap<XmPaintImpl, Value> MAP = new Object2ObjectOpenHashMap<>();
 
 	static {
@@ -84,10 +81,6 @@ public class XmPaintImpl {
 		assert PAINT_BITS.bitLength() <= 32;
 
 		DEFAULT_PAINT_BITS = BLEND_MODE.setValue(PaintBlendMode.DEFAULT, 0);
-	}
-
-	public static Value byIndex(int index) {
-		return LIST.get(index);
 	}
 
 	/** null for anonymous */
@@ -259,12 +252,10 @@ public class XmPaintImpl {
 	}
 
 	public static class Value extends XmPaintImpl implements XmPaint {
-		private final int index;
 		private int hashCode;
 		boolean external = false;
 
-		protected Value(int index, XmPaintImpl template) {
-			this.index = index;
+		protected Value(XmPaintImpl template) {
 			id = template.id;
 			copyFrom(template);
 		}
@@ -278,11 +269,6 @@ public class XmPaintImpl {
 		@Override
 		public int hashCode() {
 			return hashCode;
-		}
-
-		@Override
-		public int index() {
-			return index;
 		}
 
 		@Override
@@ -369,9 +355,8 @@ public class XmPaintImpl {
 			Value result = MAP.get(this);
 
 			if (result == null) {
-				result = new Value(LIST.size(), this);
+				result = new Value(this);
 				MAP.put(result, result);
-				LIST.add(result);
 			}
 
 			id = null;

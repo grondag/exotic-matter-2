@@ -29,7 +29,5 @@ public interface XmPaintRegistry {
 
 	XmPaint register(Identifier id, XmPaint paint);
 
-	XmPaint get(int paintIndex);
-
 	XmPaint get(Identifier paintId);
 }
