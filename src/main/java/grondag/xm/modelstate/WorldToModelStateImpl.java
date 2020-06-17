@@ -35,17 +35,17 @@ import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.MasonryHelper;
 import grondag.xm.api.connect.world.ModelStateFunction;
+import grondag.xm.api.modelstate.primitive.DynamicPrimitiveStateFunction;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
-import grondag.xm.api.modelstate.primitive.PrimitiveStateFunction;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 import grondag.xm.api.primitive.simple.CubeWithRotation;
 
 @API(status = EXPERIMENTAL)
-public class WorldToModelStateImpl implements PrimitiveStateFunction {
+public class WorldToModelStateImpl implements DynamicPrimitiveStateFunction {
 	private final BlockTest<PrimitiveState> joinTest;
 	private final PrimitiveStateMutator updater;
-	private final PrimitiveState defaultState;
+	private PrimitiveState defaultState;
 
 	private WorldToModelStateImpl(BuilderImpl builder) {
 		joinTest = builder.joinTest;
@@ -100,10 +100,21 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
 				neighbors.release();
 			}
 		}
+
 		return modelState;
 	}
 
-	private static class BuilderImpl implements PrimitiveStateFunction.Builder {
+	@Override
+	public PrimitiveState getDefaultState() {
+		return defaultState;
+	}
+
+	@Override
+	public void setDefaultState(PrimitiveState state) {
+		defaultState = state;
+	}
+
+	private static class BuilderImpl implements DynamicPrimitiveStateFunction.Builder {
 		private BlockTest<PrimitiveState> joinTest = BlockTest.sameBlock();
 		private final ArrayList<PrimitiveStateMutator> updaters = new ArrayList<>();
 		private PrimitiveState defaultState = CubeWithRotation.INSTANCE.defaultState();
@@ -140,10 +151,9 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
 
 		@Override
 		public
-		PrimitiveStateFunction build() {
+		DynamicPrimitiveStateFunction build() {
 			return new WorldToModelStateImpl(this);
 		}
-
 	}
 
 	public static Builder builder() {

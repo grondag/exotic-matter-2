@@ -40,6 +40,7 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.network.PaintSynchronizer;
+import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 
 @API(status = EXPERIMENTAL)
 public interface ModelState {
@@ -91,4 +92,8 @@ public interface ModelState {
 
 	@Environment(EnvType.CLIENT)
 	void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context);
+
+	static MutableModelState fromTag(CompoundTag tag) {
+		return ModelPrimitiveRegistryImpl.INSTANCE.fromTag(tag);
+	}
 }
