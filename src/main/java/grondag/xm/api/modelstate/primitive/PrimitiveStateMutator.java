@@ -26,6 +26,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 import grondag.xm.api.connect.world.BlockNeighbors;
+import grondag.xm.api.connect.world.BlockTest;
+import grondag.xm.modelstate.PrimitiveStateMutatorImpl;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface
@@ -35,5 +37,19 @@ public interface PrimitiveStateMutator {
 	default MutablePrimitiveState mutate(MutablePrimitiveState modelState, BlockState blockState) {
 		mutate(modelState, blockState, null, null, null, false);
 		return modelState;
+	}
+
+	static Builder builder() {
+		return PrimitiveStateMutatorImpl.builder();
+	}
+
+	public interface Builder {
+		Builder withJoin(BlockTest<PrimitiveState> joinTest);
+
+		Builder withUpdate(PrimitiveStateMutator update);
+
+		PrimitiveStateMutator build();
+
+		Builder clear();
 	}
 }

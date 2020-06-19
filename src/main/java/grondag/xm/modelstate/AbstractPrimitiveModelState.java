@@ -360,6 +360,8 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 			final XmPaint paint = paints[i];
 			list.add(paint == null ?  XmPaintImpl.DEFAULT_PAINT.toTag() : paint.toTag());
 		}
+
+		tag.put(ModelStateTagHelper.NBT_PAINTS, list);
 	}
 
 	@Override

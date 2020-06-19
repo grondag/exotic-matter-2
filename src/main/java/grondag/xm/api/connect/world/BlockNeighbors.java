@@ -225,6 +225,10 @@ public interface BlockNeighbors {
 		return claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
 	}
 
+	static BlockNeighbors claimIfNull(BlockNeighbors neighbors, BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
+		return neighbors == null ? claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test) : neighbors.withTest(test);
+	}
+
 	static BlockNeighbors claim(BlockView world, BlockPos pos, ModelStateFunction stateFunc) {
 		return claim(world, pos, stateFunc, null);
 	}
