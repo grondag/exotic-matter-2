@@ -26,9 +26,12 @@ import net.minecraft.util.Identifier;
 import net.fabricmc.api.ModInitializer;
 
 import grondag.xm.network.Packets;
+import grondag.xm.paint.PaintSynchronizerImpl;
 
 @API(status = INTERNAL)
 public class Xm implements ModInitializer {
+	// TODO: remove
+	public static PaintSynchronizerImpl paintSync = new PaintSynchronizerImpl();
 
 	@Override
 	public void onInitialize() {

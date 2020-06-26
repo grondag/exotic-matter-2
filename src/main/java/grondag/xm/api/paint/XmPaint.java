@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 import grondag.xm.api.texture.TextureSet;
@@ -82,6 +83,8 @@ public interface XmPaint {
 	 */
 	CompoundTag toTag();
 
+	void toBytes(PacketByteBuf pBuff);
+
 	/**
 	 * Serializes paint configuration, discarding registered identity if present.
 	 */
@@ -90,4 +93,9 @@ public interface XmPaint {
 	static XmPaint fromTag(CompoundTag tag) {
 		return XmPaintImpl.fromTag(tag);
 	}
+
+	static XmPaint fromBytes(PacketByteBuf pBuff) {
+		return XmPaintImpl.fromBytes(pBuff);
+	}
+
 }

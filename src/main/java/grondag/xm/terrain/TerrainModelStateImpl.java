@@ -24,9 +24,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
-import grondag.xm.network.PaintSynchronizer;
 
 @API(status = INTERNAL)
 public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> implements TerrainModelState.Mutable {
@@ -83,14 +83,14 @@ public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainMo
 	}
 
 	@Override
-	public void fromBytes(PacketByteBuf pBuff, PaintSynchronizer sync) {
+	public void fromBytes(PacketByteBuf pBuff, PaintIndex sync) {
 		super.fromBytes(pBuff, sync);
 		flowBits = pBuff.readLong();
 		glowBits = pBuff.readVarInt();
 	}
 
 	@Override
-	public void toBytes(PacketByteBuf pBuff, PaintSynchronizer sync) {
+	public void toBytes(PacketByteBuf pBuff, PaintIndex sync) {
 		super.toBytes(pBuff, sync);
 		pBuff.writeLong(flowBits);
 		pBuff.writeVarInt(glowBits);

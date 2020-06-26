@@ -39,7 +39,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.network.PaintSynchronizer;
+import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 
 @API(status = EXPERIMENTAL)
@@ -62,9 +62,17 @@ public interface ModelState {
 	 */
 	MutableModelState geometricState();
 
-	void toTag(CompoundTag tag);
+	default void toTag(CompoundTag tag) {
+		toTag(tag, PaintIndex.LOCAL);
+	}
 
-	void toBytes(PacketByteBuf pBuff, PaintSynchronizer sync);
+	void toTag(CompoundTag tag, PaintIndex sync);
+
+	default void toBytes(PacketByteBuf pBuff) {
+		toBytes(pBuff, PaintIndex.LOCAL);
+	}
+
+	void toBytes(PacketByteBuf pBuff, PaintIndex sync);
 
 	default CompoundTag toTag() {
 		final CompoundTag result = new CompoundTag();
@@ -94,6 +102,18 @@ public interface ModelState {
 	void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context);
 
 	static MutableModelState fromTag(CompoundTag tag) {
-		return ModelPrimitiveRegistryImpl.INSTANCE.fromTag(tag);
+		return fromTag(tag, PaintIndex.LOCAL);
+	}
+
+	static MutableModelState fromTag(CompoundTag tag, PaintIndex sync) {
+		return ModelPrimitiveRegistryImpl.INSTANCE.fromTag(tag, sync);
+	}
+
+	static MutableModelState fromBytes(PacketByteBuf pBuff) {
+		return fromBytes(pBuff, PaintIndex.LOCAL);
+	}
+
+	static MutableModelState fromBytes(PacketByteBuf pBuff, PaintIndex sync) {
+		return ModelPrimitiveRegistryImpl.INSTANCE.fromBytes(pBuff);
 	}
 }

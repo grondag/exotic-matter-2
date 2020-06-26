@@ -27,7 +27,7 @@ import net.minecraft.util.Identifier;
 
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.network.PaintSynchronizer;
+import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 
 @API(status = EXPERIMENTAL)
@@ -59,7 +59,16 @@ public interface ModelPrimitiveRegistry {
 		return indexOf(primitive.id());
 	}
 
-	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag);
+	default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag) {
+		return fromTag(tag, PaintIndex.LOCAL);
+	}
 
-	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBuffer(PacketByteBuf buf, PaintSynchronizer sync);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> W fromTag(CompoundTag tag, PaintIndex sync);
+
+	default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf) {
+		return  fromBytes(buf, PaintIndex.LOCAL);
+	}
+
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf, PaintIndex sync);
+
 }

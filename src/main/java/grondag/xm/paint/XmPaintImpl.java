@@ -25,6 +25,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.apiguardian.api.API;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 import grondag.fermion.bits.BitPacker32;
@@ -338,6 +339,74 @@ public class XmPaintImpl {
 
 			return result;
 		}
+
+		@Override
+		public void toBytes(PacketByteBuf pBuff) {
+			final int depth = textureDepth();
+
+			int header = 0;
+
+			if (shader != null) {
+				header |= FLAG_HAS_SHADER;
+			}
+
+			if (condition != null) {
+				header |= FLAG_HAS_CONDITION;
+			}
+
+			if (vertexProcessor0 != VertexProcessorDefault.INSTANCE) {
+				header |= FLAG_HAS_VP0;
+			}
+
+			if (depth > 1) {
+
+				if (vertexProcessor1 != VertexProcessorDefault.INSTANCE) {
+					header |= FLAG_HAS_VP1;
+				}
+
+				if (depth == 3) {
+
+					if (vertexProcessor2 != VertexProcessorDefault.INSTANCE) {
+						header |= FLAG_HAS_VP2;
+					}
+				}
+			}
+
+			pBuff.writeVarInt(header);
+			pBuff.writeInt(paintBits);
+			pBuff.writeInt(color0);
+			pBuff.writeString(textureSet0.id().toString());
+
+			if (shader != null) {
+				pBuff.writeString(shader.toString());
+			}
+
+			if (condition != null) {
+				pBuff.writeString(condition.toString());
+			}
+
+			if (vertexProcessor0 != VertexProcessorDefault.INSTANCE) {
+				pBuff.writeString(VertexProcessorRegistry.INSTANCE.getId(vertexProcessor0).toString());
+			}
+
+			if (depth > 1) {
+				pBuff.writeInt(color1);
+				pBuff.writeString(textureSet1.id().toString());
+
+				if (vertexProcessor1 != VertexProcessorDefault.INSTANCE) {
+					pBuff.writeString(VertexProcessorRegistry.INSTANCE.getId(vertexProcessor1).toString());
+				}
+
+				if (depth == 3) {
+					pBuff.writeInt(color2);
+					pBuff.writeString(textureSet2.id().toString());
+
+					if (vertexProcessor2 != VertexProcessorDefault.INSTANCE) {
+						pBuff.writeString(VertexProcessorRegistry.INSTANCE.getId(vertexProcessor2).toString());
+					}
+				}
+			}
+		}
 	}
 
 	public static class Finder extends XmPaintImpl implements XmPaintFinder {
@@ -541,6 +610,10 @@ public class XmPaintImpl {
 	private static final String TAG_VP_2 = "v2";
 
 	public static XmPaintImpl.Value fromTag(CompoundTag tag) {
+		if (tag.isEmpty()) {
+			return XmPaintImpl.DEFAULT_PAINT;
+		}
+
 		if (tag.contains(TAG_ID)) {
 			return XmPaintRegistryImpl.INSTANCE.get(new Identifier(tag.getString(TAG_ID)));
 		}
@@ -588,7 +661,48 @@ public class XmPaintImpl {
 		return finder.find();
 	}
 
+	public static XmPaint fromBytes(PacketByteBuf pBuff) {
+		final Finder finder = finder();
+
+		final int header = pBuff.readVarInt();
+		finder.paintBits = pBuff.readInt();
+		finder.color0 = pBuff.readInt();
+		finder.textureSet0 = TextureSetRegistry.instance().get(new Identifier(pBuff.readString()));
+
+		if ((header & FLAG_HAS_SHADER) == FLAG_HAS_SHADER) {
+			finder.shader =  new Identifier(pBuff.readString());
+		}
+
+		if ((header & FLAG_HAS_CONDITION) == FLAG_HAS_CONDITION) {
+			finder.condition =  new Identifier(pBuff.readString());
+		}
+
+		if ((header & FLAG_HAS_VP0) == FLAG_HAS_VP0) {
+			finder.vertexProcessor0 =  VertexProcessorRegistry.INSTANCE.get(new Identifier(pBuff.readString()));
+		}
+
+		final int depth = finder.textureDepth();
+
+		if (depth > 1) {
+			finder.color1 = pBuff.readInt();
+			finder.textureSet1 = TextureSetRegistry.instance().get(new Identifier(pBuff.readString()));
+
+			if ((header & FLAG_HAS_VP1) == FLAG_HAS_VP1) {
+				finder.vertexProcessor1 =  VertexProcessorRegistry.INSTANCE.get(new Identifier(pBuff.readString()));
+			}
+
+			if (depth == 3) {
+				finder.color2 = pBuff.readInt();
+				finder.textureSet2 = TextureSetRegistry.instance().get(new Identifier(pBuff.readString()));
+
+				if ((header & FLAG_HAS_VP2) == FLAG_HAS_VP2) {
+					finder.vertexProcessor1 =  VertexProcessorRegistry.INSTANCE.get(new Identifier(pBuff.readString()));
+				}
+			}
+		}
+
+		return finder.find();
+	}
+
 	public static final XmPaintImpl.Value DEFAULT_PAINT = finder().find();
-
-
 }

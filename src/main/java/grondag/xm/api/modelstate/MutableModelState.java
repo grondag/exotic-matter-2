@@ -20,9 +20,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 
-import grondag.xm.network.PaintSynchronizer;
+import grondag.xm.api.paint.PaintIndex;
 
 @API(status = EXPERIMENTAL)
 public interface MutableModelState extends ModelState {
@@ -39,5 +40,15 @@ public interface MutableModelState extends ModelState {
 
 	ModelState releaseToImmutable();
 
-	void fromBytes(PacketByteBuf pBuff, PaintSynchronizer sync);
+	default void fromTag(CompoundTag tag) {
+		fromTag(tag, PaintIndex.LOCAL);
+	}
+
+	void fromTag(CompoundTag tag, PaintIndex sync);
+
+	default void fromBytes(PacketByteBuf pBuff) {
+		fromBytes(pBuff, PaintIndex.LOCAL);
+	}
+
+	void fromBytes(PacketByteBuf pBuff, PaintIndex sync);
 }

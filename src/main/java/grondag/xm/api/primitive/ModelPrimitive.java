@@ -42,9 +42,9 @@ import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.network.PaintSynchronizer;
 
 @API(status = EXPERIMENTAL)
 public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {
@@ -100,10 +100,17 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 		return defaultState().mutableCopy();
 	}
 
-	W fromBuffer(PacketByteBuf buf, PaintSynchronizer sync);
+	W fromBytes(PacketByteBuf buf, PaintIndex sync);
 
+	default W fromBytes(PacketByteBuf buf) {
+		return fromBytes(buf, PaintIndex.LOCAL);
+	}
 
-	W fromTag(CompoundTag tag);
+	W fromTag(CompoundTag tag, PaintIndex sync);
+
+	default W fromTag(CompoundTag tag) {
+		return fromTag(tag, PaintIndex.LOCAL);
+	}
 
 	boolean doesShapeMatch(R from, R to);
 

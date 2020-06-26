@@ -42,10 +42,10 @@ import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.network.PaintSynchronizer;
 
 @API(status = EXPERIMENTAL)
 public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> extends ModelState {
@@ -79,12 +79,14 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	boolean doesAppearanceMatch(ModelState other);
 
 	@Override
-	void toTag(CompoundTag tag);
+	void toTag(CompoundTag tag, PaintIndex sync);
 
-	void fromBytes(PacketByteBuf pBuff, PaintSynchronizer sync);
+	void fromTag(CompoundTag tag, PaintIndex sync);
 
 	@Override
-	void toBytes(PacketByteBuf pBuff, PaintSynchronizer sync);
+	void toBytes(PacketByteBuf pBuff, PaintIndex sync);
+
+	void fromBytes(PacketByteBuf pBuff, PaintIndex sync);
 
 	int stateFlags();
 

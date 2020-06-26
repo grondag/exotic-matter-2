@@ -35,12 +35,15 @@ import grondag.xm.dispatch.XmVariantProvider;
 import grondag.xm.mesh.helper.PolyTransformImpl;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
 import grondag.xm.network.Packets;
+import grondag.xm.paint.PaintSynchronizerImpl;
 import grondag.xm.paint.XmPaintRegistryImpl;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import grondag.xm.texture.XmTexturesImpl;
 
 @API(status = INTERNAL)
 public class XmClient implements ClientModInitializer {
+	public static PaintSynchronizerImpl paintSync = new PaintSynchronizerImpl();
+
 	@Override
 	public void onInitializeClient() {
 		XmTexturesImpl.init();

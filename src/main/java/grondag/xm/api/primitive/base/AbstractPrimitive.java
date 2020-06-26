@@ -29,10 +29,10 @@ import grondag.xm.Xm;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
-import grondag.xm.network.PaintSynchronizer;
 
 @API(status = EXPERIMENTAL)
 public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> implements ModelPrimitive<R, W> {
@@ -94,12 +94,12 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
 	}
 
 	@Override
-	public final W fromBuffer(PacketByteBuf buf, PaintSynchronizer sync) {
-		return factory.fromBuffer(this, buf, sync);
+	public final W fromBytes(PacketByteBuf buf, PaintIndex sync) {
+		return factory.fromBytes(this, buf, sync);
 	}
 
 	@Override
-	public final W fromTag(CompoundTag tag) {
-		return factory.fromTag(this, tag);
+	public final W fromTag(CompoundTag tag, PaintIndex sync) {
+		return factory.fromTag(this, tag, sync);
 	}
 }

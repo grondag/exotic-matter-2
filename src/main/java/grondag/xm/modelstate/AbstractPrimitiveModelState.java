@@ -36,7 +36,6 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -62,12 +61,12 @@ import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
-import grondag.xm.network.PaintSynchronizer;
 import grondag.xm.paint.XmPaintImpl;
 import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
@@ -169,29 +168,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		}
 
 		@Override
-		public final W fromTag(ModelPrimitive<R, W> shape, CompoundTag tag) {
+		public final W fromTag(ModelPrimitive<R, W> shape, CompoundTag tag, PaintIndex sync) {
 			final T result = claimInner(shape);
-
-			final int worldBits = tag.getInt(ModelStateTagHelper.NBT_WORLD_BITS);
-			// sign on world bits is used to store static indicator
-			result.isStatic = (Useful.INT_SIGN_BIT & worldBits) == Useful.INT_SIGN_BIT;
-			result.worldBits = Useful.INT_SIGN_BIT_INVERSE & worldBits;
-			result.shapeBits = tag.getInt(ModelStateTagHelper.NBT_SHAPE_BITS);
-
-			final ListTag paints = tag.getList(ModelStateTagHelper.NBT_PAINTS, 10); // 10 is compound
-
-			final int limit = Math.min(paints.size(), result.paints.length);
-
-			for (int i = 0; i < limit; ++i) {
-				result.paints[i] = XmPaint.fromTag(paints.getCompound(i));
-			}
-
-			result.clearStateFlags();
+			result.fromTag(tag, sync);
 			return (W) result;
 		}
 
 		@Override
-		public final W fromBuffer(ModelPrimitive<R, W> shape, PacketByteBuf buf, PaintSynchronizer sync) {
+		public final W fromBytes(ModelPrimitive<R, W> shape, PacketByteBuf buf, PaintIndex sync) {
 			final T result = claimInner(shape);
 			result.fromBytes(buf, sync);
 			return (W) result;
@@ -344,28 +328,43 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	////////////////////////////////////////// SERIALIZATION //////////////////////////////////////////
 
 	@Override
-	public void toTag(CompoundTag tag) {
+	public void fromTag(CompoundTag tag, PaintIndex sync) {
+		final int worldBits = tag.getInt(ModelStateTagHelper.NBT_WORLD_BITS);
+		// sign on world bits is used to store static indicator
+		isStatic = (Useful.INT_SIGN_BIT & worldBits) == Useful.INT_SIGN_BIT;
+		this.worldBits = Useful.INT_SIGN_BIT_INVERSE & worldBits;
+		shapeBits = tag.getInt(ModelStateTagHelper.NBT_SHAPE_BITS);
 
-		// shape is serialized by name because registered shapes can change if
-		// mods/config change
+		final int[] paintIds = tag.getIntArray(ModelStateTagHelper.NBT_PAINTS);
+		final int limit = Math.min(paints.length, paintIds.length);
+
+		for (int i = 0; i < limit; ++i) {
+			paints[i] = sync.fromInt(paintIds[i]);
+		}
+
+		clearStateFlags();
+	}
+
+	@Override
+	public void toTag(CompoundTag tag, PaintIndex sync) {
 		tag.putString(ModelStateTagHelper.NBT_SHAPE, this.primitive().id().toString());
 
 		tag.putInt(ModelStateTagHelper.NBT_WORLD_BITS, this.isStatic ? (worldBits | Useful.INT_SIGN_BIT) : worldBits);
 		tag.putInt(ModelStateTagHelper.NBT_SHAPE_BITS, shapeBits);
 
 		final int limit = paints.length;
-		final ListTag list = new ListTag();
+		final int[] paintIds = new int[limit];
 
 		for (int i = 0; i < limit; ++i) {
-			final XmPaint paint = paints[i];
-			list.add(paint == null ?  XmPaintImpl.DEFAULT_PAINT.toTag() : paint.toTag());
+			paintIds[i] = sync.toInt(paints[i]);
 		}
 
-		tag.put(ModelStateTagHelper.NBT_PAINTS, list);
+		tag.putIntArray(ModelStateTagHelper.NBT_PAINTS, paintIds);
 	}
 
+
 	@Override
-	public void fromBytes(PacketByteBuf pBuff, PaintSynchronizer sync) {
+	public void fromBytes(PacketByteBuf pBuff, PaintIndex sync) {
 		shapeBits = pBuff.readInt();
 		worldBits = pBuff.readInt();
 		final int limit = primitive.surfaces((R)this).size();
@@ -376,7 +375,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	}
 
 	@Override
-	public void toBytes(PacketByteBuf pBuff, PaintSynchronizer sync) {
+	public void toBytes(PacketByteBuf pBuff, PaintIndex sync) {
 		pBuff.writeVarInt(primitive.index());
 		pBuff.writeInt(shapeBits);
 		pBuff.writeInt(worldBits);
