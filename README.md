@@ -43,14 +43,9 @@ In gradle this looks as follows:
 
 ```gradle
 repositories {
-    // Grondag's crappy maven repo...
     maven {
-        name = "grondag"
-        url = "https://grondag-repo.appspot.com"
-        credentials {
-            username "guest"
-            password ""
-	}
+    	name = "dblsaiko"
+    	url = "https://maven.dblsaiko.net/"
     }
 }
 
