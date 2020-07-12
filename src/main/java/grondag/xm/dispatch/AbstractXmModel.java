@@ -31,16 +31,9 @@ import grondag.xm.texture.TextureSetHelper;
 
 @API(status = INTERNAL)
 public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
-	protected ItemProxy itemProxy = null;
-
 	@Override
 	public ModelOverrideList getOverrides() {
-		ItemProxy result = itemProxy;
-		if (result == null) {
-			result = new ItemProxy(this);
-			itemProxy = result;
-		}
-		return result;
+		return ItemOverrideProxy.INSTANCE;
 	}
 
 	@Override

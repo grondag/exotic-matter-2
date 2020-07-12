@@ -26,6 +26,7 @@ import org.apiguardian.api.API;
 import grondag.fermion.sc.cache.ISimpleLoadingCache;
 import grondag.xm.api.mesh.polygon.Vec3f;
 
+// PERF: sucks - avoid using instanced immutable vectors in more places
 @API(status = INTERNAL)
 public class Vec3fCache {
 	static final Vec3fCache INSTANCE = new Vec3fCache(0x10000);

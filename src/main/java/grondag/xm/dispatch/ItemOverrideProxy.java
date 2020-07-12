@@ -23,23 +23,34 @@ import javax.annotation.Nullable;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
-@API(status = INTERNAL)
-public class ItemProxy extends ModelOverrideList {
-	private final BakedModel owner;
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.MutableModelState;
 
-	public ItemProxy(BakedModel owner) {
+@API(status = INTERNAL)
+public class ItemOverrideProxy extends ModelOverrideList {
+	static final ItemOverrideProxy INSTANCE = new ItemOverrideProxy();
+
+	private ItemOverrideProxy() {
 		super(null, null, null, Collections.emptyList());
-		this.owner = owner;
 	}
 
 	@Override
-	public BakedModel apply(BakedModel bakedModel_1, ItemStack itemStack_1, @Nullable ClientWorld world_1, LivingEntity livingEntity_1) {
-		return owner;
+	public BakedModel apply(BakedModel bakedModel_1, ItemStack stack, @Nullable ClientWorld world_1, LivingEntity livingEntity_1) {
+		final MutableModelState modelState = XmItem.modelState(stack);
+
+		if (modelState != null) {
+			final BakedModel result = XmDispatcher.INSTANCE.get(modelState).itemProxy();
+			modelState.release();
+			return result;
+		} else {
+			return  MinecraftClient.getInstance().getBakedModelManager().getMissingModel();
+		}
 	}
 }

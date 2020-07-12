@@ -32,6 +32,7 @@ import it.unimi.dsi.fastutil.HashCommon;
 import org.apiguardian.api.API;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
@@ -67,6 +68,7 @@ import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
+import grondag.xm.dispatch.AbstractXmModel;
 import grondag.xm.paint.XmPaintImpl;
 import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
@@ -751,11 +753,51 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	@Environment(EnvType.CLIENT)
 	public final List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand) {
 		List<BakedQuad>[] lists = quadLists;
+
 		if (lists == null) {
 			lists = ModelHelper.toQuadLists(mesh());
 			quadLists = lists;
 		}
+
 		final List<BakedQuad> result = lists[face == null ? 6 : face.getId()];
 		return result == null ? ImmutableList.of() : result;
 	}
+
+	@Environment(EnvType.CLIENT)
+	private BakedModel itemProxy = null;
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public final BakedModel itemProxy() {
+		BakedModel result = itemProxy;
+
+		if (result == null) {
+			result = new AbstractXmModel() {
+
+				@Environment(EnvType.CLIENT)
+				@Override
+				public List<BakedQuad> getQuads(BlockState state, Direction face, Random random) {
+					return bakedQuads(state, face, random);
+				}
+
+				@Environment(EnvType.CLIENT)
+				@Override
+				public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+					AbstractPrimitiveModelState.this.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+				}
+
+				@Environment(EnvType.CLIENT)
+				@Override
+				public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+					AbstractPrimitiveModelState.this.emitItemQuads(stack, randomSupplier, context);
+				}
+			};
+
+			itemProxy = result;
+		}
+
+		return result;
+	}
+
+
 }
