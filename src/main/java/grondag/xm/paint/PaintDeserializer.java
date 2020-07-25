@@ -26,6 +26,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 
 import grondag.xm.api.paint.PaintBlendMode;
+import grondag.xm.api.paint.VertexProcessorRegistry;
 import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.texture.TextureSetRegistry;
 
@@ -78,6 +79,10 @@ class PaintDeserializer {
 
 		if (layer.has("texture")) {
 			finder.texture(spriteIndex, TextureSetRegistry.instance().get(new Identifier(JsonHelper.getString(layer, "texture"))));
+		}
+
+		if (layer.has("processor")) {
+			finder.vertexProcessor(spriteIndex, VertexProcessorRegistry.INSTANCE.get(new Identifier(JsonHelper.getString(layer, "processor"))));
 		}
 	}
 

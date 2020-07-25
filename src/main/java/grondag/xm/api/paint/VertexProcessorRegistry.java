@@ -26,12 +26,12 @@ import grondag.xm.paint.VertexProcessorRegistryImpl;
 
 @API(status = EXPERIMENTAL)
 public interface VertexProcessorRegistry {
-	VertexProcessorRegistry INSTANCE = VertexProcessorRegistryImpl.INSTANCE;
-
 	/**
 	 * Will always be associated with index 0.
 	 */
 	Identifier NONE_ID = new Identifier(Xm.MODID, "none");
+
+	VertexProcessorRegistry INSTANCE = VertexProcessorRegistryImpl.INSTANCE;
 
 	VertexProcessor get(Identifier id);
 

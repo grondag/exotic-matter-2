@@ -25,6 +25,8 @@ import net.minecraft.util.Identifier;
 
 import net.fabricmc.api.ModInitializer;
 
+import grondag.xm.api.paint.VertexProcessorRegistry;
+import grondag.xm.api.paint.VertexProcessors;
 import grondag.xm.network.Packets;
 
 @API(status = INTERNAL)
@@ -33,6 +35,8 @@ public class Xm implements ModInitializer {
 	public void onInitialize() {
 		XmConfig.init();
 		Packets.initializeCommon();
+
+		VertexProcessorRegistry.INSTANCE.add(Xm.id("variation"), VertexProcessors.SPECIES_VARIATION);
 	}
 
 	public static Logger LOG = LogManager.getLogger("Exotic Matter");
