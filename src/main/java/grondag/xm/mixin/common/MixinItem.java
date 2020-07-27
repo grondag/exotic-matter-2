@@ -15,27 +15,28 @@
  ******************************************************************************/
 package grondag.xm.mixin.common;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import org.spongepowered.asm.mixin.Mixin;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmItemAccess;
 
 @Mixin(Item.class)
 public class MixinItem implements XmItemAccess {
-	private Function<ItemStack, MutableModelState> modelStateFunc = null;
+	private BiFunction<ItemStack, World, MutableModelState> modelStateFunc = null;
 
 	@Override
-	public void xm_modelStateFunc(Function<ItemStack, MutableModelState> func) {
+	public void xm_modelStateFunc(BiFunction<ItemStack, World, MutableModelState> func) {
 		modelStateFunc = func;
 	}
 
 	@Override
-	public Function<ItemStack, MutableModelState> xm_modelStateFunc() {
+	public BiFunction<ItemStack, World, MutableModelState> xm_modelStateFunc() {
 		return modelStateFunc;
 	}
 

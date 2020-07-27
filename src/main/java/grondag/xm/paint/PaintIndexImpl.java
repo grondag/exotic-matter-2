@@ -15,110 +15,174 @@
  ******************************************************************************/
 package grondag.xm.paint;
 
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.Arrays;
 
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.MathHelper;
 
 import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.paint.XmPaint;
+import grondag.xm.network.PaintIndexSnapshotS2C;
+import grondag.xm.network.PaintIndexUpdateS2C;
+import grondag.xm.paint.XmPaintImpl.Finder;
 
-// TODO: complete implementation
-// reset/synchronize on client connect
-// send deltas to connected clients
-// serialize/load to/from world on server
 public class PaintIndexImpl implements PaintIndex {
-	private final ObjectArrayList<XmPaint> list = new ObjectArrayList<>();
-	private final Object2IntOpenHashMap<XmPaint> map = new Object2IntOpenHashMap<>();
-	boolean isClient = false;
+	public static final PaintIndexImpl CLIENT = new PaintIndexImpl(true);
+	public static final PaintIndexImpl SERVER = new PaintIndexImpl(false);
 
-	PaintIndexImpl() {
-		map.defaultReturnValue(-1);
-	}
-	public void clear() {
-		list.clear();
-		map.clear();
-	}
+	private int nextIndex = 0;
+	private int capacity  = 1024;
+	private XmPaint[] paints = new XmPaint[capacity];
+	private boolean isDirty = true;
+	private PlayerManager playerManager = null;
+	public final boolean isClient;
 
-	/** set to true on clients - signals that should not be modified except via packets */
-	public void setClient(boolean isClient) {
+	private PaintIndexImpl(boolean isClient) {
 		this.isClient = isClient;
 	}
 
-	@Override
-	public XmPaint fromInt(int index) {
-		assert index < list.size();
-		return index < list.size() ? list.get(index) : XmPaintImpl.DEFAULT_PAINT;
+	public void clear() {
+		nextIndex = 0;
+		Arrays.fill(paints, null);
+		isDirty = true;
+		playerManager = null;
+	}
+
+	private void ensureCapacity(int index) {
+		if (index >= capacity) {
+			final int newCapacity = MathHelper.smallestEncompassingPowerOfTwo(index);
+			final XmPaint[] newPaints = new XmPaint[newCapacity];
+			System.arraycopy(paints, 0, newPaints, 0, nextIndex);
+			paints = newPaints;
+			capacity = newCapacity;
+		}
 	}
 
 	@Override
-	public int toInt(XmPaint paint) {
-		assert !isClient;
+	public XmPaint fromIndex(int index) {
+		assert index >= 0;
+		assert index < nextIndex;
+		return index >= 0 && index < nextIndex ? paints[index] : XmPaintImpl.DEFAULT_PAINT;
+	}
 
-		int result = map.getInt(paint);
-
-		if (result == -1) {
-			synchronized (map) {
-				result = map.getInt(paint);
-
-				if (result == -1) {
-					result = list.size();
-					list.add(paint);
-					map.put(paint, result);
-				}
-			}
+	@Override
+	public XmPaint index(XmPaint paint) {
+		if (isClient) {
+			throw new UnsupportedOperationException("XmPaint index cannot be created on logical client.");
 		}
 
-		return result;
+		final XmPaintImpl.Finder finder = (Finder) XmPaintImpl.finder().copy(paint);
+		final int index;
+
+		synchronized (this) {
+			index = nextIndex++;
+			ensureCapacity(index);
+			paint = finder.index(index).find();
+			paints[index] = paint;
+			isDirty = true;
+		}
+
+		sendToListeners(paint, index);
+		return paint;
+	}
+
+	@Override
+	public void updateIndex(int index, XmPaint paint) {
+		if (paint == null) {
+			paint = XmPaintImpl.DEFAULT_PAINT;
+		}
+
+		((XmPaintImpl) paints[index]).copyFrom((XmPaintImpl) paint);
+		isDirty = true;
+		sendToListeners(paint, index);
+	}
+
+	private void sendToListeners(XmPaint paint, int index) {
+		playerManager.sendToAll(PaintIndexUpdateS2C.toPacket(paint, index));
+	}
+
+	public void save() {
+		if (isDirty) {
+			// TODO:
+			isDirty = false;
+		}
 	}
 
 	public ListTag toTag() {
 		assert !isClient;
-		final int limit = list.size();
+		final int limit = nextIndex;
 		final ListTag tag = new ListTag();
 
 		for (int i = 0; i < limit; ++i)  {
-			tag.add(list.get(i).toTag());
+			tag.add(paints[i].toFixedTag());
 		}
 
 		return tag;
 	}
 
-	public void fromTag(ListTag tag) {
+	public void fromTag(ListTag tag, ServerWorld world) {
 		assert !isClient;
 		clear();
 
 		final int limit = tag.size();
+		ensureCapacity(limit);
+		nextIndex = limit;
 
 		for (int i = 0; i < limit; ++i)  {
-			final XmPaint paint = XmPaint.fromTag(tag.getCompound(i));
-			list.add(paint);
-			map.put(paint, i);
+			paints[i] = XmPaint.fromTag(tag.getCompound(i), null);
 		}
+	}
+
+	public void connectPlayer(ServerPlayerEntity player) {
+		final PlayerManager playerManager = player.server.getPlayerManager();
+
+		if (this.playerManager == null) {
+			this.playerManager = playerManager;
+		} else {
+			assert playerManager == this.playerManager;
+		}
+
+		player.networkHandler.sendPacket(PaintIndexSnapshotS2C.toPacket(this));
 	}
 
 	public void toBytes(PacketByteBuf pBuff) {
 		assert !isClient;
 
-		final int limit = list.size();
+		final int limit = nextIndex;
 		pBuff.writeVarInt(limit);
 
 		for (int i = 0; i < limit; ++i)  {
-			list.get(i).toBytes(pBuff);
+			paints[i].toBytes(pBuff);
 		}
 	}
 
-	public void fromBytes(PacketByteBuf pBuff) {
+	public void fromArray(XmPaint[] paints) {
 		assert isClient;
 
 		clear();
+		final int limit = paints.length;
+		ensureCapacity(limit);
+		nextIndex = limit;
+		System.arraycopy(paints, 0, this.paints, 0, limit);
+	}
+
+	public static XmPaint[] arrayFromBytes(PacketByteBuf pBuff) {
 		final int limit = pBuff.readVarInt();
+		final XmPaint[] result = new XmPaint[limit];
 
 		for (int i = 0; i < limit; ++i)  {
-			final XmPaint paint = XmPaint.fromBytes(pBuff);
-			list.add(paint);
-			map.put(paint, i);
+			result[i] = XmPaint.fromBytes(pBuff, null);
 		}
+
+		return result;
+	}
+
+	public void updateClientIndex(XmPaint paint, int index) {
+		ensureCapacity(index);
+		paints[index] = paint;
 	}
 }

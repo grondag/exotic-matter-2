@@ -37,6 +37,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -330,61 +331,62 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	////////////////////////////////////////// SERIALIZATION //////////////////////////////////////////
 
 	@Override
-	public void fromTag(CompoundTag tag, PaintIndex sync) {
+	public void fromTag(CompoundTag tag, PaintIndex paintIndex) {
 		final int worldBits = tag.getInt(ModelStateTagHelper.NBT_WORLD_BITS);
 		// sign on world bits is used to store static indicator
 		isStatic = (Useful.INT_SIGN_BIT & worldBits) == Useful.INT_SIGN_BIT;
 		this.worldBits = Useful.INT_SIGN_BIT_INVERSE & worldBits;
 		shapeBits = tag.getInt(ModelStateTagHelper.NBT_SHAPE_BITS);
 
-		final int[] paintIds = tag.getIntArray(ModelStateTagHelper.NBT_PAINTS);
-		final int limit = Math.min(paints.length, paintIds.length);
+		final ListTag paintList = tag.getList(ModelStateTagHelper.NBT_PAINTS, 10);
+		final int limit = paintList.size();
 
 		for (int i = 0; i < limit; ++i) {
-			paints[i] = sync.fromInt(paintIds[i]);
+			paints[i] = XmPaint.fromTag(paintList.getCompound(i), paintIndex);
 		}
 
 		clearStateFlags();
 	}
 
 	@Override
-	public void toTag(CompoundTag tag, PaintIndex sync) {
+	public void toTag(CompoundTag tag) {
 		tag.putString(ModelStateTagHelper.NBT_SHAPE, this.primitive().id().toString());
 
 		tag.putInt(ModelStateTagHelper.NBT_WORLD_BITS, this.isStatic ? (worldBits | Useful.INT_SIGN_BIT) : worldBits);
 		tag.putInt(ModelStateTagHelper.NBT_SHAPE_BITS, shapeBits);
 
 		final int limit = paints.length;
-		final int[] paintIds = new int[limit];
+		final ListTag paintList = new ListTag();
 
 		for (int i = 0; i < limit; ++i) {
-			paintIds[i] = sync.toInt(paints[i]);
+			final XmPaint p = paints[i];
+			paintList.add((p == null ? XmPaintImpl.DEFAULT_PAINT : p).toTag());
 		}
 
-		tag.putIntArray(ModelStateTagHelper.NBT_PAINTS, paintIds);
+		tag.put(ModelStateTagHelper.NBT_PAINTS, paintList);
 	}
 
 
 	@Override
-	public void fromBytes(PacketByteBuf pBuff, PaintIndex sync) {
+	public void fromBytes(PacketByteBuf pBuff, PaintIndex paintIndex) {
 		shapeBits = pBuff.readInt();
 		worldBits = pBuff.readInt();
 		final int limit = primitive.surfaces((R)this).size();
 
 		for (int i = 0; i < limit; i++) {
-			this.paints[i] = sync.fromInt(pBuff.readVarInt());
+			this.paints[i] = XmPaint.fromBytes(pBuff, paintIndex);
 		}
 	}
 
 	@Override
-	public void toBytes(PacketByteBuf pBuff, PaintIndex sync) {
+	public void toBytes(PacketByteBuf pBuff) {
 		pBuff.writeVarInt(primitive.index());
 		pBuff.writeInt(shapeBits);
 		pBuff.writeInt(worldBits);
 		final int limit = primitive.surfaces((R)this).size();
 
 		for (int i = 0; i < limit; i++) {
-			pBuff.writeVarInt(sync.toInt(paints[i]));
+			paints[i].toBytes(pBuff);
 		}
 	}
 

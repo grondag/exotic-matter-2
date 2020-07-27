@@ -63,17 +63,9 @@ public interface ModelState {
 	 */
 	MutableModelState geometricState();
 
-	default void toTag(CompoundTag tag) {
-		toTag(tag, PaintIndex.LOCAL);
-	}
+	void toTag(CompoundTag tag);
 
-	void toTag(CompoundTag tag, PaintIndex sync);
-
-	default void toBytes(PacketByteBuf pBuff) {
-		toBytes(pBuff, PaintIndex.LOCAL);
-	}
-
-	void toBytes(PacketByteBuf pBuff, PaintIndex sync);
+	void toBytes(PacketByteBuf pBuff);
 
 	default CompoundTag toTag() {
 		final CompoundTag result = new CompoundTag();
@@ -105,19 +97,11 @@ public interface ModelState {
 	@Environment(EnvType.CLIENT)
 	BakedModel itemProxy();
 
-	static MutableModelState fromTag(CompoundTag tag) {
-		return fromTag(tag, PaintIndex.LOCAL);
+	static MutableModelState fromTag(CompoundTag tag, PaintIndex paintIndex) {
+		return ModelPrimitiveRegistryImpl.INSTANCE.fromTag(tag, paintIndex);
 	}
 
-	static MutableModelState fromTag(CompoundTag tag, PaintIndex sync) {
-		return ModelPrimitiveRegistryImpl.INSTANCE.fromTag(tag, sync);
-	}
-
-	static MutableModelState fromBytes(PacketByteBuf pBuff) {
-		return fromBytes(pBuff, PaintIndex.LOCAL);
-	}
-
-	static MutableModelState fromBytes(PacketByteBuf pBuff, PaintIndex sync) {
-		return ModelPrimitiveRegistryImpl.INSTANCE.fromBytes(pBuff);
+	static MutableModelState fromBytes(PacketByteBuf pBuff, PaintIndex paintIndex) {
+		return ModelPrimitiveRegistryImpl.INSTANCE.fromBytes(pBuff, paintIndex);
 	}
 }

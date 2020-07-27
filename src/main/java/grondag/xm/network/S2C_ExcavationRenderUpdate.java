@@ -89,6 +89,7 @@ public abstract class S2C_ExcavationRenderUpdate {
 				}
 			}
 		}
+
 		return ServerSidePacketRegistry.INSTANCE.toPacket(ID, pBuff);
 	}
 

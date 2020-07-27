@@ -17,23 +17,24 @@ package grondag.xm.dispatch;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 import org.apiguardian.api.API;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import grondag.xm.api.modelstate.MutableModelState;
 
 @API(status = INTERNAL)
 public interface XmItemAccess {
 	@SuppressWarnings("unchecked")
-	static <T extends MutableModelState> T getModelState(ItemStack stack) {
-		final Function<ItemStack, MutableModelState> func = ((XmItemAccess)stack.getItem()).xm_modelStateFunc();
-		return func == null ? null : (T) func.apply(stack);
+	static <T extends MutableModelState> T getModelState(World world, ItemStack stack) {
+		final BiFunction<ItemStack, World, MutableModelState> func = ((XmItemAccess)stack.getItem()).xm_modelStateFunc();
+		return func == null ? null : (T) func.apply(stack, world);
 	}
 
-	Function<ItemStack, MutableModelState> xm_modelStateFunc();
+	BiFunction<ItemStack, World, MutableModelState> xm_modelStateFunc();
 
-	void xm_modelStateFunc(Function<ItemStack, MutableModelState> func);
+	void xm_modelStateFunc(BiFunction<ItemStack, World, MutableModelState> func);
 }

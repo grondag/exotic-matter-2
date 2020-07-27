@@ -40,15 +40,7 @@ public interface MutableModelState extends ModelState {
 
 	ModelState releaseToImmutable();
 
-	default void fromTag(CompoundTag tag) {
-		fromTag(tag, PaintIndex.LOCAL);
-	}
-
-	void fromTag(CompoundTag tag, PaintIndex sync);
-
-	default void fromBytes(PacketByteBuf pBuff) {
-		fromBytes(pBuff, PaintIndex.LOCAL);
-	}
+	void fromTag(CompoundTag tag, PaintIndex paintIndex);
 
 	void fromBytes(PacketByteBuf pBuff, PaintIndex sync);
 }

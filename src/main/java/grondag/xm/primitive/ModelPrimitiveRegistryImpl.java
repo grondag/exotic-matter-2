@@ -85,15 +85,15 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	}
 
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag, PaintIndex sync) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag, PaintIndex paintIndex) {
 		final ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
-		return shape == null ? null : shape.fromTag(tag);
+		return shape == null ? null : shape.fromTag(tag, paintIndex);
 	}
 
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf, PaintIndex sync) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf, PaintIndex paintIndex) {
 		final ModelPrimitive<R, W> shape = get(buf.readVarInt());
-		return shape == null ? null : shape.fromBytes(buf, sync);
+		return shape == null ? null : shape.fromBytes(buf, paintIndex);
 	}
 
 	public void invalidateCache() {

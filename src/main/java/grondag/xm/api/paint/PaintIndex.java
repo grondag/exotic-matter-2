@@ -15,16 +15,35 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
+import net.minecraft.world.World;
+
+import grondag.xm.paint.PaintIndexImpl;
+
 public interface PaintIndex {
+	XmPaint fromIndex(int paintIndex);
+
 	/**
-	 * Current paint index on local machine
-	 * NOT sided on an integrated server
-	 * Copy of server on a client.
-	 * Reset when joining a server or when server restarts/loads a new world.
-	 * */
-	PaintIndex LOCAL = null;
+	 * Will throw an unsupported operation exception if called on client.
+	 *
+	 * Persists paint with the world save and returns an index that can
+	 * later be used to retrieve an anonymous paint instance. These
+	 * indexes are not discoverable via the index, and should be
+	 * saved and/or organized somehow by the consuming mod.
 
-	XmPaint fromInt(int val);
+	 * @param paint to be indexed
+	 * @return identical paint with world-persistent index
+	 */
+	XmPaint index(XmPaint paint);
 
-	int toInt(XmPaint paint);
+	/**
+	 * Remaps the paint associated with the given index.
+	 * Throws an exception if the index does not exist.
+	 * @param index
+	 * @param paint
+	 */
+	void updateIndex(int index, XmPaint paint);
+
+	static PaintIndex forWorld(World world) {
+		return world == null || world.isClient ? PaintIndexImpl.CLIENT : PaintIndexImpl.SERVER;
+	}
 }

@@ -17,12 +17,14 @@ package grondag.xm.api.item;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmRegistryImpl;
@@ -31,7 +33,15 @@ import grondag.xm.dispatch.XmRegistryImpl;
 public class XmItemRegistry {
 	private XmItemRegistry() {}
 
+	/**
+	 * @deprecated Use version that accepts world for item state
+	 */
+	@Deprecated
 	public static void addItem(Item item, Function<ItemStack, MutableModelState> modelFunction) {
+		XmRegistryImpl.register(item, (s, w) -> modelFunction.apply(s));
+	}
+
+	public static void addItem(Item item, BiFunction<ItemStack, World, MutableModelState> modelFunction) {
 		XmRegistryImpl.register(item, modelFunction);
 	}
 }

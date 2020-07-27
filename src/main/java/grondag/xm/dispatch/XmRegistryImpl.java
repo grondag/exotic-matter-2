@@ -17,6 +17,7 @@ package grondag.xm.dispatch;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
@@ -26,6 +27,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import grondag.xm.Xm;
 import grondag.xm.api.block.XmBlockState;
@@ -37,7 +39,7 @@ public class XmRegistryImpl {
 	private XmRegistryImpl() {
 	}
 
-	public static void register(Block block, Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap, Function<ItemStack, MutableModelState> itemModelFunction) {
+	public static void register(Block block, Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap, BiFunction<ItemStack, World, MutableModelState> itemModelFunction) {
 		for (final BlockState blockState : block.getStateManager().getStates()) {
 			if (XmBlockState.get(blockState) != null) {
 				// TODO: localize
@@ -57,9 +59,9 @@ public class XmRegistryImpl {
 		}
 	}
 
-	public static void register(Item item, Function<ItemStack, MutableModelState> modelFunction) {
+	public static void register(Item item, BiFunction<ItemStack, World, MutableModelState> modelFunction) {
 		final XmItemAccess access = (XmItemAccess)item;
-		final Function<ItemStack, MutableModelState> oldFunc = access.xm_modelStateFunc();
+		final BiFunction<ItemStack, World, MutableModelState> oldFunc = access.xm_modelStateFunc();
 
 		if(oldFunc != null) {
 			if(oldFunc != modelFunction) {

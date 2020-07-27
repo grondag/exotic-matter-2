@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import org.apiguardian.api.API;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmItemAccess;
@@ -30,7 +31,15 @@ import grondag.xm.dispatch.XmItemAccess;
 public class XmItem {
 	private XmItem() {}
 
+	/**
+	 * @deprecated Use version with world
+	 */
+	@Deprecated
 	public static @Nullable <T extends MutableModelState> T modelState(ItemStack stack) {
-		return XmItemAccess.getModelState(stack);
+		return XmItemAccess.getModelState(null, stack);
+	}
+
+	public static @Nullable <T extends MutableModelState> T modelState(World world, ItemStack stack) {
+		return XmItemAccess.getModelState(world, stack);
 	}
 }

@@ -102,15 +102,7 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 
 	W fromBytes(PacketByteBuf buf, PaintIndex sync);
 
-	default W fromBytes(PacketByteBuf buf) {
-		return fromBytes(buf, PaintIndex.LOCAL);
-	}
-
 	W fromTag(CompoundTag tag, PaintIndex sync);
-
-	default W fromTag(CompoundTag tag) {
-		return fromTag(tag, PaintIndex.LOCAL);
-	}
 
 	boolean doesShapeMatch(R from, R to);
 

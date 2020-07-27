@@ -29,11 +29,14 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 import grondag.fermion.bits.BitPacker32;
+import grondag.xm.Xm;
 import grondag.xm.api.paint.PaintBlendMode;
+import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.VertexProcessorRegistry;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintFinder;
+import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetRegistry;
 
@@ -84,8 +87,12 @@ public class XmPaintImpl {
 		DEFAULT_PAINT_BITS = BLEND_MODE.setValue(PaintBlendMode.DEFAULT, 0);
 	}
 
-	/** null for anonymous */
+	/** null for anonymous and indexed */
 	@Nullable protected Identifier id;
+
+	/** XmPaint.NO_INDEX for anonymous and registered */
+	protected int index = XmPaint.NO_INDEX;
+
 	protected int paintBits = DEFAULT_PAINT_BITS;
 	protected int color0 = 0xFFFFFFFF;
 	protected int color1 = 0xFFFFFFFF;
@@ -117,8 +124,13 @@ public class XmPaintImpl {
 		if (obj != null && obj instanceof XmPaintImpl) {
 			final XmPaintImpl other = (XmPaintImpl) obj;
 
-			if (id == null) {
+			if (id != null) {
+				return id.equals(other.id);
+			} else if (index !=  XmPaint.NO_INDEX) {
+				return index == other.index;
+			} else {
 				return other.id == null
+						&& other.index == XmPaint.NO_INDEX
 						&& paintBits == other.paintBits
 						&& color0 == other.color0
 						&& color1 == other.color1
@@ -129,8 +141,6 @@ public class XmPaintImpl {
 						&& vertexProcessor0 == other.vertexProcessor0
 						&& vertexProcessor1 == other.vertexProcessor1
 						&& vertexProcessor2 == other.vertexProcessor2;
-			} else {
-				return id.equals(other.id);
 			}
 		} else {
 			return false;
@@ -141,6 +151,10 @@ public class XmPaintImpl {
 	public int hashCode() {
 		if (id != null) {
 			return id.hashCode();
+		}
+
+		if(index != XmPaint.NO_INDEX) {
+			return index;
 		}
 
 		int result = HashCommon.mix(paintBits);
@@ -239,6 +253,10 @@ public class XmPaintImpl {
 		return id;
 	}
 
+	public int index() {
+		return index;
+	}
+
 	public VertexProcessor vertexProcessor(int textureIndex) {
 		switch (textureIndex) {
 		case 0:
@@ -258,6 +276,7 @@ public class XmPaintImpl {
 
 		protected Value(XmPaintImpl template) {
 			id = template.id;
+			index = template.index;
 			copyFrom(template);
 		}
 
@@ -273,19 +292,20 @@ public class XmPaintImpl {
 		}
 
 		@Override
-		public boolean external() {
-			return external;
-		}
-
-		@Override
 		public CompoundTag toTag() {
-			if (id == null) {
+			if (this == DEFAULT_PAINT) {
+				return new CompoundTag();
+			} else if (id != null) {
+				final CompoundTag result = new CompoundTag();
+				result.putString(TAG_ID, id.toString());
+				return result;
+			} else if (index != XmPaint.NO_INDEX) {
+				final CompoundTag result = new CompoundTag();
+				result.putInt(TAG_INDEX, index);
+				return result;
+			} else  {
 				return toFixedTag();
 			}
-
-			final CompoundTag result = new CompoundTag();
-			result.putString(TAG_ID, id.toString());
-			return result;
 		}
 
 		@Override
@@ -342,6 +362,21 @@ public class XmPaintImpl {
 
 		@Override
 		public void toBytes(PacketByteBuf pBuff) {
+			if (this == DEFAULT_PAINT) {
+				pBuff.writeVarInt(XmPaint.NO_INDEX);
+			} else if (id != null) {
+				pBuff.writeVarInt(FLAG_HAS_ID);
+				pBuff.writeString(id.toString());
+			} else if (index != XmPaint.NO_INDEX) {
+				pBuff.writeVarInt(FLAG_HAS_INDEX);
+				pBuff.writeVarInt(index);
+			} else {
+				toFixedBytes(pBuff);
+			}
+		}
+
+		@Override
+		public void toFixedBytes(PacketByteBuf pBuff) {
 			final int depth = textureDepth();
 
 			int header = 0;
@@ -415,7 +450,16 @@ public class XmPaintImpl {
 		}
 
 		public Finder id(Identifier id) {
+			assert index == XmPaint.NO_INDEX;
+			assert this.id == null;
 			this.id = id;
+			return this;
+		}
+
+		public Finder index(int index) {
+			assert index == XmPaint.NO_INDEX;
+			assert id == null;
+			this.index = index;
 			return this;
 		}
 
@@ -590,6 +634,13 @@ public class XmPaintImpl {
 	@SuppressWarnings("rawtypes")
 	private static final BitPacker32.BooleanElement TAG_HAS_VP2 = TAG_PACKER.createBooleanElement();
 	private static final int FLAG_HAS_VP2 =  TAG_HAS_VP2.comparisonMask();
+	@SuppressWarnings("rawtypes")
+	private static final BitPacker32.BooleanElement TAG_HAS_ID = TAG_PACKER.createBooleanElement();
+	private static final int FLAG_HAS_ID =  TAG_HAS_ID.comparisonMask();
+	@SuppressWarnings("rawtypes")
+	private static final BitPacker32.BooleanElement TAG_HAS_INDEX = TAG_PACKER.createBooleanElement();
+	private static final int FLAG_HAS_INDEX =  TAG_HAS_INDEX.comparisonMask();
+
 
 	private static final int TAG_INDEX_HEADER_BITS = 0;
 	private static final int TAG_INDEX_PAINT_BITS = 1;
@@ -598,6 +649,7 @@ public class XmPaintImpl {
 	private static final int TAG_INDEX_COLOR_2 = 4;
 
 	private static final String TAG_ID = "id";
+	private static final String TAG_INDEX = "ix";
 	private static final String TAG_SHADER = "sh";
 	private static final String TAG_CONDITION = "cn";
 	private static final String TAG_BITS = "bt";
@@ -609,13 +661,27 @@ public class XmPaintImpl {
 	private static final String TAG_VP_1 = "v1";
 	private static final String TAG_VP_2 = "v2";
 
-	public static XmPaintImpl.Value fromTag(CompoundTag tag) {
+	public static XmPaintImpl.Value fromTag(CompoundTag tag, @Nullable PaintIndex paintIndex) {
 		if (tag.isEmpty()) {
 			return XmPaintImpl.DEFAULT_PAINT;
 		}
 
 		if (tag.contains(TAG_ID)) {
 			return XmPaintRegistryImpl.INSTANCE.get(new Identifier(tag.getString(TAG_ID)));
+		}
+
+		if (tag.contains(TAG_INDEX)) {
+			if (paintIndex == null) {
+				Xm.LOG.warn("Attempt to deserialize indexed paint with null paint index. Default paint used.");
+				return XmPaintImpl.DEFAULT_PAINT;
+			}
+
+			return (Value) paintIndex.fromIndex(tag.getInt(TAG_INDEX));
+		}
+
+		// check in case someone stuffed other bits in our empty default tag
+		if (!tag.contains(TAG_BITS)) {
+			return XmPaintImpl.DEFAULT_PAINT;
 		}
 
 		final Finder finder = finder();
@@ -661,10 +727,31 @@ public class XmPaintImpl {
 		return finder.find();
 	}
 
-	public static XmPaint fromBytes(PacketByteBuf pBuff) {
+	public static XmPaint fromBytes(PacketByteBuf pBuff, @Nullable PaintIndex paintIndex) {
+		final int header = pBuff.readVarInt();
+
+		if (header == XmPaint.NO_INDEX) {
+			return DEFAULT_PAINT;
+		}
+
+		if ((header & FLAG_HAS_ID) == FLAG_HAS_ID) {
+			final Identifier id = Identifier.tryParse(pBuff.readString());
+			return XmPaintRegistry.INSTANCE.get(id);
+		}
+
+		if ((header & FLAG_HAS_INDEX) == FLAG_HAS_INDEX) {
+			final int index = pBuff.readVarInt();
+
+			if (paintIndex == null) {
+				Xm.LOG.warn("Attempt to deserialize indexed paint with null paint index. Default paint used.");
+				return XmPaintImpl.DEFAULT_PAINT;
+			}
+
+			return paintIndex.fromIndex(index);
+		}
+
 		final Finder finder = finder();
 
-		final int header = pBuff.readVarInt();
 		finder.paintBits = pBuff.readInt();
 		finder.color0 = pBuff.readInt();
 		finder.textureSet0 = TextureSetRegistry.instance().get(new Identifier(pBuff.readString()));

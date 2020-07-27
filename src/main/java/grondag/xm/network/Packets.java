@@ -21,17 +21,19 @@ import org.apiguardian.api.API;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 
 @API(status = INTERNAL)
 public class Packets {
 
 	public static void initializeCommon() {
-		ServerSidePacketRegistry.INSTANCE.register(S2C_ExcavationRenderUpdate.ID, S2C_ExcavationRenderUpdate::accept);
-		ServerSidePacketRegistry.INSTANCE.register(S2C_PacketExcavationRenderRefresh.ID, S2C_PacketExcavationRenderRefresh::accept);
 	}
 
 	@Environment(EnvType.CLIENT)
 	public static void initializeClient() {
+		ClientSidePacketRegistry.INSTANCE.register(PaintIndexUpdateS2C.ID, PaintIndexUpdateS2C::accept);
+		ClientSidePacketRegistry.INSTANCE.register(PaintIndexSnapshotS2C.ID, PaintIndexSnapshotS2C::accept);
+		//		ClientSidePacketRegistry.INSTANCE.register(S2C_ExcavationRenderUpdate.ID, S2C_ExcavationRenderUpdate::accept);
+		//		ClientSidePacketRegistry.INSTANCE.register(S2C_PacketExcavationRenderRefresh.ID, S2C_PacketExcavationRenderRefresh::accept);
 	}
 }

@@ -12,13 +12,5 @@ public interface BaseModelStateFactory<R extends BaseModelState<R, W>, W extends
 
 	W fromBytes(ModelPrimitive<R, W> primitive, PacketByteBuf buf, PaintIndex sync);
 
-	default W fromBytes(ModelPrimitive<R, W> primitive, PacketByteBuf buf) {
-		return fromBytes(primitive, buf, PaintIndex.LOCAL);
-	}
-
 	W fromTag(ModelPrimitive<R, W> primitive, CompoundTag tag, PaintIndex sync);
-
-	default W fromTag(ModelPrimitive<R, W> primitive, CompoundTag tag) {
-		return fromTag(primitive, tag, PaintIndex.LOCAL);
-	}
 }

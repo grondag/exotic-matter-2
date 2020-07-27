@@ -42,8 +42,8 @@ public class ItemOverrideProxy extends ModelOverrideList {
 	}
 
 	@Override
-	public BakedModel apply(BakedModel bakedModel_1, ItemStack stack, @Nullable ClientWorld world_1, LivingEntity livingEntity_1) {
-		final MutableModelState modelState = XmItem.modelState(stack);
+	public BakedModel apply(BakedModel bakedModel_1, ItemStack stack, @Nullable ClientWorld world, LivingEntity livingEntity_1) {
+		final MutableModelState modelState = XmItem.modelState(world, stack);
 
 		if (modelState != null) {
 			final BakedModel result = XmDispatcher.INSTANCE.get(modelState).itemProxy();

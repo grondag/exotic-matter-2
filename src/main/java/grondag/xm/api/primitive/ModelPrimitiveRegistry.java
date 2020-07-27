@@ -59,16 +59,7 @@ public interface ModelPrimitiveRegistry {
 		return indexOf(primitive.id());
 	}
 
-	default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag) {
-		return fromTag(tag, PaintIndex.LOCAL);
-	}
-
 	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> W fromTag(CompoundTag tag, PaintIndex sync);
 
-	default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf) {
-		return  fromBytes(buf, PaintIndex.LOCAL);
-	}
-
 	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf, PaintIndex sync);
-
 }

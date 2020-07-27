@@ -83,15 +83,15 @@ public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainMo
 	}
 
 	@Override
-	public void fromBytes(PacketByteBuf pBuff, PaintIndex sync) {
-		super.fromBytes(pBuff, sync);
+	public void fromBytes(PacketByteBuf pBuff, PaintIndex paintIndex) {
+		super.fromBytes(pBuff, paintIndex);
 		flowBits = pBuff.readLong();
 		glowBits = pBuff.readVarInt();
 	}
 
 	@Override
-	public void toBytes(PacketByteBuf pBuff, PaintIndex sync) {
-		super.toBytes(pBuff, sync);
+	public void toBytes(PacketByteBuf pBuff) {
+		super.toBytes(pBuff);
 		pBuff.writeLong(flowBits);
 		pBuff.writeVarInt(glowBits);
 	}

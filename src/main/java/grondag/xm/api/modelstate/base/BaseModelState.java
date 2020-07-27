@@ -79,14 +79,14 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	boolean doesAppearanceMatch(ModelState other);
 
 	@Override
-	void toTag(CompoundTag tag, PaintIndex sync);
+	void toTag(CompoundTag tag);
 
-	void fromTag(CompoundTag tag, PaintIndex sync);
+	void fromTag(CompoundTag tag, PaintIndex paintIndex);
 
 	@Override
-	void toBytes(PacketByteBuf pBuff, PaintIndex sync);
+	void toBytes(PacketByteBuf pBuff);
 
-	void fromBytes(PacketByteBuf pBuff, PaintIndex sync);
+	void fromBytes(PacketByteBuf pBuff, PaintIndex paintIndex);
 
 	int stateFlags();
 
