@@ -678,7 +678,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	////////////////////////////////////////// RENDERING //////////////////////////////////////////
 
 	@Environment(EnvType.CLIENT)
-	void clearRendering() {
+	public void clearRendering() {
 		mesh = null;
 		particleSprite = null;
 		particleColorARBG = 0;
@@ -689,7 +689,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	private Mesh mesh = null;
 
 	@Environment(EnvType.CLIENT)
-	private Mesh mesh() {
+	public Mesh mesh() {
 		Mesh result = mesh;
 		if (result == null) {
 			result = PaintManager.paint(this);
