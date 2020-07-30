@@ -63,7 +63,6 @@ public enum XmTextures {
 			.baseTextureName("exotic-matter:block/border_single_line").versionCount(1).scale(SINGLE).layout(QUADRANT_ROTATED_SINGLE).transform(IDENTITY)
 			.renderIntent(OVERLAY_ONLY).groups(STATIC_BORDERS).build("exotic-matter:border_single_line");
 
-
 	public static final TextureSet TILE_NOISE_BLUE_A = TextureSet.builder().displayNameToken("blue_noise_a")
 			.baseTextureName("exotic-matter:block/noise_blue_0").versionCount(4)
 			.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSIONED)

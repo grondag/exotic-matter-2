@@ -27,8 +27,10 @@ public enum TextureGroup {
 	DYNAMIC_TILES,
 	DYNAMIC_BORDERS,
 	DYNAMIC_DETAILS,
-	HIDDEN_TILES, HIDDEN_BORDERS,
-	HIDDEN_DETAILS, ALWAYS_HIDDEN;
+	HIDDEN_TILES,
+	HIDDEN_BORDERS,
+	HIDDEN_DETAILS,
+	ALWAYS_HIDDEN;
 
 	/** used as a fast way to filter textures from a list */
 	public final int bitFlag;
@@ -44,4 +46,6 @@ public enum TextureGroup {
 		}
 		return flags;
 	}
+
+	public static int HIDDEN = HIDDEN_TILES.bitFlag | HIDDEN_BORDERS.bitFlag | HIDDEN_DETAILS.bitFlag | ALWAYS_HIDDEN.bitFlag;
 }
