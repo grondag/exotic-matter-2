@@ -542,6 +542,7 @@ public class XmPaintImpl {
 			default:
 				throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 			}
+
 			texture.use();
 			return this;
 		}

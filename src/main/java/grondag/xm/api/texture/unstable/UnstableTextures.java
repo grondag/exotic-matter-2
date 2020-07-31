@@ -54,7 +54,7 @@ public enum UnstableTextures {
 
 
 
-	public static final TextureSet MASONRY_SIMPLE = TextureSet.builder().displayNameToken("masonry_simple").baseTextureName(Xm.MODID + ":blocks/masonry_simple")
+	public static final TextureSet MASONRY_SIMPLE = TextureSet.builder().displayNameToken("masonry_simple").baseTextureName(Xm.MODID + ":block/masonry_simple")
 			.versionCount(1).scale(TextureScale.SINGLE).layout(TextureLayoutMap.MASONRY_5).transform(IDENTITY).renderIntent(TextureRenderIntent.OVERLAY_ONLY)
 			.groups(TextureGroup.STATIC_BORDERS).build(Xm.MODID + ":masonry_simple");
 
@@ -192,19 +192,19 @@ public enum UnstableTextures {
 			ROTATE_RANDOM);
 	public static final TextureSet DECAL_SOFT_DIAGONAL_RIDGES_RANDOM = addDecal(Xm.MODID, "diagonal_ridges_seamless_random", "diagonal_ridges_seamless", ROTATE_RANDOM);
 
-	public static final TextureSet TILE_DOTS = TextureSet.builder().displayNameToken("dots").baseTextureName("exotic-matter:blocks/dots").versionCount(4)
+	public static final TextureSet TILE_DOTS = TextureSet.builder().displayNameToken("dots").baseTextureName("exotic-matter:block/dots").versionCount(4)
 			.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(ROTATE_RANDOM).renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT)
 			.groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS).build("exotic-matter:dots");
 
 	public static final TextureSet TILE_DOTS_SUBTLE = TextureSet.builder().displayNameToken("dots_subtle").versionCount(4).scale(TextureScale.SINGLE)
-			.layout(TextureLayoutMap.VERSION_X_8).baseTextureName("exotic-matter:blocks/dots_subtle").transform(ROTATE_RANDOM)
+			.layout(TextureLayoutMap.VERSION_X_8).baseTextureName("exotic-matter:block/dots_subtle").transform(ROTATE_RANDOM)
 			.renderIntent(TextureRenderIntent.BASE_OR_OVERLAY_NO_CUTOUT).groups(TextureGroup.STATIC_TILES, TextureGroup.STATIC_DETAILS)
 			.build("exotic-matter:dots_subtle");
 
 	public static final TextureSet TILE_DOTS_INVERSE = TextureSet.builder(TILE_DOTS_SUBTLE).displayNameToken("dots_inverse")
-			.baseTextureName("exotic-matter:blocks/dots_inverse").build("exotic-matter:dots_inverse");
+			.baseTextureName("exotic-matter:block/dots_inverse").build("exotic-matter:dots_inverse");
 
 	public static final TextureSet TILE_DOTS_INVERSE_SUBTLE = TextureSet.builder(TILE_DOTS_SUBTLE).displayNameToken("dots_inverse_subtle")
-			.baseTextureName("exotic-matter:blocks/dots_inverse_subtle").build("exotic-matter:dots_inverse_subtle");
+			.baseTextureName("exotic-matter:block/dots_inverse_subtle").build("exotic-matter:dots_inverse_subtle");
 
 }

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "exotic-art-tech",
+  "version": "${version}",
+  "name": "Exotic Art Tech Pack",
+  "description": "High-Tech Textures for Exotic Matter Development",
+  "authors": [
+    "Grondag"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/exotic-matter-library",
+    "sources": "https://github.com/grondag/exotic-matter-2",
+    "issues": "https://github.com/grondag/exotic-matter-2/issues"
+  },
+
+  "license": "Apache-2.0",
+  "icon": "assets/exotic-matter/exotic_matter_icon.png",
+
+  "environment": "*",
+  "depends": {
+    "fabricloader": "\u003e\u003d0.8.4",
+    "minecraft": "~1.16-alpha",
+    "fabric": "*",
+    "exotic-matter": "*"
+  },
+  "custom": {
+    "modmenu:api": true,
+    "modmenu:clientsideOnly": false,
+    "modmenu:parent": "exotic-matter"
+  }
+}

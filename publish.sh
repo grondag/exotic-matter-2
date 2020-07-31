@@ -24,6 +24,14 @@ cd test
 cd ..
 
 echo ====================================
+echo "Exotic Art Tech"
+echo ====================================
+cd tech
+../../gradlew publish
+../../gradlew build --rerun-tasks
+cd ..
+
+echo ====================================
 echo "Exotic Art Unstable"
 echo ====================================
 cd unstable
