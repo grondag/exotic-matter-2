@@ -38,6 +38,9 @@
     "minecraft": "~1.16-alpha",
     "fabric": "*"
   },
+  "breaks": {
+  	"sodium": "*"
+  },
   "custom": {
     "modmenu:api": true,
     "modmenu:clientsideOnly": false
