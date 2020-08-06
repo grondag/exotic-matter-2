@@ -11,7 +11,8 @@ public enum TextureTransform {
 	/** Use for tiles that must remain consistent for the same species */
 	ROTATE_BIGTEX(ClockwiseRotation.ROTATE_NONE, true),
 	/** Rotate 180 and allow horizontal texture flip */
-	STONE_LIKE(ClockwiseRotation.ROTATE_NONE, true);
+	STONE_LIKE(ClockwiseRotation.ROTATE_NONE, true),
+	DIAGONAL(ClockwiseRotation.ROTATE_NONE, false),;
 
 	public final ClockwiseRotation baseRotation;
 	public final boolean hasRandom;

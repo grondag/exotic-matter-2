@@ -24,6 +24,7 @@ import org.apiguardian.api.API;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
 import grondag.xm.api.modelstate.ModelState;
@@ -51,4 +52,14 @@ public interface BlockTestContext<T extends ModelState> {
 
 	@Nullable
 	T toModelState();
+
+	/**
+	 * If this test is for a face adjacent to the "from" block,
+	 * the face that describes the relative position of the "to" block.
+	 *
+	 * @return Face relative to from block, as described above.
+	 * Or null if this test is for a corner block.
+	 */
+	@Nullable
+	Direction toFace();
 }

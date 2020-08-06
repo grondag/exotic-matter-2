@@ -22,6 +22,7 @@ import org.apiguardian.api.API;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 
+import grondag.xm.api.connect.state.SimpleJoinFaceState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
 
@@ -32,6 +33,12 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 	public static final SimpleJoinState X_JOINS;
 	public static final SimpleJoinState Y_JOINS;
 	public static final SimpleJoinState Z_JOINS;
+	public static final SimpleJoinState EAST_JOIN;
+	public static final SimpleJoinState WEST_JOIN;
+	public static final SimpleJoinState NORTH_JOIN;
+	public static final SimpleJoinState SOUTH_JOIN;
+	public static final SimpleJoinState UP_JOIN;
+	public static final SimpleJoinState DOWN_JOIN;
 
 	private static final int X_MASK = (1 << Direction.EAST.ordinal()) | (1 << Direction.WEST.ordinal());
 	private static final int Y_MASK = (1 << Direction.UP.ordinal()) | (1 << Direction.DOWN.ordinal());
@@ -95,6 +102,13 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 		X_JOINS = JOINS[X_MASK];
 		Y_JOINS = JOINS[Y_MASK];
 		Z_JOINS = JOINS[Z_MASK];
+
+		EAST_JOIN = JOINS[1 << Direction.EAST.ordinal()];
+		WEST_JOIN = JOINS[1 << Direction.WEST.ordinal()];
+		NORTH_JOIN = JOINS[1 << Direction.NORTH.ordinal()];
+		SOUTH_JOIN = JOINS[1 << Direction.SOUTH.ordinal()];
+		UP_JOIN = JOINS[1 << Direction.UP.ordinal()];
+		DOWN_JOIN = JOINS[1 << Direction.DOWN.ordinal()];
 	}
 
 	public static SimpleJoinStateImpl fromOrdinal(int index) {
@@ -135,5 +149,10 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 
 	public static SimpleJoinState fromAxisJoinIndex(int fromIndex) {
 		return AXIS_JOIN_LOOKUP[fromIndex];
+	}
+
+	@Override
+	public SimpleJoinFaceState faceState(Direction nominalFace) {
+		return SimpleJoinFaceState.find(nominalFace, this);
 	}
 }

@@ -294,12 +294,13 @@ public class PaintManager implements Consumer<Polygon> {
 
 	// PERF: consider in-lining all the coordinates
 	private void bakeSprite(int spriteIndex, MutablePolygon poly) {
+		applyTextureRotation(spriteIndex, poly);
+
+		// these need to  be captured after texture rotation is applied due to flipping
 		final float minU = poly.minU(spriteIndex);
 		final float minV = poly.minV(spriteIndex);
 		final float spanU = poly.maxU(spriteIndex) - minU;
 		final float spanV = poly.maxV(spriteIndex) - minV;
-
-		applyTextureRotation(spriteIndex, poly);
 
 		// scale UV coordinates to size of texture sub-region
 		final int vCount = poly.vertexCount();

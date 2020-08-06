@@ -102,7 +102,6 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	private final BlockPos.Mutable myPos = new BlockPos.Mutable();
 	private ModelState myModelState;
 
-
 	protected BlocksNeighborsImpl() {
 	}
 
@@ -468,5 +467,10 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	@Override
 	public ModelState toModelState() {
 		return targetModelState.apply(this);
+	}
+
+	@Override
+	public Direction toFace() {
+		return targetLocation instanceof Direction ? (Direction) targetLocation : null;
 	}
 }

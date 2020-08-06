@@ -27,19 +27,26 @@ import grondag.xm.api.connect.world.BlockNeighbors;
 
 @API(status = STABLE)
 public enum SimpleJoinFaceState {
-	NO_FACE(0), TOP(FaceEdge.TOP_EDGE.ordinalBit), BOTTOM(FaceEdge.BOTTOM_EDGE.ordinalBit), LEFT(FaceEdge.LEFT_EDGE.ordinalBit),
-	RIGHT(FaceEdge.RIGHT_EDGE.ordinalBit), TOP_BOTTOM(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.BOTTOM_EDGE.ordinalBit),
+	NO_FACE(0),
+	TOP(FaceEdge.TOP_EDGE.ordinalBit),
+	BOTTOM(FaceEdge.BOTTOM_EDGE.ordinalBit),
+	LEFT(FaceEdge.LEFT_EDGE.ordinalBit),
+	RIGHT(FaceEdge.RIGHT_EDGE.ordinalBit),
+	TOP_BOTTOM(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.BOTTOM_EDGE.ordinalBit),
 	LEFT_RIGHT(FaceEdge.LEFT_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit),
 	TOP_BOTTOM_RIGHT(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit),
 	TOP_BOTTOM_LEFT(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit),
 	TOP_LEFT_RIGHT(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit),
 	BOTTOM_LEFT_RIGHT(FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit),
-	TOP_LEFT(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit), TOP_RIGHT(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit),
+	TOP_LEFT(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit),
+	TOP_RIGHT(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit),
 	BOTTOM_LEFT(FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit),
 	BOTTOM_RIGHT(FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit),
 	ALL(FaceEdge.TOP_EDGE.ordinalBit | FaceEdge.BOTTOM_EDGE.ordinalBit | FaceEdge.LEFT_EDGE.ordinalBit | FaceEdge.RIGHT_EDGE.ordinalBit);
 
-	private static final SimpleJoinFaceState[] LOOKUP = new SimpleJoinFaceState[16];
+	public static final int COUNT = 16;
+
+	private static final SimpleJoinFaceState[] LOOKUP = new SimpleJoinFaceState[COUNT];
 
 	private final int bitFlags;
 
@@ -60,6 +67,7 @@ public enum SimpleJoinFaceState {
 
 	private static final FaceEdge[] EDGES = FaceEdge.values();
 
+	// PERF: need a lookup similar to corner joins here?
 	public static SimpleJoinFaceState find(Direction face, SimpleJoinState join) {
 		int faceFlags = 0;
 
@@ -76,6 +84,7 @@ public enum SimpleJoinFaceState {
 
 			fjs = SimpleJoinFaceState.find(faceFlags);
 		}
+
 		return fjs;
 	}
 

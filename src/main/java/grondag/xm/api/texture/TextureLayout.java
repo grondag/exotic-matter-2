@@ -19,6 +19,7 @@ import static grondag.xm.api.modelstate.ModelStateFlags.BLOCK_SPECIES;
 import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.MASONRY_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
+import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
@@ -90,7 +91,14 @@ public enum TextureLayout {
 	/**
 	 * Like {@code QUADRANT_ORIENTED_BORDER} but includes fifth texture for unbordered faces.
 	 */
-	QUADRANT_ORIENTED_TILE(CORNER_JOIN | BLOCK_SPECIES, 5);
+	QUADRANT_ORIENTED_TILE(CORNER_JOIN | BLOCK_SPECIES, 5),
+
+	/**
+	 * Compact connected texture format like QUADRANT_ROTATED but
+	 * indicates a texture for cables or other shapes that don't
+	 * need corner block information and have end caps.
+	 */
+	QUADRANT_ROTATED_CABLE(SIMPLE_JOIN | BLOCK_SPECIES);
 
 	private TextureLayout(int stateFlags) {
 		this(stateFlags, 1);

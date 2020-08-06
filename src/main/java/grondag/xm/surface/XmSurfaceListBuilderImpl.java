@@ -31,6 +31,12 @@ public class XmSurfaceListBuilderImpl implements XmSurfaceListBuilder {
 	XmSurfaceListBuilderImpl() {
 	}
 
+	public XmSurfaceListBuilderImpl(XmSurfaceListImpl baseList) {
+		for (int i = 0; i < baseList.size(); ++i) {
+			surfaces.add((XmSurfaceImpl) baseList.get(i));
+		}
+	}
+
 	@Override
 	public XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, int flags) {
 		surfaces.add(new XmSurfaceImpl(surfaces.size(), nameKey, topology, flags));
@@ -41,14 +47,20 @@ public class XmSurfaceListBuilderImpl implements XmSurfaceListBuilder {
 	public XmSurfaceList build() {
 		final int size = surfaces.size();
 		final XmSurfaceImpl[] output = new XmSurfaceImpl[size];
+
 		for (int i = 0; i < size; i++) {
 			output[i] = surfaces.get(i);
 		}
+
 		surfaces.clear();
 		return new XmSurfaceListImpl(output);
 	}
 
 	public static XmSurfaceListBuilder builder() {
 		return new XmSurfaceListBuilderImpl();
+	}
+
+	public static XmSurfaceListBuilder builder(XmSurfaceList baseList) {
+		return new XmSurfaceListBuilderImpl((XmSurfaceListImpl) baseList);
 	}
 }

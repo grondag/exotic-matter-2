@@ -180,11 +180,11 @@ public class QuadrantSplitter {
 
 			splitV(stream, highAddress, true, layerIndex);
 			splitV(stream, lowAddress, false, layerIndex);
+		}
 
-			// restore editor position if we moved it
-			if (editor.address() != editorAddress) {
-				editor.moveTo(editorAddress);
-			}
+		// restore editor position if we moved it
+		if (editor.address() != editorAddress) {
+			editor.moveTo(editorAddress);
 		}
 	}
 

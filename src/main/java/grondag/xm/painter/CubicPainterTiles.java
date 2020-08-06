@@ -30,18 +30,30 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
+import grondag.xm.api.texture.TextureTransform;
 
 @API(status = INTERNAL)
 public abstract class CubicPainterTiles extends AbstractQuadPainter {
 	@SuppressWarnings("rawtypes")
 	public static void paintQuads(MutableMesh stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
 		final MutablePolygon editor = stream.editor();
+
 		do {
 			editor.lockUV(textureIndex, true);
 			editor.assignLockedUVCoordinates(textureIndex);
 
+
 			final Direction nominalFace = editor.nominalFace();
 			final TextureSet tex = paint.texture(textureIndex);
+
+			// UGLY: need a more generic way to handle vs hardcoding in this painter
+			if (paint.texture(textureIndex).transform() == TextureTransform.DIAGONAL) {
+				for (int i = 0; i < 4; ++i) {
+					final float u = editor.u(i, textureIndex);
+					final float v = editor.v(i, textureIndex);
+					editor.uv(i, textureIndex, 0.5f * v + 0.5f * u, 0.5f - 0.5f * u + 0.5f * v);
+				}
+			}
 
 			TextureOrientation rotation = textureRotationForFace(nominalFace, tex, modelState);
 

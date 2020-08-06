@@ -66,6 +66,9 @@ public class PainterFactory {
 			case MASONRY_5:
 				return surface.allowBorders() ? CubicPainterMasonry::paintQuads : null;
 
+			case QUADRANT_ROTATED_CABLE:
+				return surface.allowBorders() ? QuadPainterCable::paintQuads : null;
+
 			case QUADRANT_ROTATED:
 				return surface.allowBorders() ? QuadPainterRotated::paintQuads : null;
 

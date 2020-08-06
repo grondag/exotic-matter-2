@@ -30,6 +30,10 @@ public interface XmSurfaceList {
 		return XmSurfaceListBuilderImpl.builder();
 	}
 
+	static XmSurfaceListBuilder builder(XmSurfaceList appendTo) {
+		return XmSurfaceListBuilderImpl.builder(appendTo);
+	}
+
 	int size();
 
 	XmSurface get(int index);

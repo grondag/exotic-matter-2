@@ -42,11 +42,20 @@ public interface SimpleJoinState {
 	SimpleJoinState Y_JOINS = SimpleJoinStateImpl.Y_JOINS;
 	SimpleJoinState Z_JOINS = SimpleJoinStateImpl.Z_JOINS;
 
+	SimpleJoinState EAST_JOIN = SimpleJoinStateImpl.EAST_JOIN;
+	SimpleJoinState WEST_JOIN = SimpleJoinStateImpl.WEST_JOIN;
+	SimpleJoinState NORTH_JOIN = SimpleJoinStateImpl.NORTH_JOIN;
+	SimpleJoinState SOUTH_JOIN = SimpleJoinStateImpl.SOUTH_JOIN;
+	SimpleJoinState UP_JOIN = SimpleJoinStateImpl.UP_JOIN;
+	SimpleJoinState DOWN_JOIN = SimpleJoinStateImpl.DOWN_JOIN;
+
 	boolean isJoined(Direction face);
 
 	boolean hasJoins(Axis axis);
 
 	int ordinal();
+
+	SimpleJoinFaceState faceState(Direction nominalFace);
 
 	static SimpleJoinState fromOrdinal(int ordinal) {
 		return SimpleJoinStateImpl.fromOrdinal(ordinal);

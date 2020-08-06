@@ -41,6 +41,8 @@ public interface TextureLayoutMap {
 
 	TextureLayoutMap BIGTEX_ANIMATED = create(TextureLayout.BIGTEX_ANIMATED, TextureNameFunction.SINGLE);
 
+	TextureLayoutMap QUADRANT_ROTATED_CABLE = create(TextureLayout.QUADRANT_ROTATED_CABLE, TextureNameFunction.SINGLE);
+
 	TextureLayoutMap QUADRANT_ROTATED_SINGLE = create(TextureLayout.QUADRANT_ROTATED, TextureNameFunction.SINGLE);
 
 	TextureLayoutMap QUADRANT_ROTATED_VERSIONED = create(TextureLayout.QUADRANT_ROTATED, TextureNameFunction.VERSIONED);
