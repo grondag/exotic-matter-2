@@ -81,7 +81,7 @@ public class PrimitiveStateMutatorImpl implements PrimitiveStateMutator {
 
 			if ((MASONRY_JOIN & stateFlags) == MASONRY_JOIN) {
 				neighbors = BlockNeighbors.claimIfNull(neighbors, world, pos, ModelStateFunction.STATIC, MasonryHelper.wrap(joinTest));
-				modelState.masonryJoin(SimpleJoinState.fromWorld(neighbors));
+				modelState.alternateJoin(SimpleJoinState.fromWorld(neighbors));
 			}
 
 			updater.mutate(modelState, blockState, world, pos, neighbors, refreshFromWorld);

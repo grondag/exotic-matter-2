@@ -49,7 +49,9 @@ public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends
 
 	W simpleJoin(SimpleJoinState join);
 
-	W masonryJoin(SimpleJoinState join);
+	W alternateJoin(SimpleJoinState join);
+
+	W alternateJoinBits(int joinBits);
 
 	W primitiveBits(int bits);
 

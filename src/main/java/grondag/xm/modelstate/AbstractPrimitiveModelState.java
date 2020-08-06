@@ -96,7 +96,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	private static final BitPacker32<AbstractPrimitiveModelState> SHAPE_ENCODER = new BitPacker32<>(m -> m.shapeBits,(m, b) -> m.shapeBits = b);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement ORIENTATION = SHAPE_ENCODER.createIntElement(32);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement BLOCK_JOIN = SHAPE_ENCODER.createIntElement(CornerJoinState.STATE_COUNT);
-	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement MASONRY_JOIN = SHAPE_ENCODER.createIntElement(SimpleJoinState.STATE_COUNT);
+	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement ALTERNATE_JOIN = SHAPE_ENCODER.createIntElement(SimpleJoinState.STATE_COUNT);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement PRIMITIVE_BITS;
 
 	static {
@@ -652,13 +652,25 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	}
 
 	@Override
-	public SimpleJoinState masonryJoin() {
-		return SimpleJoinState.fromOrdinal(MASONRY_JOIN.getValue(this));
+	public SimpleJoinState alternateJoin() {
+		return SimpleJoinState.fromOrdinal(ALTERNATE_JOIN.getValue(this));
 	}
 
 	@Override
-	public final W masonryJoin(SimpleJoinState join) {
-		MASONRY_JOIN.setValue(join.ordinal(), this);
+	public int alternateJoinBits() {
+		return ALTERNATE_JOIN.getValue(this);
+	}
+
+	@Override
+	public final W alternateJoin(SimpleJoinState join) {
+		ALTERNATE_JOIN.setValue(join.ordinal(), this);
+		invalidateHashCode();
+		return (W)this;
+	}
+
+	@Override
+	public final W alternateJoinBits(int joinBits) {
+		ALTERNATE_JOIN.setValue(joinBits, this);
 		invalidateHashCode();
 		return (W)this;
 	}

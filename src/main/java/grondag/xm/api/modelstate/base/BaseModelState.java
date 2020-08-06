@@ -135,8 +135,9 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 
 	SimpleJoinState simpleJoin();
 
-	SimpleJoinState masonryJoin();
+	SimpleJoinState alternateJoin();
 
+	int alternateJoinBits();
 
 	int primitiveBits();
 
@@ -153,4 +154,6 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	@Override
 	@Environment(EnvType.CLIENT)
 	void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context);
+
+
 }

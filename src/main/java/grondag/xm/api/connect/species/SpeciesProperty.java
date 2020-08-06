@@ -43,7 +43,17 @@ public class SpeciesProperty {
 		return (world, blockState, pos) -> {
 			if(blockState.getBlock() == block) {
 				final Comparable<?> result = blockState.getEntries().get(SPECIES);
-				return result == null ? SpeciesFunction.NO_SPECIES : (Integer)result;
+				return result == null ? SpeciesFunction.NO_SPECIES : (Integer) result;
+			} else
+				return SpeciesFunction.NO_SPECIES;
+		};
+	}
+
+	public static SpeciesFunction speciesForBlockType(Class<?> clazz) {
+		return (world, blockState, pos) -> {
+			if(clazz.isInstance(blockState.getBlock())) {
+				final Comparable<?> result = blockState.getEntries().get(SPECIES);
+				return result == null ? SpeciesFunction.NO_SPECIES : (Integer) result;
 			} else
 				return SpeciesFunction.NO_SPECIES;
 		};

@@ -91,7 +91,7 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
 				} else {
 					neighbors.withTest(MasonryHelper.wrap(joinTest));
 				}
-				modelState.masonryJoin(SimpleJoinState.fromWorld(neighbors));
+				modelState.alternateJoin(SimpleJoinState.fromWorld(neighbors));
 			}
 
 			updater.mutate(modelState, blockState, world, pos, neighbors, refreshFromWorld);
