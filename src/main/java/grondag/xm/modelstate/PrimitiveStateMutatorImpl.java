@@ -71,16 +71,16 @@ public class PrimitiveStateMutatorImpl implements PrimitiveStateMutator {
 			}
 
 			if ((CORNER_JOIN & stateFlags) == CORNER_JOIN) {
-				neighbors = BlockNeighbors.claimIfNull(neighbors, world, pos, ModelStateFunction.STATIC, joinTest);
+				neighbors = BlockNeighbors.claimIfNull(neighbors, world, pos, ModelStateFunction.STATIC, joinTest, blockState);
 				modelState.cornerJoin(CornerJoinState.fromWorld(neighbors));
 
 			} else if ((SIMPLE_JOIN & stateFlags) == SIMPLE_JOIN) {
-				neighbors = BlockNeighbors.claimIfNull(neighbors, world, pos, ModelStateFunction.STATIC, joinTest);
+				neighbors = BlockNeighbors.claimIfNull(neighbors, world, pos, ModelStateFunction.STATIC, joinTest, blockState);
 				modelState.simpleJoin(SimpleJoinState.fromWorld(neighbors));
 			}
 
 			if ((MASONRY_JOIN & stateFlags) == MASONRY_JOIN) {
-				neighbors = BlockNeighbors.claimIfNull(neighbors, world, pos, ModelStateFunction.STATIC, MasonryHelper.wrap(joinTest));
+				neighbors = BlockNeighbors.claimIfNull(neighbors, world, pos, ModelStateFunction.STATIC, MasonryHelper.wrap(joinTest), blockState);
 				modelState.alternateJoin(SimpleJoinState.fromWorld(neighbors));
 			}
 

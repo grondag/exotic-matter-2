@@ -683,6 +683,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	@Override
 	public final W primitiveBits(int bits) {
 		PRIMITIVE_BITS.setValue(bits, this);
+		invalidateHashCode();
 		return (W)this;
 	}
 

@@ -77,20 +77,21 @@ public class WorldToModelStateImpl implements PrimitiveStateFunction {
 			}
 
 			if ((CORNER_JOIN & stateFlags) == CORNER_JOIN) {
-				neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, joinTest);
+				neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, joinTest).withBlockState(blockState);
 				modelState.cornerJoin(CornerJoinState.fromWorld(neighbors));
 
 			} else if ((SIMPLE_JOIN & stateFlags) == SIMPLE_JOIN) {
-				neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, joinTest);
+				neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, joinTest).withBlockState(blockState);
 				modelState.simpleJoin(SimpleJoinState.fromWorld(neighbors));
 			}
 
 			if ((MASONRY_JOIN & stateFlags) == MASONRY_JOIN) {
 				if (neighbors == null) {
-					neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, MasonryHelper.wrap(joinTest));
+					neighbors = BlockNeighbors.claim(world, pos, ModelStateFunction.STATIC, MasonryHelper.wrap(joinTest)).withBlockState(blockState);
 				} else {
 					neighbors.withTest(MasonryHelper.wrap(joinTest));
 				}
+
 				modelState.alternateJoin(SimpleJoinState.fromWorld(neighbors));
 			}
 

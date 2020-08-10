@@ -125,6 +125,12 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	}
 
 	@Override
+	public BlocksNeighborsImpl withBlockState(BlockState state) {
+		myBlockState = state;
+		return this;
+	}
+
+	@Override
 	public void release() {
 		release(this);
 	}

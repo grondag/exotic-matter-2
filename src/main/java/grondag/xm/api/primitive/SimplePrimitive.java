@@ -55,5 +55,7 @@ public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutableP
 
 		Builder axisJoin(boolean needsJoin);
 
+		Builder alternateJoinAffectsGeometry(boolean alternateJoinAffectsGeometry);
+
 	}
 }

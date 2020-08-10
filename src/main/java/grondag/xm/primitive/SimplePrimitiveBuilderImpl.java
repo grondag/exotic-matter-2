@@ -53,6 +53,7 @@ public class SimplePrimitiveBuilderImpl {
 		private boolean axisJoin;
 		private boolean simpleJoin;
 		private boolean cornerJoin;
+		private boolean alternateJoinAffectsGeometry;
 
 		@Override
 		public SimplePrimitive build(Identifier id) {
@@ -100,6 +101,12 @@ public class SimplePrimitiveBuilderImpl {
 			cornerJoin = needsJoin;
 			return this;
 		}
+
+		@Override
+		public Builder alternateJoinAffectsGeometry(boolean affectsGeometry) {
+			alternateJoinAffectsGeometry = affectsGeometry;
+			return this;
+		}
 	}
 
 	protected static class Primitive extends AbstractSimplePrimitive {
@@ -117,6 +124,7 @@ public class SimplePrimitiveBuilderImpl {
 		private final boolean axisJoin;
 		private final boolean simpleJoin;
 		private final boolean cornerJoin;
+		private final boolean alternateJoinAffectsGeometry;
 
 		static Function<PrimitiveState, XmSurfaceList> listWrapper(XmSurfaceList list) {
 			return s -> list;
@@ -130,6 +138,7 @@ public class SimplePrimitiveBuilderImpl {
 			orientationType = builder.orientationType;
 			polyFactory = builder.polyFactory;
 			bitShift = builder.bitCount + 1; // + 1 for lamp
+			alternateJoinAffectsGeometry = builder.alternateJoinAffectsGeometry;
 			int count = orientationType.enumClass.getEnumConstants().length << bitShift;
 
 			if(simpleJoin) {
@@ -212,6 +221,10 @@ public class SimplePrimitiveBuilderImpl {
 				result.cornerJoin(fromState.cornerJoin());
 			} else if (simpleJoin) {
 				result.simpleJoin(fromState.simpleJoin());
+			}
+
+			if (alternateJoinAffectsGeometry) {
+				result.alternateJoinBits(fromState.alternateJoinBits());
 			}
 
 			return result;

@@ -29,6 +29,7 @@ import grondag.fermion.orientation.api.CubeCorner;
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.fermion.orientation.api.HorizontalEdge;
 import grondag.fermion.orientation.api.HorizontalFace;
+import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.connect.BlocksNeighborsImpl;
 
 /**
@@ -73,6 +74,8 @@ import grondag.xm.connect.BlocksNeighborsImpl;
 @API(status = STABLE)
 public interface BlockNeighbors {
 	void release();
+
+	BlockNeighbors withBlockState(BlockState myState);
 
 	BlockNeighbors withTest(BlockTest<?> blockTest);
 
@@ -227,6 +230,10 @@ public interface BlockNeighbors {
 
 	static BlockNeighbors claimIfNull(BlockNeighbors neighbors, BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
 		return neighbors == null ? claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test) : neighbors.withTest(test);
+	}
+
+	static BlockNeighbors claimIfNull(BlockNeighbors neighbors, BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<PrimitiveState> test, BlockState blockState) {
+		return neighbors == null ? claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test).withBlockState(blockState) : neighbors.withTest(test);
 	}
 
 	static BlockNeighbors claim(BlockView world, BlockPos pos, ModelStateFunction stateFunc) {
