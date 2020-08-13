@@ -72,7 +72,7 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 
 	static {
 		REGISTRY = (MutableRegistry<TextureSetImpl>) ((MutableRegistry) Registry.REGISTRIES).add(REGISTRY_KEY,
-				new DefaultedRegistry(NONE_ID.toString(), REGISTRY_KEY, Lifecycle.experimental()));
+				new DefaultedRegistry(NONE_ID.toString(), REGISTRY_KEY, Lifecycle.stable()), Lifecycle.stable());
 
 		DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)
 				.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
