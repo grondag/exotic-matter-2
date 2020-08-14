@@ -98,6 +98,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 	}
 
 	@Override
+	@Deprecated
 	public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
 		return from.primitive() == to.primitive()
 				&& from.orientationIndex() == to.orientationIndex()

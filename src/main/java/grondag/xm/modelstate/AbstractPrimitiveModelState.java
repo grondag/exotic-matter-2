@@ -310,7 +310,9 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	/**
 	 * Returns true if visual elements and geometry match. Does not consider species
 	 * in matching.
+	 * @deprecated - not used and will be removed
 	 */
+	@Deprecated
 	@Override
 	public final boolean doShapeAndAppearanceMatch(ModelState other) {
 		if(other.getClass() != this.getClass()) {
@@ -322,7 +324,9 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	/**
 	 * Returns true if visual elements match. Does not consider species or geometry
 	 * in matching.
+	 * @deprecated - not used and will be removed
 	 */
+	@Deprecated
 	@Override
 	public final boolean doesAppearanceMatch(ModelState other) {
 		return other != null && doPaintsMatch(other);

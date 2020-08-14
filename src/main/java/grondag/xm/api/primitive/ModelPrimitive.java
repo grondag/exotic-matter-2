@@ -104,6 +104,7 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 
 	W fromTag(CompoundTag tag, PaintIndex sync);
 
+	@Deprecated
 	boolean doesShapeMatch(R from, R to);
 
 	default boolean isMultiBlock() {

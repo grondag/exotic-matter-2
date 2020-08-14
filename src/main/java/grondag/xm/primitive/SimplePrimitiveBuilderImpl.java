@@ -147,14 +147,15 @@ public class SimplePrimitiveBuilderImpl {
 				count <<= AXIS_JOIN_BIT_COUNT;
 			}
 
-			cachedQuads = cornerJoin ? null : new XmMesh[count];
+			cachedQuads = cornerJoin || alternateJoinAffectsGeometry ? null : new XmMesh[count];
 			invalidateCache();
 		}
 
 		@Override
 		public void invalidateCache() {
 			notifyException = true;
-			if(!cornerJoin) {
+
+			if(!(cornerJoin || alternateJoinAffectsGeometry)) {
 				Arrays.fill(cachedQuads, null);
 			}
 		}
@@ -169,7 +170,7 @@ public class SimplePrimitiveBuilderImpl {
 			try {
 				XmMesh mesh;
 
-				if (cornerJoin) {
+				if (cornerJoin || alternateJoinAffectsGeometry) {
 					mesh = polyFactory.apply(modelState);
 
 				} else {
@@ -231,11 +232,15 @@ public class SimplePrimitiveBuilderImpl {
 		}
 
 		@Override
+		@Deprecated
 		public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
 			if (from.primitive() != to.primitive()
 					|| from.orientationIndex() != to.orientationIndex()
-					|| from.primitiveBits() != to.primitiveBits())
+					|| from.primitiveBits() != to.primitiveBits()
+					|| (alternateJoinAffectsGeometry && from.alternateJoinBits() != to.alternateJoinBits())) {
 				return false;
+			}
+
 			if (cornerJoin)
 				return from.cornerJoin() == to.cornerJoin();
 			else if (simpleJoin || axisJoin)
