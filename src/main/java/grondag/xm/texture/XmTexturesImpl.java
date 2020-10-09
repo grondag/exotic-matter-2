@@ -15,19 +15,18 @@
  ******************************************************************************/
 package grondag.xm.texture;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
+import grondag.xm.Xm;
+import grondag.xm.api.texture.XmTextures;
+import grondag.xm.paint.XmPaintRegistryImpl;
 import org.apiguardian.api.API;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback.Registry;
-
-import grondag.xm.Xm;
-import grondag.xm.api.texture.XmTextures;
-import grondag.xm.paint.XmPaintRegistryImpl;
 
 @API(status = INTERNAL)
 public class XmTexturesImpl {
@@ -41,7 +40,7 @@ public class XmTexturesImpl {
 		// Force registration
 		XmTextures.EMPTY.use();
 
-		ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register(XmTexturesImpl::registerTextures);
+		ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register(XmTexturesImpl::registerTextures);
 	}
 
 	private static void registerTextures(SpriteAtlasTexture atlas, Registry registry) {
