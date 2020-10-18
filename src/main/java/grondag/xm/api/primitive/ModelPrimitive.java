@@ -15,15 +15,19 @@
  ******************************************************************************/
 package grondag.xm.api.primitive;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
+import grondag.fermion.orientation.api.OrientationType;
+import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.api.paint.PaintIndex;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
+import org.jetbrains.annotations.ApiStatus.Experimental;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -38,15 +42,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
-import grondag.fermion.orientation.api.OrientationType;
-import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.api.paint.PaintIndex;
-import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.api.primitive.surface.XmSurfaceList;
-
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {
 	/**
 	 * Used for registration and serialization of model state.

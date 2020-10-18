@@ -15,11 +15,23 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.function.Consumer;
 
+import grondag.xm.Xm;
+import grondag.xm.api.mesh.MutableMesh;
+import grondag.xm.api.mesh.XmMeshes;
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.paint.XmPaint;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.texture.TextureOrientation;
+import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
+import grondag.xm.target.RenderTarget;
+import grondag.xm.texture.TextureSetHelper;
 import org.apiguardian.api.API;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
@@ -34,19 +46,6 @@ import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-
-import grondag.xm.Xm;
-import grondag.xm.api.mesh.MutableMesh;
-import grondag.xm.api.mesh.XmMeshes;
-import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.paint.XmPaint;
-import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.api.texture.TextureOrientation;
-import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
-import grondag.xm.target.RenderTarget;
-import grondag.xm.texture.TextureSetHelper;
 
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("rawtypes")
@@ -172,43 +171,58 @@ public class PaintManager implements Consumer<Polygon> {
 		}
 	}
 
-	private void polyToMeshFrex(MutablePolygon poly, QuadEmitter emitter) {
+	private void polyToMeshFrex(MutablePolygon poly, QuadEmitter emitterIn) {
 		final int depth = poly.spriteDepth();
-		final MaterialFinder finder = this.finder;
+		final grondag.frex.api.mesh.QuadEmitter emitter = (grondag.frex.api.mesh.QuadEmitter) emitterIn;
+		final grondag.frex.api.material.MaterialFinder finder = (grondag.frex.api.material.MaterialFinder) this.finder;
 
 		finder.clear()
-		.spriteDepth(depth)
-		.blendMode(0, BLEND_MODES[poly.blendMode().ordinal()])
-		.emissive(0, poly.emissive(0))
-		.disableAo(0, poly.disableAo(0))
-		.disableDiffuse(0, poly.disableDiffuse(0));
+		.blendMode(BLEND_MODES[poly.blendMode().ordinal()])
+		.emissive(poly.emissive(0))
+		.disableAo(poly.disableAo(0))
+		.disableDiffuse(poly.disableDiffuse(0));
 
 		bakeSprite(0, poly);
+		emitter.material(finder.find());
+		outputFrexQuad(poly, emitter, 0);
 
 		if (depth > 1) {
 			bakeSprite(1, poly);
-			finder.emissive(1, poly.emissive(1))
-			.disableAo(1, poly.disableAo(1))
-			.disableDiffuse(1, poly.disableDiffuse(1));
+
+			finder.clear()
+			.blendMode(BlendMode.TRANSLUCENT)
+			.emissive(poly.emissive(1))
+			.disableAo(poly.disableAo(1))
+			.disableDiffuse(poly.disableDiffuse(1));
+
+			emitter.material(finder.find());
+			outputFrexQuad(poly, emitter, 1);
 
 			if (depth == 3) {
 				bakeSprite(2, poly);
-				finder.emissive(2, poly.emissive(2))
-				.disableAo(2, poly.disableAo(2))
-				.disableDiffuse(2, poly.disableDiffuse(2));
+
+				finder.clear()
+				.blendMode(BlendMode.TRANSLUCENT)
+				.emissive(poly.emissive(2))
+				.disableAo(poly.disableAo(2))
+				.disableDiffuse(poly.disableDiffuse(2));
+
+				emitter.material(finder.find());
+				outputFrexQuad(poly, emitter, 2);
 			}
 		}
+	}
 
-		emitter.material(finder.find());
+	private static void outputFrexQuad(MutablePolygon poly, grondag.frex.api.mesh.QuadEmitter emitter, int spriteIndex) {
 		emitter.cullFace(poly.cullFace());
 		emitter.nominalFace(poly.nominalFace());
-		if(poly.tag() != Polygon.NO_LINK_OR_TAG) {
-			emitter.tag(poly.tag());
-		}
+		emitter.tag(poly.tag());
+
 		for (int v = 0; v < 4; v++) {
 			emitter.pos(v, poly.x(v), poly.y(v), poly.z(v));
 
 			final int g = poly.glow(v);
+
 			if(g > 0) {
 				emitter.lightmap(v, g);
 			}
@@ -217,18 +231,8 @@ public class PaintManager implements Consumer<Polygon> {
 				emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
 			}
 
-			emitter.sprite(v, 0, poly.u(v, 0), poly.v(v, 0));
-			emitter.spriteColor(v, 0, poly.color(v, 0));
-
-			if (depth > 1) {
-				emitter.sprite(v, 1, poly.u(v, 1), poly.v(v, 1));
-				emitter.spriteColor(v, 1, poly.color(v, 1));
-
-				if (depth == 3) {
-					emitter.sprite(v, 2, poly.u(v, 2), poly.v(v, 2));
-					emitter.spriteColor(v, 2, poly.color(v, 2));
-				}
-			}
+			emitter.sprite(v, poly.u(v, spriteIndex), poly.v(v, spriteIndex));
+			emitter.vertexColor(v, poly.color(v, spriteIndex));
 		}
 
 		emitter.emit();
@@ -282,6 +286,13 @@ public class PaintManager implements Consumer<Polygon> {
 
 		for (int v = 0; v < 4; v++) {
 			emitter.pos(v, poly.x(v), poly.y(v), poly.z(v));
+
+			final int g = poly.glow(v);
+
+			if(g > 0) {
+				emitter.lightmap(v, g);
+			}
+
 			if (poly.hasNormal(v)) {
 				emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
 			}
@@ -289,6 +300,7 @@ public class PaintManager implements Consumer<Polygon> {
 			emitter.sprite(v, 0, poly.u(v, spriteIndex), poly.v(v, spriteIndex));
 			emitter.spriteColor(v, 0, poly.color(v, spriteIndex));
 		}
+
 		emitter.emit();
 	}
 
@@ -360,33 +372,33 @@ public class PaintManager implements Consumer<Polygon> {
 		final TextureOrientation orientation = poly.rotation(spriteIndex);
 
 		switch (orientation.rotation) {
-		case ROTATE_NONE:
-		default:
-			break;
+			case ROTATE_NONE:
+			default:
+				break;
 
-		case ROTATE_90:
-			for (int i = 0; i < vCount; i++) {
-				final float uOld = poly.u(i, spriteIndex);
-				final float vOld = poly.v(i, spriteIndex);
-				poly.uv(i, spriteIndex, vOld, 1 - uOld);
-			}
-			break;
+			case ROTATE_90:
+				for (int i = 0; i < vCount; i++) {
+					final float uOld = poly.u(i, spriteIndex);
+					final float vOld = poly.v(i, spriteIndex);
+					poly.uv(i, spriteIndex, vOld, 1 - uOld);
+				}
+				break;
 
-		case ROTATE_180:
-			for (int i = 0; i < vCount; i++) {
-				final float uOld = poly.u(i, spriteIndex);
-				final float vOld = poly.v(i, spriteIndex);
-				poly.uv(i, spriteIndex, 1 - uOld, 1 - vOld);
-			}
-			break;
+			case ROTATE_180:
+				for (int i = 0; i < vCount; i++) {
+					final float uOld = poly.u(i, spriteIndex);
+					final float vOld = poly.v(i, spriteIndex);
+					poly.uv(i, spriteIndex, 1 - uOld, 1 - vOld);
+				}
+				break;
 
-		case ROTATE_270:
-			for (int i = 0; i < vCount; i++) {
-				final float uOld = poly.u(i, spriteIndex);
-				final float vOld = poly.v(i, spriteIndex);
-				poly.uv(i, spriteIndex, 1 - vOld, uOld);
-			}
-			break;
+			case ROTATE_270:
+				for (int i = 0; i < vCount; i++) {
+					final float uOld = poly.u(i, spriteIndex);
+					final float vOld = poly.v(i, spriteIndex);
+					poly.uv(i, spriteIndex, 1 - vOld, uOld);
+				}
+				break;
 
 		}
 

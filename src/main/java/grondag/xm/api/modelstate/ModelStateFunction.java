@@ -15,11 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import javax.annotation.Nullable;
-
 import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

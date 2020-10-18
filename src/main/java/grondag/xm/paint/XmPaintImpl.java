@@ -15,19 +15,6 @@
  ******************************************************************************/
 package grondag.xm.paint;
 
-import static grondag.xm.api.paint.XmPaint.MAX_TEXTURE_DEPTH;
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import javax.annotation.Nullable;
-
-import it.unimi.dsi.fastutil.HashCommon;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.apiguardian.api.API;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-
 import grondag.fermion.bits.BitPacker32;
 import grondag.xm.Xm;
 import grondag.xm.api.paint.PaintBlendMode;
@@ -39,6 +26,17 @@ import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetRegistry;
+import it.unimi.dsi.fastutil.HashCommon;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
+
+import static grondag.xm.api.paint.XmPaint.MAX_TEXTURE_DEPTH;
+import static org.apiguardian.api.API.Status.INTERNAL;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 
 @API(status = INTERNAL)
 public class XmPaintImpl {
@@ -130,17 +128,17 @@ public class XmPaintImpl {
 				return index == other.index;
 			} else {
 				return other.id == null
-						&& other.index == XmPaint.NO_INDEX
-						&& paintBits == other.paintBits
-						&& color0 == other.color0
-						&& color1 == other.color1
-						&& color2 == other.color2
-						&& textureSet0 == other.textureSet0
-						&& textureSet1 == other.textureSet1
-						&& textureSet2 == other.textureSet2
-						&& vertexProcessor0 == other.vertexProcessor0
-						&& vertexProcessor1 == other.vertexProcessor1
-						&& vertexProcessor2 == other.vertexProcessor2;
+				&& other.index == XmPaint.NO_INDEX
+				&& paintBits == other.paintBits
+				&& color0 == other.color0
+				&& color1 == other.color1
+				&& color2 == other.color2
+				&& textureSet0 == other.textureSet0
+				&& textureSet1 == other.textureSet1
+				&& textureSet2 == other.textureSet2
+				&& vertexProcessor0 == other.vertexProcessor0
+				&& vertexProcessor1 == other.vertexProcessor1
+				&& vertexProcessor2 == other.vertexProcessor2;
 			}
 		} else {
 			return false;
@@ -201,14 +199,14 @@ public class XmPaintImpl {
 
 	public int textureColor(int textureIndex) {
 		switch (textureIndex) {
-		case 0:
-			return color0;
-		case 1:
-			return color1;
-		case 2:
-			return color2;
-		default:
-			throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+			case 0:
+				return color0;
+			case 1:
+				return color1;
+			case 2:
+				return color2;
+			default:
+				throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 		}
 	}
 
@@ -218,14 +216,14 @@ public class XmPaintImpl {
 
 	public TextureSet texture(int textureIndex) {
 		switch (textureIndex) {
-		case 0:
-			return textureSet0;
-		case 1:
-			return textureSet1;
-		case 2:
-			return textureSet2;
-		default:
-			throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+			case 0:
+				return textureSet0;
+			case 1:
+				return textureSet1;
+			case 2:
+				return textureSet2;
+			default:
+				throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 		}
 	}
 
@@ -259,14 +257,14 @@ public class XmPaintImpl {
 
 	public VertexProcessor vertexProcessor(int textureIndex) {
 		switch (textureIndex) {
-		case 0:
-			return vertexProcessor0;
-		case 1:
-			return vertexProcessor1;
-		case 2:
-			return vertexProcessor2;
-		default:
-			throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+			case 0:
+				return vertexProcessor0;
+			case 1:
+				return vertexProcessor1;
+			case 2:
+				return vertexProcessor2;
+			default:
+				throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 		}
 	}
 
@@ -512,17 +510,17 @@ public class XmPaintImpl {
 		@Override
 		public XmPaintFinder textureColor(int textureIndex, int colorARBG) {
 			switch (textureIndex) {
-			case 0:
-				color0 = colorARBG;
-				break;
-			case 1:
-				color1 = colorARBG;
-				break;
-			case 2:
-				color2 = colorARBG;
-				break;
-			default:
-				throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+				case 0:
+					color0 = colorARBG;
+					break;
+				case 1:
+					color1 = colorARBG;
+					break;
+				case 2:
+					color2 = colorARBG;
+					break;
+				default:
+					throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 			}
 			return this;
 		}
@@ -530,17 +528,17 @@ public class XmPaintImpl {
 		@Override
 		public XmPaintFinder texture(int textureIndex, TextureSet texture) {
 			switch (textureIndex) {
-			case 0:
-				textureSet0 = texture;
-				break;
-			case 1:
-				textureSet1 = texture;
-				break;
-			case 2:
-				textureSet2 = texture;
-				break;
-			default:
-				throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+				case 0:
+					textureSet0 = texture;
+					break;
+				case 1:
+					textureSet1 = texture;
+					break;
+				case 2:
+					textureSet2 = texture;
+					break;
+				default:
+					throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 			}
 
 			texture.use();
@@ -598,17 +596,17 @@ public class XmPaintImpl {
 		@Override
 		public XmPaintFinder vertexProcessor(int textureIndex, VertexProcessor vertexProcessor) {
 			switch (textureIndex) {
-			case 0:
-				vertexProcessor0 = vertexProcessor;
-				break;
-			case 1:
-				vertexProcessor1 = vertexProcessor;
-				break;
-			case 2:
-				vertexProcessor2 = vertexProcessor;
-				break;
-			default:
-				throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
+				case 0:
+					vertexProcessor0 = vertexProcessor;
+					break;
+				case 1:
+					vertexProcessor1 = vertexProcessor;
+					break;
+				case 2:
+					vertexProcessor2 = vertexProcessor;
+					break;
+				default:
+					throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 			}
 			return this;
 		}

@@ -15,18 +15,16 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Consumer;
-
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
-
-import net.minecraft.util.math.Direction;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.primitive.surface.XmSurface;
+import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import net.minecraft.util.math.Direction;
 
 @API(status = EXPERIMENTAL)
 public class MeshHelper {
@@ -36,15 +34,15 @@ public class MeshHelper {
 	}
 
 	public static void unitCylinder(
-			MutablePolygon writer,
-			int sliceCount,
-			Consumer<MutablePolygon> transform,
-			XmSurface sideSurface,
-			@Nullable XmSurface topSurface,
-			boolean subdivideTop,
-			@Nullable XmSurface bottomSurface,
-			boolean subdiviteBottom,
-			float wrapDistance) {
+	MutablePolygon writer,
+	int sliceCount,
+	Consumer<MutablePolygon> transform,
+	XmSurface sideSurface,
+	@Nullable XmSurface topSurface,
+	boolean subdivideTop,
+	@Nullable XmSurface bottomSurface,
+	boolean subdiviteBottom,
+	float wrapDistance) {
 		unitCylinder(writer, sliceCount, transform, sideSurface, topSurface, false, bottomSurface, false, wrapDistance, 0, 1);
 	}
 
@@ -58,17 +56,17 @@ public class MeshHelper {
 	 * @param bottomSurface If null, bottom cap not output.
 	 */
 	public static void unitCylinder(
-			MutablePolygon writer,
-			int sliceCount,
-			Consumer<MutablePolygon> transform,
-			XmSurface sideSurface,
-			@Nullable XmSurface topSurface,
-			boolean subdivideTop,
-			@Nullable XmSurface bottomSurface,
-			boolean subdiviteBottom,
-			float wrapDistance,
-			float bottom,
-			float top) {
+	MutablePolygon writer,
+	int sliceCount,
+	Consumer<MutablePolygon> transform,
+	XmSurface sideSurface,
+	@Nullable XmSurface topSurface,
+	boolean subdivideTop,
+	@Nullable XmSurface bottomSurface,
+	boolean subdiviteBottom,
+	float wrapDistance,
+	float bottom,
+	float top) {
 		sliceCount = Math.max(8, ((sliceCount + 3) / 4) * 4);
 
 		final double sliceRadians = Math.PI * 2 / sliceCount;
@@ -87,14 +85,14 @@ public class MeshHelper {
 	}
 
 	private static void cylSide(
-			int slice,
-			double sliceRadians,
-			MutablePolygon writer,
-			Consumer<MutablePolygon> transform,
-			XmSurface sideSurface,
-			float wrapDistance,
-			float bottom,
-			float top)
+	int slice,
+	double sliceRadians,
+	MutablePolygon writer,
+	Consumer<MutablePolygon> transform,
+	XmSurface sideSurface,
+	float wrapDistance,
+	float bottom,
+	float top)
 	{
 		final double fromRad = sliceRadians * slice;
 		final double toRad = fromRad + sliceRadians;
@@ -141,14 +139,14 @@ public class MeshHelper {
 	 * @param subDivide Use true for CSG surfaces that may benefit from better recombination. Especially hollow cylinders.
 	 */
 	private static void cylEnd(
-			int slice,
-			double sliceRadians,
-			MutablePolygon writer,
-			Consumer<MutablePolygon> transform,
-			XmSurface surface,
-			Direction face,
-			boolean subDivide,
-			float y)
+	int slice,
+	double sliceRadians,
+	MutablePolygon writer,
+	Consumer<MutablePolygon> transform,
+	XmSurface surface,
+	Direction face,
+	boolean subDivide,
+	float y)
 	{
 		final double fromRad =slice * sliceRadians;
 		final double midRad = fromRad + sliceRadians;

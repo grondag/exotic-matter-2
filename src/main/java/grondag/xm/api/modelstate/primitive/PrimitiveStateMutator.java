@@ -15,19 +15,17 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate.primitive;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import javax.annotation.Nullable;
-
+import grondag.xm.api.connect.world.BlockNeighbors;
+import grondag.xm.api.connect.world.BlockTest;
+import grondag.xm.modelstate.PrimitiveStateMutatorImpl;
 import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
-
-import grondag.xm.api.connect.world.BlockNeighbors;
-import grondag.xm.api.connect.world.BlockTest;
-import grondag.xm.modelstate.PrimitiveStateMutatorImpl;
 
 @API(status = EXPERIMENTAL)
 @FunctionalInterface

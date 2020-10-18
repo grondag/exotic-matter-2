@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
-
 import grondag.xm.api.mesh.polygon.Polygon;
+import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 @API(status = EXPERIMENTAL)
 public interface XmMesh {

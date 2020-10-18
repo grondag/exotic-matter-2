@@ -1,18 +1,14 @@
 package grondag.xm.api.modelstate.primitive;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
+import grondag.xm.api.connect.world.BlockNeighbors;
+import org.jetbrains.annotations.ApiStatus.Experimental;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-import grondag.xm.api.connect.world.BlockNeighbors;
-
-@API(status = EXPERIMENTAL)
+@Experimental
 @FunctionalInterface
 public interface SimplePrimitiveStateMutator extends PrimitiveStateMutator {
 	@Override

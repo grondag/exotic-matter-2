@@ -15,11 +15,13 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import javax.annotation.Nullable;
-
+import grondag.xm.Xm;
+import grondag.xm.XmConfig;
+import grondag.xm.render.OutlineRenderer;
 import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.WorldRenderer;
@@ -30,10 +32,6 @@ import net.minecraft.util.math.Vec3d;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import grondag.xm.Xm;
-import grondag.xm.XmConfig;
-import grondag.xm.render.OutlineRenderer;
 
 @API(status = INTERNAL)
 public class ExcavationRenderer {
@@ -89,7 +87,7 @@ public class ExcavationRenderer {
 			if (positions == null) {
 				final Box box = aabb;
 				WorldRenderer.drawBox(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f, 0.3f,
-						1f);
+					1f);
 			} else {
 				for (final BlockPos pos : positions) {
 					final double x = pos.getX() - d0;
@@ -119,7 +117,7 @@ public class ExcavationRenderer {
 			if (positions == null) {
 				final Box box = aabb;
 				WorldRenderer.drawBox(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f,
-						0.3f, 0.3f);
+					0.3f, 0.3f);
 			} else {
 				for (final BlockPos pos : positions) {
 					final double x = pos.getX() - d0;

@@ -15,19 +15,23 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nullable;
-
+import grondag.fermion.position.IntegerBox;
+import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
+import grondag.xm.Xm;
+import grondag.xm.XmConfig;
+import grondag.xm.network.S2C_ExcavationRenderUpdate;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -35,12 +39,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-
-import grondag.fermion.position.IntegerBox;
-import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
-import grondag.xm.Xm;
-import grondag.xm.XmConfig;
-import grondag.xm.network.S2C_ExcavationRenderUpdate;
 
 /**
  * Class exists on server but render methods do not. Server instantiates (and
@@ -262,7 +260,7 @@ public class ExcavationRenderEntry {
 
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("id = %d Compute done, updateListeners=%s, isDirty=%s", id, Boolean.toString(needsListenerUpdate),
-					Boolean.toString(isDirty.get()));
+				Boolean.toString(isDirty.get()));
 		}
 
 		if (needsListenerUpdate) {
@@ -290,7 +288,7 @@ public class ExcavationRenderEntry {
 	public void addListener(ServerPlayerEntity listener, boolean sendPacketIfNew) {
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("id=%d addListenger sendIfNew=%s, isValue=%s, isFirstComputeDone=%s", id, Boolean.toString(sendPacketIfNew),
-					Boolean.toString(isValid), Boolean.toString(isFirstComputeDone));
+				Boolean.toString(isValid), Boolean.toString(isFirstComputeDone));
 		}
 
 		synchronized (listeners) {
@@ -317,23 +315,23 @@ public class ExcavationRenderEntry {
 		//        WorldTaskManager.enqueueImmediate(new Runnable()
 		//        {
 		final Packet<?> packet = ExcavationRenderEntry.this.isValid && ExcavationRenderEntry.this.positions.size() > 0
-				// update
-				? S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this)
-						// remove
-						: S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this.id);
+		// update
+		? S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this)
+		// remove
+		: S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this.id);
 
-				//            @Override
-				//            public void run()
-				//            {
-				synchronized (ExcavationRenderEntry.this.listeners) {
-					if (!ExcavationRenderEntry.this.listeners.isEmpty()) {
-						for (final ServerPlayerEntity player : listeners) {
-							ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, packet);
-						}
-					}
+		//            @Override
+		//            public void run()
+		//            {
+		synchronized (ExcavationRenderEntry.this.listeners) {
+			if (!ExcavationRenderEntry.this.listeners.isEmpty()) {
+				for (final ServerPlayerEntity player : listeners) {
+					ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, packet);
 				}
-				//            }
-				//        });
+			}
+		}
+		//            }
+		//        });
 	}
 
 	/**

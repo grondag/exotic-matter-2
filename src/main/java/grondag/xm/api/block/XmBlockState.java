@@ -15,11 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.block;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.dispatch.XmBlockStateAccess;
+import org.jetbrains.annotations.ApiStatus.Experimental;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,10 +26,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.dispatch.XmBlockStateAccess;
-
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface XmBlockState {
 	/**
 	 * Minecraft block state associated with this Exotic Matter block state.

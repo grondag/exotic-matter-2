@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
-
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelStateFunction;
+import org.apiguardian.api.API;
+import org.jetbrains.annotations.Nullable;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 @API(status = INTERNAL)
 public interface XmBlockStateAccess {

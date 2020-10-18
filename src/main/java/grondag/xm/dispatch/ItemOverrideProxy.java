@@ -15,13 +15,12 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.Collections;
 
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.MutableModelState;
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
@@ -30,10 +29,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.MutableModelState;
-
-@API(status = INTERNAL)
+@Internal
 public class ItemOverrideProxy extends ModelOverrideList {
 	static final ItemOverrideProxy INSTANCE = new ItemOverrideProxy();
 

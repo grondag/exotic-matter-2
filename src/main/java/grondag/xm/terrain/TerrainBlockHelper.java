@@ -15,13 +15,13 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
+import grondag.fermion.position.PackedBlockPos;
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.terrain.TerrainModelState;
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,11 +31,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import grondag.fermion.position.PackedBlockPos;
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.terrain.TerrainModelState;
-
-@API(status = INTERNAL)
+@Internal
 public class TerrainBlockHelper {
 	/**
 	 * Convenience method to check for flow block.
@@ -45,8 +41,8 @@ public class TerrainBlockHelper {
 	}
 
 	private static TerrainType[] HEIGHTS = { TerrainType.HEIGHT_1, TerrainType.HEIGHT_2, TerrainType.HEIGHT_3, TerrainType.HEIGHT_4, TerrainType.HEIGHT_5,
-			TerrainType.HEIGHT_6, TerrainType.HEIGHT_7, TerrainType.HEIGHT_8, TerrainType.HEIGHT_9, TerrainType.HEIGHT_10, TerrainType.HEIGHT_11,
-			TerrainType.HEIGHT_12 };
+	TerrainType.HEIGHT_6, TerrainType.HEIGHT_7, TerrainType.HEIGHT_8, TerrainType.HEIGHT_9, TerrainType.HEIGHT_10, TerrainType.HEIGHT_11,
+	TerrainType.HEIGHT_12 };
 
 	@Nullable
 	public static TerrainType terrainType(BlockState state) {
@@ -212,12 +208,12 @@ public class TerrainBlockHelper {
 	 */
 	public static BlockState stateWithYOffset(BlockState state, int value) {
 		switch (value) {
-		case 1:
-			return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_ONE);
-		case 2:
-			return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_TWO);
-		default:
-			return state;
+			case 1:
+				return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_ONE);
+			case 2:
+				return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_TWO);
+			default:
+				return state;
 		}
 	}
 }

@@ -15,18 +15,14 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import javax.annotation.Nullable;
-
-import org.apiguardian.api.API;
+import grondag.xm.api.texture.TextureSet;
+import grondag.xm.paint.XmPaintImpl;
+import org.jetbrains.annotations.ApiStatus.Experimental;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
-
-import grondag.xm.api.texture.TextureSet;
-import grondag.xm.paint.XmPaintImpl;
 
 /**
  * Paints control the appearance of mesh surfaces.<p>
@@ -57,7 +53,7 @@ import grondag.xm.paint.XmPaintImpl;
  * meant for mods that create new paints at run time and  need compact serialization.
  *
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface XmPaint {
 	static XmPaintFinder finder() {
 		return XmPaintImpl.finder();
