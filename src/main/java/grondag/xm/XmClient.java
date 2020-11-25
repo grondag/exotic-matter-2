@@ -20,8 +20,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -29,6 +36,9 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.InvalidateRenderStateCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
+import grondag.frex.api.event.WorldRenderEvents;
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.collision.CollisionDispatcherImpl;
 import grondag.xm.dispatch.XmDispatcher;
 import grondag.xm.dispatch.XmVariantProvider;
@@ -37,6 +47,7 @@ import grondag.xm.modelstate.AbstractPrimitiveModelState;
 import grondag.xm.network.Packets;
 import grondag.xm.paint.XmPaintRegistryImpl;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
+import grondag.xm.render.OutlineRenderer;
 import grondag.xm.texture.XmTexturesImpl;
 
 @API(status = INTERNAL)
@@ -53,6 +64,33 @@ public class XmClient implements ClientModInitializer {
 		SidedHelper.RENDER_LAYER_REMAPPER  = (b, s) -> BlockRenderLayerMap.INSTANCE.putBlock(b, RenderLayers.getBlockLayer(s));
 		SidedHelper.RENDER_LAYER_REMAPS.forEach(SidedHelper.RENDER_LAYER_REMAPPER);
 		SidedHelper.RENDER_LAYER_REMAPS.clear();
+
+		WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(ctx -> {
+			final HitResult hit = ctx.hitResult();
+
+			if (ctx.blockOutlines() && hit != null && hit.getType() == HitResult.Type.BLOCK) {
+				final ClientWorld world = ctx.world();
+				final BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
+                final BlockState blockState = world.getBlockState(blockPos);
+				final ModelState modelState = XmBlockState.modelState(blockState, world, blockPos, true);
+
+				if(modelState != null && !XmConfig.debugCollisionBoxes) {
+					final Vec3d cameraPos = ctx.camera().getPos();
+
+					OutlineRenderer.drawModelOutline(
+						ctx.matrixStack(),
+						ctx.consumers().getBuffer(RenderLayer.getLines()),
+						modelState,
+						blockPos.getX() - cameraPos.x,
+						blockPos.getY() - cameraPos.y,
+						blockPos.getZ() - cameraPos.z,
+						0.0F, 0.0F, 0.0F, 0.4f
+					);
+
+					ctx.cancelDefaultBlockOutline();
+				}
+			}
+		});
 	}
 
 	public static void invalidate() {

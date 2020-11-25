@@ -3,8 +3,7 @@
   "package": "grondag.xm.mixin.client",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinBlockDustParticle",
-    "MixinWorldRenderer"
+    "MixinBlockDustParticle"
       ],
   "injectors": {
     "defaultRequire": 1
