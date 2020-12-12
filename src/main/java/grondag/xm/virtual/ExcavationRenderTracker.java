@@ -27,8 +27,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.fermion.world.WorldMap;
 import grondag.xm.Xm;
@@ -83,7 +81,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 			final PlayerData pd = playerEntry.getValue();
 			if (pd.world == entry.world) {
 				entry.removeListener(playerEntry.getKey());
-				ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntry.getKey(), packet);
+				playerEntry.getKey().networkHandler.sendPacket(packet);
 			}
 		}
 	}
@@ -136,7 +134,8 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 				}
 			}
 		}
-		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, S2C_PacketExcavationRenderRefresh.toPacket(output));
+
+		player.networkHandler.sendPacket(S2C_PacketExcavationRenderRefresh.toPacket(output));
 	}
 
 	public void stopPlayerTracking(ServerPlayerEntity player) {

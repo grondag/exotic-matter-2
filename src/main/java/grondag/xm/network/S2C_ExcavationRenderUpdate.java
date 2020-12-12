@@ -22,11 +22,14 @@ import org.apiguardian.api.API;
 
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import grondag.fermion.position.IntegerBox;
 import grondag.xm.Xm;
@@ -90,33 +93,36 @@ public abstract class S2C_ExcavationRenderUpdate {
 			}
 		}
 
-		return ServerSidePacketRegistry.INSTANCE.toPacket(ID, pBuff);
+		return ServerPlayNetworking.createS2CPacket(ID, pBuff);
 	}
 
-	public static void accept(PacketContext context, PacketByteBuf pBuff) {
+	public static void accept(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+		// FIX: thread safety
 
-		final int id = pBuff.readInt();
+		final int id = buf.readInt();
 		final IntegerBox aabb;
 		final BlockPos[] positions;
 		final boolean isExchange;
-		if (pBuff.readBoolean()) {
+
+		if (buf.readBoolean()) {
 			// deletion
 			aabb = null;
 			positions = null;
 			isExchange = false;
 		} else {
-			final BlockPos minPos = BlockPos.fromLong(pBuff.readLong());
-			final BlockPos maxPos = BlockPos.fromLong(pBuff.readLong());
+			final BlockPos minPos = BlockPos.fromLong(buf.readLong());
+			final BlockPos maxPos = BlockPos.fromLong(buf.readLong());
 			aabb = new IntegerBox(minPos, maxPos);
-			isExchange = pBuff.readBoolean();
+			isExchange = buf.readBoolean();
 
-			final int posCount = pBuff.readInt();
+			final int posCount = buf.readInt();
+
 			if (posCount == 0) {
 				positions = null;
 			} else {
 				positions = new BlockPos[posCount];
 				for (int i = 0; i < posCount; i++) {
-					positions[i] = BlockPos.fromLong(pBuff.readLong());
+					positions[i] = BlockPos.fromLong(buf.readLong());
 				}
 			}
 		}

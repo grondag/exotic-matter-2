@@ -24,11 +24,14 @@ import org.apiguardian.api.API;
 
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import grondag.fermion.position.IntegerBox;
 import grondag.xm.Xm;
@@ -43,8 +46,7 @@ import grondag.xm.virtual.ExcavationRenderer;
  */
 @API(status = INTERNAL)
 public abstract class S2C_PacketExcavationRenderRefresh {
-	private S2C_PacketExcavationRenderRefresh() {
-	}
+	private S2C_PacketExcavationRenderRefresh() { }
 
 	public static final Identifier ID = new Identifier(Xm.MODID, "exrr");
 
@@ -70,10 +72,12 @@ public abstract class S2C_PacketExcavationRenderRefresh {
 			}
 		}
 
-		return ServerSidePacketRegistry.INSTANCE.toPacket(ID, pBuff);
+		return ServerPlayNetworking.createS2CPacket(ID, pBuff);
 	}
 
-	public static void accept(PacketContext context, PacketByteBuf pBuff) {
+	public static void accept(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf pBuff, PacketSender responseSender) {
+		// FIX: thread safety
+
 		ExcavationRenderManager.clear();
 		final int count = pBuff.readInt();
 		if (count > 0) {

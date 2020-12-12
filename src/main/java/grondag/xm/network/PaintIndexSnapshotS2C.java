@@ -20,12 +20,14 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import io.netty.buffer.Unpooled;
 import org.apiguardian.api.API;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 import grondag.xm.Xm;
 import grondag.xm.api.paint.XmPaint;
@@ -41,16 +43,16 @@ public abstract class PaintIndexSnapshotS2C {
 	public static Packet<?> toPacket(PaintIndexImpl paintIndex) {
 		final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
 		paintIndex.toBytes(pBuff);
-		return ServerSidePacketRegistry.INSTANCE.toPacket(ID, pBuff);
+		return ServerPlayNetworking.createS2CPacket(ID, pBuff);
 	}
 
-	public static void accept(PacketContext context, PacketByteBuf pBuff) {
+	public static void accept(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf pBuff, PacketSender responseSender) {
 		final XmPaint[] paints = PaintIndexImpl.arrayFromBytes(pBuff);
 
-		if (context.getTaskQueue().isOnThread()) {
+		if (client.isOnThread()) {
 			PaintIndexImpl.CLIENT.fromArray(paints);
 		} else {
-			context.getTaskQueue().execute(() -> PaintIndexImpl.CLIENT.fromArray(paints));
+			client.execute(() -> PaintIndexImpl.CLIENT.fromArray(paints));
 		}
 	}
 }

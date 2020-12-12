@@ -21,7 +21,7 @@ import org.apiguardian.api.API;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 @API(status = INTERNAL)
 public class Packets {
@@ -31,8 +31,8 @@ public class Packets {
 
 	@Environment(EnvType.CLIENT)
 	public static void initializeClient() {
-		ClientSidePacketRegistry.INSTANCE.register(PaintIndexUpdateS2C.ID, PaintIndexUpdateS2C::accept);
-		ClientSidePacketRegistry.INSTANCE.register(PaintIndexSnapshotS2C.ID, PaintIndexSnapshotS2C::accept);
+		ClientPlayNetworking.registerGlobalReceiver(PaintIndexUpdateS2C.ID, PaintIndexUpdateS2C::accept);
+		ClientPlayNetworking.registerGlobalReceiver(PaintIndexSnapshotS2C.ID, PaintIndexSnapshotS2C::accept);
 		//		ClientSidePacketRegistry.INSTANCE.register(S2C_ExcavationRenderUpdate.ID, S2C_ExcavationRenderUpdate::accept);
 		//		ClientSidePacketRegistry.INSTANCE.register(S2C_PacketExcavationRenderRefresh.ID, S2C_PacketExcavationRenderRefresh::accept);
 	}
