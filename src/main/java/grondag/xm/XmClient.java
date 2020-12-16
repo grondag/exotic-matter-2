@@ -25,8 +25,6 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
@@ -65,31 +63,30 @@ public class XmClient implements ClientModInitializer {
 		SidedHelper.RENDER_LAYER_REMAPS.forEach(SidedHelper.RENDER_LAYER_REMAPPER);
 		SidedHelper.RENDER_LAYER_REMAPS.clear();
 
-		WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(ctx -> {
-			final HitResult hit = ctx.hitResult();
+		WorldRenderEvents.BLOCK_OUTLINE.register((ctx, btx) -> {
+			final ClientWorld world = ctx.world();
+			final BlockPos blockPos = btx.blockPos();
+            final BlockState blockState = btx.blockState();
+			final ModelState modelState = XmBlockState.modelState(blockState, world, blockPos, true);
 
-			if (ctx.blockOutlines() && hit != null && hit.getType() == HitResult.Type.BLOCK) {
-				final ClientWorld world = ctx.world();
-				final BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
-                final BlockState blockState = world.getBlockState(blockPos);
-				final ModelState modelState = XmBlockState.modelState(blockState, world, blockPos, true);
+			if(modelState != null && !XmConfig.debugCollisionBoxes) {
+				final Vec3d cameraPos = ctx.camera().getPos();
 
-				if(modelState != null && !XmConfig.debugCollisionBoxes) {
-					final Vec3d cameraPos = ctx.camera().getPos();
+				OutlineRenderer.drawModelOutline(
+					ctx.matrixStack(),
+					ctx.consumers().getBuffer(RenderLayer.getLines()),
+					modelState,
+					blockPos.getX() - cameraPos.x,
+					blockPos.getY() - cameraPos.y,
+					blockPos.getZ() - cameraPos.z,
+					0.0F, 0.0F, 0.0F, 0.4f
+				);
 
-					OutlineRenderer.drawModelOutline(
-						ctx.matrixStack(),
-						ctx.consumers().getBuffer(RenderLayer.getLines()),
-						modelState,
-						blockPos.getX() - cameraPos.x,
-						blockPos.getY() - cameraPos.y,
-						blockPos.getZ() - cameraPos.z,
-						0.0F, 0.0F, 0.0F, 0.4f
-					);
-
-					ctx.cancelDefaultBlockOutline();
-				}
+				return false;
 			}
+
+			return true;
+
 		});
 	}
 
