@@ -32,9 +32,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.InvalidateRenderStateCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
-import grondag.frex.api.event.WorldRenderEvents;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.collision.CollisionDispatcherImpl;
