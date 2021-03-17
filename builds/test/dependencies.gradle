@@ -1,5 +1,6 @@
 repositories {
 	mavenLocal()
+	maven { url "https://maven.shedaniel.me/"}
     jcenter();
     maven { 
     	name = "Fabric"
