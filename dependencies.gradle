@@ -56,6 +56,6 @@ dependencies {
 	    include "grondag:fermion-orientation-${project.mc_tag}:${project.fermion_orientation_version}.+"
 	    include "grondag:special-circumstances-${project.mc_tag}:${project.special_circumstances_version}.+"
 		include "io.github.cottonmc:Jankson-Fabric:${jankson_version}"
-		include "me.shedaniel.cloth:config-2:${clothconfig_version}"
+		include "me.shedaniel.cloth:cloth-config-fabric:${clothconfig_version}"
  	}
 }
