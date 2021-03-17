@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.math.Vec3d;
 
@@ -35,7 +33,7 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class Icosahedron {
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
 

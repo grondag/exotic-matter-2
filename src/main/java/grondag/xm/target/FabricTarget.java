@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.target;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
-import org.apiguardian.api.API;
-
-@API(status = INTERNAL)
+@Internal
 class FabricTarget implements RenderTarget {
 	@Override
 	public boolean isFrex() {

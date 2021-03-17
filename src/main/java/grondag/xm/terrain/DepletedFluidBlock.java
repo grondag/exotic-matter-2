@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 
-@API(status = INTERNAL)
+@Internal
 public class DepletedFluidBlock extends Block {
 	public DepletedFluidBlock() {
 		super(Settings.of(Material.STRUCTURE_VOID));

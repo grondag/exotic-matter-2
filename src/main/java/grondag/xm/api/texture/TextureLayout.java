@@ -20,12 +20,11 @@ import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.MASONRY_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 //TODO: docs and remove references to layouts - that's part of layout map and name function now
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum TextureLayout {
 	/**
 	 * Separate random tiles with naming convention base_j_i where i is 0-7 and j is
@@ -100,11 +99,11 @@ public enum TextureLayout {
 	 */
 	QUADRANT_ROTATED_CABLE(SIMPLE_JOIN | BLOCK_SPECIES);
 
-	private TextureLayout(int stateFlags) {
+	TextureLayout(int stateFlags) {
 		this(stateFlags, 1);
 	}
 
-	private TextureLayout(int stateFlags, int textureCount) {
+	TextureLayout(int stateFlags, int textureCount) {
 		modelStateFlag = stateFlags;
 		this.textureCount = textureCount;
 	}

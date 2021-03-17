@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.base;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
@@ -34,7 +32,7 @@ import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> implements ModelPrimitive<R, W> {
 	private final R defaultState;
 

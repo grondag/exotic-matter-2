@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.connect.species;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -26,7 +24,7 @@ import net.minecraft.world.BlockView;
 import grondag.fermion.position.BlockRegion;
 import grondag.xm.connect.SpeciesImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class Species {
 	private  Species() {}
 

@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.network;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
-@API(status = INTERNAL)
+@Internal
 public class Packets {
 
 	public static void initializeCommon() {

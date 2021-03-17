@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -43,7 +41,7 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class CappedSquareInsetColumn  {
 	private CappedSquareInsetColumn() {}
 

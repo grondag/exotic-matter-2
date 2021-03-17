@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.api.paint.PaintBlendMode;
 
@@ -25,7 +23,7 @@ import grondag.xm.api.paint.PaintBlendMode;
  * Describes if/how this texture can be rendered in alpha or cutout modes. Used
  * to select the optimal (or least bad) block render layer for each paint layer.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum TextureRenderIntent {
 
 	/**
@@ -63,7 +61,7 @@ public enum TextureRenderIntent {
 	public final boolean canRenderAsBase;
 	public final boolean canRenderAsBaseInCutoutLayer;
 
-	private TextureRenderIntent(boolean base, boolean overlay, boolean flexible) {
+	TextureRenderIntent(boolean base, boolean overlay, boolean flexible) {
 		canRenderAsBase = base;
 		canRenderAsOverlay = overlay;
 		canRenderAsBaseInCutoutLayer = flexible;

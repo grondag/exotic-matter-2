@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate.primitive;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.modelstate.ModelStateFunction;
 import grondag.xm.modelstate.WorldToModelStateImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 @FunctionalInterface
 public interface PrimitiveStateFunction extends ModelStateFunction<MutablePrimitiveState> {
 	static PrimitiveStateFunction ofDefaultState(PrimitiveState defaultState) {

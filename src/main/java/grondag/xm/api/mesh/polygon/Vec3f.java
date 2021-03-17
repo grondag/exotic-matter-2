@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
+import org.jetbrains.annotations.ApiStatus.Experimental;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -27,7 +25,7 @@ import net.minecraft.util.math.Vec3i;
 import grondag.fermion.varia.Useful;
 import grondag.xm.mesh.vertex.Vec3fFactory;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface Vec3f {
 	static float dotProduct(final float x0, final float y0, final float z0, final float x1, final float y1, final float z1) {
 		return x0 * x1 + y0 * y1 + z0 * z1;
@@ -131,7 +129,7 @@ public interface Vec3f {
 	}
 
 	// PERF: is this way faster?
-	@API(status = Status.INTERNAL)
+	@Internal
 	static boolean isPointOnLine2(float cx, float cy, float cz, float ax, float ay, float az, float bx, float by, float bz) {
 
 		//AB and AC must have same normal

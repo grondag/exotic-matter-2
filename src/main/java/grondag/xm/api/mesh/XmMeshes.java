@@ -15,13 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.mesh.XmMeshesImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class XmMeshes {
 	private XmMeshes() {}
 

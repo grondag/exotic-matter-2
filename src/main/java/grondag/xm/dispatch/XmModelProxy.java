@@ -15,8 +15,6 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +24,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -50,7 +48,7 @@ import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.MutableModelState;
 
-@API(status = INTERNAL)
+@Internal
 @Environment(EnvType.CLIENT)
 public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 	private XmModelProxy() {

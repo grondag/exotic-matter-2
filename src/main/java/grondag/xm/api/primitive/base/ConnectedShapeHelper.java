@@ -64,16 +64,15 @@ import static grondag.xm.api.connect.state.CornerJoinFaceStates.TOP_LEFT_RIGHT_T
 import static grondag.xm.api.connect.state.CornerJoinFaceStates.TOP_LEFT_TL;
 import static grondag.xm.api.connect.state.CornerJoinFaceStates.TOP_RIGHT_NO_CORNER;
 import static grondag.xm.api.connect.state.CornerJoinFaceStates.TOP_RIGHT_TR;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 
 /**
  * Holds helper methods for generating connected shapes - not sure yet if part of API.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public class ConnectedShapeHelper {
 	private static void spec(float[][] target, CornerJoinFaceState state, float... values) {
 		target[state.ordinal()] = values;

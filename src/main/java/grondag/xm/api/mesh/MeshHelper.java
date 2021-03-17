@@ -17,16 +17,15 @@ package grondag.xm.api.mesh;
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.mesh.polygon.MutablePolygon;
-import grondag.xm.api.primitive.surface.XmSurface;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import net.minecraft.util.math.Direction;
 
-@API(status = EXPERIMENTAL)
+import grondag.xm.api.mesh.polygon.MutablePolygon;
+import grondag.xm.api.primitive.surface.XmSurface;
+
+@Experimental
 public class MeshHelper {
 
 	public static void unitCylinder(MutablePolygon writer, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, @Nullable XmSurface topSurface, @Nullable XmSurface bottomSurface, float wrapDistance) {

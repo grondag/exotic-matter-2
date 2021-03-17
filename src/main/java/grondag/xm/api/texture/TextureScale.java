@@ -17,11 +17,10 @@ package grondag.xm.api.texture;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static grondag.xm.api.modelstate.ModelStateFlags.POSITION;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum TextureScale {
 	/** 1x1 */
 	SINGLE(0, NONE),
@@ -65,7 +64,7 @@ public enum TextureScale {
 	 */
 	public final int modelStateFlag;
 
-	private TextureScale(int power, int modelStateFlag) {
+	TextureScale(int power, int modelStateFlag) {
 		this.power = power;
 		sliceCount = 1 << power;
 		sliceCountMask = sliceCount - 1;

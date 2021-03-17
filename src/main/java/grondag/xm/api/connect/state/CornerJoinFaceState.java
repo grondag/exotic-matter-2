@@ -15,10 +15,6 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import static org.apiguardian.api.API.Status.STABLE;
-
-import org.apiguardian.api.API;
-
 import net.minecraft.util.math.Direction;
 
 import grondag.fermion.orientation.api.FaceCorner;
@@ -38,7 +34,6 @@ import grondag.fermion.orientation.api.FaceEdge;
  * was returned. You must obtain and retain that information separately - it is
  * not part of this object.
  */
-@API(status = STABLE)
 public interface CornerJoinFaceState {
 
 	int ordinal();

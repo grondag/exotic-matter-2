@@ -15,13 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.texture.TextureLayoutMapImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface TextureLayoutMap {
 	static TextureLayoutMap create(TextureLayout layout, TextureNameFunction nameFunc) {
 		return TextureLayoutMapImpl.create(layout, nameFunc);

@@ -15,16 +15,14 @@
  ******************************************************************************/
 package grondag.xm.api.collision;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.shape.VoxelShape;
 
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.collision.CollisionDispatcherImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class CollisionDispatcher {
 	private CollisionDispatcher() {}
 

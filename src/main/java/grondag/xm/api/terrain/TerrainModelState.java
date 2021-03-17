@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.api.terrain;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.terrain.TerrainState;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface TerrainModelState extends BaseModelState<TerrainModelState, TerrainModelState.Mutable>  {
 
 	public interface Mutable extends TerrainModelState, MutableBaseModelState<TerrainModelState, TerrainModelState.Mutable> {

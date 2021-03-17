@@ -15,12 +15,10 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,7 +32,7 @@ import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelStateFunction;
 import grondag.xm.api.modelstate.MutableModelState;
 
-@API(status = INTERNAL)
+@Internal
 public class XmRegistryImpl {
 	private XmRegistryImpl() {
 	}

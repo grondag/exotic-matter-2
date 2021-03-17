@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
@@ -36,7 +34,7 @@ import grondag.xm.api.texture.TextureSet;
  * Applies quadrant-style border textures. Quads must have a nominal face. Will
  * split quads that span quadrants.
  */
-@API(status = INTERNAL)
+@Internal
 public abstract class QuadPainterRotated extends AbstractQuadPainter {
 	private static final RotatableQuadrant[][] TEXTURE_MAP = new RotatableQuadrant[FaceCorner.values().length][CornerJoinFaceStates.COUNT];
 

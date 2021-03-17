@@ -16,12 +16,11 @@
 
 package grondag.xm.api.mesh;
 
-import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.mesh.CsgMeshBuilderImpl;
 
-@API(status = Status.EXPERIMENTAL)
+@Experimental
 public interface CsgMeshBuilder {
 
 	void push();

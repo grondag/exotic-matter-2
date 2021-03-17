@@ -15,10 +15,6 @@
  ******************************************************************************/
 package grondag.xm.api.connect.world;
 
-import static org.apiguardian.api.API.Status.STABLE;
-
-import org.apiguardian.api.API;
-
 import grondag.xm.api.modelstate.ModelState;
 
 /**
@@ -38,7 +34,6 @@ import grondag.xm.api.modelstate.ModelState;
  * state function when it was retrieved. (And if the function returns a non-null
  * value.) See {@link ModelStateFunction}
  */
-@API(status = STABLE)
 @FunctionalInterface
 public interface BlockTest<T extends ModelState> {
 	boolean apply(BlockTestContext<T> context);

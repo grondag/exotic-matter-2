@@ -17,7 +17,6 @@ package grondag.xm.modelstate;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.BLOCK_SPECIES;
 import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +28,7 @@ import java.util.function.Supplier;
 
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.HashCommon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -75,7 +74,7 @@ import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-@API(status = INTERNAL)
+@Internal
 public abstract class AbstractPrimitiveModelState
 <V extends AbstractPrimitiveModelState<V, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>>
 extends AbstractModelState

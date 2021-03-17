@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -28,7 +26,7 @@ import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface MutablePolygon extends Polygon {
 
 	MutablePolygon spriteVertex(int layerIndex, int vertexIndex, float u, float v, int color, int glow);

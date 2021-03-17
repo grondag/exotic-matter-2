@@ -15,6 +15,17 @@
  ******************************************************************************/
 package grondag.xm.paint;
 
+import static grondag.xm.api.paint.XmPaint.MAX_TEXTURE_DEPTH;
+
+import it.unimi.dsi.fastutil.HashCommon;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
+
 import grondag.fermion.bits.BitPacker32;
 import grondag.xm.Xm;
 import grondag.xm.api.paint.PaintBlendMode;
@@ -26,19 +37,8 @@ import grondag.xm.api.paint.XmPaintFinder;
 import grondag.xm.api.paint.XmPaintRegistry;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetRegistry;
-import it.unimi.dsi.fastutil.HashCommon;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.apiguardian.api.API;
-import org.jetbrains.annotations.Nullable;
 
-import static grondag.xm.api.paint.XmPaint.MAX_TEXTURE_DEPTH;
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-
-@API(status = INTERNAL)
+@Internal
 public class XmPaintImpl {
 	private static final BitPacker32<XmPaintImpl> PAINT_BITS = new BitPacker32<>(p -> p.paintBits, (p, b) -> p.paintBits = b);
 

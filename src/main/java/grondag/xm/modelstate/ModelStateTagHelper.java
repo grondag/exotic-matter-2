@@ -15,13 +15,11 @@
  ******************************************************************************/
 package grondag.xm.modelstate;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.varia.NBTDictionary;
 
-@API(status = INTERNAL)
+@Internal
 public abstract class ModelStateTagHelper {
 	private ModelStateTagHelper() {
 	}

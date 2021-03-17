@@ -16,9 +16,7 @@
 
 package grondag.xm.api.block.base;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,7 +32,7 @@ import net.minecraft.world.WorldAccess;
 /**
  * Handles waterlogging.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public class CubicCutoutBlock extends Block {
 
 	public CubicCutoutBlock(Settings settings) {

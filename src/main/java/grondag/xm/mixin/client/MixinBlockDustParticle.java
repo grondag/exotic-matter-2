@@ -38,11 +38,9 @@ public abstract class MixinBlockDustParticle extends SpriteBillboardParticle {
 		super(world_1, double_1, double_2, double_3);
 	}
 
-	private static ThreadLocal<BlockPos.Mutable> POS = ThreadLocal.withInitial(BlockPos.Mutable::new);
-
-	@Inject(method = "<init>", at = @At(value = "RETURN"), cancellable = false, require = 0)
-	void onNew(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState blockState, CallbackInfo ci) {
-		final MutableModelState lookupState = XmBlockState.modelState(blockState, world, POS.get().set(x, y, z), false);
+	@Inject(method = "<init>(Lnet/minecraft/client/world/ClientWorld;DDDDDDLnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;)V", at = @At(value = "RETURN"), cancellable = false, require = 0)
+	void onNew(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
+		final MutableModelState lookupState = XmBlockState.modelState(blockState, world, blockPos, false);
 
 		if(lookupState != null) {
 			final ModelState renderState = XmDispatcher.INSTANCE.get(lookupState);

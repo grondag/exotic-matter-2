@@ -28,9 +28,8 @@ import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
 import static grondag.xm.texture.TextureSetHelper.addBigTex;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureLayoutMap;
@@ -38,7 +37,7 @@ import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureTransform;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum CoreTextures {
 	;
 

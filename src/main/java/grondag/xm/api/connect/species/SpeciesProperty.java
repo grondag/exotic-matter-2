@@ -16,8 +16,7 @@
 
 package grondag.xm.api.connect.species;
 
-import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.Block;
 import net.minecraft.state.property.IntProperty;
@@ -27,7 +26,7 @@ import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.connect.SpeciesImpl;
 
-@API(status = Status.EXPERIMENTAL)
+@Experimental
 public class SpeciesProperty {
 	private SpeciesProperty() {}
 

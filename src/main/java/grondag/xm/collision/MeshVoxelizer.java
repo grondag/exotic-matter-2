@@ -16,16 +16,15 @@
 package grondag.xm.collision;
 
 import static grondag.xm.collision.OctreeCoordinates.ALL_EMPTY;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 
-@API(status = INTERNAL)
+@Internal
 class MeshVoxelizer extends AbstractMeshVoxelizer implements Consumer<Polygon> {
 	private static void div1(final float[] polyData, final long[] voxelBits) {
 		if (TriangleBoxTest.triBoxOverlap(CLOW1, CLOW1, CLOW1, R1, polyData)) {

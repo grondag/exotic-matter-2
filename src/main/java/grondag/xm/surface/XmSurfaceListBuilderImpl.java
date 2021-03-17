@@ -15,16 +15,14 @@
  ******************************************************************************/
 package grondag.xm.surface;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.primitive.surface.XmSurfaceListBuilder;
 
-@API(status = INTERNAL)
+@Internal
 public class XmSurfaceListBuilderImpl implements XmSurfaceListBuilder {
 	private final SimpleUnorderedArrayList<XmSurfaceImpl> surfaces = new SimpleUnorderedArrayList<>();
 

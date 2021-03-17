@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.network;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import io.netty.buffer.Unpooled;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -33,7 +31,7 @@ import grondag.xm.Xm;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.paint.PaintIndexImpl;
 
-@API(status = INTERNAL)
+@Internal
 public abstract class PaintIndexUpdateS2C {
 	private PaintIndexUpdateS2C() {
 	}

@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.connect;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
 import grondag.xm.api.connect.world.BlockNeighbors;
 
-@API(status = INTERNAL)
+@Internal
 public class CornerJoinStateSelector {
 	private static final Direction[] FACES = Direction.values();
 	public static final int BLOCK_JOIN_STATE_COUNT = 20115;

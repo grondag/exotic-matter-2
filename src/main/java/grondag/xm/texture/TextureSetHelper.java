@@ -15,40 +15,40 @@
  ******************************************************************************/
 package grondag.xm.texture;
 
-import grondag.xm.api.texture.TextureGroup;
-import grondag.xm.api.texture.TextureLayoutMap;
-import grondag.xm.api.texture.TextureRenderIntent;
-import grondag.xm.api.texture.TextureScale;
-import grondag.xm.api.texture.TextureSet;
-import grondag.xm.api.texture.TextureTransform;
-import org.apiguardian.api.API;
-
 import static grondag.xm.api.texture.TextureGroup.STATIC_BORDERS;
 import static grondag.xm.api.texture.TextureLayoutMap.BORDER_13;
 import static grondag.xm.api.texture.TextureLayoutMap.BORDER_14;
 import static grondag.xm.api.texture.TextureRenderIntent.OVERLAY_ONLY;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
-import static org.apiguardian.api.API.Status.INTERNAL;
+
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 
-@API(status = INTERNAL)
+import grondag.xm.api.texture.TextureGroup;
+import grondag.xm.api.texture.TextureLayoutMap;
+import grondag.xm.api.texture.TextureRenderIntent;
+import grondag.xm.api.texture.TextureScale;
+import grondag.xm.api.texture.TextureSet;
+import grondag.xm.api.texture.TextureTransform;
+
+@Internal
 public enum TextureSetHelper {
 	;
 
 	public static SpriteAtlasTexture blockAtas() {
-		return MinecraftClient.getInstance().getBakedModelManager().method_24153(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
+		return MinecraftClient.getInstance().getBakedModelManager().getAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
 	}
 
 	public static Sprite missingSprite() {
 		return blockAtas().getSprite(MissingSprite.getMissingSpriteId());
 	}
 
-	private TextureSetHelper() {}
+	TextureSetHelper() {}
 
 	static final TextureGroup[] BORDERS_STATIC = new TextureGroup[] { TextureGroup.STATIC_BORDERS };
 	static final TextureGroup[] DUAL_STATIC =  new TextureGroup[] { TextureGroup.STATIC_TILES, TextureGroup.STATIC_BORDERS };

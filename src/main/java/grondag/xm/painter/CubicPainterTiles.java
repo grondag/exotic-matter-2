@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import it.unimi.dsi.fastutil.HashCommon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
@@ -32,7 +30,7 @@ import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureTransform;
 
-@API(status = INTERNAL)
+@Internal
 public abstract class CubicPainterTiles extends AbstractQuadPainter {
 	@SuppressWarnings("rawtypes")
 	public static void paintQuads(MutableMesh stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {

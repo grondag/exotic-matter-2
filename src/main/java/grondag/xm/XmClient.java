@@ -16,9 +16,7 @@
 
 package grondag.xm;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
@@ -48,7 +46,7 @@ import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import grondag.xm.render.OutlineRenderer;
 import grondag.xm.texture.XmTexturesImpl;
 
-@API(status = INTERNAL)
+@Internal
 public class XmClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {

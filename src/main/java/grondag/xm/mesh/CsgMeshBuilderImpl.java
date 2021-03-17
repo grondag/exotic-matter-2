@@ -17,8 +17,7 @@
 package grondag.xm.mesh;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.Csg;
@@ -29,7 +28,7 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.XmMeshes;
 
-@API(status = Status.EXPERIMENTAL)
+@Experimental
 public class CsgMeshBuilderImpl implements CsgMeshBuilder {
 	private static ThreadLocal<CsgMeshBuilderImpl> THREADLOCAL = ThreadLocal.withInitial(CsgMeshBuilderImpl::new);
 

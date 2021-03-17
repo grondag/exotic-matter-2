@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.surface;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 
-@API(status = INTERNAL)
+@Internal
 class XmSurfaceImpl implements XmSurface {
 	final int ordinal;
 	final String nameKey;

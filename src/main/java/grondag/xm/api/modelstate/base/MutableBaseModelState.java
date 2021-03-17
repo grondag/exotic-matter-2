@@ -1,11 +1,9 @@
 package grondag.xm.api.modelstate.base;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.math.BlockPos;
 
@@ -16,7 +14,7 @@ import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface MutableBaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> extends BaseModelState<R, W>, MutableModelState {
 	@Override
 	W copyFrom(ModelState template);

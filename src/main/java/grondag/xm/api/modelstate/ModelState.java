@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -43,7 +41,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface ModelState {
 	MutableModelState mutableCopy();
 

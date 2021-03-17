@@ -16,19 +16,18 @@
 package grondag.xm.mesh;
 
 import static grondag.xm.api.mesh.polygon.PolyHelper.epsilonEquals;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 
-@API(status = INTERNAL)
+@Internal
 class CsgPolyRecombinator {
 	private static final ThreadLocal<CsgPolyRecombinator> POOL = ThreadLocal.withInitial(CsgPolyRecombinator::new);
 

@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.Identifier;
 
 // TODO: add fallback texture specification
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface TextureSetBuilder {
 	TextureSetBuilder versionCount(int versionCount);
 

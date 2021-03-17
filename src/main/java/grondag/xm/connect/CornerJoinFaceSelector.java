@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.connect;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
 import grondag.xm.api.connect.world.BlockNeighbors;
 
-@API(status = INTERNAL)
+@Internal
 public class CornerJoinFaceSelector {
 	public final Direction face;
 

@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.connect.world;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +29,7 @@ import grondag.xm.api.modelstate.ModelState;
  * to retrieve values with lazy evaluation and caching. The resulting values
  * will also be provided to {@link BlockTest}.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 @FunctionalInterface
 public interface ModelStateFunction {
 	ModelState get(BlockView world, BlockState blockState, BlockPos pos);

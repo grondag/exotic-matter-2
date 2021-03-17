@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -30,7 +28,7 @@ import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
-@API(status = INTERNAL)
+@Internal
 class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutablePolygon {
 	@Override
 	public final MutablePolygon spriteVertex(int layerIndex, int vertexIndex, float u, float v, int color, int glow) {

@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.paint;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import com.mojang.serialization.Lifecycle;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.DefaultedRegistry;
@@ -30,7 +28,7 @@ import grondag.xm.Xm;
 import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.VertexProcessorRegistry;
 
-@API(status = INTERNAL)
+@Internal
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class VertexProcessorRegistryImpl extends DefaultedRegistry<VertexProcessor> implements VertexProcessorRegistry {
 

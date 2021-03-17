@@ -19,6 +19,17 @@ import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.BlockView;
+
 import grondag.fermion.orientation.api.CubeCorner;
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.xm.Xm;
@@ -27,17 +38,6 @@ import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.connect.world.ModelStateFunction;
 import grondag.xm.api.modelstate.ModelState;
-import org.apiguardian.api.API;
-
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.BlockView;
 
 /**
  * Convenient way to gather and test block states for blocks adjacent to a given
@@ -45,13 +45,13 @@ import net.minecraft.world.BlockView;
  * are cached for reuse.
  */
 @SuppressWarnings("rawtypes")
-@API(status = INTERNAL)
+@Internal
 public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	private static final int STATE_COUNT = 6 + 12 + 8;
 	private static final BlockState EMPTY_BLOCK_STATE[] = new BlockState[STATE_COUNT];
 	private static final BlockEntity EMPTY_BLOCK_ENTITY[] = new BlockEntity[STATE_COUNT];
 	private static final ModelState EMPTY_MODEL_STATE[] = new ModelState[STATE_COUNT];
-	private static final BlockEntity MISSING_BLOCK_ENTITY = new BlockEntity(null) {};
+	private static final BlockEntity MISSING_BLOCK_ENTITY = new BlockEntity(BlockEntityType.STRUCTURE_BLOCK, new BlockPos(0, 0, 0), Blocks.AIR.getDefaultState()) {};
 
 	static {
 		Arrays.fill(EMPTY_BLOCK_ENTITY, MISSING_BLOCK_ENTITY);

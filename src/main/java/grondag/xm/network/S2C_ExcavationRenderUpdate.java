@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.network;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import io.netty.buffer.Unpooled;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -43,7 +41,7 @@ import grondag.xm.virtual.ExcavationRenderer;
  * Sent when a new excavation is added, the bounds change, or excavation is
  * removed.
  */
-@API(status = INTERNAL)
+@Internal
 public abstract class S2C_ExcavationRenderUpdate {
 	private S2C_ExcavationRenderUpdate() {
 	}

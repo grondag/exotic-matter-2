@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 /**
  * Implementations that declare this interface guarantee that no
@@ -28,7 +26,7 @@ import org.apiguardian.api.API;
  * WritableMesh may be. Use to exclude mutable streams from use cases
  * where they would cause problems.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface ReadOnlyMesh extends XmMesh {
 
 }

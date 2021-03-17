@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.mesh.vertex;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import it.unimi.dsi.fastutil.HashCommon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.mesh.polygon.Vec3f;
 
-@API(status = INTERNAL)
+@Internal
 public class Vec3fImpl implements Vec3f {
 
 	static final Vec3fImpl ZERO = new Vec3fImpl(0, 0, 0);

@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.mesh;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -26,7 +24,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
  * Stream that allows appending to end in wip area but is immutable for polygons
  * already created.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface WritableMesh extends XmMesh {
 
 	/**

@@ -15,17 +15,16 @@
  ******************************************************************************/
 package grondag.xm.api.item;
 
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.dispatch.XmItemAccess;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-@API(status = EXPERIMENTAL)
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.dispatch.XmItemAccess;
+
+@Experimental
 public class XmItem {
 	private XmItem() {}
 

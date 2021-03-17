@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.primitive;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.Identifier;
 
@@ -30,7 +28,7 @@ import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.primitive.SimplePrimitiveBuilderImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutablePrimitiveState>{
 	static Builder builder() {
 		return SimplePrimitiveBuilderImpl.builder();

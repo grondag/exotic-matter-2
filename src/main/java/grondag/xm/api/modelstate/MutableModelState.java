@@ -16,16 +16,14 @@
 
 package grondag.xm.api.modelstate;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 
 import grondag.xm.api.paint.PaintIndex;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface MutableModelState extends ModelState {
 	void release();
 

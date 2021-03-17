@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +26,7 @@ import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.terrain.TerrainModelState;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
 
-@API(status = INTERNAL)
+@Internal
 public class TerrainModelStateImpl extends AbstractPrimitiveModelState<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> implements TerrainModelState.Mutable {
 	public static final ModelStateFactoryImpl<TerrainModelStateImpl, TerrainModelState, TerrainModelState.Mutable> FACTORY = new ModelStateFactoryImpl<>(TerrainModelStateImpl::new);
 

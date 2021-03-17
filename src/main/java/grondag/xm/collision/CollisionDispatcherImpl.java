@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -25,7 +23,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import grondag.fermion.sc.cache.ObjectSimpleLoadingCache;
 import grondag.xm.api.modelstate.ModelState;
 
-@API(status = INTERNAL)
+@Internal
 public class CollisionDispatcherImpl {
 	private static final ObjectSimpleLoadingCache<ModelState, VoxelShape> modelCache = new ObjectSimpleLoadingCache<>(
 			CollisionDispatcherImpl::load, k -> k.toImmutable(), 0xFFF);

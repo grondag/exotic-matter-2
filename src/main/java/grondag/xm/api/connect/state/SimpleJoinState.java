@@ -15,10 +15,6 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import static org.apiguardian.api.API.Status.STABLE;
-
-import org.apiguardian.api.API;
-
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
@@ -31,7 +27,6 @@ import grondag.xm.connect.SimpleJoinStateImpl;
  * depend on only on six directly adjacent neighbors.
  * <p>
  */
-@API(status = STABLE)
 public interface SimpleJoinState {
 	int STATE_COUNT = 64; // 2^6
 	int AXIS_JOIN_STATE_COUNT = 1 + 3 * 3; // No joins, plus +/-/both states for each axis

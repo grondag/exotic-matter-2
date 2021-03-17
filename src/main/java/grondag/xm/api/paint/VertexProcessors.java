@@ -15,17 +15,15 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import it.unimi.dsi.fastutil.HashCommon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.fermion.color.ColorHelper;
 
 /**
  * Vertex processors to support common use cases.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface VertexProcessors {
 	VertexProcessor SPECIES_VARIATION = (poly, modelState, surface, paint, textureIndex) -> {
 		final int mix = HashCommon.mix(modelState.species());

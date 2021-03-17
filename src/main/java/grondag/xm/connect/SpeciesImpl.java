@@ -16,9 +16,7 @@
 
 package grondag.xm.connect;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -33,7 +31,7 @@ import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.modelstate.ModelState;
 
-@API(status = INTERNAL)
+@Internal
 public class SpeciesImpl {
 	private SpeciesImpl() {}
 

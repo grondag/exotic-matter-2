@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +23,7 @@ import net.minecraft.util.math.BlockPos;
 /**
  * Read-only terrain world cache
  */
-@API(status = INTERNAL)
+@Internal
 public class TerrainWorldCache extends TerrainWorldAdapter {
 	@Override
 	public void setBlockState(long packedBlockPos, BlockState newState) {

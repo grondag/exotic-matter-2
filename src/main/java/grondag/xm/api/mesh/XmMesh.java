@@ -17,13 +17,12 @@ package grondag.xm.api.mesh;
 
 import java.util.function.Consumer;
 
-import grondag.xm.api.mesh.polygon.Polygon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import grondag.xm.api.mesh.polygon.Polygon;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface XmMesh {
 	boolean isEmpty();
 

@@ -22,9 +22,8 @@ import static grondag.xm.texture.TextureSetHelper.addBigTex;
 import static grondag.xm.texture.TextureSetHelper.addBorderRandom;
 import static grondag.xm.texture.TextureSetHelper.addBorderSingle;
 import static grondag.xm.texture.TextureSetHelper.addDecal;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureGroup;
@@ -33,7 +32,7 @@ import grondag.xm.api.texture.TextureRenderIntent;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum UnstableTextures {
 	;
 	public static final TextureSet BORDER_GRITTY_SINGLE_LINE = addBorderRandom("exotic-matter", "border_gritty_single_line", false, false);

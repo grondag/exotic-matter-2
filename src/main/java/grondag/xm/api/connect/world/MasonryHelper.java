@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.connect.world;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 
 // For masonry, true result means border IS present
-@API(status = EXPERIMENTAL)
+@Experimental
 public class MasonryHelper implements BlockTest<PrimitiveState> {
 	private MasonryHelper() {
 	}

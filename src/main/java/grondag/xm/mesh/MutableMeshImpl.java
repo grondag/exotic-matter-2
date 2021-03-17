@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 
-@API(status = INTERNAL)
+@Internal
 class MutableMeshImpl extends WritableMeshImpl implements MutableMesh {
 	protected final StreamBackedMutablePolygon editor = new StreamBackedMutablePolygon();
 

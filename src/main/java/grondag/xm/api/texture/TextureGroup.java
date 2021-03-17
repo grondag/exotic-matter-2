@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
-import org.apiguardian.api.API;
-
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum TextureGroup {
 	STATIC_TILES,
 	STATIC_BORDERS,
@@ -35,7 +33,7 @@ public enum TextureGroup {
 	/** used as a fast way to filter textures from a list */
 	public final int bitFlag;
 
-	private TextureGroup() {
+	TextureGroup() {
 		bitFlag = (1 << ordinal());
 	}
 

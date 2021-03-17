@@ -15,12 +15,11 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
-import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.texture.TextureOrientation;
 
-@API(status = Status.INTERNAL)
+@Internal
 public class FaceQuadInputs {
 	public final int textureOffset;
 	public final TextureOrientation rotation;

@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.connect;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
 import grondag.xm.api.connect.state.CornerJoinState;
 
-@API(status = INTERNAL)
+@Internal
 class CornerJoinStateImpl implements CornerJoinState {
 	private final int index;
 

@@ -15,10 +15,6 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import static org.apiguardian.api.API.Status.STABLE;
-
-import org.apiguardian.api.API;
-
 import net.minecraft.util.math.Direction;
 
 import grondag.xm.api.connect.world.BlockNeighbors;
@@ -33,7 +29,6 @@ import grondag.xm.connect.CornerJoinStateSelector;
  * {@link #simpleJoin()} state given the same block neighbors / test.
  * <p>
  */
-@API(status = STABLE)
 public interface CornerJoinState {
 	int STATE_COUNT = CornerJoinStateSelector.BLOCK_JOIN_STATE_COUNT;
 

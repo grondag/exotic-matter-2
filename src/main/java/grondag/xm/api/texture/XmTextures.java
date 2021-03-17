@@ -25,11 +25,10 @@ import static grondag.xm.api.texture.TextureRenderIntent.OVERLAY_ONLY;
 import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum XmTextures {
 	;
 

@@ -15,19 +15,19 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
-import org.apiguardian.api.API;
-
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Only purpose is to exclude tile entities that don't need TESR from chunk
  * rendering loop. Code is identical to SuperTileEntityTESR.
  */
-@API(status = INTERNAL)
+@Internal
 public class VirtualBlockEntityWithRenderer extends VirtualBlockEntity {
-	public VirtualBlockEntityWithRenderer(BlockEntityType<?> blockEntityType) {
-		super(blockEntityType);
+	public VirtualBlockEntityWithRenderer(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+		super(blockEntityType, pos, state);
 	}
 }

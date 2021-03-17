@@ -16,9 +16,8 @@
 package grondag.xm.collision;
 
 import static grondag.xm.api.mesh.polygon.PolyHelper.EPSILON;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.MathHelper;
 
@@ -31,7 +30,7 @@ import grondag.xm.api.mesh.polygon.Vec3f;
  * Heavily modified for performance in this context. Used for high-performance
  * voxelization of block models.
  */
-@API(status = INTERNAL)
+@Internal
 class TriangleBoxTest {
 	/**
 	 *

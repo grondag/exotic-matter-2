@@ -15,13 +15,11 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.StringIdentifiable;
 
-@API(status = INTERNAL)
+@Internal
 public enum TerrainType implements StringIdentifiable {
 	FILL_UP_ONE(1, true),
 	FILL_UP_TWO(2, true),
@@ -45,7 +43,7 @@ public enum TerrainType implements StringIdentifiable {
 	public final int height;
 	public final int fillOffset;
 
-	private TerrainType(int height, boolean filler) {
+	TerrainType(int height, boolean filler) {
 		name = name().toLowerCase();
 		this.height = filler ? 0 : height;
 		fillOffset = filler ? height : 0;

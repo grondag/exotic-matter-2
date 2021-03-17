@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -30,7 +28,7 @@ import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface Polygon {
 	int vertexCount();
 

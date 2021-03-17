@@ -39,9 +39,8 @@ import static grondag.fermion.orientation.api.CubeRotation.WEST_DOWN;
 import static grondag.fermion.orientation.api.CubeRotation.WEST_NORTH;
 import static grondag.fermion.orientation.api.CubeRotation.WEST_SOUTH;
 import static grondag.fermion.orientation.api.CubeRotation.WEST_UP;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -58,7 +57,7 @@ import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.modelstate.base.BaseModelState;
 
-@API(status = INTERNAL)
+@Internal
 @SuppressWarnings("rawtypes")
 public class PolyTransformImpl implements PolyTransform {
 	private final float m00, m10, m20, m30;

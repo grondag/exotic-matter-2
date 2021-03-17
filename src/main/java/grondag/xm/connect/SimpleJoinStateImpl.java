@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.connect;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -26,7 +24,7 @@ import grondag.xm.api.connect.state.SimpleJoinFaceState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
 
-@API(status = INTERNAL)
+@Internal
 public class SimpleJoinStateImpl implements SimpleJoinState {
 	public static final SimpleJoinState NO_JOINS;
 	public static final SimpleJoinState ALL_JOINS;

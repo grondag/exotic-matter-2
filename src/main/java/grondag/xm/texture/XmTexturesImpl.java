@@ -15,12 +15,7 @@
  ******************************************************************************/
 package grondag.xm.texture;
 
-import grondag.xm.Xm;
-import grondag.xm.api.texture.XmTextures;
-import grondag.xm.paint.XmPaintRegistryImpl;
-import org.apiguardian.api.API;
-
-import static org.apiguardian.api.API.Status.INTERNAL;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -28,7 +23,11 @@ import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback.Registry;
 
-@API(status = INTERNAL)
+import grondag.xm.Xm;
+import grondag.xm.api.texture.XmTextures;
+import grondag.xm.paint.XmPaintRegistryImpl;
+
+@Internal
 public class XmTexturesImpl {
 
 	/**

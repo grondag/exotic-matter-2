@@ -1,16 +1,11 @@
 package grondag.xm.api.connect.species;
 
 
-import static org.apiguardian.api.API.Status.STABLE;
-
-import org.apiguardian.api.API;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 @FunctionalInterface
-@API(status = STABLE)
 public interface SpeciesFunction {
 	int NO_SPECIES = -1;
 

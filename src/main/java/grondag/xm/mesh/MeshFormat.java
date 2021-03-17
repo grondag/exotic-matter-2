@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
@@ -25,7 +23,7 @@ import grondag.fermion.bits.BitPacker32;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 
-@API(status = INTERNAL)
+@Internal
 class MeshFormat {
 	private static final BitPacker32<MeshFormat> BITPACKER = new BitPacker32<>(null, null);
 

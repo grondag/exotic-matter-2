@@ -16,12 +16,10 @@
 
 package grondag.xm;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -29,7 +27,7 @@ import net.minecraft.block.BlockState;
 /**
  * Utilities to prevents dedicated server references to client-only classes.
  */
-@API(status = INTERNAL)
+@Internal
 public enum SidedHelper {
 	;
 

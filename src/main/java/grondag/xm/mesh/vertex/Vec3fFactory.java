@@ -15,16 +15,14 @@
  ******************************************************************************/
 package grondag.xm.mesh.vertex;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
 import grondag.xm.api.mesh.polygon.Vec3f;
 
-@API(status = INTERNAL)
+@Internal
 public class Vec3fFactory {
 	private Vec3fFactory() {}
 

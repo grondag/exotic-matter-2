@@ -16,12 +16,11 @@
 package grondag.xm.terrain;
 
 import static it.unimi.dsi.fastutil.HashCommon.arraySize;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Supplier;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -41,11 +40,9 @@ import grondag.fermion.position.PackedBlockPos;
  * TODO: add caching for flow height - do with as part of SuperBlockState TODO:
  * reinstate usage or remove
  */
-@API(status = INTERNAL)
+@Internal
 public class TerrainWorldAdapter implements BlockView {
 	protected World world;
-
-	@SuppressWarnings("serial")
 
 	public static class FastMap<V> extends Long2ObjectOpenHashMap<V> {
 		/**
@@ -187,5 +184,15 @@ public class TerrainWorldAdapter implements BlockView {
 	@Override
 	public FluidState getFluidState(BlockPos pos) {
 		return world.getFluidState(pos);
+	}
+
+	@Override
+	public int getHeight() {
+		return world.getHeight();
+	}
+
+	@Override
+	public int getBottomY() {
+		return world.getBottomY();
 	}
 }

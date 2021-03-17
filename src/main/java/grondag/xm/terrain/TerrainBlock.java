@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.Block;
 import net.minecraft.state.property.EnumProperty;
@@ -25,7 +23,7 @@ import net.minecraft.state.property.IntProperty;
 
 import grondag.xm.api.modelstate.MutableModelState;
 
-@API(status = INTERNAL)
+@Internal
 public class TerrainBlock extends Block implements IHotBlock {
 	public static final IntProperty HEAT = IntProperty.of("xm2_heat", 0, 15);
 	public static final EnumProperty<TerrainType> TERRAIN_TYPE = EnumProperty.of("xm2_terrain", TerrainType.class);

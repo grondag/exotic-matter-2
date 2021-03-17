@@ -15,14 +15,13 @@
  ******************************************************************************/
 package grondag.xm.render;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 
@@ -32,7 +31,7 @@ import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.modelstate.ModelState;
 
-@API(status = INTERNAL)
+@Internal
 public class OutlineRenderer {
 	public static final BlendMode[] RENDER_LAYERS = BlendMode.values();
 	public static final int RENDER_LAYER_COUNT = RENDER_LAYERS.length;
@@ -50,6 +49,7 @@ public class OutlineRenderer {
 
 		final WritableMesh mesh = outlineMesh;
 		final Matrix4f matrix4f = matrixStack.peek().getModel();
+		final Matrix3f normalMatrix = matrixStack.peek().getNormal();
 
 		if(outlineModelState == null || !modelState.equals(outlineModelState)) {
 			outlineModelState = modelState.toImmutable();
@@ -61,8 +61,9 @@ public class OutlineRenderer {
 			final int limit = p.vertexCount() - 1;
 
 			for(int i = 0; i < limit; i++) {
-				vertexConsumer.vertex(matrix4f, (float) (p.x(i) + x), (float) (p.y(i) + y), (float) (p.z(i) + z)).color(r, g, b, a).next();
-				vertexConsumer.vertex(matrix4f, (float) (p.x(i + 1) + x), (float) (p.y(i + 1) + y), (float) (p.z(i + 1) + z)).color(r, g, b, a).next();
+				// lines format wants a normal - god knows what for - we always pass in up
+				vertexConsumer.vertex(matrix4f, (float) (p.x(i) + x), (float) (p.y(i) + y), (float) (p.z(i) + z)).color(r, g, b, a).normal(normalMatrix, 0, 1, 0).next();
+				vertexConsumer.vertex(matrix4f, (float) (p.x(i + 1) + x), (float) (p.y(i + 1) + y), (float) (p.z(i + 1) + z)).color(r, g, b, a).normal(normalMatrix, 0, 1, 0).next();
 			}
 		});
 	}

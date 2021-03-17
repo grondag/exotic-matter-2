@@ -15,13 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.terrain;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.api.primitive.ModelPrimitive;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface TerrainPrimitive extends ModelPrimitive<TerrainModelState, TerrainModelState.Mutable>{
 
 }

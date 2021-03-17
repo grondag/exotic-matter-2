@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate.primitive;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.StairsBlock;
@@ -29,7 +27,7 @@ import grondag.fermion.orientation.api.CubeRotation;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.primitive.simple.Stair;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePrimitiveState>  {
 	SimplePrimitiveStateMutator AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
 		final Comparable<?> axis = blockState.getEntries().get(PillarBlock.AXIS);

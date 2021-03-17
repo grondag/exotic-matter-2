@@ -16,8 +16,6 @@
 
 package grondag.xm.mesh;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import it.unimi.dsi.fastutil.Swapper;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
 import it.unimi.dsi.fastutil.ints.AbstractIntComparator;
@@ -25,13 +23,13 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Polygon;
 
-@API(status = INTERNAL)
+@Internal
 /**
  * Groups proximate vertices for face recombination.
  */

@@ -28,14 +28,13 @@ import static grondag.xm.api.texture.TextureTransform.ROTATE_180;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_270;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_90;
 import static grondag.xm.api.texture.TextureTransform.ROTATE_RANDOM;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureSet;
 
-@API(status = INTERNAL)
+@Internal
 public enum TestTextures {
 	;
 

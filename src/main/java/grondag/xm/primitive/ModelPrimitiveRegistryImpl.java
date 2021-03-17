@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.primitive;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.function.Consumer;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
@@ -35,7 +33,7 @@ import grondag.xm.api.primitive.ModelPrimitiveRegistry;
 import grondag.xm.modelstate.ModelStateTagHelper;
 
 @SuppressWarnings("rawtypes")
-@API(status = INTERNAL)
+@Internal
 public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	public static ModelPrimitiveRegistryImpl INSTANCE = new ModelPrimitiveRegistryImpl();
 

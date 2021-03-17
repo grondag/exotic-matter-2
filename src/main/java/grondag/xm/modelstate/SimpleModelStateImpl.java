@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.modelstate;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 
-@API(status = INTERNAL)
+@Internal
 public class SimpleModelStateImpl extends AbstractPrimitiveModelState<SimpleModelStateImpl, PrimitiveState, MutablePrimitiveState> implements MutablePrimitiveState {
 	public static final int MAX_SURFACES = 8;
 

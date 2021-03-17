@@ -15,25 +15,21 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
-@API(status = INTERNAL)
-public class VirtualBlockEntityRenderer extends BlockEntityRenderer<VirtualBlockEntityWithRenderer> {
+@Internal
+public class VirtualBlockEntityRenderer implements BlockEntityRenderer<VirtualBlockEntityWithRenderer> {
 
-	public VirtualBlockEntityRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher) {
-		super(blockEntityRenderDispatcher);
-	}
+	public VirtualBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) { }
 
 	@Override
 	public void render(VirtualBlockEntityWithRenderer be, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {

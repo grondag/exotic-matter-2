@@ -15,18 +15,16 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.xm.texture.TextureOrientationHelper;
 
 // TODO: Restore RANDOM_CONSISTENT to distinguish multi-block textures that can and can't have rotations intermingled per-plane.
 // As is, have to assume can't, but 2x2 cobble would be an example that could.
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum TextureOrientation {
 	IDENTITY(ClockwiseRotation.ROTATE_NONE, false, false),
 	ROTATE_90(ClockwiseRotation.ROTATE_90, false, false),
@@ -52,7 +50,7 @@ public enum TextureOrientation {
 	public final boolean flipU;
 	public final boolean flipV;
 
-	private TextureOrientation(ClockwiseRotation rotation, boolean flipU, boolean flipV) {
+	TextureOrientation(ClockwiseRotation rotation, boolean flipU, boolean flipV) {
 		this.rotation = rotation;
 		this.flipU = flipU;
 		this.flipV = flipV;

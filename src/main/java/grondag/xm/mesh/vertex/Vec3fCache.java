@@ -15,19 +15,17 @@
  ******************************************************************************/
 package grondag.xm.mesh.vertex;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import it.unimi.dsi.fastutil.HashCommon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.sc.cache.ISimpleLoadingCache;
 import grondag.xm.api.mesh.polygon.Vec3f;
 
 // PERF: sucks - avoid using instanced immutable vectors in more places
-@API(status = INTERNAL)
+@Internal
 public class Vec3fCache {
 	static final Vec3fCache INSTANCE = new Vec3fCache(0x10000);
 

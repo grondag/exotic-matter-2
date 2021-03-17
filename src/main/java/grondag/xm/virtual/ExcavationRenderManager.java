@@ -15,19 +15,12 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.ArrayList;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.apiguardian.api.API;
-import org.lwjgl.opengl.GL11;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,7 +28,7 @@ import net.fabricmc.api.Environment;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
 
-@API(status = INTERNAL)
+@Internal
 public class ExcavationRenderManager {
 	private static final Int2ObjectOpenHashMap<ExcavationRenderer> excavations = new Int2ObjectOpenHashMap<>();
 
@@ -72,60 +65,60 @@ public class ExcavationRenderManager {
 		//		GlStateManager.lineWidth(2);
 
 		// TODO: reimplement for new rendering - this likely won't work
-		final Tessellator tessellator = Tessellator.getInstance();
-		final BufferBuilder bufferbuilder = tessellator.getBuffer();
-		bufferbuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
-
-		secondPass.clear();
-
-		//		final Frustum visibleRegion = XmRenderHelper.frustum();
-
-		final double d0 = player.lastRenderX + (player.getX() - player.lastRenderX) * tickDelta;
-		final double d1 = player.lastRenderY + (player.getY() - player.lastRenderY) * tickDelta;
-		final double d2 = player.lastRenderZ + (player.getZ() - player.lastRenderZ) * tickDelta;
-
-		// TODO: needed?
-		// bufferBuilder.setOffset(-d0, -d1, -d2);
-
-		for (final ExcavationRenderer ex : renderCopy) {
-			// FIX: add back visibility test using supported API
-			if (ex.bounds() != null) { // && visibleRegion.isVisible(ex.bounds())) {
-				if (ex.drawBounds(bufferbuilder, player, d0, d1, d2, tickDelta)) {
-					secondPass.add(ex);
-				}
-			}
-		}
-
-		tessellator.draw();
-
-		if (!secondPass.isEmpty()) {
-
-			GlStateManager.lineWidth(1);
-			bufferbuilder.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
-			for (final ExcavationRenderer ex : secondPass) {
-				ex.drawGrid(bufferbuilder, d0, d1, d2);
-			}
-			tessellator.draw();
-
-			GlStateManager.enableDepthTest();
-
-			// prevent z-fighting
-			GlStateManager.enablePolygonOffset();
-			GlStateManager.polygonOffset(-1, -1);
-
-			bufferbuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-			for (final ExcavationRenderer ex : secondPass) {
-				ex.drawBox(bufferbuilder, d0, d1, d2);
-			}
-			tessellator.draw();
-
-			GlStateManager.disablePolygonOffset();
-		}
-
-		GlStateManager.depthMask(true);
-		GlStateManager.enableTexture();
-		GlStateManager.disableBlend();
-		GlStateManager.enableAlphaTest();
+		//		final Tessellator tessellator = Tessellator.getInstance();
+		//		final BufferBuilder bufferbuilder = tessellator.getBuffer();
+		//		bufferbuilder.begin(GL11.GL_LINE_STRIP, VertexFormats.POSITION_COLOR);
+		//
+		//		secondPass.clear();
+		//
+		//		//		final Frustum visibleRegion = XmRenderHelper.frustum();
+		//
+		//		final double d0 = player.lastRenderX + (player.getX() - player.lastRenderX) * tickDelta;
+		//		final double d1 = player.lastRenderY + (player.getY() - player.lastRenderY) * tickDelta;
+		//		final double d2 = player.lastRenderZ + (player.getZ() - player.lastRenderZ) * tickDelta;
+		//
+		//		// TODO: needed?
+		//		// bufferBuilder.setOffset(-d0, -d1, -d2);
+		//
+		//		for (final ExcavationRenderer ex : renderCopy) {
+		//			// FIX: add back visibility test using supported API
+		//			if (ex.bounds() != null) { // && visibleRegion.isVisible(ex.bounds())) {
+		//				if (ex.drawBounds(bufferbuilder, player, d0, d1, d2, tickDelta)) {
+		//					secondPass.add(ex);
+		//				}
+		//			}
+		//		}
+		//
+		//		tessellator.draw();
+		//
+		//		if (!secondPass.isEmpty()) {
+		//
+		//			GlStateManager.lineWidth(1);
+		//			bufferbuilder.begin(GL11.GL_LINES, VertexFormats.POSITION_COLOR);
+		//			for (final ExcavationRenderer ex : secondPass) {
+		//				ex.drawGrid(bufferbuilder, d0, d1, d2);
+		//			}
+		//			tessellator.draw();
+		//
+		//			GlStateManager.enableDepthTest();
+		//
+		//			// prevent z-fighting
+		//			GlStateManager.enablePolygonOffset();
+		//			GlStateManager.polygonOffset(-1, -1);
+		//
+		//			bufferbuilder.begin(GL11.GL_TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+		//			for (final ExcavationRenderer ex : secondPass) {
+		//				ex.drawBox(bufferbuilder, d0, d1, d2);
+		//			}
+		//			tessellator.draw();
+		//
+		//			GlStateManager.disablePolygonOffset();
+		//		}
+		//
+		//		GlStateManager.depthMask(true);
+		//		GlStateManager.enableTexture();
+		//		GlStateManager.disableBlend();
+		//		GlStateManager.enableAlphaTest();
 	}
 
 	public static void clear() {

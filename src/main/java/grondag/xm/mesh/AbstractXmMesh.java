@@ -15,19 +15,17 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
 
-@API(status = INTERNAL)
+@Internal
 abstract class AbstractXmMesh implements XmMesh {
 	protected IntStream stream;
 

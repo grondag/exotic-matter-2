@@ -15,16 +15,14 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-@API(status = INTERNAL)
+@Internal
 public class VirtualItemBlock { // extends XmBlockItem implements PlacementItem {
 
 	//	@SuppressWarnings("hiding")

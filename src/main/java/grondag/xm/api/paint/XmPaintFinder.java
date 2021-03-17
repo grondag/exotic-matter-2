@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.Identifier;
 
 import grondag.xm.api.texture.TextureSet;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface XmPaintFinder {
 	XmPaint find();
 

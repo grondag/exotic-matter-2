@@ -15,17 +15,12 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import static org.apiguardian.api.API.Status.STABLE;
-
-import org.apiguardian.api.API;
-
 import net.minecraft.util.math.Direction;
 
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.fermion.orientation.api.FaceEdge;
 import grondag.xm.api.connect.world.BlockNeighbors;
 
-@API(status = STABLE)
 public enum SimpleJoinFaceState {
 	NO_FACE(0),
 	TOP(FaceEdge.TOP_EDGE.ordinalBit),
@@ -56,7 +51,7 @@ public enum SimpleJoinFaceState {
 		}
 	}
 
-	private SimpleJoinFaceState(int faceBits) {
+	SimpleJoinFaceState(int faceBits) {
 		bitFlags = faceBits;
 
 	}

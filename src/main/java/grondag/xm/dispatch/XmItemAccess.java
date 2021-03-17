@@ -15,18 +15,16 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.function.BiFunction;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import grondag.xm.api.modelstate.MutableModelState;
 
-@API(status = INTERNAL)
+@Internal
 public interface XmItemAccess {
 	@SuppressWarnings("unchecked")
 	static <T extends MutableModelState> T getModelState(World world, ItemStack stack) {

@@ -20,14 +20,13 @@ import static grondag.xm.api.texture.TextureRenderIntent.BASE_OR_OVERLAY_CUTOUT_
 import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureTransform.DIAGONAL;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureSet;
 
-@API(status = INTERNAL)
+@Internal
 public enum TechTextures {
 	;
 

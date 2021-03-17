@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate.base;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
@@ -47,7 +45,7 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> extends ModelState {
 
 	BaseModelStateFactory<R, W> factory();

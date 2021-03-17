@@ -16,13 +16,12 @@
 package grondag.xm.api.primitive.base;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.Identifier;
 
@@ -36,7 +35,7 @@ import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.modelstate.SimpleModelStateImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public abstract class AbstractWedge extends AbstractSimplePrimitive {
 	protected static final int KEY_COUNT = CubeRotation.COUNT * 3;
 

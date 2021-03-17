@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.target;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.frex.Frex;
 import grondag.frex.FrexInitializer;
 
-@API(status = INTERNAL)
+@Internal
 public class XmFrexInitializer implements FrexInitializer {
 	@Override
 	public void onInitalizeFrex() {

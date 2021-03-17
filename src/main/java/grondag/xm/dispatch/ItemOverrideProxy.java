@@ -17,8 +17,6 @@ package grondag.xm.dispatch;
 
 import java.util.Collections;
 
-import grondag.xm.api.item.XmItem;
-import grondag.xm.api.modelstate.MutableModelState;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,6 +27,9 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
+import grondag.xm.api.item.XmItem;
+import grondag.xm.api.modelstate.MutableModelState;
+
 @Internal
 public class ItemOverrideProxy extends ModelOverrideList {
 	static final ItemOverrideProxy INSTANCE = new ItemOverrideProxy();
@@ -38,7 +39,7 @@ public class ItemOverrideProxy extends ModelOverrideList {
 	}
 
 	@Override
-	public BakedModel apply(BakedModel bakedModel_1, ItemStack stack, @Nullable ClientWorld world, LivingEntity livingEntity_1) {
+	public BakedModel apply(BakedModel bakedModel_1, ItemStack stack, @Nullable ClientWorld world, LivingEntity livingEntity_1, int seed) {
 		final MutableModelState modelState = XmItem.modelState(world, stack);
 
 		if (modelState != null) {

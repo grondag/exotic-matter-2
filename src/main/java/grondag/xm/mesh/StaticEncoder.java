@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.intstream.IntStream;
@@ -26,7 +24,7 @@ import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
-@API(status = INTERNAL)
+@Internal
 class StaticEncoder {
 	private static final BitPacker32<StaticEncoder> BITPACKER = new BitPacker32<>(null, null);
 	private static final BitPacker32<StaticEncoder> BITPACKER_2 = new BitPacker32<>(null, null);

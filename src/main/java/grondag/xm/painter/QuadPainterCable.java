@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
@@ -35,7 +33,7 @@ import grondag.xm.api.texture.TextureSet;
  * Applies quadrant-style connected (non-corner) textures. Quads must have a nominal face. Will
  * split quads that span quadrants.
  */
-@API(status = INTERNAL)
+@Internal
 public abstract class QuadPainterCable extends AbstractQuadPainter {
 	private static final RotatableCableQuadrant[][] TEXTURE_MAP = new RotatableCableQuadrant[FaceCorner.values().length][SimpleJoinFaceState.COUNT];
 

@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.Identifier;
 
@@ -31,7 +29,7 @@ import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class Stair extends AbstractWedge {
 	public static final XmSurfaceList SURFACES = CubeWithRotation.SURFACES;
 

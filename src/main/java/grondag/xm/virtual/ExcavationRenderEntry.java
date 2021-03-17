@@ -15,8 +15,6 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.network.Packet;
@@ -43,7 +41,7 @@ import grondag.xm.network.S2C_ExcavationRenderUpdate;
  * Class exists on server but render methods do not. Server instantiates (and
  * generates IDs) and transmits to clients.
  */
-@API(status = INTERNAL)
+@Internal
 public class ExcavationRenderEntry {
 	private static int nextID = 0;
 

@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class PolyHelper {
 	public static final float EPSILON = 1.0E-5F;
 

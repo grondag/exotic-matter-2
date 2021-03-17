@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Direction.Axis;
@@ -28,7 +26,7 @@ import grondag.fermion.orientation.api.CubeRotation;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.mesh.helper.PolyTransformImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 @FunctionalInterface
 public interface PolyTransform extends Consumer<MutablePolygon> {
 	@Override

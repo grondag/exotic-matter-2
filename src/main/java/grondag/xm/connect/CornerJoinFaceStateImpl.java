@@ -23,12 +23,11 @@ import static grondag.fermion.orientation.api.FaceEdge.BOTTOM_EDGE;
 import static grondag.fermion.orientation.api.FaceEdge.LEFT_EDGE;
 import static grondag.fermion.orientation.api.FaceEdge.RIGHT_EDGE;
 import static grondag.fermion.orientation.api.FaceEdge.TOP_EDGE;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
@@ -42,7 +41,7 @@ import grondag.xm.api.connect.world.BlockNeighbors;
  * Corner bits indicate that a corner is needed, not that the corner is present.
  * (These are normally inverse.)
  */
-@API(status = INTERNAL)
+@Internal
 public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
 	NO_FACE(0, 0), NONE(0, 0), // must be after NO_FACE, overwrites NO_FACE in lookup table, should never be
 	// checked by lookup
@@ -108,7 +107,7 @@ public enum CornerJoinFaceStateImpl implements CornerJoinFaceState {
 	private final FaceCorner[] cornerTests;
 	private CornerJoinFaceStateImpl[] subStates;
 
-	private CornerJoinFaceStateImpl(int faceBits, int cornerBits, FaceCorner... cornerTests) {
+	CornerJoinFaceStateImpl(int faceBits, int cornerBits, FaceCorner... cornerTests) {
 		bitFlags = faceBits | (cornerBits << 4);
 		this.cornerTests = cornerTests;
 	}

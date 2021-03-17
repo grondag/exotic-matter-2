@@ -19,13 +19,12 @@ import static grondag.xm.api.connect.state.SimpleJoinState.AXIS_JOIN_BIT_COUNT;
 import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.Identifier;
 
@@ -43,7 +42,7 @@ import grondag.xm.connect.SimpleJoinStateImpl;
 import grondag.xm.modelstate.SimpleModelStateImpl;
 import grondag.xm.paint.XmPaintImpl;
 
-@API(status = INTERNAL)
+@Internal
 public class SimplePrimitiveBuilderImpl {
 	protected static class BuilderImpl implements Builder {
 		private OrientationType orientationType = OrientationType.NONE;

@@ -15,11 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import static org.apiguardian.api.API.Status.STABLE;
-
 import java.util.function.Consumer;
-
-import org.apiguardian.api.API;
 
 import grondag.xm.connect.CornerJoinFaceStateImpl;
 
@@ -31,7 +27,6 @@ import grondag.xm.connect.CornerJoinFaceStateImpl;
  * The actual texturing/transformation is not part of this library because it
  * can vary greatly depending on use case, texture layout, etc.
  */
-@API(status = STABLE)
 public abstract class CornerJoinFaceStates {
 	private CornerJoinFaceStates() {
 	}

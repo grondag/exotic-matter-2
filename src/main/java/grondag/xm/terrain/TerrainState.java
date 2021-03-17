@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import it.unimi.dsi.fastutil.HashCommon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -32,7 +30,7 @@ import grondag.fermion.orientation.api.HorizontalFace;
 import grondag.fermion.position.PackedBlockPos;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 
-@API(status = INTERNAL)
+@Internal
 public class TerrainState {
 
 	public final static long FULL_BLOCK_STATE_KEY = TerrainState.computeStateKey(12, new int[] { 12, 12, 12, 12 }, new int[] { 12, 12, 12, 12 }, 0);

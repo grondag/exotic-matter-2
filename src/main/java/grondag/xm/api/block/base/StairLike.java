@@ -16,14 +16,13 @@
 package grondag.xm.api.block.base;
 
 import static net.minecraft.block.StairsBlock.WATERLOGGED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Random;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -70,7 +69,7 @@ import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.api.primitive.simple.Stair;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class StairLike extends Block implements Waterloggable {
 	protected final Block baseBlock;
 	protected final BlockState baseBlockState;

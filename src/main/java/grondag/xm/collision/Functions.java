@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
-import org.apiguardian.api.API;
-
-@API(status = INTERNAL)
+@Internal
 interface Functions {
 	@FunctionalInterface interface Int3Consumer {
 		void accept(int x, int y, int z);

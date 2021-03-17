@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.collision.Functions.Int3Consumer;
 
@@ -25,7 +23,7 @@ import grondag.xm.collision.Functions.Int3Consumer;
  * Operations on Cartesian representation of 16x16x16 voxels in unit cube that
  * can happen more efficiently that way. (Filling, mostly)
  */
-@API(status = INTERNAL)
+@Internal
 class VoxelVolume16 {
 
 	// UGLY - should probably just merge this with MeshVoxelizer because data structures are tightly coupled

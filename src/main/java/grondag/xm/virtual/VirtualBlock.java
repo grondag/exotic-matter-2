@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,7 +24,7 @@ import net.minecraft.util.math.BlockPos;
 
 import grondag.xm.api.modelstate.ModelState;
 
-@API(status = INTERNAL)
+@Internal
 public interface VirtualBlock {
 	/**
 	 * True if block at the given position is actually solid (not replaceable) or is

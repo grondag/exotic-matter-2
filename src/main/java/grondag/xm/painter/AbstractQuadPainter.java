@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.painter;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import it.unimi.dsi.fastutil.HashCommon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
@@ -34,7 +32,7 @@ import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 
-@API(status = INTERNAL)
+@Internal
 @SuppressWarnings("rawtypes")
 public abstract class AbstractQuadPainter {
 	@FunctionalInterface

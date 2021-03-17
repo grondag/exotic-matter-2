@@ -15,22 +15,21 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.math.BlockPos;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@API(status = INTERNAL)
+@Internal
 public class VirtualBlockEntity extends BlockEntity {
-	public VirtualBlockEntity(BlockEntityType<?> blockEntityType) {
-		super(blockEntityType);
+	public VirtualBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+		super(blockEntityType, pos, state);
 	}
 
 	//    /**
@@ -113,16 +112,16 @@ public class VirtualBlockEntity extends BlockEntity {
 	//    private static final String NBT_BUILD_ID = NBTDictionary.claim("vtBuildID");
 
 	@Override
-	public CompoundTag toTag(CompoundTag compound) {
-		compound = super.toTag(compound);
+	public CompoundTag writeNbt(CompoundTag compound) {
+		compound = super.writeNbt(compound);
 		//        compound.putInt(NBT_DOMAIN_ID, this.domainID);
 		//        compound.putInt(NBT_BUILD_ID, this.buildID);
 		return compound;
 	}
 
 	@Override
-	public void fromTag(BlockState blockState, CompoundTag compound) {
-		super.fromTag(blockState, compound);
+	public void readNbt(CompoundTag compound) {
+		super.readNbt(compound);
 
 		//        this.domainID = compound.containsKey(NBT_DOMAIN_ID) ? compound.getInt(NBT_DOMAIN_ID) : IIdentified.UNASSIGNED_ID;
 		//

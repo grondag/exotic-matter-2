@@ -15,8 +15,6 @@
  ******************************************************************************/
 package grondag.xm;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -25,11 +23,11 @@ import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.fabricmc.loader.api.FabricLoader;
 
-@API(status = INTERNAL)
+@Internal
 public class XmConfig {
 	public static class ConfigData {
 

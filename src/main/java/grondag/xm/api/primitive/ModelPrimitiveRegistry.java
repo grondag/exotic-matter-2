@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.primitive;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
@@ -30,7 +28,7 @@ import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface ModelPrimitiveRegistry {
 	ModelPrimitiveRegistry INSTANCE = ModelPrimitiveRegistryImpl.INSTANCE;
 

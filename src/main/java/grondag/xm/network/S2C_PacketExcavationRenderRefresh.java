@@ -15,12 +15,10 @@
  ******************************************************************************/
 package grondag.xm.network;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.Collection;
 
 import io.netty.buffer.Unpooled;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -44,7 +42,7 @@ import grondag.xm.virtual.ExcavationRenderer;
  * Replaces all excavation render entries. Sent when players logs in, changes
  * dimension or changes active domain.
  */
-@API(status = INTERNAL)
+@Internal
 public abstract class S2C_PacketExcavationRenderRefresh {
 	private S2C_PacketExcavationRenderRefresh() { }
 

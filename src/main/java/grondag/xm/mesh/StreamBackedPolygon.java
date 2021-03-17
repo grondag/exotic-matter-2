@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.function.IntUnaryOperator;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.math.Direction;
 
@@ -30,7 +28,7 @@ import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 
-@API(status = INTERNAL)
+@Internal
 class StreamBackedPolygon implements Polygon {
 	protected static final int NO_ADDRESS = -1;
 	protected static final IntUnaryOperator VERTEX_FUNC_TRIANGLE = (v) -> v == 3 ? 0 : v;

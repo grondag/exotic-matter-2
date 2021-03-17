@@ -15,13 +15,8 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
-import grondag.xm.Xm;
-import grondag.xm.XmConfig;
-import grondag.xm.render.OutlineRenderer;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
-
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.WorldRenderer;
@@ -33,7 +28,11 @@ import net.minecraft.util.math.Vec3d;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-@API(status = INTERNAL)
+import grondag.xm.Xm;
+import grondag.xm.XmConfig;
+import grondag.xm.render.OutlineRenderer;
+
+@Internal
 public class ExcavationRenderer {
 	public final int id;
 

@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.surface;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.client.resource.language.I18n;
 
@@ -26,7 +24,7 @@ import net.fabricmc.api.Environment;
 
 import grondag.xm.api.paint.SurfaceTopology;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public interface XmSurface {
 	int FLAG_NONE = 0;
 

@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.block;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -31,7 +29,7 @@ import grondag.fermion.orientation.api.HorizontalEdge;
 import grondag.fermion.orientation.api.HorizontalFace;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class XmProperties {
 	public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
 	public static final EnumProperty<HorizontalFace> HORIZONTAL_FACE = EnumProperty.of("xm_horiz_face", HorizontalFace.class);

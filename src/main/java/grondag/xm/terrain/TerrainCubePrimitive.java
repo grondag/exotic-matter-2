@@ -16,11 +16,10 @@
 package grondag.xm.terrain;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -36,7 +35,7 @@ import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.terrain.TerrainModelState;
 
-@API(status = INTERNAL)
+@Internal
 public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS).build();
 

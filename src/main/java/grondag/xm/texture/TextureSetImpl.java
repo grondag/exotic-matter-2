@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.texture;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
@@ -28,7 +26,7 @@ import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetBuilder;
 
-@API(status = INTERNAL)
+@Internal
 public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 	public static TextureSetBuilder builder() {
 		return new TextureSetBuilderImpl();

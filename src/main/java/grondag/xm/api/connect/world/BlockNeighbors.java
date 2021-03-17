@@ -15,10 +15,6 @@
  ******************************************************************************/
 package grondag.xm.api.connect.world;
 
-import static org.apiguardian.api.API.Status.STABLE;
-
-import org.apiguardian.api.API;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
@@ -71,7 +67,6 @@ import grondag.xm.connect.BlocksNeighborsImpl;
  * claimed. Calling {@link #release()} is unnecessary and has no effect for
  * instances returned by {@link #threadLocal(BlockView, BlockPos)}.
  */
-@API(status = STABLE)
 public interface BlockNeighbors {
 	void release();
 

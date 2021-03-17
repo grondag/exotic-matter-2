@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.mesh;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.intstream.IntStreams;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
 
-@API(status = INTERNAL)
+@Internal
 class ReadOnlyMeshImpl extends AbstractXmMesh implements ReadOnlyMesh {
 	void load(WritableMeshImpl streamIn, int formatFlags) {
 		prepare(IntStreams.claim(streamIn.stream.capacity()));

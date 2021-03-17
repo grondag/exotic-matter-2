@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.fermion.orientation.api.FaceCorner;
@@ -29,7 +27,7 @@ import grondag.xm.api.texture.TextureOrientation;
  * Identifies content of each quadrant within texture file, starting at top
  * left.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum RotatableQuadrant {
 	/**
 	 * Will position texture to display no border. Should not be used unless texture
@@ -72,7 +70,7 @@ public enum RotatableQuadrant {
 	 */
 	public final int rotation;
 
-	private RotatableQuadrant(int rotation) {
+	RotatableQuadrant(int rotation) {
 		this.rotation = rotation;
 	}
 

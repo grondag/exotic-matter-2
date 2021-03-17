@@ -15,16 +15,13 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 //import java.util.ArrayList;
 //import java.util.Collection;
 //import java.util.List;
 //import java.util.function.Consumer;
 import java.util.function.Function;
 
-//import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.Identifier;
 
@@ -53,7 +50,7 @@ import grondag.xm.api.terrain.TerrainModelState.Mutable;
  * no effort to set useful UV values because all quads are expected to be UV
  * locked.
  */
-@API(status = INTERNAL)
+@Internal
 public abstract class TerrainSurface extends AbstractTerrainPrimitive {
 
 	protected TerrainSurface(Identifier id, int stateFlags, BaseModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {

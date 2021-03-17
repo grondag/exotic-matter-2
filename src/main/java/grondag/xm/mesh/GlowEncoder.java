@@ -21,13 +21,12 @@ import static grondag.xm.mesh.MeshFormat.VERTEX_GLOW_SAME;
 import static grondag.xm.mesh.MeshFormat.getVertexCount;
 import static grondag.xm.mesh.MeshFormat.getVertexGlowFormat;
 import static grondag.xm.mesh.MeshFormat.isMutable;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.intstream.IntStream;
 
-@API(status = INTERNAL)
+@Internal
 abstract class GlowEncoder {
 	private static final GlowEncoder NO_GLOW = new GlowEncoder() {
 		@Override

@@ -15,11 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.connect.world;
 
-import grondag.xm.api.modelstate.ModelState;
-import org.apiguardian.api.API;
 import org.jetbrains.annotations.Nullable;
-
-import static org.apiguardian.api.API.Status.STABLE;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -27,7 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-@API(status = STABLE)
+import grondag.xm.api.modelstate.ModelState;
+
 public interface BlockTestContext<T extends ModelState> {
 	BlockView world();
 

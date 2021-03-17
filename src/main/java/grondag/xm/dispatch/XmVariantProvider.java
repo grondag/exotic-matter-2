@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
@@ -30,7 +28,7 @@ import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 
 import grondag.xm.api.block.XmBlockState;
 
-@API(status = INTERNAL)
+@Internal
 public class XmVariantProvider implements ModelVariantProvider {
 	private final ObjectOpenHashSet<String> targets = new ObjectOpenHashSet<>();
 

@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
@@ -29,7 +27,7 @@ import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 
 import grondag.xm.texture.TextureSetHelper;
 
-@API(status = INTERNAL)
+@Internal
 public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 	@Override
 	public ModelOverrideList getOverrides() {

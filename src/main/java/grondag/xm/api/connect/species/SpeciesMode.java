@@ -15,8 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.connect.species;
 
-import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.nbt.CompoundTag;
@@ -25,7 +24,7 @@ import net.minecraft.network.PacketByteBuf;
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 
-@API(status = Status.EXPERIMENTAL)
+@Experimental
 public enum SpeciesMode {
 	MATCH_CLICKED,
 	MATCH_MOST,

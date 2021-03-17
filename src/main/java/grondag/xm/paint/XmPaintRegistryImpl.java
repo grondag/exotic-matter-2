@@ -15,14 +15,12 @@
  ******************************************************************************/
 package grondag.xm.paint;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map.Entry;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
@@ -43,7 +41,7 @@ import grondag.xm.paint.XmPaintImpl.Value;
  * We create the default value in the constructor here to ensure this requirement
  * is always met.
  */
-@API(status = INTERNAL)
+@Internal
 public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousResourceReloadListener {
 	public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
 

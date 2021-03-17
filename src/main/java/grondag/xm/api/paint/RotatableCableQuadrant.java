@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.fermion.orientation.api.FaceCorner;
@@ -28,7 +26,7 @@ import grondag.xm.api.texture.TextureOrientation;
 /**
  * Like RotatableQuadrant but for cable-like geometry and textures with end caps.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum RotatableCableQuadrant {
 	/**
 	 * Will position texture to border the left (counter-clockwise) side of a
@@ -97,7 +95,7 @@ public enum RotatableCableQuadrant {
 	 */
 	public final int rotation;
 
-	private RotatableCableQuadrant(int rotation) {
+	RotatableCableQuadrant(int rotation) {
 		this.rotation = rotation;
 	}
 

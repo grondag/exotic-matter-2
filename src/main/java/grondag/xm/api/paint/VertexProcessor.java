@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
@@ -33,7 +31,7 @@ import grondag.xm.paint.VertexProcessorRegistryImpl;
  * While intended to assign color values, could also be used to transform UV,
  * normal or other vertex attributes.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 @FunctionalInterface
 public interface VertexProcessor {
 	@SuppressWarnings("rawtypes")

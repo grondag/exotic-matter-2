@@ -15,9 +15,7 @@
  ******************************************************************************/
 package grondag.xm.paint;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.color.ColorHelper;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
@@ -26,7 +24,7 @@ import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 
-@API(status = INTERNAL)
+@Internal
 public class VertexProcessorDefault implements VertexProcessor {
 	private VertexProcessorDefault() {}
 	public final static VertexProcessor INSTANCE = new VertexProcessorDefault();

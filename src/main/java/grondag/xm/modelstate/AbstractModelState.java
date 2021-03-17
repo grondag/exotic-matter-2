@@ -15,13 +15,11 @@
  ******************************************************************************/
 package grondag.xm.modelstate;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
-@API(status = INTERNAL)
+@Internal
 abstract class AbstractModelState {
 
 	/////// REFERENCE COUNTING /////////

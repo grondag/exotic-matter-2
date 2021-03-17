@@ -15,15 +15,13 @@
  ******************************************************************************/
 package grondag.xm.dispatch;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.fermion.sc.cache.KeyInterningCache;
 import grondag.xm.api.modelstate.ModelState;
 
 // custom loading cache is at least 2X faster than guava LoadingCache for our use case
-@API(status = INTERNAL)
+@Internal
 public class XmDispatcher extends KeyInterningCache<ModelState> {
 
 	public static final XmDispatcher INSTANCE = new XmDispatcher(0xFFFF);

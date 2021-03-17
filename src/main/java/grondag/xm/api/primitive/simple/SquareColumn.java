@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.primitive.simple;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import java.util.function.Consumer;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -50,7 +48,7 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
 import grondag.xm.modelstate.SimpleModelStateImpl;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class SquareColumn extends AbstractSimplePrimitive {
 	private static final XmSurfaceList SURFACES = XmSurfaceList.builder()
 			.add("end", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)

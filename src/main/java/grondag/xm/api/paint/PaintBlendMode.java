@@ -16,14 +16,12 @@
 
 package grondag.xm.api.paint;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 /**
  * Server-safe copy of BlendMode used in rendering.
  */
-@API(status = EXPERIMENTAL)
+@Experimental
 public enum PaintBlendMode {
 	/**
 	 * Emulate blending behavior associated with the block.

@@ -15,10 +15,8 @@
  ******************************************************************************/
 package grondag.xm.collision;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import it.unimi.dsi.fastutil.HashCommon;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -45,7 +43,7 @@ import net.minecraft.util.shape.VoxelShapes;
  * representation is better (or at least as good) for the subsequent
  * simplification, fill and output operations.
  */
-@API(status = INTERNAL)
+@Internal
 class VoxelVolumeKey {
 	private static final long[] EMPTY = new long[8];
 	private boolean immutable = false;

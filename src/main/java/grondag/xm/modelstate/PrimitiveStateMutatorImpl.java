@@ -19,11 +19,10 @@ import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.MASONRY_JOIN;
 import static grondag.xm.api.modelstate.ModelStateFlags.POSITION;
 import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.ArrayList;
 
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -39,7 +38,7 @@ import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveStateMutator;
 
-@API(status = EXPERIMENTAL)
+@Experimental
 public class PrimitiveStateMutatorImpl implements PrimitiveStateMutator {
 	private final BlockTest<PrimitiveState> joinTest;
 	private final PrimitiveStateMutator updater;

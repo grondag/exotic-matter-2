@@ -15,11 +15,9 @@
  ******************************************************************************/
 package grondag.xm;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apiguardian.api.API;
+import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.Identifier;
 
@@ -29,7 +27,7 @@ import grondag.xm.api.paint.VertexProcessorRegistry;
 import grondag.xm.api.paint.VertexProcessors;
 import grondag.xm.network.Packets;
 
-@API(status = INTERNAL)
+@Internal
 public class Xm implements ModInitializer {
 	@Override
 	public void onInitialize() {
