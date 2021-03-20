@@ -1,6 +1,6 @@
 package grondag.xm.api.modelstate.base;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 
 import grondag.xm.api.paint.PaintIndex;
@@ -12,5 +12,5 @@ public interface BaseModelStateFactory<R extends BaseModelState<R, W>, W extends
 
 	W fromBytes(ModelPrimitive<R, W> primitive, PacketByteBuf buf, PaintIndex sync);
 
-	W fromTag(ModelPrimitive<R, W> primitive, CompoundTag tag, PaintIndex sync);
+	W fromTag(ModelPrimitive<R, W> primitive, NbtCompound tag, PaintIndex sync);
 }

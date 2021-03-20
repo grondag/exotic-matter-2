@@ -35,8 +35,8 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -170,7 +170,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		}
 
 		@Override
-		public final W fromTag(ModelPrimitive<R, W> shape, CompoundTag tag, PaintIndex sync) {
+		public final W fromTag(ModelPrimitive<R, W> shape, NbtCompound tag, PaintIndex sync) {
 			final T result = claimInner(shape);
 			result.fromTag(tag, sync);
 			return (W) result;
@@ -334,14 +334,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	////////////////////////////////////////// SERIALIZATION //////////////////////////////////////////
 
 	@Override
-	public void fromTag(CompoundTag tag, PaintIndex paintIndex) {
+	public void fromTag(NbtCompound tag, PaintIndex paintIndex) {
 		final int worldBits = tag.getInt(ModelStateTagHelper.NBT_WORLD_BITS);
 		// sign on world bits is used to store static indicator
 		isStatic = (Useful.INT_SIGN_BIT & worldBits) == Useful.INT_SIGN_BIT;
 		this.worldBits = Useful.INT_SIGN_BIT_INVERSE & worldBits;
 		shapeBits = tag.getInt(ModelStateTagHelper.NBT_SHAPE_BITS);
 
-		final ListTag paintList = tag.getList(ModelStateTagHelper.NBT_PAINTS, 10);
+		final NbtList paintList = tag.getList(ModelStateTagHelper.NBT_PAINTS, 10);
 		final int limit = paintList.size();
 
 		for (int i = 0; i < limit; ++i) {
@@ -352,14 +352,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	}
 
 	@Override
-	public void toTag(CompoundTag tag) {
+	public void toTag(NbtCompound tag) {
 		tag.putString(ModelStateTagHelper.NBT_SHAPE, this.primitive().id().toString());
 
 		tag.putInt(ModelStateTagHelper.NBT_WORLD_BITS, this.isStatic ? (worldBits | Useful.INT_SIGN_BIT) : worldBits);
 		tag.putInt(ModelStateTagHelper.NBT_SHAPE_BITS, shapeBits);
 
 		final int limit = paints.length;
-		final ListTag paintList = new ListTag();
+		final NbtList paintList = new NbtList();
 
 		for (int i = 0; i < limit; ++i) {
 			final XmPaint p = paints[i];

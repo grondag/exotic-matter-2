@@ -18,7 +18,7 @@ package grondag.xm.api.modelstate;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 
 import grondag.xm.api.paint.PaintIndex;
@@ -38,7 +38,7 @@ public interface MutableModelState extends ModelState {
 
 	ModelState releaseToImmutable();
 
-	void fromTag(CompoundTag tag, PaintIndex paintIndex);
+	void fromTag(NbtCompound tag, PaintIndex paintIndex);
 
 	void fromBytes(PacketByteBuf pBuff, PaintIndex sync);
 }

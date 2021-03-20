@@ -20,7 +20,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
 import net.fabricmc.api.EnvType;
@@ -112,7 +112,7 @@ public class VirtualBlockEntity extends BlockEntity {
 	//    private static final String NBT_BUILD_ID = NBTDictionary.claim("vtBuildID");
 
 	@Override
-	public CompoundTag writeNbt(CompoundTag compound) {
+	public NbtCompound writeNbt(NbtCompound compound) {
 		compound = super.writeNbt(compound);
 		//        compound.putInt(NBT_DOMAIN_ID, this.domainID);
 		//        compound.putInt(NBT_BUILD_ID, this.buildID);
@@ -120,7 +120,7 @@ public class VirtualBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	public void readNbt(CompoundTag compound) {
+	public void readNbt(NbtCompound compound) {
 		super.readNbt(compound);
 
 		//        this.domainID = compound.containsKey(NBT_DOMAIN_ID) ? compound.getInt(NBT_DOMAIN_ID) : IIdentified.UNASSIGNED_ID;

@@ -15,14 +15,15 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
-import grondag.xm.api.texture.TextureSet;
-import grondag.xm.paint.XmPaintImpl;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+
+import grondag.xm.api.texture.TextureSet;
+import grondag.xm.paint.XmPaintImpl;
 
 /**
  * Paints control the appearance of mesh surfaces.<p>
@@ -105,7 +106,7 @@ public interface XmPaint {
 	/**
 	 * If paint is registered or indexed, will serialized based on registered ID instead of paint configuration.
 	 */
-	CompoundTag toTag();
+	NbtCompound toTag();
 
 	/**
 	 * If paint is registered or indexed, will serialized based on registered ID instead of paint configuration.
@@ -115,14 +116,14 @@ public interface XmPaint {
 	/**
 	 * Serializes paint configuration, discarding registered identity or index if present.
 	 */
-	CompoundTag toFixedTag();
+	NbtCompound toFixedTag();
 
 	/**
 	 * Serializes paint configuration, discarding registered identity or index if present.
 	 */
 	void toFixedBytes(PacketByteBuf pBuff);
 
-	static XmPaint fromTag(CompoundTag tag, @Nullable PaintIndex paintIndex) {
+	static XmPaint fromTag(NbtCompound tag, @Nullable PaintIndex paintIndex) {
 		return XmPaintImpl.fromTag(tag, paintIndex);
 	}
 

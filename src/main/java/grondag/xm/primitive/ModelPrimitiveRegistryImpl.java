@@ -22,7 +22,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 
 import grondag.xm.api.modelstate.base.BaseModelState;
@@ -83,7 +83,7 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	}
 
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag, PaintIndex paintIndex) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(NbtCompound tag, PaintIndex paintIndex) {
 		final ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
 		return shape == null ? null : shape.fromTag(tag, paintIndex);
 	}

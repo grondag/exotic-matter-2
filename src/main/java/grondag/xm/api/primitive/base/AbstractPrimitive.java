@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -97,7 +97,7 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
 	}
 
 	@Override
-	public final W fromTag(CompoundTag tag, PaintIndex sync) {
+	public final W fromTag(NbtCompound tag, PaintIndex sync) {
 		return factory.fromTag(this, tag, sync);
 	}
 }

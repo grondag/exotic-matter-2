@@ -19,19 +19,12 @@ import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import grondag.fermion.orientation.api.OrientationType;
-import grondag.xm.api.mesh.polygon.Polygon;
-import grondag.xm.api.modelstate.base.BaseModelState;
-import grondag.xm.api.modelstate.base.MutableBaseModelState;
-import grondag.xm.api.paint.PaintIndex;
-import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.api.primitive.surface.XmSurfaceList;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -41,6 +34,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import grondag.fermion.orientation.api.OrientationType;
+import grondag.xm.api.mesh.polygon.Polygon;
+import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.modelstate.base.MutableBaseModelState;
+import grondag.xm.api.paint.PaintIndex;
+import grondag.xm.api.primitive.surface.XmSurface;
+import grondag.xm.api.primitive.surface.XmSurfaceList;
 
 @Experimental
 public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> {
@@ -98,7 +99,7 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 
 	W fromBytes(PacketByteBuf buf, PaintIndex sync);
 
-	W fromTag(CompoundTag tag, PaintIndex sync);
+	W fromTag(NbtCompound tag, PaintIndex sync);
 
 	@Deprecated
 	boolean doesShapeMatch(R from, R to);

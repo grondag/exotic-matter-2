@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -57,7 +57,7 @@ public interface ModelPrimitiveRegistry {
 		return indexOf(primitive.id());
 	}
 
-	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> W fromTag(CompoundTag tag, PaintIndex sync);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> W fromTag(NbtCompound tag, PaintIndex sync);
 
 	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf, PaintIndex sync);
 }

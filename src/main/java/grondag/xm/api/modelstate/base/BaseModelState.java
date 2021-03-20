@@ -25,7 +25,7 @@ import org.jetbrains.annotations.ApiStatus.Experimental;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -77,9 +77,9 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	boolean doesAppearanceMatch(ModelState other);
 
 	@Override
-	void toTag(CompoundTag tag);
+	void toTag(NbtCompound tag);
 
-	void fromTag(CompoundTag tag, PaintIndex paintIndex);
+	void fromTag(NbtCompound tag, PaintIndex paintIndex);
 
 	@Override
 	void toBytes(PacketByteBuf pBuff);

@@ -18,7 +18,7 @@ package grondag.xm.api.connect.species;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 
 import grondag.fermion.varia.NBTDictionary;
@@ -32,11 +32,11 @@ public enum SpeciesMode {
 
 	private static final String TAG_NAME = NBTDictionary.GLOBAL.claim("speciesMode");
 
-	public SpeciesMode deserializeNBT(CompoundTag tag) {
+	public SpeciesMode deserializeNBT(NbtCompound tag) {
 		return Useful.safeEnumFromTag(tag, TAG_NAME, this);
 	}
 
-	public void serializeNBT(CompoundTag tag) {
+	public void serializeNBT(NbtCompound tag) {
 		Useful.saveEnumToTag(tag, TAG_NAME, this);
 	}
 

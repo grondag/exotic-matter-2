@@ -22,7 +22,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
@@ -290,15 +290,15 @@ public class XmPaintImpl {
 		}
 
 		@Override
-		public CompoundTag toTag() {
+		public NbtCompound toTag() {
 			if (this == DEFAULT_PAINT) {
-				return new CompoundTag();
+				return new NbtCompound();
 			} else if (id != null) {
-				final CompoundTag result = new CompoundTag();
+				final NbtCompound result = new NbtCompound();
 				result.putString(TAG_ID, id.toString());
 				return result;
 			} else if (index != XmPaint.NO_INDEX) {
-				final CompoundTag result = new CompoundTag();
+				final NbtCompound result = new NbtCompound();
 				result.putInt(TAG_INDEX, index);
 				return result;
 			} else  {
@@ -307,8 +307,8 @@ public class XmPaintImpl {
 		}
 
 		@Override
-		public CompoundTag toFixedTag() {
-			final CompoundTag result = new CompoundTag();
+		public NbtCompound toFixedTag() {
+			final NbtCompound result = new NbtCompound();
 			final int depth = textureDepth();
 			final int[] words = new int[TAG_INDEX_COLOR_0 + depth];
 			words[TAG_INDEX_PAINT_BITS] = paintBits;
@@ -660,7 +660,7 @@ public class XmPaintImpl {
 	private static final String TAG_VP_1 = "v1";
 	private static final String TAG_VP_2 = "v2";
 
-	public static XmPaintImpl.Value fromTag(CompoundTag tag, @Nullable PaintIndex paintIndex) {
+	public static XmPaintImpl.Value fromTag(NbtCompound tag, @Nullable PaintIndex paintIndex) {
 		if (tag.isEmpty()) {
 			return XmPaintImpl.DEFAULT_PAINT;
 		}

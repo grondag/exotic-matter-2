@@ -27,7 +27,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -61,12 +61,12 @@ public interface ModelState {
 	 */
 	MutableModelState geometricState();
 
-	void toTag(CompoundTag tag);
+	void toTag(NbtCompound tag);
 
 	void toBytes(PacketByteBuf pBuff);
 
-	default CompoundTag toTag() {
-		final CompoundTag result = new CompoundTag();
+	default NbtCompound toTag() {
+		final NbtCompound result = new NbtCompound();
 		toTag(result);
 		return result;
 	}
@@ -95,7 +95,7 @@ public interface ModelState {
 	@Environment(EnvType.CLIENT)
 	BakedModel itemProxy();
 
-	static MutableModelState fromTag(CompoundTag tag, PaintIndex paintIndex) {
+	static MutableModelState fromTag(NbtCompound tag, PaintIndex paintIndex) {
 		return ModelPrimitiveRegistryImpl.INSTANCE.fromTag(tag, paintIndex);
 	}
 

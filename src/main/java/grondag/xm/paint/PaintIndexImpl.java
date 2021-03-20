@@ -17,7 +17,7 @@ package grondag.xm.paint;
 
 import java.util.Arrays;
 
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -112,10 +112,10 @@ public class PaintIndexImpl implements PaintIndex {
 		}
 	}
 
-	public ListTag toTag() {
+	public NbtList toTag() {
 		assert !isClient;
 		final int limit = nextIndex;
-		final ListTag tag = new ListTag();
+		final NbtList tag = new NbtList();
 
 		for (int i = 0; i < limit; ++i)  {
 			tag.add(paints[i].toFixedTag());
@@ -124,7 +124,7 @@ public class PaintIndexImpl implements PaintIndex {
 		return tag;
 	}
 
-	public void fromTag(ListTag tag, ServerWorld world) {
+	public void fromTag(NbtList tag, ServerWorld world) {
 		assert !isClient;
 		clear();
 
