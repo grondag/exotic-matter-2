@@ -82,7 +82,7 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 	}
 
 	@Override
-	public void apply(ResourceManager resourceManager) {
+	public void reload(ResourceManager resourceManager) {
 		for( final Entry<Identifier, Value> e : paints.entrySet()) {
 			final Identifier key = e.getKey();
 

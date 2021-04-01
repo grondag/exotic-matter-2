@@ -44,7 +44,7 @@ public class XmTexturesImpl {
 
 	private static void registerTextures(SpriteAtlasTexture atlas, Registry registry) {
 		// need to resolve/use texture names at this point
-		XmPaintRegistryImpl.INSTANCE.apply(MinecraftClient.getInstance().getResourceManager());
+		XmPaintRegistryImpl.INSTANCE.reload(MinecraftClient.getInstance().getResourceManager());
 		final TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
 
 		texReg.forEach(set -> {
