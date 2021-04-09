@@ -55,7 +55,7 @@ public class SpeciesImpl {
 
 		// PERF: avoid allocation - but not urgent; not hot
 		if(region == null) {
-			region = BlockRegion.of(onPos.method_35851(onFace));
+			region = BlockRegion.of(onPos.offset(onFace));
 		}
 		final int[] adjacentCount = new int[16];
 		final int[] surfaceCount = new int[16];
