@@ -38,9 +38,6 @@
     "minecraft": "~1.16.2",
     "fabric": "*"
   },
-  "breaks": {
-  	"sodium": "*"
-  },
   "custom": {
     "modmenu:api": true,
     "modmenu:clientsideOnly": false
