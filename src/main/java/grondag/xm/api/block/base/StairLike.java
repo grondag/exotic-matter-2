@@ -144,8 +144,8 @@ public class StairLike extends Block implements Waterloggable {
 	}
 
 	@Override
-	public void onSteppedOn(World world, BlockPos blockPos, Entity entity) {
-		baseBlock.onSteppedOn(world, blockPos, entity);
+	public void onSteppedOn(World world, BlockPos blockPos, BlockState state, Entity entity) {
+		baseBlock.onSteppedOn(world, blockPos, state, entity);
 	}
 
 	@Override
@@ -286,7 +286,7 @@ public class StairLike extends Block implements Waterloggable {
 						}
 					} else {
 						bottomFace = faces[yIndex];
-						final HorizontalEdge edge = HorizontalEdge.fromRotation(player.yaw);
+						final HorizontalEdge edge = HorizontalEdge.fromRotation(player.getYaw());
 						backFace = bottomFace == Direction.DOWN ? edge.left.face : edge.right.face;
 					}
 				}
