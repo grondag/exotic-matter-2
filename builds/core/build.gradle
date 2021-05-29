@@ -37,10 +37,8 @@ if (grgit == null) {
 processResources {
 	inputs.property "version", project.version
 
-	from(sourceSets.main.resources.srcDirs) {
-        filesMatching("fabric.mod.json") {
-            expand "version": project.version
-        }
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
     }
 }
 
