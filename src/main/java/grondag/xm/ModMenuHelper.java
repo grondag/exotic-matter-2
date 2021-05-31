@@ -16,19 +16,16 @@
 
 package grondag.xm;
 
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-// FIX: restore when ModMenu available
 @Environment(EnvType.CLIENT)
-public class ModMenuHelper { //implements ModMenuApi {
-//	@Override
-//	public Function<Screen, ? extends Screen> getConfigScreenFactory() {
-//		return ConfigScreen::getScreen;
-//	}
-//
-//	@Override
-//	public String getModId() {
-//		return Xm.MODID;
-//	}
+public class ModMenuHelper implements ModMenuApi {
+	@Override
+	public ConfigScreenFactory<?> getModConfigScreenFactory() {
+		return ConfigScreen::getScreen;
+	}
 }

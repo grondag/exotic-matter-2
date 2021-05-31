@@ -25,8 +25,9 @@
     "exotic-matter": "*"
   },
   "custom": {
-    "modmenu:api": true,
-    "modmenu:clientsideOnly": false,
-    "modmenu:parent": "exotic-matter"
+  	"modmenu": {
+        "badges": [ "library" ],
+        "parent": "exotic-matter"
+    }
   }
 }
