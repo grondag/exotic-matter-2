@@ -47,8 +47,6 @@ dependencies {
         exclude group :"net.fabricmc.fabric-loader"
     }
 	
-	modApi("com.terraformersmc:modmenu:${project.modmenu_version}") {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude group: "net.fabricmc.fabric-loader"
-	}
+	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 }

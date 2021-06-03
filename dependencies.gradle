@@ -51,10 +51,8 @@ dependencies {
         exclude group :"net.fabricmc.fabric-loader"
     }
 	
-	modApi("com.terraformersmc:modmenu:${project.modmenu_version}") {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude group: "net.fabricmc.fabric-loader"
-	}
+	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 	
 	if (!(gradle.startParameter.taskNames.contains("publish") || gradle.startParameter.taskNames.contains("publishToMavenLocal"))) {
 		include "grondag:fermion-${project.mc_tag}:${project.fermion_version}.+"
