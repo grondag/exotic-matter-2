@@ -65,7 +65,7 @@ public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 	}
 
 	@Override
-	public Sprite getSprite() {
+	public Sprite getParticleSprite() {
 		return TextureSetHelper.missingSprite();
 	}
 }
