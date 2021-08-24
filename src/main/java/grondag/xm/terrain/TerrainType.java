@@ -15,6 +15,8 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import java.util.Locale;
+
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.util.StringIdentifiable;
@@ -44,7 +46,7 @@ public enum TerrainType implements StringIdentifiable {
 	public final int fillOffset;
 
 	TerrainType(int height, boolean filler) {
-		name = name().toLowerCase();
+		name = name().toLowerCase(Locale.ROOT);
 		this.height = filler ? 0 : height;
 		fillOffset = filler ? height : 0;
 		isFiller = filler;

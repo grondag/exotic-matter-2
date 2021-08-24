@@ -15,6 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.connect.species;
 
+import java.util.Locale;
+
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.client.resource.language.I18n;
@@ -49,7 +51,7 @@ public enum SpeciesMode {
 	}
 
 	public String localizedName() {
-		return I18n.translate("placement.species_mode." + name().toLowerCase());
+		return I18n.translate("placement.species_mode." + name().toLowerCase(Locale.ROOT));
 	}
 
 	/** mode to use if player holding modifier key */
