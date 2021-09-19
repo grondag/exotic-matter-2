@@ -29,27 +29,24 @@ import java.util.function.Supplier;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.HashCommon;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BlockRenderView;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.fermion.varia.Useful;
@@ -170,14 +167,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		}
 
 		@Override
-		public final W fromTag(ModelPrimitive<R, W> shape, NbtCompound tag, PaintIndex sync) {
+		public final W fromTag(ModelPrimitive<R, W> shape, CompoundTag tag, PaintIndex sync) {
 			final T result = claimInner(shape);
 			result.fromTag(tag, sync);
 			return (W) result;
 		}
 
 		@Override
-		public final W fromBytes(ModelPrimitive<R, W> shape, PacketByteBuf buf, PaintIndex sync) {
+		public final W fromBytes(ModelPrimitive<R, W> shape, FriendlyByteBuf buf, PaintIndex sync) {
 			final T result = claimInner(shape);
 			result.fromBytes(buf, sync);
 			return (W) result;
@@ -334,14 +331,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	////////////////////////////////////////// SERIALIZATION //////////////////////////////////////////
 
 	@Override
-	public void fromTag(NbtCompound tag, PaintIndex paintIndex) {
+	public void fromTag(CompoundTag tag, PaintIndex paintIndex) {
 		final int worldBits = tag.getInt(ModelStateTagHelper.NBT_WORLD_BITS);
 		// sign on world bits is used to store static indicator
 		isStatic = (Useful.INT_SIGN_BIT & worldBits) == Useful.INT_SIGN_BIT;
 		this.worldBits = Useful.INT_SIGN_BIT_INVERSE & worldBits;
 		shapeBits = tag.getInt(ModelStateTagHelper.NBT_SHAPE_BITS);
 
-		final NbtList paintList = tag.getList(ModelStateTagHelper.NBT_PAINTS, 10);
+		final ListTag paintList = tag.getList(ModelStateTagHelper.NBT_PAINTS, 10);
 		final int limit = paintList.size();
 
 		for (int i = 0; i < limit; ++i) {
@@ -352,14 +349,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	}
 
 	@Override
-	public void toTag(NbtCompound tag) {
+	public void toTag(CompoundTag tag) {
 		tag.putString(ModelStateTagHelper.NBT_SHAPE, this.primitive().id().toString());
 
 		tag.putInt(ModelStateTagHelper.NBT_WORLD_BITS, this.isStatic ? (worldBits | Useful.INT_SIGN_BIT) : worldBits);
 		tag.putInt(ModelStateTagHelper.NBT_SHAPE_BITS, shapeBits);
 
 		final int limit = paints.length;
-		final NbtList paintList = new NbtList();
+		final ListTag paintList = new ListTag();
 
 		for (int i = 0; i < limit; ++i) {
 			final XmPaint p = paints[i];
@@ -371,7 +368,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 
 	@Override
-	public void fromBytes(PacketByteBuf pBuff, PaintIndex paintIndex) {
+	public void fromBytes(FriendlyByteBuf pBuff, PaintIndex paintIndex) {
 		shapeBits = pBuff.readInt();
 		worldBits = pBuff.readInt();
 		final int limit = primitive.surfaces((R)this).size();
@@ -382,7 +379,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	}
 
 	@Override
-	public void toBytes(PacketByteBuf pBuff) {
+	public void toBytes(FriendlyByteBuf pBuff) {
 		pBuff.writeVarInt(primitive.index());
 		pBuff.writeInt(shapeBits);
 		pBuff.writeInt(worldBits);
@@ -623,7 +620,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	public CornerJoinState cornerJoin() {
-		return CornerJoinStateSelector.fromOrdinal(MathHelper.clamp(BLOCK_JOIN.getValue(this), 0, CornerJoinState.STATE_COUNT - 1));
+		return CornerJoinStateSelector.fromOrdinal(Mth.clamp(BLOCK_JOIN.getValue(this), 0, CornerJoinState.STATE_COUNT - 1));
 	}
 
 	@Override
@@ -716,7 +713,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		primitive.emitBlockMesh(mesh(), blockView, state, pos, randomSupplier, context);
 	}
 
@@ -727,14 +724,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	}
 
 	@Environment(EnvType.CLIENT)
-	private Sprite particleSprite = null;
+	private TextureAtlasSprite particleSprite = null;
 
 	@Environment(EnvType.CLIENT)
 	private int particleColorARBG = 0;
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public final Sprite particleSprite() {
+	public final TextureAtlasSprite particleSprite() {
 		if(particleSprite == null) {
 			final Mesh mesh = mesh();
 			mesh.forEach(q -> {
@@ -777,7 +774,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 			quadLists = lists;
 		}
 
-		final List<BakedQuad> result = lists[face == null ? 6 : face.getId()];
+		final List<BakedQuad> result = lists[face == null ? 6 : face.get3DDataValue()];
 		return result == null ? ImmutableList.of() : result;
 	}
 
@@ -800,7 +797,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 				@Environment(EnvType.CLIENT)
 				@Override
-				public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+				public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 					AbstractPrimitiveModelState.this.emitBlockQuads(blockView, state, pos, randomSupplier, context);
 				}
 

@@ -15,14 +15,13 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 
 @Internal
 public class DepletedFluidBlock extends Block {
 	public DepletedFluidBlock() {
-		super(Settings.of(Material.STRUCTURE_VOID));
+		super(Properties.of(Material.STRUCTURAL_AIR));
 	}
 }

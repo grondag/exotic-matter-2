@@ -16,10 +16,8 @@
 package grondag.xm.connect;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-
 import grondag.xm.api.connect.state.CornerJoinState;
+import net.minecraft.core.Direction;
 
 @Internal
 class CornerJoinStateImpl implements CornerJoinState {

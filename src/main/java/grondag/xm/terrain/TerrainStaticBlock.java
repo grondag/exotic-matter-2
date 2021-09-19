@@ -16,24 +16,22 @@
 package grondag.xm.terrain;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Internal
 public class TerrainStaticBlock extends Block implements IHotBlock {
 
-	public TerrainStaticBlock(Settings blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
+	public TerrainStaticBlock(Properties blockSettings, ModelState defaultModelState, BlockEntityType<?> blockEntityType, boolean isFiller) {
 		super(blockSettings); //, adjustShape(defaultModelState, isFiller), blockEntityType);
 	}
 
@@ -63,9 +61,9 @@ public class TerrainStaticBlock extends Block implements IHotBlock {
 	 * static.
 	 */
 	@Override
-	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
 		TerrainDynamicBlock.freezeNeighbors(world, pos, state);
-		super.onBreak(world, pos, state, player);
+		super.playerWillDestroy(world, pos, state, player);
 	}
 
 	/**
@@ -73,33 +71,33 @@ public class TerrainStaticBlock extends Block implements IHotBlock {
 	 * static.
 	 */
 	@Override
-	public void onPlaced(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		super.onPlaced(worldIn, pos, state, placer, stack);
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(worldIn, pos, state, placer, stack);
 		TerrainDynamicBlock.freezeNeighbors(worldIn, pos, state);
 	}
 
 	/**
 	 * Convert this block to a dynamic version of itself if one is known.
 	 */
-	public void makeDynamic(BlockState state, World world, BlockPos pos) {
+	public void makeDynamic(BlockState state, Level world, BlockPos pos) {
 		final BlockState newState = dynamicState(state, world, pos);
 		if (newState != state) {
-			world.setBlockState(pos, newState, 3);
+			world.setBlock(pos, newState, 3);
 		}
 	}
 
 	/**
 	 * Returns dynamic version of self if one is known. Otherwise returns self.
 	 */
-	public BlockState dynamicState(BlockState state, BlockView world, BlockPos pos) {
+	public BlockState dynamicState(BlockState state, BlockGetter world, BlockPos pos) {
 		final Block dynamicVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getDynamicBlock(this);
 		if (dynamicVersion == null || state.getBlock() != this)
 			return state;
 		// TODO: transfer heat block state?
-		return dynamicVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE));
+		return dynamicVersion.defaultBlockState().setValue(TerrainBlock.TERRAIN_TYPE, state.getValue(TerrainBlock.TERRAIN_TYPE));
 	}
 
-	public void setModelState(World world, BlockPos pos, MutableModelState myModelState) {
+	public void setModelState(Level world, BlockPos pos, MutableModelState myModelState) {
 		// TODO Auto-generated method stub
 
 	}

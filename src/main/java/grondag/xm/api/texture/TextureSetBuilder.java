@@ -15,9 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.texture;
 
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.Identifier;
 
 // TODO: add fallback texture specification
 @Experimental
@@ -43,13 +42,13 @@ public interface TextureSetBuilder {
 
 	TextureSetBuilder displayNameToken(String displayNameToken);
 
-	TextureSet build(Identifier id);
+	TextureSet build(ResourceLocation id);
 
 	default TextureSet build(String nameSpace, String path) {
-		return build(new Identifier(nameSpace, path));
+		return build(new ResourceLocation(nameSpace, path));
 	}
 
 	default TextureSet build(String idString) {
-		return build(new Identifier(idString));
+		return build(new ResourceLocation(idString));
 	}
 }

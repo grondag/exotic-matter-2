@@ -16,12 +16,9 @@
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
-
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
@@ -109,7 +106,7 @@ public class StackedPlates {
 	 * @param modelState
 	 */
 	public static void setHeight(int height, MutablePrimitiveState modelState) {
-		modelState.primitiveBits(MathHelper.clamp(height, 1, 16) - 1);
+		modelState.primitiveBits(Mth.clamp(height, 1, 16) - 1);
 	}
 
 	public static int getHeight(PrimitiveState modelState) {

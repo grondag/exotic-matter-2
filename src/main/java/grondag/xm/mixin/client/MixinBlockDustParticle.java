@@ -19,27 +19,25 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.particle.BlockDustParticle;
-import net.minecraft.client.particle.SpriteBillboardParticle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
-
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmDispatcher;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.TerrainParticle;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
-@Mixin(BlockDustParticle.class)
-public abstract class MixinBlockDustParticle extends SpriteBillboardParticle {
+@Mixin(TerrainParticle.class)
+public abstract class MixinBlockDustParticle extends TextureSheetParticle {
 	// not used
-	protected MixinBlockDustParticle(ClientWorld world_1, double double_1, double double_2, double double_3) {
+	protected MixinBlockDustParticle(ClientLevel world_1, double double_1, double double_2, double double_3) {
 		super(world_1, double_1, double_2, double_3);
 	}
 
 	@Inject(method = "<init>(Lnet/minecraft/client/world/ClientWorld;DDDDDDLnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;)V", at = @At(value = "RETURN"), cancellable = false, require = 0)
-	void onNew(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
+	void onNew(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
 		final MutableModelState lookupState = XmBlockState.modelState(blockState, world, blockPos, false);
 
 		if(lookupState != null) {
@@ -47,9 +45,9 @@ public abstract class MixinBlockDustParticle extends SpriteBillboardParticle {
 			lookupState.release();
 			this.setSprite(renderState.particleSprite());
 			final int color = renderState.particleColorARBG();
-			colorRed = ((color >> 16) & 0xFF) / 255f;
-			colorGreen = ((color >> 8) & 0xFF) / 255f;
-			colorBlue = (color& 0xFF) / 255f;
+			rCol = ((color >> 16) & 0xFF) / 255f;
+			gCol = ((color >> 8) & 0xFF) / 255f;
+			bCol = (color& 0xFF) / 255f;
 		}
 	}
 }

@@ -16,11 +16,8 @@
 package grondag.xm.api.texture;
 
 import java.util.function.Consumer;
-
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.Identifier;
-
 import grondag.xm.Xm;
 import grondag.xm.texture.TextureSetRegistryImpl;
 
@@ -33,9 +30,9 @@ public interface TextureSetRegistry {
 	/**
 	 * Will always be associated with index 0.
 	 */
-	Identifier NONE_ID = new Identifier(Xm.MODID, "none");
+	ResourceLocation NONE_ID = new ResourceLocation(Xm.MODID, "none");
 
-	TextureSet get(Identifier id);
+	TextureSet get(ResourceLocation id);
 
 	TextureSet get(int index);
 

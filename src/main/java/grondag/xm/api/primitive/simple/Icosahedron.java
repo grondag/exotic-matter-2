@@ -16,11 +16,8 @@
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
-
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Vec3d;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
@@ -46,7 +43,7 @@ public class Icosahedron {
 		.surface(SURFACE_ALL)
 		.saveDefaults();
 
-		icosahedron(new Vec3d(.5, .5, .5), 0.6, mesh, false);
+		icosahedron(new Vec3(.5, .5, .5), 0.6, mesh, false);
 		return mesh.releaseToReader();
 	};
 
@@ -63,34 +60,34 @@ public class Icosahedron {
 	 *
 	 * PERF: use primitives instead of Vec3d
 	 */
-	public static void icosahedron(Vec3d center, double radius, WritableMesh mesh, boolean smoothNormals) {
+	public static void icosahedron(Vec3 center, double radius, WritableMesh mesh, boolean smoothNormals) {
 		/** vertex scale */
 		final double s = radius / (2 * Math.sin(2 * Math.PI / 5));
 
-		final Vec3d[] vertexes = new Vec3d[12];
+		final Vec3[] vertexes = new Vec3[12];
 
 		// create 12 vertices of a icosahedron
 		final double t = s * (1.0 + Math.sqrt(5.0)) / 2.0;
 		int vi = 0;
 
-		vertexes[vi++] = new Vec3d(-s, t, 0).add(center);
-		vertexes[vi++] = new Vec3d(s, t, 0).add(center);
-		vertexes[vi++] = new Vec3d(-s, -t, 0).add(center);
-		vertexes[vi++] = new Vec3d(s, -t, 0).add(center);
+		vertexes[vi++] = new Vec3(-s, t, 0).add(center);
+		vertexes[vi++] = new Vec3(s, t, 0).add(center);
+		vertexes[vi++] = new Vec3(-s, -t, 0).add(center);
+		vertexes[vi++] = new Vec3(s, -t, 0).add(center);
 
-		vertexes[vi++] = new Vec3d(0, -s, t).add(center);
-		vertexes[vi++] = new Vec3d(0, s, t).add(center);
-		vertexes[vi++] = new Vec3d(0, -s, -t).add(center);
-		vertexes[vi++] = new Vec3d(0, s, -t).add(center);
+		vertexes[vi++] = new Vec3(0, -s, t).add(center);
+		vertexes[vi++] = new Vec3(0, s, t).add(center);
+		vertexes[vi++] = new Vec3(0, -s, -t).add(center);
+		vertexes[vi++] = new Vec3(0, s, -t).add(center);
 
-		vertexes[vi++] = new Vec3d(t, 0, -s).add(center);
-		vertexes[vi++] = new Vec3d(t, 0, s).add(center);
-		vertexes[vi++] = new Vec3d(-t, 0, -s).add(center);
-		vertexes[vi++] = new Vec3d(-t, 0, s).add(center);
+		vertexes[vi++] = new Vec3(t, 0, -s).add(center);
+		vertexes[vi++] = new Vec3(t, 0, s).add(center);
+		vertexes[vi++] = new Vec3(-t, 0, -s).add(center);
+		vertexes[vi++] = new Vec3(-t, 0, s).add(center);
 
-		Vec3d[] normals = null;
+		Vec3[] normals = null;
 		if (smoothNormals) {
-			normals = new Vec3d[12];
+			normals = new Vec3[12];
 			for (int i = 0; i < 12; i++) {
 				normals[i] = vertexes[i].subtract(center).normalize();
 			}
@@ -164,7 +161,7 @@ public class Icosahedron {
 
 	}
 
-	private static void icosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3d[] points, Vec3d[] normals, WritableMesh mesh) {
+	private static void icosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3[] points, Vec3[] normals, WritableMesh mesh) {
 		final MutablePolygon writer = mesh.writer();
 		if (normals == null) {
 			if (topHalf) {

@@ -17,12 +17,10 @@ package grondag.xm.api.item;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmItemAccess;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 @Experimental
 public class XmItem {
@@ -36,7 +34,7 @@ public class XmItem {
 		return XmItemAccess.getModelState(null, stack);
 	}
 
-	public static @Nullable <T extends MutableModelState> T modelState(World world, ItemStack stack) {
+	public static @Nullable <T extends MutableModelState> T modelState(Level world, ItemStack stack) {
 		return XmItemAccess.getModelState(world, stack);
 	}
 }

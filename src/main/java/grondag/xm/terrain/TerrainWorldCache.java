@@ -15,10 +15,9 @@
  ******************************************************************************/
 package grondag.xm.terrain;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * Read-only terrain world cache

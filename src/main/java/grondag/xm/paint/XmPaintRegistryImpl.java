@@ -21,13 +21,10 @@ import java.util.Map.Entry;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
-
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 import grondag.xm.Xm;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.paint.XmPaintRegistry;
@@ -45,18 +42,18 @@ import grondag.xm.paint.XmPaintImpl.Value;
 public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousResourceReloadListener {
 	public static final XmPaintRegistryImpl INSTANCE = new XmPaintRegistryImpl();
 
-	private final Identifier DEFAULT_PAINT_ID = Xm.id("default");
-	private final Identifier id = Xm.id("paint_registry");
+	private final ResourceLocation DEFAULT_PAINT_ID = Xm.id("default");
+	private final ResourceLocation id = Xm.id("paint_registry");
 
 	private XmPaintRegistryImpl() {
 		// see header notes
 		register(DEFAULT_PAINT_ID, XmPaintImpl.DEFAULT_PAINT);
 	}
 
-	private final Object2ObjectOpenHashMap<Identifier, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
+	private final Object2ObjectOpenHashMap<ResourceLocation, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
 
 	@Override
-	public synchronized XmPaint register(Identifier id, XmPaint paint) {
+	public synchronized XmPaint register(ResourceLocation id, XmPaint paint) {
 		final XmPaintImpl.Value prior = paints.get(id);
 
 		if(prior != null) {
@@ -69,7 +66,7 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 	}
 
 	@Override
-	public XmPaintImpl.Value get(Identifier paintId) {
+	public XmPaintImpl.Value get(ResourceLocation paintId) {
 		XmPaintImpl.Value result = paints.get(paintId);
 
 		if(result == null) {
@@ -82,9 +79,9 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 	}
 
 	@Override
-	public void reload(ResourceManager resourceManager) {
-		for( final Entry<Identifier, Value> e : paints.entrySet()) {
-			final Identifier key = e.getKey();
+	public void onResourceManagerReload(ResourceManager resourceManager) {
+		for( final Entry<ResourceLocation, Value> e : paints.entrySet()) {
+			final ResourceLocation key = e.getKey();
 
 			if (key.equals(DEFAULT_PAINT_ID)) {
 				continue;
@@ -99,12 +96,12 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 	}
 
 	@Override
-	public Identifier getFabricId() {
+	public ResourceLocation getFabricId() {
 		return id;
 	}
 
-	private XmPaintImpl loadPaint(Identifier idIn, ResourceManager rm, boolean loadExpected) {
-		final Identifier id = new Identifier(idIn.getNamespace(), "paints/" + idIn.getPath() + ".json");
+	private XmPaintImpl loadPaint(ResourceLocation idIn, ResourceManager rm, boolean loadExpected) {
+		final ResourceLocation id = new ResourceLocation(idIn.getNamespace(), "paints/" + idIn.getPath() + ".json");
 
 		XmPaintImpl result = XmPaintImpl.DEFAULT_PAINT;
 

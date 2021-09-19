@@ -16,11 +16,8 @@
 package grondag.xm.mesh;
 
 import java.util.function.IntUnaryOperator;
-
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-
 import grondag.fermion.intstream.IntStream;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;

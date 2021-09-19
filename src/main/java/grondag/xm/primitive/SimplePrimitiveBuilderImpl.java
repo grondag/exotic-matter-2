@@ -23,11 +23,8 @@ import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.Identifier;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
@@ -55,7 +52,7 @@ public class SimplePrimitiveBuilderImpl {
 		private boolean alternateJoinAffectsGeometry;
 
 		@Override
-		public SimplePrimitive build(Identifier id) {
+		public SimplePrimitive build(ResourceLocation id) {
 			return new Primitive(id, this);
 		}
 
@@ -129,7 +126,7 @@ public class SimplePrimitiveBuilderImpl {
 			return s -> list;
 		}
 
-		public Primitive(Identifier id, BuilderImpl builder) {
+		public Primitive(ResourceLocation id, BuilderImpl builder) {
 			super(id, (builder.cornerJoin ? CORNER_JOIN : NONE) | (builder.simpleJoin || builder.axisJoin ? SIMPLE_JOIN : NONE), SimpleModelStateImpl.FACTORY, listWrapper(builder.list));
 			axisJoin = builder.axisJoin & !builder.simpleJoin & !builder.cornerJoin;
 			simpleJoin = builder.simpleJoin;

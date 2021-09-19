@@ -19,12 +19,11 @@ import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelStateFunction;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmBlockStateAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
 @Mixin(BlockState.class)
 public class MixinBlockState implements XmBlockState, XmBlockStateAccess {
@@ -37,7 +36,7 @@ public class MixinBlockState implements XmBlockState, XmBlockStateAccess {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends MutableModelState> T modelState(BlockView world, BlockPos pos, boolean refreshFromWorld) {
+	public <T extends MutableModelState> T modelState(BlockGetter world, BlockPos pos, boolean refreshFromWorld) {
 		final ModelStateFunction<?> func = modelStateFunc;
 		return func == null ? null : (T) func.apply((BlockState)(Object)this, world, pos, refreshFromWorld);
 	}

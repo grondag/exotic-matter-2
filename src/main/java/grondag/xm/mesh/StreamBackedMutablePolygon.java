@@ -16,10 +16,6 @@
 package grondag.xm.mesh;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-
 import grondag.fermion.color.ColorHelper;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -27,6 +23,8 @@ import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 
 @Internal
 class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutablePolygon {
@@ -335,17 +333,17 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		}
 
 		this.pos(targetIndex,
-				MathHelper.lerp(toWeight, from.x(fromIndex), to.x(toIndex)),
-				MathHelper.lerp(toWeight, from.y(fromIndex), to.y(toIndex)),
-				MathHelper.lerp(toWeight, from.z(fromIndex), to.z(toIndex)));
+				Mth.lerp(toWeight, from.x(fromIndex), to.x(toIndex)),
+				Mth.lerp(toWeight, from.y(fromIndex), to.y(toIndex)),
+				Mth.lerp(toWeight, from.z(fromIndex), to.z(toIndex)));
 
 		final int fromGlow = from.glow(fromIndex);
 		this.glow(targetIndex, (int)(fromGlow + (to.glow(toIndex) - fromGlow) * toWeight));
 
 		if (from.hasNormal(fromIndex) && to.hasNormal(toIndex)) {
-			final float normX = MathHelper.lerp(toWeight, from.normalX(fromIndex), to.normalX(toIndex));
-			final float normY = MathHelper.lerp(toWeight, from.normalY(fromIndex), to.normalY(toIndex));
-			final float normZ = MathHelper.lerp(toWeight, from.normalZ(fromIndex), to.normalZ(toIndex));
+			final float normX = Mth.lerp(toWeight, from.normalX(fromIndex), to.normalX(toIndex));
+			final float normY = Mth.lerp(toWeight, from.normalY(fromIndex), to.normalY(toIndex));
+			final float normZ = Mth.lerp(toWeight, from.normalZ(fromIndex), to.normalZ(toIndex));
 			final float normScale = 1f / (float) Math.sqrt(normX * normX + normY * normY + normZ * normZ);
 			this.normal(targetIndex, normX * normScale, normY * normScale, normZ * normScale);
 		} else {
@@ -354,20 +352,20 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
 		this.color(targetIndex, 0, ColorHelper.interpolate(from.color(fromIndex, 0), to.color(toIndex, 0), toWeight));
 		uv(targetIndex, 0,
-				MathHelper.lerp(toWeight, from.u(fromIndex, 0), to.u(toIndex, 0)),
-				MathHelper.lerp(toWeight, from.v(fromIndex, 0), to.v(toIndex, 0)));
+				Mth.lerp(toWeight, from.u(fromIndex, 0), to.u(toIndex, 0)),
+				Mth.lerp(toWeight, from.v(fromIndex, 0), to.v(toIndex, 0)));
 
 		if (layerCount > 1) {
 			this.color(targetIndex, 1, ColorHelper.interpolate(from.color(fromIndex, 1), to.color(toIndex, 1), toWeight));
 			uv(targetIndex, 1,
-					MathHelper.lerp(toWeight, from.u(fromIndex, 1), to.u(toIndex, 1)),
-					MathHelper.lerp(toWeight, from.v(fromIndex, 1), to.v(toIndex, 1)));
+					Mth.lerp(toWeight, from.u(fromIndex, 1), to.u(toIndex, 1)),
+					Mth.lerp(toWeight, from.v(fromIndex, 1), to.v(toIndex, 1)));
 
 			if (layerCount == 3) {
 				this.color(targetIndex, 2, ColorHelper.interpolate(from.color(fromIndex, 2), to.color(toIndex, 2), toWeight));
 				uv(targetIndex, 2,
-						MathHelper.lerp(toWeight, from.u(fromIndex, 2), to.u(toIndex, 2)),
-						MathHelper.lerp(toWeight, from.v(fromIndex, 2), to.v(toIndex, 2)));
+						Mth.lerp(toWeight, from.u(fromIndex, 2), to.u(toIndex, 2)),
+						Mth.lerp(toWeight, from.v(fromIndex, 2), to.v(toIndex, 2)));
 			}
 		}
 

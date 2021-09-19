@@ -1,9 +1,9 @@
 package grondag.xm.api.connect.species;
 
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 @FunctionalInterface
 public interface SpeciesFunction {
@@ -16,9 +16,9 @@ public interface SpeciesFunction {
 	 * @param pos
 	 * @return Numeric species value >=0 if block has one, {@link #NO_SPECIES} otherwise.
 	 */
-	int species(BlockView world, BlockState blockState, BlockPos pos);
+	int species(BlockGetter world, BlockState blockState, BlockPos pos);
 
-	default int species(BlockView world, BlockPos pos) {
+	default int species(BlockGetter world, BlockPos pos) {
 		return species(world, world.getBlockState(pos), pos);
 	}
 }

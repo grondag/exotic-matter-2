@@ -16,23 +16,21 @@
 package grondag.xm.api.connect.species;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-
 import grondag.fermion.position.BlockRegion;
 import grondag.xm.connect.SpeciesImpl;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
 
 @Experimental
 public class Species {
 	private  Species() {}
 
-	public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func) {
+	public static int speciesForPlacement(BlockGetter world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func) {
 		return SpeciesImpl.speciesForPlacement(world, onPos, onFace, mode, func, null);
 	}
 
-	public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
+	public static int speciesForPlacement(BlockGetter world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
 		return SpeciesImpl.speciesForPlacement(world, onPos, onFace, mode, func, region);
 	}
 }

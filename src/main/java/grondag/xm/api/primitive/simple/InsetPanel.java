@@ -16,12 +16,9 @@
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
-
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-
 import grondag.fermion.color.Color;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
@@ -75,7 +72,7 @@ public class InsetPanel {
 		final boolean isLit = modelState.primitive().lampSurface(modelState) != null;
 
 		for (int i = 0; i < 6; i++) {
-			final Direction face = Direction.byId(i);
+			final Direction face = Direction.from3DDataValue(i);
 			cutSide(face, csg, joins.faceState(face), isLit);
 		}
 
@@ -139,7 +136,7 @@ public class InsetPanel {
 				topFace);
 
 		// force vertex normals out to prevent lighting anomalies
-		final Vec3i vec = face.getVector();
+		final Vec3i vec = face.getNormal();
 		final float x = vec.getX();
 		final float y = vec.getY();
 		final float z = vec.getZ();

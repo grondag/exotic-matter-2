@@ -16,9 +16,6 @@
 package grondag.xm.painter;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-
 import grondag.fermion.orientation.api.FaceCorner;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
@@ -29,6 +26,7 @@ import grondag.xm.api.paint.RotatableQuadrant;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureSet;
+import net.minecraft.core.Direction;
 
 /**
  * Applies quadrant-style border textures. Quads must have a nominal face. Will

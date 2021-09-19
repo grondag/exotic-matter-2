@@ -16,23 +16,20 @@
 package grondag.xm.dispatch;
 
 import java.util.function.BiFunction;
-
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-
 import grondag.xm.api.modelstate.MutableModelState;
 
 @Internal
 public interface XmItemAccess {
 	@SuppressWarnings("unchecked")
-	static <T extends MutableModelState> T getModelState(World world, ItemStack stack) {
-		final BiFunction<ItemStack, World, MutableModelState> func = ((XmItemAccess)stack.getItem()).xm_modelStateFunc();
+	static <T extends MutableModelState> T getModelState(Level world, ItemStack stack) {
+		final BiFunction<ItemStack, Level, MutableModelState> func = ((XmItemAccess)stack.getItem()).xm_modelStateFunc();
 		return func == null ? null : (T) func.apply(stack, world);
 	}
 
-	BiFunction<ItemStack, World, MutableModelState> xm_modelStateFunc();
+	BiFunction<ItemStack, Level, MutableModelState> xm_modelStateFunc();
 
-	void xm_modelStateFunc(BiFunction<ItemStack, World, MutableModelState> func);
+	void xm_modelStateFunc(BiFunction<ItemStack, Level, MutableModelState> func);
 }

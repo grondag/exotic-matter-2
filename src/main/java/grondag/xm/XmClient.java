@@ -17,22 +17,19 @@
 package grondag.xm;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.InvalidateRenderStateCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.collision.CollisionDispatcherImpl;
@@ -55,24 +52,24 @@ public class XmClient implements ClientModInitializer {
 		InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
 		Packets.initializeClient();
 		AbstractPrimitiveModelState.useClientHandler();
-		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(XmPaintRegistryImpl.INSTANCE);
+		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(XmPaintRegistryImpl.INSTANCE);
 
-		SidedHelper.RENDER_LAYER_REMAPPER  = (b, s) -> BlockRenderLayerMap.INSTANCE.putBlock(b, RenderLayers.getBlockLayer(s));
+		SidedHelper.RENDER_LAYER_REMAPPER  = (b, s) -> BlockRenderLayerMap.INSTANCE.putBlock(b, ItemBlockRenderTypes.getChunkRenderType(s));
 		SidedHelper.RENDER_LAYER_REMAPS.forEach(SidedHelper.RENDER_LAYER_REMAPPER);
 		SidedHelper.RENDER_LAYER_REMAPS.clear();
 
 		WorldRenderEvents.BLOCK_OUTLINE.register((ctx, btx) -> {
-			final ClientWorld world = ctx.world();
+			final ClientLevel world = ctx.world();
 			final BlockPos blockPos = btx.blockPos();
             final BlockState blockState = btx.blockState();
 			final ModelState modelState = XmBlockState.modelState(blockState, world, blockPos, true);
 
 			if(modelState != null && !XmConfig.debugCollisionBoxes) {
-				final Vec3d cameraPos = ctx.camera().getPos();
+				final Vec3 cameraPos = ctx.camera().getPosition();
 
 				OutlineRenderer.drawModelOutline(
 					ctx.matrixStack(),
-					ctx.consumers().getBuffer(RenderLayer.getLines()),
+					ctx.consumers().getBuffer(RenderType.lines()),
 					modelState,
 					blockPos.getX() - cameraPos.x,
 					blockPos.getY() - cameraPos.y,

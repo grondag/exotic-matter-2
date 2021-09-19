@@ -16,9 +16,6 @@
 package grondag.xm.texture;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.Identifier;
-
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
@@ -26,6 +23,7 @@ import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetBuilder;
 import grondag.xm.api.texture.TextureTransform;
+import net.minecraft.resources.ResourceLocation;
 
 @Internal
 public class TextureSetBuilderImpl extends AbstractTextureSet implements TextureSetBuilder {
@@ -84,7 +82,7 @@ public class TextureSetBuilderImpl extends AbstractTextureSet implements Texture
 	}
 
 	@Override
-	public TextureSet build(Identifier id) {
+	public TextureSet build(ResourceLocation id) {
 		TextureSetImpl result;
 		if(TextureSetRegistryImpl.INSTANCE.contains(id)) {
 			result = TextureSetRegistryImpl.INSTANCE.get(id);

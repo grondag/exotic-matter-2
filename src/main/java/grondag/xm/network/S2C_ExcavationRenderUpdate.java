@@ -17,15 +17,13 @@ package grondag.xm.network;
 
 import io.netty.buffer.Unpooled;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -46,7 +44,7 @@ public abstract class S2C_ExcavationRenderUpdate {
 	private S2C_ExcavationRenderUpdate() {
 	}
 
-	public static final Identifier ID = new Identifier(Xm.MODID, "exru");
+	public static final ResourceLocation ID = new ResourceLocation(Xm.MODID, "exru");
 
 	/**
 	 * Use this for new and changed.
@@ -70,7 +68,7 @@ public abstract class S2C_ExcavationRenderUpdate {
 	}
 
 	private static Packet<?> toPacket(int id, IntegerBox aabb, boolean isExchange, BlockPos[] positions) {
-		final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
+		final FriendlyByteBuf pBuff = new FriendlyByteBuf(Unpooled.buffer());
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("id %d Update toBytes position count = %d", id, positions == null ? 0 : positions.length);
 		}
@@ -94,7 +92,7 @@ public abstract class S2C_ExcavationRenderUpdate {
 		return ServerPlayNetworking.createS2CPacket(ID, pBuff);
 	}
 
-	public static void accept(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+	public static void accept(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender responseSender) {
 		// FIX: thread safety
 
 		final int id = buf.readInt();
@@ -108,8 +106,8 @@ public abstract class S2C_ExcavationRenderUpdate {
 			positions = null;
 			isExchange = false;
 		} else {
-			final BlockPos minPos = BlockPos.fromLong(buf.readLong());
-			final BlockPos maxPos = BlockPos.fromLong(buf.readLong());
+			final BlockPos minPos = BlockPos.of(buf.readLong());
+			final BlockPos maxPos = BlockPos.of(buf.readLong());
 			aabb = new IntegerBox(minPos, maxPos);
 			isExchange = buf.readBoolean();
 
@@ -120,7 +118,7 @@ public abstract class S2C_ExcavationRenderUpdate {
 			} else {
 				positions = new BlockPos[posCount];
 				for (int i = 0; i < posCount; i++) {
-					positions[i] = BlockPos.fromLong(buf.readLong());
+					positions[i] = BlockPos.of(buf.readLong());
 				}
 			}
 		}

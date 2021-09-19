@@ -17,11 +17,6 @@
 package grondag.xm.connect;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-
 import grondag.fermion.position.BlockRegion;
 import grondag.xm.XmConfig;
 import grondag.xm.api.connect.species.SpeciesFunction;
@@ -30,12 +25,15 @@ import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.modelstate.ModelState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
 
 @Internal
 public class SpeciesImpl {
 	private SpeciesImpl() {}
 
-	public static int speciesForPlacement(BlockView world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
+	public static int speciesForPlacement(BlockGetter world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
 		// ways this can happen:
 		// have a species we want to match because we clicked on a face
 		// break with everything - need to know adjacent species
@@ -55,7 +53,7 @@ public class SpeciesImpl {
 
 		// PERF: avoid allocation - but not urgent; not hot
 		if(region == null) {
-			region = BlockRegion.of(onPos.offset(onFace));
+			region = BlockRegion.of(onPos.relative(onFace));
 		}
 		final int[] adjacentCount = new int[16];
 		final int[] surfaceCount = new int[16];
@@ -124,8 +122,8 @@ public class SpeciesImpl {
 	@SuppressWarnings("rawtypes")
 	private static boolean blockAndSpeciesTest(BlockTestContext ctx) {
 		return ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock()
-				&& ctx.fromBlockState().contains(SpeciesProperty.SPECIES)
-				&& ctx.fromBlockState().get(SpeciesProperty.SPECIES) == ctx.toBlockState().get(SpeciesProperty.SPECIES);
+				&& ctx.fromBlockState().hasProperty(SpeciesProperty.SPECIES)
+				&& ctx.fromBlockState().getValue(SpeciesProperty.SPECIES) == ctx.toBlockState().getValue(SpeciesProperty.SPECIES);
 	}
 
 	@SuppressWarnings("rawtypes")

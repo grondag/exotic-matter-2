@@ -16,26 +16,23 @@
 package grondag.xm.dispatch;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
-
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import grondag.xm.texture.TextureSetHelper;
 
 @Internal
 public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 	@Override
-	public ModelOverrideList getOverrides() {
+	public ItemOverrides getOverrides() {
 		return ItemOverrideProxy.INSTANCE;
 	}
 
 	@Override
-	public ModelTransformation getTransformation() {
+	public ItemTransforms getTransforms() {
 		return ModelHelper.MODEL_TRANSFORM_BLOCK;
 	}
 
@@ -45,17 +42,17 @@ public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
+	public boolean usesBlockLight() {
 		return true;
 	}
 
 	@Override
-	public boolean hasDepth() {
+	public boolean isGui3d() {
 		return true;
 	}
 
 	@Override
-	public boolean isBuiltin() {
+	public boolean isCustomRenderer() {
 		return false;
 	}
 
@@ -65,7 +62,7 @@ public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 	}
 
 	@Override
-	public Sprite getParticleSprite() {
+	public TextureAtlasSprite getParticleIcon() {
 		return TextureSetHelper.missingSprite();
 	}
 }

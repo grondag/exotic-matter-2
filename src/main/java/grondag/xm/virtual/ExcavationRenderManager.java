@@ -19,12 +19,9 @@ import java.util.ArrayList;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.network.ClientPlayerEntity;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.player.LocalPlayer;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
 
@@ -47,7 +44,7 @@ public class ExcavationRenderManager {
 	private static final ArrayList<ExcavationRenderer> secondPass = new ArrayList<>();
 
 	@Environment(EnvType.CLIENT)
-	public static void render(float tickDelta, ClientPlayerEntity player) {
+	public static void render(float tickDelta, LocalPlayer player) {
 		if (player == null) {
 			return;
 		}

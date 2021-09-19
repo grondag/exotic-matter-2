@@ -17,13 +17,10 @@ package grondag.xm.painter;
 
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
-
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import it.unimi.dsi.fastutil.HashCommon;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-
 import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
@@ -431,13 +428,13 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 				}
 			}
 
-			final int uMinIndex = MathHelper.floor(minU / tilingDistance);
+			final int uMinIndex = Mth.floor(minU / tilingDistance);
 
-			final int uMaxIndex = MathHelper.ceil(maxU / tilingDistance);
+			final int uMaxIndex = Mth.ceil(maxU / tilingDistance);
 
-			final int vMinIndex = MathHelper.floor(minV / tilingDistance);
+			final int vMinIndex = Mth.floor(minV / tilingDistance);
 
-			final int vMaxIndex = MathHelper.ceil(maxV / tilingDistance);
+			final int vMaxIndex = Mth.ceil(maxV / tilingDistance);
 
 			final int baseSalt = (editor.textureSalt() << 3) | (face == null ? 6 : face.ordinal());
 

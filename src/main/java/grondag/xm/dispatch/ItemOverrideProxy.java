@@ -16,22 +16,19 @@
 package grondag.xm.dispatch;
 
 import java.util.Collections;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.MutableModelState;
 
 @Internal
-public class ItemOverrideProxy extends ModelOverrideList {
+public class ItemOverrideProxy extends ItemOverrides {
 	static final ItemOverrideProxy INSTANCE = new ItemOverrideProxy();
 
 	private ItemOverrideProxy() {
@@ -39,7 +36,7 @@ public class ItemOverrideProxy extends ModelOverrideList {
 	}
 
 	@Override
-	public BakedModel apply(BakedModel bakedModel_1, ItemStack stack, @Nullable ClientWorld world, LivingEntity livingEntity_1, int seed) {
+	public BakedModel resolve(BakedModel bakedModel_1, ItemStack stack, @Nullable ClientLevel world, LivingEntity livingEntity_1, int seed) {
 		final MutableModelState modelState = XmItem.modelState(world, stack);
 
 		if (modelState != null) {
@@ -47,7 +44,7 @@ public class ItemOverrideProxy extends ModelOverrideList {
 			modelState.release();
 			return result;
 		} else {
-			return  MinecraftClient.getInstance().getBakedModelManager().getMissingModel();
+			return  Minecraft.getInstance().getModelManager().getMissingModel();
 		}
 	}
 }

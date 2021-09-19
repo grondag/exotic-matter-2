@@ -17,14 +17,11 @@ package grondag.xm.virtual;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
-
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.network.Packet;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
-
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.fermion.world.WorldMap;
 import grondag.xm.Xm;
@@ -37,10 +34,10 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 
 	public static final ExcavationRenderTracker INSTANCE = new ExcavationRenderTracker();
 
-	private final IdentityHashMap<ServerPlayerEntity, PlayerData> playerTracking = new IdentityHashMap<>();
+	private final IdentityHashMap<ServerPlayer, PlayerData> playerTracking = new IdentityHashMap<>();
 
 	@Override
-	protected Int2ObjectOpenHashMap<ExcavationRenderEntry> load(World world) {
+	protected Int2ObjectOpenHashMap<ExcavationRenderEntry> load(Level world) {
 		return new Int2ObjectOpenHashMap<>();
 	}
 
@@ -54,7 +51,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 				this.get(entry.world).put(entry.id, entry);
 			}
 
-			for (final Map.Entry<ServerPlayerEntity, PlayerData> playerEntry : playerTracking.entrySet()) {
+			for (final Map.Entry<ServerPlayer, PlayerData> playerEntry : playerTracking.entrySet()) {
 				final PlayerData pd = playerEntry.getValue();
 				if (pd.world == entry.world && task.visibleTo(playerEntry.getKey())) {
 					if (XmConfig.logExcavationRenderTracking) {
@@ -75,11 +72,11 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 
 		final Packet<?> packet = S2C_ExcavationRenderUpdate.toPacket(entry.id);
 
-		for (final Map.Entry<ServerPlayerEntity, PlayerData> playerEntry : playerTracking.entrySet()) {
+		for (final Map.Entry<ServerPlayer, PlayerData> playerEntry : playerTracking.entrySet()) {
 			final PlayerData pd = playerEntry.getValue();
 			if (pd.world == entry.world) {
 				entry.removeListener(playerEntry.getKey());
-				playerEntry.getKey().networkHandler.sendPacket(packet);
+				playerEntry.getKey().connection.send(packet);
 			}
 		}
 	}
@@ -87,7 +84,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 	/**
 	 * Call when player joins server, changes dimension or changes active domain.
 	 */
-	public void updatePlayerTracking(ServerPlayerEntity player) {
+	public void updatePlayerTracking(ServerPlayer player) {
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("updatePlayerTracking for %s", player.getName());
 		}
@@ -133,10 +130,10 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 			}
 		}
 
-		player.networkHandler.sendPacket(S2C_PacketExcavationRenderRefresh.toPacket(output));
+		player.connection.send(S2C_PacketExcavationRenderRefresh.toPacket(output));
 	}
 
-	public void stopPlayerTracking(ServerPlayerEntity player) {
+	public void stopPlayerTracking(ServerPlayer player) {
 		final PlayerData oldData = playerTracking.get(player);
 
 		if (oldData == null)
@@ -156,12 +153,12 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 
 	private static class PlayerData {
 		private final int domainID;
-		private final World world;
+		private final Level world;
 
-		private PlayerData(ServerPlayerEntity player) {
+		private PlayerData(ServerPlayer player) {
 			// FIX: put back when Domains are moved out of Simulator
 			domainID = 1; //DomainManager.instance().getActiveDomain(player).getAssignedNumber();
-			world = player.world;
+			world = player.level;
 		}
 	}
 

@@ -16,13 +16,11 @@
 package grondag.xm.api.connect.world;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Provide an instance to {@link BlockNeighbors} when it is retrieved in order
@@ -32,7 +30,7 @@ import grondag.xm.api.modelstate.ModelState;
 @Experimental
 @FunctionalInterface
 public interface ModelStateFunction {
-	ModelState get(BlockView world, BlockState blockState, BlockPos pos);
+	ModelState get(BlockGetter world, BlockState blockState, BlockPos pos);
 
 	/**
 	 * Use this as factory for model state block tests that DON'T need to refresh

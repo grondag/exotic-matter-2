@@ -16,59 +16,58 @@
 
 package grondag.xm.api.block.base;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.PillarBlock;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager.Builder;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.WorldAccess;
 
 /**
  * Handles waterlogging.
  */
 @Experimental
-public class NonCubicPillarBlock extends PillarBlock {
+public class NonCubicPillarBlock extends RotatedPillarBlock {
 
-	public NonCubicPillarBlock(Settings settings) {
+	public NonCubicPillarBlock(Properties settings) {
 		super(settings);
 	}
 
 	@Override
-	public BlockState getPlacementState(ItemPlacementContext ctx) {
-		final FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
-		return getDefaultState()
-				.with(AXIS, ctx.getSide().getAxis())
-				.with(Properties.WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		final FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+		return defaultBlockState()
+				.setValue(AXIS, ctx.getClickedFace().getAxis())
+				.setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
 	}
 
 	@Override
-	protected void appendProperties(Builder<Block, BlockState> builder) {
-		super.appendProperties(builder);
-		builder.add(Properties.WATERLOGGED);
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(BlockStateProperties.WATERLOGGED);
 	}
 
 	@Override
-	public boolean hasSidedTransparency(BlockState blockState_1) {
+	public boolean useShapeForLightOcclusion(BlockState blockState_1) {
 		return true;
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState blockState, Direction face, BlockState blockState2, WorldAccess world, BlockPos pos, BlockPos pos2) {
-		if (blockState.get(Properties.WATERLOGGED)) {
-			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+	public BlockState updateShape(BlockState blockState, Direction face, BlockState blockState2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
+		if (blockState.getValue(BlockStateProperties.WATERLOGGED)) {
+			world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
-		return super.getStateForNeighborUpdate(blockState, face, blockState2, world, pos, pos2);
+		return super.updateShape(blockState, face, blockState2, world, pos, pos2);
 	}
 
 	@Override
 	public FluidState getFluidState(BlockState blockState) {
-		return blockState.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(blockState);
+		return blockState.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
 	}
 }

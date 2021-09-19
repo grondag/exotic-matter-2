@@ -16,21 +16,19 @@
 package grondag.xm.terrain;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.api.terrain.TerrainModelState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Internal
 public class TerrainDynamicBlock extends TerrainBlock {
-	public TerrainDynamicBlock(Settings blockSettings, ModelState defaultModelState, boolean isFiller) {
+	public TerrainDynamicBlock(Properties blockSettings, ModelState defaultModelState, boolean isFiller) {
 		super(blockSettings, adjustShape(defaultModelState, isFiller));
 	}
 
@@ -46,7 +44,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
 	 * Convert this block to a static version of itself if a static version was
 	 * given.
 	 */
-	public void makeStatic(BlockState state, World world, BlockPos pos) {
+	public void makeStatic(BlockState state, Level world, BlockPos pos) {
 		final TerrainStaticBlock staticVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getStaticBlock(this);
 		if (staticVersion == null || state.getBlock() != this)
 			return;
@@ -54,7 +52,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
 		final MutableModelState myModelState = XmBlockState.modelState(state, world, pos, true);
 		myModelState.setStatic(true);
 		// TODO: transfer heat block state?
-		world.setBlockState(pos, staticVersion.getDefaultState().with(TerrainBlock.TERRAIN_TYPE, state.get(TerrainBlock.TERRAIN_TYPE)), 7);
+		world.setBlock(pos, staticVersion.defaultBlockState().setValue(TerrainBlock.TERRAIN_TYPE, state.getValue(TerrainBlock.TERRAIN_TYPE)), 7);
 		staticVersion.setModelState(world, pos, myModelState);
 	}
 
@@ -83,16 +81,16 @@ public class TerrainDynamicBlock extends TerrainBlock {
 	//    }
 
 	@Override
-	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+	public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
 		TerrainDynamicBlock.freezeNeighbors(world, pos, state);
-		super.onBreak(world, pos, state, player);
+		super.playerWillDestroy(world, pos, state, player);
 	}
 
 	/**
 	 * Looks for nearby dynamic blocks that might depend on this block for height
 	 * state and converts them to static blocks if possible.
 	 */
-	public static void freezeNeighbors(World worldIn, BlockPos pos, BlockState state) {
+	public static void freezeNeighbors(Level worldIn, BlockPos pos, BlockState state) {
 		// only height blocks affect neighbors
 		if (!TerrainBlockHelper.isFlowHeight(state))
 			return;
@@ -105,7 +103,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
 				for (int y = -4; y <= 4; y++) {
 					//                    if(!(x == 0 && y == 0 && z == 0))
 					{
-						final BlockPos targetPos = pos.add(x, y, z);
+						final BlockPos targetPos = pos.offset(x, y, z);
 						targetState = worldIn.getBlockState(targetPos);
 						targetBlock = targetState.getBlock();
 						if (targetBlock instanceof TerrainDynamicBlock) {

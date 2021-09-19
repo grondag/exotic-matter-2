@@ -16,13 +16,10 @@
 package grondag.xm.api.primitive.base;
 
 import java.util.function.Function;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-
 import grondag.xm.Xm;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.BaseModelStateFactory;
@@ -38,7 +35,7 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
 
 	private final BaseModelStateFactory<R, W> factory;
 
-	private final Identifier id;
+	private final ResourceLocation id;
 
 	private final Function<R, XmSurfaceList> surfaceFunc;
 
@@ -48,7 +45,7 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
 	 */
 	private final int stateFlags;
 
-	protected AbstractPrimitive(Identifier id, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
+	protected AbstractPrimitive(ResourceLocation id, int stateFlags, BaseModelStateFactory<R, W> factory, Function<R, XmSurfaceList> surfaceFunc) {
 		this.stateFlags = stateFlags;
 		this.id = id;
 		this.factory = factory;
@@ -81,7 +78,7 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
 	}
 
 	@Override
-	public Identifier id() {
+	public ResourceLocation id() {
 		return id;
 	}
 
@@ -92,12 +89,12 @@ public abstract class AbstractPrimitive<R extends BaseModelState<R, W>, W extend
 	}
 
 	@Override
-	public final W fromBytes(PacketByteBuf buf, PaintIndex sync) {
+	public final W fromBytes(FriendlyByteBuf buf, PaintIndex sync) {
 		return factory.fromBytes(this, buf, sync);
 	}
 
 	@Override
-	public final W fromTag(NbtCompound tag, PaintIndex sync) {
+	public final W fromTag(CompoundTag tag, PaintIndex sync) {
 		return factory.fromTag(this, tag, sync);
 	}
 }

@@ -16,13 +16,10 @@
 package grondag.xm.api.connect.species;
 
 import java.util.Locale;
-
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-
 import grondag.fermion.varia.NBTDictionary;
 import grondag.fermion.varia.Useful;
 
@@ -34,24 +31,24 @@ public enum SpeciesMode {
 
 	private static final String TAG_NAME = NBTDictionary.GLOBAL.claim("speciesMode");
 
-	public SpeciesMode deserializeNBT(NbtCompound tag) {
+	public SpeciesMode deserializeNBT(CompoundTag tag) {
 		return Useful.safeEnumFromTag(tag, TAG_NAME, this);
 	}
 
-	public void serializeNBT(NbtCompound tag) {
+	public void serializeNBT(CompoundTag tag) {
 		Useful.saveEnumToTag(tag, TAG_NAME, this);
 	}
 
-	public SpeciesMode fromBytes(PacketByteBuf pBuff) {
-		return pBuff.readEnumConstant(SpeciesMode.class);
+	public SpeciesMode fromBytes(FriendlyByteBuf pBuff) {
+		return pBuff.readEnum(SpeciesMode.class);
 	}
 
-	public void toBytes(PacketByteBuf pBuff) {
-		pBuff.writeEnumConstant(this);
+	public void toBytes(FriendlyByteBuf pBuff) {
+		pBuff.writeEnum(this);
 	}
 
 	public String localizedName() {
-		return I18n.translate("placement.species_mode." + name().toLowerCase(Locale.ROOT));
+		return I18n.get("placement.species_mode." + name().toLowerCase(Locale.ROOT));
 	}
 
 	/** mode to use if player holding modifier key */

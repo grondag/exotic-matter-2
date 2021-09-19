@@ -16,15 +16,13 @@
 package grondag.xm.virtual;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Internal
 public class VirtualBlockEntity extends BlockEntity {
@@ -112,16 +110,16 @@ public class VirtualBlockEntity extends BlockEntity {
 	//    private static final String NBT_BUILD_ID = NBTDictionary.claim("vtBuildID");
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound compound) {
-		compound = super.writeNbt(compound);
+	public CompoundTag save(CompoundTag compound) {
+		compound = super.save(compound);
 		//        compound.putInt(NBT_DOMAIN_ID, this.domainID);
 		//        compound.putInt(NBT_BUILD_ID, this.buildID);
 		return compound;
 	}
 
 	@Override
-	public void readNbt(NbtCompound compound) {
-		super.readNbt(compound);
+	public void load(CompoundTag compound) {
+		super.load(compound);
 
 		//        this.domainID = compound.containsKey(NBT_DOMAIN_ID) ? compound.getInt(NBT_DOMAIN_ID) : IIdentified.UNASSIGNED_ID;
 		//

@@ -16,12 +16,10 @@
 package grondag.xm.collision;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-
 import grondag.fermion.sc.cache.ObjectSimpleLoadingCache;
 import grondag.xm.api.modelstate.ModelState;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 @Internal
 public class CollisionDispatcherImpl {
@@ -39,7 +37,7 @@ public class CollisionDispatcherImpl {
 	};
 
 	public static VoxelShape shapeFor(ModelState modelState) {
-		return modelState == null ? VoxelShapes.fullCube() : modelCache.get(modelState.geometricState());
+		return modelState == null ? Shapes.block() : modelCache.get(modelState.geometricState());
 	}
 
 	/**

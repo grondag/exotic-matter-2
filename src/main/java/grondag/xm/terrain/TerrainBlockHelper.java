@@ -16,20 +16,18 @@
 package grondag.xm.terrain;
 
 import java.util.function.Predicate;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import grondag.fermion.position.PackedBlockPos;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.terrain.TerrainModelState;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
 @Internal
 public class TerrainBlockHelper {
@@ -46,8 +44,8 @@ public class TerrainBlockHelper {
 
 	@Nullable
 	public static TerrainType terrainType(BlockState state) {
-		final Comparable<?> val = state.getEntries().get(TerrainBlock.TERRAIN_TYPE);
-		return val == null ? null : TerrainBlock.TERRAIN_TYPE.getType().cast(val);
+		final Comparable<?> val = state.getValues().get(TerrainBlock.TERRAIN_TYPE);
+		return val == null ? null : TerrainBlock.TERRAIN_TYPE.getValueClass().cast(val);
 	}
 
 	/**
@@ -67,8 +65,8 @@ public class TerrainBlockHelper {
 	}
 
 	public static int getHotness(BlockState state) {
-		final Comparable<?> val = state.getEntries().get(TerrainBlock.HEAT);
-		return val == null ? 0 : TerrainBlock.HEAT.getType().cast(val);
+		final Comparable<?> val = state.getValues().get(TerrainBlock.HEAT);
+		return val == null ? 0 : TerrainBlock.HEAT.getValueClass().cast(val);
 	}
 
 	/**
@@ -85,7 +83,7 @@ public class TerrainBlockHelper {
 	 * height of this block
 	 */
 	public static BlockState stateWithDiscreteFlowHeight(BlockState state, int value) {
-		return state.with(TerrainBlock.TERRAIN_TYPE, HEIGHTS[MathHelper.clamp(value - 1, 0, 11)]);
+		return state.setValue(TerrainBlock.TERRAIN_TYPE, HEIGHTS[Mth.clamp(value - 1, 0, 11)]);
 	}
 
 	public static BlockState stateWithFlowHeight(BlockState state, float value) {
@@ -93,7 +91,7 @@ public class TerrainBlockHelper {
 	}
 
 	/**
-	 * Shorthand for {@link #adjustFillIfNeeded(World, BlockPos, Predicate)} with no
+	 * Shorthand for {@link #adjustFillIfNeeded(Level, BlockPos, Predicate)} with no
 	 * predicate.
 	 */
 	public static BlockState adjustFillIfNeeded(TerrainWorldAdapter worldObj, long packedBasePos) {
@@ -155,15 +153,15 @@ public class TerrainBlockHelper {
 
 		if (isFlowFiller(baseState)) {
 			if (targetFill == SHOULD_BE_AIR) {
-				update = Blocks.AIR.getDefaultState();
+				update = Blocks.AIR.defaultBlockState();
 				worldObj.setBlockState(packedBasePos, update);
 			} else if (fillBlock != null && (getYOffsetFromState(baseState) != targetFill || baseBlock != fillBlock)) {
-				update = stateWithYOffset(fillBlock.getDefaultState(), targetFill);
+				update = stateWithYOffset(fillBlock.defaultBlockState(), targetFill);
 				worldObj.setBlockState(packedBasePos, update);
 			}
 			// confirm filler needed and adjustIfEnabled/remove if needed
 		} else if (targetFill != SHOULD_BE_AIR && fillBlock != null) {
-			update = stateWithYOffset(fillBlock.getDefaultState(), targetFill);
+			update = stateWithYOffset(fillBlock.defaultBlockState(), targetFill);
 			worldObj.setBlockState(packedBasePos, update);
 		}
 
@@ -175,7 +173,7 @@ public class TerrainBlockHelper {
 	 * and neighboring flow blocks. Returns false if otherwise or if is not a flow
 	 * block.
 	 */
-	public static boolean shouldBeFullCube(BlockState blockState, BlockView blockAccess, BlockPos pos) {
+	public static boolean shouldBeFullCube(BlockState blockState, BlockGetter blockAccess, BlockPos pos) {
 		if (isFlowBlock(blockState)) {
 			final TerrainModelState.Mutable mState = (TerrainModelState.Mutable)XmBlockState.modelState(blockState, blockAccess, pos, true);
 			final boolean result = mState.getTerrainState().isFullCube();
@@ -185,7 +183,7 @@ public class TerrainBlockHelper {
 			return false;
 	}
 
-	public static @Nullable TerrainState terrainState(BlockState blockState, BlockView blockAccess, BlockPos pos) {
+	public static @Nullable TerrainState terrainState(BlockState blockState, BlockGetter blockAccess, BlockPos pos) {
 		if (isFlowBlock(blockState)) {
 			final TerrainModelState.Mutable mState = (TerrainModelState.Mutable)XmBlockState.modelState(blockState, blockAccess, pos, true);
 			final TerrainState result = mState.getTerrainState();
@@ -209,9 +207,9 @@ public class TerrainBlockHelper {
 	public static BlockState stateWithYOffset(BlockState state, int value) {
 		switch (value) {
 			case 1:
-				return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_ONE);
+				return state.setValue(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_ONE);
 			case 2:
-				return state.with(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_TWO);
+				return state.setValue(TerrainBlock.TERRAIN_TYPE, TerrainType.FILL_UP_TWO);
 			default:
 				return state;
 		}

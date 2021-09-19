@@ -17,15 +17,12 @@ package grondag.xm.dispatch;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.util.registry.Registry;
-
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelProviderException;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
-
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.core.Registry;
 import grondag.xm.api.block.XmBlockState;
 
 @Internal
@@ -37,19 +34,19 @@ public class XmVariantProvider implements ModelVariantProvider {
 
 		Registry.BLOCK.forEach(b -> {
 			if (XmBlockState.get(b) != null) {
-				targets.add(Registry.BLOCK.getId(b).toString());
+				targets.add(Registry.BLOCK.getKey(b).toString());
 			}
 		});
 
 		Registry.ITEM.forEach(i -> {
 			if (((XmItemAccess) i).xm_modelStateFunc() != null) {
-				targets.add(Registry.ITEM.getId(i).toString());
+				targets.add(Registry.ITEM.getKey(i).toString());
 			}
 		});
 	}
 
 	@Override
-	public UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context) throws ModelProviderException {
+	public UnbakedModel loadModelVariant(ModelResourceLocation modelId, ModelProviderContext context) throws ModelProviderException {
 		return targets.contains(modelId.getNamespace() + ":" + modelId.getPath()) ? XmModelProxy.INSTANCE : null;
 	}
 }

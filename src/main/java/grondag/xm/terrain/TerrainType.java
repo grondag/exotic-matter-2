@@ -16,13 +16,11 @@
 package grondag.xm.terrain;
 
 import java.util.Locale;
-
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.util.StringIdentifiable;
-
 @Internal
-public enum TerrainType implements StringIdentifiable {
+public enum TerrainType implements StringRepresentable {
 	FILL_UP_ONE(1, true),
 	FILL_UP_TWO(2, true),
 	HEIGHT_1(1, false),
@@ -54,7 +52,7 @@ public enum TerrainType implements StringIdentifiable {
 	}
 
 	@Override
-	public String asString() {
+	public String getSerializedName() {
 		return name;
 	}
 }

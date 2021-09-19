@@ -2,11 +2,8 @@ package grondag.xm.api.modelstate.base;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.BlockPos;
-
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.modelstate.ModelState;

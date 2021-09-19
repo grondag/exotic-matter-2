@@ -17,7 +17,7 @@ package grondag.xm.api.paint;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import grondag.xm.Xm;
 import grondag.xm.paint.VertexProcessorRegistryImpl;
@@ -27,17 +27,17 @@ public interface VertexProcessorRegistry {
 	/**
 	 * Will always be associated with index 0.
 	 */
-	Identifier NONE_ID = new Identifier(Xm.MODID, "none");
+	ResourceLocation NONE_ID = new ResourceLocation(Xm.MODID, "none");
 
 	VertexProcessorRegistry INSTANCE = VertexProcessorRegistryImpl.INSTANCE;
 
-	VertexProcessor get(Identifier id);
+	VertexProcessor get(ResourceLocation id);
 
 	VertexProcessor get(int index);
 
-	VertexProcessor add(Identifier id, VertexProcessor set);
+	VertexProcessor add(ResourceLocation id, VertexProcessor set);
 
-	Identifier getId(VertexProcessor value);
+	ResourceLocation getKey(VertexProcessor value);
 
-	boolean containsId(Identifier id);
+	boolean containsKey(ResourceLocation id);
 }

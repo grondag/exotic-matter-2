@@ -17,15 +17,12 @@ package grondag.xm.api.block;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-
 import grondag.xm.api.modelstate.ModelStateFunction;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmRegistryImpl;
@@ -51,7 +48,7 @@ public class XmBlockRegistry {
 	public static void addBlockStates(
 			Block block,
 			Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap,
-					BiFunction<ItemStack, World, MutableModelState> itemModelFunction)
+					BiFunction<ItemStack, Level, MutableModelState> itemModelFunction)
 	{
 
 		XmRegistryImpl.register(block, modelFunctionMap, itemModelFunction);
@@ -76,7 +73,7 @@ public class XmBlockRegistry {
 		addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
 	}
 
-	public static <F extends ModelStateFunction<?>> void addBlock(Block block, F blockModelFunction, BiFunction<ItemStack, World, MutableModelState> itemModelFunction) {
+	public static <F extends ModelStateFunction<?>> void addBlock(Block block, F blockModelFunction, BiFunction<ItemStack, Level, MutableModelState> itemModelFunction) {
 		addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
 	}
 
@@ -94,7 +91,7 @@ public class XmBlockRegistry {
 		return null;
 	};
 
-	public static final BiFunction<ItemStack, World, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION_V2  = (s, w) -> {
+	public static final BiFunction<ItemStack, Level, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION_V2  = (s, w) -> {
 		if (s.getItem() instanceof BlockItem) {
 			final BlockItem item = (BlockItem) s.getItem();
 			final XmBlockState xmState = XmBlockState.get(item);

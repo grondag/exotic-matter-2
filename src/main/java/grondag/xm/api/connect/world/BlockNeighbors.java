@@ -15,18 +15,17 @@
  ******************************************************************************/
 package grondag.xm.api.connect.world;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-
 import grondag.fermion.orientation.api.CubeCorner;
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.fermion.orientation.api.HorizontalEdge;
 import grondag.fermion.orientation.api.HorizontalFace;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.connect.BlocksNeighborsImpl;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Provides lazy, cached access to the block state for a single block position
@@ -46,11 +45,11 @@ import grondag.xm.connect.BlocksNeighborsImpl;
  *
  * Instance methods are not thread-safe and this class is intended to be
  * accessed as re-used, threadlocal instances via
- * {@link #threadLocal(BlockView, BlockPos)} and its variants.
+ * {@link #threadLocal(BlockGetter, BlockPos)} and its variants.
  * <p>
  *
  * If thread local access is insufficient (for example, if two instances are
- * needed in the same scope) then {@link #claim(BlockView, BlockPos)} (or one of
+ * needed in the same scope) then {@link #claim(BlockGetter, BlockPos)} (or one of
  * its variants) can be used to retrieve or create a potentially pooled
  * instance. If {@link #release()} is then called before the instance goes out
  * of scope, it will be returned to a pool for later re-used.
@@ -62,10 +61,10 @@ import grondag.xm.connect.BlocksNeighborsImpl;
  * during chunk rebuilds or other scenarios that result in high call volume.
  * <p>
  *
- * Note that instances provided by {@link #claim(BlockView, BlockPos)} have no
+ * Note that instances provided by {@link #claim(BlockGetter, BlockPos)} have no
  * connection to the re-use pool and no references are retained to them once
  * claimed. Calling {@link #release()} is unnecessary and has no effect for
- * instances returned by {@link #threadLocal(BlockView, BlockPos)}.
+ * instances returned by {@link #threadLocal(BlockGetter, BlockPos)}.
  */
 public interface BlockNeighbors {
 	void release();
@@ -171,75 +170,75 @@ public interface BlockNeighbors {
 		return result(CubeCorner.find(face1, face2, face3));
 	}
 
-	static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> test) {
+	static BlockNeighbors threadLocal(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> test) {
 		return BlocksNeighborsImpl.threadLocal(world, x, y, z, stateFunc, test);
 	}
 
-	static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc) {
+	static BlockNeighbors threadLocal(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc) {
 		return threadLocal(world, x, y, z, stateFunc, null);
 	}
 
-	static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, BlockTest<?> test) {
+	static BlockNeighbors threadLocal(BlockGetter world, int x, int y, int z, BlockTest<?> test) {
 		return threadLocal(world, x, y, z, null, test);
 	}
 
-	static BlockNeighbors threadLocal(BlockView world, int x, int y, int z) {
+	static BlockNeighbors threadLocal(BlockGetter world, int x, int y, int z) {
 		return threadLocal(world, x, y, z, null, null);
 	}
 
-	static BlockNeighbors threadLocal(BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
+	static BlockNeighbors threadLocal(BlockGetter world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
 		return threadLocal(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
 	}
 
-	static BlockNeighbors threadLocal(BlockView world, BlockPos pos, ModelStateFunction stateFunc) {
+	static BlockNeighbors threadLocal(BlockGetter world, BlockPos pos, ModelStateFunction stateFunc) {
 		return threadLocal(world, pos, stateFunc, null);
 	}
 
-	static BlockNeighbors threadLocal(BlockView world, BlockPos pos, BlockTest<?> test) {
+	static BlockNeighbors threadLocal(BlockGetter world, BlockPos pos, BlockTest<?> test) {
 		return threadLocal(world, pos, null, test);
 	}
 
-	static BlockNeighbors threadLocal(BlockView world, BlockPos pos) {
+	static BlockNeighbors threadLocal(BlockGetter world, BlockPos pos) {
 		return threadLocal(world, pos, null, null);
 	}
 
-	static BlockNeighbors claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> test) {
+	static BlockNeighbors claim(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> test) {
 		return BlocksNeighborsImpl.claim(world, x, y, z, stateFunc, test);
 	}
 
-	static BlockNeighbors claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc) {
+	static BlockNeighbors claim(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc) {
 		return claim(world, x, y, z, stateFunc, null);
 	}
 
-	static BlockNeighbors claim(BlockView world, int x, int y, int z, BlockTest<?> test) {
+	static BlockNeighbors claim(BlockGetter world, int x, int y, int z, BlockTest<?> test) {
 		return claim(world, x, y, z, null, test);
 	}
 
-	static BlockNeighbors claim(BlockView world, int x, int y, int z) {
+	static BlockNeighbors claim(BlockGetter world, int x, int y, int z) {
 		return claim(world, x, y, z, null, null);
 	}
 
-	static BlockNeighbors claim(BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
+	static BlockNeighbors claim(BlockGetter world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
 		return claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test);
 	}
 
-	static BlockNeighbors claimIfNull(BlockNeighbors neighbors, BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
+	static BlockNeighbors claimIfNull(BlockNeighbors neighbors, BlockGetter world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<?> test) {
 		return neighbors == null ? claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test) : neighbors.withTest(test);
 	}
 
-	static BlockNeighbors claimIfNull(BlockNeighbors neighbors, BlockView world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<PrimitiveState> test, BlockState blockState) {
+	static BlockNeighbors claimIfNull(BlockNeighbors neighbors, BlockGetter world, BlockPos pos, ModelStateFunction stateFunc, BlockTest<PrimitiveState> test, BlockState blockState) {
 		return neighbors == null ? claim(world, pos.getX(), pos.getY(), pos.getZ(), stateFunc, test).withBlockState(blockState) : neighbors.withTest(test);
 	}
 
-	static BlockNeighbors claim(BlockView world, BlockPos pos, ModelStateFunction stateFunc) {
+	static BlockNeighbors claim(BlockGetter world, BlockPos pos, ModelStateFunction stateFunc) {
 		return claim(world, pos, stateFunc, null);
 	}
 
-	static BlockNeighbors claim(BlockView world, BlockPos pos, BlockTest<?> test) {
+	static BlockNeighbors claim(BlockGetter world, BlockPos pos, BlockTest<?> test) {
 		return claim(world, pos, null, test);
 	}
 
-	static BlockNeighbors claim(BlockView world, BlockPos pos) {
+	static BlockNeighbors claim(BlockGetter world, BlockPos pos) {
 		return claim(world, pos, null, null);
 	}
 }

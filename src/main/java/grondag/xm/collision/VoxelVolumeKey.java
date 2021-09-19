@@ -16,10 +16,9 @@
 package grondag.xm.collision;
 
 import it.unimi.dsi.fastutil.HashCommon;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 
 /**
  * Generates non-intersecting collision boxes for a model within a single block
@@ -159,11 +158,11 @@ class VoxelVolumeKey {
 	final VoxelShape build() {
 		//        final long start = System.nanoTime();
 
-		VoxelShape result = VoxelShapes.empty();
+		VoxelShape result = Shapes.empty();
 
 		if (!isEmpty()) {
 			if (isFull()) {
-				result = VoxelShapes.fullCube();
+				result = Shapes.block();
 			} else {
 				final int count000 = count1(0, 0, 0);
 				final int count001 = count1(1, 0, 0);
@@ -202,42 +201,42 @@ class VoxelVolumeKey {
 				}
 
 				if ((halves & Y_LOW) == Y_LOW) {
-					result = VoxelShapes.union(result, VoxelShapes.cuboid(0, 0, 0, 1, 0.5, 1));
+					result = Shapes.or(result, Shapes.box(0, 0, 0, 1, 0.5, 1));
 					result = div1(count010, result, 0, 1, 0);
 					result = div1(count011, result, 1, 1, 0);
 					result = div1(count110, result, 0, 1, 1);
 					result = div1(count111, result, 1, 1, 1);
 
 				} else if ((halves & Y_HIGH) == Y_HIGH) {
-					result = VoxelShapes.union(result, VoxelShapes.cuboid(0, 0.5, 0, 1, 1, 1));
+					result = Shapes.or(result, Shapes.box(0, 0.5, 0, 1, 1, 1));
 					result = div1(count000, result, 0, 0, 0);
 					result = div1(count001, result, 1, 0, 0);
 					result = div1(count100, result, 0, 0, 1);
 					result = div1(count101, result, 1, 0, 1);
 
 				} else if ((halves & X_LOW) == X_LOW) {
-					result = VoxelShapes.union(result, VoxelShapes.cuboid(0, 0, 0, 0.5, 1, 1));
+					result = Shapes.or(result, Shapes.box(0, 0, 0, 0.5, 1, 1));
 					result = div1(count001, result, 1, 0, 0);
 					result = div1(count011, result, 1, 1, 0);
 					result = div1(count101, result, 1, 0, 1);
 					result = div1(count111, result, 1, 1, 1);
 
 				} else if ((halves & X_HIGH) == X_HIGH) {
-					result = VoxelShapes.union(result, VoxelShapes.cuboid(0.5, 0, 0, 1, 1, 1));
+					result = Shapes.or(result, Shapes.box(0.5, 0, 0, 1, 1, 1));
 					result = div1(count000, result, 0, 0, 0);
 					result = div1(count010, result, 0, 1, 0);
 					result = div1(count100, result, 0, 0, 1);
 					result = div1(count110, result, 0, 1, 1);
 
 				} else if ((halves & Z_LOW) == Z_LOW) {
-					result = VoxelShapes.union(result, VoxelShapes.cuboid(0, 0, 0, 1, 1, 0.5));
+					result = Shapes.or(result, Shapes.box(0, 0, 0, 1, 1, 0.5));
 					result = div1(count100, result, 0, 0, 1);
 					result = div1(count101, result, 1, 0, 1);
 					result = div1(count110, result, 0, 1, 1);
 					result = div1(count111, result, 1, 1, 1);
 
 				} else if ((halves & Z_HIGH) == Z_HIGH) {
-					result = VoxelShapes.union(result, VoxelShapes.cuboid(0, 0, 0.5, 1, 1, 1));
+					result = Shapes.or(result, Shapes.box(0, 0, 0.5, 1, 1, 1));
 					result = div1(count000, result, 0, 0, 0);
 					result = div1(count001, result, 1, 0, 0);
 					result = div1(count010, result, 0, 1, 0);
@@ -271,7 +270,7 @@ class VoxelVolumeKey {
 			final double x0 = x * DIV1;
 			final double y0 = y * DIV1;
 			final double z0 = z * DIV1;
-			return VoxelShapes.union(shape, VoxelShapes.cuboid(x0, y0, z0, x0 + DIV1, y0 + DIV1, z0 + DIV1));
+			return Shapes.or(shape, Shapes.box(x0, y0, z0, x0 + DIV1, y0 + DIV1, z0 + DIV1));
 		} else {
 			final int x0 = x * 2;
 			final int y0 = y * 2;
@@ -303,7 +302,7 @@ class VoxelVolumeKey {
 			final double x0 = x * DIV2;
 			final double y0 = y * DIV2;
 			final double z0 = z * DIV2;
-			return VoxelShapes.union(shape, VoxelShapes.cuboid(x0, y0, z0, x0 + DIV2, y0 + DIV2, z0 + DIV2));
+			return Shapes.or(shape, Shapes.box(x0, y0, z0, x0 + DIV2, y0 + DIV2, z0 + DIV2));
 		} else {
 			final int x0 = x * 2;
 			final int y0 = y * 2;
@@ -331,7 +330,7 @@ class VoxelVolumeKey {
 			final double x0 = x * DIV3;
 			final double y0 = y * DIV3;
 			final double z0 = z * DIV3;
-			return VoxelShapes.union(shape, VoxelShapes.cuboid(x0, y0, z0, x0 + DIV3, y0 + DIV3, z0 + DIV3));
+			return Shapes.or(shape, Shapes.box(x0, y0, z0, x0 + DIV3, y0 + DIV3, z0 + DIV3));
 		} else
 			return shape;
 	}

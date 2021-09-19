@@ -17,13 +17,10 @@ package grondag.xm.api.primitive.simple;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Direction.AxisDirection;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -63,13 +60,13 @@ public class RoundedColumn  {
 		boolean hasCap = false;
 
 		final Axis axis = AXES[modelState.orientationIndex()];
-		if (!state.isJoined(Direction.from(axis, AxisDirection.POSITIVE))) {
+		if (!state.isJoined(Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE))) {
 			emitCapSection(csg.input(), pt, axis != Axis.X);
 			csg.union();
 			hasCap = true;
 		}
 
-		if (!state.isJoined(Direction.from(axis, AxisDirection.NEGATIVE))) {
+		if (!state.isJoined(Direction.fromAxisAndDirection(axis, AxisDirection.NEGATIVE))) {
 			emitCapSection(csg.input(), pt, axis == Axis.X);
 			csg.union();
 			hasCap = true;

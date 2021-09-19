@@ -16,11 +16,8 @@
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
-
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;

@@ -17,14 +17,13 @@ package grondag.xm.api.block;
 
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmBlockStateAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
 @Experimental
 public interface XmBlockState {
@@ -40,7 +39,7 @@ public interface XmBlockState {
 	 * recursion when need to reference some static state ) information in order to
 	 * determine dynamic world state. Block tests are main use case for false.
 	 */
-	<T extends MutableModelState> T modelState(@Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
+	<T extends MutableModelState> T modelState(@Nullable BlockGetter world, @Nullable BlockPos pos, boolean refreshFromWorld);
 
 	default <T extends MutableModelState> T defaultModelState() {
 		return modelState(null, null, false);
@@ -55,11 +54,11 @@ public interface XmBlockState {
 	}
 
 	static @Nullable XmBlockState get(Block fromBlock) {
-		return get(fromBlock.getDefaultState());
+		return get(fromBlock.defaultBlockState());
 	}
 
 	@SuppressWarnings("unchecked")
-	static @Nullable <T extends MutableModelState> T modelState(BlockState fromState, @Nullable BlockView blockView, @Nullable BlockPos pos, boolean refresh) {
+	static @Nullable <T extends MutableModelState> T modelState(BlockState fromState, @Nullable BlockGetter blockView, @Nullable BlockPos pos, boolean refresh) {
 		final XmBlockState xmState = get(fromState);
 		return xmState == null ? null : (T) xmState.modelState(blockView, pos, refresh);
 	}

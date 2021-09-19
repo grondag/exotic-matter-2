@@ -16,11 +16,9 @@
 package grondag.xm.api.collision;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.shape.VoxelShape;
-
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.collision.CollisionDispatcherImpl;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 @Experimental
 public class CollisionDispatcher {

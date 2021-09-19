@@ -15,10 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import net.minecraft.util.math.Direction;
-
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.connect.CornerJoinStateSelector;
+import net.minecraft.core.Direction;
 
 /**
  * Describes the state of a block model with connected textures/shapes that

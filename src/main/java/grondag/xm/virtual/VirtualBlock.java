@@ -16,13 +16,11 @@
 package grondag.xm.virtual;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-
 import grondag.xm.api.modelstate.ModelState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Internal
 public interface VirtualBlock {
@@ -30,8 +28,8 @@ public interface VirtualBlock {
 	 * True if block at the given position is actually solid (not replaceable) or is
 	 * virtual and visible to the given player.
 	 */
-	default boolean isVirtuallySolid(BlockPos pos, PlayerEntity player) {
-		return !player.world.getBlockState(pos).getMaterial().isReplaceable();
+	default boolean isVirtuallySolid(BlockPos pos, Player player) {
+		return !player.level.getBlockState(pos).getMaterial().isReplaceable();
 	}
 
 	/**
@@ -49,8 +47,8 @@ public interface VirtualBlock {
 	 * don't know what type of block it is. Will return false for any block that
 	 * doesn't implement ISuperBlock.
 	 */
-	static boolean isVirtuallySolidBlock(BlockPos pos, PlayerEntity player) {
-		return isVirtuallySolidBlock(player.world.getBlockState(pos), pos, player);
+	static boolean isVirtuallySolidBlock(BlockPos pos, Player player) {
+		return isVirtuallySolidBlock(player.level.getBlockState(pos), pos, player);
 	}
 
 	/**
@@ -63,7 +61,7 @@ public interface VirtualBlock {
 	 * UGLY: really needed? Seems redundant of isVirtuallySolid, plus have mixins
 	 * now
 	 */
-	static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, PlayerEntity player) {
+	static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, Player player) {
 		final Block block = state.getBlock();
 		return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player) : !state.getMaterial().isReplaceable();
 	}

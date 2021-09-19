@@ -16,15 +16,12 @@
 package grondag.xm.primitive;
 
 import java.util.function.Consumer;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.paint.PaintIndex;
@@ -83,13 +80,13 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	}
 
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(NbtCompound tag, PaintIndex paintIndex) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag, PaintIndex paintIndex) {
 		final ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
 		return shape == null ? null : shape.fromTag(tag, paintIndex);
 	}
 
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf, PaintIndex paintIndex) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(FriendlyByteBuf buf, PaintIndex paintIndex) {
 		final ModelPrimitive<R, W> shape = get(buf.readVarInt());
 		return shape == null ? null : shape.fromBytes(buf, paintIndex);
 	}

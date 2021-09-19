@@ -16,11 +16,9 @@
 package grondag.xm.mesh.vertex;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-
 import grondag.xm.api.mesh.polygon.Vec3f;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 
 @Internal
 public class Vec3fFactory {
@@ -29,12 +27,12 @@ public class Vec3fFactory {
 	private static final Vec3f[] FACES = new Vec3f[6];
 
 	static {
-		FACES[Direction.UP.ordinal()] = create(Direction.UP.getVector());
-		FACES[Direction.DOWN.ordinal()] = create(Direction.DOWN.getVector());
-		FACES[Direction.EAST.ordinal()] = create(Direction.EAST.getVector());
-		FACES[Direction.WEST.ordinal()] = create(Direction.WEST.getVector());
-		FACES[Direction.NORTH.ordinal()] = create(Direction.NORTH.getVector());
-		FACES[Direction.SOUTH.ordinal()] = create(Direction.SOUTH.getVector());
+		FACES[Direction.UP.ordinal()] = create(Direction.UP.getNormal());
+		FACES[Direction.DOWN.ordinal()] = create(Direction.DOWN.getNormal());
+		FACES[Direction.EAST.ordinal()] = create(Direction.EAST.getNormal());
+		FACES[Direction.WEST.ordinal()] = create(Direction.WEST.getNormal());
+		FACES[Direction.NORTH.ordinal()] = create(Direction.NORTH.getNormal());
+		FACES[Direction.SOUTH.ordinal()] = create(Direction.SOUTH.getNormal());
 	}
 
 	public static final Vec3f ZERO = Vec3fImpl.ZERO;

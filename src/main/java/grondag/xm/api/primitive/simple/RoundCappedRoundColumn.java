@@ -17,13 +17,10 @@ package grondag.xm.api.primitive.simple;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Direction.AxisDirection;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -69,14 +66,14 @@ public class RoundCappedRoundColumn  {
 		boolean hasCap = false;
 
 		final Axis axis = AXES[modelState.orientationIndex()];
-		if (!state.isJoined(Direction.from(axis, AxisDirection.POSITIVE))) {
+		if (!state.isJoined(Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE))) {
 			emitOuterSection(csg.input().writer(), pt, 0.25f, axis == Axis.X ? 0 : 0.75f, SURFACE_ENDS, SURFACE_CUT);
 			//emitCapSection(csg.input(), pt, axis != Axis.X);
 			csg.union();
 			hasCap = true;
 		}
 
-		if (!state.isJoined(Direction.from(axis, AxisDirection.NEGATIVE))) {
+		if (!state.isJoined(Direction.fromAxisAndDirection(axis, AxisDirection.NEGATIVE))) {
 			emitOuterSection(csg.input().writer(), pt, 0.25f, axis == Axis.X ? 0.75f : 0, SURFACE_CUT, SURFACE_ENDS);
 			//			emitCapSection(csg.input(), pt, axis == Axis.X);
 			csg.union();

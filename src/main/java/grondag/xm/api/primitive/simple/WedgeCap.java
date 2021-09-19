@@ -16,9 +16,7 @@
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
-
-import net.minecraft.util.math.Direction;
-
+import net.minecraft.core.Direction;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;

@@ -16,14 +16,12 @@
 package grondag.xm.paint;
 
 import java.util.Arrays;
-
-import net.minecraft.nbt.NbtList;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.MathHelper;
-
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.util.Mth;
 import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.network.PaintIndexSnapshotS2C;
@@ -38,7 +36,7 @@ public class PaintIndexImpl implements PaintIndex {
 	private int capacity  = 1024;
 	private XmPaint[] paints = new XmPaint[capacity];
 	private boolean isDirty = true;
-	private PlayerManager playerManager = null;
+	private PlayerList playerManager = null;
 	public final boolean isClient;
 
 	private PaintIndexImpl(boolean isClient) {
@@ -54,7 +52,7 @@ public class PaintIndexImpl implements PaintIndex {
 
 	private void ensureCapacity(int index) {
 		if (index >= capacity) {
-			final int newCapacity = MathHelper.smallestEncompassingPowerOfTwo(index);
+			final int newCapacity = Mth.smallestEncompassingPowerOfTwo(index);
 			final XmPaint[] newPaints = new XmPaint[newCapacity];
 			System.arraycopy(paints, 0, newPaints, 0, nextIndex);
 			paints = newPaints;
@@ -102,7 +100,7 @@ public class PaintIndexImpl implements PaintIndex {
 	}
 
 	private void sendToListeners(XmPaint paint, int index) {
-		playerManager.sendToAll(PaintIndexUpdateS2C.toPacket(paint, index));
+		playerManager.broadcastAll(PaintIndexUpdateS2C.toPacket(paint, index));
 	}
 
 	public void save() {
@@ -112,10 +110,10 @@ public class PaintIndexImpl implements PaintIndex {
 		}
 	}
 
-	public NbtList toTag() {
+	public ListTag toTag() {
 		assert !isClient;
 		final int limit = nextIndex;
-		final NbtList tag = new NbtList();
+		final ListTag tag = new ListTag();
 
 		for (int i = 0; i < limit; ++i)  {
 			tag.add(paints[i].toFixedTag());
@@ -124,7 +122,7 @@ public class PaintIndexImpl implements PaintIndex {
 		return tag;
 	}
 
-	public void fromTag(NbtList tag, ServerWorld world) {
+	public void fromTag(ListTag tag, ServerLevel world) {
 		assert !isClient;
 		clear();
 
@@ -137,8 +135,8 @@ public class PaintIndexImpl implements PaintIndex {
 		}
 	}
 
-	public void connectPlayer(ServerPlayerEntity player) {
-		final PlayerManager playerManager = player.server.getPlayerManager();
+	public void connectPlayer(ServerPlayer player) {
+		final PlayerList playerManager = player.server.getPlayerList();
 
 		if (this.playerManager == null) {
 			this.playerManager = playerManager;
@@ -146,10 +144,10 @@ public class PaintIndexImpl implements PaintIndex {
 			assert playerManager == this.playerManager;
 		}
 
-		player.networkHandler.sendPacket(PaintIndexSnapshotS2C.toPacket(this));
+		player.connection.send(PaintIndexSnapshotS2C.toPacket(this));
 	}
 
-	public void toBytes(PacketByteBuf pBuff) {
+	public void toBytes(FriendlyByteBuf pBuff) {
 		assert !isClient;
 
 		final int limit = nextIndex;
@@ -170,7 +168,7 @@ public class PaintIndexImpl implements PaintIndex {
 		System.arraycopy(paints, 0, this.paints, 0, limit);
 	}
 
-	public static XmPaint[] arrayFromBytes(PacketByteBuf pBuff) {
+	public static XmPaint[] arrayFromBytes(FriendlyByteBuf pBuff) {
 		final int limit = pBuff.readVarInt();
 		final XmPaint[] result = new XmPaint[limit];
 

@@ -16,11 +16,8 @@
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
-
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Vec3d;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
@@ -66,7 +63,7 @@ public class IcosahedralSphere {
 		.surface(mesh.writer().surface())
 		.lockUV(0, false)
 		.saveDefaults();
-		Icosahedron.icosahedron(Vec3d.ZERO, 0.5, icoMesh, true);
+		Icosahedron.icosahedron(Vec3.ZERO, 0.5, icoMesh, true);
 
 		final Polygon reader = icoMesh.reader();
 		reader.origin();

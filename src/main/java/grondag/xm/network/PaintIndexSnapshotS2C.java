@@ -17,16 +17,13 @@ package grondag.xm.network;
 
 import io.netty.buffer.Unpooled;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.resources.ResourceLocation;
 import grondag.xm.Xm;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.paint.PaintIndexImpl;
@@ -36,18 +33,18 @@ public abstract class PaintIndexSnapshotS2C {
 	private PaintIndexSnapshotS2C() {
 	}
 
-	public static final Identifier ID = new Identifier(Xm.MODID, "pxs");
+	public static final ResourceLocation ID = new ResourceLocation(Xm.MODID, "pxs");
 
 	public static Packet<?> toPacket(PaintIndexImpl paintIndex) {
-		final PacketByteBuf pBuff = new PacketByteBuf(Unpooled.buffer());
+		final FriendlyByteBuf pBuff = new FriendlyByteBuf(Unpooled.buffer());
 		paintIndex.toBytes(pBuff);
 		return ServerPlayNetworking.createS2CPacket(ID, pBuff);
 	}
 
-	public static void accept(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf pBuff, PacketSender responseSender) {
+	public static void accept(Minecraft client, ClientPacketListener handler, FriendlyByteBuf pBuff, PacketSender responseSender) {
 		final XmPaint[] paints = PaintIndexImpl.arrayFromBytes(pBuff);
 
-		if (client.isOnThread()) {
+		if (client.isSameThread()) {
 			PaintIndexImpl.CLIENT.fromArray(paints);
 		} else {
 			client.execute(() -> PaintIndexImpl.CLIENT.fromArray(paints));

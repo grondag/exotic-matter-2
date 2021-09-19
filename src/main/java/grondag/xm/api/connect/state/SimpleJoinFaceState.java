@@ -15,11 +15,10 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import net.minecraft.util.math.Direction;
-
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.fermion.orientation.api.FaceEdge;
 import grondag.xm.api.connect.world.BlockNeighbors;
+import net.minecraft.core.Direction;
 
 public enum SimpleJoinFaceState {
 	NO_FACE(0),

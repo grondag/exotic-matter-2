@@ -15,10 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.mesh.polygon;
 
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
 
 @Experimental
 public class PolyHelper {
@@ -41,7 +40,7 @@ public class PolyHelper {
 
 		for (int i = 0; i < 6; i++) {
 			final Direction f = FACES[i];
-			final Vec3i faceNormal = f.getVector();
+			final Vec3i faceNormal = f.getNormal();
 			final float diff = Vec3f.dotProduct(faceNormal.getX(), faceNormal.getY(), faceNormal.getZ(), x, y, z);
 
 			if (diff >= 0.0 && diff > minDiff) {

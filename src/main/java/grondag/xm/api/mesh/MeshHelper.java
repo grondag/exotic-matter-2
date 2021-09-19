@@ -16,12 +16,9 @@
 package grondag.xm.api.mesh;
 
 import java.util.function.Consumer;
-
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.util.math.Direction;
-
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.primitive.surface.XmSurface;
 

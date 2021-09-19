@@ -21,20 +21,17 @@ import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
@@ -48,7 +45,7 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 	/**
 	 * Used for registration and serialization of model state.
 	 */
-	Identifier id();
+	ResourceLocation id();
 
 	/**
 	 * Used for fast, transient serialization. Recommended that implementations
@@ -97,9 +94,9 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 		return defaultState().mutableCopy();
 	}
 
-	W fromBytes(PacketByteBuf buf, PaintIndex sync);
+	W fromBytes(FriendlyByteBuf buf, PaintIndex sync);
 
-	W fromTag(NbtCompound tag, PaintIndex sync);
+	W fromTag(CompoundTag tag, PaintIndex sync);
 
 	@Deprecated
 	boolean doesShapeMatch(R from, R to);
@@ -111,7 +108,7 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 	default void invalidateCache() { }
 
 	@Environment(EnvType.CLIENT)
-	default void emitBlockMesh(Mesh mesh, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+	default void emitBlockMesh(Mesh mesh, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
 		context.meshConsumer().accept(mesh);
 	}
 

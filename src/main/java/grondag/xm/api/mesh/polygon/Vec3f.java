@@ -17,13 +17,11 @@ package grondag.xm.api.mesh.polygon;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
-
 import grondag.fermion.varia.Useful;
 import grondag.xm.mesh.vertex.Vec3fFactory;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
 
 @Experimental
 public interface Vec3f {
@@ -47,7 +45,7 @@ public interface Vec3f {
 	}
 
 	default float length() {
-		return MathHelper.sqrt(lengthSquared());
+		return Mth.sqrt(lengthSquared());
 	}
 
 	default float lengthSquared() {

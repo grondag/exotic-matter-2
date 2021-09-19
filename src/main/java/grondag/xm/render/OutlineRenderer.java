@@ -16,17 +16,14 @@
 package grondag.xm.render;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3d;
-
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.modelstate.ModelState;
@@ -43,13 +40,13 @@ public class OutlineRenderer {
 	 * Draws block-aligned grid on sides of AABB if entity can see it from outside
 	 */
 
-	public static void drawModelOutline(MatrixStack matrixStack, VertexConsumer vertexConsumer, ModelState modelState, double x, double y, double z, float r, float g, float b, float a) {
+	public static void drawModelOutline(PoseStack matrixStack, VertexConsumer vertexConsumer, ModelState modelState, double x, double y, double z, float r, float g, float b, float a) {
 		if (modelState == null)
 			return;
 
 		final WritableMesh mesh = outlineMesh;
-		final Matrix4f matrix4f = matrixStack.peek().getModel();
-		final Matrix3f normalMatrix = matrixStack.peek().getNormal();
+		final Matrix4f matrix4f = matrixStack.last().pose();
+		final Matrix3f normalMatrix = matrixStack.last().normal();
 
 		if(outlineModelState == null || !modelState.equals(outlineModelState)) {
 			outlineModelState = modelState.toImmutable();
@@ -62,14 +59,14 @@ public class OutlineRenderer {
 
 			for(int i = 0; i < limit; i++) {
 				// lines format wants a normal - god knows what for - we always pass in up
-				vertexConsumer.vertex(matrix4f, (float) (p.x(i) + x), (float) (p.y(i) + y), (float) (p.z(i) + z)).color(r, g, b, a).normal(normalMatrix, 0, 1, 0).next();
-				vertexConsumer.vertex(matrix4f, (float) (p.x(i + 1) + x), (float) (p.y(i + 1) + y), (float) (p.z(i + 1) + z)).color(r, g, b, a).normal(normalMatrix, 0, 1, 0).next();
+				vertexConsumer.vertex(matrix4f, (float) (p.x(i) + x), (float) (p.y(i) + y), (float) (p.z(i) + z)).color(r, g, b, a).normal(normalMatrix, 0, 1, 0).endVertex();
+				vertexConsumer.vertex(matrix4f, (float) (p.x(i + 1) + x), (float) (p.y(i + 1) + y), (float) (p.z(i + 1) + z)).color(r, g, b, a).normal(normalMatrix, 0, 1, 0).endVertex();
 			}
 		});
 	}
 
 	@SuppressWarnings("unused")
-	public static void drawGrid(BufferBuilder buffer, Box aabb, Vec3d viewFrom, double offsetX, double offsetY, double offsetZ, float red, float green,
+	public static void drawGrid(BufferBuilder buffer, AABB aabb, Vec3 viewFrom, double offsetX, double offsetY, double offsetZ, float red, float green,
 			float blue, float alpha) {
 		final double minX = aabb.minX - offsetX;
 		final double minY = aabb.minY - offsetY;

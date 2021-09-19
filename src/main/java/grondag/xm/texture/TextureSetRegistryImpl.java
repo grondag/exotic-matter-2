@@ -16,15 +16,12 @@
 package grondag.xm.texture;
 
 import java.util.function.Consumer;
-
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import com.mojang.serialization.Lifecycle;
-
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.DefaultedRegistry;
-import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-
 import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
@@ -38,8 +35,8 @@ import grondag.xm.api.texture.TextureTransform;
 public class TextureSetRegistryImpl implements TextureSetRegistry {
 	public static final TextureSetImpl DEFAULT_TEXTURE_SET;
 
-	private static final RegistryKey REGISTRY_KEY = RegistryKey.ofRegistry(Xm.id("texture_sets"));
-	private static final MutableRegistry<TextureSetImpl> REGISTRY;
+	private static final ResourceKey REGISTRY_KEY = ResourceKey.createRegistryKey(Xm.id("texture_sets"));
+	private static final WritableRegistry<TextureSetImpl> REGISTRY;
 
 	public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
 
@@ -48,17 +45,17 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 	}
 
 	@Override
-	public TextureSetImpl get(Identifier id) {
+	public TextureSetImpl get(ResourceLocation id) {
 		return REGISTRY.get(id);
 	}
 
 	@Override
 	public TextureSetImpl get(int index) {
-		return index < 0 ? DEFAULT_TEXTURE_SET : REGISTRY.get(index);
+		return index < 0 ? DEFAULT_TEXTURE_SET : REGISTRY.byId(index);
 	}
 
 	public int indexOf(TextureSetImpl set) {
-		return REGISTRY.getRawId(set);
+		return REGISTRY.getId(set);
 	}
 
 	@Override
@@ -66,12 +63,12 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 		REGISTRY.forEach(consumer);
 	}
 
-	public boolean contains(Identifier id) {
-		return REGISTRY != null && REGISTRY.getIds().contains(id);
+	public boolean contains(ResourceLocation id) {
+		return REGISTRY != null && REGISTRY.keySet().contains(id);
 	}
 
 	static {
-		REGISTRY = (MutableRegistry<TextureSetImpl>) ((MutableRegistry) Registry.REGISTRIES).add(REGISTRY_KEY,
+		REGISTRY = (WritableRegistry<TextureSetImpl>) ((WritableRegistry) Registry.REGISTRY).register(REGISTRY_KEY,
 				new DefaultedRegistry(NONE_ID.toString(), REGISTRY_KEY, Lifecycle.stable()), Lifecycle.stable());
 
 		DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)

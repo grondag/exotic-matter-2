@@ -15,10 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import net.minecraft.util.math.Direction;
-
 import grondag.fermion.orientation.api.FaceCorner;
 import grondag.fermion.orientation.api.FaceEdge;
+import net.minecraft.core.Direction;
 
 /**
  * Describes the connected-texture state of a block face for a face within a

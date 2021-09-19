@@ -15,9 +15,8 @@
  ******************************************************************************/
 package grondag.xm.api.paint;
 
-import net.minecraft.world.World;
-
 import grondag.xm.paint.PaintIndexImpl;
+import net.minecraft.world.level.Level;
 
 public interface PaintIndex {
 	XmPaint fromIndex(int paintIndex);
@@ -43,7 +42,7 @@ public interface PaintIndex {
 	 */
 	void updateIndex(int index, XmPaint paint);
 
-	static PaintIndex forWorld(World world) {
-		return world == null || world.isClient ? PaintIndexImpl.CLIENT : PaintIndexImpl.SERVER;
+	static PaintIndex forWorld(Level world) {
+		return world == null || world.isClientSide ? PaintIndexImpl.CLIENT : PaintIndexImpl.SERVER;
 	}
 }

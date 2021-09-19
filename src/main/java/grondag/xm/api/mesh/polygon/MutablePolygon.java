@@ -16,12 +16,9 @@
 package grondag.xm.api.mesh.polygon;
 
 import java.util.function.Consumer;
-
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
@@ -98,7 +95,7 @@ public interface MutablePolygon extends Polygon {
 	 * Assumes layer 0, sets glow to 0. Prefer value-passing, floats.
 	 */
 	@Deprecated
-	default MutablePolygon vertex(int vertexIndex, Vec3d pos, double u, double v, int color) {
+	default MutablePolygon vertex(int vertexIndex, Vec3 pos, double u, double v, int color) {
 		return vertex(vertexIndex, (float) pos.x, (float) pos.y, (float) pos.z, (float) u, (float) v, color, 0);
 	}
 
@@ -106,7 +103,7 @@ public interface MutablePolygon extends Polygon {
 	 * Assumes layer 0, sets glow to 0. Prefer value-passing, floats.
 	 */
 	@Deprecated
-	default MutablePolygon vertex(int vertexIndex, Vec3d pos, double u, double v, int color, Vec3d normal) {
+	default MutablePolygon vertex(int vertexIndex, Vec3 pos, double u, double v, int color, Vec3 normal) {
 		final MutablePolygon result = vertex(vertexIndex, (float) pos.x, (float) pos.y, (float) pos.z, (float) u, (float) v, color, 0);
 		return normal == null ? result : result.normal(vertexIndex, (float) normal.x, (float) normal.y, (float) normal.z);
 	}

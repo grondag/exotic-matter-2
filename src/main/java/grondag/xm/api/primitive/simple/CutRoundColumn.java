@@ -17,13 +17,10 @@ package grondag.xm.api.primitive.simple;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Direction.AxisDirection;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -71,8 +68,8 @@ public class CutRoundColumn  {
 		final SimpleJoinState state = modelState.simpleJoin();
 		final boolean isLit = modelState.primitive().lampSurface(modelState) != null;
 		final Axis axis = AXES[modelState.orientationIndex()];
-		final Direction up = Direction.from(axis, AxisDirection.POSITIVE);
-		final Direction down = Direction.from(axis, AxisDirection.NEGATIVE);
+		final Direction up = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
+		final Direction down = Direction.fromAxisAndDirection(axis, AxisDirection.NEGATIVE);
 
 		// FIXME: not a big problem (yet) but should not cull ends when producing collision model
 		final boolean cullUpper = state.isJoined(up);

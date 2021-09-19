@@ -16,17 +16,15 @@
 package grondag.xm.api.mesh.polygon;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
-
 import grondag.xm.Xm;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.AABB;
 
 @Experimental
 public interface Polygon {
@@ -57,7 +55,7 @@ public interface Polygon {
 		return faceNormal().z();
 	}
 
-	default Box bounds() {
+	default AABB bounds() {
 		final Vec3f p0 = getPos(0);
 		final Vec3f p1 = getPos(1);
 		final Vec3f p2 = getPos(2);
@@ -71,7 +69,7 @@ public interface Polygon {
 		final double maxY = Math.max(Math.max(p0.y(), p1.y()), Math.max(p2.y(), p3.y()));
 		final double maxZ = Math.max(Math.max(p0.z(), p1.z()), Math.max(p2.z(), p3.z()));
 
-		return new Box(minX, minY, minZ, maxX, maxY, maxZ);
+		return new AABB(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
 	int VERTEX_NOT_FOUND = -1;
@@ -95,7 +93,7 @@ public interface Polygon {
 	}
 
 	default boolean isOrthogonalTo(Direction face) {
-		final Vec3i dv = face.getVector();
+		final Vec3i dv = face.getNormal();
 		final float dot = faceNormal().dotProduct(dv.getX(), dv.getY(), dv.getZ());
 		return Math.abs(dot) <= PolyHelper.EPSILON;
 	}
@@ -159,7 +157,7 @@ public interface Polygon {
 			final float y = z0 * x1 - x0 * z1;
 			final float z = x0 * y1 - y0 * x1;
 
-			float mag = MathHelper.sqrt(x * x + y * y + z * z);
+			float mag = Mth.sqrt(x * x + y * y + z * z);
 			if (mag < 1.0E-4F) {
 				mag = 1f;
 			}
@@ -239,7 +237,7 @@ public interface Polygon {
 		}
 
 		// scale to get area before projection
-		an = MathHelper.sqrt(ax * ax + ay * ay + az * az); // length of normal vector
+		an = Mth.sqrt(ax * ax + ay * ay + az * az); // length of normal vector
 		switch (coord) {
 		case 1:
 			area *= (an / (2 * N.x()));
@@ -284,7 +282,7 @@ public interface Polygon {
 		}
 
 		for (int i = 0; i < 6; i++) {
-			final Direction f = Direction.byId(i);
+			final Direction f = Direction.from3DDataValue(i);
 			if (f != nominalFace && isOnFace(f, PolyHelper.EPSILON)) {
 				return f;
 			}

@@ -26,11 +26,8 @@ import static grondag.fermion.orientation.api.FaceEdge.TOP_EDGE;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
-
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.fermion.orientation.api.FaceCorner;
 import grondag.fermion.orientation.api.FaceEdge;

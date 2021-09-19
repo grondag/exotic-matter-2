@@ -16,13 +16,11 @@
 package grondag.xm.connect;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-
 import grondag.xm.api.connect.state.SimpleJoinFaceState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 
 @Internal
 public class SimpleJoinStateImpl implements SimpleJoinState {

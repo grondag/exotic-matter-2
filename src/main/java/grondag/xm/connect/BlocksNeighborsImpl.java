@@ -18,18 +18,15 @@ package grondag.xm.connect;
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Function;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.BlockView;
-
 import grondag.fermion.orientation.api.CubeCorner;
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.xm.Xm;
@@ -51,7 +48,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	private static final BlockState EMPTY_BLOCK_STATE[] = new BlockState[STATE_COUNT];
 	private static final BlockEntity EMPTY_BLOCK_ENTITY[] = new BlockEntity[STATE_COUNT];
 	private static final ModelState EMPTY_MODEL_STATE[] = new ModelState[STATE_COUNT];
-	private static final BlockEntity MISSING_BLOCK_ENTITY = new BlockEntity(BlockEntityType.STRUCTURE_BLOCK, new BlockPos(0, 0, 0), Blocks.AIR.getDefaultState()) {};
+	private static final BlockEntity MISSING_BLOCK_ENTITY = new BlockEntity(BlockEntityType.STRUCTURE_BLOCK, new BlockPos(0, 0, 0), Blocks.AIR.defaultBlockState()) {};
 
 	static {
 		Arrays.fill(EMPTY_BLOCK_ENTITY, MISSING_BLOCK_ENTITY);
@@ -59,13 +56,13 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 
 	private static ThreadLocal<BlocksNeighborsImpl> THREADLOCAL = ThreadLocal.withInitial(BlocksNeighborsImpl::new);
 
-	public static BlockNeighbors threadLocal(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> blockTest) {
+	public static BlockNeighbors threadLocal(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> blockTest) {
 		return THREADLOCAL.get().prepare(world, x, y, z, stateFunc, blockTest);
 	}
 
 	private static final ArrayBlockingQueue<BlocksNeighborsImpl> POOL = new ArrayBlockingQueue<>(64);
 
-	public static BlocksNeighborsImpl claim(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> blockTest) {
+	public static BlocksNeighborsImpl claim(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> blockTest) {
 		BlocksNeighborsImpl result = POOL.poll();
 		if (result == null) {
 			result = new BlocksNeighborsImpl();
@@ -84,14 +81,14 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	private final BlockState blockStates[] = new BlockState[STATE_COUNT];
 	private final BlockEntity blockEntities[] = new BlockEntity[STATE_COUNT];
 	private final ModelState modelStates[] = new ModelState[STATE_COUNT];
-	private final BlockPos.Mutable mutablePos = new BlockPos.Mutable();
+	private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
 	private boolean allowReclaim = false;
 
 	private int completionFlags = 0;
 	private int resultFlags = 0;
 
-	private BlockView world;
+	private BlockGetter world;
 	private int x;
 	private int y;
 	private int z;
@@ -100,13 +97,13 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	private BlockTest blockTest;
 	private BlockState myBlockState;
 	private BlockEntity myBlockEntity = MISSING_BLOCK_ENTITY;
-	private final BlockPos.Mutable myPos = new BlockPos.Mutable();
+	private final BlockPos.MutableBlockPos myPos = new BlockPos.MutableBlockPos();
 	private ModelState myModelState;
 
 	protected BlocksNeighborsImpl() {
 	}
 
-	BlocksNeighborsImpl prepare(BlockView world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest blockTest) {
+	BlocksNeighborsImpl prepare(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest blockTest) {
 		this.world = world;
 		this.x = x;
 		this.y = y;
@@ -140,17 +137,17 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	// POSITION
 	//////////////////////////////
 
-	private void setPos(BlockPos.Mutable pos, Direction face) {
-		final Vec3i vec = face.getVector();
+	private void setPos(BlockPos.MutableBlockPos pos, Direction face) {
+		final Vec3i vec = face.getNormal();
 		pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
 	}
 
-	private void setPos(BlockPos.Mutable pos, CubeEdge edge) {
+	private void setPos(BlockPos.MutableBlockPos pos, CubeEdge edge) {
 		final Vec3i vec = edge.vector;
 		pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
 	}
 
-	private void setPos(BlockPos.Mutable pos, CubeCorner corner) {
+	private void setPos(BlockPos.MutableBlockPos pos, CubeCorner corner) {
 		final Vec3i vec = corner.vector;
 		pos.set(x + vec.getX(), y + vec.getY(), z + vec.getZ());
 	}
@@ -169,7 +166,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 			try {
 				result = world.getBlockState(mutablePos);
 			} catch (final Exception e) {
-				result = Blocks.AIR.getDefaultState();
+				result = Blocks.AIR.defaultBlockState();
 				Xm.LOG.warn("Unable to retrieve neighbor block state due to error. Block shape/appearance may be incorrect.", e);
 			}
 
@@ -334,7 +331,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	}
 
 	// valid during tests - the "to" values
-	private final BlockPos.Mutable targetPos = new BlockPos.Mutable();
+	private final BlockPos.MutableBlockPos targetPos = new BlockPos.MutableBlockPos();
 	private Function<BlocksNeighborsImpl, BlockState> targetBlockState;
 	private Function<BlocksNeighborsImpl, ModelState> targetModelState;
 	private Function<BlocksNeighborsImpl, BlockEntity> targetBlockEntity;
@@ -440,7 +437,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	}
 
 	@Override
-	public BlockView world() {
+	public BlockGetter world() {
 		return world;
 	}
 

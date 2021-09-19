@@ -16,14 +16,11 @@
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Consumer;
-
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Vec3i;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Vec3i;
-
 import grondag.fermion.bits.BitPacker32;
 import grondag.fermion.color.Color;
 import grondag.fermion.orientation.api.FaceEdge;
@@ -107,7 +104,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 		setCutsOnEdge(true, modelState);
 	}
 
-	protected SquareColumn(Identifier id) {
+	protected SquareColumn(ResourceLocation id) {
 		super(id, ModelStateFlags.CORNER_JOIN, SimpleModelStateImpl.FACTORY, s -> SURFACES);
 	}
 
@@ -115,7 +112,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 	public void emitQuads(PrimitiveState modelState, Consumer<Polygon> target) {
 		final FaceSpec spec = new FaceSpec(getCutCount(modelState), areCutsOnEdge(modelState));
 		for (int i = 0; i < 6; i++) {
-			makeFaceQuads(modelState, Direction.byId(i), spec, target);
+			makeFaceQuads(modelState, Direction.from3DDataValue(i), spec, target);
 		}
 	}
 
@@ -517,7 +514,7 @@ public class SquareColumn extends AbstractSimplePrimitive {
 				qb.topFace);
 
 		// force vertex normals out to prevent lighting anomalies
-		final Vec3i vec = face.getVector();
+		final Vec3i vec = face.getNormal();
 		final float x = vec.getX();
 		final float y = vec.getY();
 		final float z = vec.getZ();

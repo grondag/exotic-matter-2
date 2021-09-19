@@ -15,12 +15,11 @@
  ******************************************************************************/
 package grondag.xm.virtual;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 @Internal
 public class VirtualItemBlock { // extends XmBlockItem implements PlacementItem {
@@ -86,7 +85,7 @@ public class VirtualItemBlock { // extends XmBlockItem implements PlacementItem 
 	//			return Blocks.AIR.getDefaultState();
 	//	}
 
-	public static ItemStack getStack(World world, BlockState blockState, BlockPos pos) {
+	public static ItemStack getStack(Level world, BlockState blockState, BlockPos pos) {
 		// TODO Auto-generated method stub
 		return null;
 	}

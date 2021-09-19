@@ -16,10 +16,8 @@
 package grondag.xm.connect;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-
 import grondag.xm.api.connect.world.BlockNeighbors;
+import net.minecraft.core.Direction;
 
 @Internal
 public class CornerJoinStateSelector {

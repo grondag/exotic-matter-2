@@ -41,11 +41,6 @@ import static grondag.fermion.orientation.api.CubeRotation.WEST_SOUTH;
 import static grondag.fermion.orientation.api.CubeRotation.WEST_UP;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Vec3i;
-
 import grondag.fermion.orientation.api.CubeCorner;
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.fermion.orientation.api.CubeRotation;
@@ -56,6 +51,9 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.modelstate.base.BaseModelState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Vec3i;
 
 @Internal
 @SuppressWarnings("rawtypes")
@@ -114,7 +112,7 @@ public class PolyTransformImpl implements PolyTransform {
 
 		// transform nominal face
 		{
-			final Vec3i oldVec = poly.nominalFace().getVector();
+			final Vec3i oldVec = poly.nominalFace().getNormal();
 			final float nx = oldVec.getX();
 			final float ny = oldVec.getY();
 			final float nz = oldVec.getZ();
@@ -129,7 +127,7 @@ public class PolyTransformImpl implements PolyTransform {
 		// transform cull face
 		final Direction cullFace = poly.cullFace();
 		if(cullFace != null) {
-			final Vec3i oldVec = cullFace.getVector();
+			final Vec3i oldVec = cullFace.getNormal();
 			final float nx = oldVec.getX();
 			final float ny = oldVec.getY();
 			final float nz = oldVec.getZ();

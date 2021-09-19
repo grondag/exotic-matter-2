@@ -17,13 +17,11 @@ package grondag.xm.api.paint;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.paint.XmPaintImpl;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * Paints control the appearance of mesh surfaces.<p>
@@ -83,10 +81,10 @@ public interface XmPaint {
 	boolean disableAo(int textureIndex);
 
 	@Nullable
-	Identifier shader();
+	ResourceLocation shader();
 
 	@Nullable
-	Identifier condition();
+	ResourceLocation condition();
 
 	VertexProcessor vertexProcessor(int textureIndex);
 
@@ -95,7 +93,7 @@ public interface XmPaint {
 	 * @return
 	 */
 	@Nullable
-	Identifier id();
+	ResourceLocation id();
 
 	/**
 	 * NO_INDEX if paint is not indexed.
@@ -106,28 +104,28 @@ public interface XmPaint {
 	/**
 	 * If paint is registered or indexed, will serialized based on registered ID instead of paint configuration.
 	 */
-	NbtCompound toTag();
+	CompoundTag toTag();
 
 	/**
 	 * If paint is registered or indexed, will serialized based on registered ID instead of paint configuration.
 	 */
-	void toBytes(PacketByteBuf pBuff);
+	void toBytes(FriendlyByteBuf pBuff);
 
 	/**
 	 * Serializes paint configuration, discarding registered identity or index if present.
 	 */
-	NbtCompound toFixedTag();
+	CompoundTag toFixedTag();
 
 	/**
 	 * Serializes paint configuration, discarding registered identity or index if present.
 	 */
-	void toFixedBytes(PacketByteBuf pBuff);
+	void toFixedBytes(FriendlyByteBuf pBuff);
 
-	static XmPaint fromTag(NbtCompound tag, @Nullable PaintIndex paintIndex) {
+	static XmPaint fromTag(CompoundTag tag, @Nullable PaintIndex paintIndex) {
 		return XmPaintImpl.fromTag(tag, paintIndex);
 	}
 
-	static XmPaint fromBytes(PacketByteBuf pBuff, @Nullable PaintIndex paintIndex) {
+	static XmPaint fromBytes(FriendlyByteBuf pBuff, @Nullable PaintIndex paintIndex) {
 		return XmPaintImpl.fromBytes(pBuff, paintIndex);
 	}
 

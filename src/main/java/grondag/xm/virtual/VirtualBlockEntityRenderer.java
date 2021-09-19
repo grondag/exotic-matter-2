@@ -16,23 +16,21 @@
 package grondag.xm.virtual;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 @Environment(EnvType.CLIENT)
 @Internal
 public class VirtualBlockEntityRenderer implements BlockEntityRenderer<VirtualBlockEntityWithRenderer> {
 
-	public VirtualBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) { }
+	public VirtualBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) { }
 
 	@Override
-	public void render(VirtualBlockEntityWithRenderer be, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+	public void render(VirtualBlockEntityWithRenderer be, float f, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, int j) {
 		if (!be.isVirtual() || !((VirtualBlockEntity) be).isVisible())
 			return;
 

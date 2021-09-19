@@ -16,12 +16,9 @@
 package grondag.xm.api.mesh.polygon;
 
 import java.util.function.Consumer;
-
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-
 import grondag.fermion.orientation.api.CubeRotation;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.mesh.helper.PolyTransformImpl;

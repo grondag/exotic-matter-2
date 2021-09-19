@@ -21,20 +21,17 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -77,14 +74,14 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	boolean doesAppearanceMatch(ModelState other);
 
 	@Override
-	void toTag(NbtCompound tag);
+	void toTag(CompoundTag tag);
 
-	void fromTag(NbtCompound tag, PaintIndex paintIndex);
+	void fromTag(CompoundTag tag, PaintIndex paintIndex);
 
 	@Override
-	void toBytes(PacketByteBuf pBuff);
+	void toBytes(FriendlyByteBuf pBuff);
 
-	void fromBytes(PacketByteBuf pBuff, PaintIndex paintIndex);
+	void fromBytes(FriendlyByteBuf pBuff, PaintIndex paintIndex);
 
 	int stateFlags();
 
@@ -147,7 +144,7 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context);
+	void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context);
 
 	@Override
 	@Environment(EnvType.CLIENT)

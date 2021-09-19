@@ -16,14 +16,12 @@
 package grondag.xm.terrain;
 
 import it.unimi.dsi.fastutil.HashCommon;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos.MutableBlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockPos.Mutable;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.BlockView;
-
 import grondag.fermion.bits.BitPacker64;
 import grondag.fermion.orientation.api.HorizontalEdge;
 import grondag.fermion.orientation.api.HorizontalFace;
@@ -57,11 +55,11 @@ public class TerrainState {
 	/**
 	 * Want to avoid the synchronization penalty of pooled block pos.
 	 */
-	private static ThreadLocal<BlockPos.Mutable> mutablePos = new ThreadLocal<BlockPos.Mutable>() {
+	private static ThreadLocal<BlockPos.MutableBlockPos> mutablePos = new ThreadLocal<BlockPos.MutableBlockPos>() {
 
 		@Override
-		protected BlockPos.Mutable initialValue() {
-			return new BlockPos.Mutable();
+		protected BlockPos.MutableBlockPos initialValue() {
+			return new BlockPos.MutableBlockPos();
 		}
 	};
 
@@ -1038,11 +1036,11 @@ public class TerrainState {
 		return div;
 	}
 
-	public static <T> T produceBitsFromWorldStatically(BlockState state, BlockView world, BlockPos pos, ITerrainBitConsumer<T> consumer) {
+	public static <T> T produceBitsFromWorldStatically(BlockState state, BlockGetter world, BlockPos pos, ITerrainBitConsumer<T> consumer) {
 		return produceBitsFromWorldStatically(TerrainBlockHelper.isFlowFiller(state), state, world, pos, consumer);
 	}
 
-	public static TerrainState terrainState(BlockView world, BlockState state, BlockPos pos) {
+	public static TerrainState terrainState(BlockGetter world, BlockState state, BlockPos pos) {
 		if (!TerrainBlockHelper.isFlowBlock(state))
 			return TerrainState.EMPTY_STATE;
 		return produceBitsFromWorldStatically(state, world, pos, TerrainState.FACTORY);
@@ -1070,7 +1068,7 @@ public class TerrainState {
 
 	}
 
-	private static <T> T produceBitsFromWorldStatically(boolean isFlowFiller, BlockState state, BlockView world, final BlockPos pos,
+	private static <T> T produceBitsFromWorldStatically(boolean isFlowFiller, BlockState state, BlockGetter world, final BlockPos pos,
 			ITerrainBitConsumer<T> consumer) {
 		final int sideHeight[] = new int[4];
 		final int cornerHeight[] = new int[4];
@@ -1078,7 +1076,7 @@ public class TerrainState {
 
 		long hotness = 0;
 
-		final BlockPos.Mutable mPos = mutablePos.get();
+		final BlockPos.MutableBlockPos mPos = mutablePos.get();
 
 		// HardScience.log.info("flowstate getBitsFromWorld @" + pos.toString());
 
@@ -1182,8 +1180,8 @@ public class TerrainState {
 	 * relative flow height based on blocks 2 above through 2 down. Gets called
 	 * frequently, thus the use of mutable pos.
 	 */
-	public static int getFlowHeight(BlockView world, long packedBlockPos) {
-		final Mutable mPos = mutablePos.get();
+	public static int getFlowHeight(BlockGetter world, long packedBlockPos) {
+		final MutableBlockPos mPos = mutablePos.get();
 		BlockState state = world.getBlockState(PackedBlockPos.unpackTo(PackedBlockPos.up(packedBlockPos, 2), mPos));
 		int h = TerrainBlockHelper.getFlowHeightFromState(state);
 		if (h > 0)
@@ -1252,7 +1250,7 @@ public class TerrainState {
 			result = drop < 1 ? Math.round(diffFromAvgLevels + (1 - drop) * BLOCK_LEVELS_INT_HALF) : Math.round(diffFromAvgLevels);
 		}
 
-		return MathHelper.clamp(result, 1, BLOCK_LEVELS_INT + BLOCK_LEVELS_INT_HALF);
+		return Mth.clamp(result, 1, BLOCK_LEVELS_INT + BLOCK_LEVELS_INT_HALF);
 	}
 
 	@FunctionalInterface

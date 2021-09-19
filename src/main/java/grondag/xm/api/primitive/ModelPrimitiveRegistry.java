@@ -16,13 +16,10 @@
 package grondag.xm.api.primitive;
 
 import java.util.function.Consumer;
-
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.paint.PaintIndex;
@@ -36,7 +33,7 @@ public interface ModelPrimitiveRegistry {
 
 	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(int primitiveIndex);
 
-	default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(Identifier primitiveId) {
+	default <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(ResourceLocation primitiveId) {
 		return get(primitiveId.toString());
 	}
 
@@ -49,7 +46,7 @@ public interface ModelPrimitiveRegistry {
 
 	int indexOf(String idString);
 
-	default int indexOf(Identifier primitiveId) {
+	default int indexOf(ResourceLocation primitiveId) {
 		return indexOf(primitiveId.toString());
 	}
 
@@ -57,7 +54,7 @@ public interface ModelPrimitiveRegistry {
 		return indexOf(primitive.id());
 	}
 
-	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> W fromTag(NbtCompound tag, PaintIndex sync);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> W fromTag(CompoundTag tag, PaintIndex sync);
 
-	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(PacketByteBuf buf, PaintIndex sync);
+	<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(FriendlyByteBuf buf, PaintIndex sync);
 }

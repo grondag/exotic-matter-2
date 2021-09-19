@@ -18,11 +18,9 @@ package grondag.xm;
 
 import java.util.HashMap;
 import java.util.function.BiConsumer;
-
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 
 /**
  * Utilities to prevents dedicated server references to client-only classes.

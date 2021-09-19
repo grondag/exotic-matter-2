@@ -16,16 +16,14 @@
 package grondag.xm.api.paint;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.Identifier;
-
 import grondag.xm.paint.XmPaintRegistryImpl;
+import net.minecraft.resources.ResourceLocation;
 
 @Experimental
 public interface XmPaintRegistry {
 	XmPaintRegistry INSTANCE = XmPaintRegistryImpl.INSTANCE;
 
-	XmPaint register(Identifier id, XmPaint paint);
+	XmPaint register(ResourceLocation id, XmPaint paint);
 
-	XmPaint get(Identifier paintId);
+	XmPaint get(ResourceLocation paintId);
 }

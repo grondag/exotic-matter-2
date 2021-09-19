@@ -18,11 +18,9 @@ package grondag.xm.collision;
 import static grondag.xm.api.mesh.polygon.PolyHelper.EPSILON;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.MathHelper;
-
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.Vec3f;
+import net.minecraft.util.Mth;
 
 /**
  * Ported to Java from Tomas Akenine-Möller
@@ -126,17 +124,17 @@ class TriangleBoxTest {
 	 * For low garbage, use a threadlocal array.
 	 */
 	public static void packPolyData(Vec3f v0, Vec3f v1, Vec3f v2, float[] polyData) {
-		final float x0 = MathHelper.clamp(v0.x(), 0, 1);
-		final float y0 = MathHelper.clamp(v0.y(), 0, 1);
-		final float z0 = MathHelper.clamp(v0.z(), 0, 1);
+		final float x0 = Mth.clamp(v0.x(), 0, 1);
+		final float y0 = Mth.clamp(v0.y(), 0, 1);
+		final float z0 = Mth.clamp(v0.z(), 0, 1);
 
-		final float x1 = MathHelper.clamp(v1.x(), 0, 1);
-		final float y1 = MathHelper.clamp(v1.y(), 0, 1);
-		final float z1 = MathHelper.clamp(v1.z(), 0, 1);
+		final float x1 = Mth.clamp(v1.x(), 0, 1);
+		final float y1 = Mth.clamp(v1.y(), 0, 1);
+		final float z1 = Mth.clamp(v1.z(), 0, 1);
 
-		final float x2 = MathHelper.clamp(v2.x(), 0, 1);
-		final float y2 = MathHelper.clamp(v2.y(), 0, 1);
-		final float z2 = MathHelper.clamp(v2.z(), 0, 1);
+		final float x2 = Mth.clamp(v2.x(), 0, 1);
+		final float y2 = Mth.clamp(v2.y(), 0, 1);
+		final float z2 = Mth.clamp(v2.z(), 0, 1);
 
 		polyData[POLY_V0_X] = x0;
 		polyData[POLY_V0_Y] = y0;

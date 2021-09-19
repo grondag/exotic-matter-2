@@ -16,11 +16,8 @@
 package grondag.xm.api.primitive;
 
 import java.util.function.Function;
-
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.Identifier;
-
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
@@ -35,7 +32,7 @@ public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutableP
 	}
 
 	public interface Builder {
-		default SimplePrimitive build(Identifier id) {
+		default SimplePrimitive build(ResourceLocation id) {
 			return build(id);
 		}
 

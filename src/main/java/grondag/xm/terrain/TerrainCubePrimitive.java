@@ -18,12 +18,9 @@ package grondag.xm.terrain;
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 
 import java.util.function.Consumer;
-
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -46,7 +43,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 	/** never changes so may as well save it */
 	private final XmMesh cachedQuads;
 
-	protected TerrainCubePrimitive(Identifier id) {
+	protected TerrainCubePrimitive(ResourceLocation id) {
 		super(id, NONE, TerrainModelStateImpl.FACTORY, s -> SURFACES);
 		cachedQuads = getCubeQuads();
 	}

@@ -18,11 +18,6 @@ package grondag.xm.painter;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
@@ -32,7 +27,9 @@ import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.XmMeshes;
@@ -319,16 +316,16 @@ public class PaintManager implements Consumer<Polygon> {
 			poly.uv(v, spriteIndex, minU + spanU * poly.u(v, spriteIndex), minV + spanV * poly.v(v, spriteIndex));
 		}
 
-		final Sprite sprite = TextureSetHelper.blockAtas().getSprite(new Identifier(poly.spriteName(spriteIndex)));
+		final TextureAtlasSprite sprite = TextureSetHelper.blockAtas().getSprite(new ResourceLocation(poly.spriteName(spriteIndex)));
 
 		if (poly.shouldContractUVs(spriteIndex)) {
 			contractUVs(spriteIndex, sprite, poly);
 		}
 
-		final float spriteMinU = sprite.getMinU();
-		final float spriteSpanU = sprite.getMaxU() - spriteMinU;
-		final float spriteMinV = sprite.getMinV();
-		final float spriteSpanV = sprite.getMaxV() - spriteMinV;
+		final float spriteMinU = sprite.getU0();
+		final float spriteSpanU = sprite.getU1() - spriteMinU;
+		final float spriteMinV = sprite.getV0();
+		final float spriteSpanV = sprite.getV1() - spriteMinV;
 
 		// doing interpolation here vs using sprite methods to avoid wasteful multiply
 		// and divide by 16
@@ -342,9 +339,9 @@ public class PaintManager implements Consumer<Polygon> {
 	 * texture coordinates slightly towards the vertex centroid of the UV
 	 * coordinates.
 	 */
-	private void contractUVs(int spriteIndex, Sprite sprite, MutablePolygon poly) {
-		final float uPixels = sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU());
-		final float vPixels = sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV());
+	private void contractUVs(int spriteIndex, TextureAtlasSprite sprite, MutablePolygon poly) {
+		final float uPixels = sprite.getWidth() / (sprite.getU1() - sprite.getU0());
+		final float vPixels = sprite.getHeight() / (sprite.getV1() - sprite.getV0());
 		final float nudge = 4.0f / Math.max(vPixels, uPixels);
 
 		final float u0 = poly.u(0, spriteIndex);
@@ -360,10 +357,10 @@ public class PaintManager implements Consumer<Polygon> {
 		final float uCenter = (u0 + u1 + u2 + u3) * 0.25F;
 		final float vCenter = (v0 + v1 + v2 + v3) * 0.25F;
 
-		poly.uv(0, spriteIndex, MathHelper.lerp(nudge, u0, uCenter), MathHelper.lerp(nudge, v0, vCenter));
-		poly.uv(1, spriteIndex, MathHelper.lerp(nudge, u1, uCenter), MathHelper.lerp(nudge, v1, vCenter));
-		poly.uv(2, spriteIndex, MathHelper.lerp(nudge, u2, uCenter), MathHelper.lerp(nudge, v2, vCenter));
-		poly.uv(3, spriteIndex, MathHelper.lerp(nudge, u3, uCenter), MathHelper.lerp(nudge, v3, vCenter));
+		poly.uv(0, spriteIndex, Mth.lerp(nudge, u0, uCenter), Mth.lerp(nudge, v0, vCenter));
+		poly.uv(1, spriteIndex, Mth.lerp(nudge, u1, uCenter), Mth.lerp(nudge, v1, vCenter));
+		poly.uv(2, spriteIndex, Mth.lerp(nudge, u2, uCenter), Mth.lerp(nudge, v2, vCenter));
+		poly.uv(3, spriteIndex, Mth.lerp(nudge, u3, uCenter), Mth.lerp(nudge, v3, vCenter));
 	}
 
 	private void applyTextureRotation(int spriteIndex, MutablePolygon poly) {

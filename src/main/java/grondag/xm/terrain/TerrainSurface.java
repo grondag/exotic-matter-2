@@ -20,10 +20,8 @@ package grondag.xm.terrain;
 //import java.util.List;
 //import java.util.function.Consumer;
 import java.util.function.Function;
-
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.Identifier;
 
 //import net.minecraft.util.math.Box;
 //import net.minecraft.util.math.Direction;
@@ -53,7 +51,7 @@ import grondag.xm.api.terrain.TerrainModelState.Mutable;
 @Internal
 public abstract class TerrainSurface extends AbstractTerrainPrimitive {
 
-	protected TerrainSurface(Identifier id, int stateFlags, BaseModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
+	protected TerrainSurface(ResourceLocation id, int stateFlags, BaseModelStateFactory<TerrainModelState, Mutable> factory, Function<TerrainModelState, XmSurfaceList> surfaceFunc) {
 		super(id, stateFlags | ModelStateFlags.POSITION, factory, surfaceFunc);
 	}
 

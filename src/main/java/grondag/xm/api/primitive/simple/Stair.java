@@ -16,9 +16,6 @@
 package grondag.xm.api.primitive.simple;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.Identifier;
-
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.WritableMesh;
@@ -28,6 +25,7 @@ import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
+import net.minecraft.resources.ResourceLocation;
 
 @Experimental
 public class Stair extends AbstractWedge {
@@ -49,7 +47,7 @@ public class Stair extends AbstractWedge {
 
 	public static final Stair INSTANCE = new Stair(Xm.id("stair"));
 
-	protected Stair(Identifier id) {
+	protected Stair(ResourceLocation id) {
 		super(id, s -> SURFACES);
 	}
 

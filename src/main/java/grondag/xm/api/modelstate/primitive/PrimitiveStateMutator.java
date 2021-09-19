@@ -17,19 +17,17 @@ package grondag.xm.api.modelstate.primitive;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.modelstate.PrimitiveStateMutatorImpl;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 @Experimental
 @FunctionalInterface
 public interface PrimitiveStateMutator {
-	void mutate(MutablePrimitiveState modelState, BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
+	void mutate(MutablePrimitiveState modelState, BlockState blockState, @Nullable BlockGetter world, @Nullable BlockPos pos, @Nullable BlockNeighbors neighbors, boolean refreshFromWorld);
 
 	default MutablePrimitiveState mutate(MutablePrimitiveState modelState, BlockState blockState) {
 		mutate(modelState, blockState, null, null, null, false);

@@ -18,17 +18,14 @@ package grondag.xm.terrain;
 import static it.unimi.dsi.fastutil.HashCommon.arraySize;
 
 import java.util.function.Supplier;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-
 import grondag.fermion.position.PackedBlockPos;
 
 /**
@@ -41,8 +38,8 @@ import grondag.fermion.position.PackedBlockPos;
  * reinstate usage or remove
  */
 @Internal
-public class TerrainWorldAdapter implements BlockView {
-	protected World world;
+public class TerrainWorldAdapter implements BlockGetter {
+	protected Level world;
 
 	public static class FastMap<V> extends Long2ObjectOpenHashMap<V> {
 		/**
@@ -83,17 +80,17 @@ public class TerrainWorldAdapter implements BlockView {
 
 	}
 
-	public TerrainWorldAdapter(World world) {
+	public TerrainWorldAdapter(Level world) {
 		prepare(world);
 	}
 
-	public void prepare(World world) {
+	public void prepare(Level world) {
 		this.world = world;
 		blockStates.clear();
 		terrainStates.clear();
 	}
 
-	public World wrapped() {
+	public Level wrapped() {
 		return world;
 	}
 
@@ -103,7 +100,7 @@ public class TerrainWorldAdapter implements BlockView {
 		return blockStates.computeFast(packedBlockPos, () -> world.getBlockState(pos));
 	}
 
-	private final BlockPos.Mutable getBlockPos = new BlockPos.Mutable();
+	private final BlockPos.MutableBlockPos getBlockPos = new BlockPos.MutableBlockPos();
 
 	public BlockState getBlockState(long packedBlockPos) {
 		return blockStates.computeFast(packedBlockPos, () -> {
@@ -112,7 +109,7 @@ public class TerrainWorldAdapter implements BlockView {
 		});
 	}
 
-	private final BlockPos.Mutable getTerrainPos = new BlockPos.Mutable();
+	private final BlockPos.MutableBlockPos getTerrainPos = new BlockPos.MutableBlockPos();
 
 	public TerrainState terrainState(BlockState state, long packedBlockPos) {
 		return terrainStates.computeFast(packedBlockPos, () -> {
@@ -162,7 +159,7 @@ public class TerrainWorldAdapter implements BlockView {
 	 * use cases where world should not be affected directly.
 	 */
 	protected void applyBlockState(long packedBlockPos, BlockState oldState, BlockState newState) {
-		world.setBlockState(PackedBlockPos.unpack(packedBlockPos), newState);
+		world.setBlockAndUpdate(PackedBlockPos.unpack(packedBlockPos), newState);
 	}
 
 	/**
@@ -192,7 +189,7 @@ public class TerrainWorldAdapter implements BlockView {
 	}
 
 	@Override
-	public int getBottomY() {
-		return world.getBottomY();
+	public int getMinBuildHeight() {
+		return world.getMinBuildHeight();
 	}
 }

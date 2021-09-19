@@ -16,10 +16,8 @@
 package grondag.xm.api.paint;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.Identifier;
-
 import grondag.xm.api.texture.TextureSet;
+import net.minecraft.resources.ResourceLocation;
 
 @Experimental
 public interface XmPaintFinder {
@@ -48,9 +46,9 @@ public interface XmPaintFinder {
 
 	XmPaintFinder emissive(int textureIndex, boolean isEmissive);
 
-	XmPaintFinder shader(Identifier shader);
+	XmPaintFinder shader(ResourceLocation shader);
 
-	XmPaintFinder condition(Identifier condition);
+	XmPaintFinder condition(ResourceLocation condition);
 
 	XmPaintFinder vertexProcessor(int textureIndex, VertexProcessor vp);
 }

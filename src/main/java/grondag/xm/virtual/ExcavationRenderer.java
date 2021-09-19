@@ -17,17 +17,14 @@ package grondag.xm.virtual;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
 import grondag.xm.render.OutlineRenderer;
@@ -41,28 +38,28 @@ public class ExcavationRenderer {
 	 */
 	public final boolean isExchange;
 
-	private Box aabb;
+	private AABB aabb;
 
-	private Box visibilityBounds;
+	private AABB visibilityBounds;
 
 	private boolean didDrawBoundsLastTime = false;
 
-	private Vec3d lastEyePosition;
+	private Vec3 lastEyePosition;
 
 	/**
 	 * If non-null, then we should render individual positions instead of AABB.
 	 */
 	private BlockPos[] positions;
 
-	public ExcavationRenderer(int id, Box aabb, boolean isExchange, @Nullable BlockPos[] positions) {
+	public ExcavationRenderer(int id, AABB aabb, boolean isExchange, @Nullable BlockPos[] positions) {
 		this.id = id;
 		this.isExchange = isExchange;
 		setBounds(aabb, positions);
 	}
 
-	public void setBounds(Box bounds, @Nullable BlockPos[] positions) {
+	public void setBounds(AABB bounds, @Nullable BlockPos[] positions) {
 		aabb = bounds;
-		visibilityBounds = bounds.expand(192);
+		visibilityBounds = bounds.inflate(192);
 		this.positions = positions;
 
 		if (XmConfig.logExcavationRenderTracking) {
@@ -70,29 +67,29 @@ public class ExcavationRenderer {
 		}
 	}
 
-	public Box bounds() {
+	public AABB bounds() {
 		return aabb;
 	}
 
-	public Box visibilityBounds() {
+	public AABB visibilityBounds() {
 		return visibilityBounds;
 	}
 
 	/** return true if something was drawn */
 	@Environment(EnvType.CLIENT)
 	public boolean drawBounds(BufferBuilder bufferbuilder, Entity viewEntity, double d0, double d1, double d2, float partialTicks) {
-		lastEyePosition = viewEntity.getCameraPosVec(partialTicks);
+		lastEyePosition = viewEntity.getEyePosition(partialTicks);
 		if (visibilityBounds.contains(lastEyePosition)) {
 			if (positions == null) {
-				final Box box = aabb;
-				WorldRenderer.drawBox(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f, 0.3f,
+				final AABB box = aabb;
+				LevelRenderer.addChainedFilledBoxVertices(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f, 0.3f,
 					1f);
 			} else {
 				for (final BlockPos pos : positions) {
 					final double x = pos.getX() - d0;
 					final double y = pos.getY() - d1;
 					final double z = pos.getZ() - d2;
-					WorldRenderer.drawBox(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 1f);
+					LevelRenderer.addChainedFilledBoxVertices(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 1f);
 				}
 			}
 			didDrawBoundsLastTime = true;
@@ -114,15 +111,15 @@ public class ExcavationRenderer {
 	public void drawBox(BufferBuilder bufferbuilder, double d0, double d1, double d2) {
 		if (didDrawBoundsLastTime) {
 			if (positions == null) {
-				final Box box = aabb;
-				WorldRenderer.drawBox(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f,
+				final AABB box = aabb;
+				LevelRenderer.addChainedFilledBoxVertices(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f,
 					0.3f, 0.3f);
 			} else {
 				for (final BlockPos pos : positions) {
 					final double x = pos.getX() - d0;
 					final double y = pos.getY() - d1;
 					final double z = pos.getZ() - d2;
-					WorldRenderer.drawBox(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 0.3f);
+					LevelRenderer.addChainedFilledBoxVertices(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 0.3f);
 				}
 			}
 		}

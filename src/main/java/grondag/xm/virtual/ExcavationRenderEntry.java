@@ -20,17 +20,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.network.Packet;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
 import grondag.fermion.position.IntegerBox;
 import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.xm.Xm;
@@ -47,7 +44,7 @@ public class ExcavationRenderEntry {
 
 	public final int id;
 
-	public final World world;
+	public final Level world;
 
 	public final ExcavationRenderTask task;
 
@@ -86,7 +83,7 @@ public class ExcavationRenderEntry {
 	 * Players who could be viewing this excavation and should received client-side
 	 * updates.
 	 */
-	private final SimpleUnorderedArrayList<ServerPlayerEntity> listeners = new SimpleUnorderedArrayList<>();
+	private final SimpleUnorderedArrayList<ServerPlayer> listeners = new SimpleUnorderedArrayList<>();
 
 	private void addPos(BlockPos pos) {
 		positions.add(pos);
@@ -282,7 +279,7 @@ public class ExcavationRenderEntry {
 		return aabb;
 	}
 
-	public void addListener(ServerPlayerEntity listener, boolean sendPacketIfNew) {
+	public void addListener(ServerPlayer listener, boolean sendPacketIfNew) {
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("id=%d addListenger sendIfNew=%s, isValue=%s, isFirstComputeDone=%s", id, Boolean.toString(sendPacketIfNew),
 				Boolean.toString(isValid), Boolean.toString(isFirstComputeDone));
@@ -294,12 +291,12 @@ public class ExcavationRenderEntry {
 					Xm.LOG.info("id=%d addListenger scheduling packet.", id);
 				}
 
-				listener.networkHandler.sendPacket(S2C_ExcavationRenderUpdate.toPacket(this));
+				listener.connection.send(S2C_ExcavationRenderUpdate.toPacket(this));
 			}
 		}
 	}
 
-	public void removeListener(ServerPlayerEntity listener) {
+	public void removeListener(ServerPlayer listener) {
 		synchronized (listeners) {
 			listeners.removeIfPresent(listener);
 		}
@@ -323,8 +320,8 @@ public class ExcavationRenderEntry {
 		//            {
 		synchronized (ExcavationRenderEntry.this.listeners) {
 			if (!ExcavationRenderEntry.this.listeners.isEmpty()) {
-				for (final ServerPlayerEntity player : listeners) {
-					player.networkHandler.sendPacket(packet);
+				for (final ServerPlayer player : listeners) {
+					player.connection.send(packet);
 				}
 			}
 		}

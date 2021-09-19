@@ -17,13 +17,10 @@ package grondag.xm.api.item;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
-
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmRegistryImpl;
 
@@ -39,7 +36,7 @@ public class XmItemRegistry {
 		XmRegistryImpl.register(item, (s, w) -> modelFunction.apply(s));
 	}
 
-	public static void addItem(Item item, BiFunction<ItemStack, World, MutableModelState> modelFunction) {
+	public static void addItem(Item item, BiFunction<ItemStack, Level, MutableModelState> modelFunction) {
 		XmRegistryImpl.register(item, modelFunction);
 	}
 }

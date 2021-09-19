@@ -16,12 +16,9 @@
 package grondag.xm.api.primitive.surface;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.client.resource.language.I18n;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
+import net.minecraft.client.resources.language.I18n;
 import grondag.xm.api.paint.SurfaceTopology;
 
 @Experimental
@@ -64,7 +61,7 @@ public interface XmSurface {
 
 	@Environment(EnvType.CLIENT)
 	default String name() {
-		return I18n.translate(nameKey());
+		return I18n.get(nameKey());
 	}
 
 	SurfaceTopology topology();

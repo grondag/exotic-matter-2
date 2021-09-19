@@ -16,13 +16,10 @@
 package grondag.xm.api.texture;
 
 import java.util.function.Consumer;
-
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.Identifier;
-
 import grondag.xm.texture.TextureSetImpl;
 
 @Experimental
@@ -40,7 +37,7 @@ public interface TextureSet {
 	}
 
 	/** Registration ID */
-	Identifier id();
+	ResourceLocation id();
 
 	/**
 	 * Transient id for temporary serialization. Client values may not match server
@@ -51,12 +48,12 @@ public interface TextureSet {
 	/**
 	 * Passes strings to consumer for all textures to be included in texture stitch.
 	 */
-	void prestitch(Consumer<Identifier> stitcher);
+	void prestitch(Consumer<ResourceLocation> stitcher);
 
 	/**
 	 * For use by TESR and GUI to conveniently and quickly access default sprite
 	 */
-	Sprite sampleSprite();
+	TextureAtlasSprite sampleSprite();
 
 	/**
 	 * Returns the actual texture name for purpose of finding a texture sprite. For
@@ -108,7 +105,7 @@ public interface TextureSet {
 	 * Player-friendly, localized name for this texture palette
 	 */
 	default String displayName() {
-		return I18n.translate(displayNameToken());
+		return I18n.get(displayNameToken());
 	}
 
 	/**

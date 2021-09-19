@@ -16,11 +16,10 @@
 package grondag.xm.virtual;
 
 import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Consumer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 @Internal
 public interface ExcavationRenderTask {
@@ -37,7 +36,7 @@ public interface ExcavationRenderTask {
 
 	void forEachPosition(Consumer<BlockPos> consumer);
 
-	World world();
+	Level world();
 
-	boolean visibleTo(PlayerEntity player);
+	boolean visibleTo(Player player);
 }

@@ -18,11 +18,11 @@ package grondag.xm.paint;
 import com.mojang.serialization.Lifecycle;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.DefaultedRegistry;
-import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 
 import grondag.xm.Xm;
 import grondag.xm.api.paint.VertexProcessor;
@@ -34,11 +34,11 @@ public class VertexProcessorRegistryImpl extends DefaultedRegistry<VertexProcess
 
 	public static final VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorDefault.INSTANCE;
 
-	private static final RegistryKey REGISTRY_KEY = RegistryKey.ofRegistry(Xm.id("vertex_proc"));
+	private static final ResourceKey REGISTRY_KEY = ResourceKey.createRegistryKey(Xm.id("vertex_proc"));
 	public static final VertexProcessorRegistryImpl INSTANCE;
 
 	static {
-		INSTANCE = (VertexProcessorRegistryImpl) ((MutableRegistry) Registry.REGISTRIES).add(REGISTRY_KEY,
+		INSTANCE = (VertexProcessorRegistryImpl) ((WritableRegistry) Registry.REGISTRY).register(REGISTRY_KEY,
 				new VertexProcessorRegistryImpl(NONE_ID.toString()), Lifecycle.stable());
 	}
 
@@ -47,7 +47,12 @@ public class VertexProcessorRegistryImpl extends DefaultedRegistry<VertexProcess
 	}
 
 	@Override
-	public VertexProcessor add(Identifier id, VertexProcessor processor) {
+	public VertexProcessor add(ResourceLocation id, VertexProcessor processor) {
 		return Registry.register(this, id, processor);
+	}
+
+	@Override
+	public VertexProcessor get(int index) {
+		return byId(index);
 	}
 }

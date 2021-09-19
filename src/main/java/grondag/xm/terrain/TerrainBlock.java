@@ -16,19 +16,17 @@
 package grondag.xm.terrain;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.Block;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
-
 import grondag.xm.api.modelstate.MutableModelState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 @Internal
 public class TerrainBlock extends Block implements IHotBlock {
-	public static final IntProperty HEAT = IntProperty.of("xm2_heat", 0, 15);
-	public static final EnumProperty<TerrainType> TERRAIN_TYPE = EnumProperty.of("xm2_terrain", TerrainType.class);
+	public static final IntegerProperty HEAT = IntegerProperty.create("xm2_heat", 0, 15);
+	public static final EnumProperty<TerrainType> TERRAIN_TYPE = EnumProperty.create("xm2_terrain", TerrainType.class);
 
-	public TerrainBlock(Settings blockSettings, MutableModelState defaultModelState) {
+	public TerrainBlock(Properties blockSettings, MutableModelState defaultModelState) {
 		super(blockSettings);
 	}
 

@@ -16,12 +16,9 @@
 package grondag.xm.texture;
 
 import java.util.function.Consumer;
-
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.Identifier;
-
 import grondag.xm.api.modelstate.ModelStateFlags;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetBuilder;
@@ -38,13 +35,13 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 		return result;
 	}
 
-	public final Identifier id;
+	public final ResourceLocation id;
 	public final int versionMask;
 	public final int stateFlags;
 	public final String baseTextureName;
 	private boolean used = false;
 
-	TextureSetImpl(Identifier id, AbstractTextureSet template) {
+	TextureSetImpl(ResourceLocation id, AbstractTextureSet template) {
 		this.id = id;
 		baseTextureName = template.rawBaseTextureName;
 		copyFrom(template);
@@ -68,7 +65,7 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 	}
 
 	@Override
-	public Identifier id() {
+	public ResourceLocation id() {
 		return id;
 	}
 
@@ -83,7 +80,7 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 	}
 
 	@Override
-	public void prestitch(Consumer<Identifier> stitcher) {
+	public void prestitch(Consumer<ResourceLocation> stitcher) {
 		layoutMap.prestitch(this, stitcher);
 	}
 
@@ -92,13 +89,13 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 		return layoutMap.sampleTextureName(this);
 	}
 
-	private Sprite sampleSprite;
+	private TextureAtlasSprite sampleSprite;
 
 	@Override
-	public Sprite sampleSprite() {
-		Sprite result = sampleSprite;
+	public TextureAtlasSprite sampleSprite() {
+		TextureAtlasSprite result = sampleSprite;
 		if (result == null) {
-			result = TextureSetHelper.blockAtas().getSprite(new Identifier(sampleTextureName()));
+			result = TextureSetHelper.blockAtas().getSprite(new ResourceLocation(sampleTextureName()));
 			sampleSprite = result;
 		}
 		return result;

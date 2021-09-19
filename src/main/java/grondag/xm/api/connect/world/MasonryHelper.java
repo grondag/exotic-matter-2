@@ -16,11 +16,9 @@
 package grondag.xm.api.connect.world;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 // For masonry, true result means border IS present
 @Experimental
@@ -49,7 +47,7 @@ public class MasonryHelper implements BlockTest<PrimitiveState> {
 
 		// if not a sibling, mortar if against full opaque
 		if (!test.apply(context))
-			return toBlockState.isOpaqueFullCube(context.world(), toPos);
+			return toBlockState.isSolidRender(context.world(), toPos);
 
 		final BlockPos fromPos = context.fromPos();
 

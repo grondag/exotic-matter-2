@@ -23,29 +23,27 @@ import static grondag.xm.api.texture.TextureScale.SINGLE;
 import static grondag.xm.api.texture.TextureTransform.IDENTITY;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
 import grondag.xm.api.texture.TextureScale;
 import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureTransform;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 @Internal
 public enum TextureSetHelper {
 	;
 
-	public static SpriteAtlasTexture blockAtas() {
-		return MinecraftClient.getInstance().getBakedModelManager().getAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
+	public static TextureAtlas blockAtas() {
+		return Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
 	}
 
-	public static Sprite missingSprite() {
-		return blockAtas().getSprite(MissingSprite.getMissingSpriteId());
+	public static TextureAtlasSprite missingSprite() {
+		return blockAtas().getSprite(MissingTextureAtlasSprite.getLocation());
 	}
 
 	TextureSetHelper() {}

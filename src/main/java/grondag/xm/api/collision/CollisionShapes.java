@@ -15,10 +15,9 @@
  ******************************************************************************/
 package grondag.xm.api.collision;
 
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
 
 @Experimental
 public class CollisionShapes {
@@ -35,23 +34,23 @@ public class CollisionShapes {
 		final double p = 1.0/16.0;
 		final double q = 1 - p;
 
-		VoxelShape shape = VoxelShapes.cuboid(p, p, p, q, q, q);
+		VoxelShape shape = Shapes.box(p, p, p, q, q, q);
 
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 0, p, p, 1));
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 0, p, 1, p));
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, 0, 1, p, p));
+		shape = Shapes.or(shape, Shapes.box(0, 0, 0, p, p, 1));
+		shape = Shapes.or(shape, Shapes.box(0, 0, 0, p, 1, p));
+		shape = Shapes.or(shape, Shapes.box(0, 0, 0, 1, p, p));
 
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(q, q, 0, 1, 1, 1));
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(q, 0, q, 1, 1, 1));
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, q, q, 1, 1, 1));
+		shape = Shapes.or(shape, Shapes.box(q, q, 0, 1, 1, 1));
+		shape = Shapes.or(shape, Shapes.box(q, 0, q, 1, 1, 1));
+		shape = Shapes.or(shape, Shapes.box(0, q, q, 1, 1, 1));
 
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(q, 0, 0, 1, p, 1));
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(q, 0, 0, 1, 1, p));
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, q, 0, 1, 1, p));
+		shape = Shapes.or(shape, Shapes.box(q, 0, 0, 1, p, 1));
+		shape = Shapes.or(shape, Shapes.box(q, 0, 0, 1, 1, p));
+		shape = Shapes.or(shape, Shapes.box(0, q, 0, 1, 1, p));
 
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, q, 0, p, 1, 1));
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, q, p, 1, 1));
-		shape = VoxelShapes.union(shape, VoxelShapes.cuboid(0, 0, q, 1, p, 1));
+		shape = Shapes.or(shape, Shapes.box(0, q, 0, p, 1, 1));
+		shape = Shapes.or(shape, Shapes.box(0, 0, q, p, 1, 1));
+		shape = Shapes.or(shape, Shapes.box(0, 0, q, 1, p, 1));
 
 		CUBE_WITH_CUTOUTS = shape;
 	}

@@ -16,37 +16,35 @@
 package grondag.xm.api.modelstate.primitive;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.block.PillarBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.block.enums.BlockHalf;
-import net.minecraft.block.enums.StairShape;
-import net.minecraft.util.math.Direction;
-
 import grondag.fermion.orientation.api.CubeRotation;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.primitive.simple.Stair;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.StairsShape;
 
 @Experimental
 public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePrimitiveState>  {
 	SimplePrimitiveStateMutator AXIS_FROM_BLOCKSTATE = (modelState, blockState) -> {
-		final Comparable<?> axis = blockState.getEntries().get(PillarBlock.AXIS);
+		final Comparable<?> axis = blockState.getValues().get(RotatedPillarBlock.AXIS);
 		if (axis != null) {
-			modelState.orientationIndex(PillarBlock.AXIS.getType().cast(axis).ordinal());
+			modelState.orientationIndex(RotatedPillarBlock.AXIS.getValueClass().cast(axis).ordinal());
 		}
 		return modelState;
 	};
 
 	SimplePrimitiveStateMutator STAIRS_FROM_BLOCKSTATE = (modelState, blockState) -> {
-		final Comparable<?> faceProp = blockState.getEntries().get(StairsBlock.FACING);
-		final Comparable<?> half = blockState.getEntries().get(StairsBlock.HALF);
-		final Comparable<?> shapeProp = blockState.getEntries().get(StairsBlock.SHAPE);
+		final Comparable<?> faceProp = blockState.getValues().get(StairBlock.FACING);
+		final Comparable<?> half = blockState.getValues().get(StairBlock.HALF);
+		final Comparable<?> shapeProp = blockState.getValues().get(StairBlock.SHAPE);
 
 		if (faceProp != null && half != null && shapeProp != null) {
-			final StairShape shape = StairsBlock.SHAPE.getType().cast(shapeProp);
-			Direction face = StairsBlock.FACING.getType().cast(faceProp);
-			final boolean bottom = StairsBlock.HALF.getType().cast(half) == BlockHalf.BOTTOM;
-			final boolean corner = shape != StairShape.STRAIGHT;
+			final StairsShape shape = StairBlock.SHAPE.getValueClass().cast(shapeProp);
+			Direction face = StairBlock.FACING.getValueClass().cast(faceProp);
+			final boolean bottom = StairBlock.HALF.getValueClass().cast(half) == Half.BOTTOM;
+			final boolean corner = shape != StairsShape.STRAIGHT;
 			boolean inside = false;
 			boolean left = false;
 
@@ -66,11 +64,11 @@ public interface PrimitiveState extends BaseModelState<PrimitiveState, MutablePr
 			if(corner) {
 				if(bottom) {
 					if(left) {
-						face = face.rotateYCounterclockwise();
+						face = face.getCounterClockWise();
 					}
 				} else {
 					if(!left) {
-						face = face.rotateYClockwise();
+						face = face.getClockWise();
 					}
 				}
 			}

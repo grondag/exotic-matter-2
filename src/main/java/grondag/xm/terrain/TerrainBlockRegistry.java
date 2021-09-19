@@ -16,11 +16,9 @@
 package grondag.xm.terrain;
 
 import java.util.HashMap;
-
+import net.minecraft.world.level.block.Block;
 import com.google.common.collect.HashBiMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.block.Block;
 
 /** tracks which terrain blocks can be frozen or thawed from each other */
 @Internal

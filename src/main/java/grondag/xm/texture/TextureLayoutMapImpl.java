@@ -16,11 +16,8 @@
 package grondag.xm.texture;
 
 import java.util.function.Consumer;
-
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.Identifier;
-
 import grondag.xm.api.texture.TextureLayout;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureNameFunction;
@@ -46,10 +43,10 @@ public class TextureLayoutMapImpl implements TextureLayoutMap {
 		return layout;
 	}
 
-	public final void prestitch(TextureSet texture, Consumer<Identifier> stitcher) {
+	public final void prestitch(TextureSet texture, Consumer<ResourceLocation> stitcher) {
 		for (int i = 0; i < texture.versionCount(); i++) {
 			for (int j = 0; j < layout.textureCount; j++) {
-				stitcher.accept(new Identifier(nameFunc.apply(texture.baseTextureName(), i, j)));
+				stitcher.accept(new ResourceLocation(nameFunc.apply(texture.baseTextureName(), i, j)));
 			}
 		}
 	}

@@ -16,13 +16,10 @@
 package grondag.xm.texture;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback.Registry;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import grondag.xm.Xm;
 import grondag.xm.api.texture.XmTextures;
 import grondag.xm.paint.XmPaintRegistryImpl;
@@ -39,12 +36,12 @@ public class XmTexturesImpl {
 		// Force registration
 		XmTextures.EMPTY.use();
 
-		ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register(XmTexturesImpl::registerTextures);
+		ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register(XmTexturesImpl::registerTextures);
 	}
 
-	private static void registerTextures(SpriteAtlasTexture atlas, Registry registry) {
+	private static void registerTextures(TextureAtlas atlas, Registry registry) {
 		// need to resolve/use texture names at this point
-		XmPaintRegistryImpl.INSTANCE.reload(MinecraftClient.getInstance().getResourceManager());
+		XmPaintRegistryImpl.INSTANCE.onResourceManagerReload(Minecraft.getInstance().getResourceManager());
 		final TextureSetRegistryImpl texReg = TextureSetRegistryImpl.INSTANCE;
 
 		texReg.forEach(set -> {

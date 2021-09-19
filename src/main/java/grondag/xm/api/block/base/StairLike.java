@@ -15,7 +15,7 @@
  ******************************************************************************/
 package grondag.xm.api.block.base;
 
-import static net.minecraft.block.StairsBlock.WATERLOGGED;
+import static net.minecraft.world.level.block.StairBlock.WATERLOGGED;
 
 import java.util.Random;
 import java.util.function.Predicate;
@@ -23,40 +23,37 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.Waterloggable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Direction.AxisDirection;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.explosion.Explosion;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import grondag.fermion.orientation.api.CubeRotation;
 import grondag.fermion.orientation.api.DirectionHelper;
 import grondag.fermion.orientation.api.FaceEdge;
@@ -70,7 +67,7 @@ import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.api.primitive.simple.Stair;
 
 @Experimental
-public class StairLike extends Block implements Waterloggable {
+public class StairLike extends Block implements SimpleWaterloggedBlock {
 	protected final Block baseBlock;
 	protected final BlockState baseBlockState;
 
@@ -82,13 +79,13 @@ public class StairLike extends Block implements Waterloggable {
 
 	public final Shape shape;
 
-	protected final Predicate<PlayerEntity> modKeyTest;
-	protected final Predicate<PlayerEntity> forceKeyTest;
+	protected final Predicate<Player> modKeyTest;
+	protected final Predicate<Player> forceKeyTest;
 
-	public StairLike(BlockState blockState, Settings settings, Shape shape, Predicate<PlayerEntity> modKeyTest, Predicate<PlayerEntity> forceKeyTest) {
-		super(FabricBlockSettings.copyOf(settings).dynamicBounds());
-		setDefaultState(stateManager.getDefaultState()
-				.with(WATERLOGGED, false));
+	public StairLike(BlockState blockState, Properties settings, Shape shape, Predicate<Player> modKeyTest, Predicate<Player> forceKeyTest) {
+		super(FabricBlockSettings.copyOf(settings).dynamicShape());
+		registerDefaultState(stateDefinition.any()
+				.setValue(WATERLOGGED, false));
 		baseBlock = blockState.getBlock();
 		baseBlockState = blockState;
 		this.shape = shape;
@@ -98,95 +95,95 @@ public class StairLike extends Block implements Waterloggable {
 	}
 
 	@Override
-	public boolean hasSidedTransparency(BlockState blockState_1) {
+	public boolean useShapeForLightOcclusion(BlockState blockState_1) {
 		return true;
 	}
 
 	@Override
-	public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos pos, ShapeContext entityContext) {
+	public VoxelShape getShape(BlockState blockState, BlockGetter blockView, BlockPos pos, CollisionContext entityContext) {
 		return CollisionDispatcher.shapeFor(XmBlockState.modelState(blockState, blockView, pos, true));
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
-		baseBlock.randomDisplayTick(blockState, world, blockPos, random);
+	public void animateTick(BlockState blockState, Level world, BlockPos blockPos, Random random) {
+		baseBlock.animateTick(blockState, world, blockPos, random);
 	}
 
 	@Override
-	public void onBlockBreakStart(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity) {
-		baseBlockState.onBlockBreakStart(world, blockPos, playerEntity);
+	public void attack(BlockState blockState, Level world, BlockPos blockPos, Player playerEntity) {
+		baseBlockState.attack(world, blockPos, playerEntity);
 	}
 
 	@Override
-	public void onBroken(WorldAccess iWorld, BlockPos blockPos, BlockState blockState) {
-		baseBlock.onBroken(iWorld, blockPos, blockState);
+	public void destroy(LevelAccessor iWorld, BlockPos blockPos, BlockState blockState) {
+		baseBlock.destroy(iWorld, blockPos, blockState);
 	}
 
 	@Override
-	public float getBlastResistance() {
-		return baseBlock.getBlastResistance();
+	public float getExplosionResistance() {
+		return baseBlock.getExplosionResistance();
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-		if (!state.isOf(state.getBlock())) {
-			baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
-			baseBlock.onBlockAdded(baseBlockState, world, pos, oldState, false);
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+		if (!state.is(state.getBlock())) {
+			baseBlockState.neighborChanged(world, pos, Blocks.AIR, pos, false);
+			baseBlock.onPlace(baseBlockState, world, pos, oldState, false);
 		}
 	}
 
 	@Override
-	public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean notify) {
-		if (!state.isOf(newState.getBlock())) {
-			baseBlockState.onStateReplaced(world, pos, newState, notify);
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean notify) {
+		if (!state.is(newState.getBlock())) {
+			baseBlockState.onRemove(world, pos, newState, notify);
 		}
 	}
 
 	@Override
-	public void onSteppedOn(World world, BlockPos blockPos, BlockState state, Entity entity) {
-		baseBlock.onSteppedOn(world, blockPos, state, entity);
+	public void stepOn(Level world, BlockPos blockPos, BlockState state, Entity entity) {
+		baseBlock.stepOn(world, blockPos, state, entity);
 	}
 
 	@Override
-	public boolean hasRandomTicks(BlockState blockState) {
-		return baseBlock.hasRandomTicks(blockState);
+	public boolean isRandomlyTicking(BlockState blockState) {
+		return baseBlock.isRandomlyTicking(blockState);
 	}
 
 	@Override
-	public void randomTick(BlockState blockState, ServerWorld serverWorld, BlockPos blockPos, Random random) {
+	public void randomTick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, Random random) {
 		baseBlock.randomTick(blockState, serverWorld, blockPos, random);
 	}
 
 	@Override
-	public void scheduledTick(BlockState blockState, ServerWorld serverWorld, BlockPos blockPos, Random random) {
-		baseBlock.scheduledTick(blockState, serverWorld, blockPos, random);
+	public void tick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, Random random) {
+		baseBlock.tick(blockState, serverWorld, blockPos, random);
 	}
 
 	@Override
-	public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
-		return baseBlockState.onUse(world, playerEntity, hand, blockHitResult);
+	public InteractionResult use(BlockState blockState, Level world, BlockPos blockPos, Player playerEntity, InteractionHand hand, BlockHitResult blockHitResult) {
+		return baseBlockState.use(world, playerEntity, hand, blockHitResult);
 	}
 
 	@Override
-	public void onDestroyedByExplosion(World world, BlockPos blockPos, Explosion explosion) {
-		baseBlock.onDestroyedByExplosion(world, blockPos, explosion);
+	public void wasExploded(Level world, BlockPos blockPos, Explosion explosion) {
+		baseBlock.wasExploded(world, blockPos, explosion);
 	}
 
 	//UGLY: It was bad in the previous versions, too.  There must be a better model for this, but I haven't found it yet.
 	//TODO: consider splitting this mess into a utility class for reuse - like it was in prior version
 	@Override
-	public BlockState getPlacementState(ItemPlacementContext context) {
-		final BlockPos pos = context.getBlockPos();
-		final PlayerEntity player = context.getPlayer();
-		final FluidState fluidState = context.getWorld().getFluidState(pos);
-		final Direction onFace = context.getSide().getOpposite();
-		BlockState result = getDefaultState().with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		final BlockPos pos = context.getClickedPos();
+		final Player player = context.getPlayer();
+		final FluidState fluidState = context.getLevel().getFluidState(pos);
+		final Direction onFace = context.getClickedFace().getOpposite();
+		BlockState result = defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
 
 		Direction bottomFace = Direction.DOWN;
 		Direction backFace = Direction.SOUTH;
 		if(player != null) {
-			final Direction[] faces = context.getPlacementDirections();
+			final Direction[] faces = context.getNearestLookingDirections();
 			final int xIndex = faces[0].getAxis() == Axis.X ? 0 : (faces[1].getAxis() == Axis.X ? 1 : 2);
 			final int yIndex = faces[0].getAxis() == Axis.Y ? 0 : (faces[1].getAxis() == Axis.Y ? 1 : 2);
 			final int zIndex = faces[0].getAxis() == Axis.Z ? 0 : (faces[1].getAxis() == Axis.Z ? 1 : 2);
@@ -194,7 +191,7 @@ public class StairLike extends Block implements Waterloggable {
 			final boolean modKey = modKeyTest.test(player);
 			final boolean forceKey = forceKeyTest.test(player);
 
-			final Vec3d hit = context.getHitPos();
+			final Vec3 hit = context.getClickLocation();
 			if(shape == Shape.STRAIGHT) {
 				if (modKey) {
 					// horizontal stairs
@@ -214,7 +211,7 @@ public class StairLike extends Block implements Waterloggable {
 						backFace = onFace;
 						bottomFace = forceKey
 								? WorldHelper.closestAdjacentFace(onFace, hit.x, hit.y, hit.z)
-										: player.getHorizontalFacing();
+										: player.getDirection();
 					}
 				} else {
 					// vertical (normal)
@@ -222,7 +219,7 @@ public class StairLike extends Block implements Waterloggable {
 						bottomFace = onFace;
 						backFace = forceKey
 								? WorldHelper.closestAdjacentFace(onFace, hit.x, hit.y, hit.z)
-										: player.getHorizontalFacing();
+										: player.getDirection();
 					} else {
 						backFace = onFace;
 						if( forceKey) {
@@ -245,7 +242,7 @@ public class StairLike extends Block implements Waterloggable {
 							final Direction rightFace = FaceEdge.fromWorld(onFace, bottomFace).counterClockwise().toWorld(bottomFace);
 							backFace = rightFace == pair.getRight() ? onFace : pair.getRight();
 						} else {
-							bottomFace = player.getHorizontalFacing();
+							bottomFace = player.getDirection();
 							final int otherIndex = bottomFace.getAxis() == Axis.X ? zIndex : xIndex;
 							final Direction otherFace = faces[otherIndex];
 							final Direction rightFace = FaceEdge.fromWorld(onFace, bottomFace).counterClockwise().toWorld(bottomFace);
@@ -257,7 +254,7 @@ public class StairLike extends Block implements Waterloggable {
 						if (forceKey) {
 							final Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, (float)hit.x, (float)hit.y, (float)hit.z);
 							boolean leftRightOrder = DirectionHelper.counterClockwise(pair.getLeft(), onFace.getAxis()) == pair.getRight();
-							if (onFace.getDirection() == AxisDirection.NEGATIVE) {
+							if (onFace.getAxisDirection() == AxisDirection.NEGATIVE) {
 								leftRightOrder = !leftRightOrder;
 							}
 							backFace = leftRightOrder ? pair.getRight() : pair.getLeft();
@@ -286,47 +283,47 @@ public class StairLike extends Block implements Waterloggable {
 						}
 					} else {
 						bottomFace = faces[yIndex];
-						final HorizontalEdge edge = HorizontalEdge.fromRotation(player.getYaw());
+						final HorizontalEdge edge = HorizontalEdge.fromRotation(player.getYRot());
 						backFace = bottomFace == Direction.DOWN ? edge.left.face : edge.right.face;
 					}
 				}
 			}
 		}
-		result = result.with(XmProperties.ROTATION, ObjectUtils.defaultIfNull(CubeRotation.find(bottomFace, backFace), CubeRotation.DOWN_WEST));
+		result = result.setValue(XmProperties.ROTATION, ObjectUtils.defaultIfNull(CubeRotation.find(bottomFace, backFace), CubeRotation.DOWN_WEST));
 		return result;
 	}
 
 	@Override
-	public BlockState getStateForNeighborUpdate(BlockState blockState_1, Direction direction_1, BlockState blockState_2, WorldAccess iWorld_1, BlockPos blockPos_1, BlockPos blockPos_2) {
-		if (blockState_1.get(WATERLOGGED)) {
-			iWorld_1.getFluidTickScheduler().schedule(blockPos_1, Fluids.WATER, Fluids.WATER.getTickRate(iWorld_1));
+	public BlockState updateShape(BlockState blockState_1, Direction direction_1, BlockState blockState_2, LevelAccessor iWorld_1, BlockPos blockPos_1, BlockPos blockPos_2) {
+		if (blockState_1.getValue(WATERLOGGED)) {
+			iWorld_1.getLiquidTicks().scheduleTick(blockPos_1, Fluids.WATER, Fluids.WATER.getTickDelay(iWorld_1));
 		}
-		return super.getStateForNeighborUpdate(blockState_1, direction_1, blockState_2, iWorld_1, blockPos_1, blockPos_2);
+		return super.updateShape(blockState_1, direction_1, blockState_2, iWorld_1, blockPos_1, blockPos_2);
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(XmProperties.ROTATION, WATERLOGGED);
 	}
 
 	@Override
 	public FluidState getFluidState(BlockState blockState_1) {
-		return blockState_1.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(blockState_1);
+		return blockState_1.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState_1);
 	}
 
 	@Override
-	public boolean canPathfindThrough(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, NavigationType blockPlacementEnvironment_1) {
+	public boolean isPathfindable(BlockState blockState_1, BlockGetter blockView_1, BlockPos blockPos_1, PathComputationType blockPlacementEnvironment_1) {
 		return false;
 	}
 
 	@Override
-	public BlockState rotate(BlockState state, BlockRotation rotation) {
-		return state.with(XmProperties.ROTATION, state.get(XmProperties.ROTATION).rotate(rotation));
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		return state.setValue(XmProperties.ROTATION, state.getValue(XmProperties.ROTATION).rotate(rotation));
 	}
 
 	@Override
-	public BlockState mirror(BlockState state, BlockMirror mirrir) {
-		return state.rotate(BlockRotation.CLOCKWISE_180);
+	public BlockState mirror(BlockState state, Mirror mirrir) {
+		return state.rotate(Rotation.CLOCKWISE_180);
 	}
 
 	public static SimplePrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
@@ -338,7 +335,7 @@ public class StairLike extends Block implements Waterloggable {
 		final StairLike block = (StairLike)rawBlock;
 		Stair.setCorner(block.shape != Shape.STRAIGHT, modelState);
 		Stair.setInsideCorner(block.shape == Shape.INSIDE_CORNER, modelState);
-		modelState.orientationIndex(blockState.get(XmProperties.ROTATION).ordinal());
+		modelState.orientationIndex(blockState.getValue(XmProperties.ROTATION).ordinal());
 		return modelState;
 	};
 }

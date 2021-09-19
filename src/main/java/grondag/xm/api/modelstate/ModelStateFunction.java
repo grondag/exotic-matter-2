@@ -15,12 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.modelstate;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 
 /**
  * Produces model state instance from world state, refreshing if necessary.
@@ -28,7 +27,7 @@ import net.minecraft.world.BlockView;
 @Experimental
 @FunctionalInterface
 public interface ModelStateFunction<T extends MutableModelState> {
-	@Nullable T apply(BlockState blockState, @Nullable BlockView world, @Nullable BlockPos pos, boolean refreshFromWorld);
+	@Nullable T apply(BlockState blockState, @Nullable BlockGetter world, @Nullable BlockPos pos, boolean refreshFromWorld);
 
 	ModelStateFunction<?> NULL = (s, w, p, r) -> null;
 }

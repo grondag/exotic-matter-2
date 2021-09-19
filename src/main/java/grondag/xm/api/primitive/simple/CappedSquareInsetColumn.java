@@ -16,12 +16,6 @@
 package grondag.xm.api.primitive.simple;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.Direction.AxisDirection;
-import net.minecraft.util.math.Vec3i;
-
 import grondag.fermion.color.Color;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
@@ -40,6 +34,10 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.Vec3i;
 
 @Experimental
 public class CappedSquareInsetColumn  {
@@ -74,8 +72,8 @@ public class CappedSquareInsetColumn  {
 		boolean hasUpper = false;
 		boolean hasLower = false;
 		final Axis axis = AXES[modelState.orientationIndex()];
-		final Direction up = Direction.from(axis, AxisDirection.POSITIVE);
-		final Direction down = Direction.from(axis, AxisDirection.NEGATIVE);
+		final Direction up = Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE);
+		final Direction down = Direction.fromAxisAndDirection(axis, AxisDirection.NEGATIVE);
 
 		emitMiddleSection(csg, pt, modelState.primitive().lampSurface(modelState) != null);
 
@@ -202,7 +200,7 @@ public class CappedSquareInsetColumn  {
 				topFace);
 
 		// force vertex normals out to prevent lighting anomalies
-		final Vec3i vec = face.getVector();
+		final Vec3i vec = face.getNormal();
 		final float x = vec.getX();
 		final float y = vec.getY();
 		final float z = vec.getZ();

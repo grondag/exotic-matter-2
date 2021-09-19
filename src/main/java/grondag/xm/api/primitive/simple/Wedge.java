@@ -16,10 +16,6 @@
 package grondag.xm.api.primitive.simple;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
-
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.WritableMesh;
@@ -32,6 +28,8 @@ import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 
 @Experimental
 public class Wedge extends AbstractWedge {
@@ -48,7 +46,7 @@ public class Wedge extends AbstractWedge {
 
 	public static final Wedge INSTANCE = new Wedge(Xm.id("wedge"));
 
-	protected Wedge(Identifier id) {
+	protected Wedge(ResourceLocation id) {
 		super(id, s -> SURFACES);
 	}
 

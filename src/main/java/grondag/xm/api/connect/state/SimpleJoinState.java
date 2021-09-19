@@ -15,12 +15,11 @@
  ******************************************************************************/
 package grondag.xm.api.connect.state;
 
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Direction.Axis;
-import net.minecraft.util.math.MathHelper;
-
 import grondag.xm.api.connect.world.BlockNeighbors;
 import grondag.xm.connect.SimpleJoinStateImpl;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.Mth;
 
 /**
  * Describes the state of a block model with connected textures/shapes that
@@ -30,7 +29,7 @@ import grondag.xm.connect.SimpleJoinStateImpl;
 public interface SimpleJoinState {
 	int STATE_COUNT = 64; // 2^6
 	int AXIS_JOIN_STATE_COUNT = 1 + 3 * 3; // No joins, plus +/-/both states for each axis
-	int AXIS_JOIN_BIT_COUNT = Integer.bitCount(MathHelper.smallestEncompassingPowerOfTwo(AXIS_JOIN_STATE_COUNT) - 1);
+	int AXIS_JOIN_BIT_COUNT = Integer.bitCount(Mth.smallestEncompassingPowerOfTwo(AXIS_JOIN_STATE_COUNT) - 1);
 	SimpleJoinState NO_JOINS = SimpleJoinStateImpl.NO_JOINS;
 	SimpleJoinState ALL_JOINS = SimpleJoinStateImpl.ALL_JOINS;
 	SimpleJoinState X_JOINS = SimpleJoinStateImpl.X_JOINS;

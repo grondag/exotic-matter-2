@@ -18,13 +18,10 @@ package grondag.xm.paint;
 
 import java.io.Reader;
 import java.util.Locale;
-
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.VertexProcessorRegistry;
 import grondag.xm.api.paint.XmPaintFinder;
@@ -33,10 +30,10 @@ import grondag.xm.api.texture.TextureSetRegistry;
 class PaintDeserializer {
 	public static XmPaintImpl.Finder deserialize(Reader reader) {
 		final XmPaintImpl.Finder finder = XmPaintImpl.finder();
-		final JsonObject json = JsonHelper.deserialize(reader);
+		final JsonObject json = GsonHelper.parse(reader);
 
 		if (json.has("layers")) {
-			final JsonArray layers = JsonHelper.asArray(json.get("layers"), "layers");
+			final JsonArray layers = GsonHelper.convertToJsonArray(json.get("layers"), "layers");
 			if(!layers.isJsonNull()) {
 				final int depth = layers.size();
 				if(depth > 3) {
@@ -54,35 +51,35 @@ class PaintDeserializer {
 
 	private static void readLayer(JsonObject layer, XmPaintFinder finder, int spriteIndex) {
 		if (layer.has("disableAo")) {
-			finder.disableAo(spriteIndex, JsonHelper.getBoolean(layer, "disableAo", true));
+			finder.disableAo(spriteIndex, GsonHelper.getAsBoolean(layer, "disableAo", true));
 		}
 
 		if (layer.has("disableColorIndex")) {
-			finder.disableColorIndex(spriteIndex, JsonHelper.getBoolean(layer, "disableColorIndex", true));
+			finder.disableColorIndex(spriteIndex, GsonHelper.getAsBoolean(layer, "disableColorIndex", true));
 		}
 
 		if (layer.has("disableDiffuse")) {
-			finder.disableDiffuse(spriteIndex, JsonHelper.getBoolean(layer, "disableDiffuse", true));
+			finder.disableDiffuse(spriteIndex, GsonHelper.getAsBoolean(layer, "disableDiffuse", true));
 		}
 
 		if (layer.has("emissive")) {
-			finder.emissive(spriteIndex, JsonHelper.getBoolean(layer, "emissive", true));
+			finder.emissive(spriteIndex, GsonHelper.getAsBoolean(layer, "emissive", true));
 		}
 
 		if (spriteIndex == 0 && layer.has("blendMode")) {
-			finder.blendMode(readBlendMode(JsonHelper.getString(layer, "blendMode")));
+			finder.blendMode(readBlendMode(GsonHelper.getAsString(layer, "blendMode")));
 		}
 
 		if (layer.has("color")) {
-			finder.textureColor(spriteIndex, color(JsonHelper.getString(layer, "color")));
+			finder.textureColor(spriteIndex, color(GsonHelper.getAsString(layer, "color")));
 		}
 
 		if (layer.has("texture")) {
-			finder.texture(spriteIndex, TextureSetRegistry.instance().get(new Identifier(JsonHelper.getString(layer, "texture"))));
+			finder.texture(spriteIndex, TextureSetRegistry.instance().get(new ResourceLocation(GsonHelper.getAsString(layer, "texture"))));
 		}
 
 		if (layer.has("processor")) {
-			finder.vertexProcessor(spriteIndex, VertexProcessorRegistry.INSTANCE.get(new Identifier(JsonHelper.getString(layer, "processor"))));
+			finder.vertexProcessor(spriteIndex, VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(GsonHelper.getAsString(layer, "processor"))));
 		}
 	}
 

@@ -21,13 +21,10 @@ import static grondag.xm.api.modelstate.ModelStateFlags.POSITION;
 import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
 
 import java.util.ArrayList;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
@@ -61,7 +58,7 @@ public class PrimitiveStateMutatorImpl implements PrimitiveStateMutator {
 	}
 
 	@Override
-	public void mutate(MutablePrimitiveState modelState, BlockState blockState, BlockView world, BlockPos pos, BlockNeighbors neighbors, boolean refreshFromWorld) {
+	public void mutate(MutablePrimitiveState modelState, BlockState blockState, BlockGetter world, BlockPos pos, BlockNeighbors neighbors, boolean refreshFromWorld) {
 		if(!modelState.isStatic() && refreshFromWorld) {
 
 			final int stateFlags = modelState.stateFlags();

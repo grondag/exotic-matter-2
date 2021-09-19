@@ -16,10 +16,8 @@
 package grondag.xm.painter;
 
 import it.unimi.dsi.fastutil.HashCommon;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.ApiStatus.Internal;
-
-import net.minecraft.util.math.Direction;
-
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
