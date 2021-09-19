@@ -4,7 +4,7 @@
   "package": "grondag.xm.mixin.client",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "MixinBlockDustParticle"
+    "MixinTerrainParticle"
       ],
   "injectors": {
     "defaultRequire": 1

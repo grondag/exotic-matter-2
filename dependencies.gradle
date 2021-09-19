@@ -33,7 +33,11 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	
-	modImplementation ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false; changing = true; }
+	// The first would be sufficient but we want to bring in changes of underlying
+	modImplementation("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false; changing = true; }
+	modImplementation("grondag:frex-core-${project.mc_tag}:${project.frex_core_version}.+") { transitive = false; changing = true; }
+	modImplementation("grondag:frex-fabric-${project.mc_tag}:${project.frex_fabric_version}.+") { transitive = false; changing = true; }
+	
 	modImplementation ("grondag:fermion-${project.mc_tag}:${project.fermion_version}.+") { transitive = false; changing = true; }
 	modImplementation ("grondag:fermion-modkeys-${project.mc_tag}:${project.fermion_modkeys_version}.+") { transitive = false; changing = true; }
     modImplementation ("grondag:fermion-varia-${project.mc_tag}:${project.fermion_varia_version}.+") { transitive = false; changing = true; }
