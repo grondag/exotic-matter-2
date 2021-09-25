@@ -16,9 +16,12 @@
 package grondag.xm.api.mesh.polygon;
 
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
@@ -434,7 +437,7 @@ public interface MutablePolygon extends Polygon {
 	MutablePolygon append();
 
 	/**
-	 * Current poly settings will be used to initialize WIP after append.
+	 * Current poly settings will be used to initialize working space after append.
 	 */
 	MutablePolygon saveDefaults();
 
@@ -445,7 +448,7 @@ public interface MutablePolygon extends Polygon {
 	MutablePolygon clearDefaults();
 
 	/**
-	 * Loads default values into WIP.
+	 * Loads default values into working space.
 	 */
 	MutablePolygon loadDefaults();
 
