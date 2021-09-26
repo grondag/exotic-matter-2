@@ -16,13 +16,9 @@
 
 package grondag.xm;
 
+import io.vram.frex.api.event.RenderReloadListener;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.InvalidateRenderStateCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -30,6 +26,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
 import grondag.xm.collision.CollisionDispatcherImpl;
@@ -49,7 +52,7 @@ public class XmClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		XmTexturesImpl.init();
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
-		InvalidateRenderStateCallback.EVENT.register(XmClient::invalidate);
+		RenderReloadListener.register(XmClient::invalidate);
 		Packets.initializeClient();
 		AbstractPrimitiveModelState.useClientHandler();
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(XmPaintRegistryImpl.INSTANCE);
