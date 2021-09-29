@@ -20,16 +20,20 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
+
+import io.vram.sc.unordered.SimpleUnorderedArrayList;
+
 import grondag.fermion.position.IntegerBox;
-import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
 import grondag.xm.network.S2C_ExcavationRenderUpdate;

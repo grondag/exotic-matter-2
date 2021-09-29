@@ -17,12 +17,16 @@ package grondag.xm.virtual;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import org.jetbrains.annotations.ApiStatus.Internal;
-import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
+
+import io.vram.sc.unordered.SimpleUnorderedArrayList;
+
 import grondag.fermion.world.WorldMap;
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;

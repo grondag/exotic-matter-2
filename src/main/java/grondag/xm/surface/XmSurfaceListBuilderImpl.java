@@ -17,7 +17,8 @@ package grondag.xm.surface;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import grondag.fermion.sc.unordered.SimpleUnorderedArrayList;
+import io.vram.sc.unordered.SimpleUnorderedArrayList;
+
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.primitive.surface.XmSurfaceListBuilder;

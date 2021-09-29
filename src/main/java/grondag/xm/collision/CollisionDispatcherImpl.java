@@ -16,10 +16,13 @@
 package grondag.xm.collision;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-import grondag.fermion.sc.cache.ObjectSimpleLoadingCache;
-import grondag.xm.api.modelstate.ModelState;
+
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import io.vram.sc.cache.ObjectSimpleLoadingCache;
+
+import grondag.xm.api.modelstate.ModelState;
 
 @Internal
 public class CollisionDispatcherImpl {
@@ -29,7 +32,7 @@ public class CollisionDispatcherImpl {
 	private static final ObjectSimpleLoadingCache<VoxelVolumeKey, VoxelShape> volCache = new ObjectSimpleLoadingCache<>(
 			k -> k.build(), k -> k.toImmutable(), 0xFFF);
 
-	private static ThreadLocal<MeshVoxelizer> fastBoxGen = new ThreadLocal<MeshVoxelizer>() {
+	private static ThreadLocal<MeshVoxelizer> fastBoxGen = new ThreadLocal<>() {
 		@Override
 		protected MeshVoxelizer initialValue() {
 			return new MeshVoxelizer();

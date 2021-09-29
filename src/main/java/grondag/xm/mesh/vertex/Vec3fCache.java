@@ -21,7 +21,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import it.unimi.dsi.fastutil.HashCommon;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import grondag.fermion.sc.cache.ISimpleLoadingCache;
+import io.vram.sc.cache.ISimpleLoadingCache;
+
 import grondag.xm.api.mesh.polygon.Vec3f;
 
 // PERF: sucks - avoid using instanced immutable vectors in more places
