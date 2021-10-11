@@ -17,7 +17,8 @@ package grondag.xm.mesh;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import grondag.fermion.bits.BitPacker32;
+import io.vram.bitkit.BitPacker32;
+
 import grondag.fermion.intstream.IntStream;
 import grondag.fermion.varia.IndexedInterner;
 import grondag.xm.api.paint.PaintBlendMode;

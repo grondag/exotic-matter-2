@@ -16,13 +16,16 @@
 package grondag.xm.terrain;
 
 import it.unimi.dsi.fastutil.HashCommon;
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.ApiStatus.Internal;
-import grondag.fermion.bits.BitPacker64;
+
+import io.vram.bitkit.BitPacker64;
+
 import grondag.fermion.orientation.api.HorizontalEdge;
 import grondag.fermion.orientation.api.HorizontalFace;
 import grondag.fermion.position.PackedBlockPos;
@@ -55,7 +58,7 @@ public class TerrainState {
 	/**
 	 * Want to avoid the synchronization penalty of pooled block pos.
 	 */
-	private static ThreadLocal<BlockPos.MutableBlockPos> mutablePos = new ThreadLocal<BlockPos.MutableBlockPos>() {
+	private static ThreadLocal<BlockPos.MutableBlockPos> mutablePos = new ThreadLocal<>() {
 
 		@Override
 		protected BlockPos.MutableBlockPos initialValue() {
@@ -153,8 +156,7 @@ public class TerrainState {
 			return true;
 		if (obj == null)
 			return false;
-		if (obj instanceof TerrainState) {
-			final TerrainState other = (TerrainState) obj;
+		if (obj instanceof TerrainState other) {
 			return other.stateKey == stateKey && other.hotness == hotness;
 		}
 		return false;

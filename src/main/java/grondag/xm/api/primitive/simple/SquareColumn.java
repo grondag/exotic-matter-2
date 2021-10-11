@@ -16,12 +16,16 @@
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.ApiStatus.Experimental;
-import grondag.fermion.bits.BitPacker32;
+
+import io.vram.bitkit.BitPacker32;
+
 import grondag.fermion.color.Color;
 import grondag.fermion.orientation.api.FaceEdge;
 import grondag.fermion.orientation.api.OrientationType;

@@ -16,10 +16,13 @@
 package grondag.xm.mesh;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-import grondag.fermion.bits.BitPacker32;
+
+import net.minecraft.core.Direction;
+
+import io.vram.bitkit.BitPacker32;
+
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
-import net.minecraft.core.Direction;
 
 @Internal
 class MeshFormat {

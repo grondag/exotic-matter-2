@@ -26,7 +26,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 
-import grondag.fermion.bits.BitPacker32;
+import io.vram.bitkit.BitPacker32;
+
 import grondag.xm.Xm;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.PaintIndex;
@@ -119,7 +120,7 @@ public class XmPaintImpl {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof XmPaintImpl other) {
+		if (obj != null && obj instanceof final XmPaintImpl other) {
 			if (id != null) {
 				return id.equals(other.id);
 			} else if (index !=  XmPaint.NO_INDEX) {
