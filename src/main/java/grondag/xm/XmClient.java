@@ -16,8 +16,6 @@
 
 package grondag.xm;
 
-import io.vram.frex.api.renderloop.BlockOutlineListener;
-import io.vram.frex.api.renderloop.RenderReloadListener;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -32,6 +30,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+
+import io.vram.frex.api.renderloop.BlockOutlineListener;
+import io.vram.frex.api.renderloop.RenderReloadListener;
 
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
@@ -71,7 +72,7 @@ public class XmClient implements ClientModInitializer {
 				final Vec3 cameraPos = ctx.camera().getPosition();
 
 				OutlineRenderer.drawModelOutline(
-					ctx.matrixStack(),
+					ctx.poseStack(),
 					ctx.consumers().getBuffer(RenderType.lines()),
 					modelState,
 					blockPos.getX() - cameraPos.x,
