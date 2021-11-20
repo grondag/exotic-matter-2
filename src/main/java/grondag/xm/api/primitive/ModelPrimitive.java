@@ -20,25 +20,22 @@
 
 package grondag.xm.api.primitive;
 
-import java.util.Random;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.model.BlockModel.BlockInputContext;
+import io.vram.frex.api.model.ItemModel.ItemInputContext;
 
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -116,12 +113,12 @@ public interface ModelPrimitive<R extends BaseModelState<R, W>, W extends Mutabl
 	default void invalidateCache() { }
 
 	@Environment(EnvType.CLIENT)
-	default void emitBlockMesh(Mesh mesh, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-		context.meshConsumer().accept(mesh);
+	default void emitBlockMesh(Mesh mesh, BlockInputContext input, QuadSink output) {
+		mesh.outputTo(output);
 	}
 
 	@Environment(EnvType.CLIENT)
-	default void emitItemMesh(Mesh mesh, ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-		context.meshConsumer().accept(mesh);
+	default void emitItemMesh(Mesh mesh, ItemInputContext input, QuadSink output) {
+		mesh.outputTo(output);
 	}
 }

@@ -20,17 +20,12 @@
   "entrypoints": {
     "main": [ "grondag.xm.Xm" ],
     "client": [ "grondag.xm.XmClient" ],
-    "modmenu": [ "grondag.xm.ModMenuHelper" ],
-    "frex": [ "grondag.xm.target.XmFrexInitializer" ]
+    "modmenu": [ "grondag.xm.ModMenuHelper" ]
   },
   "mixins": [
 	  {
 	      "config": "xm.common.json",
 	      "environment": "*"
-	  },
-	  {
-	      "config": "xm.client.json",
-	      "environment": "client"
 	  }
   ],
   "depends": {

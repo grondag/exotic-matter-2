@@ -23,9 +23,9 @@ package grondag.xm.mesh;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import io.vram.bitkit.BitPacker32;
+import io.vram.sc.concurrency.IndexedInterner;
 
 import grondag.fermion.intstream.IntStream;
-import grondag.fermion.varia.IndexedInterner;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
@@ -50,11 +50,11 @@ class StaticEncoder {
 	public static final int INTEGER_WIDTH = 5;
 
 	public static XmSurface surface(IntStream stream, int baseAddress) {
-		return xmSurfaces.fromHandle(stream.get(baseAddress + SURFACE_OFFSET));
+		return xmSurfaces.fromIndex(stream.get(baseAddress + SURFACE_OFFSET));
 	}
 
 	public static void surface(IntStream stream, int baseAddress, XmSurface surface) {
-		stream.set(baseAddress + SURFACE_OFFSET, xmSurfaces.toHandle(surface));
+		stream.set(baseAddress + SURFACE_OFFSET, xmSurfaces.toIndex(surface));
 	}
 
 	public static float uvWrapDistance(IntStream stream, int baseAddress) {

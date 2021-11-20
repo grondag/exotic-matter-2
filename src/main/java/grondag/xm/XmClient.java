@@ -31,12 +31,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 
+import io.vram.frex.api.model.provider.ModelProviderRegistry;
 import io.vram.frex.api.renderloop.BlockOutlineListener;
 import io.vram.frex.api.renderloop.RenderReloadListener;
+import io.vram.frex.api.rendertype.BlockPresets;
 
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.modelstate.ModelState;
@@ -51,19 +51,19 @@ import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 import grondag.xm.render.OutlineRenderer;
 import grondag.xm.texture.XmTexturesImpl;
 
-// WIP: remove fabric deps
 @Internal
 public class XmClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		XmTexturesImpl.init();
-		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> new XmVariantProvider());
+
+		ModelProviderRegistry.registerVariantProvider(r -> new XmVariantProvider());
 		RenderReloadListener.register(XmClient::invalidate);
 		Packets.initializeClient();
 		AbstractPrimitiveModelState.useClientHandler();
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(XmPaintRegistryImpl.INSTANCE);
 
-		SidedHelper.RENDER_LAYER_REMAPPER = (b, s) -> BlockRenderLayerMap.INSTANCE.putBlock(b, ItemBlockRenderTypes.getChunkRenderType(s));
+		SidedHelper.RENDER_LAYER_REMAPPER = (b, s) -> BlockPresets.mapBlocks(ItemBlockRenderTypes.getChunkRenderType(s), b);
 		SidedHelper.RENDER_LAYER_REMAPS.forEach(SidedHelper.RENDER_LAYER_REMAPPER);
 		SidedHelper.RENDER_LAYER_REMAPS.clear();
 

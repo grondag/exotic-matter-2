@@ -38,7 +38,6 @@ import grondag.xm.Xm;
 import grondag.xm.XmConfig;
 import grondag.xm.render.OutlineRenderer;
 
-// WIP: Fabric deps
 @Internal
 public class ExcavationRenderer {
 	public final int id;

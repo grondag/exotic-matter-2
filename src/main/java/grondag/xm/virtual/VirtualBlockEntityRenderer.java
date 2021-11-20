@@ -31,7 +31,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-// WIP: Fabric dep
 @Environment(EnvType.CLIENT)
 @Internal
 public class VirtualBlockEntityRenderer implements BlockEntityRenderer<VirtualBlockEntityWithRenderer> {

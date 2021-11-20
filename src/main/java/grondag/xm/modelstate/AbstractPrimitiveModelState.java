@@ -44,18 +44,18 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
 import io.vram.bitkit.BitPacker32;
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.model.BlockModel.BlockInputContext;
+import io.vram.frex.api.model.ItemModel.ItemInputContext;
+import io.vram.frex.api.model.util.BakedModelUtil;
+import io.vram.frex.api.texture.SpriteFinder;
 
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.fermion.varia.Useful;
@@ -79,7 +79,6 @@ import grondag.xm.paint.XmPaintImpl;
 import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
 
-// WIP: Fabric deps
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Internal
 public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveModelState<V, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> extends AbstractModelState
@@ -721,14 +720,14 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-		primitive.emitBlockMesh(mesh(), blockView, state, pos, randomSupplier, context);
+	public void renderAsBlock(BlockInputContext input, QuadSink output) {
+		primitive.emitBlockMesh(mesh(), input, output);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-		primitive.emitItemMesh(mesh(), stack, randomSupplier, context);
+	public void renderAsItem(ItemInputContext input, QuadSink output) {
+		primitive.emitItemMesh(mesh(), input, output);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -745,8 +744,8 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 			mesh.forEach(q -> {
 				if (particleSprite == null) {
 					final SpriteFinder finder = SpriteFinder.get(TextureSetHelper.blockAtas());
-					particleSprite = finder.find(q, 0);
-					particleColorARBG = q.spriteColor(0, 0);
+					particleSprite = finder.find(q);
+					particleColorARBG = q.vertexColor(0);
 				}
 			});
 
@@ -781,7 +780,7 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 		List<BakedQuad>[] lists = quadLists;
 
 		if (lists == null) {
-			lists = ModelHelper.toQuadLists(mesh());
+			lists = BakedModelUtil.toQuadLists(mesh());
 			quadLists = lists;
 		}
 
@@ -805,16 +804,14 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 						return bakedQuads(state, face, random);
 					}
 
-					@Environment(EnvType.CLIENT)
 					@Override
-					public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-						AbstractPrimitiveModelState.this.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+					public void renderAsBlock(BlockInputContext input, QuadSink output) {
+						AbstractPrimitiveModelState.this.renderAsBlock(input, output);
 					}
 
-					@Environment(EnvType.CLIENT)
 					@Override
-					public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-						AbstractPrimitiveModelState.this.emitItemQuads(stack, randomSupplier, context);
+					public void renderAsItem(ItemInputContext input, QuadSink output) {
+						AbstractPrimitiveModelState.this.renderAsItem(input, output);
 					}
 				};
 

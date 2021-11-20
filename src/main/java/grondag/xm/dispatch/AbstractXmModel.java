@@ -27,13 +27,13 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
+import io.vram.frex.api.model.BlockItemModel;
+import io.vram.frex.api.model.util.BakedModelUtil;
 
 import grondag.xm.texture.TextureSetHelper;
 
 @Internal
-public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
+public abstract class AbstractXmModel implements BlockItemModel, BakedModel {
 	@Override
 	public ItemOverrides getOverrides() {
 		return ItemOverrideProxy.INSTANCE;
@@ -41,7 +41,7 @@ public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 
 	@Override
 	public ItemTransforms getTransforms() {
-		return ModelHelper.MODEL_TRANSFORM_BLOCK;
+		return BakedModelUtil.MODEL_TRANSFORM_BLOCK;
 	}
 
 	@Override
@@ -61,11 +61,6 @@ public abstract class AbstractXmModel implements BakedModel, FabricBakedModel {
 
 	@Override
 	public boolean isCustomRenderer() {
-		return false;
-	}
-
-	@Override
-	public boolean isVanillaAdapter() {
 		return false;
 	}
 

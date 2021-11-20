@@ -22,19 +22,19 @@ package grondag.xm.dispatch;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Registry;
 
-import net.fabricmc.fabric.api.client.model.ModelProviderContext;
-import net.fabricmc.fabric.api.client.model.ModelProviderException;
-import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
+import io.vram.frex.api.model.provider.ModelProvider;
+import io.vram.frex.api.model.provider.SubModelLoader;
 
 import grondag.xm.api.block.XmBlockState;
 
 @Internal
-public class XmVariantProvider implements ModelVariantProvider {
+public class XmVariantProvider implements ModelProvider<ModelResourceLocation> {
 	private final ObjectOpenHashSet<String> targets = new ObjectOpenHashSet<>();
 
 	public XmVariantProvider() {
@@ -54,7 +54,7 @@ public class XmVariantProvider implements ModelVariantProvider {
 	}
 
 	@Override
-	public UnbakedModel loadModelVariant(ModelResourceLocation modelId, ModelProviderContext context) throws ModelProviderException {
-		return targets.contains(modelId.getNamespace() + ":" + modelId.getPath()) ? XmModelProxy.INSTANCE : null;
+	public @Nullable UnbakedModel loadModel(ModelResourceLocation path, SubModelLoader subModelLoader) {
+		return targets.contains(path.getNamespace() + ":" + path.getPath()) ? XmModelProxy.INSTANCE : null;
 	}
 }

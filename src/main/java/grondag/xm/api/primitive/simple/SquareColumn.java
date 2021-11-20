@@ -30,8 +30,8 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 
 import io.vram.bitkit.BitPacker32;
+import io.vram.frex.api.model.util.ColorUtil;
 
-import grondag.fermion.color.Color;
 import grondag.fermion.orientation.api.FaceEdge;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
@@ -518,10 +518,10 @@ public class SquareColumn extends AbstractSimplePrimitive {
 
 		qi.setupFaceQuad(
 			qb.face,
-			new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, Color.WHITE, glow),
-			new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, Color.WHITE, glow),
-			new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, Color.WHITE, glow / 3),
-			new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, Color.WHITE, glow / 3),
+			new FaceVertex.Colored(qb.x0, qb.y0, qb.depth, ColorUtil.WHITE, glow),
+			new FaceVertex.Colored(qb.x1, qb.y0, qb.depth, ColorUtil.WHITE, glow),
+			new FaceVertex.Colored(qb.x1, qb.y1, qb.depth, ColorUtil.WHITE, glow / 3),
+			new FaceVertex.Colored(qb.x0, qb.y1, qb.depth, ColorUtil.WHITE, glow / 3),
 			qb.topFace
 		);
 

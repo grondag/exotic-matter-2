@@ -29,8 +29,6 @@ import net.fabricmc.api.Environment;
 
 import grondag.xm.api.paint.SurfaceTopology;
 
-// WIP: Fabric deps
-
 @Experimental
 public interface XmSurface {
 	int FLAG_NONE = 0;

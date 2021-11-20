@@ -26,12 +26,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
 import com.mojang.datafixers.util.Pair;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -42,19 +43,17 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import io.vram.frex.api.buffer.QuadSink;
 
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.item.XmItem;
 import grondag.xm.api.modelstate.MutableModelState;
 
-// WIP: fabric deps
 @Internal
 @Environment(EnvType.CLIENT)
 public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
@@ -69,21 +68,21 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 	}
 
 	@Override
-	public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-		final MutableModelState modelState = XmBlockState.modelState(state, blockView, pos, true);
+	public void renderAsBlock(BlockInputContext input, QuadSink output) {
+		final MutableModelState modelState = XmBlockState.modelState(input.blockState(), input.blockView(), input.pos(), true);
 
 		if (modelState != null) {
-			XmDispatcher.INSTANCE.get(modelState).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+			XmDispatcher.INSTANCE.get(modelState).renderAsBlock(input, output);
 			modelState.release();
 		}
 	}
 
 	@Override
-	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-		final MutableModelState modelState = XmItem.modelState(stack);
+	public void renderAsItem(ItemInputContext input, QuadSink output) {
+		final MutableModelState modelState = XmItem.modelState(input.itemStack());
 
 		if (modelState != null) {
-			XmDispatcher.INSTANCE.get(modelState).emitItemQuads(stack, randomSupplier, context);
+			XmDispatcher.INSTANCE.get(modelState).renderAsItem(input, output);
 			modelState.release();
 		}
 	}
@@ -101,5 +100,17 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 	@Override
 	public BakedModel bake(ModelBakery var1, Function<Material, TextureAtlasSprite> var2, ModelState var3, ResourceLocation modelId) {
 		return this;
+	}
+
+	@Override
+	public void onNewTerrainParticle(@Nullable ClientLevel clientLevel, BlockState blockState, @Nullable BlockPos blockPos, TerrainParticleDelegate delegate) {
+		final MutableModelState lookupState = XmBlockState.modelState(blockState, clientLevel, blockPos, false);
+
+		if (lookupState != null) {
+			final var renderState = XmDispatcher.INSTANCE.get(lookupState);
+			lookupState.release();
+			delegate.setModelParticleSprite(renderState.particleSprite());
+			delegate.setModelParticleColor(renderState.particleColorARBG());
+		}
 	}
 }

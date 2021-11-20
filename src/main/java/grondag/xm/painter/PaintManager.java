@@ -30,13 +30,13 @@ import net.minecraft.util.Mth;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.Renderer;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+
+import io.vram.frex.api.buffer.QuadEmitter;
+import io.vram.frex.api.material.MaterialConstants;
+import io.vram.frex.api.material.MaterialFinder;
+import io.vram.frex.api.mesh.Mesh;
+import io.vram.frex.api.mesh.MeshBuilder;
+import io.vram.frex.api.renderer.Renderer;
 
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.MutableMesh;
@@ -44,35 +44,38 @@ import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
+import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
-import grondag.xm.target.RenderTarget;
 import grondag.xm.texture.TextureSetHelper;
 
-// WIP: Fabric/FREX Dep
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("rawtypes")
 @Internal
 public class PaintManager implements Consumer<Polygon> {
 	private static final ThreadLocal<PaintManager> POOL = ThreadLocal.withInitial(PaintManager::new);
 
-	private static final Renderer RENDERER = RendererAccess.INSTANCE.getRenderer();
+	private static final int[] BLEND_MODES = new int[MaterialConstants.PRESET_COUNT];
 
-	private static final boolean FREX_ACTIVE = RenderTarget.instance().isFrex();
-
-	private static final BlendMode[] BLEND_MODES = BlendMode.values();
+	static {
+		BLEND_MODES[PaintBlendMode.DEFAULT.ordinal()] = MaterialConstants.PRESET_DEFAULT;
+		BLEND_MODES[PaintBlendMode.SOLID.ordinal()] = MaterialConstants.PRESET_SOLID;
+		BLEND_MODES[PaintBlendMode.CUTOUT.ordinal()] = MaterialConstants.PRESET_CUTOUT;
+		BLEND_MODES[PaintBlendMode.CUTOUT_MIPPED.ordinal()] = MaterialConstants.PRESET_CUTOUT_MIPPED;
+		BLEND_MODES[PaintBlendMode.TRANSLUCENT.ordinal()] = MaterialConstants.PRESET_TRANSLUCENT;
+	}
 
 	public static Mesh paint(BaseModelState meshState) {
 		return POOL.get().handlePaint(meshState);
 	}
 
-	private final MeshBuilder builder = RENDERER.meshBuilder();
+	private final MeshBuilder builder = Renderer.get().meshBuilder();
 	private final MutableMesh work = XmMeshes.claimMutable();
 	private final QuadEmitter emitter = builder.getEmitter();
 	private BaseModelState modelState;
-	private final MaterialFinder finder = RENDERER.materialFinder();
+	private final MaterialFinder finder = MaterialFinder.newInstance();
 
 	private Mesh handlePaint(BaseModelState modelState) {
 		this.modelState = modelState;
@@ -84,7 +87,6 @@ public class PaintManager implements Consumer<Polygon> {
 	@Override
 	public void accept(Polygon poly) {
 		final BaseModelState modelState = this.modelState;
-		final QuadEmitter emitter = this.emitter;
 		final MutableMesh mesh = work;
 		final MutablePolygon editor = mesh.editor();
 
@@ -93,7 +95,6 @@ public class PaintManager implements Consumer<Polygon> {
 		XmSurface surface = poly.surface();
 
 		if (surface == null) {
-			//TODO: remove
 			Xm.LOG.info("Encountered null surface during paint, using default surface");
 			surface = modelState.primitive().surfaces(modelState).get(0);
 		}
@@ -104,7 +105,6 @@ public class PaintManager implements Consumer<Polygon> {
 		editor.origin();
 
 		if (editor.vertexCount() > 4) {
-			//TODO: remove
 			Xm.LOG.info("Encountered higher-order polygon during paint. Bad primitive output.");
 		}
 
@@ -169,27 +169,17 @@ public class PaintManager implements Consumer<Polygon> {
 			if (!editor.spriteName(0).isEmpty()) {
 				final int layerCount = editor.spriteName(1).isEmpty() ? 1 : editor.spriteName(2).isEmpty() ? 2 : 3;
 				editor.spriteDepth(layerCount);
-				polyToMesh(editor, emitter);
+				polyToMesh(editor);
 			}
 		} while (editor.next());
 	}
 
-	private void polyToMesh(MutablePolygon poly, QuadEmitter emitter) {
-		if (FREX_ACTIVE) {
-			polyToMeshFrex(poly, emitter);
-		} else {
-			polyToMeshIndigo(poly, emitter);
-		}
-	}
-
-	private void polyToMeshFrex(MutablePolygon poly, QuadEmitter emitterIn) {
+	private void polyToMesh(MutablePolygon poly) {
 		final int depth = poly.spriteDepth();
-		final grondag.frex.api.mesh.QuadEmitter emitter = (grondag.frex.api.mesh.QuadEmitter) emitterIn;
-		final grondag.frex.api.material.MaterialFinder finder = (grondag.frex.api.material.MaterialFinder) this.finder;
 
 		finder
 			.clear()
-			.blendMode(BLEND_MODES[poly.blendMode().ordinal()])
+			.preset(BLEND_MODES[poly.blendMode().ordinal()])
 			.emissive(poly.emissive(0))
 			.disableAo(poly.disableAo(0))
 			.disableDiffuse(poly.disableDiffuse(0));
@@ -203,7 +193,7 @@ public class PaintManager implements Consumer<Polygon> {
 
 			finder
 				.clear()
-				.blendMode(BlendMode.TRANSLUCENT)
+				.preset(MaterialConstants.PRESET_TRANSLUCENT)
 				.emissive(poly.emissive(1))
 				.disableAo(poly.disableAo(1))
 				.disableDiffuse(poly.disableDiffuse(1));
@@ -216,7 +206,7 @@ public class PaintManager implements Consumer<Polygon> {
 
 				finder
 					.clear()
-					.blendMode(BlendMode.TRANSLUCENT)
+					.preset(MaterialConstants.PRESET_TRANSLUCENT)
 					.emissive(poly.emissive(2))
 					.disableAo(poly.disableAo(2))
 					.disableDiffuse(poly.disableDiffuse(2));
@@ -227,7 +217,7 @@ public class PaintManager implements Consumer<Polygon> {
 		}
 	}
 
-	private static void outputFrexQuad(MutablePolygon poly, grondag.frex.api.mesh.QuadEmitter emitter, int spriteIndex) {
+	private static void outputFrexQuad(MutablePolygon poly, QuadEmitter emitter, int spriteIndex) {
 		emitter.cullFace(poly.cullFace());
 		emitter.nominalFace(poly.nominalFace());
 		emitter.tag(poly.tag());
@@ -245,77 +235,9 @@ public class PaintManager implements Consumer<Polygon> {
 				emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
 			}
 
-			emitter.sprite(v, poly.u(v, spriteIndex), poly.v(v, spriteIndex));
+			// PERF: use normalized coordinates
+			emitter.uv(v, poly.u(v, spriteIndex), poly.v(v, spriteIndex));
 			emitter.vertexColor(v, poly.color(v, spriteIndex));
-		}
-
-		emitter.emit();
-	}
-
-	private void polyToMeshIndigo(MutablePolygon poly, QuadEmitter emitter) {
-		final int depth = poly.spriteDepth();
-		final MaterialFinder finder = this.finder;
-
-		finder
-			.clear()
-			.blendMode(0, BLEND_MODES[poly.blendMode().ordinal()])
-			.emissive(0, poly.emissive(0))
-			.disableAo(0, poly.disableAo(0))
-			.disableDiffuse(0, poly.disableDiffuse(0));
-
-		bakeSprite(0, poly);
-		emitter.material(finder.find());
-		outputIndigoQuad(poly, emitter, 0);
-
-		if (depth > 1) {
-			bakeSprite(1, poly);
-
-			finder
-				.clear()
-				.blendMode(0, BlendMode.TRANSLUCENT)
-				.emissive(0, poly.emissive(1))
-				.disableAo(0, poly.disableAo(1))
-				.disableDiffuse(0, poly.disableDiffuse(1));
-
-			emitter.material(finder.find());
-			outputIndigoQuad(poly, emitter, 1);
-
-			if (depth == 3) {
-				bakeSprite(2, poly);
-
-				finder
-					.clear()
-					.blendMode(0, BlendMode.TRANSLUCENT)
-					.emissive(0, poly.emissive(2))
-					.disableAo(0, poly.disableAo(2))
-					.disableDiffuse(0, poly.disableDiffuse(2));
-
-				emitter.material(finder.find());
-				outputIndigoQuad(poly, emitter, 2);
-			}
-		}
-	}
-
-	private static void outputIndigoQuad(MutablePolygon poly, QuadEmitter emitter, int spriteIndex) {
-		emitter.cullFace(poly.cullFace());
-		emitter.nominalFace(poly.nominalFace());
-		emitter.tag(poly.tag());
-
-		for (int v = 0; v < 4; v++) {
-			emitter.pos(v, poly.x(v), poly.y(v), poly.z(v));
-
-			final int g = poly.glow(v);
-
-			if (g > 0) {
-				emitter.lightmap(v, g);
-			}
-
-			if (poly.hasNormal(v)) {
-				emitter.normal(v, poly.normalX(v), poly.normalY(v), poly.normalZ(v));
-			}
-
-			emitter.sprite(v, 0, poly.u(v, spriteIndex), poly.v(v, spriteIndex));
-			emitter.spriteColor(v, 0, poly.color(v, spriteIndex));
 		}
 
 		emitter.emit();

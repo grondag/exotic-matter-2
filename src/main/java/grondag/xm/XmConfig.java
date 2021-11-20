@@ -37,6 +37,7 @@ import net.fabricmc.loader.api.FabricLoader;
 public class XmConfig {
 	public static class ConfigData {
 		// DEBUG
+		@SuppressWarnings("hiding")
 		@Comment("Draw detailed collision boxes normally rendered by vanilla. Can be ugly - useful for debugging.")
 		public boolean debugCollisionBoxes = false;
 	}

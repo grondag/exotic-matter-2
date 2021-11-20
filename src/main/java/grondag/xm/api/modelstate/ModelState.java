@@ -23,30 +23,28 @@ package grondag.xm.api.modelstate;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.model.BlockModel.BlockInputContext;
+import io.vram.frex.api.model.ItemModel.ItemInputContext;
 
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.primitive.ModelPrimitiveRegistryImpl;
 
-// WIP: remove Fabric deps
 @Experimental
 public interface ModelState {
 	MutableModelState mutableCopy();
@@ -93,10 +91,10 @@ public interface ModelState {
 	int particleColorARBG();
 
 	@Environment(EnvType.CLIENT)
-	void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context);
+	void renderAsBlock(BlockInputContext input, QuadSink output);
 
 	@Environment(EnvType.CLIENT)
-	void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context);
+	void renderAsItem(ItemInputContext input, QuadSink output);
 
 	@Environment(EnvType.CLIENT)
 	BakedModel itemProxy();

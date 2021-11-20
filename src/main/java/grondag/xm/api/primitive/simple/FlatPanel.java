@@ -26,7 +26,8 @@ import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.core.Direction;
 
-import grondag.fermion.color.Color;
+import io.vram.frex.api.model.util.ColorUtil;
+
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
@@ -129,10 +130,10 @@ public class FlatPanel {
 		poly.surface(SURFACE_INNER);
 
 		poly.setupFaceQuad(face,
-			new FaceVertex.Colored(x0, y0, depth, Color.WHITE, 0),
-			new FaceVertex.Colored(x1, y0, depth, Color.WHITE, 0),
-			new FaceVertex.Colored(x1, y1, depth, Color.WHITE, 0),
-			new FaceVertex.Colored(x0, y1, depth, Color.WHITE, 0),
+			new FaceVertex.Colored(x0, y0, depth, ColorUtil.WHITE, 0),
+			new FaceVertex.Colored(x1, y0, depth, ColorUtil.WHITE, 0),
+			new FaceVertex.Colored(x1, y1, depth, ColorUtil.WHITE, 0),
+			new FaceVertex.Colored(x0, y1, depth, ColorUtil.WHITE, 0),
 			topFace
 		);
 

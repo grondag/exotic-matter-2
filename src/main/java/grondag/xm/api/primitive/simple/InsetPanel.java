@@ -27,7 +27,8 @@ import org.jetbrains.annotations.ApiStatus.Experimental;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 
-import grondag.fermion.color.Color;
+import io.vram.frex.api.model.util.ColorUtil;
+
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.CornerJoinFaceState;
@@ -135,10 +136,10 @@ public class InsetPanel {
 		poly.surface(SURFACE_CUT);
 
 		poly.setupFaceQuad(face,
-			new FaceVertex.Colored(x0, y0, depth, Color.WHITE, glow),
-			new FaceVertex.Colored(x1, y0, depth, Color.WHITE, glow),
-			new FaceVertex.Colored(x1, y1, depth, Color.WHITE, glow / 3),
-			new FaceVertex.Colored(x0, y1, depth, Color.WHITE, glow / 3),
+			new FaceVertex.Colored(x0, y0, depth, ColorUtil.WHITE, glow),
+			new FaceVertex.Colored(x1, y0, depth, ColorUtil.WHITE, glow),
+			new FaceVertex.Colored(x1, y1, depth, ColorUtil.WHITE, glow / 3),
+			new FaceVertex.Colored(x0, y1, depth, ColorUtil.WHITE, glow / 3),
 			topFace
 		);
 

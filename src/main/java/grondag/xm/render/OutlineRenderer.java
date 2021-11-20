@@ -31,17 +31,12 @@ import com.mojang.math.Matrix4f;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
-
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMeshes;
 import grondag.xm.api.modelstate.ModelState;
 
 @Internal
 public class OutlineRenderer {
-	public static final BlendMode[] RENDER_LAYERS = BlendMode.values();
-	public static final int RENDER_LAYER_COUNT = RENDER_LAYERS.length;
-
 	private static ModelState outlineModelState = null;
 	private static final WritableMesh outlineMesh = XmMeshes.claimWritable();
 

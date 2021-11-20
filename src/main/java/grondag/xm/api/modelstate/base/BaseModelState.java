@@ -23,22 +23,21 @@ package grondag.xm.api.modelstate.base;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
+import io.vram.frex.api.buffer.QuadSink;
+import io.vram.frex.api.model.BlockModel.BlockInputContext;
+import io.vram.frex.api.model.ItemModel.ItemInputContext;
 
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.connect.state.CornerJoinState;
@@ -50,7 +49,6 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 
-// WIP: remove Fabric deps
 @Experimental
 public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> extends ModelState {
 	BaseModelStateFactory<R, W> factory();
@@ -152,9 +150,9 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context);
+	void renderAsBlock(BlockInputContext input, QuadSink output);
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context);
+	void renderAsItem(ItemInputContext input, QuadSink output);
 }

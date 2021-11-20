@@ -59,8 +59,9 @@ import static grondag.xm.mesh.MeshFormat.polyFormatKey;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 
+import io.vram.sc.concurrency.IndexedInterner;
+
 import grondag.fermion.intstream.IntStream;
-import grondag.fermion.varia.IndexedInterner;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.mesh.EncoderFunctions.FloatGetter;
@@ -467,11 +468,11 @@ class PolyEncoder {
 		final int handle = layerIndex == 0 ? getTexture0.get(stream, baseAddress + textureOffset01)
 				: layerIndex == 1 ? getTexture1.get(stream, baseAddress + textureOffset01) : getTexture2.get(stream, baseAddress + textureOffset2);
 
-		return handle == 0 ? "" : textureHandler.fromHandle(handle);
+		return handle == 0 ? "" : textureHandler.fromIndex(handle);
 	}
 
 	public final void setTextureName(IntStream stream, int baseAddress, int layerIndex, String textureName) {
-		final int handle = textureName == null || textureName.isEmpty() ? 0 : textureHandler.toHandle(textureName);
+		final int handle = textureName == null || textureName.isEmpty() ? 0 : textureHandler.toIndex(textureName);
 
 		if (layerIndex == 0) {
 			setTexture0.set(stream, baseAddress + textureOffset01, handle);
