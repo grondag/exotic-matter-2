@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.painter;
 
 import static grondag.xm.api.texture.TextureNameFunction.BORDER_CORNERS_ALL;
@@ -31,6 +36,9 @@ import static grondag.xm.api.texture.TextureNameFunction.BORDER_SIDES_TOP_RIGHT;
 import static grondag.xm.api.texture.TextureNameFunction.BORDER_SIDE_TOP;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.core.Direction;
+
 import grondag.xm.api.connect.state.CornerJoinFaceStates;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.mesh.MutableMesh;
@@ -40,16 +48,15 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
 import grondag.xm.api.texture.TextureSet;
-import net.minecraft.core.Direction;
 
 @Internal
 public abstract class CubicPainterBorders extends AbstractQuadPainter {
-	protected final static FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[6][CornerJoinFaceStates.COUNT];
+	protected static final FaceQuadInputs[][] FACE_INPUTS = new FaceQuadInputs[6][CornerJoinFaceStates.COUNT];
 	/**
 	 * Used only when a border is rendered in the solid layer. Declared at module
 	 * level so that we can check for it.
 	 */
-	private final static FaceQuadInputs NO_BORDER = new FaceQuadInputs(BORDER_NONE, TextureOrientation.IDENTITY, false, false);
+	private static final FaceQuadInputs NO_BORDER = new FaceQuadInputs(BORDER_NONE, TextureOrientation.IDENTITY, false, false);
 
 	static {
 		for (final Direction face : Direction.values()) {
@@ -157,8 +164,8 @@ public abstract class CubicPainterBorders extends AbstractQuadPainter {
 	@SuppressWarnings("rawtypes")
 	public static void paintQuads(MutableMesh stream, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex) {
 		final MutablePolygon editor = stream.editor();
-		do {
 
+		do {
 			final CornerJoinState bjs = modelState.cornerJoin();
 			final Direction face = editor.nominalFace();
 			final FaceQuadInputs inputs = FACE_INPUTS[face.ordinal()][bjs.faceState(face).ordinal()];
@@ -187,7 +194,6 @@ public abstract class CubicPainterBorders extends AbstractQuadPainter {
 			editor.sprite(textureIndex, tex.textureName(textureVersionForFace(face, tex, modelState), inputs.textureOffset));
 
 			commonPostPaint(editor, modelState, surface, paint, textureIndex);
-
 		} while (editor.next());
 	}
 }

@@ -1,19 +1,25 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.mesh;
+
 /**
  * Portions reproduced or adapted from JCSG.
  * Copyright 2014-2014 Michael Hoffer <info@michaelhoffer.de>. All rights
@@ -242,11 +248,12 @@ public abstract class Csg {
 	@SuppressWarnings("unused")
 	private static boolean outputDisjointA(CsgMesh a, CsgMesh b, WritableMesh output) {
 		final Polygon aReader = a.reader();
+
 		if (aReader.origin()) {
-			if (b.reader().origin())
+			if (b.reader().origin()) {
 				// nominal case
 				return outputDisjointAInner(a, b, output);
-			else {
+			} else {
 				// B is empty, A is not, therefore output all of A and return false
 
 				do {
@@ -255,9 +262,10 @@ public abstract class Csg {
 				} while (aReader.next());
 				return false;
 			}
-		} else
+		} else {
 			// A already empty
 			return false;
+		}
 	}
 
 	/**
@@ -278,10 +286,13 @@ public abstract class Csg {
 		// scoping
 		{
 			final Polygon bReader = b.reader();
+
 			do {
 				final int vCount = bReader.vertexCount();
+
 				for (int i = 1; i < vCount; i++) {
 					final float x = bReader.x(i);
+
 					if (x < bMinX) {
 						bMinX = x;
 					} else if (x > bMaxX) {
@@ -289,6 +300,7 @@ public abstract class Csg {
 					}
 
 					final float y = bReader.y(i);
+
 					if (y < bMinY) {
 						bMinY = y;
 					} else if (y > bMaxY) {
@@ -296,6 +308,7 @@ public abstract class Csg {
 					}
 
 					final float z = bReader.z(i);
+
 					if (z < bMinZ) {
 						bMinZ = z;
 					} else if (z > bMaxZ) {
@@ -306,6 +319,7 @@ public abstract class Csg {
 		}
 
 		final Polygon aReader = a.reader();
+
 		do {
 			// Note we don't do a point-by-point test here
 			// and instead compute a bounding box for the polygon.
@@ -322,8 +336,10 @@ public abstract class Csg {
 			float pMaxZ = pMinZ;
 
 			final int vCount = aReader.vertexCount();
+
 			for (int i = 1; i < vCount; i++) {
 				final float x = aReader.x(i);
+
 				if (x < pMinX) {
 					pMinX = x;
 				} else if (x > pMaxX) {
@@ -331,6 +347,7 @@ public abstract class Csg {
 				}
 
 				final float y = aReader.y(i);
+
 				if (y < pMinY) {
 					pMinY = y;
 				} else if (y > pMaxY) {
@@ -338,6 +355,7 @@ public abstract class Csg {
 				}
 
 				final float z = aReader.z(i);
+
 				if (z < pMinZ) {
 					pMinZ = z;
 				} else if (z > pMaxZ) {

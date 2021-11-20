@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.modelstate.base;
 
 import java.util.List;
@@ -21,9 +26,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,6 +35,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.connect.state.CornerJoinState;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -42,9 +50,9 @@ import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.ModelPrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 
+// WIP: remove Fabric deps
 @Experimental
-public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> extends ModelState {
-
+public interface BaseModelState<R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> extends ModelState {
 	BaseModelStateFactory<R, W> factory();
 
 	@Override
@@ -54,7 +62,7 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	W mutableCopy();
 
 	/**
-	 * Does NOT consider isStatic in comparison.<p>
+	 * Does NOT consider isStatic in comparison.
 	 *
 	 * {@inheritDoc}
 	 */
@@ -149,6 +157,4 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 	@Override
 	@Environment(EnvType.CLIENT)
 	void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context);
-
-
 }

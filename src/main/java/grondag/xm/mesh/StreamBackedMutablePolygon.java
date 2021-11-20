@@ -1,21 +1,30 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.mesh;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+
 import grondag.fermion.color.ColorHelper;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.Polygon;
@@ -23,8 +32,6 @@ import grondag.xm.api.mesh.polygon.Vec3f;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 
 @Internal
 class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutablePolygon {
@@ -84,6 +91,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		final UVLocker locker = UVLOCKERS[nominalFace().ordinal()];
 
 		final int vertexCount = vertexCount();
+
 		for (int i = 0; i < vertexCount; i++) {
 			locker.apply(i, layerIndex, this);
 		}
@@ -127,9 +135,11 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 	@Override
 	public final MutablePolygon spriteDepth(int layerCount) {
 		final int format = format();
+
 		if (!MeshFormat.isMutable(format)) {
 			throw new UnsupportedOperationException("Cannot change layer count on immutable polygon");
 		}
+
 		setFormat(MeshFormat.setLayerCount(format, layerCount));
 		return this;
 	}
@@ -181,6 +191,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		} else {
 			polyEncoder.setVertexColor(stream, baseAddress, layerIndex, color);
 		}
+
 		return this;
 	}
 
@@ -235,6 +246,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 				vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), normal.x(), normal.y(), normal.z());
 			}
 		}
+
 		return this;
 	}
 
@@ -243,6 +255,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		if (vertexEncoder.hasNormals()) {
 			vertexEncoder.setVertexNormal(stream, vertexAddress, vertexIndexer.applyAsInt(vertexIndex), x, y, z);
 		}
+
 		return this;
 	}
 
@@ -304,6 +317,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		// do for all vertices even if all the same - slightly wasteful but fewer logic
 		// paths
 		color(targetIndex, 0, source.color(sourceIndex, 0));
+
 		if (layerCount > 1) {
 			color(targetIndex, 1, source.color(sourceIndex, 1));
 
@@ -313,6 +327,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		}
 
 		uv(targetIndex, 0, source.u(sourceIndex, 0), source.v(sourceIndex, 0));
+
 		if (vertexEncoder.multiUV() && layerCount > 1) {
 			uv(targetIndex, 1, source.u(sourceIndex, 1), source.v(sourceIndex, 1));
 
@@ -328,7 +343,8 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 	public MutablePolygon copyInterpolatedVertexFrom(int targetIndex, Polygon from, int fromIndex, Polygon to, int toIndex, float toWeight) {
 		final int layerCount = from.spriteDepth();
 		assert layerCount == to.spriteDepth();
-		if(this.spriteDepth() < layerCount) {
+
+		if (this.spriteDepth() < layerCount) {
 			this.spriteDepth(layerCount);
 		}
 
@@ -338,7 +354,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 				Mth.lerp(toWeight, from.z(fromIndex), to.z(toIndex)));
 
 		final int fromGlow = from.glow(fromIndex);
-		this.glow(targetIndex, (int)(fromGlow + (to.glow(toIndex) - fromGlow) * toWeight));
+		this.glow(targetIndex, (int) (fromGlow + (to.glow(toIndex) - fromGlow) * toWeight));
 
 		if (from.hasNormal(fromIndex) && to.hasNormal(toIndex)) {
 			final float normX = Mth.lerp(toWeight, from.normalX(fromIndex), to.normalX(toIndex));
@@ -379,6 +395,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		cullFace(polyIn.cullFace());
 
 		final int faceNormalFormat = MeshFormat.getFaceNormalFormat(format());
+
 		if (faceNormalFormat == MeshFormat.FACE_NORMAL_FORMAT_COMPUTED) {
 			clearFaceNormal();
 		} else if (faceNormalFormat == MeshFormat.FACE_NORMAL_FORMAT_QUANTIZED) {
@@ -386,6 +403,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		}
 
 		final int layerCount = polyIn.spriteDepth();
+
 		if (spriteDepth() < layerCount) {
 			spriteDepth(layerCount);
 		}
@@ -411,6 +429,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
 		if (includeVertices) {
 			final int vertexCount = polyIn.vertexCount();
+
 			if (vertexCount() == vertexCount) {
 				for (int i = 0; i < vertexCount; i++) {
 					copyVertexFrom(i, polyIn, i);
@@ -419,6 +438,7 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 				throw new UnsupportedOperationException("Polygon vertex counts must match when copying vertex data.");
 			}
 		}
+
 		return this;
 	}
 
@@ -437,17 +457,17 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 		final int midPoint = (vCount + 1) / 2;
 		nominalFace(nominalFace().getOpposite());
 
-		for(int low = 0; low < midPoint; low++) {
+		for (int low = 0; low < midPoint; low++) {
 			final int high = vCount - low - 1;
 
 			// flip low vertex normal, or mid-point on odd-numbered polys
-			if(hasNormal(low)) {
+			if (hasNormal(low)) {
 				normal(low, -normalX(low), -normalY(low), -normalZ(low));
 			}
 
-			if(low != high) {
+			if (low != high) {
 				// flip high vertex normal
-				if(hasNormal(high)) {
+				if (hasNormal(high)) {
 					normal(high, -normalX(high), -normalY(high), -normalZ(high));
 				}
 
@@ -457,16 +477,20 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 				final float z = z(low);
 				final boolean hasNormal = hasNormal(low);
 				float normX = 0, normY = 0, normZ = 0;
-				if(hasNormal) {
+
+				if (hasNormal) {
 					normX = normalX(low);
 					normY = normalY(low);
 					normZ = normalZ(low);
 				}
+
 				final boolean doGlow = glowEncoder.glowFormat() == MeshFormat.VERTEX_GLOW_PER_VERTEX;
 				int glow = 0;
-				if(doGlow) {
+
+				if (doGlow) {
 					glow = glow(low);
 				}
+
 				final int color0 = color(low, 0);
 				final float u0 = u(low, 0);
 				final float v0 = u(low, 0);
@@ -474,34 +498,41 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 				int color1 = 0, color2 = 0;
 				float u1 = 0, u2 = 0, v1 = 0, v2 = 0;
 				final int depth = spriteDepth();
-				if(depth > 1) {
+
+				if (depth > 1) {
 					color1 = color(low, 1);
 					u1 = u(low, 1);
 					v1 = u(low, 1);
-					if(depth == 3) {
+
+					if (depth == 3) {
 						color2 = color(low, 2);
 						u2 = u(low, 2);
 						v2 = u(low, 2);
 					}
 				}
+
 				copyVertexFrom(low, this, high);
 
 				pos(high, x, y, z);
-				if(hasNormal) {
+
+				if (hasNormal) {
 					normal(high, normX, normY, normZ);
 				} else {
 					normal(high, null);
 				}
-				if(doGlow) {
+
+				if (doGlow) {
 					glow(high, glow);
 				}
+
 				uv(high, 0, u0, v0);
 				color(high, 0, color0);
 
-				if(depth > 1) {
+				if (depth > 1) {
 					uv(high, 1, u1, v1);
 					color(high, 1, color1);
-					if(depth == 3) {
+
+					if (depth == 3) {
 						uv(high, 2, u2, v2);
 						color(high, 2, color2);
 					}
@@ -557,25 +588,25 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
 	@Override
 	public MutablePolygon append() {
-		((WritableMeshImpl)mesh).append();
+		((WritableMeshImpl) mesh).append();
 		return this;
 	}
 
 	@Override
 	public MutablePolygon saveDefaults() {
-		((WritableMeshImpl)mesh).saveDefaults();
+		((WritableMeshImpl) mesh).saveDefaults();
 		return this;
 	}
 
 	@Override
 	public MutablePolygon clearDefaults() {
-		((WritableMeshImpl)mesh).clearDefaults();
+		((WritableMeshImpl) mesh).clearDefaults();
 		return this;
 	}
 
 	@Override
 	public MutablePolygon loadDefaults() {
-		((WritableMeshImpl)mesh).loadDefaults();
+		((WritableMeshImpl) mesh).loadDefaults();
 		return this;
 	}
 
@@ -587,6 +618,6 @@ class StreamBackedMutablePolygon extends StreamBackedPolygon implements MutableP
 
 	@Override
 	public boolean splitIfNeeded() {
-		return ((WritableMeshImpl)mesh).splitIfNeeded(address()) != Polygon.NO_LINK_OR_TAG;
+		return ((WritableMeshImpl) mesh).splitIfNeeded(address()) != Polygon.NO_LINK_OR_TAG;
 	}
 }

@@ -1,27 +1,34 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
 
 package grondag.xm.paint;
 
 import java.io.Reader;
 import java.util.Locale;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.VertexProcessorRegistry;
 import grondag.xm.api.paint.XmPaintFinder;
@@ -34,13 +41,17 @@ class PaintDeserializer {
 
 		if (json.has("layers")) {
 			final JsonArray layers = GsonHelper.convertToJsonArray(json.get("layers"), "layers");
-			if(!layers.isJsonNull()) {
+
+			if (!layers.isJsonNull()) {
 				final int depth = layers.size();
-				if(depth > 3) {
+
+				if (depth > 3) {
 					return null;
 				}
+
 				finder.textureDepth(depth);
-				for(int i = 0; i < depth; i++) {
+
+				for (int i = 0; i < depth; i++) {
 					readLayer(layers.get(i).getAsJsonObject(), finder, i);
 				}
 			}
@@ -85,16 +96,16 @@ class PaintDeserializer {
 
 	private static PaintBlendMode readBlendMode(String val) {
 		val = val.toLowerCase(Locale.ROOT);
-		switch(val) {
-		case "solid":
-		default:
-			return PaintBlendMode.SOLID;
-		case "cutout":
-			return PaintBlendMode.CUTOUT;
-		case "cutout_mipped":
-			return PaintBlendMode.CUTOUT_MIPPED;
-		case "translucent":
-			return PaintBlendMode.TRANSLUCENT;
+		switch (val) {
+			case "solid":
+			default:
+				return PaintBlendMode.SOLID;
+			case "cutout":
+				return PaintBlendMode.CUTOUT;
+			case "cutout_mipped":
+				return PaintBlendMode.CUTOUT_MIPPED;
+			case "translucent":
+				return PaintBlendMode.TRANSLUCENT;
 		}
 	}
 

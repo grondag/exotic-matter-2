@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.virtual;
 
 import java.util.Collections;
@@ -57,7 +62,7 @@ public class ExcavationRenderEntry {
 
 	private boolean isFirstComputeDone = false;
 
-	/** Non-null if should render individual renderPositions instead of AABB */
+	/** Non-null if should render individual renderPositions instead of AABB. */
 	@Nullable
 	private BlockPos[] renderPositions = null;
 
@@ -72,12 +77,10 @@ public class ExcavationRenderEntry {
 	/**
 	 * If true, has changed after the start of the last computation. Cleared at
 	 * start of computation run.
-	 * <p>
 	 *
-	 * If dirty when computation completes, computation will resubmit self to queue
+	 * <p>If dirty when computation completes, computation will resubmit self to queue
 	 * for recomputation.
-	 * <p>
-	 *
+
 	 * If becomes dirty while computation not in progress, {@link #setDirty()} will
 	 * submit for computation.
 	 */
@@ -94,6 +97,7 @@ public class ExcavationRenderEntry {
 
 		synchronized (xCounts) {
 			AtomicInteger xCounter = xCounts.get(pos.getX());
+
 			if (xCounter == null) {
 				xCounter = new AtomicInteger(1);
 				xCounts.put(pos.getX(), xCounter);
@@ -104,6 +108,7 @@ public class ExcavationRenderEntry {
 
 		synchronized (yCounts) {
 			AtomicInteger yCounter = yCounts.get(pos.getY());
+
 			if (yCounter == null) {
 				yCounter = new AtomicInteger(1);
 				yCounts.put(pos.getY(), yCounter);
@@ -114,6 +119,7 @@ public class ExcavationRenderEntry {
 
 		synchronized (zCounts) {
 			AtomicInteger zCounter = zCounts.get(pos.getZ());
+
 			if (zCounter == null) {
 				zCounter = new AtomicInteger(1);
 				zCounts.put(pos.getZ(), zCounter);
@@ -124,7 +130,7 @@ public class ExcavationRenderEntry {
 	}
 
 	/**
-	 * Returns true if any dimension had a count drop to zero
+	 * Returns true if any dimension had a count drop to zero.
 	 */
 	private boolean removePos(BlockPos pos) {
 		positions.remove(pos);
@@ -135,7 +141,7 @@ public class ExcavationRenderEntry {
 	}
 
 	/**
-	 * For server side
+	 * For server side.
 	 */
 	public ExcavationRenderEntry(ExcavationRenderTask task) {
 		id = nextID++;
@@ -154,11 +160,13 @@ public class ExcavationRenderEntry {
 			if (XmConfig.logExcavationRenderTracking) {
 				Xm.LOG.info("id = %d new Entry constructor - invalid", id);
 			}
+
 			isValid = false;
 		} else {
 			if (XmConfig.logExcavationRenderTracking) {
 				Xm.LOG.info("id = %d new Entry constructor - launching compute", id);
 			}
+
 			ExcavationRenderEntry.this.compute();
 		}
 	}
@@ -166,6 +174,7 @@ public class ExcavationRenderEntry {
 	public void onPositionComplete(BlockPos pos) {
 		final boolean needsCompute = removePos(pos);
 		isValid = isValid && positions.size() > 0;
+
 		if (isValid) {
 			if (needsCompute) {
 				setDirty();
@@ -201,6 +210,7 @@ public class ExcavationRenderEntry {
 			if (XmConfig.logExcavationRenderTracking) {
 				Xm.LOG.info("id = %d Compute existing due to empty positions.", id);
 			}
+
 			updateListeners();
 			ExcavationRenderTracker.INSTANCE.remove(this);
 			return;
@@ -208,6 +218,7 @@ public class ExcavationRenderEntry {
 
 		int minX = Integer.MAX_VALUE;
 		int maxX = Integer.MIN_VALUE;
+
 		for (final Int2ObjectMap.Entry<AtomicInteger> x : xCounts.int2ObjectEntrySet()) {
 			if (x.getValue().get() > 0) {
 				minX = Math.min(minX, x.getIntKey());
@@ -217,6 +228,7 @@ public class ExcavationRenderEntry {
 
 		int minY = Integer.MAX_VALUE;
 		int maxY = Integer.MIN_VALUE;
+
 		for (final Int2ObjectMap.Entry<AtomicInteger> y : yCounts.int2ObjectEntrySet()) {
 			if (y.getValue().get() > 0) {
 				minY = Math.min(minY, y.getIntKey());
@@ -226,6 +238,7 @@ public class ExcavationRenderEntry {
 
 		int minZ = Integer.MAX_VALUE;
 		int maxZ = Integer.MIN_VALUE;
+
 		for (final Int2ObjectMap.Entry<AtomicInteger> z : zCounts.int2ObjectEntrySet()) {
 			if (z.getValue().get() > 0) {
 				minZ = Math.min(minZ, z.getIntKey());
@@ -250,7 +263,9 @@ public class ExcavationRenderEntry {
 				newPositions = positions.toArray(newPositions);
 				renderPositions = newPositions;
 			}
+
 			needsListenerUpdate = true;
+
 			if (XmConfig.logExcavationRenderTracking) {
 				Xm.LOG.info("id %d Computed render position length = %d", id, renderPositions == null ? 0 : renderPositions.length);
 			}
@@ -307,17 +322,18 @@ public class ExcavationRenderEntry {
 	}
 
 	public void updateListeners() {
-		if (listeners.isEmpty())
+		if (listeners.isEmpty()) {
 			return;
+		}
 
 		//        // think network operations need to run in world tick
 		//        WorldTaskManager.enqueueImmediate(new Runnable()
 		//        {
 		final Packet<?> packet = ExcavationRenderEntry.this.isValid && ExcavationRenderEntry.this.positions.size() > 0
-		// update
-		? S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this)
-		// remove
-		: S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this.id);
+			// update
+			? S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this)
+			// remove
+			: S2C_ExcavationRenderUpdate.toPacket(ExcavationRenderEntry.this.id);
 
 		//            @Override
 		//            public void run()
@@ -329,6 +345,7 @@ public class ExcavationRenderEntry {
 				}
 			}
 		}
+
 		//            }
 		//        });
 	}
@@ -342,6 +359,7 @@ public class ExcavationRenderEntry {
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("id %d Render position retrieval, count = %d", id, renderPositions == null ? 0 : renderPositions.length);
 		}
+
 		return renderPositions;
 	}
 }

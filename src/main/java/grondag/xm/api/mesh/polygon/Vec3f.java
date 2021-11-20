@@ -1,27 +1,34 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.mesh.polygon;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.ApiStatus.Internal;
-import grondag.fermion.varia.Useful;
-import grondag.xm.mesh.vertex.Vec3fFactory;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
+
+import grondag.fermion.varia.Useful;
+import grondag.xm.mesh.vertex.Vec3fFactory;
 
 @Experimental
 public interface Vec3f {
@@ -68,27 +75,27 @@ public interface Vec3f {
 	default float distanceToFacePlane(Direction face) {
 		// could use dot product, but exploiting special case for less math
 		switch (face) {
-		case UP:
-			return y() - 1;
+			case UP:
+				return y() - 1;
 
-		case DOWN:
-			return -y();
+			case DOWN:
+				return -y();
 
-		case EAST:
-			return x() - 1;
+			case EAST:
+				return x() - 1;
 
-		case WEST:
-			return -x();
+			case WEST:
+				return -x();
 
-		case NORTH:
-			return -z();
+			case NORTH:
+				return -z();
 
-		case SOUTH:
-			return z() - 1;
+			case SOUTH:
+				return z() - 1;
 
-		default:
-			// make compiler shut up about unhandled case
-			return 0;
+			default:
+				// make compiler shut up about unhandled case
+				return 0;
 		}
 	}
 
@@ -108,18 +115,18 @@ public interface Vec3f {
 
 	/**
 	 * True if point i,j,k is on line formed by x0,y0,z0 and x1, y1, z1.
-	 * <p>
 	 *
-	 * Will return false for points that are "very close" to each other because
+	 * <p>Will return false for points that are "very close" to each other because
 	 * there essentially isn't enough resolution to make a firm determination of
 	 * what the line is.
 	 */
 	static boolean isPointOnLine(float cx, float cy, float cz, float ax, float ay, float az, float bx, float by, float bz) {
 		// points have to be far enough apart to form a line
 		final float ab = Useful.distance(ax, ay, az, bx, by, bz);
-		if (ab < PolyHelper.EPSILON * 5)
+
+		if (ab < PolyHelper.EPSILON * 5) {
 			return false;
-		else {
+		} else {
 			final float bThis = Useful.distance(cx, cy, cz, bx, by, bz);
 			final float aThis = Useful.distance(ax, ay, az, cx, cy, cz);
 			return Math.abs(ab - bThis - aThis) < PolyHelper.EPSILON;
@@ -129,7 +136,6 @@ public interface Vec3f {
 	// PERF: is this way faster?
 	@Internal
 	static boolean isPointOnLine2(float cx, float cy, float cz, float ax, float ay, float az, float bx, float by, float bz) {
-
 		//AB and AC must have same normal
 		final float abx = bx - ax;
 		final float aby = by - ay;
@@ -144,31 +150,28 @@ public interface Vec3f {
 		final float xy = abz * acx - abx * acz;
 		final float xz = abx * acy - aby * acx;
 
-
-		if(PolyHelper.epsilonZero(xx) && PolyHelper.epsilonZero(xy) && PolyHelper.epsilonZero(xz)) {
+		if (PolyHelper.epsilonZero(xx) && PolyHelper.epsilonZero(xy) && PolyHelper.epsilonZero(xz)) {
 			// on the line, check if in segment
 
 			// must be on same side
 			final float dot = dotProduct(abx, aby, abz, acx, acy, acz);
-			if(dot < -PolyHelper.EPSILON)
+
+			if (dot < -PolyHelper.EPSILON) {
 				return false;
-			else {
+			} else {
 				final float abm = abx * abx + aby * aby + abz * abz;
 				final float acm = acx * acx + acy * acy + acz * acz;
-				if(acm - abm > PolyHelper.EPSILON)
-					return false;
-				else
-					return true;
+				return !(acm - abm > PolyHelper.EPSILON);
 			}
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	/**
 	 * True if this point is on the line formed by the two given points.
-	 * <p>
 	 *
-	 * Will return false for points that are "very close" to each other because
+	 * <p>Will return false for points that are "very close" to each other because
 	 * there essentially isn't enough resolution to make a firm determination of
 	 * what the line is.
 	 */

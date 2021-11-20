@@ -1,26 +1,34 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
-import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.connect.state.SimpleJoinState;
@@ -38,8 +46,8 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
 
 @Experimental
-public class RoundedColumn  {
-	private RoundedColumn() {}
+public class RoundedColumn {
+	private RoundedColumn() { }
 
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
 			.add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
@@ -60,6 +68,7 @@ public class RoundedColumn  {
 		boolean hasCap = false;
 
 		final Axis axis = AXES[modelState.orientationIndex()];
+
 		if (!state.isJoined(Direction.fromAxisAndDirection(axis, AxisDirection.POSITIVE))) {
 			emitCapSection(csg.input(), pt, axis != Axis.X);
 			csg.union();
@@ -84,33 +93,35 @@ public class RoundedColumn  {
 	 * @param pt
 	 * @param incudeCaps  True if either cap is included so that CSG operation is supported. Otherwise cull.
 	 */
-	private static final void emitRoundSection(WritableMesh mesh, PolyTransform pt, boolean incudeCaps) {
+	private static void emitRoundSection(WritableMesh mesh, PolyTransform pt, boolean incudeCaps) {
 		final MutablePolygon writer = mesh.writer();
 		final Consumer<MutablePolygon> transform = p -> {
 			p.scaleFromBlockCenter(0.75f, 1, 0.75f).apply(pt);
 		};
-		writer.colorAll(0, 0xFFFFFFFF)
-		.surface(SURFACE_SIDES)
-		.lockUV(0, false)
-		.rotation(0, TextureOrientation.IDENTITY)
-		.sprite(0, "")
-		.saveDefaults();
+
+		writer
+			.colorAll(0, 0xFFFFFFFF)
+			.surface(SURFACE_SIDES)
+			.lockUV(0, false)
+			.rotation(0, TextureOrientation.IDENTITY)
+			.sprite(0, "")
+			.saveDefaults();
 
 		final XmSurface surface = incudeCaps ? SURFACE_ENDS : null;
 
 		MeshHelper.unitCylinder(mesh.writer(), 16, transform, SURFACE_SIDES, surface, surface, 3);
 	}
 
-	private static final void emitCapSection(WritableMesh mesh, PolyTransform pt, boolean top) {
+	private static void emitCapSection(WritableMesh mesh, PolyTransform pt, boolean top) {
 		final MutablePolygon writer = mesh.writer();
 
-		writer.colorAll(0, 0xFFFFFFFF)
-		.surface(SURFACE_ENDS)
-		.lockUV(0, true)
-		.rotation(0, TextureOrientation.IDENTITY)
-		.sprite(0, "")
-		.saveDefaults();
-
+		writer
+			.colorAll(0, 0xFFFFFFFF)
+			.surface(SURFACE_ENDS)
+			.lockUV(0, true)
+			.rotation(0, TextureOrientation.IDENTITY)
+			.sprite(0, "")
+			.saveDefaults();
 
 		writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, top ? 0.75f : 0, Direction.NORTH);
 		pt.accept(writer);
@@ -138,9 +149,9 @@ public class RoundedColumn  {
 		writer.setupFaceQuad(Direction.SOUTH, 0, min, 1, max, 0, Direction.UP);
 		pt.accept(writer);
 		writer.append();
-
 	}
-	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
+
+	public static SimplePrimitive INSTANCE = SimplePrimitive.builder()
 			.surfaceList(SURFACES)
 			.polyFactory(POLY_FACTORY)
 			.axisJoin(true)

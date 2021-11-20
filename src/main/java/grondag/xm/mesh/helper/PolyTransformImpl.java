@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.mesh.helper;
 
 import static grondag.fermion.orientation.api.CubeRotation.DOWN_EAST;
@@ -41,6 +46,11 @@ import static grondag.fermion.orientation.api.CubeRotation.WEST_SOUTH;
 import static grondag.fermion.orientation.api.CubeRotation.WEST_UP;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Vec3i;
+
 import grondag.fermion.orientation.api.CubeCorner;
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.fermion.orientation.api.CubeRotation;
@@ -51,9 +61,6 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyHelper;
 import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.modelstate.base.BaseModelState;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Vec3i;
 
 @Internal
 @SuppressWarnings("rawtypes")
@@ -94,7 +101,6 @@ public class PolyTransformImpl implements PolyTransform {
 					m01 * x + m11 * y + m21 * z + m31 + 0.5f,
 					m02 * x + m12 * y + m22 * z + m32 + 0.5f);
 
-
 			if (poly.hasNormal(i)) {
 				final float nx = poly.normalX(i);
 				final float ny = poly.normalY(i);
@@ -126,7 +132,8 @@ public class PolyTransformImpl implements PolyTransform {
 
 		// transform cull face
 		final Direction cullFace = poly.cullFace();
-		if(cullFace != null) {
+
+		if (cullFace != null) {
 			final Vec3i oldVec = cullFace.getNormal();
 			final float nx = oldVec.getX();
 			final float ny = oldVec.getY();
@@ -140,15 +147,14 @@ public class PolyTransformImpl implements PolyTransform {
 		}
 	}
 
-	private final static PolyTransformImpl[][] LOOKUP = new PolyTransformImpl[OrientationType.values().length][];
-	private final static PolyTransformImpl[] EXACT = new PolyTransformImpl[CubeRotation.COUNT];
-	private final static PolyTransformImpl[] EDGE = new PolyTransformImpl[CubeEdge.COUNT];
-	private final static PolyTransformImpl[] CORNER = new PolyTransformImpl[CubeCorner.COUNT];
-	private final static PolyTransformImpl[] FACE = new PolyTransformImpl[6];
-	private final static PolyTransformImpl[] HORIZONTAL_EDGE = new PolyTransformImpl[HorizontalEdge.COUNT];
-	private final static PolyTransformImpl[] HORIZONTAL_FACE = new PolyTransformImpl[HorizontalFace.COUNT];
-	private final static PolyTransformImpl[] AXIS = new PolyTransformImpl[3];
-
+	private static final PolyTransformImpl[][] LOOKUP = new PolyTransformImpl[OrientationType.values().length][];
+	private static final PolyTransformImpl[] EXACT = new PolyTransformImpl[CubeRotation.COUNT];
+	private static final PolyTransformImpl[] EDGE = new PolyTransformImpl[CubeEdge.COUNT];
+	private static final PolyTransformImpl[] CORNER = new PolyTransformImpl[CubeCorner.COUNT];
+	private static final PolyTransformImpl[] FACE = new PolyTransformImpl[6];
+	private static final PolyTransformImpl[] HORIZONTAL_EDGE = new PolyTransformImpl[HorizontalEdge.COUNT];
+	private static final PolyTransformImpl[] HORIZONTAL_FACE = new PolyTransformImpl[HorizontalFace.COUNT];
+	private static final PolyTransformImpl[] AXIS = new PolyTransformImpl[3];
 
 	// mainly for run-time testing
 	public static void invalidateCache() {
@@ -157,9 +163,9 @@ public class PolyTransformImpl implements PolyTransform {
 
 	static {
 		LOOKUP[OrientationType.ROTATION.ordinal()] = EXACT;
-		LOOKUP[OrientationType.EDGE.ordinal()] =  EDGE;
-		LOOKUP[OrientationType.CORNER.ordinal()] =  CORNER;
-		LOOKUP[OrientationType.FACE.ordinal()] =  FACE;
+		LOOKUP[OrientationType.EDGE.ordinal()] = EDGE;
+		LOOKUP[OrientationType.CORNER.ordinal()] = CORNER;
+		LOOKUP[OrientationType.FACE.ordinal()] = FACE;
 		LOOKUP[OrientationType.HORIZONTAL_FACE.ordinal()] = HORIZONTAL_FACE;
 		LOOKUP[OrientationType.HORIZONTAL_EDGE.ordinal()] = HORIZONTAL_EDGE;
 		LOOKUP[OrientationType.AXIS.ordinal()] = AXIS;

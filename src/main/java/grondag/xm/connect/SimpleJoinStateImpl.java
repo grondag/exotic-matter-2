@@ -1,26 +1,33 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.connect;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+
 import grondag.xm.api.connect.state.SimpleJoinFaceState;
 import grondag.xm.api.connect.state.SimpleJoinState;
 import grondag.xm.api.connect.world.BlockNeighbors;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
 
 @Internal
 public class SimpleJoinStateImpl implements SimpleJoinState {
@@ -62,21 +69,22 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 
 		int axisCount = 0;
 
-		if(hasJoins(Axis.X)) {
-			++axisCount;
-		}
-		if(hasJoins(Axis.Y)) {
+		if (hasJoins(Axis.X)) {
 			++axisCount;
 		}
 
-		if(hasJoins(Axis.Z)) {
+		if (hasJoins(Axis.Y)) {
+			++axisCount;
+		}
+
+		if (hasJoins(Axis.Z)) {
 			++axisCount;
 		}
 
 		if (axisCount <= 1) {
 			axisJoinIndex = nextAxisJoinIndex++;
 			AXIS_JOIN_LOOKUP[axisJoinIndex] = this;
-			assert axisJoinIndex <  AXIS_JOIN_STATE_COUNT;
+			assert axisJoinIndex < AXIS_JOIN_STATE_COUNT;
 		} else {
 			axisJoinIndex = -1;
 		}
@@ -84,9 +92,9 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 
 	private static final Direction[] FACES = Direction.values();
 
-	private static final SimpleJoinStateImpl JOINS[] = new SimpleJoinStateImpl[STATE_COUNT];
+	private static final SimpleJoinStateImpl[] JOINS = new SimpleJoinStateImpl[STATE_COUNT];
 
-	private static final SimpleJoinStateImpl AXIS_JOIN_LOOKUP[] = new SimpleJoinStateImpl[AXIS_JOIN_STATE_COUNT];
+	private static final SimpleJoinStateImpl[] AXIS_JOIN_LOOKUP = new SimpleJoinStateImpl[AXIS_JOIN_STATE_COUNT];
 
 	static {
 		for (int i = 0; i < 64; i++) {
@@ -117,30 +125,32 @@ public class SimpleJoinStateImpl implements SimpleJoinState {
 
 	public static int ordinalFromWorld(BlockNeighbors testResults) {
 		byte j = 0;
+
 		for (int i = 0; i < 6; i++) {
 			if (testResults.result(FACES[i])) {
 				j |= (1 << i);
 			}
 		}
+
 		return j;
 	}
 
 	@Override
 	public boolean hasJoins(Axis axis) {
-		switch(axis) {
-		case X:
-			return (joins & X_MASK) != 0;
-		case Y:
-			return (joins & Y_MASK) != 0;
-		case Z:
-			return (joins & Z_MASK) != 0;
-		default:
-			return false;
+		switch (axis) {
+			case X:
+				return (joins & X_MASK) != 0;
+			case Y:
+				return (joins & Y_MASK) != 0;
+			case Z:
+				return (joins & Z_MASK) != 0;
+			default:
+				return false;
 		}
 	}
 
 	public static int toAxisJoinIndex(SimpleJoinState fromJoin) {
-		return ((SimpleJoinStateImpl) fromJoin).axisJoinIndex ;
+		return ((SimpleJoinStateImpl) fromJoin).axisJoinIndex;
 	}
 
 	public static SimpleJoinState fromAxisJoinIndex(int fromIndex) {

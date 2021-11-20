@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.texture;
 
 import static grondag.xm.api.texture.TextureGroup.STATIC_TILES;
@@ -25,12 +30,12 @@ import org.jetbrains.annotations.ApiStatus.Experimental;
 
 @Experimental
 public class McTextures {
-	private McTextures() {}
+	private McTextures() { }
 
 	public static final TextureSet STONE = TextureSet.builder()
-			.displayNameToken("mc_stone").baseTextureName("minecraft:block/stone")
-			.versionCount(1).scale(SINGLE).layout(TextureLayoutMap.SINGLE).transform(STONE_LIKE)
-			.renderIntent(BASE_ONLY).groups(STATIC_TILES).build("minecraft:stone");
+		.displayNameToken("mc_stone").baseTextureName("minecraft:block/stone")
+		.versionCount(1).scale(SINGLE).layout(TextureLayoutMap.SINGLE).transform(STONE_LIKE)
+		.renderIntent(BASE_ONLY).groups(STATIC_TILES).build("minecraft:stone");
 
 	public static final TextureSet ACACIA_DOOR_BOTTOM = decal("acacia_door_bottom");
 	public static final TextureSet ACACIA_DOOR_TOP = decal("acacia_door_top");
@@ -673,7 +678,7 @@ public class McTextures {
 	public static final TextureSet TURTLE_EGG_VERY_CRACKED = decal("turtle_egg_very_cracked");
 	public static final TextureSet TURTLE_EGG = decal("turtle_egg");
 	public static final TextureSet TWISTING_VINES_PLANT = decal("twisting_vines_plant");
-	public static final TextureSet TWISTING_VINES =decal("twisting_vines");
+	public static final TextureSet TWISTING_VINES = decal("twisting_vines");
 	public static final TextureSet VINE = decal("vine");
 	public static final TextureSet WARPED_DOOR_BOTTOM = decal("warped_door_bottom");
 	public static final TextureSet WARPED_DOOR_TOP = decal("warped_door_top");

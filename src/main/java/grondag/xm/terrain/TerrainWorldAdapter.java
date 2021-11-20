@@ -1,51 +1,58 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.terrain;
 
 import static it.unimi.dsi.fastutil.HashCommon.arraySize;
 
 import java.util.function.Supplier;
+
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import org.jetbrains.annotations.ApiStatus.Internal;
+
 import grondag.fermion.position.PackedBlockPos;
+
+// TODO: add caching for flow height - do with as part of SuperBlockState
+// TODO: reinstate usage or remove
 
 /**
  * Caches expensive world state lookups until next prepare() call. For
  * server-side use on server thread only. Doesn't try to track state changes
  * while not in active use, and all state changes must be single threaded and
  * occur through this instance.
- *
- * TODO: add caching for flow height - do with as part of SuperBlockState TODO:
- * reinstate usage or remove
  */
 @Internal
 public class TerrainWorldAdapter implements BlockGetter {
 	protected Level world;
 
+	@SuppressWarnings("serial")
 	public static class FastMap<V> extends Long2ObjectOpenHashMap<V> {
 		/**
-		 * DOES NOT SUPPORT ZERO-VALUED KEYS
-		 * <p>
-		 *
+		 * DOES NOT SUPPORT ZERO-VALUED KEYS.
 		 * Only computes key 1x and scans arrays 1x for a modest savings. Here because
 		 * block updates are the on-tick performance bottleneck for lava sim.
 		 */
@@ -56,19 +63,24 @@ public class TerrainWorldAdapter implements BlockGetter {
 
 			// The starting point.
 			if (curr != 0) {
-				if (curr == k)
+				if (curr == k) {
 					return value[pos];
+				}
+
 				while (!((curr = key[pos = (pos + 1) & mask]) == (0)))
-					if (curr == k)
+					if (curr == k) {
 						return value[pos];
+					}
 			}
 
 			final V result = v.get();
 			key[pos] = k;
 			value[pos] = result;
+
 			if (size++ >= maxFill) {
 				rehash(arraySize(size + 1, f));
 			}
+
 			return result;
 		}
 	}
@@ -76,9 +88,7 @@ public class TerrainWorldAdapter implements BlockGetter {
 	protected FastMap<BlockState> blockStates = new FastMap<>();
 	protected FastMap<TerrainState> terrainStates = new FastMap<>();
 
-	public TerrainWorldAdapter() {
-
-	}
+	public TerrainWorldAdapter() { }
 
 	public TerrainWorldAdapter(Level world) {
 		prepare(world);
@@ -143,8 +153,9 @@ public class TerrainWorldAdapter implements BlockGetter {
 	protected void setBlockState(long packedBlockPos, BlockState newState, boolean callback) {
 		final BlockState oldState = getBlockState(packedBlockPos);
 
-		if (newState == oldState)
+		if (newState == oldState) {
 			return;
+		}
 
 		blockStates.put(packedBlockPos, newState);
 		applyBlockState(packedBlockPos, oldState, newState);
@@ -166,7 +177,7 @@ public class TerrainWorldAdapter implements BlockGetter {
 	 * Called for all block state changes, even if not a terrain block.
 	 */
 	protected void onBlockStateChange(long packedBlockPos, BlockState oldBlockState, BlockState newBlockState) {
-
+		// NOOP
 	}
 
 	public void setBlockState(BlockPos blockPos, BlockState newState) {

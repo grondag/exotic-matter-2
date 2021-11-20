@@ -1,26 +1,30 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
 
 package grondag.xm.mesh;
 
 import it.unimi.dsi.fastutil.Swapper;
 import it.unimi.dsi.fastutil.floats.FloatArrayList;
-import it.unimi.dsi.fastutil.ints.AbstractIntComparator;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntComparator;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongComparators;
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -34,9 +38,8 @@ import grondag.xm.api.mesh.polygon.Polygon;
  * Groups proximate vertices for face recombination.
  */
 class CsgVertexMap {
-
 	/**
-	 * Holds vertices as sequential tuples of x, y, z values
+	 * Holds vertices as sequential tuples of x, y, z values.
 	 */
 	private final FloatArrayList clusters = new FloatArrayList();
 
@@ -75,14 +78,14 @@ class CsgVertexMap {
 	void add(int polyId, Polygon poly) {
 		final IntArrayList vertices = this.vertices;
 		final LongArrayList clusterMap = this.clusterMap;
-
 		final int limit = poly.vertexCount();
-		for(int i = 0; i < limit; i++) {
+
+		for (int i = 0; i < limit; i++) {
 			final int vertexAddress = vertices.size();
 			final int cluster = findOrCreateCluster(poly.x(i), poly.y(i), poly.z(i));
 			vertices.add(polyId);
 			vertices.add(i);
-			clusterMap.add(((long)cluster << 32) | vertexAddress);
+			clusterMap.add(((long) cluster << 32) | vertexAddress);
 		}
 
 		isClusterMapDirty = true;
@@ -91,14 +94,18 @@ class CsgVertexMap {
 	private int findOrCreateCluster(float x, float y, float z) {
 		final FloatArrayList clusters = this.clusters;
 		final int limit = clusters.size();
-		int i  = 0;
+		int i = 0;
+
 		while (i < limit) {
 			final float dx = x - clusters.getFloat(i++);
 			final float dy = y - clusters.getFloat(i++);
 			final float dz = z - clusters.getFloat(i++);
-			if(dx * dx + dy * dy + dz * dz < PolyHelper.EPSILON)
+
+			if (dx * dx + dy * dy + dz * dz < PolyHelper.EPSILON) {
 				return i - 3;
+			}
 		}
+
 		clusters.add(x);
 		clusters.add(y);
 		clusters.add(z);
@@ -115,13 +122,15 @@ class CsgVertexMap {
 	}
 
 	private void sortClusterMap() {
-		if(isClusterMapDirty) {
+		if (isClusterMapDirty) {
 			clusterMap.sort(LongComparators.NATURAL_COMPARATOR);
 			int i = clusterMap.size() - 1;
+
 			// trim deleted values from end to speed searches
-			while(i >= 0 && clusterMap.getLong(i) == Long.MAX_VALUE) {
+			while (i >= 0 && clusterMap.getLong(i) == Long.MAX_VALUE) {
 				clusterMap.rem(i--);
 			}
+
 			isClusterMapDirty = false;
 		}
 	}
@@ -134,16 +143,15 @@ class CsgVertexMap {
 		matchIndex = size == 0 ? NONE : 0;
 
 		// Sort to put best matches first - will tend to get more optimal joins that way
-		if(size > 1) {
+		if (size > 1) {
 			it.unimi.dsi.fastutil.Arrays.quickSort(0, size, comparator, swapper);
 		}
 	}
 
 	/**
-	 * Join polys with fewest potential matches first
+	 * Join polys with fewest potential matches first.
 	 */
-	@SuppressWarnings("serial")
-	private final AbstractIntComparator comparator = new AbstractIntComparator() {
+	private final IntComparator comparator = new IntComparator() {
 		@Override
 		public int compare(int a, int b) {
 			final Int2IntOpenHashMap counts = matchCounts;
@@ -181,34 +189,39 @@ class CsgVertexMap {
 		final LongArrayList clusterMap = this.clusterMap;
 
 		final int limit = clusterMap.size();
-		if(limit == 0) return;
+		if (limit == 0) return;
 
 		int clusterSearchIndex = 0;
 
 		long pair = clusterMap.getLong(clusterSearchIndex++);
+
 		while (pair == Long.MAX_VALUE && clusterSearchIndex < limit) {
 			pair = clusterMap.getLong(clusterSearchIndex++);
 		}
 
-		if(clusterSearchIndex == limit) return;
+		if (clusterSearchIndex == limit) return;
 
 		long lastCluster = pair & CLUSTER_MASK;
-		matchBuilder.add((int)(pair & VERTEX_MASK));
+		matchBuilder.add((int) (pair & VERTEX_MASK));
 
 		while (clusterSearchIndex < limit) {
 			pair = clusterMap.getLong(clusterSearchIndex++);
-			if(pair == Long.MAX_VALUE) {
+
+			if (pair == Long.MAX_VALUE) {
 				continue;
 			}
 
-			if((pair & CLUSTER_MASK) != lastCluster) {
+			if ((pair & CLUSTER_MASK) != lastCluster) {
 				lastCluster = pair & CLUSTER_MASK;
+
 				if (matchBuilder.size() > 1) {
 					addMatches(mesh);
 				}
+
 				matchBuilder.clear();
 			}
-			matchBuilder.add((int)(pair & VERTEX_MASK));
+
+			matchBuilder.add((int) (pair & VERTEX_MASK));
 		}
 
 		if (matchBuilder.size() > 1) {
@@ -223,12 +236,13 @@ class CsgVertexMap {
 		final Int2IntOpenHashMap matchCounts = this.matchCounts;
 
 		// PERF: could be better to use pairs directly vs building combinations
-		for(int i = 0; i < matchCount; i++) {
+		for (int i = 0; i < matchCount; i++) {
 			final int matchA = matchBuilder.getInt(i);
 			final int idA = vertices.getInt(matchA + VERTEX_POLY_ID);
 			final Polygon polyA = mesh.polyA(idA);
 			final int vertexA = vertices.getInt(matchA + VERTEX_INDEX);
-			for(int j = i + 1; j < matchCount; j++) {
+
+			for (int j = i + 1; j < matchCount; j++) {
 				final int matchB = matchBuilder.getInt(j);
 				final int idB = vertices.getInt(matchB + VERTEX_POLY_ID);
 				final int vertexB = vertices.getInt(matchB + VERTEX_INDEX);
@@ -273,18 +287,21 @@ class CsgVertexMap {
 	 * @return false if at end of potential matches
 	 */
 	boolean next(XmMesh mesh) {
-		if(hasValue()) {
+		if (hasValue()) {
 			matchIndex += 4;
-			if(matchIndex >= matches.size()) {
+
+			if (matchIndex >= matches.size()) {
 				matchIndex = NONE;
 				return false;
-			} else
+			} else {
 				return true;
-		} else
+			}
+		} else {
 			return false;
+		}
 	}
 
-	/** removes polys that are part of current match */
+	/** Removes polys that are part of current match. */
 	void remove() {
 		assert hasValue() : "CsgVertexMap: removal without current value";
 		final int a = idA();
@@ -298,10 +315,12 @@ class CsgVertexMap {
 		final LongArrayList clusterMap = this.clusterMap;
 
 		final int clusterLimit = clusterMap.size();
-		for(int i = 0; i < clusterLimit; i++) {
-			final int vertexAddress = (int)(clusterMap.getLong(i) & VERTEX_MASK);
+
+		for (int i = 0; i < clusterLimit; i++) {
+			final int vertexAddress = (int) (clusterMap.getLong(i) & VERTEX_MASK);
+
 			// may encounter negative values due to removals elsewhen
-			if(vertexAddress >= 0 && vertices.getInt(vertexAddress) == polyId) {
+			if (vertexAddress >= 0 && vertices.getInt(vertexAddress) == polyId) {
 				clusterMap.set(i, Long.MAX_VALUE);
 			}
 		}

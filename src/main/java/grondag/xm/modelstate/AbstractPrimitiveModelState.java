@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.modelstate;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.BLOCK_SPECIES;
@@ -74,26 +79,22 @@ import grondag.xm.paint.XmPaintImpl;
 import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
 
+// WIP: Fabric deps
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Internal
-public abstract class AbstractPrimitiveModelState
-<V extends AbstractPrimitiveModelState<V, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>>
-extends AbstractModelState
-implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
-{
-
+public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveModelState<V, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> extends AbstractModelState
+	implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W> {
 	////////////////////////////////////////// BIT-WISE ENCODING //////////////////////////////////////////
 
-	/** note that sign bit on world encoder is reserved to persist static state during serialization */
-	private static final BitPacker32<AbstractPrimitiveModelState> WORLD_ENCODER = new BitPacker32<>(m -> m.worldBits,(m, b) -> m.worldBits = b);
+	/** Note that sign bit on world encoder is reserved to persist static state during serialization. */
+	private static final BitPacker32<AbstractPrimitiveModelState> WORLD_ENCODER = new BitPacker32<>(m -> m.worldBits, (m, b) -> m.worldBits = b);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement POS_X = WORLD_ENCODER.createIntElement(256);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement POS_Y = WORLD_ENCODER.createIntElement(256);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement POS_Z = WORLD_ENCODER.createIntElement(256);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement SPECIES = WORLD_ENCODER.createIntElement(16);
 
-
 	public static final int PRIMITIVE_BIT_COUNT;
-	private static final BitPacker32<AbstractPrimitiveModelState> SHAPE_ENCODER = new BitPacker32<>(m -> m.shapeBits,(m, b) -> m.shapeBits = b);
+	private static final BitPacker32<AbstractPrimitiveModelState> SHAPE_ENCODER = new BitPacker32<>(m -> m.shapeBits, (m, b) -> m.shapeBits = b);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement ORIENTATION = SHAPE_ENCODER.createIntElement(32);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement BLOCK_JOIN = SHAPE_ENCODER.createIntElement(CornerJoinState.STATE_COUNT);
 	private static final BitPacker32<AbstractPrimitiveModelState>.IntElement ALTERNATE_JOIN = SHAPE_ENCODER.createIntElement(SimpleJoinState.STATE_COUNT);
@@ -107,7 +108,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		assert SHAPE_ENCODER.bitLength() <= 32;
 	}
 
-	static Consumer<AbstractPrimitiveModelState> clientClearHandler = s -> {};
+	static Consumer<AbstractPrimitiveModelState> clientClearHandler = s -> { };
 
 	public static void useClientHandler() {
 		clientClearHandler = s -> s.clearRendering();
@@ -115,11 +116,8 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	////////////////////////////////////////// FACTORY //////////////////////////////////////////
 
-	public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>>
-	implements BaseModelStateFactory<R, W>
-	{
+	public static class ModelStateFactoryImpl<T extends AbstractPrimitiveModelState<T, R, W>, R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> implements BaseModelStateFactory<R, W> {
 		private final ArrayBlockingQueue<T> POOL = new ArrayBlockingQueue<>(4096);
-
 		private final Supplier<T> factory;
 
 		public ModelStateFactoryImpl(Supplier<T> factory) {
@@ -143,12 +141,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 		protected final T claimInner(T template) {
 			T result = POOL.poll();
+
 			if (result == null) {
 				result = factory.get();
 				result.isImmutable = false;
 			} else {
 				result.clear();
 			}
+
 			result.retain();
 			result.primitive = template.primitive;
 			result.copyInternal(template);
@@ -219,24 +219,24 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	public final W apply(Consumer<W> consumer) {
-		final W self = (W)this;
+		final W self = (W) this;
 		consumer.accept(self);
 		return self;
 	}
 
 	@Override
 	protected final void onLastRelease() {
-		factoryImpl().POOL.offer((V)this);
+		factoryImpl().POOL.offer((V) this);
 	}
 
 	@Override
 	public R toImmutable() {
-		if(isImmutable) {
-			return (R)this;
+		if (isImmutable) {
+			return (R) this;
 		} else {
-			final V result = factoryImpl().claimInner((V)this);
+			final V result = factoryImpl().claimInner((V) this);
 			result.isImmutable = true;
-			return (R)result;
+			return (R) result;
 		}
 	}
 
@@ -258,8 +258,8 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	public W copyFrom(ModelState template) {
-		copyInternal((V)template);
-		return (W)this;
+		copyInternal((V) template);
+		return (W) this;
 	}
 
 	@Override
@@ -271,15 +271,15 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	public W mutableCopy() {
-		return (W) factoryImpl().claimInner((V)this);
+		return (W) factoryImpl().claimInner((V) this);
 	}
 
 	////////////////////////////////////////// COMPARISON //////////////////////////////////////////
 
 	/**
-	 * Does NOT consider isStatic in comparison.<p>
+	 * Does NOT consider isStatic in comparison.
 	 *
-	 * {@inheritDoc}
+	 * <p>{@inheritDoc}
 	 */
 	@Override
 	public final boolean equals(Object obj) {
@@ -315,10 +315,11 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	@Deprecated
 	@Override
 	public final boolean doShapeAndAppearanceMatch(ModelState other) {
-		if(other.getClass() != this.getClass()) {
+		if (other.getClass() != this.getClass()) {
 			return false;
 		}
-		return primitive.doesShapeMatch((R)this, (R)other) && doesAppearanceMatch(other);
+
+		return primitive.doesShapeMatch((R) this, (R) other) && doesAppearanceMatch(other);
 	}
 
 	/**
@@ -370,12 +371,11 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		tag.put(ModelStateTagHelper.NBT_PAINTS, paintList);
 	}
 
-
 	@Override
 	public void fromBytes(FriendlyByteBuf pBuff, PaintIndex paintIndex) {
 		shapeBits = pBuff.readInt();
 		worldBits = pBuff.readInt();
-		final int limit = primitive.surfaces((R)this).size();
+		final int limit = primitive.surfaces((R) this).size();
 
 		for (int i = 0; i < limit; i++) {
 			this.paints[i] = XmPaint.fromBytes(pBuff, paintIndex);
@@ -387,7 +387,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		pBuff.writeVarInt(primitive.index());
 		pBuff.writeInt(shapeBits);
 		pBuff.writeInt(worldBits);
-		final int limit = primitive.surfaces((R)this).size();
+		final int limit = primitive.surfaces((R) this).size();
 
 		for (int i = 0; i < limit; i++) {
 			paints[i].toBytes(pBuff);
@@ -396,26 +396,29 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	////////////////////////////////////////// STATE FLAGS //////////////////////////////////////////
 
-	/** contains indicators derived from shape and painters */
+	/** Contains indicators derived from shape and painters. */
 	private int stateFlags = 0;
 
 	@Override
 	public final int stateFlags() {
 		int result = stateFlags;
+
 		if (result == 0) {
+			result = ModelStateFlags.IS_POPULATED | primitive.stateFlags((R) this);
+			final int surfCount = primitive.surfaces((R) this).size();
 
-			result = ModelStateFlags.IS_POPULATED | primitive.stateFlags((R)this);
-
-			final int surfCount = primitive.surfaces((R)this).size();
 			for (int i = 0; i < surfCount; i++) {
 				final XmPaint p = paint(i);
 				final int texDepth = p.textureDepth();
+
 				for (int j = 0; j < texDepth; j++) {
 					result |= p.texture(j).stateFlags();
 				}
 			}
+
 			stateFlags = result;
 		}
+
 		return result;
 	}
 
@@ -434,21 +437,21 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	public final void emitPolygons(Consumer<Polygon> target) {
-		primitive.emitQuads((R)this, target);
+		primitive.emitQuads((R) this, target);
 	}
 
 	@Override
 	public W geometricState() {
-		return primitive.geometricState((R)this);
+		return primitive.geometricState((R) this);
 	}
 
 	@Override
 	public final OrientationType orientationType() {
-		return primitive.orientationType((R)this);
+		return primitive.orientationType((R) this);
 	}
 
 	protected final int surfaceCount() {
-		return primitive.surfaces((R)this).size();
+		return primitive.surfaces((R) this).size();
 	}
 
 	////////////////////////////////////////// WORLD REFRESH CONTROL //////////////////////////////////////////
@@ -463,7 +466,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	@Override
 	public final W setStatic(boolean isStatic) {
 		this.isStatic = isStatic;
-		return (W)this;
+		return (W) this;
 	}
 
 	////////////////////////////////////////// PAINT //////////////////////////////////////////
@@ -479,6 +482,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	protected final boolean doPaintsMatchNative(AbstractPrimitiveModelState other) {
 		final int limit = surfaceCount();
+
 		if (limit == other.surfaceCount()) {
 			final XmPaint[] paints = this.paints;
 			final XmPaint[] otherPaints = other.paints;
@@ -519,7 +523,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 	@Override
 	public final W paintAll(XmPaint paint) {
-		final XmSurfaceList slist = primitive().surfaces((R)this);
+		final XmSurfaceList slist = primitive().surfaces((R) this);
 		final int limit = slist.size();
 
 		for (int i = 0; i < limit; i++) {
@@ -528,7 +532,6 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 		return (W) this;
 	}
-
 
 	////////////////////////////////////////// WORLD ATTRIBUTES //////////////////////////////////////////
 
@@ -553,21 +556,21 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	public final W posX(int index) {
 		POS_X.setValue(index, this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	@Override
 	public final W posY(int index) {
 		POS_Y.setValue(index, this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	@Override
 	public final W posZ(int index) {
 		POS_Z.setValue(index, this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	@Override
@@ -576,7 +579,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 		POS_Y.setValue((pos.getY()), this);
 		POS_Z.setValue((pos.getZ()), this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	/**
@@ -604,7 +607,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	public final W species(int species) {
 		SPECIES.setValue(species, this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	////////////////////////////////////////// SHAPE ATTRIBUTES //////////////////////////////////////////
@@ -634,7 +637,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 		BLOCK_JOIN.setValue(join.ordinal(), this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	@Override
@@ -652,7 +655,7 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 		BLOCK_JOIN.setValue(join.ordinal(), this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	@Override
@@ -669,14 +672,14 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	public final W alternateJoin(SimpleJoinState join) {
 		ALTERNATE_JOIN.setValue(join.ordinal(), this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	@Override
 	public final W alternateJoinBits(int joinBits) {
 		ALTERNATE_JOIN.setValue(joinBits, this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
 
 	@Override
@@ -688,9 +691,8 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	public final W primitiveBits(int bits) {
 		PRIMITIVE_BITS.setValue(bits, this);
 		invalidateHashCode();
-		return (W)this;
+		return (W) this;
 	}
-
 
 	////////////////////////////////////////// RENDERING //////////////////////////////////////////
 
@@ -708,10 +710,12 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	@Environment(EnvType.CLIENT)
 	public Mesh mesh() {
 		Mesh result = mesh;
+
 		if (result == null) {
 			result = PaintManager.paint(this);
 			mesh = result;
 		}
+
 		return result;
 	}
 
@@ -736,19 +740,21 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	@Override
 	@Environment(EnvType.CLIENT)
 	public final TextureAtlasSprite particleSprite() {
-		if(particleSprite == null) {
+		if (particleSprite == null) {
 			final Mesh mesh = mesh();
 			mesh.forEach(q -> {
-				if(particleSprite == null) {
+				if (particleSprite == null) {
 					final SpriteFinder finder = SpriteFinder.get(TextureSetHelper.blockAtas());
 					particleSprite = finder.find(q, 0);
 					particleColorARBG = q.spriteColor(0, 0);
 				}
 			});
-			if(particleSprite == null) {
+
+			if (particleSprite == null) {
 				particleSprite = TextureSetHelper.missingSprite();
 			}
 		}
+
 		return particleSprite;
 	}
 
@@ -756,7 +762,8 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 	@Environment(EnvType.CLIENT)
 	public final int particleColorARBG() {
 		final int result = particleColorARBG;
-		if(result == 0) {
+
+		if (result == 0) {
 			// if zero then probably requires lookup
 			particleSprite();
 			return particleColorARBG;
@@ -792,31 +799,28 @@ implements MutableModelState, BaseModelState<R, W>, MutableBaseModelState<R, W>
 
 		if (result == null) {
 			result = new AbstractXmModel() {
+					@Environment(EnvType.CLIENT)
+					@Override
+					public List<BakedQuad> getQuads(BlockState state, Direction face, Random random) {
+						return bakedQuads(state, face, random);
+					}
 
-				@Environment(EnvType.CLIENT)
-				@Override
-				public List<BakedQuad> getQuads(BlockState state, Direction face, Random random) {
-					return bakedQuads(state, face, random);
-				}
+					@Environment(EnvType.CLIENT)
+					@Override
+					public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+						AbstractPrimitiveModelState.this.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+					}
 
-				@Environment(EnvType.CLIENT)
-				@Override
-				public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-					AbstractPrimitiveModelState.this.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-				}
-
-				@Environment(EnvType.CLIENT)
-				@Override
-				public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-					AbstractPrimitiveModelState.this.emitItemQuads(stack, randomSupplier, context);
-				}
-			};
+					@Environment(EnvType.CLIENT)
+					@Override
+					public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+						AbstractPrimitiveModelState.this.emitItemQuads(stack, randomSupplier, context);
+					}
+				};
 
 			itemProxy = result;
 		}
 
 		return result;
 	}
-
-
 }

@@ -1,26 +1,34 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.painter;
 
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
-import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
+
 import it.unimi.dsi.fastutil.HashCommon;
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+
 import grondag.fermion.orientation.api.ClockwiseRotation;
 import grondag.fermion.varia.Useful;
 import grondag.xm.api.mesh.MutableMesh;
@@ -36,8 +44,7 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureTransform;
 
 /**
- *
- * See {@link SurfaceTopology#TILED}
+ * See {@link SurfaceTopology#TILED}.
  */
 @Internal
 public abstract class SurfacePainterTiled extends AbstractQuadPainter {
@@ -69,30 +76,26 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 	}
 
 	/**
-	 *
 	 * If quad at the target address is within the given u bounds, does nothing to
 	 * it and passes address to consumer, and then returns
 	 * {@link Polygon#NO_ADDRESS};
 	 *
-	 * Otherwise, slices off a quad from the poly at the target address, with u
+	 * <p>Otherwise, slices off a quad from the poly at the target address, with u
 	 * value between low bound + span, with the assumption no vertices are below the
 	 * lower bound. Appends the new quad to the end of the stream, and passes its
 	 * address to the consumer. The original quad is marked as deleted.
-	 * <p>
 	 *
-	 * Output quads will have uMin/uMax of 0,1 corresponding to the given split
+	 * <p>Output quads will have uMin/uMax of 0,1 corresponding to the given split
 	 * bounds and all vertices will be scaled to that range. This will be true even
 	 * for quads that covered a multiple or fraction of a 0-1 range, or which were
 	 * offset.
-	 * <p>
 	 *
-	 * Also appends a new quad containing the remnants of the original polygon less
+	 * <p>Also appends a new quad containing the remnants of the original polygon less
 	 * the slice. This remainder quad will have the same uMin/uMax as the input
 	 * quad, and all vertices will remain scaled to that range. Address of remainder
 	 * quad is the return value.
-	 * <p>
 	 *
-	 * EXCEPT, if all remainder vertices are within the given split bounds, will
+	 * <p>EXCEPT, if all remainder vertices are within the given split bounds, will
 	 * instead apply offset and scaled as if it had been sliced, and pass it to the
 	 * consumer. Will then return {@link Polygon#NO_ADDRESS}.
 	 */
@@ -116,6 +119,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 			vertexU[i] = u;
 
 			final int t = vertexType(u);
+
 			if (t == REMAINDER) {
 				remainderCount++;
 			} else if (t == SLICE) {
@@ -140,6 +144,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 			for (int i = 0; i < vCountIn; i++) {
 				editor.u(i, layerIndex, vertexU[i]);
 			}
+
 			vSplitter.accept(targetAddress);
 			return Polygon.NO_LINK_OR_TAG;
 		}
@@ -148,17 +153,19 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 		final MutablePolygon writer = stream.writer();
 
 		final int sliceAddress = stream.writerAddress();
-		writer.vertexCount(sliceCount + 2)
-		.copyFrom(reader, false)
-		.minU(layerIndex, flipped ? 1 : 0)
-		.maxU(layerIndex, flipped ? 0 : 1)
-		.append();
+		writer
+			.vertexCount(sliceCount + 2)
+			.copyFrom(reader, false)
+			.minU(layerIndex, flipped ? 1 : 0)
+			.maxU(layerIndex, flipped ? 0 : 1)
+			.append();
 		int iSliceVertex = 0;
 
 		final int remainderAddress = stream.writerAddress();
-		writer.vertexCount(remainderCount + 2)
-		.copyFrom(reader, false)
-		.append();
+		writer
+			.vertexCount(remainderCount + 2)
+			.copyFrom(reader, false)
+			.append();
 		int iRemainderVertex = 0;
 
 		float uThis = vertexU[vCountIn - 1];
@@ -172,15 +179,15 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
 			if (thisType == EDGE) {
 				stream.editor(sliceAddress)
-				.copyVertexFrom(iSliceVertex, reader, iThis)
-				.u(iSliceVertex, layerIndex, uThis);
+					.copyVertexFrom(iSliceVertex, reader, iThis)
+					.u(iSliceVertex, layerIndex, uThis);
 				iSliceVertex++;
 				stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
 				iRemainderVertex++;
-
 			} else if (thisType == SLICE) {
 				stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).u(iSliceVertex, layerIndex, uThis);
 				iSliceVertex++;
+
 				if (nextType == REMAINDER) {
 					final float dist = (uSpan - uThis) / (uNext - uThis);
 					stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
@@ -192,10 +199,10 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 					iRemainderVertex++;
 					iSliceVertex++;
 				}
-
 			} else {
 				stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
 				iRemainderVertex++;
+
 				if (nextType == SLICE) {
 					final float dist = (uSpan - uThis) / (uNext - uThis);
 					stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
@@ -225,7 +232,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 	private static final int REMAINDER = 1;
 	private static final int SLICE = 2;
 
-	private static final int vertexType(float uvCoord) {
+	private static int vertexType(float uvCoord) {
 		if (uvCoord >= 1 - PolyHelper.EPSILON) {
 			if (uvCoord <= 1 + PolyHelper.EPSILON) {
 				return EDGE;
@@ -262,6 +269,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 			vertexV[i] = v;
 
 			final int t = vertexType(v);
+
 			if (t == REMAINDER) {
 				remainderCount++;
 			} else if (t == SLICE) {
@@ -287,6 +295,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 			for (int i = 0; i < vCountIn; i++) {
 				editor.v(i, layerIndex, vertexV[i]);
 			}
+
 			output.accept(targetAddress);
 			return Polygon.NO_LINK_OR_TAG;
 		}
@@ -294,17 +303,19 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 		final MutablePolygon writer = stream.writer();
 
 		final int sliceAddress = stream.writerAddress();
-		writer.vertexCount(sliceCount + 2)
-		.copyFrom(reader, false)
-		.minV(layerIndex, flipped ? 1 : 0)
-		.maxV(layerIndex, flipped ? 0 : 1)
-		.append();
+		writer
+			.vertexCount(sliceCount + 2)
+			.copyFrom(reader, false)
+			.minV(layerIndex, flipped ? 1 : 0)
+			.maxV(layerIndex, flipped ? 0 : 1)
+			.append();
 		int iSliceVertex = 0;
 
 		final int remainderAddress = stream.writerAddress();
-		writer.vertexCount(remainderCount + 2)
-		.copyFrom(reader, false)
-		.append();
+		writer
+			.vertexCount(remainderCount + 2)
+			.copyFrom(reader, false)
+			.append();
 		int iRemainderVertex = 0;
 
 		float vThis = vertexV[vCountIn - 1];
@@ -324,6 +335,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 			} else if (thisType == SLICE) {
 				stream.editor(sliceAddress).copyVertexFrom(iSliceVertex, reader, iThis).v(iSliceVertex, layerIndex, vThis);
 				iSliceVertex++;
+
 				if (nextType == REMAINDER) {
 					final float dist = (vSpan - vThis) / (vNext - vThis);
 					stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
@@ -338,6 +350,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 			} else {
 				stream.editor(remainderAddress).copyVertexFrom(iRemainderVertex, reader, iThis);
 				iRemainderVertex++;
+
 				if (nextType == SLICE) {
 					final float dist = (vSpan - vThis) / (vNext - vThis);
 					stream.editor(remainderAddress).copyInterpolatedVertexFrom(iRemainderVertex, reader, iThis, reader, iNext, dist);
@@ -413,14 +426,18 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 			float maxV = minV;
 
 			final int vCount = editor.vertexCount();
-			for(int i = 1; i < vCount; i++) {
+
+			for (int i = 1; i < vCount; i++) {
 				final float u = editor.u(i, textureIndex);
+
 				if (u < minU) {
 					minU = u;
 				} else if (u > maxU) {
 					maxU = u;
 				}
+
 				final float v = editor.v(i, textureIndex);
+
 				if (v < minV) {
 					minV = v;
 				} else if (v > maxV) {
@@ -447,6 +464,7 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
 				uRemainder = splitU(stream, uRemainder, textureIndex, uSplitLow, tilingDistance, vTargetAddress -> {
 					int vRemainder = vTargetAddress;
+
 					for (int vIndex = vMinIndex; vIndex != vMaxIndex; vIndex++) {
 						final int vIndexFinal = vIndex;
 						final float vSplitLow = vIndexFinal * tilingDistance;
@@ -479,17 +497,17 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 									? Useful.offsetEnumValue(tex.transform().baseRotation, (salt >> 16) & 3)
 											: tex.transform().baseRotation;
 
-									editor.rotation(textureIndex, TextureOrientation.find(rot, false, false));
+							editor.rotation(textureIndex, TextureOrientation.find(rot, false, false));
 
-									editor.lockUV(textureIndex, false);
-									commonPostPaint(editor, modelState, surface, paint, textureIndex);
+							editor.lockUV(textureIndex, false);
+							commonPostPaint(editor, modelState, surface, paint, textureIndex);
 
-									// earlier UV splits may have left us with something other than a convex quad or
-									// tri
-									// doing this last to avoid have to loop through the splits
-									if (editor.splitIfNeeded()) {
-										assert editor.isDeleted();
-									}
+							// earlier UV splits may have left us with something other than a convex quad or
+							// tri
+							// doing this last to avoid have to loop through the splits
+							if (editor.splitIfNeeded()) {
+								assert editor.isDeleted();
+							}
 						});
 
 						if (vRemainder == Polygon.NO_LINK_OR_TAG) {
@@ -505,7 +523,6 @@ public abstract class SurfacePainterTiled extends AbstractQuadPainter {
 
 			// restore editor position for iteration
 			editor.moveTo(editorAddress);
-
 		} while (editor.next());
 	}
 }

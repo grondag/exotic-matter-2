@@ -1,23 +1,33 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.painter;
 
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
@@ -27,9 +37,7 @@ import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.MutableMesh;
 import grondag.xm.api.mesh.XmMeshes;
@@ -43,6 +51,7 @@ import grondag.xm.painter.AbstractQuadPainter.PaintMethod;
 import grondag.xm.target.RenderTarget;
 import grondag.xm.texture.TextureSetHelper;
 
+// WIP: Fabric/FREX Dep
 @Environment(EnvType.CLIENT)
 @SuppressWarnings("rawtypes")
 @Internal
@@ -82,17 +91,19 @@ public class PaintManager implements Consumer<Polygon> {
 		mesh.clear();
 
 		XmSurface surface = poly.surface();
-		if(surface == null) {
+
+		if (surface == null) {
 			//TODO: remove
 			Xm.LOG.info("Encountered null surface during paint, using default surface");
 			surface = modelState.primitive().surfaces(modelState).get(0);
 		}
+
 		final XmPaint paint = modelState.paint(surface);
 
 		mesh.appendCopy(poly);
 		editor.origin();
 
-		if(editor.vertexCount() > 4) {
+		if (editor.vertexCount() > 4) {
 			//TODO: remove
 			Xm.LOG.info("Encountered higher-order polygon during paint. Bad primitive output.");
 		}
@@ -111,6 +122,7 @@ public class PaintManager implements Consumer<Polygon> {
 			editor.maxU(1, maxU);
 			editor.minV(1, minV);
 			editor.maxV(1, maxV);
+
 			if (depth == 3) {
 				editor.minU(2, minU);
 				editor.maxU(2, maxU);
@@ -119,12 +131,14 @@ public class PaintManager implements Consumer<Polygon> {
 			}
 
 			final int vertexCount = editor.vertexCount();
+
 			for (int i = 0; i < vertexCount; i++) {
 				final int c = editor.color(i, 0);
 				final float u = editor.u(i, 0);
 				final float v = editor.v(i, 0);
 				editor.color(i, 1, c);
 				editor.uv(i, 1, u, v);
+
 				if (depth == 3) {
 					editor.color(i, 2, c);
 					editor.uv(i, 2, u, v);
@@ -138,7 +152,8 @@ public class PaintManager implements Consumer<Polygon> {
 
 			do {
 				final PaintMethod painter = PainterFactory.getPainter(modelState, surface, paint, i);
-				if(painter != null) {
+
+				if (painter != null) {
 					painter.paintQuads(mesh, modelState, surface, paint, i);
 				} else {
 					//TODO: put back
@@ -172,11 +187,12 @@ public class PaintManager implements Consumer<Polygon> {
 		final grondag.frex.api.mesh.QuadEmitter emitter = (grondag.frex.api.mesh.QuadEmitter) emitterIn;
 		final grondag.frex.api.material.MaterialFinder finder = (grondag.frex.api.material.MaterialFinder) this.finder;
 
-		finder.clear()
-		.blendMode(BLEND_MODES[poly.blendMode().ordinal()])
-		.emissive(poly.emissive(0))
-		.disableAo(poly.disableAo(0))
-		.disableDiffuse(poly.disableDiffuse(0));
+		finder
+			.clear()
+			.blendMode(BLEND_MODES[poly.blendMode().ordinal()])
+			.emissive(poly.emissive(0))
+			.disableAo(poly.disableAo(0))
+			.disableDiffuse(poly.disableDiffuse(0));
 
 		bakeSprite(0, poly);
 		emitter.material(finder.find());
@@ -185,11 +201,12 @@ public class PaintManager implements Consumer<Polygon> {
 		if (depth > 1) {
 			bakeSprite(1, poly);
 
-			finder.clear()
-			.blendMode(BlendMode.TRANSLUCENT)
-			.emissive(poly.emissive(1))
-			.disableAo(poly.disableAo(1))
-			.disableDiffuse(poly.disableDiffuse(1));
+			finder
+				.clear()
+				.blendMode(BlendMode.TRANSLUCENT)
+				.emissive(poly.emissive(1))
+				.disableAo(poly.disableAo(1))
+				.disableDiffuse(poly.disableDiffuse(1));
 
 			emitter.material(finder.find());
 			outputFrexQuad(poly, emitter, 1);
@@ -197,11 +214,12 @@ public class PaintManager implements Consumer<Polygon> {
 			if (depth == 3) {
 				bakeSprite(2, poly);
 
-				finder.clear()
-				.blendMode(BlendMode.TRANSLUCENT)
-				.emissive(poly.emissive(2))
-				.disableAo(poly.disableAo(2))
-				.disableDiffuse(poly.disableDiffuse(2));
+				finder
+					.clear()
+					.blendMode(BlendMode.TRANSLUCENT)
+					.emissive(poly.emissive(2))
+					.disableAo(poly.disableAo(2))
+					.disableDiffuse(poly.disableDiffuse(2));
 
 				emitter.material(finder.find());
 				outputFrexQuad(poly, emitter, 2);
@@ -219,7 +237,7 @@ public class PaintManager implements Consumer<Polygon> {
 
 			final int g = poly.glow(v);
 
-			if(g > 0) {
+			if (g > 0) {
 				emitter.lightmap(v, g);
 			}
 
@@ -238,11 +256,12 @@ public class PaintManager implements Consumer<Polygon> {
 		final int depth = poly.spriteDepth();
 		final MaterialFinder finder = this.finder;
 
-		finder.clear()
-		.blendMode(0, BLEND_MODES[poly.blendMode().ordinal()])
-		.emissive(0, poly.emissive(0))
-		.disableAo(0, poly.disableAo(0))
-		.disableDiffuse(0, poly.disableDiffuse(0));
+		finder
+			.clear()
+			.blendMode(0, BLEND_MODES[poly.blendMode().ordinal()])
+			.emissive(0, poly.emissive(0))
+			.disableAo(0, poly.disableAo(0))
+			.disableDiffuse(0, poly.disableDiffuse(0));
 
 		bakeSprite(0, poly);
 		emitter.material(finder.find());
@@ -251,11 +270,12 @@ public class PaintManager implements Consumer<Polygon> {
 		if (depth > 1) {
 			bakeSprite(1, poly);
 
-			finder.clear()
-			.blendMode(0, BlendMode.TRANSLUCENT)
-			.emissive(0, poly.emissive(1))
-			.disableAo(0, poly.disableAo(1))
-			.disableDiffuse(0, poly.disableDiffuse(1));
+			finder
+				.clear()
+				.blendMode(0, BlendMode.TRANSLUCENT)
+				.emissive(0, poly.emissive(1))
+				.disableAo(0, poly.disableAo(1))
+				.disableDiffuse(0, poly.disableDiffuse(1));
 
 			emitter.material(finder.find());
 			outputIndigoQuad(poly, emitter, 1);
@@ -263,11 +283,12 @@ public class PaintManager implements Consumer<Polygon> {
 			if (depth == 3) {
 				bakeSprite(2, poly);
 
-				finder.clear()
-				.blendMode(0, BlendMode.TRANSLUCENT)
-				.emissive(0, poly.emissive(2))
-				.disableAo(0, poly.disableAo(2))
-				.disableDiffuse(0, poly.disableDiffuse(2));
+				finder
+					.clear()
+					.blendMode(0, BlendMode.TRANSLUCENT)
+					.emissive(0, poly.emissive(2))
+					.disableAo(0, poly.disableAo(2))
+					.disableDiffuse(0, poly.disableDiffuse(2));
 
 				emitter.material(finder.find());
 				outputIndigoQuad(poly, emitter, 2);
@@ -285,7 +306,7 @@ public class PaintManager implements Consumer<Polygon> {
 
 			final int g = poly.glow(v);
 
-			if(g > 0) {
+			if (g > 0) {
 				emitter.lightmap(v, g);
 			}
 
@@ -312,6 +333,7 @@ public class PaintManager implements Consumer<Polygon> {
 
 		// scale UV coordinates to size of texture sub-region
 		final int vCount = poly.vertexCount();
+
 		for (int v = 0; v < vCount; v++) {
 			poly.uv(v, spriteIndex, minU + spanU * poly.u(v, spriteIndex), minV + spanV * poly.v(v, spriteIndex));
 		}
@@ -378,6 +400,7 @@ public class PaintManager implements Consumer<Polygon> {
 					final float vOld = poly.v(i, spriteIndex);
 					poly.uv(i, spriteIndex, vOld, 1 - uOld);
 				}
+
 				break;
 
 			case ROTATE_180:
@@ -386,6 +409,7 @@ public class PaintManager implements Consumer<Polygon> {
 					final float vOld = poly.v(i, spriteIndex);
 					poly.uv(i, spriteIndex, 1 - uOld, 1 - vOld);
 				}
+
 				break;
 
 			case ROTATE_270:
@@ -394,8 +418,8 @@ public class PaintManager implements Consumer<Polygon> {
 					final float vOld = poly.v(i, spriteIndex);
 					poly.uv(i, spriteIndex, 1 - vOld, uOld);
 				}
-				break;
 
+				break;
 		}
 
 		if (orientation.flipU) {
@@ -410,5 +434,4 @@ public class PaintManager implements Consumer<Polygon> {
 			poly.maxV(spriteIndex, swap);
 		}
 	}
-
 }

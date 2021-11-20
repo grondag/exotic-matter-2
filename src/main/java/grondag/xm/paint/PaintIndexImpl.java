@@ -1,27 +1,34 @@
-/*******************************************************************************
- * Copyright 2020 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.paint;
 
 import java.util.Arrays;
+
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.util.Mth;
+
 import grondag.xm.api.paint.PaintIndex;
 import grondag.xm.api.paint.XmPaint;
 import grondag.xm.network.PaintIndexSnapshotS2C;
@@ -33,7 +40,7 @@ public class PaintIndexImpl implements PaintIndex {
 	public static final PaintIndexImpl SERVER = new PaintIndexImpl(false);
 
 	private int nextIndex = 0;
-	private int capacity  = 1024;
+	private int capacity = 1024;
 	private XmPaint[] paints = new XmPaint[capacity];
 	private boolean isDirty = true;
 	private PlayerList playerManager = null;
@@ -115,7 +122,7 @@ public class PaintIndexImpl implements PaintIndex {
 		final int limit = nextIndex;
 		final ListTag tag = new ListTag();
 
-		for (int i = 0; i < limit; ++i)  {
+		for (int i = 0; i < limit; ++i) {
 			tag.add(paints[i].toFixedTag());
 		}
 
@@ -130,7 +137,7 @@ public class PaintIndexImpl implements PaintIndex {
 		ensureCapacity(limit);
 		nextIndex = limit;
 
-		for (int i = 0; i < limit; ++i)  {
+		for (int i = 0; i < limit; ++i) {
 			paints[i] = XmPaint.fromTag(tag.getCompound(i), null);
 		}
 	}
@@ -153,7 +160,7 @@ public class PaintIndexImpl implements PaintIndex {
 		final int limit = nextIndex;
 		pBuff.writeVarInt(limit);
 
-		for (int i = 0; i < limit; ++i)  {
+		for (int i = 0; i < limit; ++i) {
 			paints[i].toBytes(pBuff);
 		}
 	}
@@ -172,7 +179,7 @@ public class PaintIndexImpl implements PaintIndex {
 		final int limit = pBuff.readVarInt();
 		final XmPaint[] result = new XmPaint[limit];
 
-		for (int i = 0; i < limit; ++i)  {
+		for (int i = 0; i < limit; ++i) {
 			result[i] = XmPaint.fromBytes(pBuff, null);
 		}
 

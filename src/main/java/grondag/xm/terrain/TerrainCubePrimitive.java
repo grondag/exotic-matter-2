@@ -1,26 +1,34 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.terrain;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.ApiStatus.Internal;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.XmMesh;
@@ -40,7 +48,7 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 
 	public static final TerrainCubePrimitive INSTANCE = new TerrainCubePrimitive(Xm.id("terrain_cube"));
 
-	/** never changes so may as well save it */
+	/** Never changes so may as well save it. */
 	private final XmMesh cachedQuads;
 
 	protected TerrainCubePrimitive(ResourceLocation id) {
@@ -78,51 +86,52 @@ public class TerrainCubePrimitive extends AbstractTerrainPrimitive {
 		q.nominalFace(side);
 
 		switch (side) {
-		case UP:
-			q.vertex(0, 0, 1, 0, 0, 0, 0xFFFFFFFF);
-			q.vertex(1, 0, 1, 1, 0, 1, 0xFFFFFFFF);
-			q.vertex(2, 1, 1, 1, 1, 1, 0xFFFFFFFF);
-			q.vertex(3, 1, 1, 0, 1, 0, 0xFFFFFFFF);
-			break;
+			case UP:
+				q.vertex(0, 0, 1, 0, 0, 0, 0xFFFFFFFF);
+				q.vertex(1, 0, 1, 1, 0, 1, 0xFFFFFFFF);
+				q.vertex(2, 1, 1, 1, 1, 1, 0xFFFFFFFF);
+				q.vertex(3, 1, 1, 0, 1, 0, 0xFFFFFFFF);
+				break;
 
-		case DOWN:
-			q.vertex(0, 0, 0, 1, 1, 1, 0xFFFFFFFF);
-			q.vertex(1, 0, 0, 0, 1, 0, 0xFFFFFFFF);
-			q.vertex(2, 1, 0, 0, 0, 0, 0xFFFFFFFF);
-			q.vertex(3, 1, 0, 1, 0, 1, 0xFFFFFFFF);
-			break;
+			case DOWN:
+				q.vertex(0, 0, 0, 1, 1, 1, 0xFFFFFFFF);
+				q.vertex(1, 0, 0, 0, 1, 0, 0xFFFFFFFF);
+				q.vertex(2, 1, 0, 0, 0, 0, 0xFFFFFFFF);
+				q.vertex(3, 1, 0, 1, 0, 1, 0xFFFFFFFF);
+				break;
 
-		case WEST:
-			q.vertex(0, 0, 1, 0, 0, 0, 0xFFFFFFFF);
-			q.vertex(1, 0, 0, 0, 0, 1, 0xFFFFFFFF);
-			q.vertex(2, 0, 0, 1, 1, 1, 0xFFFFFFFF);
-			q.vertex(3, 0, 1, 1, 1, 0, 0xFFFFFFFF);
-			break;
+			case WEST:
+				q.vertex(0, 0, 1, 0, 0, 0, 0xFFFFFFFF);
+				q.vertex(1, 0, 0, 0, 0, 1, 0xFFFFFFFF);
+				q.vertex(2, 0, 0, 1, 1, 1, 0xFFFFFFFF);
+				q.vertex(3, 0, 1, 1, 1, 0, 0xFFFFFFFF);
+				break;
 
-		case EAST:
-			q.vertex(0, 1, 1, 1, 0, 0, 0xFFFFFFFF);
-			q.vertex(1, 1, 0, 1, 0, 1, 0xFFFFFFFF);
-			q.vertex(2, 1, 0, 0, 1, 1, 0xFFFFFFFF);
-			q.vertex(3, 1, 1, 0, 1, 0, 0xFFFFFFFF);
-			break;
+			case EAST:
+				q.vertex(0, 1, 1, 1, 0, 0, 0xFFFFFFFF);
+				q.vertex(1, 1, 0, 1, 0, 1, 0xFFFFFFFF);
+				q.vertex(2, 1, 0, 0, 1, 1, 0xFFFFFFFF);
+				q.vertex(3, 1, 1, 0, 1, 0, 0xFFFFFFFF);
+				break;
 
-		case NORTH:
-			q.vertex(0, 1, 1, 0, 0, 0, 0xFFFFFFFF);
-			q.vertex(1, 1, 0, 0, 0, 1, 0xFFFFFFFF);
-			q.vertex(2, 0, 0, 0, 1, 1, 0xFFFFFFFF);
-			q.vertex(3, 0, 1, 0, 1, 0, 0xFFFFFFFF);
-			break;
+			case NORTH:
+				q.vertex(0, 1, 1, 0, 0, 0, 0xFFFFFFFF);
+				q.vertex(1, 1, 0, 0, 0, 1, 0xFFFFFFFF);
+				q.vertex(2, 0, 0, 0, 1, 1, 0xFFFFFFFF);
+				q.vertex(3, 0, 1, 0, 1, 0, 0xFFFFFFFF);
+				break;
 
-		case SOUTH:
-			q.vertex(0, 0, 1, 1, 0, 0, 0xFFFFFFFF);
-			q.vertex(1, 0, 0, 1, 0, 1, 0xFFFFFFFF);
-			q.vertex(2, 1, 0, 1, 1, 1, 0xFFFFFFFF);
-			q.vertex(3, 1, 1, 1, 1, 0, 0xFFFFFFFF);
-			break;
+			case SOUTH:
+				q.vertex(0, 0, 1, 1, 0, 0, 0xFFFFFFFF);
+				q.vertex(1, 0, 0, 1, 0, 1, 0xFFFFFFFF);
+				q.vertex(2, 1, 0, 1, 1, 1, 0xFFFFFFFF);
+				q.vertex(3, 1, 1, 1, 1, 0, 0xFFFFFFFF);
+				break;
 		}
 
 		q.append();
 	}
+
 	@Override
 	public TerrainModelState.Mutable geometricState(TerrainModelState fromState) {
 		return defaultState().mutableCopy();

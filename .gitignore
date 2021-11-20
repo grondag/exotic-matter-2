@@ -48,3 +48,4 @@ notes.txt
 *.js
 doc/package-list
 /exotic-art-tech/
+.checkstyle

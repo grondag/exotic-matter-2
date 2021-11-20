@@ -1,21 +1,30 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.terrain;
 
 import java.util.function.Predicate;
+
+import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockGetter;
@@ -23,11 +32,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+
 import grondag.fermion.position.PackedBlockPos;
 import grondag.xm.api.block.XmBlockState;
 import grondag.xm.api.terrain.TerrainModelState;
-import org.jetbrains.annotations.ApiStatus.Internal;
-import org.jetbrains.annotations.Nullable;
 
 @Internal
 public class TerrainBlockHelper {
@@ -38,9 +46,11 @@ public class TerrainBlockHelper {
 		return terrainType(state) != null;
 	}
 
-	private static TerrainType[] HEIGHTS = { TerrainType.HEIGHT_1, TerrainType.HEIGHT_2, TerrainType.HEIGHT_3, TerrainType.HEIGHT_4, TerrainType.HEIGHT_5,
-	TerrainType.HEIGHT_6, TerrainType.HEIGHT_7, TerrainType.HEIGHT_8, TerrainType.HEIGHT_9, TerrainType.HEIGHT_10, TerrainType.HEIGHT_11,
-	TerrainType.HEIGHT_12 };
+	private static TerrainType[] HEIGHTS = {
+		TerrainType.HEIGHT_1, TerrainType.HEIGHT_2, TerrainType.HEIGHT_3, TerrainType.HEIGHT_4,
+		TerrainType.HEIGHT_5, TerrainType.HEIGHT_6, TerrainType.HEIGHT_7, TerrainType.HEIGHT_8,
+		TerrainType.HEIGHT_9, TerrainType.HEIGHT_10, TerrainType.HEIGHT_11, TerrainType.HEIGHT_12
+	};
 
 	@Nullable
 	public static TerrainType terrainType(BlockState state) {
@@ -101,9 +111,8 @@ public class TerrainBlockHelper {
 	/**
 	 * Adds or removes a filler block if needed. Also replaces static filler blocks
 	 * with dynamic version. Returns the blockstate that was set if it was changed.
-	 * <p>
 	 *
-	 * Optional predicate can limit what block states are updated. If provided, only
+	 * <p>Optional predicate can limit what block states are updated. If provided, only
 	 * block states where predicate test returns true will be changed.
 	 *
 	 */
@@ -111,12 +120,14 @@ public class TerrainBlockHelper {
 		final BlockState baseState = worldObj.getBlockState(packedBasePos);
 		final Block baseBlock = baseState.getBlock();
 
-		if (TerrainBlockHelper.isFlowHeight(baseState))
+		if (TerrainBlockHelper.isFlowHeight(baseState)) {
 			return null;
+		}
 
 		// Checks for non-displaceable block
-		if (filter != null && !filter.test(baseState))
+		if (filter != null && !filter.test(baseState)) {
 			return null;
+		}
 
 		final int SHOULD_BE_AIR = -1;
 
@@ -159,8 +170,8 @@ public class TerrainBlockHelper {
 				update = stateWithYOffset(fillBlock.defaultBlockState(), targetFill);
 				worldObj.setBlockState(packedBasePos, update);
 			}
-			// confirm filler needed and adjustIfEnabled/remove if needed
 		} else if (targetFill != SHOULD_BE_AIR && fillBlock != null) {
+			// confirm filler needed and adjustIfEnabled/remove if needed
 			update = stateWithYOffset(fillBlock.defaultBlockState(), targetFill);
 			worldObj.setBlockState(packedBasePos, update);
 		}
@@ -175,22 +186,24 @@ public class TerrainBlockHelper {
 	 */
 	public static boolean shouldBeFullCube(BlockState blockState, BlockGetter blockAccess, BlockPos pos) {
 		if (isFlowBlock(blockState)) {
-			final TerrainModelState.Mutable mState = (TerrainModelState.Mutable)XmBlockState.modelState(blockState, blockAccess, pos, true);
+			final TerrainModelState.Mutable mState = (TerrainModelState.Mutable) XmBlockState.modelState(blockState, blockAccess, pos, true);
 			final boolean result = mState.getTerrainState().isFullCube();
 			mState.release();
 			return result;
-		} else
+		} else {
 			return false;
+		}
 	}
 
 	public static @Nullable TerrainState terrainState(BlockState blockState, BlockGetter blockAccess, BlockPos pos) {
 		if (isFlowBlock(blockState)) {
-			final TerrainModelState.Mutable mState = (TerrainModelState.Mutable)XmBlockState.modelState(blockState, blockAccess, pos, true);
+			final TerrainModelState.Mutable mState = (TerrainModelState.Mutable) XmBlockState.modelState(blockState, blockAccess, pos, true);
 			final TerrainState result = mState.getTerrainState();
 			mState.release();
 			return result;
-		} else
+		} else {
 			return null;
+		}
 	}
 
 	/**

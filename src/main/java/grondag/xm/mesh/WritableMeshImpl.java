@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.mesh;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -46,7 +51,7 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
 	 */
 	protected int formatFlags = 0;
 
-	public WritableMeshImpl() {
+	WritableMeshImpl() {
 		super();
 		writer = new StreamBackedMutablePolygon();
 		// note this never changes - writer stream is dedicated,
@@ -164,21 +169,25 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
 	@Override
 	public void splitAsNeeded() {
 		final Polygon reader = reader();
+
 		if (reader.origin()) {
 			final int limit = writerAddress();
+
 			do {
 				final int readAddress = reader.address();
 				splitIfNeeded(readAddress);
-				if(reader.address() != readAddress) {
+
+				if (reader.address() != readAddress) {
 					reader.moveTo(readAddress);
 				}
-			} while(reader.next() && reader.address() < limit);
+			} while (reader.next() && reader.address() < limit);
 		}
 	}
 
 	int splitIfNeeded(int targetAddress) {
 		internal.moveTo(targetAddress);
 		final int inCount = internal.vertexCount();
+
 		if (inCount == 3 || (inCount == 4 && internal.isConvex())) {
 			return Polygon.NO_LINK_OR_TAG;
 		}
@@ -187,22 +196,25 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
 
 		int head = inCount - 1;
 		int tail = 2;
-		writer.copyFrom(internal, false)
-		.vertexCount(4)
-		.copyVertexFrom(0, internal, head)
-		.copyVertexFrom(1, internal, 0)
-		.copyVertexFrom(2, internal, 1)
-		.copyVertexFrom(3, internal, tail)
-		.append();
+		writer
+			.copyFrom(internal, false)
+			.vertexCount(4)
+			.copyVertexFrom(0, internal, head)
+			.copyVertexFrom(1, internal, 0)
+			.copyVertexFrom(2, internal, 1)
+			.copyVertexFrom(3, internal, tail)
+			.append();
 
 		while (head - tail > 1) {
 			final int vCount = head - tail == 2 ? 3 : 4;
 			internal.moveTo(targetAddress);
-			writer.copyFrom(internal, false)
-			.vertexCount(vCount)
-			.copyVertexFrom(0, internal, head)
-			.copyVertexFrom(1, internal, tail)
-			.copyVertexFrom(2, internal, ++tail);
+			writer
+				.copyFrom(internal, false)
+				.vertexCount(vCount)
+				.copyVertexFrom(0, internal, head)
+				.copyVertexFrom(1, internal, tail)
+				.copyVertexFrom(2, internal, ++tail);
+
 			if (vCount == 4) {
 				writer.copyVertexFrom(3, internal, --head);
 
@@ -211,15 +223,18 @@ class WritableMeshImpl extends AbstractXmMesh implements WritableMesh {
 				if (!writer.isConvex()) {
 					head++;
 					tail--;
-					writer.copyFrom(internal, false)
-					.vertexCount(3)
-					.copyVertexFrom(0, internal, head)
-					.copyVertexFrom(1, internal, tail)
-					.copyVertexFrom(2, internal, ++tail);
+					writer
+						.copyFrom(internal, false)
+						.vertexCount(3)
+						.copyVertexFrom(0, internal, head)
+						.copyVertexFrom(1, internal, tail)
+						.copyVertexFrom(2, internal, ++tail);
 				}
 			}
+
 			append();
 		}
+
 		reader(targetAddress).delete();
 		return firstSplitAddress;
 	}

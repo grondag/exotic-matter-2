@@ -1,30 +1,37 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.mesh.polygon;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
+
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.AABB;
+
 import grondag.xm.Xm;
 import grondag.xm.api.paint.PaintBlendMode;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.AABB;
 
 @Experimental
 public interface Polygon {
@@ -80,11 +87,13 @@ public interface Polygon {
 	 */
 	default int indexOf(Vec3f v) {
 		final int limit = vertexCount();
+
 		for (int i = 0; i < limit; i++) {
 			if (v.equals(getPos(i))) {
 				return i;
 			}
 		}
+
 		return VERTEX_NOT_FOUND;
 	}
 
@@ -130,11 +139,13 @@ public interface Polygon {
 		if (face == null) {
 			return false;
 		}
+
 		for (int i = 0; i < vertexCount(); i++) {
 			if (!getPos(i).isOnFacePlane(face, tolerance)) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -158,6 +169,7 @@ public interface Polygon {
 			final float z = x0 * y1 - y0 * x1;
 
 			float mag = Mth.sqrt(x * x + y * y + z * z);
+
 			if (mag < 1.0E-4F) {
 				mag = 1f;
 			}
@@ -165,7 +177,7 @@ public interface Polygon {
 			return Vec3f.create(x / mag, y / mag, z / mag);
 		} catch (final Exception e) {
 			assert false : "Bad polygon structure during face normal request.";
-		return Vec3f.ZERO;
+			return Vec3f.ZERO;
 		}
 	}
 
@@ -184,8 +196,7 @@ public interface Polygon {
 		final int n = vertexCount();
 		final Vec3f N = faceNormal();
 
-		if (n < 3)
-		{
+		if (n < 3) {
 			return 0; // a degenerate polygon
 		}
 
@@ -195,59 +206,68 @@ public interface Polygon {
 		az = (N.z() > 0 ? N.z() : -N.z()); // abs z-coord
 
 		coord = 3; // ignore z-coord
+
 		if (ax > ay) {
-			if (ax > az)
-			{
+			if (ax > az) {
 				coord = 1; // ignore x-coord
 			}
-		} else if (ay > az)
-		{
+		} else if (ay > az) {
 			coord = 2; // ignore y-coord
 		}
 
 		// compute area of the 2D projection
 		switch (coord) {
-		case 1:
-			for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
-				area += (getPosModulo(i)).y() * (getPosModulo(j).z() - getPosModulo(k).z());
-			}
-			break;
-		case 2:
-			for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
-				area += (getPosModulo(i).z() * (getPosModulo(j).x() - getPosModulo(k).x()));
-			}
-			break;
-		case 3:
-			for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
-				area += (getPosModulo(i).x() * (getPosModulo(j).y() - getPosModulo(k).y()));
-			}
-			break;
+			case 1:
+				for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
+					area += (getPosModulo(i)).y() * (getPosModulo(j).z() - getPosModulo(k).z());
+				}
+
+				break;
+
+			case 2:
+				for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
+					area += (getPosModulo(i).z() * (getPosModulo(j).x() - getPosModulo(k).x()));
+				}
+
+				break;
+
+			case 3:
+				for (i = 1, j = 2, k = 0; i < n; i++, j++, k++) {
+					area += (getPosModulo(i).x() * (getPosModulo(j).y() - getPosModulo(k).y()));
+				}
+
+				break;
 		}
 
 		switch (coord) { // wrap-around term
-		case 1:
-			area += (getPosModulo(n).y() * (getPosModulo(1).z() - getPosModulo(n - 1).z()));
-			break;
-		case 2:
-			area += (getPosModulo(n).z() * (getPosModulo(1).x() - getPosModulo(n - 1).x()));
-			break;
-		case 3:
-			area += (getPosModulo(n).x() * (getPosModulo(1).y() - getPosModulo(n - 1).y()));
-			break;
+			case 1:
+				area += (getPosModulo(n).y() * (getPosModulo(1).z() - getPosModulo(n - 1).z()));
+				break;
+
+			case 2:
+				area += (getPosModulo(n).z() * (getPosModulo(1).x() - getPosModulo(n - 1).x()));
+				break;
+
+			case 3:
+				area += (getPosModulo(n).x() * (getPosModulo(1).y() - getPosModulo(n - 1).y()));
+				break;
 		}
 
 		// scale to get area before projection
 		an = Mth.sqrt(ax * ax + ay * ay + az * az); // length of normal vector
 		switch (coord) {
-		case 1:
-			area *= (an / (2 * N.x()));
-			break;
-		case 2:
-			area *= (an / (2 * N.y()));
-			break;
-		case 3:
-			area *= (an / (2 * N.z()));
+			case 1:
+				area *= (an / (2 * N.x()));
+				break;
+
+			case 2:
+				area *= (an / (2 * N.y()));
+				break;
+
+			case 3:
+				area *= (an / (2 * N.z()));
 		}
+
 		return area;
 	}
 
@@ -283,6 +303,7 @@ public interface Polygon {
 
 		for (int i = 0; i < 6; i++) {
 			final Direction f = Direction.from3DDataValue(i);
+
 			if (f != nominalFace && isOnFace(f, PolyHelper.EPSILON)) {
 				return f;
 			}
@@ -301,26 +322,21 @@ public interface Polygon {
 
 	/**
 	 * The maximum wrapping uv distance for either dimension on this surface.
-	 * <p>
 	 *
-	 * Must be zero or positive. Setting to zero disable uvWrapping - painter will
+	 * <p>Must be zero or positive. Setting to zero disable uvWrapping - painter will
 	 * use a 1:1 scale.
-	 * <p>
 	 *
-	 * If the surface is painted with a texture larger than this distance, the
+	 * <p>If the surface is painted with a texture larger than this distance, the
 	 * texture will be scaled down to fit in order to prevent visible seams. A scale
 	 * of 4, for example, would force a 32x32 texture to be rendered at 1/8 scale.
-	 * <p>
 	 *
-	 * If the surface is painted with a texture smaller than this distance, then the
+	 * <p>If the surface is painted with a texture smaller than this distance, then the
 	 * texture will be zoomed tiled to fill the surface.
-	 * <p>
 	 *
-	 * Default is 0 and generally only comes into play for non-cubic surface
+	 * <p>Default is 0 and generally only comes into play for non-cubic surface
 	 * painters.
-	 * <p>
 	 *
-	 * See also {@link SurfaceTopology#TILED}
+	 * <p>See {@link SurfaceTopology#TILED}
 	 */
 	float uvWrapDistance();
 
@@ -369,13 +385,12 @@ public interface Polygon {
 	/**
 	 * Should be called by when the original reference or another reference created
 	 * via {@link #retain()} is no longer held.
-	 * <p>
 	 *
-	 * When retain count is 0 the object will be returned to its allocation pool if
+	 * <p>When retain count is 0 the object will be returned to its allocation pool if
 	 * it has one.
 	 */
 	default void release() {
-
+		// NOOP
 	}
 
 	default int tag() {
@@ -420,27 +435,26 @@ public interface Polygon {
 	void moveTo(int address);
 
 	/**
-	 * False if reader at end of stream in build order. <br>
-	 * By extension, also false if stream is empty.<br>
-	 * Note that WIP is not considered part of stream.
+	 * False if reader at end of stream in build order.
+	 * By extension, also false if stream is empty.
+	 * Note that cursor is not considered part of stream.
 	 */
 	boolean hasValue();
 
 	/**
 	 * Moves reader to next poly in this stream. Returns false if already at
 	 * end.<br>
-	 * Note that WIP is not considered part of stream.
+	 * Note that cursor is not considered part of stream.
 	 */
 	boolean next();
 
 	boolean nextLink();
 
 	/**
-	 * Moves reader to start of stream.<br>
-	 * Note that WIP is not considered part of stream.
-	 * <p>
+	 * Moves reader to start of stream.
+	 * Note that cursor is not considered part of stream.
 	 *
-	 * Returns true if reader has a value, meaning stream not empty & not all polys
+	 * <p>Returns true if reader has a value, meaning stream not empty & not all polys
 	 * are deleted.
 	 */
 	boolean origin();
@@ -448,7 +462,6 @@ public interface Polygon {
 	/**
 	 * Address of current reader location. Can be used with {@link #moveTo(int)} to
 	 * return. Addresses are immutable within this stream instance.
-	 * <p>
 	 */
 	int address();
 
@@ -457,7 +470,8 @@ public interface Polygon {
 	default void toLog() {
 		Xm.LOG.debug("Polygon @ mesh address " + address());
 		final int limit = vertexCount();
-		for(int i = 0; i < limit ; i++) {
+
+		for (int i = 0; i < limit; i++) {
 			Xm.LOG.info(String.format("   %d = %f  %f  %f", i, x(i), y(i), z(i)));
 		}
 	}

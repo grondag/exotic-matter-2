@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.mesh;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
@@ -116,11 +121,13 @@ class MeshFormat {
 	}
 
 	/**
-	 * use full precision face normal - normal needs to be computed from vertices
+	 * Use full precision face normal - normal needs to be computed from vertices.
 	 */
 	public static final int FACE_NORMAL_FORMAT_COMPUTED = 0;
-	/** use quantized normal - normal will be computed when poly is written */
+
+	/** Use quantized normal - normal will be computed when poly is written. */
 	public static final int FACE_NORMAL_FORMAT_QUANTIZED = 1;
+
 	/**
 	 * use normal of nominal face - used when a poly about to be written is found to
 	 * have a face normal that matches the nominal face. Requires no storage.
@@ -157,13 +164,13 @@ class MeshFormat {
 		return LAYER_COUNT.setValue(layerCount, formatIn);
 	}
 
-	/** all vertices are white */
+	/** All vertices are white. */
 	public static final int VERTEX_COLOR_WHITE = 0;
-	/** all vertices have same color, irrespective of layer */
+	/** All vertices have same color, irrespective of layer. */
 	public static final int VERTEX_COLOR_SAME = 1;
-	/** all vertices in a layer share same color, layers are different */
+	/** All vertices in a layer share same color, layers are different. */
 	public static final int VERTEX_COLOR_SAME_BY_LAYER = 2;
-	/** assign vertex color to each layer/vertex */
+	/** Assign vertex color to each layer/vertex. */
 	public static final int VERTEX_COLOR_PER_VERTEX_LAYER = 3;
 
 	private static final BitPacker32<MeshFormat>.IntElement VERTEX_COLOR_FORMAT = BITPACKER.createIntElement(4);
@@ -186,11 +193,11 @@ class MeshFormat {
 		return QUANTIZED_POS.setValue(isQuantized, formatIn);
 	}
 
-	/** use face normal as vertex normals */
+	/** Use face normal as vertex normals. */
 	public static final int VERTEX_NORMAL_FACE = 0;
-	/** quantized normals */
+	/** Quantized normals. */
 	public static final int VERTEX_NORMAL_QUANTIZED = 1;
-	/** full precision normals */
+	/** Full precision normals. */
 	public static final int VERTEX_NORMAL_REGULAR = 2;
 
 	private static final BitPacker32<MeshFormat>.IntElement VERTEX_NORMAL_FORMAT = BITPACKER.createIntElement(3);
@@ -203,13 +210,13 @@ class MeshFormat {
 		return VERTEX_NORMAL_FORMAT.setValue(normFormat, formatIn);
 	}
 
-	/** different UV in each layer */
+	/** Different UV in each layer. */
 	public static final int VERTEX_UV_BY_LAYER = 0;
-	/** all layers have same UV */
+	/** All layers have same UV. */
 	public static final int VERTEX_UV_SAME = 1;
-	/** different UV in each layer, half precision */
+	/** Different UV in each layer, half precision. */
 	public static final int VERTEX_UV_BY_LAYER_HALF = 2;
-	/** all layers have same UV, half precision */
+	/** All layers have same UV, half precision. */
 	public static final int VERTEX_UV_SAME_HALF = 3;
 
 	private static final BitPacker32<MeshFormat>.IntElement VERTEX_UV_FORMAT = BITPACKER.createIntElement(4);
@@ -222,11 +229,11 @@ class MeshFormat {
 		return VERTEX_UV_FORMAT.setValue(uvFormat, formatIn);
 	}
 
-	/** values are zero for every vertex */
+	/** Values are zero for every vertex. */
 	public static final int VERTEX_GLOW_NONE = 0;
-	/** all vertices have same non-zero value */
+	/** All vertices have same non-zero value. */
 	public static final int VERTEX_GLOW_SAME = 1;
-	/** each vertex has a glow value */
+	/** Each vertex has a glow value. */
 	public static final int VERTEX_GLOW_PER_VERTEX = 2;
 
 	private static final BitPacker32<MeshFormat>.IntElement VERTEX_GLOW_FORMAT = BITPACKER.createIntElement(3);
@@ -265,16 +272,16 @@ class MeshFormat {
 	// glow encoder features
 	//    vertexGlow  3   2   None/Same/Per Vertex    vertex layer    no  no
 
-	final static int POLY_FORMAT_SHIFTED_MASK;
-	final static int POLY_FORMAT_SHIFT;
-	final static int POLY_FORMAT_COUNT;
+	static final int POLY_FORMAT_SHIFTED_MASK;
+	static final int POLY_FORMAT_SHIFT;
+	static final int POLY_FORMAT_COUNT;
 
-	final static int POLY_FORMAT_MUTABLE_UNSHIFTED_MASK;
-	final static int POLY_FORMAT_MUTABLE_BITS;
+	static final int POLY_FORMAT_MUTABLE_UNSHIFTED_MASK;
+	static final int POLY_FORMAT_MUTABLE_BITS;
 
-	final static int VERTEX_FORMAT_MASK;
-	final static int VERTEX_FORMAT_SHIFT;
-	final static int VERTEX_FORMAT_COUNT;
+	static final int VERTEX_FORMAT_MASK;
+	static final int VERTEX_FORMAT_SHIFT;
+	static final int VERTEX_FORMAT_COUNT;
 
 	public static final int HAS_LINK_FLAG;
 	public static final int HAS_TAG_FLAG;
@@ -318,6 +325,7 @@ class MeshFormat {
 		if (isMutable(formatIn)) {
 			formatIn = (formatIn & POLY_FORMAT_MUTABLE_UNSHIFTED_MASK) | POLY_FORMAT_MUTABLE_BITS;
 		}
+
 		return (formatIn >> POLY_FORMAT_SHIFT) & POLY_FORMAT_SHIFTED_MASK;
 	}
 
@@ -329,9 +337,8 @@ class MeshFormat {
 	 * Returns smallest format that contain all layers and vertices of the given
 	 * poly, plus any metadata declared in formatTags (tags, links, or bounds).
 	 * Never copies marks.
-	 * <p>
 	 *
-	 * Ignore mutable flag in input poly and flag - output format will always have
+	 * <p>Ignore mutable flag in input poly and flag - output format will always have
 	 * mutable = false because this meant for optimal storage and there would be no
 	 * guarantee changes could be stored in the format.
 	 */
@@ -343,7 +350,7 @@ class MeshFormat {
 		final int vertexCount = polyIn.vertexCount();
 		assert vertexCount >= 3;
 
-		if(polyIn.tag() != Polygon.NO_LINK_OR_TAG) {
+		if (polyIn.tag() != Polygon.NO_LINK_OR_TAG) {
 			result |= HAS_TAG_FLAG;
 		}
 
@@ -358,6 +365,7 @@ class MeshFormat {
 		result = setCullFace(result, polyIn.cullFace());
 
 		final Vec3f faceNormal = polyIn.faceNormal();
+
 		if (faceNormal.equals(Vec3f.forFace(nominalFace))) {
 			result = setFaceNormalFormat(result, FACE_NORMAL_FORMAT_NOMINAL);
 		} else {
@@ -456,9 +464,11 @@ class MeshFormat {
 	 */
 	public static int polyStride(int newFormat, boolean includeVertices) {
 		int result = 1 + StaticEncoder.INTEGER_WIDTH + PolyEncoder.get(newFormat).stride();
+
 		if (includeVertices) {
 			result += VertexEncoder.get(newFormat).vertexStride() * getVertexCount(newFormat) + GlowEncoder.get(newFormat).stride(newFormat);
 		}
+
 		return result;
 	}
 }

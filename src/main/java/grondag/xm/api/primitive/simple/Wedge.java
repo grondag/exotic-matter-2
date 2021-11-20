@@ -1,21 +1,30 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.primitive.simple;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
+
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.ReadOnlyMesh;
 import grondag.xm.api.mesh.WritableMesh;
@@ -28,8 +37,6 @@ import grondag.xm.api.primitive.base.AbstractWedge;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 
 @Experimental
 public class Wedge extends AbstractWedge {
@@ -72,7 +79,7 @@ public class Wedge extends AbstractWedge {
 		quad.surface(SURFACE_BACK);
 		quad.nominalFace(Direction.SOUTH);
 
-		if(isCorner && !isInside) {
+		if (isCorner && !isInside) {
 			quad.setupFaceQuad(Direction.SOUTH,
 					new FaceVertex(0, 0, 0),
 					new FaceVertex(1, 0, 0),
@@ -83,10 +90,11 @@ public class Wedge extends AbstractWedge {
 		} else {
 			quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
 		}
+
 		transform.accept(quad);
 		quad.append();
 
-		if(!isCorner || isInside) {
+		if (!isCorner || isInside) {
 			quad.surface(SURFACE_SIDES);
 			quad.nominalFace(Direction.EAST);
 			quad.setupFaceQuad(Direction.EAST,
@@ -99,6 +107,7 @@ public class Wedge extends AbstractWedge {
 			transform.accept(quad);
 			quad.append();
 		}
+
 		//        } else {
 		//            quad.setupFaceQuad(Direction.EAST,
 		//                    new FaceVertex(0, 0, 0),
@@ -110,24 +119,27 @@ public class Wedge extends AbstractWedge {
 
 		quad.surface(SURFACE_SIDES);
 		quad.nominalFace(Direction.WEST);
-		if(!isCorner || !isInside) {
-			quad.setupFaceQuad(Direction.WEST,
-					new FaceVertex(0, 0, 0),
-					new FaceVertex(1, 0, 0),
-					new FaceVertex(1, 1, 0),
-					new FaceVertex(0.5f, 0.5f, 0),
-					Direction.UP);
 
+		if (!isCorner || !isInside) {
+			quad.setupFaceQuad(
+				Direction.WEST,
+				new FaceVertex(0, 0, 0),
+				new FaceVertex(1, 0, 0),
+				new FaceVertex(1, 1, 0),
+				new FaceVertex(0.5f, 0.5f, 0),
+				Direction.UP
+			);
 		} else {
 			quad.setupFaceQuad(0, 0, 1, 1, 0, Direction.UP);
 		}
+
 		quad.assignLockedUVCoordinates(0);
 		transform.accept(quad);
 		quad.append();
 
 		// front/top
-		if(isCorner) {
-			if(isInside) {
+		if (isCorner) {
+			if (isInside) {
 				quad.surface(SURFACE_TOP);
 				quad.nominalFace(Direction.UP);
 				quad.setupFaceQuad(Direction.UP,
@@ -164,7 +176,6 @@ public class Wedge extends AbstractWedge {
 				quad.assignLockedUVCoordinates(0);
 				transform.accept(quad);
 				quad.append();
-
 			} else {
 				// outside
 				quad.surface(SURFACE_TOP);

@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.paint;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
@@ -42,20 +47,20 @@ public enum RotatableCableQuadrant {
 		@Override
 		public void applyForQuadrant(MutablePolygon polygon, int layerIndex, FaceCorner quadrant) {
 			switch (quadrant) {
-			case BOTTOM_LEFT:
-				polygon.rotation(layerIndex, TextureOrientation.find(ClockwiseRotation.fromOrdinal((FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] + 1) & 3), false, true));
-				break;
-			case BOTTOM_RIGHT:
-				polygon.rotation(layerIndex, TextureOrientation.find(ClockwiseRotation.fromOrdinal((FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - 1) & 3), true, false));
-				break;
-			case TOP_LEFT:
-				polygon.rotation(layerIndex, TextureOrientation.find(ClockwiseRotation.fromOrdinal((FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - 1) & 3), true, false));
-				break;
-			case TOP_RIGHT:
-				polygon.rotation(layerIndex, TextureOrientation.FLIP_U);
-				break;
-			default:
-				break;
+				case BOTTOM_LEFT:
+					polygon.rotation(layerIndex, TextureOrientation.find(ClockwiseRotation.fromOrdinal((FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] + 1) & 3), false, true));
+					break;
+				case BOTTOM_RIGHT:
+					polygon.rotation(layerIndex, TextureOrientation.find(ClockwiseRotation.fromOrdinal((FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - 1) & 3), true, false));
+					break;
+				case TOP_LEFT:
+					polygon.rotation(layerIndex, TextureOrientation.find(ClockwiseRotation.fromOrdinal((FACE_CORNER_ROTATION_MAP[quadrant.ordinal()] - 1) & 3), true, false));
+					break;
+				case TOP_RIGHT:
+					polygon.rotation(layerIndex, TextureOrientation.FLIP_U);
+					break;
+				default:
+					break;
 			}
 		}
 	},
@@ -66,13 +71,12 @@ public enum RotatableCableQuadrant {
 	OUTSIDE_CORNER(1),
 
 	/**
-	 * Will position texture to border the left (counter-clockwise) side of a
-	 * quadrant
+	 * Will position texture to border the left (counter-clockwise) side of a quadrant.
 	 */
 	SIDE_LEFT(2),
 
 	/**
-	 * Will position texture to border the right (clockwise) side of a quadrant
+	 * Will position texture to border the right (clockwise) side of a quadrant.
 	 */
 	SIDE_RIGHT(1) {
 		@Override
@@ -103,17 +107,17 @@ public enum RotatableCableQuadrant {
 	 * Maps face corner value to rotations from upper left. Values correspond to
 	 * Rotation ordinals.
 	 */
-	private static final int FACE_CORNER_ROTATION_MAP[] = new int[FaceCorner.values().length];
+	private static final int[] FACE_CORNER_ROTATION_MAP = new int[FaceCorner.values().length];
 
 	/**
-	 * Holds u offset when mapping the side texture to the right side of a quadrant
+	 * Holds u offset when mapping the side texture to the right side of a quadrant.
 	 */
-	private static final float RIGHT_SIDE_U_SHIFT[] = new float[FaceEdge.values().length];
+	private static final float[] RIGHT_SIDE_U_SHIFT = new float[FaceEdge.values().length];
 
 	/**
-	 * Holds v offset when mapping the side texture to the right side of a quadrant
+	 * Holds v offset when mapping the side texture to the right side of a quadrant.
 	 */
-	private static final float RIGHT_SIDE_V_SHIFT[] = new float[FaceEdge.values().length];
+	private static final float[] RIGHT_SIDE_V_SHIFT = new float[FaceEdge.values().length];
 
 	static {
 		FACE_CORNER_ROTATION_MAP[FaceCorner.TOP_LEFT.ordinal()] = ClockwiseRotation.ROTATE_NONE.ordinal();

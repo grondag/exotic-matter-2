@@ -1,23 +1,31 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
-import net.minecraft.world.phys.Vec3;
+
 import org.jetbrains.annotations.ApiStatus.Experimental;
+
+import net.minecraft.world.phys.Vec3;
+
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.WritableMesh;
@@ -38,28 +46,28 @@ public class Icosahedron {
 
 	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
 		final WritableMesh mesh = XmMeshes.claimWritable();
-		mesh.writer()
-		.lockUV(0, false)
-		.surface(SURFACE_ALL)
-		.saveDefaults();
+		mesh
+			.writer()
+			.lockUV(0, false)
+			.surface(SURFACE_ALL)
+			.saveDefaults();
 
 		icosahedron(new Vec3(.5, .5, .5), 0.6, mesh, false);
 		return mesh.releaseToReader();
 	};
 
 	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-			.surfaceList(SURFACES)
-			.polyFactory(POLY_FACTORY)
-			.orientationType(OrientationType.NONE)
-			.build(Xm.id("icosahedron"));
+		.surfaceList(SURFACES)
+		.polyFactory(POLY_FACTORY)
+		.orientationType(OrientationType.NONE)
+		.build(Xm.id("icosahedron"));
 
 	/**
 	 * Makes a regular icosahedron, which is a very close approximation to a sphere
 	 * for most purposes. Loosely based on
 	 * http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
-	 *
-	 * PERF: use primitives instead of Vec3d
 	 */
+	//PERF: use primitives instead of Vec3d
 	public static void icosahedron(Vec3 center, double radius, WritableMesh mesh, boolean smoothNormals) {
 		/** vertex scale */
 		final double s = radius / (2 * Math.sin(2 * Math.PI / 5));
@@ -86,8 +94,10 @@ public class Icosahedron {
 		vertexes[vi++] = new Vec3(-t, 0, s).add(center);
 
 		Vec3[] normals = null;
+
 		if (smoothNormals) {
 			normals = new Vec3[12];
+
 			for (int i = 0; i < 12; i++) {
 				normals[i] = vertexes[i].subtract(center).normalize();
 			}
@@ -97,8 +107,8 @@ public class Icosahedron {
 
 		final MutablePolygon writer = mesh.writer();
 		writer.vertexCount(3);
-
 		final XmSurface surface = writer.surface();
+
 		if (surface.topology() == SurfaceTopology.TILED) {
 			final float uvMax = (float) (2 * s);
 			writer.maxU(0, uvMax);
@@ -158,11 +168,11 @@ public class Icosahedron {
 		writer.saveDefaults();
 		icosahedronFace(true, 1, 9, 8, vertexes, normals, mesh);
 		icosahedronFace(false, 3, 8, 9, vertexes, normals, mesh);
-
 	}
 
 	private static void icosahedronFace(boolean topHalf, int p1, int p2, int p3, Vec3[] points, Vec3[] normals, WritableMesh mesh) {
 		final MutablePolygon writer = mesh.writer();
+
 		if (normals == null) {
 			if (topHalf) {
 				writer.vertex(0, points[p1], 1, 1, 0xFFFFFFFF, null);
@@ -184,6 +194,7 @@ public class Icosahedron {
 				writer.vertex(2, points[p3], 0, 1, 0xFFFFFFFF, normals[p3]);
 			}
 		}
+
 		// clear face normal if has been set somehow
 		writer.clearFaceNormal();
 		writer.nominalFace(writer.lightFace());

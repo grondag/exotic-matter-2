@@ -1,23 +1,31 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.connect;
 
 import java.util.Arrays;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.ApiStatus.Internal;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -26,7 +34,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.ApiStatus.Internal;
+
 import grondag.fermion.orientation.api.CubeCorner;
 import grondag.fermion.orientation.api.CubeEdge;
 import grondag.xm.Xm;
@@ -45,10 +53,10 @@ import grondag.xm.api.modelstate.ModelState;
 @Internal
 public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	private static final int STATE_COUNT = 6 + 12 + 8;
-	private static final BlockState EMPTY_BLOCK_STATE[] = new BlockState[STATE_COUNT];
-	private static final BlockEntity EMPTY_BLOCK_ENTITY[] = new BlockEntity[STATE_COUNT];
-	private static final ModelState EMPTY_MODEL_STATE[] = new ModelState[STATE_COUNT];
-	private static final BlockEntity MISSING_BLOCK_ENTITY = new BlockEntity(BlockEntityType.STRUCTURE_BLOCK, new BlockPos(0, 0, 0), Blocks.AIR.defaultBlockState()) {};
+	private static final BlockState[] EMPTY_BLOCK_STATE = new BlockState[STATE_COUNT];
+	private static final BlockEntity[] EMPTY_BLOCK_ENTITY = new BlockEntity[STATE_COUNT];
+	private static final ModelState[] EMPTY_MODEL_STATE = new ModelState[STATE_COUNT];
+	private static final BlockEntity MISSING_BLOCK_ENTITY = new BlockEntity(BlockEntityType.STRUCTURE_BLOCK, new BlockPos(0, 0, 0), Blocks.AIR.defaultBlockState()) { };
 
 	static {
 		Arrays.fill(EMPTY_BLOCK_ENTITY, MISSING_BLOCK_ENTITY);
@@ -64,9 +72,11 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 
 	public static BlocksNeighborsImpl claim(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest<?> blockTest) {
 		BlocksNeighborsImpl result = POOL.poll();
+
 		if (result == null) {
 			result = new BlocksNeighborsImpl();
 		}
+
 		result.allowReclaim = true;
 		return result.prepare(world, x, y, z, stateFunc, blockTest);
 	}
@@ -78,9 +88,9 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 		}
 	}
 
-	private final BlockState blockStates[] = new BlockState[STATE_COUNT];
-	private final BlockEntity blockEntities[] = new BlockEntity[STATE_COUNT];
-	private final ModelState modelStates[] = new ModelState[STATE_COUNT];
+	private final BlockState[] blockStates = new BlockState[STATE_COUNT];
+	private final BlockEntity[] blockEntities = new BlockEntity[STATE_COUNT];
+	private final ModelState[] modelStates = new ModelState[STATE_COUNT];
 	private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
 
 	private boolean allowReclaim = false;
@@ -100,8 +110,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	private final BlockPos.MutableBlockPos myPos = new BlockPos.MutableBlockPos();
 	private ModelState myModelState;
 
-	protected BlocksNeighborsImpl() {
-	}
+	protected BlocksNeighborsImpl() { }
 
 	BlocksNeighborsImpl prepare(BlockGetter world, int x, int y, int z, ModelStateFunction stateFunc, BlockTest blockTest) {
 		this.world = world;
@@ -159,6 +168,7 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	@Override
 	public BlockState blockState(Direction face) {
 		BlockState result = blockStates[face.ordinal()];
+
 		if (result == null) {
 			setPos(mutablePos, face);
 
@@ -172,38 +182,45 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 
 			blockStates[face.ordinal()] = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public BlockState blockState() {
 		BlockState result = myBlockState;
+
 		if (result == null) {
 			result = world.getBlockState(mutablePos.set(x, y, z));
 			myBlockState = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public BlockState blockState(CubeEdge edge) {
 		BlockState result = blockStates[edge.superOrdinal];
+
 		if (result == null) {
 			setPos(mutablePos, edge);
 			result = world.getBlockState(mutablePos);
 			blockStates[edge.superOrdinal] = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public BlockState blockState(CubeCorner corner) {
 		BlockState result = blockStates[corner.superOrdinal];
+
 		if (result == null) {
 			setPos(mutablePos, corner);
 			result = world.getBlockState(mutablePos);
 			blockStates[corner.superOrdinal] = result;
 		}
+
 		return result;
 	}
 
@@ -214,43 +231,51 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	@Override
 	public BlockEntity blockEntity(Direction face) {
 		BlockEntity result = blockEntities[face.ordinal()];
+
 		if (result == MISSING_BLOCK_ENTITY) {
 			setPos(mutablePos, face);
 			result = world.getBlockEntity(mutablePos);
 			blockEntities[face.ordinal()] = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public BlockEntity blockEntity() {
 		BlockEntity result = myBlockEntity;
+
 		if (result == MISSING_BLOCK_ENTITY) {
 			result = world.getBlockEntity(mutablePos.set(x, y, z));
 			myBlockEntity = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public BlockEntity blockEntity(CubeEdge edge) {
 		BlockEntity result = blockEntities[edge.superOrdinal];
+
 		if (result == MISSING_BLOCK_ENTITY) {
 			setPos(mutablePos, edge);
 			result = world.getBlockEntity(mutablePos);
 			blockEntities[edge.superOrdinal] = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public BlockEntity blockEntity(CubeCorner corner) {
 		BlockEntity result = blockEntities[corner.superOrdinal];
+
 		if (result == MISSING_BLOCK_ENTITY) {
 			setPos(mutablePos, corner);
 			result = world.getBlockEntity(mutablePos);
 			blockEntities[corner.superOrdinal] = result;
 		}
+
 		return result;
 	}
 
@@ -260,61 +285,65 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 
 	@Override
 	public ModelState modelState() {
-		if (stateFunc == null)
-			return null;
+		if (stateFunc == null) return null;
 
 		ModelState result = myModelState;
+
 		if (result == null) {
 			final BlockState state = this.blockState();
 			mutablePos.set(x, y, z);
 			result = stateFunc.get(world, state, mutablePos);
 			myModelState = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public ModelState modelState(Direction face) {
-		if (stateFunc == null)
-			return null;
+		if (stateFunc == null) return null;
 
 		ModelState result = modelStates[face.ordinal()];
+
 		if (result == null) {
 			final BlockState state = this.blockState(face);
 			setPos(mutablePos, face);
 			result = stateFunc.get(world, state, mutablePos);
 			modelStates[face.ordinal()] = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public ModelState modelState(CubeEdge edge) {
-		if (stateFunc == null)
-			return null;
+		if (stateFunc == null) return null;
 
 		ModelState result = modelStates[edge.superOrdinal];
+
 		if (result == null) {
 			final BlockState state = blockState(edge);
 			setPos(mutablePos, edge);
 			result = stateFunc.get(world, state, mutablePos);
 			modelStates[edge.superOrdinal] = result;
 		}
+
 		return result;
 	}
 
 	@Override
 	public ModelState modelState(CubeCorner corner) {
-		if (stateFunc == null)
-			return null;
+		if (stateFunc == null) return null;
 
 		ModelState result = modelStates[corner.superOrdinal];
+
 		if (result == null) {
 			final BlockState state = blockState(corner);
 			setPos(mutablePos, corner);
 			result = stateFunc.get(world, state, mutablePos);
 			modelStates[corner.superOrdinal] = result;
 		}
+
 		return result;
 	}
 
@@ -337,17 +366,17 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 	private Function<BlocksNeighborsImpl, BlockEntity> targetBlockEntity;
 	private Object targetLocation;
 
-	private static final Function<BlocksNeighborsImpl, BlockState> FACE_BLOCKSTATE = bn -> bn.blockState((Direction)bn.targetLocation);
-	private static final Function<BlocksNeighborsImpl, BlockState> EDGE_BLOCKSTATE = bn -> bn.blockState((CubeEdge)bn.targetLocation);
-	private static final Function<BlocksNeighborsImpl, BlockState> CORNER_BLOCKSTATE = bn -> bn.blockState((CubeCorner)bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, BlockState> FACE_BLOCKSTATE = bn -> bn.blockState((Direction) bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, BlockState> EDGE_BLOCKSTATE = bn -> bn.blockState((CubeEdge) bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, BlockState> CORNER_BLOCKSTATE = bn -> bn.blockState((CubeCorner) bn.targetLocation);
 
-	private static final Function<BlocksNeighborsImpl, BlockEntity> FACE_BLOCKENTITY = bn -> bn.blockEntity((Direction)bn.targetLocation);
-	private static final Function<BlocksNeighborsImpl, BlockEntity> EDGE_BLOCKENTITY = bn -> bn.blockEntity((CubeEdge)bn.targetLocation);
-	private static final Function<BlocksNeighborsImpl, BlockEntity> CORNER_BLOCKENTITY = bn -> bn.blockEntity((CubeCorner)bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, BlockEntity> FACE_BLOCKENTITY = bn -> bn.blockEntity((Direction) bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, BlockEntity> EDGE_BLOCKENTITY = bn -> bn.blockEntity((CubeEdge) bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, BlockEntity> CORNER_BLOCKENTITY = bn -> bn.blockEntity((CubeCorner) bn.targetLocation);
 
-	private static final Function<BlocksNeighborsImpl, ModelState> FACE_MODELSTATE = bn -> bn.modelState((Direction)bn.targetLocation);
-	private static final Function<BlocksNeighborsImpl, ModelState> EDGE_MODELSTATE = bn -> bn.modelState((CubeEdge)bn.targetLocation);
-	private static final Function<BlocksNeighborsImpl, ModelState> CORNER_MODELSTATE = bn -> bn.modelState((CubeCorner)bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, ModelState> FACE_MODELSTATE = bn -> bn.modelState((Direction) bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, ModelState> EDGE_MODELSTATE = bn -> bn.modelState((CubeEdge) bn.targetLocation);
+	private static final Function<BlocksNeighborsImpl, ModelState> CORNER_MODELSTATE = bn -> bn.modelState((CubeCorner) bn.targetLocation);
 
 	@SuppressWarnings("unchecked")
 	private boolean doTest(Direction face) {
@@ -381,11 +410,11 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 
 	@Override
 	public void override(Direction face, boolean override) {
-		if (face == null)
-			return;
+		if (face == null) return;
 
 		final int bitFlag = 1 << face.ordinal();
 		completionFlags |= bitFlag;
+
 		if (override) {
 			resultFlags |= bitFlag;
 		} else {
@@ -395,44 +424,48 @@ public class BlocksNeighborsImpl implements BlockNeighbors, BlockTestContext {
 
 	@Override
 	public boolean result(Direction face) {
-		if (face == null)
-			return false;
+		if (face == null) return false;
 
 		final int bitFlag = 1 << face.ordinal();
+
 		if ((completionFlags & bitFlag) != bitFlag) {
 			if (doTest(face)) {
 				resultFlags |= bitFlag;
 			}
+
 			completionFlags |= bitFlag;
 		}
+
 		return (resultFlags & bitFlag) == bitFlag;
 	}
 
 	@Override
 	public boolean result(CubeEdge edge) {
-		if (edge == null)
-			return false;
+		if (edge == null) return false;
 
 		if ((completionFlags & edge.superOrdinalBit) != edge.superOrdinalBit) {
 			if (doTest(edge)) {
 				resultFlags |= edge.superOrdinalBit;
 			}
+
 			completionFlags |= edge.superOrdinalBit;
 		}
+
 		return (resultFlags & edge.superOrdinalBit) == edge.superOrdinalBit;
 	}
 
 	@Override
 	public boolean result(CubeCorner corner) {
-		if (corner == null)
-			return false;
+		if (corner == null) return false;
 
 		if ((completionFlags & corner.superOrdinalBit) != corner.superOrdinalBit) {
 			if (doTest(corner)) {
 				resultFlags |= corner.superOrdinalBit;
 			}
+
 			completionFlags |= corner.superOrdinalBit;
 		}
+
 		return (resultFlags & corner.superOrdinalBit) == corner.superOrdinalBit;
 	}
 

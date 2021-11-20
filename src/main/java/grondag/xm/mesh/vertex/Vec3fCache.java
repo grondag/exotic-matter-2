@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.mesh.vertex;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -62,8 +67,9 @@ public class Vec3fCache {
 
 		// Zero value normally indicates an unused spot in key array
 		// so requires privileged handling to prevent search weirdness.
-		if (x == 0f && y == 0f && z == 0f)
+		if (x == 0f && y == 0f && z == 0f) {
 			return Vec3fImpl.ZERO;
+		}
 
 		final long hash = (Float.floatToIntBits(x)) ^ (((long) Float.floatToIntBits(y)) << 16) ^ (((long) Float.floatToIntBits(z)) << 32);
 
@@ -72,22 +78,23 @@ public class Vec3fCache {
 		do {
 			final Vec3fImpl check = localState.values[position];
 
-			if (check == null)
+			if (check == null) {
 				return load(localState, x, y, z, position);
-
-			else if (check.x() == x && check.y() == y && check.z() == z)
+			} else if (check.x() == x && check.y() == y && check.z() == z) {
 				return check;
+			}
 
 			position = (position + 1) & positionMask;
-
 		} while (true);
 	}
 
 	protected Vec3fImpl loadFromBackup(Vec3fCacheState backup, final float x, final float y, final float z, int position) {
 		do {
 			final Vec3fImpl v = backup.values[position];
-			if (v != null && v.x() == x && v.y() == y && v.z() == z)
+
+			if (v != null && v.x() == x && v.y() == y && v.z() == z) {
 				return v;
+			}
 
 			if (v == null) {
 				if ((backupMissCount.incrementAndGet() & 0xFF) == 0xFF) {
@@ -95,22 +102,24 @@ public class Vec3fCache {
 						backupState.compareAndSet(backup, null);
 					}
 				}
+
 				return new Vec3fImpl(x, y, z);
 			}
+
 			position = (position + 1) & positionMask;
 		} while (true);
 	}
 
 	protected Vec3fImpl load(Vec3fCacheState localState, final float x, final float y, final float z, int position) {
 		// no need to handle zero key here - is handled as privileged case in get();
-
 		final Vec3fCacheState backupState = this.backupState.get();
-
 		final Vec3fImpl result = backupState == null ? new Vec3fImpl(x, y, z) : loadFromBackup(backupState, x, y, z, position);
+
 		do {
 			Vec3fImpl currentKey;
 			synchronized (writeLock) {
 				currentKey = localState.values[position];
+
 				if (currentKey == null) {
 					// write value start in case another thread tries to read it before we can write
 					// it
@@ -120,11 +129,11 @@ public class Vec3fCache {
 			}
 
 			// small chance another thread added our value before we got our lock
-			if (currentKey.x() == result.x() && currentKey.y() == result.y() && currentKey.z() == result.z())
+			if (currentKey.x() == result.x() && currentKey.y() == result.y() && currentKey.z() == result.z()) {
 				return currentKey;
+			}
 
 			position = (position + 1) & positionMask;
-
 		} while (true);
 
 		if (localState.size.incrementAndGet() == maxFill) {
@@ -141,7 +150,7 @@ public class Vec3fCache {
 		protected AtomicInteger size = new AtomicInteger(0);
 		protected final Vec3fImpl[] values;
 
-		public Vec3fCacheState(int capacityIn) {
+		Vec3fCacheState(int capacityIn) {
 			values = new Vec3fImpl[capacityIn];
 		}
 	}

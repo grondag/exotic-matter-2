@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.collision;
 
 import java.util.Arrays;
@@ -30,19 +35,19 @@ class OctreeCoordinates {
 	static final long[] ALL_EMPTY = new long[64];
 
 	/**
-	 * Indexes to face voxels in division level 4
+	 * Indexes to face voxels in division level 4.
 	 */
 	static final int[] EXTERIOR_INDEX_4 = new int[1352];
 
 	/**
-	 * Indexes to face voxels in division level 3
+	 * Indexes to face voxels in division level 3.
 	 */
 	static final int[] EXTERIOR_INDEX_3 = new int[1352]; //FIXME: why not 296?
 
 	static {
 		Arrays.fill(ALL_FULL, FULL_BITS);
-
 		int exteriorIndex = 0;
+
 		for (int i = 0; i < 4096; i++) {
 			final int xyz = indexToXYZ4(i);
 			final int x = xyz & 15;
@@ -63,11 +68,12 @@ class OctreeCoordinates {
 				EXTERIOR_INDEX_4[exteriorIndex++] = xyzToIndex4(xyz);
 				continue;
 			}
-
 		}
+
 		assert exteriorIndex == 1352;
 
 		int exteriorBottomIndex = 0;
+
 		for (int i = 0; i < 512; i++) {
 			final int xyz = indexToXYZ3(i);
 			final int x = xyz & 7;
@@ -88,54 +94,55 @@ class OctreeCoordinates {
 				EXTERIOR_INDEX_3[exteriorBottomIndex++] = xyzToIndex3(xyz);
 				continue;
 			}
-
 		}
+
 		assert exteriorBottomIndex == 296;
 	}
 
 	static int xyzToIndex(final int xyz, final int divisionLevel) {
 		switch (divisionLevel) {
-		case 0:
-			return 0;
+			case 0:
+				return 0;
 
-		case 1:
-			return xyz;
+			case 1:
+				return xyz;
 
-		case 2:
-			return xyzToIndex2(xyz);
+			case 2:
+				return xyzToIndex2(xyz);
 
-		case 3:
-			return xyzToIndex3(xyz);
+			case 3:
+				return xyzToIndex3(xyz);
 
-		case 4:
-			return xyzToIndex4(xyz);
+			case 4:
+				return xyzToIndex4(xyz);
 		}
+
 		return 0;
 	}
 
 	static int indexToXYZ(final int index, final int divisionLevel) {
 		switch (divisionLevel) {
-		case 0:
-			return 0;
+			case 0:
+				return 0;
 
-		case 1:
-			return index;
+			case 1:
+				return index;
 
-		case 2:
-			return indexToXYZ2(index);
+			case 2:
+				return indexToXYZ2(index);
 
-		case 3:
-			return indexToXYZ3(index);
+			case 3:
+				return indexToXYZ3(index);
 
-		case 4:
-			return indexToXYZ4(index);
+			case 4:
+				return indexToXYZ4(index);
 		}
+
 		return 0;
 	}
 
 	/**
-	 * Gives octree index w/ division level 2 from packed 2-bit Cartesian
-	 * coordinates
+	 * Gives octree index w/ division level 2 from packed 2-bit Cartesian coordinates.
 	 */
 	static int xyzToIndex2(final int xyz2) {
 		final int y = xyz2 >> 1;
@@ -145,8 +152,7 @@ class OctreeCoordinates {
 	}
 
 	/**
-	 * Gives packed 2-bit Cartesian coordinates from octree index w/ division level
-	 * 2
+	 * Gives packed 2-bit Cartesian coordinates from octree index w/ division level 2.
 	 */
 	static int indexToXYZ2(final int i2) {
 		final int j = i2 >> 2;
@@ -154,7 +160,7 @@ class OctreeCoordinates {
 	}
 
 	/**
-	 * Packed 2-bit Cartesian coordinates
+	 * Packed 2-bit Cartesian coordinates.
 	 */
 	static int packedXYZ2(int x, int y, int z) {
 		return x | (y << 2) | (z << 4);
@@ -165,8 +171,7 @@ class OctreeCoordinates {
 	}
 
 	/**
-	 * Gives octree index w/ division level 3 from packed 3-bit Cartesian
-	 * coordinates
+	 * Gives octree index w/ division level 3 from packed 3-bit Cartesian coordinates.
 	 */
 	static int xyzToIndex3(final int xyz3) {
 		// coordinate values are 3 bits each: xxx, yyy, zzz
@@ -181,8 +186,7 @@ class OctreeCoordinates {
 	}
 
 	/**
-	 * Gives packed 3-bit Cartesian coordinates from octree index w/ division level
-	 * 3
+	 * Gives packed 3-bit Cartesian coordinates from octree index w/ division level 3.
 	 */
 	static int indexToXYZ3(final int i3) {
 		// coordinate values are 3 bits each: xxx, yyy, zzz
@@ -200,7 +204,7 @@ class OctreeCoordinates {
 	}
 
 	/**
-	 * Packed 3-bit Cartesian coordinates
+	 * Packed 3-bit Cartesian coordinates.
 	 */
 	static int packedXYZ3(int x, int y, int z) {
 		return x | (y << 3) | (z << 6);
@@ -211,8 +215,7 @@ class OctreeCoordinates {
 	}
 
 	/**
-	 * Gives octree index w/ division level 4 from packed 4-bit Cartesian
-	 * coordinates
+	 * Gives octree index w/ division level 4 from packed 4-bit Cartesian coordinates.
 	 */
 	static int xyzToIndex4(final int xyz4) {
 		// coordinate values are 4 bits each: xxxx, yyyy, zzzz
@@ -237,15 +240,14 @@ class OctreeCoordinates {
 	}
 
 	/**
-	 * Gives packed 4-bit Cartesian coordinates from octree index w/ division level
-	 * 4
+	 * Gives packed 4-bit Cartesian coordinates from octree index w/ division level 4.
 	 */
 	static int indexToXYZ4(final int i4) {
 		// coordinate values are 4 bits each: xxxx, yyyy, zzzz
 		// voxel coordinates are interleaved: zyx zyx zyx zyx
 
 		final int j = i4 >> 2;
-				final int k = i4 >> 4;
+		final int k = i4 >> 4;
 		final int l = i4 >> 6;
 
 		return ((i4 & 1) | (j & 2) | (k & 4) | (l & 8))
@@ -254,7 +256,7 @@ class OctreeCoordinates {
 	}
 
 	/**
-	 * Packed 4-bit Cartesian coordinates
+	 * Packed 4-bit Cartesian coordinates.
 	 */
 	static int packedXYZ4(int x, int y, int z) {
 		return x | (y << 4) | (z << 8);

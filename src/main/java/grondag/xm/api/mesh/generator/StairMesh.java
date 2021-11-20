@@ -1,25 +1,46 @@
+/*
+ * Copyright © Original Authors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.mesh.generator;
+
+import net.minecraft.core.Direction;
 
 import grondag.xm.api.mesh.WritableMesh;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.core.Direction;
 
 public class StairMesh {
 	public static void build(
-			WritableMesh mesh,
-			PolyTransform transform,
-			boolean isCorner,
-			boolean isInside,
-			XmSurface SURFACE_BOTTOM,
-			XmSurface SURFACE_TOP,
-			XmSurface SURFACE_FRONT,
-			XmSurface SURFACE_BACK,
-			XmSurface SURFACE_LEFT,
-			XmSurface SURFACE_RIGHT )
-	{
+		WritableMesh mesh,
+		PolyTransform transform,
+		boolean isCorner,
+		boolean isInside,
+		XmSurface SURFACE_BOTTOM,
+		XmSurface SURFACE_TOP,
+		XmSurface SURFACE_FRONT,
+		XmSurface SURFACE_BACK,
+		XmSurface SURFACE_LEFT,
+		XmSurface SURFACE_RIGHT
+	) {
 		// Default geometry bottom/back against down/south faces. Corner is on right.
 
 		// Sides are split into three quadrants vs one long strip plus one long quadrant
@@ -39,9 +60,8 @@ public class StairMesh {
 		transform.accept(quad);
 		quad.append();
 
-
 		// back is full except for outside corners
-		if(isCorner && !isInside) {
+		if (isCorner && !isInside) {
 			quad.surface(SURFACE_BACK);
 			quad.setupFaceQuad(Direction.SOUTH, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, Direction.UP);
 			transform.accept(quad);
@@ -64,8 +84,8 @@ public class StairMesh {
 			quad.append();
 		}
 
-		if(isCorner) {
-			if(isInside) {
+		if (isCorner) {
+			if (isInside) {
 				quad.surface(SURFACE_LEFT);
 				quad.setupFaceQuad(Direction.EAST, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.UP);
 				transform.accept(quad);
@@ -79,7 +99,6 @@ public class StairMesh {
 				quad.setupFaceQuad(Direction.EAST, 0.5f, 0.5f, 1.0f, 1.0f, 0.5f, Direction.UP);
 				transform.accept(quad);
 				quad.append();
-
 			} else {
 				// Left side top quadrant is inset on an outside corner
 				quad.textureSalt(1);
@@ -88,7 +107,6 @@ public class StairMesh {
 				transform.accept(quad);
 				quad.append();
 			}
-
 		} else {
 			quad.surface(SURFACE_LEFT);
 			quad.setupFaceQuad(Direction.EAST, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.UP);
@@ -106,9 +124,8 @@ public class StairMesh {
 		transform.accept(quad);
 		quad.append();
 
-
 		// right side is a full face on an inside corner
-		if(isCorner && isInside) {
+		if (isCorner && isInside) {
 			quad.surface(SURFACE_RIGHT);
 			quad.setupFaceQuad(Direction.WEST, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, Direction.UP);
 			transform.accept(quad);
@@ -131,8 +148,8 @@ public class StairMesh {
 		}
 
 		// front
-		if(isCorner) {
-			if(isInside) {
+		if (isCorner) {
+			if (isInside) {
 				quad.surface(SURFACE_FRONT);
 				quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, Direction.UP);
 				transform.accept(quad);
@@ -165,7 +182,6 @@ public class StairMesh {
 				transform.accept(quad);
 				quad.append();
 			}
-
 		} else {
 			quad.surface(SURFACE_FRONT);
 			quad.setupFaceQuad(Direction.NORTH, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, Direction.UP);
@@ -180,8 +196,8 @@ public class StairMesh {
 		}
 
 		// top
-		if(isCorner) {
-			if(isInside) {
+		if (isCorner) {
+			if (isInside) {
 				quad.surface(SURFACE_TOP);
 				quad.setupFaceQuad(Direction.UP, 0.0f, 0.5f, 0.5f, 1.0f, 0.0f, Direction.SOUTH);
 				transform.accept(quad);

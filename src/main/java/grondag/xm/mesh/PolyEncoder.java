@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.mesh;
 
 import static grondag.xm.mesh.EncoderFunctions.BAD_ADDRESS;
@@ -135,7 +140,7 @@ class PolyEncoder {
 	private final IntSetter setTexture1;
 	private final IntGetter getTexture2;
 	private final IntSetter setTexture2;
-	/** holds first two textures */
+	/** Holds first two textures. */
 	private final int textureOffset01;
 	private final int textureOffset2;
 
@@ -154,39 +159,39 @@ class PolyEncoder {
 		int offset = baseOffset;
 
 		switch (getFaceNormalFormat(format)) {
-		case FACE_NORMAL_FORMAT_COMPUTED:
-			getNormalXOffset = offset++;
-			getNormalX = GET_FLOAT;
-			getNormalYOffset = offset++;
-			getNormalY = GET_FLOAT;
-			getNormalZOffset = offset++;
-			getNormalZ = GET_FLOAT;
-			setNormalXYZ = SET_FLOAT3;
-			clearNormal = SET_FLOAT3;
-			break;
+			case FACE_NORMAL_FORMAT_COMPUTED:
+				getNormalXOffset = offset++;
+				getNormalX = GET_FLOAT;
+				getNormalYOffset = offset++;
+				getNormalY = GET_FLOAT;
+				getNormalZOffset = offset++;
+				getNormalZ = GET_FLOAT;
+				setNormalXYZ = SET_FLOAT3;
+				clearNormal = SET_FLOAT3;
+				break;
 
-		default:
-		case FACE_NORMAL_FORMAT_NOMINAL:
-			getNormalXOffset = -1;
-			getNormalX = GET_FLOAT_FAIL;
-			getNormalYOffset = -1;
-			getNormalY = GET_FLOAT_FAIL;
-			getNormalZOffset = -1;
-			getNormalZ = GET_FLOAT_FAIL;
-			setNormalXYZ = SET_FLOAT3_FAIL;
-			clearNormal = SET_FLOAT3_FAIL;
-			break;
+			case FACE_NORMAL_FORMAT_QUANTIZED:
+				getNormalXOffset = offset++;
+				getNormalYOffset = getNormalXOffset;
+				getNormalZOffset = getNormalXOffset;
+				getNormalX = GET_NORMAL_X_QUANTIZED;
+				getNormalY = GET_NORMAL_Y_QUANTIZED;
+				getNormalZ = GET_NORMAL_Z_QUANTIZED;
+				setNormalXYZ = SET_NORMAL_XYZ_QUANTIZED;
+				clearNormal = SET_FLOAT3_FAIL;
+				break;
 
-		case FACE_NORMAL_FORMAT_QUANTIZED:
-			getNormalXOffset = offset++;
-			getNormalYOffset = getNormalXOffset;
-			getNormalZOffset = getNormalXOffset;
-			getNormalX = GET_NORMAL_X_QUANTIZED;
-			getNormalY = GET_NORMAL_Y_QUANTIZED;
-			getNormalZ = GET_NORMAL_Z_QUANTIZED;
-			setNormalXYZ = SET_NORMAL_XYZ_QUANTIZED;
-			clearNormal = SET_FLOAT3_FAIL;
-			break;
+			case FACE_NORMAL_FORMAT_NOMINAL:
+			default:
+				getNormalXOffset = -1;
+				getNormalX = GET_FLOAT_FAIL;
+				getNormalYOffset = -1;
+				getNormalY = GET_FLOAT_FAIL;
+				getNormalZOffset = -1;
+				getNormalZ = GET_FLOAT_FAIL;
+				setNormalXYZ = SET_FLOAT3_FAIL;
+				clearNormal = SET_FLOAT3_FAIL;
+				break;
 		}
 
 		final int layerCount = getLayerCount(format);
@@ -280,54 +285,54 @@ class PolyEncoder {
 		}
 
 		switch (getVertexColorFormat(format)) {
-		case VERTEX_COLOR_WHITE:
-			getColor0 = GET_INT_WHITE;
-			getColor1 = layerCount > 1 ? GET_INT_WHITE : GET_INT_FAIL;
-			getColor2 = layerCount == 3 ? GET_INT_WHITE : GET_INT_FAIL;
-			setColor0 = SET_INT_WHITE;
-			setColor1 = layerCount > 1 ? SET_INT_WHITE : SET_INT_FAIL;
-			setColor2 = layerCount == 3 ? SET_INT_WHITE : SET_INT_FAIL;
-			colorOffset0 = BAD_ADDRESS;
-			colorOffset1 = BAD_ADDRESS;
-			colorOffset2 = BAD_ADDRESS;
-			break;
+			case VERTEX_COLOR_WHITE:
+				getColor0 = GET_INT_WHITE;
+				getColor1 = layerCount > 1 ? GET_INT_WHITE : GET_INT_FAIL;
+				getColor2 = layerCount == 3 ? GET_INT_WHITE : GET_INT_FAIL;
+				setColor0 = SET_INT_WHITE;
+				setColor1 = layerCount > 1 ? SET_INT_WHITE : SET_INT_FAIL;
+				setColor2 = layerCount == 3 ? SET_INT_WHITE : SET_INT_FAIL;
+				colorOffset0 = BAD_ADDRESS;
+				colorOffset1 = BAD_ADDRESS;
+				colorOffset2 = BAD_ADDRESS;
+				break;
 
-		case VERTEX_COLOR_SAME:
-			getColor0 = GET_INT;
-			getColor1 = GET_INT;
-			getColor2 = GET_INT;
-			setColor0 = SET_INT;
-			setColor1 = SET_INT;
-			setColor2 = SET_INT;
-			colorOffset0 = offset++;
-			colorOffset1 = colorOffset0;
-			colorOffset2 = colorOffset0;
-			break;
+			case VERTEX_COLOR_SAME:
+				getColor0 = GET_INT;
+				getColor1 = GET_INT;
+				getColor2 = GET_INT;
+				setColor0 = SET_INT;
+				setColor1 = SET_INT;
+				setColor2 = SET_INT;
+				colorOffset0 = offset++;
+				colorOffset1 = colorOffset0;
+				colorOffset2 = colorOffset0;
+				break;
 
-		case VERTEX_COLOR_SAME_BY_LAYER:
-			getColor0 = GET_INT;
-			getColor1 = GET_INT;
-			getColor2 = GET_INT;
-			setColor0 = SET_INT;
-			setColor1 = SET_INT;
-			setColor2 = SET_INT;
-			colorOffset0 = offset++;
-			colorOffset1 = offset++;
-			colorOffset2 = offset++;
-			break;
+			case VERTEX_COLOR_SAME_BY_LAYER:
+				getColor0 = GET_INT;
+				getColor1 = GET_INT;
+				getColor2 = GET_INT;
+				setColor0 = SET_INT;
+				setColor1 = SET_INT;
+				setColor2 = SET_INT;
+				colorOffset0 = offset++;
+				colorOffset1 = offset++;
+				colorOffset2 = offset++;
+				break;
 
-		default:
-		case VERTEX_COLOR_PER_VERTEX_LAYER:
-			getColor0 = GET_INT_FAIL;
-			getColor1 = GET_INT_FAIL;
-			getColor2 = GET_INT_FAIL;
-			setColor0 = SET_INT_FAIL;
-			setColor1 = SET_INT_FAIL;
-			setColor2 = SET_INT_FAIL;
-			colorOffset0 = BAD_ADDRESS;
-			colorOffset1 = BAD_ADDRESS;
-			colorOffset2 = BAD_ADDRESS;
-			break;
+			case VERTEX_COLOR_PER_VERTEX_LAYER:
+			default:
+				getColor0 = GET_INT_FAIL;
+				getColor1 = GET_INT_FAIL;
+				getColor2 = GET_INT_FAIL;
+				setColor0 = SET_INT_FAIL;
+				setColor1 = SET_INT_FAIL;
+				setColor2 = SET_INT_FAIL;
+				colorOffset0 = BAD_ADDRESS;
+				colorOffset1 = BAD_ADDRESS;
+				colorOffset2 = BAD_ADDRESS;
+				break;
 		}
 
 		stride = offset - baseOffset;
@@ -351,8 +356,11 @@ class PolyEncoder {
 
 	public final Vec3f getFaceNormal(IntStream stream, int baseAddress) {
 		final float x = getNormalX.get(stream, baseAddress + getNormalXOffset);
-		if (Float.isNaN(x))
+
+		if (Float.isNaN(x)) {
 			return null;
+		}
+
 		return Vec3f.create(x, getNormalY.get(stream, baseAddress + getNormalYOffset), getNormalZ.get(stream, baseAddress + getNormalZOffset));
 	}
 
@@ -459,11 +467,12 @@ class PolyEncoder {
 		final int handle = layerIndex == 0 ? getTexture0.get(stream, baseAddress + textureOffset01)
 				: layerIndex == 1 ? getTexture1.get(stream, baseAddress + textureOffset01) : getTexture2.get(stream, baseAddress + textureOffset2);
 
-				return handle == 0 ? "" : textureHandler.fromHandle(handle);
+		return handle == 0 ? "" : textureHandler.fromHandle(handle);
 	}
 
 	public final void setTextureName(IntStream stream, int baseAddress, int layerIndex, String textureName) {
 		final int handle = textureName == null || textureName.isEmpty() ? 0 : textureHandler.toHandle(textureName);
+
 		if (layerIndex == 0) {
 			setTexture0.set(stream, baseAddress + textureOffset01, handle);
 		} else if (layerIndex == 1) {

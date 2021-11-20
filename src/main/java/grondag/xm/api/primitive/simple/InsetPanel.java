@@ -1,24 +1,32 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.primitive.simple;
 
 import java.util.function.Function;
+
+import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import grondag.fermion.color.Color;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
@@ -41,10 +49,10 @@ import grondag.xm.api.texture.TextureOrientation;
 
 @Experimental
 public class InsetPanel {
-	private InsetPanel() {}
+	private InsetPanel() { }
 
 	private static final float DEPTH = 2f / 16f;
-	private static final float INV_DEPTH = 1 -  DEPTH;
+	private static final float INV_DEPTH = 1 - DEPTH;
 
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
 			.add("outer", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
@@ -61,8 +69,9 @@ public class InsetPanel {
 	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
 		final CornerJoinState joins = modelState.cornerJoin();
 
-		if(joins.simpleJoin() == SimpleJoinState.ALL_JOINS)
+		if (joins.simpleJoin() == SimpleJoinState.ALL_JOINS) {
 			return XmMesh.EMPTY;
+		}
 
 		final CsgMeshBuilder csg = CsgMeshBuilder.threadLocal();
 		emitOuter(csg.input(), joins);
@@ -77,20 +86,18 @@ public class InsetPanel {
 		}
 
 		return csg.build();
-
 	};
 
 	private static void cutSide(Direction face, CsgMeshBuilder csg, CornerJoinFaceState faceJoin, boolean isLit) {
-
 		final float[] spec = SPECS[faceJoin.ordinal()];
 
-		if(spec == null) return;
+		if (spec == null) return;
 
 		final Direction top = PolyHelper.defaultTopOf(face);
 		final Direction opposite = face.getOpposite();
-
 		final int limit = spec.length / 4;
-		for(int i = 0; i < limit; i++) {
+
+		for (int i = 0; i < limit; i++) {
 			final WritableMesh mesh = csg.input();
 			final MutablePolygon writer = mesh.writer();
 
@@ -125,29 +132,30 @@ public class InsetPanel {
 
 	private static void setupCutSideQuad(MutablePolygon poly, float x0, float y0, float x1, float y1, float depth, Direction face, Direction topFace, boolean isLit) {
 		final int glow = isLit ? 255 : 0;
-
 		poly.surface(SURFACE_CUT);
 
 		poly.setupFaceQuad(face,
-				new FaceVertex.Colored(x0, y0, depth, Color.WHITE, glow),
-				new FaceVertex.Colored(x1, y0, depth, Color.WHITE, glow),
-				new FaceVertex.Colored(x1, y1, depth, Color.WHITE, glow / 3),
-				new FaceVertex.Colored(x0, y1, depth, Color.WHITE, glow / 3),
-				topFace);
+			new FaceVertex.Colored(x0, y0, depth, Color.WHITE, glow),
+			new FaceVertex.Colored(x1, y0, depth, Color.WHITE, glow),
+			new FaceVertex.Colored(x1, y1, depth, Color.WHITE, glow / 3),
+			new FaceVertex.Colored(x0, y1, depth, Color.WHITE, glow / 3),
+			topFace
+		);
 
 		// force vertex normals out to prevent lighting anomalies
 		final Vec3i vec = face.getNormal();
 		final float x = vec.getX();
 		final float y = vec.getY();
 		final float z = vec.getZ();
-		for(int i = 0; i < 4; i++) {
+
+		for (int i = 0; i < 4; i++) {
 			poly.normal(i, x, y, z);
 		}
 
 		poly.append();
 	}
 
-	private static final void emitOuter(WritableMesh mesh, CornerJoinState joins) {
+	private static void emitOuter(WritableMesh mesh, CornerJoinState joins) {
 		final MutablePolygon writer = mesh.writer();
 
 		writer.colorAll(0, 0xFFFFFFFF);
@@ -196,9 +204,9 @@ public class InsetPanel {
 	}
 
 	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-			.surfaceList(SURFACES)
-			.cornerJoin(true)
-			.polyFactory(POLY_FACTORY)
-			.orientationType(OrientationType.NONE)
-			.build(Xm.id("inset_panel"));
+		.surfaceList(SURFACES)
+		.cornerJoin(true)
+		.polyFactory(POLY_FACTORY)
+		.orientationType(OrientationType.NONE)
+		.build(Xm.id("inset_panel"));
 }

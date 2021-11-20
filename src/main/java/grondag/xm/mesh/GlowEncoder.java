@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.mesh;
 
 import static grondag.xm.mesh.MeshFormat.VERTEX_GLOW_NONE;
@@ -30,17 +35,17 @@ import grondag.fermion.intstream.IntStream;
 abstract class GlowEncoder {
 	private static final GlowEncoder NO_GLOW = new GlowEncoder() {
 		@Override
-		public final int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
+		public int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
 			return 0;
 		}
 
 		@Override
-		public final void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
+		public void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		protected final int stride(int format) {
+		protected int stride(int format) {
 			return 0;
 		}
 
@@ -52,17 +57,17 @@ abstract class GlowEncoder {
 
 	private static final GlowEncoder SAME_GLOW = new GlowEncoder() {
 		@Override
-		public final int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
+		public int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
 			return stream.get(glowAddress);
 		}
 
 		@Override
-		public final void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
+		public void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
 			stream.set(glowAddress, glow);
 		}
 
 		@Override
-		protected final int stride(int format) {
+		protected int stride(int format) {
 			return 1;
 		}
 
@@ -74,7 +79,7 @@ abstract class GlowEncoder {
 
 	private static final GlowEncoder VERTEX_GLOW = new GlowEncoder() {
 		@Override
-		public final int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
+		public int getGlow(IntStream stream, int glowAddress, int vertexIndex) {
 			final int streamIndex = glowAddress + (vertexIndex >> 2);
 			final int byteIndex = vertexIndex & 3;
 			final int shift = 8 * byteIndex;
@@ -82,7 +87,7 @@ abstract class GlowEncoder {
 		}
 
 		@Override
-		public final void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
+		public void setGlow(IntStream stream, int glowAddress, int vertexIndex, int glow) {
 			final int streamIndex = glowAddress + (vertexIndex >> 2);
 			final int byteIndex = vertexIndex & 3;
 			final int shift = 8 * byteIndex;
@@ -91,7 +96,7 @@ abstract class GlowEncoder {
 		}
 
 		@Override
-		protected final int stride(int format) {
+		protected int stride(int format) {
 			return (getVertexCount(format) + 3) / 4;
 		}
 

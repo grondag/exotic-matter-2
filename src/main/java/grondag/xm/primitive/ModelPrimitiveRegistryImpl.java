@@ -1,27 +1,35 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.primitive;
 
 import java.util.function.Consumer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
+
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.modelstate.base.MutableBaseModelState;
 import grondag.xm.api.paint.PaintIndex;
@@ -42,25 +50,27 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	}
 
 	@Override
-	public synchronized <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> boolean register(ModelPrimitive<R, W> primitive) {
+	public synchronized <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> boolean register(ModelPrimitive<R, W> primitive) {
 		final boolean result = map.putIfAbsent(primitive.id().toString(), primitive) == null;
+
 		if (result) {
 			final int index = list.size();
 			list.add(primitive);
 			reverseMap.put(primitive.id().toString(), index);
 		}
+
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> ModelPrimitive<R, W> get(int primitiveIndex) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> ModelPrimitive<R, W> get(int primitiveIndex) {
 		return list.get(primitiveIndex);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>>  ModelPrimitive<R, W> get(String idString) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> ModelPrimitive<R, W> get(String idString) {
 		return map.get(idString);
 	}
 
@@ -80,13 +90,13 @@ public class ModelPrimitiveRegistryImpl implements ModelPrimitiveRegistry {
 	}
 
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromTag(CompoundTag tag, PaintIndex paintIndex) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> W fromTag(CompoundTag tag, PaintIndex paintIndex) {
 		final ModelPrimitive<R, W> shape = get(tag.getString(ModelStateTagHelper.NBT_SHAPE));
 		return shape == null ? null : shape.fromTag(tag, paintIndex);
 	}
 
 	@Override
-	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R,W>> W fromBytes(FriendlyByteBuf buf, PaintIndex paintIndex) {
+	public <R extends BaseModelState<R, W>, W extends MutableBaseModelState<R, W>> W fromBytes(FriendlyByteBuf buf, PaintIndex paintIndex) {
 		final ModelPrimitive<R, W> shape = get(buf.readVarInt());
 		return shape == null ? null : shape.fromBytes(buf, paintIndex);
 	}

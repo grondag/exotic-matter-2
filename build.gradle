@@ -3,8 +3,10 @@ plugins {
 	id "eclipse"
 	id "maven-publish"
 	id "com.github.breadmoirai.github-release" version "2.2.9"
+	id 'org.cadixdev.licenser' version '0.6.1'
 	id "org.ajoberstar.grgit" version "3.1.1"
 	id "com.matthewprenger.cursegradle" version "1.4.0"
+	id "checkstyle"
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
@@ -40,6 +42,16 @@ processResources {
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
+}
+
+license {
+	header rootProject.file("HEADER")
+	include "**/*.java"
+}
+
+checkstyle {
+	configFile = rootProject.file("checkstyle.xml")
+	toolVersion = "8.44"
 }
 
 def eclipseName =  project.mod_name;

@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.mesh.polygon;
 
 import java.util.function.Consumer;
@@ -28,7 +33,6 @@ import grondag.xm.api.texture.TextureOrientation;
 
 @Experimental
 public interface MutablePolygon extends Polygon {
-
 	MutablePolygon spriteVertex(int layerIndex, int vertexIndex, float u, float v, int color, int glow);
 
 	MutablePolygon maxU(int layerIndex, float maxU);
@@ -42,13 +46,15 @@ public interface MutablePolygon extends Polygon {
 	MutablePolygon uvWrapDistance(float uvWrapDistance);
 
 	/**
-	 * Sets all vertex colors to given color
+	 * Sets all vertex colors to given color.
 	 */
 	default MutablePolygon colorAll(int layerIndex, int color) {
 		final int limit = vertexCount();
+
 		for (int i = 0; i < limit; i++) {
 			color(i, layerIndex, color);
 		}
+
 		return this;
 	}
 
@@ -76,19 +82,19 @@ public interface MutablePolygon extends Polygon {
 	MutablePolygon disableDiffuse(int layerIndex, boolean disable);
 
 	/**
-	 * Assumes layer 0
+	 * Assumes layer 0.
 	 */
 	MutablePolygon vertex(int vertexIndex, float x, float y, float z, float u, float v, int color, int glow);
 
 	/**
-	 * Assumes layer 0, sets glow to 0
+	 * Assumes layer 0, sets glow to 0.
 	 */
 	default MutablePolygon vertex(int vertexIndex, float x, float y, float z, float u, float v, int color) {
 		return vertex(vertexIndex, x, y, z, u, v, color, 0);
 	}
 
 	/**
-	 * Assumes layer 0
+	 * Assumes layer 0.
 	 */
 	default MutablePolygon vertex(int vertexIndex, float x, float y, float z, float u, float v, int color, float normX, float normY, float normZ) {
 		return this.vertex(vertexIndex, normX, normY, normZ, u, v, color).normal(vertexIndex, normX, normY, normZ);
@@ -134,7 +140,7 @@ public interface MutablePolygon extends Polygon {
 	}
 
 	/**
-	 * glow is clamped to allowed values
+	 * Glow is clamped to allowed values.
 	 */
 	MutablePolygon glow(int vertexIndex, int glow);
 
@@ -166,26 +172,24 @@ public interface MutablePolygon extends Polygon {
 	}
 
 	/**
-	 * Sets up a quad with human-friendly semantics. <br>
-	 * <br>
+	 * Sets up a quad with human-friendly semantics.
 	 *
-	 * topFace establishes a reference for "up" in these semantics. If null, will
+	 * <p>topFace establishes a reference for "up" in these semantics. If null, will
 	 * use default. Depth represents how far recessed into the surface of the face
-	 * the quad should be. <br>
-	 * <br>
+	 * the quad should be.
 	 *
-	 * Vertices should be given counter-clockwise. Ordering of vertices is
+	 * <p>Vertices should be given counter-clockwise. Ordering of vertices is
 	 * maintained for future references. (First vertex passed in will be vertex 0,
-	 * for example.) <br>
-	 * <br>
+	 * for example.)
 	 *
-	 * UV coordinates will be based on where rotated vertices project onto the
+	 * <p>UV coordinates will be based on where rotated vertices project onto the
 	 * nominal face for this quad (effectively lockedUV) unless face vertexes have
 	 * UV coordinates.
 	 */
 	default MutablePolygon setupFaceQuad(FaceVertex vertexIn0, FaceVertex vertexIn1, FaceVertex vertexIn2, FaceVertex vertexIn3, Direction topFace) {
 		assert vertexCount() <= 4;
 		final Direction defaultTop = PolyHelper.defaultTopOf(this.nominalFace());
+
 		if (topFace == null) {
 			topFace = defaultTop;
 		}
@@ -210,8 +214,8 @@ public interface MutablePolygon extends Polygon {
 			rv1 = vertexIn1.withXY(1 - vertexIn1.x, 1 - vertexIn1.y);
 			rv2 = vertexIn2.withXY(1 - vertexIn2.x, 1 - vertexIn2.y);
 			rv3 = vertexIn3.withXY(1 - vertexIn3.x, 1 - vertexIn3.y);
-		} else // left of
-		{
+		} else {
+			// left of
 			rv0 = vertexIn0.withXY(1 - vertexIn0.y, vertexIn0.x);
 			rv1 = vertexIn1.withXY(1 - vertexIn1.y, vertexIn1.x);
 			rv2 = vertexIn2.withXY(1 - vertexIn2.y, vertexIn2.x);
@@ -219,62 +223,74 @@ public interface MutablePolygon extends Polygon {
 		}
 
 		switch (this.nominalFace()) {
-		case UP:
-			vertex(0, rv0.x, 1 - rv0.depth, 1 - rv0.y, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-			vertex(1, rv1.x, 1 - rv1.depth, 1 - rv1.y, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-			vertex(2, rv2.x, 1 - rv2.depth, 1 - rv2.y, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-			if (vertexCount() == 4) {
-				vertex(3, rv3.x, 1 - rv3.depth, 1 - rv3.y, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-			}
-			break;
+			case UP:
+				vertex(0, rv0.x, 1 - rv0.depth, 1 - rv0.y, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+				vertex(1, rv1.x, 1 - rv1.depth, 1 - rv1.y, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+				vertex(2, rv2.x, 1 - rv2.depth, 1 - rv2.y, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
 
-		case DOWN:
-			vertex(0, rv0.x, rv0.depth, rv0.y, 1 - rv0.u(), 1 - rv0.v(), rv0.color(), rv0.glow());
-			vertex(1, rv1.x, rv1.depth, rv1.y, 1 - rv1.u(), 1 - rv1.v(), rv1.color(), rv1.glow());
-			vertex(2, rv2.x, rv2.depth, rv2.y, 1 - rv2.u(), 1 - rv2.v(), rv2.color(), rv2.glow());
-			if (vertexCount() == 4) {
-				vertex(3, rv3.x, rv3.depth, rv3.y, 1 - rv3.u(), 1 - rv3.v(), rv3.color(), rv3.glow());
-			}
-			break;
+				if (vertexCount() == 4) {
+					vertex(3, rv3.x, 1 - rv3.depth, 1 - rv3.y, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+				}
 
-		case EAST:
-			vertex(0, 1 - rv0.depth, rv0.y, 1 - rv0.x, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-			vertex(1, 1 - rv1.depth, rv1.y, 1 - rv1.x, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-			vertex(2, 1 - rv2.depth, rv2.y, 1 - rv2.x, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-			if (vertexCount() == 4) {
-				vertex(3, 1 - rv3.depth, rv3.y, 1 - rv3.x, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-			}
-			break;
+				break;
 
-		case WEST:
-			vertex(0, rv0.depth, rv0.y, rv0.x, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-			vertex(1, rv1.depth, rv1.y, rv1.x, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-			vertex(2, rv2.depth, rv2.y, rv2.x, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-			if (vertexCount() == 4) {
-				vertex(3, rv3.depth, rv3.y, rv3.x, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-			}
-			break;
+			case DOWN:
+				vertex(0, rv0.x, rv0.depth, rv0.y, 1 - rv0.u(), 1 - rv0.v(), rv0.color(), rv0.glow());
+				vertex(1, rv1.x, rv1.depth, rv1.y, 1 - rv1.u(), 1 - rv1.v(), rv1.color(), rv1.glow());
+				vertex(2, rv2.x, rv2.depth, rv2.y, 1 - rv2.u(), 1 - rv2.v(), rv2.color(), rv2.glow());
 
-		case NORTH:
-			vertex(0, 1 - rv0.x, rv0.y, rv0.depth, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-			vertex(1, 1 - rv1.x, rv1.y, rv1.depth, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-			vertex(2, 1 - rv2.x, rv2.y, rv2.depth, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-			if (vertexCount() == 4) {
-				vertex(3, 1 - rv3.x, rv3.y, rv3.depth, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-			}
-			break;
+				if (vertexCount() == 4) {
+					vertex(3, rv3.x, rv3.depth, rv3.y, 1 - rv3.u(), 1 - rv3.v(), rv3.color(), rv3.glow());
+				}
 
-		case SOUTH:
-			vertex(0, rv0.x, rv0.y, 1 - rv0.depth, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
-			vertex(1, rv1.x, rv1.y, 1 - rv1.depth, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
-			vertex(2, rv2.x, rv2.y, 1 - rv2.depth, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
-			if (vertexCount() == 4) {
-				vertex(3, rv3.x, rv3.y, 1 - rv3.depth, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
-			}
-			break;
+				break;
+
+			case EAST:
+				vertex(0, 1 - rv0.depth, rv0.y, 1 - rv0.x, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+				vertex(1, 1 - rv1.depth, rv1.y, 1 - rv1.x, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+				vertex(2, 1 - rv2.depth, rv2.y, 1 - rv2.x, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+
+				if (vertexCount() == 4) {
+					vertex(3, 1 - rv3.depth, rv3.y, 1 - rv3.x, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+				}
+
+				break;
+
+			case WEST:
+				vertex(0, rv0.depth, rv0.y, rv0.x, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+				vertex(1, rv1.depth, rv1.y, rv1.x, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+				vertex(2, rv2.depth, rv2.y, rv2.x, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+
+				if (vertexCount() == 4) {
+					vertex(3, rv3.depth, rv3.y, rv3.x, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+				}
+
+				break;
+
+			case NORTH:
+				vertex(0, 1 - rv0.x, rv0.y, rv0.depth, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+				vertex(1, 1 - rv1.x, rv1.y, rv1.depth, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+				vertex(2, 1 - rv2.x, rv2.y, rv2.depth, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+
+				if (vertexCount() == 4) {
+					vertex(3, 1 - rv3.x, rv3.y, rv3.depth, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+				}
+
+				break;
+
+			case SOUTH:
+				vertex(0, rv0.x, rv0.y, 1 - rv0.depth, rv0.u(), rv0.v(), rv0.color(), rv0.glow());
+				vertex(1, rv1.x, rv1.y, 1 - rv1.depth, rv1.u(), rv1.v(), rv1.color(), rv1.glow());
+				vertex(2, rv2.x, rv2.y, 1 - rv2.depth, rv2.u(), rv2.v(), rv2.color(), rv2.glow());
+
+				if (vertexCount() == 4) {
+					vertex(3, rv3.x, rv3.y, 1 - rv3.depth, rv3.u(), rv3.v(), rv3.color(), rv3.glow());
+				}
+
+				break;
 		}
 
-		if(cullFace() == null) {
+		if (cullFace() == null) {
 			cullFace(computeCullFace());
 		}
 
@@ -285,11 +301,9 @@ public interface MutablePolygon extends Polygon {
 	 * Sets up a quad with standard semantics. x0,y0 are at lower left and x1, y1
 	 * are top right. topFace establishes a reference for "up" in these semantics.
 	 * Depth represents how far recessed into the surface of the face the quad
-	 * should be.<br>
-	 * <br>
+	 * should be.
 	 *
-	 * Returns self for convenience.<br>
-	 * <br>
+	 * <p>Returns self for convenience.
 	 *
 	 * @see #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex,
 	 *      Direction)
@@ -313,7 +327,7 @@ public interface MutablePolygon extends Polygon {
 
 	/**
 	 * Triangular version of
-	 * {@link #setupFaceQuad(Direction, FaceVertex, FaceVertex, FaceVertex, Direction)}
+	 * {@link #setupFaceQuad(Direction, FaceVertex, FaceVertex, FaceVertex, Direction)}.
 	 */
 	default MutablePolygon setupFaceQuad(Direction side, FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, Direction topFace) {
 		assert (vertexCount() == 3);
@@ -323,7 +337,7 @@ public interface MutablePolygon extends Polygon {
 
 	/**
 	 * Triangular version of
-	 * {@link #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex, Direction)}
+	 * {@link #setupFaceQuad(FaceVertex, FaceVertex, FaceVertex, FaceVertex, Direction)}.
 	 */
 	default MutablePolygon setupFaceQuad(FaceVertex tv0, FaceVertex tv1, FaceVertex tv2, Direction topFace) {
 		assert (vertexCount() == 3);
@@ -357,6 +371,7 @@ public interface MutablePolygon extends Polygon {
 
 			uv(i, layerIndex, u, v);
 		}
+
 		return this;
 	}
 
@@ -375,8 +390,8 @@ public interface MutablePolygon extends Polygon {
 
 	default MutablePolygon scaleFromBlockCenter(float scale) {
 		final float c = 0.5f * (1 - scale);
-
 		final int limit = this.vertexCount();
+
 		for (int i = 0; i < limit; i++) {
 			pos(i, x(i) * scale + c, y(i) * scale + c, z(i) * scale + c);
 		}
@@ -388,8 +403,8 @@ public interface MutablePolygon extends Polygon {
 		final float cx = 0.5f * (1 - scaleX);
 		final float cy = 0.5f * (1 - scaleY);
 		final float cz = 0.5f * (1 - scaleZ);
-
 		final int limit = this.vertexCount();
+
 		for (int i = 0; i < limit; i++) {
 			pos(i, x(i) * scaleX + cx, y(i) * scaleY + cy, z(i) * scaleZ + cz);
 		}
@@ -399,7 +414,7 @@ public interface MutablePolygon extends Polygon {
 
 	/**
 	 * if lockUV is on, derive UV coords by projection of vertex coordinates on the
-	 * plane of the quad's face
+	 * plane of the quad's face.
 	 */
 	MutablePolygon assignLockedUVCoordinates(int layerIndex);
 
@@ -407,9 +422,8 @@ public interface MutablePolygon extends Polygon {
 	 * Will copy all poly and poly layer attributes. Layer counts must match. Will
 	 * copy vertices if requested, but vertex counts must match or will throw
 	 * exception.
-	 * <p>
 	 *
-	 * Does not copy links, marks, tags or deleted status.
+	 * <p>Does not copy links, marks, tags or deleted status.
 	 */
 	MutablePolygon copyFrom(Polygon polyIn, boolean includeVertices);
 
@@ -419,9 +433,11 @@ public interface MutablePolygon extends Polygon {
 
 	default MutablePolygon translate(float x, float y, float z) {
 		final int limit = this.vertexCount();
-		for(int i = 0; i < limit; i++) {
+
+		for (int i = 0; i < limit; i++) {
 			pos(i, x(i) + x, y(i) + y, z(i) + z);
 		}
+
 		return this;
 	}
 

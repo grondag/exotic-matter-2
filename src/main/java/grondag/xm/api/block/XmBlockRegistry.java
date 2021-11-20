@@ -1,35 +1,43 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.block;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.ApiStatus.Experimental;
+
 import grondag.xm.api.modelstate.ModelStateFunction;
 import grondag.xm.api.modelstate.MutableModelState;
 import grondag.xm.dispatch.XmRegistryImpl;
 
 @Experimental
 public class XmBlockRegistry {
-	private XmBlockRegistry() {}
+	private XmBlockRegistry() { }
 
 	/**
 	 * @deprecated Use version that accepts world for item state
@@ -38,26 +46,23 @@ public class XmBlockRegistry {
 	public static void addBlockStates(
 			Block block,
 			Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap,
-					Function<ItemStack, MutableModelState> itemModelFunction)
-	{
-
+			Function<ItemStack, MutableModelState> itemModelFunction
+	) {
 		XmRegistryImpl.register(block, modelFunctionMap, (s, w) -> itemModelFunction.apply(s));
 	}
-
 
 	public static void addBlockStates(
 			Block block,
 			Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap,
-					BiFunction<ItemStack, Level, MutableModelState> itemModelFunction)
-	{
-
+					BiFunction<ItemStack, Level, MutableModelState> itemModelFunction
+	) {
 		XmRegistryImpl.register(block, modelFunctionMap, itemModelFunction);
 	}
 
 	public static void addBlockStates(
 			Block block,
-			Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap) {
-
+			Function<BlockState, ? extends ModelStateFunction<?>> modelFunctionMap
+	) {
 		XmRegistryImpl.register(block, modelFunctionMap, DEFAULT_ITEM_MODEL_FUNCTION_V2);
 	}
 
@@ -78,26 +83,30 @@ public class XmBlockRegistry {
 	}
 
 	/**
-	 * Use {@link #DEFAULT_ITEM_MODEL_FUNCTION_V2}
+	 * Use {@link #DEFAULT_ITEM_MODEL_FUNCTION_V2}.
 	 */
 	@Deprecated
-	public static final Function<ItemStack, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION  = s -> {
+	public static final Function<ItemStack, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION = s -> {
 		if (s.getItem() instanceof BlockItem) {
 			final BlockItem item = (BlockItem) s.getItem();
 			final XmBlockState xmState = XmBlockState.get(item);
-			if (xmState != null)
+
+			if (xmState != null) {
 				return xmState.defaultModelState();
+			}
 		}
+
 		return null;
 	};
 
-	public static final BiFunction<ItemStack, Level, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION_V2  = (s, w) -> {
+	public static final BiFunction<ItemStack, Level, MutableModelState> DEFAULT_ITEM_MODEL_FUNCTION_V2 = (s, w) -> {
 		if (s.getItem() instanceof BlockItem) {
 			final BlockItem item = (BlockItem) s.getItem();
 			final XmBlockState xmState = XmBlockState.get(item);
 
-			if (xmState != null)
+			if (xmState != null) {
 				return xmState.defaultModelState();
+			}
 		}
 
 		return null;

@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.mesh.polygon;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
@@ -46,7 +51,7 @@ public class FaceVertex {
 	@Override
 	public FaceVertex clone() {
 		assert false : "Why u clone immutable object?";
-	return new FaceVertex(x, y, depth, glow);
+		return new FaceVertex(x, y, depth, glow);
 	}
 
 	public FaceVertex withXY(float x, float y) {
@@ -75,15 +80,13 @@ public class FaceVertex {
 
 	/**
 	 * This value is logical 0-1 within the texture for this face. NOT 0-16. And NOT
-	 * interpolated for the sprite. <br>
-	 * <br>
+	 * interpolated for the sprite.
 	 *
-	 * Note that the V orientation is flipped from the Y axis used for vertices.
+	 * <p>Note that the V orientation is flipped from the Y axis used for vertices.
 	 * Origin is at the top left for textures, vs. bottom left for vertex
-	 * coordinates. This means the default values for u, v will be x, 1-y. <br>
-	 * <br>
+	 * coordinates. This means the default values for u, v will be x, 1-y.
 	 *
-	 * The bottom face is handled differently and RawQuad will flip it
+	 * <p>The bottom face is handled differently and RawQuad will flip it
 	 * automatically..
 	 */
 	public float u() {
@@ -91,7 +94,7 @@ public class FaceVertex {
 	}
 
 	/**
-	 * See {@link #u()}
+	 * See {@link #u()}.
 	 */
 	public float v() {
 		return 1 - y;
@@ -173,7 +176,7 @@ public class FaceVertex {
 		@Override
 		public FaceVertex clone() {
 			assert false : "Why u clone immutable object?";
-		return new FaceVertex.UV(x, y, depth, u, v, glow);
+			return new FaceVertex.UV(x, y, depth, u, v, glow);
 		}
 
 		@Override
@@ -232,7 +235,7 @@ public class FaceVertex {
 		@Override
 		public FaceVertex clone() {
 			assert false : "Why u clone immutable object?";
-		return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
+			return new FaceVertex.UVColored(x, y, depth, u, v, color, glow);
 		}
 
 		@Override

@@ -1,30 +1,37 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.terrain;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
-import grondag.xm.api.block.XmBlockState;
-import grondag.xm.api.modelstate.ModelState;
-import grondag.xm.api.modelstate.MutableModelState;
-import grondag.xm.api.terrain.TerrainModelState;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+
+import grondag.xm.api.block.XmBlockState;
+import grondag.xm.api.modelstate.ModelState;
+import grondag.xm.api.modelstate.MutableModelState;
+import grondag.xm.api.terrain.TerrainModelState;
 
 @Internal
 public class TerrainDynamicBlock extends TerrainBlock {
@@ -46,8 +53,10 @@ public class TerrainDynamicBlock extends TerrainBlock {
 	 */
 	public void makeStatic(BlockState state, Level world, BlockPos pos) {
 		final TerrainStaticBlock staticVersion = TerrainBlockRegistry.TERRAIN_STATE_REGISTRY.getStaticBlock(this);
-		if (staticVersion == null || state.getBlock() != this)
+
+		if (staticVersion == null || state.getBlock() != this) {
 			return;
+		}
 
 		final MutableModelState myModelState = XmBlockState.modelState(state, world, pos, true);
 		myModelState.setStatic(true);
@@ -92,8 +101,9 @@ public class TerrainDynamicBlock extends TerrainBlock {
 	 */
 	public static void freezeNeighbors(Level worldIn, BlockPos pos, BlockState state) {
 		// only height blocks affect neighbors
-		if (!TerrainBlockHelper.isFlowHeight(state))
+		if (!TerrainBlockHelper.isFlowHeight(state)) {
 			return;
+		}
 
 		BlockState targetState;
 		Block targetBlock;
@@ -106,6 +116,7 @@ public class TerrainDynamicBlock extends TerrainBlock {
 						final BlockPos targetPos = pos.offset(x, y, z);
 						targetState = worldIn.getBlockState(targetPos);
 						targetBlock = targetState.getBlock();
+
 						if (targetBlock instanceof TerrainDynamicBlock) {
 							((TerrainDynamicBlock) targetBlock).makeStatic(targetState, worldIn, targetPos);
 						}

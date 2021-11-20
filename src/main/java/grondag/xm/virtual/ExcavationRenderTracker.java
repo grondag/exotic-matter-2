@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.virtual;
 
 import java.util.IdentityHashMap;
@@ -35,7 +40,6 @@ import grondag.xm.network.S2C_PacketExcavationRenderRefresh;
 
 @Internal
 public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<ExcavationRenderEntry>> {
-
 	public static final ExcavationRenderTracker INSTANCE = new ExcavationRenderTracker();
 
 	private final IdentityHashMap<ServerPlayer, PlayerData> playerTracking = new IdentityHashMap<>();
@@ -47,9 +51,11 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 
 	public void add(ExcavationRenderTask task) {
 		final ExcavationRenderEntry entry = new ExcavationRenderEntry(task);
+
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("id = %d new Entry, valid=%s", entry.id, Boolean.toString(entry.isValid()));
 		}
+
 		if (entry.isValid()) {
 			synchronized (this) {
 				this.get(entry.world).put(entry.id, entry);
@@ -57,10 +63,12 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 
 			for (final Map.Entry<ServerPlayer, PlayerData> playerEntry : playerTracking.entrySet()) {
 				final PlayerData pd = playerEntry.getValue();
+
 				if (pd.world == entry.world && task.visibleTo(playerEntry.getKey())) {
 					if (XmConfig.logExcavationRenderTracking) {
 						Xm.LOG.info("adding listeners for %s", playerEntry.getKey().getDisplayName());
 					}
+
 					entry.addListener(playerEntry.getKey(), true);
 				}
 			}
@@ -78,6 +86,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 
 		for (final Map.Entry<ServerPlayer, PlayerData> playerEntry : playerTracking.entrySet()) {
 			final PlayerData pd = playerEntry.getValue();
+
 			if (pd.world == entry.world) {
 				entry.removeListener(playerEntry.getKey());
 				playerEntry.getKey().connection.send(packet);
@@ -101,6 +110,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 			if (XmConfig.logExcavationRenderTracking) {
 				Xm.LOG.info("updatePlayerTracking exit no changes");
 			}
+
 			return;
 		}
 
@@ -110,6 +120,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 		if (oldData != null) {
 			synchronized (this) {
 				final Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(oldData.world);
+
 				if (entries != null && !entries.isEmpty()) {
 					for (final ExcavationRenderEntry entry : entries.values()) {
 						entry.removeListener(player);
@@ -122,10 +133,12 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 		final SimpleUnorderedArrayList<ExcavationRenderEntry> output = new SimpleUnorderedArrayList<>();
 		synchronized (this) {
 			final Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(newData.world);
+
 			if (entries != null && !entries.isEmpty()) {
 				for (final ExcavationRenderEntry entry : entries.values()) {
-					if(entry.task.visibleTo(player)) {
+					if (entry.task.visibleTo(player)) {
 						entry.addListener(player, false);
+
 						if (entry.isFirstComputeDone()) {
 							output.add(entry);
 						}
@@ -140,11 +153,13 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 	public void stopPlayerTracking(ServerPlayer player) {
 		final PlayerData oldData = playerTracking.get(player);
 
-		if (oldData == null)
+		if (oldData == null) {
 			return;
+		}
 
 		synchronized (this) {
 			final Int2ObjectOpenHashMap<ExcavationRenderEntry> entries = this.get(oldData.world);
+
 			if (entries != null && !entries.isEmpty()) {
 				for (final ExcavationRenderEntry entry : entries.values()) {
 					entry.removeListener(player);

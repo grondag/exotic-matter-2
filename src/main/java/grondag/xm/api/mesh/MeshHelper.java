@@ -1,44 +1,52 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.mesh;
 
 import java.util.function.Consumer;
-import net.minecraft.core.Direction;
+
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.core.Direction;
+
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.primitive.surface.XmSurface;
 
 @Experimental
 public class MeshHelper {
-
 	public static void unitCylinder(MutablePolygon writer, int sliceCount, Consumer<MutablePolygon> transform, XmSurface sideSurface, @Nullable XmSurface topSurface, @Nullable XmSurface bottomSurface, float wrapDistance) {
 		unitCylinder(writer, sliceCount, transform, sideSurface, topSurface, false, bottomSurface, false, wrapDistance);
 	}
 
 	public static void unitCylinder(
-	MutablePolygon writer,
-	int sliceCount,
-	Consumer<MutablePolygon> transform,
-	XmSurface sideSurface,
-	@Nullable XmSurface topSurface,
-	boolean subdivideTop,
-	@Nullable XmSurface bottomSurface,
-	boolean subdiviteBottom,
-	float wrapDistance) {
+		MutablePolygon writer,
+		int sliceCount,
+		Consumer<MutablePolygon> transform,
+		XmSurface sideSurface,
+		@Nullable XmSurface topSurface,
+		boolean subdivideTop,
+		@Nullable XmSurface bottomSurface,
+		boolean subdiviteBottom,
+		float wrapDistance
+	) {
 		unitCylinder(writer, sliceCount, transform, sideSurface, topSurface, false, bottomSurface, false, wrapDistance, 0, 1);
 	}
 
@@ -52,28 +60,31 @@ public class MeshHelper {
 	 * @param bottomSurface If null, bottom cap not output.
 	 */
 	public static void unitCylinder(
-	MutablePolygon writer,
-	int sliceCount,
-	Consumer<MutablePolygon> transform,
-	XmSurface sideSurface,
-	@Nullable XmSurface topSurface,
-	boolean subdivideTop,
-	@Nullable XmSurface bottomSurface,
-	boolean subdiviteBottom,
-	float wrapDistance,
-	float bottom,
-	float top) {
+		MutablePolygon writer,
+		int sliceCount,
+		Consumer<MutablePolygon> transform,
+		XmSurface sideSurface,
+		@Nullable XmSurface topSurface,
+		boolean subdivideTop,
+		@Nullable XmSurface bottomSurface,
+		boolean subdiviteBottom,
+		float wrapDistance,
+		float bottom,
+		float top
+	) {
 		sliceCount = Math.max(8, ((sliceCount + 3) / 4) * 4);
 
 		final double sliceRadians = Math.PI * 2 / sliceCount;
 
-		for(int i = 0; i < sliceCount; i++) {
+		for (int i = 0; i < sliceCount; i++) {
 			cylSide(i, sliceRadians, writer, transform, sideSurface, wrapDistance, bottom, top);
-			if((i & 1) == 0) {
-				if(topSurface != null) {
+
+			if ((i & 1) == 0) {
+				if (topSurface != null) {
 					cylEnd(i, sliceRadians, writer, transform, topSurface, Direction.UP, subdivideTop, top);
 				}
-				if(bottomSurface != null) {
+
+				if (bottomSurface != null) {
 					cylEnd(i, sliceRadians, writer, transform, bottomSurface, Direction.DOWN, subdiviteBottom, bottom);
 				}
 			}
@@ -81,15 +92,15 @@ public class MeshHelper {
 	}
 
 	private static void cylSide(
-	int slice,
-	double sliceRadians,
-	MutablePolygon writer,
-	Consumer<MutablePolygon> transform,
-	XmSurface sideSurface,
-	float wrapDistance,
-	float bottom,
-	float top)
-	{
+		int slice,
+		double sliceRadians,
+		MutablePolygon writer,
+		Consumer<MutablePolygon> transform,
+		XmSurface sideSurface,
+		float wrapDistance,
+		float bottom,
+		float top
+	) {
 		final double fromRad = sliceRadians * slice;
 		final double toRad = fromRad + sliceRadians;
 		final float nx0 = (float) Math.sin(fromRad);
@@ -106,22 +117,23 @@ public class MeshHelper {
 		writer.maxU(0, wrapDistance);
 		writer.maxV(0, 1);
 
-		writer.surface(sideSurface)
-		.vertex(0, x0, bottom, z0, uMin, bottom, 0xFFFFFFFF)
-		.normal(0, nx0, 0, nz0)
+		writer
+			.surface(sideSurface)
+			.vertex(0, x0, bottom, z0, uMin, bottom, 0xFFFFFFFF)
+			.normal(0, nx0, 0, nz0)
 
-		.vertex(1, x1, bottom, z1, uMax, bottom, 0xFFFFFFFF)
-		.normal(1, nx1, 0, nz1)
+			.vertex(1, x1, bottom, z1, uMax, bottom, 0xFFFFFFFF)
+			.normal(1, nx1, 0, nz1)
 
-		.vertex(2, x1, top, z1, uMax, top, 0xFFFFFFFF)
-		.normal(2, nx1, 0, nz1)
+			.vertex(2, x1, top, z1, uMax, top, 0xFFFFFFFF)
+			.normal(2, nx1, 0, nz1)
 
-		.vertex(3, x0, top, z0, uMin, top, 0xFFFFFFFF)
-		.normal(3, nx0, 0, nz0)
+			.vertex(3, x0, top, z0, uMin, top, 0xFFFFFFFF)
+			.normal(3, nx0, 0, nz0)
 
-		.nominalFace(writer.lightFace())
-		.apply(transform)
-		.append();
+			.nominalFace(writer.lightFace())
+			.apply(transform)
+			.append();
 	}
 
 	/**
@@ -135,16 +147,16 @@ public class MeshHelper {
 	 * @param subDivide Use true for CSG surfaces that may benefit from better recombination. Especially hollow cylinders.
 	 */
 	private static void cylEnd(
-	int slice,
-	double sliceRadians,
-	MutablePolygon writer,
-	Consumer<MutablePolygon> transform,
-	XmSurface surface,
-	Direction face,
-	boolean subDivide,
-	float y)
-	{
-		final double fromRad =slice * sliceRadians;
+		int slice,
+		double sliceRadians,
+		MutablePolygon writer,
+		Consumer<MutablePolygon> transform,
+		XmSurface surface,
+		Direction face,
+		boolean subDivide,
+		float y
+	) {
+		final double fromRad = slice * sliceRadians;
 		final double midRad = fromRad + sliceRadians;
 		final double toRad = midRad + sliceRadians;
 		final float x0 = (float) (0.5 + 0.5 * Math.sin(fromRad));
@@ -154,59 +166,64 @@ public class MeshHelper {
 		final float z1 = (float) (0.5 + 0.5 * Math.cos(midRad));
 		final float z2 = (float) (0.5 + 0.5 * Math.cos(toRad));
 
-		if(face == Direction.UP) {
+		if (face == Direction.UP) {
 			if (subDivide) {
-				writer.vertexCount(3)
-				.vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
-				.vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
-				.vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
-				.surface(surface)
-				.clearFaceNormal()
-				.nominalFace(face)
-				.apply(transform)
-				.append();
+				writer
+					.vertexCount(3)
+					.vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
+					.vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
+					.vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
+					.surface(surface)
+					.clearFaceNormal()
+					.nominalFace(face)
+					.apply(transform)
+					.append();
 
-				writer.vertexCount(3)
-				.vertex(0, x1, y, z1, x1, z1, 0xFFFFFFFF)
-				.vertex(1, x2, y, z2, x2, z2, 0xFFFFFFFF)
-				.vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
+				writer
+					.vertexCount(3)
+					.vertex(0, x1, y, z1, x1, z1, 0xFFFFFFFF)
+					.vertex(1, x2, y, z2, x2, z2, 0xFFFFFFFF)
+					.vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
 			} else {
 				writer
-				.vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
-				.vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
-				.vertex(2, x2, y, z2, x2, z2, 0xFFFFFFFF)
-				.vertex(3, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
+					.vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
+					.vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
+					.vertex(2, x2, y, z2, x2, z2, 0xFFFFFFFF)
+					.vertex(3, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
 			}
 		} else {
 			if (subDivide) {
-				writer.vertexCount(3)
-				.vertex(0, x1, y, z1, x1, z1, 0xFFFFFFFF)
-				.vertex(1, x0, y, z0, x0, z0, 0xFFFFFFFF)
-				.vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
-				.surface(surface)
-				.clearFaceNormal()
-				.nominalFace(face)
-				.apply(transform)
-				.append();
+				writer
+					.vertexCount(3)
+					.vertex(0, x1, y, z1, x1, z1, 0xFFFFFFFF)
+					.vertex(1, x0, y, z0, x0, z0, 0xFFFFFFFF)
+					.vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
+					.surface(surface)
+					.clearFaceNormal()
+					.nominalFace(face)
+					.apply(transform)
+					.append();
 
-				writer.vertexCount(3)
-				.vertex(0, x2, y, z2, x2, z2, 0xFFFFFFFF)
-				.vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
-				.vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
+				writer
+					.vertexCount(3)
+					.vertex(0, x2, y, z2, x2, z2, 0xFFFFFFFF)
+					.vertex(1, x1, y, z1, x1, z1, 0xFFFFFFFF)
+					.vertex(2, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF);
 			} else {
 				writer
-				.vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
-				.vertex(1, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
-				.vertex(2, x2, y, z2, x2, z2, 0xFFFFFFFF)
-				.vertex(3, x1, y, z1, x1, z1, 0xFFFFFFFF);
+					.vertex(0, x0, y, z0, x0, z0, 0xFFFFFFFF)
+					.vertex(1, 0.5f, y, 0.5f, 0.5f, 0.5f, 0xFFFFFFFF)
+					.vertex(2, x2, y, z2, x2, z2, 0xFFFFFFFF)
+					.vertex(3, x1, y, z1, x1, z1, 0xFFFFFFFF);
 			}
 		}
 
-		writer.surface(surface)
-		.clearFaceNormal()
-		.nominalFace(face)
-		.apply(transform)
-		.append();
+		writer
+			.surface(surface)
+			.clearFaceNormal()
+			.nominalFace(face)
+			.apply(transform)
+			.append();
 	}
 
 	/**

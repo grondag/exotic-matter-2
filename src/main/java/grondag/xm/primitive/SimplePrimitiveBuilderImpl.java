@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.primitive;
 
 import static grondag.xm.api.connect.state.SimpleJoinState.AXIS_JOIN_BIT_COUNT;
@@ -23,8 +28,11 @@ import static grondag.xm.api.modelstate.ModelStateFlags.SIMPLE_JOIN;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.minecraft.resources.ResourceLocation;
+
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.resources.ResourceLocation;
+
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
 import grondag.xm.api.mesh.XmMesh;
@@ -116,7 +124,7 @@ public class SimplePrimitiveBuilderImpl {
 
 		private final int bitShift;
 
-		/** true when needs only per-axis connections */
+		/** True when needs only per-axis connections. */
 		private final boolean axisJoin;
 		private final boolean simpleJoin;
 		private final boolean cornerJoin;
@@ -137,7 +145,7 @@ public class SimplePrimitiveBuilderImpl {
 			alternateJoinAffectsGeometry = builder.alternateJoinAffectsGeometry;
 			int count = orientationType.enumClass.getEnumConstants().length << bitShift;
 
-			if(simpleJoin) {
+			if (simpleJoin) {
 				count <<= 6;
 			} else if (axisJoin) {
 				count <<= AXIS_JOIN_BIT_COUNT;
@@ -151,7 +159,7 @@ public class SimplePrimitiveBuilderImpl {
 		public void invalidateCache() {
 			notifyException = true;
 
-			if(!(cornerJoin || alternateJoinAffectsGeometry)) {
+			if (!(cornerJoin || alternateJoinAffectsGeometry)) {
 				Arrays.fill(cachedQuads, null);
 			}
 		}
@@ -168,7 +176,6 @@ public class SimplePrimitiveBuilderImpl {
 
 				if (cornerJoin || alternateJoinAffectsGeometry) {
 					mesh = polyFactory.apply(modelState);
-
 				} else {
 					int index = (modelState.orientationIndex() << bitShift) | (modelState.primitiveBits() << 1);
 
@@ -176,31 +183,31 @@ public class SimplePrimitiveBuilderImpl {
 						index |= 1;
 					}
 
-					if(simpleJoin) {
+					if (simpleJoin) {
 						index = (index << 6) | modelState.simpleJoin().ordinal();
 					} else if (axisJoin) {
 						index = (index << AXIS_JOIN_BIT_COUNT) | SimpleJoinStateImpl.toAxisJoinIndex(modelState.simpleJoin());
 					}
 
-					mesh =  cachedQuads[index];
+					mesh = cachedQuads[index];
 
-					if(mesh == null) {
+					if (mesh == null) {
 						mesh = polyFactory.apply(modelState);
 						cachedQuads[index] = mesh;
 					}
 				}
 
 				final Polygon reader = mesh.threadSafeReader();
-				if(reader.origin()) {
+
+				if (reader.origin()) {
 					do {
 						target.accept(reader);
 					} while (reader.next());
 				}
 
 				reader.release();
-
 			} catch (final Exception e) {
-				if(notifyException) {
+				if (notifyException) {
 					notifyException = false;
 					Xm.LOG.error("Unexpected exception while rendering primitive '" + translationKey() + "'.  Subsequent errors will be supressed.", e);
 				}
@@ -237,12 +244,13 @@ public class SimplePrimitiveBuilderImpl {
 				return false;
 			}
 
-			if (cornerJoin)
+			if (cornerJoin) {
 				return from.cornerJoin() == to.cornerJoin();
-			else if (simpleJoin || axisJoin)
+			} else if (simpleJoin || axisJoin) {
 				return from.simpleJoin() == to.simpleJoin();
-			else
+			} else {
 				return true;
+			}
 		}
 	}
 

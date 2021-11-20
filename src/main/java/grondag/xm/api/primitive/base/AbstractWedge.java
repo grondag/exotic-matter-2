@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.primitive.base;
 
 import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
@@ -20,8 +25,11 @@ import static grondag.xm.api.modelstate.ModelStateFlags.NONE;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.minecraft.resources.ResourceLocation;
+
 import org.jetbrains.annotations.ApiStatus.Experimental;
+
+import net.minecraft.resources.ResourceLocation;
+
 import grondag.fermion.orientation.api.CubeRotation;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.api.mesh.ReadOnlyMesh;
@@ -60,19 +68,20 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 		final int key = computeKey(edgeIndex, isCorner, isInside);
 
 		ReadOnlyMesh mesh = CACHE[key];
-		if(mesh == null) {
+
+		if (mesh == null) {
 			mesh = buildMesh(PolyTransform.forEdgeRotation(edgeIndex), isCorner, isInside);
 			CACHE[key] = mesh;
 		}
 
 		final Polygon reader = mesh.threadSafeReader();
-		if (reader.origin()) {
 
+		if (reader.origin()) {
 			do {
 				target.accept(reader);
 			} while (reader.next());
-
 		}
+
 		reader.release();
 	}
 
@@ -86,10 +95,12 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 	@Override
 	public MutablePrimitiveState geometricState(PrimitiveState fromState) {
 		final MutablePrimitiveState result = newState();
-		if(fromState.primitive().orientationType(fromState) == OrientationType.ROTATION) {
+
+		if (fromState.primitive().orientationType(fromState) == OrientationType.ROTATION) {
 			result.orientationIndex(fromState.orientationIndex());
 			result.primitiveBits(fromState.primitiveBits());
 		}
+
 		return result;
 	}
 
@@ -97,8 +108,8 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 	@Deprecated
 	public boolean doesShapeMatch(PrimitiveState from, PrimitiveState to) {
 		return from.primitive() == to.primitive()
-				&& from.orientationIndex() == to.orientationIndex()
-				&& from.primitiveBits() == to.primitiveBits();
+			&& from.orientationIndex() == to.orientationIndex()
+			&& from.primitiveBits() == to.primitiveBits();
 	}
 
 	private static final int CORNER_FLAG = 1;
@@ -123,7 +134,7 @@ public abstract class AbstractWedge extends AbstractSimplePrimitive {
 	}
 
 	/**
-	 * See {@link #isInsideCorner(PrimitiveState)}
+	 * See {@link #isInsideCorner(PrimitiveState)}.
 	 * @param isCorner
 	 * @param modelState
 	 */

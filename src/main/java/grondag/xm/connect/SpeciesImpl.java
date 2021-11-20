@@ -1,22 +1,31 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
 
 package grondag.xm.connect;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+
 import grondag.fermion.position.BlockRegion;
 import grondag.xm.XmConfig;
 import grondag.xm.api.connect.species.SpeciesFunction;
@@ -25,13 +34,10 @@ import grondag.xm.api.connect.species.SpeciesProperty;
 import grondag.xm.api.connect.world.BlockTest;
 import grondag.xm.api.connect.world.BlockTestContext;
 import grondag.xm.api.modelstate.ModelState;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockGetter;
 
 @Internal
 public class SpeciesImpl {
-	private SpeciesImpl() {}
+	private SpeciesImpl() { }
 
 	public static int speciesForPlacement(BlockGetter world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
 		// ways this can happen:
@@ -52,9 +58,10 @@ public class SpeciesImpl {
 		}
 
 		// PERF: avoid allocation - but not urgent; not hot
-		if(region == null) {
+		if (region == null) {
 			region = BlockRegion.of(onPos.relative(onFace));
 		}
+
 		final int[] adjacentCount = new int[16];
 		final int[] surfaceCount = new int[16];
 
@@ -63,9 +70,11 @@ public class SpeciesImpl {
 
 		for (final BlockPos pos : region.adjacentPositions()) {
 			final int adjacentSpecies = func.species(world, pos);
+
 			if (adjacentSpecies >= 0 && adjacentSpecies <= 15) {
 				adjacentCount[adjacentSpecies]++;
 			}
+
 			if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
 				break;
 			}
@@ -73,9 +82,11 @@ public class SpeciesImpl {
 
 		for (final BlockPos pos : region.surfacePositions()) {
 			final int interiorSpecies = func.species(world, pos);
+
 			if (interiorSpecies >= 0 && interiorSpecies <= 15) {
 				surfaceCount[interiorSpecies]++;
 			}
+
 			if (checkCount++ >= XmConfig.maxPlacementCheckCount) {
 				break;
 			}
@@ -88,11 +99,13 @@ public class SpeciesImpl {
 
 			for (int i = 1; i < 16; i++) {
 				final int tryCount = adjacentCount[i] + surfaceCount[i];
+
 				if (tryCount < bestCount) {
 					bestCount = tryCount;
 					bestSpecies = i;
 				}
 			}
+
 			return bestSpecies;
 		} else {
 			// find the most common species and match with that
@@ -115,6 +128,7 @@ public class SpeciesImpl {
 					}
 				}
 			}
+
 			return bestSpecies;
 		}
 	}
@@ -122,8 +136,8 @@ public class SpeciesImpl {
 	@SuppressWarnings("rawtypes")
 	private static boolean blockAndSpeciesTest(BlockTestContext ctx) {
 		return ctx.fromBlockState().getBlock() == ctx.toBlockState().getBlock()
-				&& ctx.fromBlockState().hasProperty(SpeciesProperty.SPECIES)
-				&& ctx.fromBlockState().getValue(SpeciesProperty.SPECIES) == ctx.toBlockState().getValue(SpeciesProperty.SPECIES);
+			&& ctx.fromBlockState().hasProperty(SpeciesProperty.SPECIES)
+			&& ctx.fromBlockState().getValue(SpeciesProperty.SPECIES) == ctx.toBlockState().getValue(SpeciesProperty.SPECIES);
 	}
 
 	@SuppressWarnings("rawtypes")

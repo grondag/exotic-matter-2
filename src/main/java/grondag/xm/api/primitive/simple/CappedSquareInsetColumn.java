@@ -1,21 +1,32 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.primitive.simple;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
+
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.Vec3i;
+
 import grondag.fermion.color.Color;
 import grondag.fermion.orientation.api.OrientationType;
 import grondag.xm.Xm;
@@ -34,21 +45,17 @@ import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.core.Vec3i;
 
 @Experimental
-public class CappedSquareInsetColumn  {
-	private CappedSquareInsetColumn() {}
+public class CappedSquareInsetColumn {
+	private CappedSquareInsetColumn() { }
 
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-			.add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-			.add("outer", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-			.add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
-			.add("inner", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP)
-			.build();
+		.add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+		.add("outer", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
+		.add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
+		.add("inner", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP)
+		.build();
 
 	public static final XmSurface SURFACE_ENDS = SURFACES.get(0);
 	public static final XmSurface SURFACE_OUTER = SURFACES.get(1);
@@ -93,19 +100,21 @@ public class CappedSquareInsetColumn  {
 
 		csg.pop();
 
-		if(hasLower || hasUpper) {
+		if (hasLower || hasUpper) {
 			csg.union();
 		}
 
 		// Filter out quads that are occluded by connection
 		final WritableMesh result = csg.buildMutable();
 
-		if(!hasLower || !hasUpper) {
+		if (!hasLower || !hasUpper) {
 			final Polygon reader = result.reader();
-			if(reader.origin()) {
+
+			if (reader.origin()) {
 				do {
 					final Direction cullFace = reader.cullFace();
-					if((!hasLower && cullFace == down) || (!hasUpper && cullFace == up)) {
+
+					if ((!hasLower && cullFace == down) || (!hasUpper && cullFace == up)) {
 						reader.delete();
 					}
 				} while (reader.next());
@@ -115,15 +124,16 @@ public class CappedSquareInsetColumn  {
 		return result.releaseToReader();
 	}
 
-	private static final void emitMiddleSection(CsgMeshBuilder csg, PolyTransform pt, boolean isLit) {
+	private static void emitMiddleSection(CsgMeshBuilder csg, PolyTransform pt, boolean isLit) {
 		final MutablePolygon writer = csg.input().writer();
 
-		writer.colorAll(0, 0xFFFFFFFF)
-		.surface(SURFACE_OUTER)
-		.lockUV(0, false)
-		.rotation(0, TextureOrientation.IDENTITY)
-		.sprite(0, "")
-		.saveDefaults();
+		writer
+			.colorAll(0, 0xFFFFFFFF)
+			.surface(SURFACE_OUTER)
+			.lockUV(0, false)
+			.rotation(0, TextureOrientation.IDENTITY)
+			.sprite(0, "")
+			.saveDefaults();
 
 		writer.setupFaceQuad(Direction.DOWN, MIN, MIN, MAX, MAX, 0, Direction.NORTH);
 		pt.accept(writer);
@@ -192,35 +202,39 @@ public class CappedSquareInsetColumn  {
 
 		poly.surface(SURFACE_CUT);
 
-		poly.setupFaceQuad(face,
-				new FaceVertex.Colored(x0, y0, depth, Color.WHITE, glow),
-				new FaceVertex.Colored(x1, y0, depth, Color.WHITE, glow),
-				new FaceVertex.Colored(x1, y1, depth, Color.WHITE, glow / 3),
-				new FaceVertex.Colored(x0, y1, depth, Color.WHITE, glow / 3),
-				topFace);
+		poly.setupFaceQuad(
+			face,
+			new FaceVertex.Colored(x0, y0, depth, Color.WHITE, glow),
+			new FaceVertex.Colored(x1, y0, depth, Color.WHITE, glow),
+			new FaceVertex.Colored(x1, y1, depth, Color.WHITE, glow / 3),
+			new FaceVertex.Colored(x0, y1, depth, Color.WHITE, glow / 3),
+			topFace
+		);
 
 		// force vertex normals out to prevent lighting anomalies
 		final Vec3i vec = face.getNormal();
 		final float x = vec.getX();
 		final float y = vec.getY();
 		final float z = vec.getZ();
-		for(int i = 0; i < 4; i++) {
+
+		for (int i = 0; i < 4; i++) {
 			poly.normal(i, x, y, z);
 		}
+
 		pt.accept(poly);
 		poly.append();
 	}
 
-	private static final void emitCapSection(WritableMesh mesh, PolyTransform pt, boolean top) {
+	private static void emitCapSection(WritableMesh mesh, PolyTransform pt, boolean top) {
 		final MutablePolygon writer = mesh.writer();
 
-		writer.colorAll(0, 0xFFFFFFFF)
-		.surface(SURFACE_ENDS)
-		.lockUV(0, true)
-		.rotation(0, TextureOrientation.IDENTITY)
-		.sprite(0, "")
-		.saveDefaults();
-
+		writer
+			.colorAll(0, 0xFFFFFFFF)
+			.surface(SURFACE_ENDS)
+			.lockUV(0, true)
+			.rotation(0, TextureOrientation.IDENTITY)
+			.sprite(0, "")
+			.saveDefaults();
 
 		writer.setupFaceQuad(Direction.DOWN, 0, 0, 1, 1, top ? 0.75f : 0, Direction.NORTH);
 		pt.accept(writer);
@@ -248,12 +262,12 @@ public class CappedSquareInsetColumn  {
 		writer.setupFaceQuad(Direction.SOUTH, 0, min, 1, max, 0, Direction.UP);
 		pt.accept(writer);
 		writer.append();
-
 	}
+
 	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
-			.surfaceList(SURFACES)
-			.polyFactory( CappedSquareInsetColumn::factory)
-			.axisJoin(true)
-			.orientationType(OrientationType.AXIS)
-			.build(Xm.id("capped_square_inset_column"));
+		.surfaceList(SURFACES)
+		.polyFactory(CappedSquareInsetColumn::factory)
+		.axisJoin(true)
+		.orientationType(OrientationType.AXIS)
+		.build(Xm.id("capped_square_inset_column"));
 }

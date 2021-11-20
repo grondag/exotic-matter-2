@@ -1,27 +1,35 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.virtual;
 
 import java.util.ArrayList;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
+
+import net.minecraft.client.player.LocalPlayer;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.player.LocalPlayer;
+
 import grondag.xm.Xm;
 import grondag.xm.XmConfig;
 
@@ -38,7 +46,7 @@ public class ExcavationRenderManager {
 	private static ExcavationRenderer[] renderCopy = new ExcavationRenderer[0];
 
 	/**
-	 * Keep reference to avoid garbage creation
+	 * Keep reference to avoid garbage creation.
 	 */
 	@Environment(EnvType.CLIENT)
 	private static final ArrayList<ExcavationRenderer> secondPass = new ArrayList<>();
@@ -50,7 +58,6 @@ public class ExcavationRenderManager {
 		}
 
 		if (renderCopy == null || renderCopy.length == 0) {
-			return;
 		}
 
 		//		GlStateManager.enableBlend();
@@ -127,7 +134,9 @@ public class ExcavationRenderManager {
 		for (final ExcavationRenderer render : renders) {
 			excavations.put(render.id, render);
 		}
+
 		renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
+
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("mass update, excavationSize = %d, renderSize = %d", excavations.size(), renderCopy.length);
 		}
@@ -136,6 +145,7 @@ public class ExcavationRenderManager {
 	public static void addOrUpdate(ExcavationRenderer render) {
 		excavations.put(render.id, render);
 		renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
+
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("addOrUpdate id = %d, excavationSize = %d, renderSize = %d", render.id, excavations.size(), renderCopy.length);
 		}
@@ -144,6 +154,7 @@ public class ExcavationRenderManager {
 	public static void remove(int id) {
 		excavations.remove(id);
 		renderCopy = excavations.values().toArray(new ExcavationRenderer[excavations.size()]);
+
 		if (XmConfig.logExcavationRenderTracking) {
 			Xm.LOG.info("remove id = %d, excavationSize = %d, renderSize = %d", id, excavations.size(), renderCopy.length);
 		}

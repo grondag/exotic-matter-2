@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.mesh;
 
 import static grondag.xm.mesh.EncoderFunctions.BAD_ADDRESS;
@@ -89,7 +94,7 @@ class VertexEncoder {
 
 	/**
 	 * All mutable formats have same full-feature binary format for
-	 * data-compatibility with format changes
+	 * data-compatibility with format changes.
 	 */
 	public static VertexEncoder get(int format) {
 		return isMutable(format) ? MUTABLE : ENCODERS[vertexFormatKey(format)];
@@ -162,39 +167,39 @@ class VertexEncoder {
 		setPosXYZ = SET_FLOAT3;
 
 		switch (getVertexNormalFormat(format)) {
-		case VERTEX_NORMAL_QUANTIZED:
-			hasNormals = true;
-			getNormalX = GET_NORMAL_X_QUANTIZED;
-			getNormalY = GET_NORMAL_Y_QUANTIZED;
-			getNormalZ = GET_NORMAL_Z_QUANTIZED;
-			setNormalXYZ = SET_FLOAT3_FAIL;
-			offsetNormalX = offset++;
-			offsetNormalY = offsetNormalX;
-			offsetNormalZ = offsetNormalX;
-			break;
+			case VERTEX_NORMAL_QUANTIZED:
+				hasNormals = true;
+				getNormalX = GET_NORMAL_X_QUANTIZED;
+				getNormalY = GET_NORMAL_Y_QUANTIZED;
+				getNormalZ = GET_NORMAL_Z_QUANTIZED;
+				setNormalXYZ = SET_FLOAT3_FAIL;
+				offsetNormalX = offset++;
+				offsetNormalY = offsetNormalX;
+				offsetNormalZ = offsetNormalX;
+				break;
 
-		case VERTEX_NORMAL_REGULAR:
-			hasNormals = true;
-			getNormalX = GET_FLOAT;
-			getNormalY = GET_FLOAT;
-			getNormalZ = GET_FLOAT;
-			setNormalXYZ = SET_FLOAT3;
-			offsetNormalX = offset++;
-			offsetNormalY = offset++;
-			offsetNormalZ = offset++;
-			break;
+			case VERTEX_NORMAL_REGULAR:
+				hasNormals = true;
+				getNormalX = GET_FLOAT;
+				getNormalY = GET_FLOAT;
+				getNormalZ = GET_FLOAT;
+				setNormalXYZ = SET_FLOAT3;
+				offsetNormalX = offset++;
+				offsetNormalY = offset++;
+				offsetNormalZ = offset++;
+				break;
 
-		default:
-		case VERTEX_NORMAL_FACE:
-			hasNormals = false;
-			getNormalX = GET_FLOAT_FAIL;
-			getNormalY = GET_FLOAT_FAIL;
-			getNormalZ = GET_FLOAT_FAIL;
-			setNormalXYZ = SET_FLOAT3_FAIL;
-			offsetNormalX = BAD_ADDRESS;
-			offsetNormalY = BAD_ADDRESS;
-			offsetNormalZ = BAD_ADDRESS;
-			break;
+			case VERTEX_NORMAL_FACE:
+			default:
+				hasNormals = false;
+				getNormalX = GET_FLOAT_FAIL;
+				getNormalY = GET_FLOAT_FAIL;
+				getNormalZ = GET_FLOAT_FAIL;
+				setNormalXYZ = SET_FLOAT3_FAIL;
+				offsetNormalX = BAD_ADDRESS;
+				offsetNormalY = BAD_ADDRESS;
+				offsetNormalZ = BAD_ADDRESS;
+				break;
 		}
 
 		final int layerCount = getLayerCount(format);
@@ -228,6 +233,7 @@ class VertexEncoder {
 		offsetV2 = multiUV && layerCount == 3 ? offset++ : offsetV0;
 
 		hasColor = getVertexColorFormat(format) == VERTEX_COLOR_PER_VERTEX_LAYER;
+
 		if (hasColor) {
 			getColor0 = GET_INT;
 			getColor1 = layerCount > 1 ? GET_INT : GET_INT_FAIL;
@@ -262,8 +268,9 @@ class VertexEncoder {
 	}
 
 	public Vec3f getVertexNormal(IntStream stream, int vertexAddress, int vertexIndex) {
-		if (!hasNormals)
+		if (!hasNormals) {
 			return null;
+		}
 
 		final int base = vertexAddress + vertexIndex * vertexStride;
 		final Vec3f result = Vec3f.create(getNormalX.get(stream, base + offsetNormalX), getNormalY.get(stream, base + offsetNormalY),
@@ -276,13 +283,14 @@ class VertexEncoder {
 	 * To distinguish between normals that have been set vs not set, we swap the
 	 * interpretation of zero and NaN.
 	 */
-	private final float interpretMissingNormal(float rawValue) {
-		if (rawValue == 0)
+	private float interpretMissingNormal(float rawValue) {
+		if (rawValue == 0) {
 			return Float.NaN;
-		else if (Float.isNaN(rawValue))
+		} else if (Float.isNaN(rawValue)) {
 			return 0;
-		else
+		} else {
 			return rawValue;
+		}
 	}
 
 	public boolean hasVertexNormal(IntStream stream, int vertexAddress, int vertexIndex) {

@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.block.base;
 
 import static net.minecraft.world.level.block.StairBlock.WATERLOGGED;
@@ -23,9 +28,7 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.ApiStatus.Experimental;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -54,6 +57,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+
 import grondag.fermion.orientation.api.CubeRotation;
 import grondag.fermion.orientation.api.DirectionHelper;
 import grondag.fermion.orientation.api.FaceEdge;
@@ -66,6 +74,7 @@ import grondag.xm.api.collision.CollisionDispatcher;
 import grondag.xm.api.modelstate.primitive.SimplePrimitiveStateMutator;
 import grondag.xm.api.primitive.simple.Stair;
 
+// WIP: Fabric deps
 @Experimental
 public class StairLike extends Block implements SimpleWaterloggedBlock {
 	protected final Block baseBlock;
@@ -182,7 +191,8 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 
 		Direction bottomFace = Direction.DOWN;
 		Direction backFace = Direction.SOUTH;
-		if(player != null) {
+
+		if (player != null) {
 			final Direction[] faces = context.getNearestLookingDirections();
 			final int xIndex = faces[0].getAxis() == Axis.X ? 0 : (faces[1].getAxis() == Axis.X ? 1 : 2);
 			final int yIndex = faces[0].getAxis() == Axis.Y ? 0 : (faces[1].getAxis() == Axis.Y ? 1 : 2);
@@ -192,15 +202,17 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 			final boolean forceKey = forceKeyTest.test(player);
 
 			final Vec3 hit = context.getClickLocation();
-			if(shape == Shape.STRAIGHT) {
+
+			if (shape == Shape.STRAIGHT) {
 				if (modKey) {
 					// horizontal stairs
 					if (onFace.getAxis() != Axis.Y) {
 						bottomFace = onFace;
+
 						if (forceKey) {
 							backFace = WorldHelper.closestAdjacentFace(onFace, hit.x, hit.y, hit.z);
 						} else {
-							if(onFace.getAxis() == Axis.X) {
+							if (onFace.getAxis() == Axis.X) {
 								backFace = yIndex < zIndex ? faces[yIndex] : faces[zIndex];
 							} else {
 								backFace = yIndex < xIndex ? faces[yIndex] : faces[xIndex];
@@ -222,7 +234,8 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 										: player.getDirection();
 					} else {
 						backFace = onFace;
-						if( forceKey) {
+
+						if (forceKey) {
 							final Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, hit.x, hit.y, hit.z);
 							bottomFace = pair.getLeft().getAxis() == Axis.Y ? pair.getLeft() : pair.getRight();
 						} else {
@@ -237,7 +250,7 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 					if (onFace.getAxis() == Axis.Y) {
 						// placed on up or down
 						if (forceKey) {
-							final Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, (float)hit.x, (float)hit.y, (float)hit.z);
+							final Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, (float) hit.x, (float) hit.y, (float) hit.z);
 							bottomFace = pair.getLeft();
 							final Direction rightFace = FaceEdge.fromWorld(onFace, bottomFace).counterClockwise().toWorld(bottomFace);
 							backFace = rightFace == pair.getRight() ? onFace : pair.getRight();
@@ -251,12 +264,15 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 					} else {
 						// placed on bottom (horizontal) face directly
 						bottomFace = onFace;
+
 						if (forceKey) {
-							final Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, (float)hit.x, (float)hit.y, (float)hit.z);
+							final Pair<Direction, Direction> pair = WorldHelper.closestAdjacentFaces(onFace, (float) hit.x, (float) hit.y, (float) hit.z);
 							boolean leftRightOrder = DirectionHelper.counterClockwise(pair.getLeft(), onFace.getAxis()) == pair.getRight();
+
 							if (onFace.getAxisDirection() == AxisDirection.NEGATIVE) {
 								leftRightOrder = !leftRightOrder;
 							}
+
 							backFace = leftRightOrder ? pair.getRight() : pair.getLeft();
 						} else {
 							final int firstIndex = onFace.getAxis() == Axis.X ? Math.min(yIndex, zIndex) : Math.min(yIndex, xIndex);
@@ -269,8 +285,8 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 					}
 				} else {
 					// vertical (normal)
-					if(forceKey) {
-						if(onFace.getAxis() == Axis.Y) {
+					if (forceKey) {
+						if (onFace.getAxis() == Axis.Y) {
 							bottomFace = onFace;
 							backFace = WorldHelper.closestAdjacentFace(onFace, hit.x, hit.y, hit.z);
 						} else {
@@ -289,6 +305,7 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 				}
 			}
 		}
+
 		result = result.setValue(XmProperties.ROTATION, ObjectUtils.defaultIfNull(CubeRotation.find(bottomFace, backFace), CubeRotation.DOWN_WEST));
 		return result;
 	}
@@ -298,6 +315,7 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 		if (blockState_1.getValue(WATERLOGGED)) {
 			iWorld_1.getLiquidTicks().scheduleTick(blockPos_1, Fluids.WATER, Fluids.WATER.getTickDelay(iWorld_1));
 		}
+
 		return super.updateShape(blockState_1, direction_1, blockState_2, iWorld_1, blockPos_1, blockPos_2);
 	}
 
@@ -328,11 +346,11 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 
 	public static SimplePrimitiveStateMutator MODELSTATE_FROM_BLOCKSTATE = (modelState, blockState) -> {
 		final Block rawBlock = blockState.getBlock();
-		if(!(rawBlock instanceof StairLike)) {
+
+		if (!(rawBlock instanceof final StairLike block)) {
 			return modelState;
 		}
 
-		final StairLike block = (StairLike)rawBlock;
 		Stair.setCorner(block.shape != Shape.STRAIGHT, modelState);
 		Stair.setInsideCorner(block.shape == Shape.INSIDE_CORNER, modelState);
 		modelState.orientationIndex(blockState.getValue(XmProperties.ROTATION).ordinal());

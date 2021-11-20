@@ -1,18 +1,23 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.paint;
 
 import static grondag.xm.api.paint.XmPaint.MAX_TEXTURE_DEPTH;
@@ -80,16 +85,15 @@ public class XmPaintImpl {
 		FLAGS[COLOR_DISABLE_INDEX_START + 1] = PAINT_BITS.createBooleanElement();
 		FLAGS[COLOR_DISABLE_INDEX_START + 2] = PAINT_BITS.createBooleanElement();
 
-
 		assert PAINT_BITS.bitLength() <= 32;
 
 		DEFAULT_PAINT_BITS = BLEND_MODE.setValue(PaintBlendMode.DEFAULT, 0);
 	}
 
-	/** null for anonymous and indexed */
+	/** Null for anonymous and indexed. */
 	@Nullable protected ResourceLocation id;
 
-	/** XmPaint.NO_INDEX for anonymous and registered */
+	/** XmPaint.NO_INDEX for anonymous and registered. */
 	protected int index = XmPaint.NO_INDEX;
 
 	protected int paintBits = DEFAULT_PAINT_BITS;
@@ -123,21 +127,21 @@ public class XmPaintImpl {
 		if (obj != null && obj instanceof final XmPaintImpl other) {
 			if (id != null) {
 				return id.equals(other.id);
-			} else if (index !=  XmPaint.NO_INDEX) {
+			} else if (index != XmPaint.NO_INDEX) {
 				return index == other.index;
 			} else {
 				return other.id == null
-				&& other.index == XmPaint.NO_INDEX
-				&& paintBits == other.paintBits
-				&& color0 == other.color0
-				&& color1 == other.color1
-				&& color2 == other.color2
-				&& textureSet0 == other.textureSet0
-				&& textureSet1 == other.textureSet1
-				&& textureSet2 == other.textureSet2
-				&& vertexProcessor0 == other.vertexProcessor0
-				&& vertexProcessor1 == other.vertexProcessor1
-				&& vertexProcessor2 == other.vertexProcessor2;
+					&& other.index == XmPaint.NO_INDEX
+					&& paintBits == other.paintBits
+					&& color0 == other.color0
+					&& color1 == other.color1
+					&& color2 == other.color2
+					&& textureSet0 == other.textureSet0
+					&& textureSet1 == other.textureSet1
+					&& textureSet2 == other.textureSet2
+					&& vertexProcessor0 == other.vertexProcessor0
+					&& vertexProcessor1 == other.vertexProcessor1
+					&& vertexProcessor2 == other.vertexProcessor2;
 			}
 		} else {
 			return false;
@@ -150,7 +154,7 @@ public class XmPaintImpl {
 			return id.hashCode();
 		}
 
-		if(index != XmPaint.NO_INDEX) {
+		if (index != XmPaint.NO_INDEX) {
 			return index;
 		}
 
@@ -300,7 +304,7 @@ public class XmPaintImpl {
 				final CompoundTag result = new CompoundTag();
 				result.putInt(TAG_INDEX, index);
 				return result;
-			} else  {
+			} else {
 				return toFixedTag();
 			}
 		}
@@ -391,13 +395,11 @@ public class XmPaintImpl {
 			}
 
 			if (depth > 1) {
-
 				if (vertexProcessor1 != VertexProcessorDefault.INSTANCE) {
 					header |= FLAG_HAS_VP1;
 				}
 
 				if (depth == 3) {
-
 					if (vertexProcessor2 != VertexProcessorDefault.INSTANCE) {
 						header |= FLAG_HAS_VP2;
 					}
@@ -502,6 +504,7 @@ public class XmPaintImpl {
 			if (depth < 1 || depth > MAX_TEXTURE_DEPTH) {
 				throw new IndexOutOfBoundsException("Invalid texture depth: " + depth);
 			}
+
 			TEXTURE_DEPTH.setValue(depth, this);
 			return this;
 		}
@@ -521,6 +524,7 @@ public class XmPaintImpl {
 				default:
 					throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 			}
+
 			return this;
 		}
 
@@ -607,6 +611,7 @@ public class XmPaintImpl {
 				default:
 					throw new IndexOutOfBoundsException("Invalid texture index: " + textureIndex);
 			}
+
 			return this;
 		}
 	}
@@ -625,20 +630,19 @@ public class XmPaintImpl {
 	private static final int FLAG_HAS_CONDITION = TAG_HAS_CONDITION.comparisonMask();
 	@SuppressWarnings("rawtypes")
 	private static final BitPacker32.BooleanElement TAG_HAS_VP0 = TAG_PACKER.createBooleanElement();
-	private static final int FLAG_HAS_VP0 =  TAG_HAS_VP0.comparisonMask();
+	private static final int FLAG_HAS_VP0 = TAG_HAS_VP0.comparisonMask();
 	@SuppressWarnings("rawtypes")
 	private static final BitPacker32.BooleanElement TAG_HAS_VP1 = TAG_PACKER.createBooleanElement();
-	private static final int FLAG_HAS_VP1 =  TAG_HAS_VP1.comparisonMask();
+	private static final int FLAG_HAS_VP1 = TAG_HAS_VP1.comparisonMask();
 	@SuppressWarnings("rawtypes")
 	private static final BitPacker32.BooleanElement TAG_HAS_VP2 = TAG_PACKER.createBooleanElement();
-	private static final int FLAG_HAS_VP2 =  TAG_HAS_VP2.comparisonMask();
+	private static final int FLAG_HAS_VP2 = TAG_HAS_VP2.comparisonMask();
 	@SuppressWarnings("rawtypes")
 	private static final BitPacker32.BooleanElement TAG_HAS_ID = TAG_PACKER.createBooleanElement();
-	private static final int FLAG_HAS_ID =  TAG_HAS_ID.comparisonMask();
+	private static final int FLAG_HAS_ID = TAG_HAS_ID.comparisonMask();
 	@SuppressWarnings("rawtypes")
 	private static final BitPacker32.BooleanElement TAG_HAS_INDEX = TAG_PACKER.createBooleanElement();
-	private static final int FLAG_HAS_INDEX =  TAG_HAS_INDEX.comparisonMask();
-
+	private static final int FLAG_HAS_INDEX = TAG_HAS_INDEX.comparisonMask();
 
 	private static final int TAG_INDEX_HEADER_BITS = 0;
 	private static final int TAG_INDEX_PAINT_BITS = 1;
@@ -685,21 +689,21 @@ public class XmPaintImpl {
 		final Finder finder = finder();
 
 		final int[] words = tag.getIntArray(TAG_BITS);
-		final int header  = words[TAG_INDEX_HEADER_BITS];
+		final int header = words[TAG_INDEX_HEADER_BITS];
 		finder.paintBits = words[TAG_INDEX_PAINT_BITS];
 		finder.color0 = words[TAG_INDEX_COLOR_0];
 		finder.textureSet0 = TextureSetRegistry.instance().get(new ResourceLocation(tag.getString(TAG_TEX_0)));
 
 		if ((header & FLAG_HAS_SHADER) == FLAG_HAS_SHADER) {
-			finder.shader =  new ResourceLocation(tag.getString(TAG_SHADER));
+			finder.shader = new ResourceLocation(tag.getString(TAG_SHADER));
 		}
 
 		if ((header & FLAG_HAS_CONDITION) == FLAG_HAS_CONDITION) {
-			finder.condition =  new ResourceLocation(tag.getString(TAG_CONDITION));
+			finder.condition = new ResourceLocation(tag.getString(TAG_CONDITION));
 		}
 
 		if ((header & FLAG_HAS_VP0) == FLAG_HAS_VP0) {
-			finder.vertexProcessor0 =  VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(tag.getString(TAG_VP_0)));
+			finder.vertexProcessor0 = VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(tag.getString(TAG_VP_0)));
 		}
 
 		final int depth = finder.textureDepth();
@@ -709,7 +713,7 @@ public class XmPaintImpl {
 			finder.textureSet1 = TextureSetRegistry.instance().get(new ResourceLocation(tag.getString(TAG_TEX_1)));
 
 			if ((header & FLAG_HAS_VP1) == FLAG_HAS_VP1) {
-				finder.vertexProcessor1 =  VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(tag.getString(TAG_VP_1)));
+				finder.vertexProcessor1 = VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(tag.getString(TAG_VP_1)));
 			}
 
 			if (depth == 3) {
@@ -717,7 +721,7 @@ public class XmPaintImpl {
 				finder.textureSet2 = TextureSetRegistry.instance().get(new ResourceLocation(tag.getString(TAG_TEX_2)));
 
 				if ((header & FLAG_HAS_VP2) == FLAG_HAS_VP2) {
-					finder.vertexProcessor1 =  VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(tag.getString(TAG_VP_2)));
+					finder.vertexProcessor1 = VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(tag.getString(TAG_VP_2)));
 				}
 			}
 		}
@@ -755,15 +759,15 @@ public class XmPaintImpl {
 		finder.textureSet0 = TextureSetRegistry.instance().get(new ResourceLocation(pBuff.readUtf()));
 
 		if ((header & FLAG_HAS_SHADER) == FLAG_HAS_SHADER) {
-			finder.shader =  new ResourceLocation(pBuff.readUtf());
+			finder.shader = new ResourceLocation(pBuff.readUtf());
 		}
 
 		if ((header & FLAG_HAS_CONDITION) == FLAG_HAS_CONDITION) {
-			finder.condition =  new ResourceLocation(pBuff.readUtf());
+			finder.condition = new ResourceLocation(pBuff.readUtf());
 		}
 
 		if ((header & FLAG_HAS_VP0) == FLAG_HAS_VP0) {
-			finder.vertexProcessor0 =  VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(pBuff.readUtf()));
+			finder.vertexProcessor0 = VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(pBuff.readUtf()));
 		}
 
 		final int depth = finder.textureDepth();
@@ -773,7 +777,7 @@ public class XmPaintImpl {
 			finder.textureSet1 = TextureSetRegistry.instance().get(new ResourceLocation(pBuff.readUtf()));
 
 			if ((header & FLAG_HAS_VP1) == FLAG_HAS_VP1) {
-				finder.vertexProcessor1 =  VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(pBuff.readUtf()));
+				finder.vertexProcessor1 = VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(pBuff.readUtf()));
 			}
 
 			if (depth == 3) {
@@ -781,7 +785,7 @@ public class XmPaintImpl {
 				finder.textureSet2 = TextureSetRegistry.instance().get(new ResourceLocation(pBuff.readUtf()));
 
 				if ((header & FLAG_HAS_VP2) == FLAG_HAS_VP2) {
-					finder.vertexProcessor1 =  VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(pBuff.readUtf()));
+					finder.vertexProcessor1 = VertexProcessorRegistry.INSTANCE.get(new ResourceLocation(pBuff.readUtf()));
 				}
 			}
 		}

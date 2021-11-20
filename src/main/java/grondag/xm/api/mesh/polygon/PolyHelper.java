@@ -1,23 +1,29 @@
-/*******************************************************************************
- * Copyright 2019 grondag
+/*
+ * Copyright © Original Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
- * of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Additional copyright and licensing notices may apply for content that was
+ * included from other projects. For more information, see ATTRIBUTION.md.
+ */
+
 package grondag.xm.api.mesh.polygon;
+
+import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import org.jetbrains.annotations.ApiStatus.Experimental;
 
 @Experimental
 public class PolyHelper {
@@ -49,25 +55,22 @@ public class PolyHelper {
 			}
 		}
 
-		if (result == null)
-			return Direction.UP;
-		else
-			return result;
+		return result == null ? Direction.UP : result;
 	}
 
 	public static Direction faceForNormal(Vec3f normal) {
 		return faceForNormal(normal.x(), normal.y(), normal.z());
 	}
 
-	/** returns the face that is normally the "top" of the given face */
+	/** Returns the face that is normally the "top" of the given face. */
 	public static Direction defaultTopOf(Direction faceIn) {
 		switch (faceIn) {
-		case UP:
-			return Direction.NORTH;
-		case DOWN:
-			return Direction.SOUTH;
-		default:
-			return Direction.UP;
+			case UP:
+				return Direction.NORTH;
+			case DOWN:
+				return Direction.SOUTH;
+			default:
+				return Direction.UP;
 		}
 	}
 
@@ -77,12 +80,12 @@ public class PolyHelper {
 
 	public static Direction positiveDirection(Direction.Axis axis) {
 		switch (axis) {
-		case Y:
-			return Direction.UP;
-		case X:
-			return Direction.EAST;
-		default:
-			return Direction.NORTH;
+			case Y:
+				return Direction.UP;
+			case X:
+				return Direction.EAST;
+			default:
+				return Direction.NORTH;
 		}
 	}
 
@@ -92,86 +95,85 @@ public class PolyHelper {
 
 	public static Direction rightOf(Direction faceIn, Direction topFace) {
 		switch (faceIn) {
-		case NORTH:
-			switch (topFace) {
-			case UP:
-				return Direction.WEST;
-			case EAST:
-				return Direction.UP;
-			case DOWN:
-				return Direction.EAST;
-			case WEST:
-			default:
-				return Direction.DOWN;
-			}
-		case SOUTH:
-			switch (topFace) {
-			case UP:
-				return Direction.EAST;
-			case EAST:
-				return Direction.DOWN;
-			case DOWN:
-				return Direction.WEST;
-			case WEST:
-			default:
-				return Direction.UP;
-			}
-		case EAST:
-			switch (topFace) {
-			case UP:
-				return Direction.NORTH;
 			case NORTH:
-				return Direction.DOWN;
-			case DOWN:
-				return Direction.SOUTH;
+				switch (topFace) {
+					case UP:
+						return Direction.WEST;
+					case EAST:
+						return Direction.UP;
+					case DOWN:
+						return Direction.EAST;
+					case WEST:
+					default:
+						return Direction.DOWN;
+				}
 			case SOUTH:
-			default:
-				return Direction.UP;
-			}
-		case WEST:
-			switch (topFace) {
+				switch (topFace) {
+					case UP:
+						return Direction.EAST;
+					case EAST:
+						return Direction.DOWN;
+					case DOWN:
+						return Direction.WEST;
+					case WEST:
+					default:
+						return Direction.UP;
+				}
+			case EAST:
+				switch (topFace) {
+					case UP:
+						return Direction.NORTH;
+					case NORTH:
+						return Direction.DOWN;
+					case DOWN:
+						return Direction.SOUTH;
+					case SOUTH:
+					default:
+						return Direction.UP;
+				}
+			case WEST:
+				switch (topFace) {
+					case UP:
+						return Direction.SOUTH;
+					case NORTH:
+						return Direction.UP;
+					case DOWN:
+						return Direction.NORTH;
+					case SOUTH:
+					default:
+						return Direction.DOWN;
+				}
 			case UP:
-				return Direction.SOUTH;
-			case NORTH:
-				return Direction.UP;
+				switch (topFace) {
+					case NORTH:
+						return Direction.EAST;
+					case EAST:
+						return Direction.SOUTH;
+					case SOUTH:
+						return Direction.WEST;
+					case WEST:
+					default:
+						return Direction.NORTH;
+				}
 			case DOWN:
-				return Direction.NORTH;
-			case SOUTH:
 			default:
-				return Direction.DOWN;
-			}
-		case UP:
-			switch (topFace) {
-			case NORTH:
-				return Direction.EAST;
-			case EAST:
-				return Direction.SOUTH;
-			case SOUTH:
-				return Direction.WEST;
-			case WEST:
-			default:
-				return Direction.NORTH;
-			}
-		case DOWN:
-		default:
-			switch (topFace) {
-			case NORTH:
-				return Direction.WEST;
-			case EAST:
-				return Direction.NORTH;
-			case SOUTH:
-				return Direction.EAST;
-			case WEST:
-			default:
-				return Direction.SOUTH;
-			}
+				switch (topFace) {
+					case NORTH:
+						return Direction.WEST;
+					case EAST:
+						return Direction.NORTH;
+					case SOUTH:
+						return Direction.EAST;
+					case WEST:
+					default:
+						return Direction.SOUTH;
+				}
 		}
 	}
 
 	public static boolean isConvex(Polygon poly) {
 		final int vertexCount = poly.vertexCount();
-		if (vertexCount == 3)
-			return true;
+		if (vertexCount == 3) return true;
 
 		float testX = 0;
 		float testY = 0;
@@ -201,12 +203,14 @@ public class PolyHelper {
 				testX = crossX;
 				testY = crossY;
 				testZ = crossZ;
-			} else if (testX * crossX + testY * crossY + testZ * crossZ < 0)
+			} else if (testX * crossX + testY * crossY + testZ * crossZ < 0) {
 				return false;
+			}
 
 			priorVertex = thisVertex;
 			thisVertex = nextVertex;
 		}
+
 		return true;
 	}
 }
