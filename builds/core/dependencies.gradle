@@ -26,27 +26,5 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
-	modImplementation ("grondag:exotic-matter-${project.mc_tag}:${project.exotic_matter_version}.+") { transitive = false }
-	modImplementation ("grondag:fermion-${project.mc_tag}:${project.fermion_version}.+") { transitive = false }
-	modImplementation ("grondag:fermion-modkeys-${project.mc_tag}:${project.fermion_modkeys_version}.+") { transitive = false }
-    modImplementation ("grondag:fermion-varia-${project.mc_tag}:${project.fermion_varia_version}.+") { transitive = false }
-    modImplementation ("grondag:fermion-orientation-${project.mc_tag}:${project.fermion_orientation_version}.+") { transitive = false }
-    modImplementation ("grondag:special-circumstances-${project.mc_tag}:${project.special_circumstances_version}.+") { transitive = false }
-	modImplementation ("grondag:frex-${project.mc_tag}:${project.frex_version}.+") { transitive = false }
-    	
-	modImplementation ("io.github.cottonmc:Jankson-Fabric:${jankson_version}") {
-        exclude group :"net.fabricmc.fabric-api"
-        exclude group :"net.fabricmc.fabric-loader"
-    }
-	
-	modImplementation ("me.shedaniel.cloth:cloth-config-fabric:${clothconfig_version}") {
-        exclude group :"io.github.prospector.modmenu"
-        exclude group :"net.fabricmc.fabric-api"
-        exclude group :"net.fabricmc.fabric-loader"
-    }
-	
-	modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
-	modRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
+	modImplementation ("grondag:exotic-matter-${project.mc_tag}:${project.exotic_matter_version}.+") { changing = true }
 }
