@@ -13,6 +13,7 @@ bin
 .classpath
 .project
 eclipse
+gruntle
 
 build
 run
@@ -49,3 +50,4 @@ notes.txt
 doc/package-list
 /exotic-art-tech/
 .checkstyle
+.vscode

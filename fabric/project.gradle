@@ -1,0 +1,48 @@
+// Hat tip to JellySquid
+configurations {
+    modIncludeImplementation
+    modImplementation.extendsFrom modIncludeImplementation
+    include.extendsFrom modIncludeImplementation
+}
+
+dependencies {
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modRuntimeOnly "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	modIncludeImplementation(fabricApi.module("fabric-api-base", project.fabric_version))
+  modIncludeImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+  modIncludeImplementation(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
+  modIncludeImplementation(fabricApi.module( "fabric-key-binding-api-v1", project.fabric_version))
+
+  modCompileOnly(fabricApi.module("fabric-rendering-data-attachment-v1", project.fabric_version))
+
+	modIncludeImplementation("io.vram:frex-fabric-mc118:6.0.236:fat")
+  
+	modIncludeImplementation "blue.endless:jankson:1.2.1"
+  modIncludeImplementation("io.vram:special-circumstances:1.10.7")
+
+	modIncludeImplementation("me.shedaniel.cloth:cloth-config-fabric:6.1.48")
+
+	modCompileOnly "com.terraformersmc:modmenu:3.0.1"
+	modRuntimeOnly "com.terraformersmc:modmenu:3.0.1"
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['../common/src/main/java', 'src/main/java']
+			include '**/*'
+			exclude '*.DS_Store'
+		}
+		resources {
+			srcDirs = ['../common/src/main/resources', 'src/main/resources', '../textures/core/src/main/resources', '../textures/tech/src/main/resources', '../textures/test/src/main/resources', '../textures/unstable/src/main/resources']
+			include '**/*'
+			exclude '*.DS_Store'
+		}
+	}
+	test {
+		java {
+			exclude '**/*'
+		}
+	}
+}
