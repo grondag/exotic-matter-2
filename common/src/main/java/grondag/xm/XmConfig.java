@@ -63,11 +63,16 @@ public class XmConfig {
 		if (configFile.exists()) {
 			loadConfig();
 		} else {
-			saveConfig();
+			saveConfig(loadConfig());
 		}
 	}
 
-	private static void loadConfig() {
+	public static void readConfig(ConfigData config) {
+		// DEBUG
+		debugCollisionBoxes = config.debugCollisionBoxes;
+	}
+
+	private static ConfigData loadConfig() {
 		ConfigData config = new ConfigData();
 
 		try {
@@ -79,16 +84,21 @@ public class XmConfig {
 			Xm.LOG.error("Unable to load config. Using default values.");
 		}
 
-		// DEBUG
-		debugCollisionBoxes = config.debugCollisionBoxes;
+		readConfig(config);
+
+		return config;
 	}
 
-	public static void saveConfig() {
+	public static ConfigData writeConfig() {
 		final ConfigData config = new ConfigData();
 
 		// DEBUG
 		config.debugCollisionBoxes = debugCollisionBoxes;
 
+		return config;
+	}
+
+	public static void saveConfig(ConfigData config) {
 		try {
 			final String result = JANKSON.toJson(config).toJson(true, true, 0);
 

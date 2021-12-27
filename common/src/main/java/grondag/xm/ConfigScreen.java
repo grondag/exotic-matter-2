@@ -20,45 +20,29 @@
 
 package grondag.xm;
 
-import static grondag.xm.XmConfig.DEFAULTS;
-import static grondag.xm.XmConfig.debugCollisionBoxes;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import me.shedaniel.clothconfig2.api.ConfigCategory;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
-public class ConfigScreen {
-	private static ConfigEntryBuilder ENTRY_BUILDER = ConfigEntryBuilder.create();
+import io.vram.littlegui.screen.ComponentSource;
+import io.vram.littlegui.screen.HorizontalLayout;
+import io.vram.littlegui.screen.SaveCancelScreen;
+import io.vram.littlegui.screen.VerticalLayout;
 
-	static Component[] parse(String key) {
-		return Arrays.stream(I18n.get("config.xblocks.help.force_key").split(";")).map(s -> new TextComponent(s)).collect(Collectors.toList()).toArray(new Component[0]);
+import grondag.xm.XmConfig.ConfigData;
+
+public class ConfigScreen extends SaveCancelScreen<ConfigData> {
+	public ConfigScreen(Screen parent) {
+		super(new TranslatableComponent("config.xm.title"), parent, XmConfig.writeConfig(), ComponentSource.of("config.xm.value.", "config.xm.help."));
 	}
 
-	static Screen getScreen(Screen parent) {
-		final ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(new TranslatableComponent("config.xm.title")).setSavingRunnable(ConfigScreen::saveUserInput);
-
-		// DEBUG
-		final ConfigCategory blocks = builder.getOrCreateCategory(new TranslatableComponent("config.xm.category.debug"));
-
-		blocks.addEntry(ENTRY_BUILDER.startBooleanToggle(new TranslatableComponent("config.xm.value.debug_collision_boxes"), debugCollisionBoxes)
-				.setDefaultValue(DEFAULTS.debugCollisionBoxes)
-				.setSaveConsumer(b -> debugCollisionBoxes = b)
-				.setTooltip(parse("config.xm.help.debug_collision_boxes"))
-				.build());
-
-		return builder.build();
+	@Override
+	protected void addControls() {
+		this.addToggle(HorizontalLayout.MIDDLE_THIRD, VerticalLayout.ROW_1, "debug_collision_boxes", data.debugCollisionBoxes, val -> data.debugCollisionBoxes = val);
 	}
 
-	private static void saveUserInput() {
-		XmConfig.saveConfig();
+	@Override
+	protected void saveData() {
+		XmConfig.readConfig(data);
+		XmConfig.saveConfig(data);
 	}
 }
