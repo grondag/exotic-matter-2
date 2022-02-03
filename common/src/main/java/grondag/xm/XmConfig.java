@@ -63,13 +63,19 @@ public class XmConfig {
 		if (configFile.exists()) {
 			loadConfig();
 		} else {
-			saveConfig(loadConfig());
+			createConfig();
 		}
 	}
 
 	public static void readConfig(ConfigData config) {
 		// DEBUG
 		debugCollisionBoxes = config.debugCollisionBoxes;
+	}
+
+	private static void createConfig() {
+		final ConfigData config = new ConfigData();
+		readConfig(config);
+		saveConfig(config);
 	}
 
 	private static ConfigData loadConfig() {
