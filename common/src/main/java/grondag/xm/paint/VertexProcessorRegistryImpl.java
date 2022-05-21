@@ -44,11 +44,11 @@ public class VertexProcessorRegistryImpl extends DefaultedRegistry<VertexProcess
 
 	static {
 		INSTANCE = (VertexProcessorRegistryImpl) ((WritableRegistry) Registry.REGISTRY).register(REGISTRY_KEY,
-				new VertexProcessorRegistryImpl(NONE_ID.toString()), Lifecycle.stable());
+				new VertexProcessorRegistryImpl(NONE_ID.toString()), Lifecycle.stable()).value();
 	}
 
 	VertexProcessorRegistryImpl(String defaultIdString) {
-		super(defaultIdString, REGISTRY_KEY, Lifecycle.experimental());
+		super(defaultIdString, REGISTRY_KEY, Lifecycle.experimental(), null);
 	}
 
 	@Override
