@@ -48,6 +48,17 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 
 	public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
 
+	static {
+		REGISTRY = (WritableRegistry<TextureSetImpl>) ((WritableRegistry) Registry.REGISTRY).register(REGISTRY_KEY,
+				new DefaultedRegistry(NONE_ID.toString(), REGISTRY_KEY, Lifecycle.stable(), null), Lifecycle.stable()).value();
+
+		DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)
+				.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
+				.renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
+
+		DEFAULT_TEXTURE_SET.use();
+	}
+
 	public static TextureSet noTexture() {
 		return INSTANCE.get(0);
 	}
@@ -73,17 +84,6 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 
 	public boolean contains(ResourceLocation id) {
 		return REGISTRY != null && REGISTRY.keySet().contains(id);
-	}
-
-	static {
-		REGISTRY = (WritableRegistry<TextureSetImpl>) ((WritableRegistry) Registry.REGISTRY).register(REGISTRY_KEY,
-				new DefaultedRegistry(NONE_ID.toString(), REGISTRY_KEY, Lifecycle.stable()), Lifecycle.stable());
-
-		DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)
-				.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
-				.renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
-
-		DEFAULT_TEXTURE_SET.use();
 	}
 
 	void add(TextureSetImpl set) {
