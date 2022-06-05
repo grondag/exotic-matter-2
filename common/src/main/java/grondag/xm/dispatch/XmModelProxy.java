@@ -23,7 +23,6 @@ package grondag.xm.dispatch;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -43,6 +42,7 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
@@ -62,7 +62,7 @@ public class XmModelProxy extends AbstractXmModel implements UnbakedModel {
 	public static final XmModelProxy INSTANCE = new XmModelProxy();
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand) {
+	public List<BakedQuad> getQuads(BlockState state, Direction face, RandomSource rand) {
 		final XmBlockState xmState = XmBlockState.get(state);
 		return xmState == null ? Collections.emptyList() : XmDispatcher.INSTANCE.get(xmState.defaultModelState()).bakedQuads(state, face, rand);
 	}

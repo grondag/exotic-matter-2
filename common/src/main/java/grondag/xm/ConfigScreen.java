@@ -21,7 +21,7 @@
 package grondag.xm;
 
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import io.vram.littlegui.screen.ComponentSource;
 import io.vram.littlegui.screen.HorizontalLayout;
@@ -32,7 +32,7 @@ import grondag.xm.XmConfig.ConfigData;
 
 public class ConfigScreen extends SaveCancelScreen<ConfigData> {
 	public ConfigScreen(Screen parent) {
-		super(new TranslatableComponent("config.xm.title"), parent, XmConfig.writeConfig(), ComponentSource.of("config.xm.value.", "config.xm.help."));
+		super(Component.translatable("config.xm.title"), parent, XmConfig.writeConfig(), ComponentSource.of("config.xm.value.", "config.xm.help."));
 	}
 
 	@Override

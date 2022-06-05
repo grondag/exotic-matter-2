@@ -21,7 +21,6 @@
 package grondag.xm.api.modelstate.base;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
@@ -30,6 +29,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
@@ -146,7 +146,7 @@ public interface BaseModelState<R extends BaseModelState<R, W>, W extends Mutabl
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
+	List<BakedQuad> bakedQuads(BlockState state, Direction face, RandomSource rand);
 
 	@Override
 	@Environment(EnvType.CLIENT)

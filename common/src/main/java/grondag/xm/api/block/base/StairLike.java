@@ -22,7 +22,6 @@ package grondag.xm.api.block.base;
 
 import static net.minecraft.world.level.block.StairBlock.WATERLOGGED;
 
-import java.util.Random;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -34,6 +33,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -115,7 +115,7 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void animateTick(BlockState blockState, Level world, BlockPos blockPos, Random random) {
+	public void animateTick(BlockState blockState, Level world, BlockPos blockPos, RandomSource random) {
 		baseBlock.animateTick(blockState, world, blockPos, random);
 	}
 
@@ -160,12 +160,12 @@ public class StairLike extends Block implements SimpleWaterloggedBlock {
 	}
 
 	@Override
-	public void randomTick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, Random random) {
+	public void randomTick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, RandomSource random) {
 		baseBlock.randomTick(blockState, serverWorld, blockPos, random);
 	}
 
 	@Override
-	public void tick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, Random random) {
+	public void tick(BlockState blockState, ServerLevel serverWorld, BlockPos blockPos, RandomSource random) {
 		baseBlock.tick(blockState, serverWorld, blockPos, random);
 	}
 

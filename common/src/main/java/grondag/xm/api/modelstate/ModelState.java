@@ -21,7 +21,6 @@
 package grondag.xm.api.modelstate;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
@@ -32,6 +31,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
@@ -82,7 +82,7 @@ public interface ModelState {
 	void emitPolygons(Consumer<Polygon> target);
 
 	@Environment(EnvType.CLIENT)
-	List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand);
+	List<BakedQuad> bakedQuads(BlockState state, Direction face, RandomSource rand);
 
 	@Environment(EnvType.CLIENT)
 	TextureAtlasSprite particleSprite();

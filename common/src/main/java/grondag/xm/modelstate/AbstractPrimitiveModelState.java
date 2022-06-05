@@ -25,7 +25,6 @@ import static grondag.xm.api.modelstate.ModelStateFlags.CORNER_JOIN;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -44,6 +43,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.fabricmc.api.EnvType;
@@ -779,7 +779,7 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public final List<BakedQuad> bakedQuads(BlockState state, Direction face, Random rand) {
+	public final List<BakedQuad> bakedQuads(BlockState state, Direction face, RandomSource rand) {
 		List<BakedQuad>[] lists = quadLists;
 
 		if (lists == null) {
@@ -803,7 +803,7 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 			result = new AbstractXmModel() {
 					@Environment(EnvType.CLIENT)
 					@Override
-					public List<BakedQuad> getQuads(BlockState state, Direction face, Random random) {
+					public List<BakedQuad> getQuads(BlockState state, Direction face, RandomSource random) {
 						return bakedQuads(state, face, random);
 					}
 

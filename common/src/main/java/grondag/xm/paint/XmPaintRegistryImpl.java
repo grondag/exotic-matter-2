@@ -112,8 +112,9 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 
 		XmPaintImpl result = XmPaintImpl.DEFAULT_PAINT;
 
-		try (Resource res = rm.getResource(id)) {
-			result = PaintDeserializer.deserialize(new InputStreamReader(res.getInputStream(), StandardCharsets.UTF_8));
+		try {
+			final Resource res = rm.getResource(id).get();
+			result = PaintDeserializer.deserialize(new InputStreamReader(res.open(), StandardCharsets.UTF_8));
 		} catch (final Exception e) {
 			if (loadExpected) {
 				Xm.LOG.info("Unable to load paint " + idIn.toString() + " due to exception " + e.toString());
