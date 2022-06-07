@@ -12,8 +12,8 @@ dependencies {
   modImplementation(fabricApi.module("fabric-object-builder-api-v1", project.fabric_version))
   modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version))
 
-	modIncludeImplementation("io.vram:frex-fabric-mc118:6.0.258:fat")
-	modIncludeImplementation("io.vram:littlegui-fabric-mc118:1.0.5")
+	modIncludeImplementation("io.vram:frex-fabric-mc119:6.0.263:fat")
+	modIncludeImplementation("io.vram:littlegui-fabric-mc119:1.0.6")
 
 	modIncludeImplementation "blue.endless:jankson:1.2.1"
   modIncludeImplementation("io.vram:special-circumstances:1.10.7")
