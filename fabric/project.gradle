@@ -7,16 +7,17 @@ configurations {
 
 dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-  modImplementation(fabricApi.module("fabric-api-base", project.fabric_version))
-  modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
-  modImplementation(fabricApi.module("fabric-object-builder-api-v1", project.fabric_version))
-  modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version))
+	modImplementation(fabricApi.module("fabric-api-base", project.fabric_version))
+	modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+	modImplementation(fabricApi.module("fabric-object-builder-api-v1", project.fabric_version))
+	modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version))
 
+	// Note that BitKit is included via FREX
 	modIncludeImplementation("io.vram:frex-fabric-mc119:6.0.263:fat")
 	modIncludeImplementation("io.vram:littlegui-fabric-mc119:1.0.6")
 
 	modIncludeImplementation "blue.endless:jankson:1.2.1"
-  modIncludeImplementation("io.vram:special-circumstances:1.10.7")
+	modIncludeImplementation("io.vram:special-circumstances:1.10.7")
 
 	modCompileOnly "com.terraformersmc:modmenu:4.0.0-beta.4"
 	modRuntimeOnly "com.terraformersmc:modmenu:4.0.0-beta.4"
