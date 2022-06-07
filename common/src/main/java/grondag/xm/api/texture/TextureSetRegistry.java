@@ -42,7 +42,5 @@ public interface TextureSetRegistry {
 
 	TextureSet get(ResourceLocation id);
 
-	TextureSet get(int index);
-
 	void forEach(Consumer<TextureSet> consumer);
 }

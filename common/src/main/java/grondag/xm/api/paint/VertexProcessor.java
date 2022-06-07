@@ -25,7 +25,7 @@ import org.jetbrains.annotations.ApiStatus.Experimental;
 import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.base.BaseModelState;
 import grondag.xm.api.primitive.surface.XmSurface;
-import grondag.xm.paint.VertexProcessorRegistryImpl;
+import grondag.xm.paint.VertexProcessorDefault;
 
 /**
  * Logic to apply color, brightness, glow and other attributes that depend on
@@ -41,5 +41,5 @@ public interface VertexProcessor {
 	@SuppressWarnings("rawtypes")
 	void process(MutablePolygon result, BaseModelState modelState, XmSurface surface, XmPaint paint, int textureIndex);
 
-	VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorRegistryImpl.DEFAULT_VERTEX_PROCESSOR;
+	VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorDefault.INSTANCE;
 }

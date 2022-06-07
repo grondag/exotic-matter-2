@@ -29,16 +29,11 @@ import grondag.xm.paint.VertexProcessorRegistryImpl;
 
 @Experimental
 public interface VertexProcessorRegistry {
-	/**
-	 * Will always be associated with index 0.
-	 */
 	ResourceLocation NONE_ID = new ResourceLocation(Xm.MODID, "none");
 
 	VertexProcessorRegistry INSTANCE = VertexProcessorRegistryImpl.INSTANCE;
 
 	VertexProcessor get(ResourceLocation id);
-
-	VertexProcessor get(int index);
 
 	VertexProcessor add(ResourceLocation id, VertexProcessor set);
 

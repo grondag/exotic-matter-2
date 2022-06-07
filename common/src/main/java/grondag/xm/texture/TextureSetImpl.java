@@ -78,11 +78,6 @@ public class TextureSetImpl extends AbstractTextureSet implements TextureSet {
 	}
 
 	@Override
-	public int index() {
-		return TextureSetRegistryImpl.INSTANCE.indexOf(this);
-	}
-
-	@Override
 	public int stateFlags() {
 		return stateFlags;
 	}

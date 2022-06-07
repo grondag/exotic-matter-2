@@ -20,14 +20,9 @@
 
 package grondag.xm.paint;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import com.mojang.serialization.Lifecycle;
-
-import net.minecraft.core.DefaultedRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.core.WritableRegistry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
 import grondag.xm.Xm;
@@ -35,29 +30,39 @@ import grondag.xm.api.paint.VertexProcessor;
 import grondag.xm.api.paint.VertexProcessorRegistry;
 
 @Internal
-@SuppressWarnings({ "unchecked", "rawtypes" })
-public class VertexProcessorRegistryImpl extends DefaultedRegistry<VertexProcessor> implements VertexProcessorRegistry {
-	public static final VertexProcessor DEFAULT_VERTEX_PROCESSOR = VertexProcessorDefault.INSTANCE;
+public class VertexProcessorRegistryImpl implements VertexProcessorRegistry {
+	public static final VertexProcessorRegistry INSTANCE = new VertexProcessorRegistryImpl();
 
-	private static final ResourceKey REGISTRY_KEY = ResourceKey.createRegistryKey(Xm.id("vertex_proc"));
-	public static final VertexProcessorRegistryImpl INSTANCE;
+	private final Object2ObjectOpenHashMap<ResourceLocation, VertexProcessor> keyToValueMap = new Object2ObjectOpenHashMap<>();
+	private final Object2ObjectOpenHashMap<VertexProcessor, ResourceLocation> valueToKeyMap = new Object2ObjectOpenHashMap<>();
 
 	static {
-		INSTANCE = (VertexProcessorRegistryImpl) ((WritableRegistry) Registry.REGISTRY).register(REGISTRY_KEY,
-				new VertexProcessorRegistryImpl(NONE_ID.toString()), Lifecycle.stable()).value();
-	}
-
-	VertexProcessorRegistryImpl(String defaultIdString) {
-		super(defaultIdString, REGISTRY_KEY, Lifecycle.experimental(), null);
+		INSTANCE.add(NONE_ID, VertexProcessorDefault.INSTANCE);
 	}
 
 	@Override
 	public VertexProcessor add(ResourceLocation id, VertexProcessor processor) {
-		return Registry.register(this, id, processor);
+		if (keyToValueMap.containsKey(id)) {
+			Xm.LOG.warn("Duplicate registration for VertexProcessor ID " + id.toString());
+		}
+
+		keyToValueMap.put(id, processor);
+		valueToKeyMap.put(processor, id);
+		return processor;
 	}
 
 	@Override
-	public VertexProcessor get(int index) {
-		return byId(index);
+	public VertexProcessor get(ResourceLocation id) {
+		return keyToValueMap.getOrDefault(id, VertexProcessorDefault.INSTANCE);
+	}
+
+	@Override
+	public ResourceLocation getKey(VertexProcessor value) {
+		return valueToKeyMap.getOrDefault(value, NONE_ID);
+	}
+
+	@Override
+	public boolean containsKey(ResourceLocation id) {
+		return keyToValueMap.containsKey(id);
 	}
 }

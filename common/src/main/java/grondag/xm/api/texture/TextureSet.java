@@ -48,12 +48,6 @@ public interface TextureSet {
 	ResourceLocation id();
 
 	/**
-	 * Transient id for temporary serialization. Client values may not match server
-	 * values.
-	 */
-	int index();
-
-	/**
 	 * Passes strings to consumer for all textures to be included in texture stitch.
 	 */
 	void prestitch(Consumer<ResourceLocation> stitcher);

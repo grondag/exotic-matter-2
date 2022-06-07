@@ -22,15 +22,10 @@ package grondag.xm.texture;
 
 import java.util.function.Consumer;
 
-import com.mojang.serialization.Lifecycle;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
-import net.minecraft.core.DefaultedRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.core.WritableRegistry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
-import grondag.xm.Xm;
 import grondag.xm.api.texture.TextureGroup;
 import grondag.xm.api.texture.TextureLayoutMap;
 import grondag.xm.api.texture.TextureRenderIntent;
@@ -39,19 +34,12 @@ import grondag.xm.api.texture.TextureSet;
 import grondag.xm.api.texture.TextureSetRegistry;
 import grondag.xm.api.texture.TextureTransform;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class TextureSetRegistryImpl implements TextureSetRegistry {
 	public static final TextureSetImpl DEFAULT_TEXTURE_SET;
-
-	private static final ResourceKey REGISTRY_KEY = ResourceKey.createRegistryKey(Xm.id("texture_sets"));
-	private static final WritableRegistry<TextureSetImpl> REGISTRY;
 
 	public static final TextureSetRegistryImpl INSTANCE = new TextureSetRegistryImpl();
 
 	static {
-		REGISTRY = (WritableRegistry<TextureSetImpl>) ((WritableRegistry) Registry.REGISTRY).register(REGISTRY_KEY,
-				new DefaultedRegistry(NONE_ID.toString(), REGISTRY_KEY, Lifecycle.stable(), null), Lifecycle.stable()).value();
-
 		DEFAULT_TEXTURE_SET = (TextureSetImpl) TextureSet.builder().displayNameToken("none").baseTextureName("exotic-matter:block/noise_moderate").versionCount(4)
 				.scale(TextureScale.SINGLE).layout(TextureLayoutMap.VERSION_X_8).transform(TextureTransform.ROTATE_RANDOM)
 				.renderIntent(TextureRenderIntent.BASE_ONLY).groups(TextureGroup.ALWAYS_HIDDEN).build(TextureSetRegistry.NONE_ID);
@@ -60,33 +48,26 @@ public class TextureSetRegistryImpl implements TextureSetRegistry {
 	}
 
 	public static TextureSet noTexture() {
-		return INSTANCE.get(0);
+		return INSTANCE.get(TextureSetRegistry.NONE_ID);
 	}
+
+	private final Object2ObjectOpenHashMap<ResourceLocation, TextureSetImpl> MAP = new Object2ObjectOpenHashMap<>();
 
 	@Override
 	public TextureSetImpl get(ResourceLocation id) {
-		return REGISTRY.get(id);
-	}
-
-	@Override
-	public TextureSetImpl get(int index) {
-		return index < 0 ? DEFAULT_TEXTURE_SET : REGISTRY.byId(index);
-	}
-
-	public int indexOf(TextureSetImpl set) {
-		return REGISTRY.getId(set);
+		return MAP.getOrDefault(id, DEFAULT_TEXTURE_SET);
 	}
 
 	@Override
 	public void forEach(Consumer<TextureSet> consumer) {
-		REGISTRY.forEach(consumer);
+		MAP.values().forEach(consumer);
 	}
 
 	public boolean contains(ResourceLocation id) {
-		return REGISTRY != null && REGISTRY.keySet().contains(id);
+		return MAP.containsKey(id);
 	}
 
 	void add(TextureSetImpl set) {
-		Registry.register(REGISTRY, set.id, set);
+		MAP.put(set.id, set);
 	}
 }
