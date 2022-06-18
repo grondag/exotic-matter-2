@@ -39,7 +39,7 @@ public interface SimplePrimitive extends ModelPrimitive<PrimitiveState, MutableP
 		return SimplePrimitiveBuilderImpl.builder();
 	}
 
-	public interface Builder {
+	interface Builder {
 		default SimplePrimitive build(ResourceLocation id) {
 			return build(id);
 		}

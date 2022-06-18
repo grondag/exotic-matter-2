@@ -37,7 +37,7 @@ public interface PrimitiveStateFunction extends ModelStateFunction<MutablePrimit
 		return WorldToModelStateImpl.builder();
 	}
 
-	public interface Builder {
+	interface Builder {
 		Builder withJoin(BlockTest<PrimitiveState> joinTest);
 
 		Builder withUpdate(PrimitiveStateMutator update);

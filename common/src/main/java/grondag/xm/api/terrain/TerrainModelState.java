@@ -28,7 +28,7 @@ import grondag.xm.terrain.TerrainState;
 
 @Experimental
 public interface TerrainModelState extends BaseModelState<TerrainModelState, TerrainModelState.Mutable> {
-	public interface Mutable extends TerrainModelState, MutableBaseModelState<TerrainModelState, TerrainModelState.Mutable> {
+	interface Mutable extends TerrainModelState, MutableBaseModelState<TerrainModelState, TerrainModelState.Mutable> {
 		TerrainModelState.Mutable setTerrainStateKey(long terrainStateKey);
 
 		TerrainModelState.Mutable setTerrainState(TerrainState flowState);

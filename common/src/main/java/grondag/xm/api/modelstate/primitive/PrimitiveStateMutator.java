@@ -45,7 +45,7 @@ public interface PrimitiveStateMutator {
 		return PrimitiveStateMutatorImpl.builder();
 	}
 
-	public interface Builder {
+	interface Builder {
 		Builder withJoin(BlockTest<PrimitiveState> joinTest);
 
 		Builder withUpdate(PrimitiveStateMutator update);
