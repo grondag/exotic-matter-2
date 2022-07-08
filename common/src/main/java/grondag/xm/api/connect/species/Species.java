@@ -24,6 +24,7 @@ import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 
 import grondag.xm.api.connect.world.BlockRegion;
@@ -39,5 +40,9 @@ public class Species {
 
 	public static int speciesForPlacement(BlockGetter world, BlockPos onPos, Direction onFace, SpeciesMode mode, SpeciesFunction func, BlockRegion region) {
 		return SpeciesImpl.speciesForPlacement(world, onPos, onFace, mode, func, region);
+	}
+
+	public static int speciesForPlacement(BlockPlaceContext context, SpeciesMode mode, SpeciesFunction func) {
+		return speciesForPlacement(context.getLevel(), context.getClickedPos(), context.getClickedFace(), mode, func);
 	}
 }

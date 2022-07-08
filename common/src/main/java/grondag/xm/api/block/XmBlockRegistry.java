@@ -24,6 +24,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
+import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -78,7 +79,7 @@ public class XmBlockRegistry {
 		addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
 	}
 
-	public static <F extends ModelStateFunction<?>> void addBlock(Block block, F blockModelFunction, BiFunction<ItemStack, Level, MutableModelState> itemModelFunction) {
+	public static <F extends ModelStateFunction<?>> void addBlock(Block block, F blockModelFunction, @Nullable BiFunction<ItemStack, Level, MutableModelState> itemModelFunction) {
 		addBlockStates(block, (BlockState bs) -> blockModelFunction, itemModelFunction);
 	}
 
