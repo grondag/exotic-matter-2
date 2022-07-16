@@ -71,7 +71,7 @@ public class PaintIndexImpl implements PaintIndex {
 	public XmPaint fromIndex(int index) {
 		assert index >= 0;
 		assert index < nextIndex;
-		return index >= 0 && index < nextIndex ? paints[index] : XmPaintImpl.DEFAULT_PAINT;
+		return index >= 0 && index < nextIndex ? paints[index] : XmPaint.DEFAULT_PAINT;
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class PaintIndexImpl implements PaintIndex {
 	@Override
 	public void updateIndex(int index, XmPaint paint) {
 		if (paint == null) {
-			paint = XmPaintImpl.DEFAULT_PAINT;
+			paint = XmPaint.DEFAULT_PAINT;
 		}
 
 		((XmPaintImpl) paints[index]).copyFrom((XmPaintImpl) paint);

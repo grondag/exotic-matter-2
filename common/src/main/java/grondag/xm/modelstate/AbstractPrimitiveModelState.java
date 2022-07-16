@@ -74,7 +74,6 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.connect.CornerJoinStateSelector;
 import grondag.xm.dispatch.AbstractXmModel;
 import grondag.xm.orientation.api.OrientationType;
-import grondag.xm.paint.XmPaintImpl;
 import grondag.xm.painter.PaintManager;
 import grondag.xm.texture.TextureSetHelper;
 
@@ -250,7 +249,7 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 	}
 
 	protected void clear() {
-		Arrays.fill(paints, XmPaintImpl.DEFAULT_PAINT);
+		Arrays.fill(paints, XmPaint.DEFAULT_PAINT);
 		worldBits = 0;
 		shapeBits = 0;
 		clearStateFlags();
@@ -367,7 +366,7 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 
 		for (int i = 0; i < limit; ++i) {
 			final XmPaint p = paints[i];
-			paintList.add((p == null ? XmPaintImpl.DEFAULT_PAINT : p).toTag());
+			paintList.add((p == null ? XmPaint.DEFAULT_PAINT : p).toTag());
 		}
 
 		tag.put(ModelStateTagHelper.NBT_PAINTS, paintList);
@@ -504,7 +503,7 @@ public abstract class AbstractPrimitiveModelState<V extends AbstractPrimitiveMod
 	@Override
 	public final XmPaint paint(int surfaceIndex) {
 		final XmPaint result = paints[surfaceIndex];
-		return result == null ? XmPaintImpl.DEFAULT_PAINT : result;
+		return result == null ? XmPaint.DEFAULT_PAINT : result;
 	}
 
 	@Override

@@ -137,4 +137,6 @@ public interface XmPaint {
 	}
 
 	int NO_INDEX = -1;
+
+	XmPaint DEFAULT_PAINT = finder().find();
 }

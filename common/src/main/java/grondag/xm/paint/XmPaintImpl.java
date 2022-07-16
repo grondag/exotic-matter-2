@@ -663,9 +663,9 @@ public class XmPaintImpl {
 	private static final String TAG_VP_1 = "v1";
 	private static final String TAG_VP_2 = "v2";
 
-	public static XmPaintImpl.Value fromTag(CompoundTag tag, @Nullable PaintIndex paintIndex) {
+	public static XmPaint fromTag(CompoundTag tag, @Nullable PaintIndex paintIndex) {
 		if (tag.isEmpty()) {
-			return XmPaintImpl.DEFAULT_PAINT;
+			return XmPaint.DEFAULT_PAINT;
 		}
 
 		if (tag.contains(TAG_ID)) {
@@ -675,15 +675,15 @@ public class XmPaintImpl {
 		if (tag.contains(TAG_INDEX)) {
 			if (paintIndex == null) {
 				Xm.LOG.warn("Attempt to deserialize indexed paint with null paint index. Default paint used.");
-				return XmPaintImpl.DEFAULT_PAINT;
+				return XmPaint.DEFAULT_PAINT;
 			}
 
-			return (Value) paintIndex.fromIndex(tag.getInt(TAG_INDEX));
+			return paintIndex.fromIndex(tag.getInt(TAG_INDEX));
 		}
 
 		// check in case someone stuffed other bits in our empty default tag
 		if (!tag.contains(TAG_BITS)) {
-			return XmPaintImpl.DEFAULT_PAINT;
+			return XmPaint.DEFAULT_PAINT;
 		}
 
 		final Finder finder = finder();
@@ -733,7 +733,7 @@ public class XmPaintImpl {
 		final int header = pBuff.readVarInt();
 
 		if (header == XmPaint.NO_INDEX) {
-			return DEFAULT_PAINT;
+			return XmPaint.DEFAULT_PAINT;
 		}
 
 		if ((header & FLAG_HAS_ID) == FLAG_HAS_ID) {
@@ -746,7 +746,7 @@ public class XmPaintImpl {
 
 			if (paintIndex == null) {
 				Xm.LOG.warn("Attempt to deserialize indexed paint with null paint index. Default paint used.");
-				return XmPaintImpl.DEFAULT_PAINT;
+				return XmPaint.DEFAULT_PAINT;
 			}
 
 			return paintIndex.fromIndex(index);
@@ -792,6 +792,4 @@ public class XmPaintImpl {
 
 		return finder.find();
 	}
-
-	public static final XmPaintImpl.Value DEFAULT_PAINT = finder().find();
 }

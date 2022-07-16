@@ -38,6 +38,7 @@ import grondag.xm.api.mesh.XmMesh;
 import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
+import grondag.xm.api.paint.XmPaint;
 import grondag.xm.api.primitive.SimplePrimitive;
 import grondag.xm.api.primitive.SimplePrimitive.Builder;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
@@ -45,7 +46,6 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.connect.SimpleJoinStateImpl;
 import grondag.xm.modelstate.SimpleModelStateImpl;
 import grondag.xm.orientation.api.OrientationType;
-import grondag.xm.paint.XmPaintImpl;
 
 @Internal
 public class SimplePrimitiveBuilderImpl {
@@ -218,7 +218,7 @@ public class SimplePrimitiveBuilderImpl {
 		public MutablePrimitiveState geometricState(PrimitiveState fromState) {
 			final MutablePrimitiveState result = newState()
 					.orientationIndex(fromState.orientationIndex())
-					.paintAll(XmPaintImpl.DEFAULT_PAINT)
+					.paintAll(XmPaint.DEFAULT_PAINT)
 					.primitiveBits(fromState.primitiveBits());
 
 			if (cornerJoin) {

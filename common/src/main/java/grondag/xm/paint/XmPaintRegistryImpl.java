@@ -54,7 +54,7 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 
 	private XmPaintRegistryImpl() {
 		// see header notes
-		register(DEFAULT_PAINT_ID, XmPaintImpl.DEFAULT_PAINT);
+		register(DEFAULT_PAINT_ID, XmPaint.DEFAULT_PAINT);
 	}
 
 	private final Object2ObjectOpenHashMap<ResourceLocation, XmPaintImpl.Value> paints = new Object2ObjectOpenHashMap<>();
@@ -110,7 +110,7 @@ public class XmPaintRegistryImpl implements XmPaintRegistry, SimpleSynchronousRe
 	private XmPaintImpl loadPaint(ResourceLocation idIn, ResourceManager rm, boolean loadExpected) {
 		final ResourceLocation id = new ResourceLocation(idIn.getNamespace(), "paints/" + idIn.getPath() + ".json");
 
-		XmPaintImpl result = XmPaintImpl.DEFAULT_PAINT;
+		XmPaintImpl result = (XmPaintImpl) XmPaint.DEFAULT_PAINT;
 
 		try {
 			final Resource res = rm.getResource(id).get();
