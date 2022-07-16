@@ -20,6 +20,7 @@
 
 package grondag.xm.orientation.api;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.StringRepresentable;
 
 import grondag.xm.orientation.impl.HorizontalFaceHelper;
 
@@ -35,17 +37,18 @@ import grondag.xm.orientation.impl.HorizontalFaceHelper;
  * plane.
  */
 @Experimental
-public enum HorizontalFace {
+public enum HorizontalFace implements StringRepresentable {
 	NORTH(Direction.NORTH),
 	EAST(Direction.EAST),
 	SOUTH(Direction.SOUTH),
 	WEST(Direction.WEST);
 
 	public final Direction face;
-
+	private final String serializedName;
 	public final Vec3i vector;
 
 	HorizontalFace(Direction face) {
+		serializedName = name().toLowerCase(Locale.ROOT);
 		this.face = face;
 		vector = face.getNormal();
 	}
@@ -74,5 +77,10 @@ public enum HorizontalFace {
 
 	public static void forEach(Consumer<HorizontalFace> consumer) {
 		HorizontalFaceHelper.forEach(consumer);
+	}
+
+	@Override
+	public String getSerializedName() {
+		return serializedName;
 	}
 }

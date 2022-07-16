@@ -25,6 +25,7 @@ import static grondag.xm.orientation.api.ClockwiseRotation.ROTATE_270;
 import static grondag.xm.orientation.api.ClockwiseRotation.ROTATE_90;
 import static grondag.xm.orientation.api.ClockwiseRotation.ROTATE_NONE;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
@@ -34,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.StringRepresentable;
 
 import grondag.xm.orientation.impl.CubeEdgeHelper;
 
@@ -43,7 +45,7 @@ import grondag.xm.orientation.impl.CubeEdgeHelper;
  * respect to that edge.
  */
 @Experimental
-public enum CubeEdge {
+public enum CubeEdge implements StringRepresentable {
 	DOWN_SOUTH(Direction.DOWN, Direction.SOUTH, ROTATE_180),
 	DOWN_WEST(Direction.DOWN, Direction.WEST, ROTATE_270),
 	DOWN_NORTH(Direction.DOWN, Direction.NORTH, ROTATE_NONE),
@@ -68,7 +70,7 @@ public enum CubeEdge {
 	 */
 
 	public final ClockwiseRotation rotation;
-
+	private final String serializedName;
 	public final Vec3i vector;
 
 	/**
@@ -88,6 +90,7 @@ public enum CubeEdge {
 	public final HorizontalEdge horizontalEdge;
 
 	CubeEdge(Direction face1, Direction face2, ClockwiseRotation rotation) {
+		serializedName = name().toLowerCase(Locale.ROOT);
 		this.face1 = face1;
 		this.face2 = face2;
 		this.rotation = rotation;
@@ -121,5 +124,10 @@ public enum CubeEdge {
 
 	public static void forEach(Consumer<CubeEdge> consumer) {
 		CubeEdgeHelper.forEach(consumer);
+	}
+
+	@Override
+	public String getSerializedName() {
+		return serializedName;
 	}
 }

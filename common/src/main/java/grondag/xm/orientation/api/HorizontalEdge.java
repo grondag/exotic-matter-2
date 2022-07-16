@@ -20,6 +20,7 @@
 
 package grondag.xm.orientation.api;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Rotation;
 
 import grondag.xm.orientation.impl.HorizontalEdgeHelper;
@@ -37,7 +39,7 @@ import grondag.xm.orientation.impl.HorizontalEdgeHelper;
  * plane.
  */
 @Experimental
-public enum HorizontalEdge {
+public enum HorizontalEdge implements StringRepresentable {
 	NORTH_EAST(HorizontalFace.NORTH, HorizontalFace.EAST),
 	NORTH_WEST(HorizontalFace.WEST, HorizontalFace.NORTH),
 	SOUTH_EAST(HorizontalFace.EAST, HorizontalFace.SOUTH),
@@ -45,10 +47,11 @@ public enum HorizontalEdge {
 
 	public final HorizontalFace left;
 	public final HorizontalFace right;
-
+	private final String serializedName;
 	public final Vec3i vector;
 
 	HorizontalEdge(HorizontalFace left, HorizontalFace right) {
+		serializedName = name().toLowerCase(Locale.ROOT);
 		this.left = left;
 		this.right = right;
 		vector = new Vec3i(left.face.getNormal().getX() + right.face.getNormal().getX(), 0,
@@ -86,5 +89,10 @@ public enum HorizontalEdge {
 
 	public static void forEach(Consumer<HorizontalEdge> consumer) {
 		HorizontalEdgeHelper.forEach(consumer);
+	}
+
+	@Override
+	public String getSerializedName() {
+		return serializedName;
 	}
 }

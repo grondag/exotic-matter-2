@@ -20,6 +20,7 @@
 
 package grondag.xm.orientation.api;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Rotation;
 
 import grondag.xm.orientation.impl.CubeRotationHelper;
@@ -44,7 +46,7 @@ import grondag.xm.orientation.impl.CubeRotationHelper;
  * <p>Components of the name are bottom and back face.
  */
 @Experimental
-public enum CubeRotation {
+public enum CubeRotation implements StringRepresentable {
 	DOWN_SOUTH(Direction.DOWN, Direction.SOUTH),
 	DOWN_WEST(Direction.DOWN, Direction.WEST),
 	DOWN_NORTH(Direction.DOWN, Direction.NORTH),
@@ -72,7 +74,7 @@ public enum CubeRotation {
 
 	public final Direction bottom;
 	public final Direction back;
-
+	private final String serializedName;
 	public final Vec3i vector;
 
 	/**
@@ -92,6 +94,7 @@ public enum CubeRotation {
 	public final HorizontalEdge horizontalEdge;
 
 	CubeRotation(Direction bottom, Direction back) {
+		serializedName = name().toLowerCase(Locale.ROOT);
 		this.bottom = bottom;
 		this.back = back;
 		superOrdinal = 6 + ordinal();
@@ -130,5 +133,10 @@ public enum CubeRotation {
 		final Direction newBack = rotation.rotate(back);
 		final Direction newBottom = rotation.rotate(bottom);
 		return find(newBottom, newBack);
+	}
+
+	@Override
+	public String getSerializedName() {
+		return serializedName;
 	}
 }
