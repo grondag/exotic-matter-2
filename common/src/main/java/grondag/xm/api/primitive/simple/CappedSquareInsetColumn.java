@@ -42,6 +42,7 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
@@ -52,16 +53,16 @@ public class CappedSquareInsetColumn {
 	private CappedSquareInsetColumn() { }
 
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-		.add("ends", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-		.add("outer", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-		.add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
-		.add("inner", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP)
+		.add("ends", SurfaceTopology.CUBIC, SurfaceLocation.ENDS)
+		.add("outer", SurfaceTopology.CUBIC, SurfaceLocation.SIDES)
+		.add("cut", SurfaceTopology.CUBIC, SurfaceLocation.CUT, XmSurface.FLAG_LAMP_GRADIENT)
+		.add("inner", SurfaceTopology.CUBIC, SurfaceLocation.INSIDE, XmSurface.FLAG_LAMP)
 		.build();
 
-	public static final XmSurface SURFACE_ENDS = SURFACES.get(0);
-	public static final XmSurface SURFACE_OUTER = SURFACES.get(1);
-	public static final XmSurface SURFACE_CUT = SURFACES.get(2);
-	public static final XmSurface SURFACE_INNER = SURFACES.get(3);
+	@Deprecated public static final XmSurface SURFACE_ENDS = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_OUTER = SURFACES.get(1);
+	@Deprecated public static final XmSurface SURFACE_CUT = SURFACES.get(2);
+	@Deprecated public static final XmSurface SURFACE_INNER = SURFACES.get(3);
 
 	private static Axis[] AXES = Axis.values();
 

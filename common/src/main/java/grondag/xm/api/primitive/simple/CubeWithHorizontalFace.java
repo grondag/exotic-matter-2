@@ -29,8 +29,8 @@ import grondag.xm.orientation.api.OrientationType;
 public class CubeWithHorizontalFace {
 	public static final XmSurfaceList SURFACES = CubeWithFace.SURFACES;
 
-	public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
-	public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
+	@Deprecated public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_SIDES = SURFACES.get(1);
 
 	public static final SimplePrimitive INSTANCE = SimplePrimitive.builder()
 		.surfaceList(SURFACES)

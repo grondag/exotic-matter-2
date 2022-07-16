@@ -25,6 +25,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import io.vram.sc.unordered.SimpleUnorderedArrayList;
 
 import grondag.xm.api.paint.SurfaceTopology;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.primitive.surface.XmSurfaceListBuilder;
 
@@ -42,8 +43,8 @@ public class XmSurfaceListBuilderImpl implements XmSurfaceListBuilder {
 	}
 
 	@Override
-	public XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, int flags) {
-		surfaces.add(new XmSurfaceImpl(surfaces.size(), nameKey, topology, flags));
+	public XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, SurfaceLocation location, int flags) {
+		surfaces.add(new XmSurfaceImpl(surfaces.size(), nameKey, topology, location, flags));
 		return this;
 	}
 

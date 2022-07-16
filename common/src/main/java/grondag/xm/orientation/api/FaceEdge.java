@@ -27,19 +27,17 @@ import static net.minecraft.core.Direction.SOUTH;
 import static net.minecraft.core.Direction.UP;
 import static net.minecraft.core.Direction.WEST;
 
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.Direction;
-import net.minecraft.util.StringRepresentable;
 
 import grondag.xm.orientation.impl.FaceEdgeHelper;
 
 @Internal
-public enum FaceEdge implements StringRepresentable {
+public enum FaceEdge {
 	TOP_EDGE(SOUTH, NORTH, UP, UP, UP, UP),
 	BOTTOM_EDGE(NORTH, SOUTH, DOWN, DOWN, DOWN, DOWN),
 	LEFT_EDGE(WEST, WEST, EAST, WEST, NORTH, SOUTH),
@@ -51,10 +49,7 @@ public enum FaceEdge implements StringRepresentable {
 	@Internal
 	public final int ordinalBit;
 
-	public final String name;
-
 	FaceEdge(Direction... relativeLookup) {
-		name = name().toLowerCase(Locale.ROOT);
 		this.relativeLookup = relativeLookup;
 		ordinalBit = 1 << ordinal();
 	}
@@ -128,11 +123,6 @@ public enum FaceEdge implements StringRepresentable {
 
 	public static void forEach(Consumer<FaceEdge> consumer) {
 		FaceEdgeHelper.forEach(consumer);
-	}
-
-	@Override
-	public String getSerializedName() {
-		return name;
 	}
 
 	public boolean isHorizontal() {

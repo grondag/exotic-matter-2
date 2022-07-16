@@ -20,7 +20,6 @@
 
 package grondag.xm.orientation.api;
 
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
@@ -30,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Vec3i;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Rotation;
 
 import grondag.xm.orientation.impl.CubeRotationHelper;
@@ -46,7 +44,7 @@ import grondag.xm.orientation.impl.CubeRotationHelper;
  * <p>Components of the name are bottom and back face.
  */
 @Experimental
-public enum CubeRotation implements StringRepresentable {
+public enum CubeRotation {
 	DOWN_SOUTH(Direction.DOWN, Direction.SOUTH),
 	DOWN_WEST(Direction.DOWN, Direction.WEST),
 	DOWN_NORTH(Direction.DOWN, Direction.NORTH),
@@ -74,7 +72,6 @@ public enum CubeRotation implements StringRepresentable {
 
 	public final Direction bottom;
 	public final Direction back;
-	public final String name;
 
 	public final Vec3i vector;
 
@@ -95,7 +92,6 @@ public enum CubeRotation implements StringRepresentable {
 	public final HorizontalEdge horizontalEdge;
 
 	CubeRotation(Direction bottom, Direction back) {
-		name = name().toLowerCase(Locale.ROOT);
 		this.bottom = bottom;
 		this.back = back;
 		superOrdinal = 6 + ordinal();
@@ -128,11 +124,6 @@ public enum CubeRotation implements StringRepresentable {
 
 	public static void forEach(Consumer<CubeRotation> consumer) {
 		CubeRotationHelper.forEach(consumer);
-	}
-
-	@Override
-	public String getSerializedName() {
-		return name;
 	}
 
 	public CubeRotation rotate(Rotation rotation) {

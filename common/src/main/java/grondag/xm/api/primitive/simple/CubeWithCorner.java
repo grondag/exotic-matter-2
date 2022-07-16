@@ -35,6 +35,7 @@ import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
@@ -43,12 +44,12 @@ import grondag.xm.orientation.api.OrientationType;
 @Experimental
 public class CubeWithCorner {
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-		.add("front", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-		.add("back", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+		.add("front", SurfaceTopology.CUBIC, SurfaceLocation.FRONT, XmSurface.FLAG_ALLOW_BORDERS)
+		.add("back", SurfaceTopology.CUBIC, SurfaceLocation.BACK, XmSurface.FLAG_ALLOW_BORDERS)
 		.build();
 
-	public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
-	public static final XmSurface SURFACE_BACK = SURFACES.get(1);
+	@Deprecated public static final XmSurface SURFACE_FRONT = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_BACK = SURFACES.get(1);
 
 	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
 		final PolyTransform transform = PolyTransform.get(modelState);

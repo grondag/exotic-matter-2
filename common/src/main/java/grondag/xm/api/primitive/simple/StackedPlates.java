@@ -37,6 +37,7 @@ import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
@@ -47,13 +48,13 @@ public class StackedPlates {
 	private StackedPlates() { }
 
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-			.add("bottom", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("top", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE)
-			.add("sides", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+			.add("bottom", SurfaceTopology.CUBIC, SurfaceLocation.BOTTOM, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("top", SurfaceTopology.CUBIC, SurfaceLocation.TOP)
+			.add("sides", SurfaceTopology.CUBIC, SurfaceLocation.SIDES).build();
 
-	public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
-	public static final XmSurface SURFACE_TOP = SURFACES.get(1);
-	public static final XmSurface SURFACE_SIDES = SURFACES.get(2);
+	@Deprecated public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_TOP = SURFACES.get(1);
+	@Deprecated public static final XmSurface SURFACE_SIDES = SURFACES.get(2);
 
 	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
 		final PolyTransform transform = PolyTransform.get(modelState);

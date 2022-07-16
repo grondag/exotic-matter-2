@@ -20,18 +20,15 @@
 
 package grondag.xm.orientation.api;
 
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
-import net.minecraft.util.StringRepresentable;
-
 import grondag.xm.orientation.impl.FaceCornerHelper;
 
 @Experimental
-public enum FaceCorner implements StringRepresentable {
+public enum FaceCorner {
 	TOP_LEFT(FaceEdge.LEFT_EDGE, FaceEdge.TOP_EDGE), TOP_RIGHT(FaceEdge.TOP_EDGE, FaceEdge.RIGHT_EDGE), BOTTOM_LEFT(FaceEdge.BOTTOM_EDGE, FaceEdge.LEFT_EDGE),
 	BOTTOM_RIGHT(FaceEdge.RIGHT_EDGE, FaceEdge.BOTTOM_EDGE);
 
@@ -45,13 +42,10 @@ public enum FaceCorner implements StringRepresentable {
 	 */
 	public final FaceEdge rightSide;
 
-	public final String name;
-
 	@Internal
 	public final int ordinalBit;
 
 	FaceCorner(FaceEdge leftSide, FaceEdge rightSide) {
-		name = name().toLowerCase(Locale.ROOT);
 		this.leftSide = leftSide;
 		this.rightSide = rightSide;
 		ordinalBit = 1 << ordinal();
@@ -69,10 +63,5 @@ public enum FaceCorner implements StringRepresentable {
 
 	public static void forEach(Consumer<FaceCorner> consumer) {
 		FaceCornerHelper.forEach(consumer);
-	}
-
-	@Override
-	public String getSerializedName() {
-		return name;
 	}
 }

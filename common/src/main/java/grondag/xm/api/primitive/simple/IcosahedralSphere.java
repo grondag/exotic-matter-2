@@ -35,15 +35,16 @@ import grondag.xm.api.mesh.polygon.Polygon;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.orientation.api.OrientationType;
 
 @Experimental
 public class IcosahedralSphere {
-	public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("back", SurfaceTopology.TILED, XmSurface.FLAG_NONE).build();
+	public static final XmSurfaceList SURFACES = XmSurfaceList.builder().add("back", SurfaceTopology.TILED, SurfaceLocation.OUTSIDE).build();
 
-	public static final XmSurface SURFACE_ALL = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
 	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
 		final WritableMesh mesh = XmMeshes.claimWritable();

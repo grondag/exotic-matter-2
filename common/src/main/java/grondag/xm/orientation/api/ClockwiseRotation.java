@@ -20,22 +20,18 @@
 
 package grondag.xm.orientation.api;
 
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus.Experimental;
 
 import net.minecraft.core.Direction;
-import net.minecraft.util.StringRepresentable;
 
 @Experimental
-public enum ClockwiseRotation implements StringRepresentable {
+public enum ClockwiseRotation {
 	ROTATE_NONE(0),
 	ROTATE_90(90),
 	ROTATE_180(180),
 	ROTATE_270(270);
-
-	public final String name;
 
 	/**
 	 * Useful for locating model file names that use degrees as a suffix.
@@ -49,14 +45,8 @@ public enum ClockwiseRotation implements StringRepresentable {
 	public final int degreesInverse;
 
 	ClockwiseRotation(int degrees) {
-		name = name().toLowerCase(Locale.ROOT);
 		this.degrees = degrees;
 		degreesInverse = (360 - degrees) % 360;
-	}
-
-	@Override
-	public String getSerializedName() {
-		return name;
 	}
 
 	public ClockwiseRotation clockwise() {

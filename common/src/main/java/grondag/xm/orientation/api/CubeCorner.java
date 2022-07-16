@@ -20,7 +20,6 @@
 
 package grondag.xm.orientation.api;
 
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -30,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Rotation;
 
 import grondag.xm.orientation.impl.CubeCornerHelper;
@@ -40,7 +38,7 @@ import grondag.xm.orientation.impl.CubeCornerHelper;
  * neighboring blocks diagonally adjacent to those corners.
  */
 @Experimental
-public enum CubeCorner implements StringRepresentable {
+public enum CubeCorner {
 	UP_NORTH_EAST(Direction.UP, Direction.EAST, Direction.NORTH),
 	UP_NORTH_WEST(Direction.UP, Direction.WEST, Direction.NORTH),
 	UP_SOUTH_EAST(Direction.UP, Direction.EAST, Direction.SOUTH),
@@ -54,7 +52,6 @@ public enum CubeCorner implements StringRepresentable {
 	public final Direction face2;
 	public final Direction face3;
 	public final Vec3i vector;
-	public final String name;
 
 	/**
 	 * Ordinal sequence that includes all faces, corner and far corners. Use to
@@ -66,7 +63,6 @@ public enum CubeCorner implements StringRepresentable {
 	public final int superOrdinalBit;
 
 	CubeCorner(Direction face1, Direction face2, Direction face3) {
-		name = name().toLowerCase(Locale.ROOT);
 		this.face1 = face1;
 		this.face2 = face2;
 		this.face3 = face3;
@@ -97,11 +93,6 @@ public enum CubeCorner implements StringRepresentable {
 
 	public static void forEach(Consumer<CubeCorner> consumer) {
 		CubeCornerHelper.forEach(consumer);
-	}
-
-	@Override
-	public String getSerializedName() {
-		return name;
 	}
 
 	public CubeCorner rotate(Rotation rotation) {

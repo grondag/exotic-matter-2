@@ -34,6 +34,7 @@ import grondag.xm.api.mesh.polygon.MutablePolygon;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
@@ -44,10 +45,10 @@ public class Cube {
 	private Cube() { }
 
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-			.add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("all", SurfaceTopology.CUBIC, SurfaceLocation.OUTSIDE, XmSurface.FLAG_ALLOW_BORDERS)
 			.build();
 
-	public static final XmSurface SURFACE_ALL = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_ALL = SURFACES.get(0);
 
 	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
 		final WritableMesh mesh = XmMeshes.claimWritable();

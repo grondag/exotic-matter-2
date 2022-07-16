@@ -72,6 +72,8 @@ public interface XmSurface {
 
 	SurfaceTopology topology();
 
+	SurfaceLocation location();
+
 	int flags();
 
 	default boolean ignoreDepthForRandomization() {

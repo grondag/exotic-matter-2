@@ -26,7 +26,19 @@ import grondag.xm.api.paint.SurfaceTopology;
 
 @Experimental
 public interface XmSurfaceListBuilder {
-	XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, int flags);
+	XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, SurfaceLocation location, int flags);
+
+	default XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology) {
+		return add(nameKey, topology, SurfaceLocation.OUTSIDE, XmSurface.FLAG_NONE);
+	}
+
+	default XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, SurfaceLocation location) {
+		return add(nameKey, topology, location, XmSurface.FLAG_NONE);
+	}
+
+	default XmSurfaceListBuilder add(String nameKey, SurfaceTopology topology, int flags) {
+		return add(nameKey, topology, SurfaceLocation.OUTSIDE, flags);
+	}
 
 	XmSurfaceList build();
 }

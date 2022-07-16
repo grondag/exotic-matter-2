@@ -38,19 +38,19 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 public class Stair extends AbstractWedge {
 	public static final XmSurfaceList SURFACES = CubeWithRotation.SURFACES;
 
-	public static final XmSurface SURFACE_DOWN = CubeWithRotation.SURFACE_DOWN;
-	public static final XmSurface SURFACE_UP = CubeWithRotation.SURFACE_UP;
-	public static final XmSurface SURFACE_NORTH = CubeWithRotation.SURFACE_NORTH;
-	public static final XmSurface SURFACE_SOUTH = CubeWithRotation.SURFACE_SOUTH;
-	public static final XmSurface SURFACE_WEST = CubeWithRotation.SURFACE_WEST;
-	public static final XmSurface SURFACE_EAST = CubeWithRotation.SURFACE_EAST;
+	@Deprecated public static final XmSurface SURFACE_DOWN = CubeWithRotation.SURFACE_DOWN;
+	@Deprecated public static final XmSurface SURFACE_UP = CubeWithRotation.SURFACE_UP;
+	@Deprecated public static final XmSurface SURFACE_NORTH = CubeWithRotation.SURFACE_NORTH;
+	@Deprecated public static final XmSurface SURFACE_SOUTH = CubeWithRotation.SURFACE_SOUTH;
+	@Deprecated public static final XmSurface SURFACE_WEST = CubeWithRotation.SURFACE_WEST;
+	@Deprecated public static final XmSurface SURFACE_EAST = CubeWithRotation.SURFACE_EAST;
 
-	public static final XmSurface SURFACE_BOTTOM = CubeWithRotation.SURFACE_BOTTOM;
-	public static final XmSurface SURFACE_TOP = CubeWithRotation.SURFACE_TOP;
-	public static final XmSurface SURFACE_BACK = CubeWithRotation.SURFACE_BACK;
-	public static final XmSurface SURFACE_FRONT = CubeWithRotation.SURFACE_FRONT;
-	public static final XmSurface SURFACE_LEFT = CubeWithRotation.SURFACE_LEFT;
-	public static final XmSurface SURFACE_RIGHT = CubeWithRotation.SURFACE_RIGHT;
+	@Deprecated public static final XmSurface SURFACE_BOTTOM = CubeWithRotation.SURFACE_BOTTOM;
+	@Deprecated public static final XmSurface SURFACE_TOP = CubeWithRotation.SURFACE_TOP;
+	@Deprecated public static final XmSurface SURFACE_BACK = CubeWithRotation.SURFACE_BACK;
+	@Deprecated public static final XmSurface SURFACE_FRONT = CubeWithRotation.SURFACE_FRONT;
+	@Deprecated public static final XmSurface SURFACE_LEFT = CubeWithRotation.SURFACE_LEFT;
+	@Deprecated public static final XmSurface SURFACE_RIGHT = CubeWithRotation.SURFACE_RIGHT;
 
 	public static final Stair INSTANCE = new Stair(Xm.id("stair"));
 

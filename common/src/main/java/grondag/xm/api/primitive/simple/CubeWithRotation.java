@@ -35,6 +35,7 @@ import grondag.xm.api.mesh.polygon.PolyTransform;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.SimplePrimitive;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.api.texture.TextureOrientation;
@@ -45,27 +46,27 @@ public class CubeWithRotation {
 	private CubeWithRotation() { }
 
 	public static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-		.add("down", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-		.add("up", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-		.add("north", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-		.add("south", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-		.add("west", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-		.add("east", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
+		.add("down", SurfaceTopology.CUBIC, SurfaceLocation.BOTTOM, XmSurface.FLAG_ALLOW_BORDERS)
+		.add("up", SurfaceTopology.CUBIC, SurfaceLocation.TOP, XmSurface.FLAG_ALLOW_BORDERS)
+		.add("north", SurfaceTopology.CUBIC, SurfaceLocation.FRONT, XmSurface.FLAG_ALLOW_BORDERS)
+		.add("south", SurfaceTopology.CUBIC, SurfaceLocation.BACK, XmSurface.FLAG_ALLOW_BORDERS)
+		.add("west", SurfaceTopology.CUBIC, SurfaceLocation.LEFT, XmSurface.FLAG_ALLOW_BORDERS)
+		.add("east", SurfaceTopology.CUBIC, SurfaceLocation.RIGHT, XmSurface.FLAG_ALLOW_BORDERS)
 		.build();
 
-	public static final XmSurface SURFACE_DOWN = SURFACES.get(0);
-	public static final XmSurface SURFACE_UP = SURFACES.get(1);
-	public static final XmSurface SURFACE_NORTH = SURFACES.get(2);
-	public static final XmSurface SURFACE_SOUTH = SURFACES.get(3);
-	public static final XmSurface SURFACE_WEST = SURFACES.get(4);
-	public static final XmSurface SURFACE_EAST = SURFACES.get(5);
+	@Deprecated public static final XmSurface SURFACE_DOWN = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_UP = SURFACES.get(1);
+	@Deprecated public static final XmSurface SURFACE_NORTH = SURFACES.get(2);
+	@Deprecated public static final XmSurface SURFACE_SOUTH = SURFACES.get(3);
+	@Deprecated public static final XmSurface SURFACE_WEST = SURFACES.get(4);
+	@Deprecated public static final XmSurface SURFACE_EAST = SURFACES.get(5);
 
-	public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
-	public static final XmSurface SURFACE_TOP = SURFACES.get(1);
-	public static final XmSurface SURFACE_FRONT = SURFACES.get(2);
-	public static final XmSurface SURFACE_BACK = SURFACES.get(3);
-	public static final XmSurface SURFACE_LEFT = SURFACES.get(4);
-	public static final XmSurface SURFACE_RIGHT = SURFACES.get(5);
+	@Deprecated public static final XmSurface SURFACE_BOTTOM = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_TOP = SURFACES.get(1);
+	@Deprecated public static final XmSurface SURFACE_FRONT = SURFACES.get(2);
+	@Deprecated public static final XmSurface SURFACE_BACK = SURFACES.get(3);
+	@Deprecated public static final XmSurface SURFACE_LEFT = SURFACES.get(4);
+	@Deprecated public static final XmSurface SURFACE_RIGHT = SURFACES.get(5);
 
 	static final Function<PrimitiveState, XmMesh> POLY_FACTORY = modelState -> {
 		final PolyTransform transform = PolyTransform.get(modelState);

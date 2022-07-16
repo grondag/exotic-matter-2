@@ -44,4 +44,7 @@ public interface XmSurfaceList {
 	XmSurface lamp();
 
 	XmSurfaceList ALL = builder().add("all", SurfaceTopology.CUBIC, XmSurface.FLAG_NONE).build();
+
+	@Nullable
+	XmSurface firstWithLocation(SurfaceLocation location);
 }

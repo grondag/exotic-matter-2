@@ -23,6 +23,7 @@ package grondag.xm.surface;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import grondag.xm.api.paint.SurfaceTopology;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 
 @Internal
@@ -30,12 +31,14 @@ class XmSurfaceImpl implements XmSurface {
 	final int ordinal;
 	final String nameKey;
 	final SurfaceTopology topology;
+	final SurfaceLocation location;
 	final int flags;
 
-	XmSurfaceImpl(int ordinal, String nameKey, SurfaceTopology topology, int flags) {
+	XmSurfaceImpl(int ordinal, String nameKey, SurfaceTopology topology, SurfaceLocation location, int flags) {
 		this.ordinal = ordinal;
 		this.nameKey = nameKey;
 		this.topology = topology;
+		this.location = location;
 		this.flags = flags;
 	}
 
@@ -52,6 +55,11 @@ class XmSurfaceImpl implements XmSurface {
 	@Override
 	public SurfaceTopology topology() {
 		return topology;
+	}
+
+	@Override
+	public SurfaceLocation location() {
+		return location;
 	}
 
 	@Override

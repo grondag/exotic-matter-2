@@ -21,7 +21,9 @@
 package grondag.xm.surface;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.Nullable;
 
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 
@@ -29,17 +31,23 @@ import grondag.xm.api.primitive.surface.XmSurfaceList;
 class XmSurfaceListImpl implements XmSurfaceList {
 	private final int size;
 	private final XmSurfaceImpl[] surfaces;
-
+	private final XmSurfaceImpl[] surfacesByFirstLocation = new XmSurfaceImpl[SurfaceLocation.COUNT];
 	private final XmSurface lamp;
 
 	XmSurfaceListImpl(XmSurfaceImpl[] surfaces) {
 		this.surfaces = surfaces;
-		size = surfaces.length;
 		XmSurface lamp = null;
+		size = surfaces.length;
 
 		for (final XmSurfaceImpl surface : surfaces) {
 			if (surface.isLamp()) {
 				lamp = surface;
+			}
+
+			final var locationIndex = surface.location.ordinal();
+
+			if (surfacesByFirstLocation[locationIndex] == null) {
+				surfacesByFirstLocation[locationIndex] = surface;
 			}
 		}
 
@@ -59,5 +67,10 @@ class XmSurfaceListImpl implements XmSurfaceList {
 	@Override
 	public XmSurface lamp() {
 		return lamp;
+	}
+
+	@Override
+	public @Nullable XmSurface firstWithLocation(SurfaceLocation location) {
+		return surfacesByFirstLocation[location.ordinal()];
 	}
 }

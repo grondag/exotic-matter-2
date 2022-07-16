@@ -47,6 +47,7 @@ import grondag.xm.api.modelstate.primitive.MutablePrimitiveState;
 import grondag.xm.api.modelstate.primitive.PrimitiveState;
 import grondag.xm.api.paint.SurfaceTopology;
 import grondag.xm.api.primitive.base.AbstractSimplePrimitive;
+import grondag.xm.api.primitive.surface.SurfaceLocation;
 import grondag.xm.api.primitive.surface.XmSurface;
 import grondag.xm.api.primitive.surface.XmSurfaceList;
 import grondag.xm.modelstate.AbstractPrimitiveModelState;
@@ -57,15 +58,15 @@ import grondag.xm.orientation.api.OrientationType;
 @Experimental
 public class SquareColumn extends AbstractSimplePrimitive {
 	private static final XmSurfaceList SURFACES = XmSurfaceList.builder()
-			.add("end", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("side", SurfaceTopology.CUBIC, XmSurface.FLAG_ALLOW_BORDERS)
-			.add("cut", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP_GRADIENT)
-			.add("inlay", SurfaceTopology.CUBIC, XmSurface.FLAG_LAMP).build();
+			.add("end", SurfaceTopology.CUBIC, SurfaceLocation.ENDS, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("side", SurfaceTopology.CUBIC, SurfaceLocation.SIDES, XmSurface.FLAG_ALLOW_BORDERS)
+			.add("cut", SurfaceTopology.CUBIC, SurfaceLocation.CUT, XmSurface.FLAG_LAMP_GRADIENT)
+			.add("inlay", SurfaceTopology.CUBIC, SurfaceLocation.INSIDE, XmSurface.FLAG_LAMP).build();
 
-	public static final XmSurface SURFACE_END = SURFACES.get(0);
-	public static final XmSurface SURFACE_SIDE = SURFACES.get(1);
-	public static final XmSurface SURFACE_CUT = SURFACES.get(2);
-	public static final XmSurface SURFACE_INLAY = SURFACES.get(3);
+	@Deprecated public static final XmSurface SURFACE_END = SURFACES.get(0);
+	@Deprecated public static final XmSurface SURFACE_SIDE = SURFACES.get(1);
+	@Deprecated public static final XmSurface SURFACE_CUT = SURFACES.get(2);
+	@Deprecated public static final XmSurface SURFACE_INLAY = SURFACES.get(3);
 
 	public static final int MIN_CUTS = 1;
 	public static final int MAX_CUTS = 3;

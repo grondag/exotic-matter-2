@@ -18,28 +18,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package grondag.xm.orientation.impl;
+package grondag.xm.util;
 
 import java.util.function.Consumer;
 
-import org.jetbrains.annotations.ApiStatus.Internal;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
-import grondag.xm.orientation.api.ClockwiseRotation;
+public class SimpleEnumCodec<T extends Enum<?>> {
+	private final T[] values;
+	private final Object2ObjectOpenHashMap<String, T> map = new Object2ObjectOpenHashMap<>();
 
-@Internal
-public abstract class ClockwiseRotationHelper {
-	private ClockwiseRotationHelper() {
+	public final int count;
+
+	public SimpleEnumCodec(Class<T> clazz) {
+		this.values = clazz.getEnumConstants();
+		count = values.length;
+
+		for (final var val : values) {
+			map.put(val.name(), val);
+		}
 	}
 
-	private static final ClockwiseRotation[] VALUES = ClockwiseRotation.values();
-	public static final int COUNT = VALUES.length;
-
-	public static final ClockwiseRotation fromOrdinal(int ordinal) {
-		return VALUES[ordinal];
+	public final T fromOrdinal(int ordinal) {
+		return values[ordinal];
 	}
 
-	public static void forEach(Consumer<ClockwiseRotation> consumer) {
-		for (final ClockwiseRotation val : VALUES) {
+	public final T fromName(String name) {
+		return map.get(name);
+	}
+
+	public void forEach(Consumer<T> consumer) {
+		for (final T val : values) {
 			consumer.accept(val);
 		}
 	}
