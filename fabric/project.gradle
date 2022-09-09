@@ -13,14 +13,14 @@ dependencies {
 	modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version))
 
 	// Note that BitKit is included via FREX
-	modIncludeImplementation("io.vram:frex-fabric-mc119:6.0.278:fat")
-	modIncludeImplementation("io.vram:littlegui-fabric-mc119:1.0.7")
+	modIncludeImplementation("io.vram:frex-fabric-mc119:6.0.279:fat")
+	modIncludeImplementation("io.vram:littlegui-fabric-mc119:1.0.8")
 
 	modIncludeImplementation "blue.endless:jankson:1.2.1"
 	modIncludeImplementation("io.vram:special-circumstances:1.10.7")
 
-	modCompileOnly "com.terraformersmc:modmenu:4.0.0-beta.4"
-	modRuntimeOnly "com.terraformersmc:modmenu:4.0.0-beta.4"
+	modCompileOnly "com.terraformersmc:modmenu:4.0.6"
+	modRuntimeOnly "com.terraformersmc:modmenu:4.0.6"
 }
 
 sourceSets {
