@@ -13,7 +13,7 @@ dependencies {
 	modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version))
 
 	// Note that BitKit is included via FREX
-	modIncludeImplementation("io.vram:frex-fabric-mc119:6.1.297:fat")
+	modIncludeImplementation("io.vram:frex-fabric-mc119:6.1.305:fat")
 	modIncludeImplementation("io.vram:littlegui-fabric-mc119:1.0.8")
 
 	modIncludeImplementation "blue.endless:jankson:1.2.1"
