@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import io.vram.frex.api.model.provider.ModelProvider;
 import io.vram.frex.api.model.provider.SubModelLoader;
@@ -40,15 +41,15 @@ public class XmVariantProvider implements ModelProvider<ModelResourceLocation> {
 	public XmVariantProvider() {
 		targets.clear();
 
-		Registry.BLOCK.forEach(b -> {
+		BuiltInRegistries.BLOCK.forEach(b -> {
 			if (XmBlockState.get(b) != null) {
-				targets.add(Registry.BLOCK.getKey(b).toString());
+				targets.add(BuiltInRegistries.BLOCK.getKey(b).toString());
 			}
 		});
 
-		Registry.ITEM.forEach(i -> {
+		BuiltInRegistries.ITEM.forEach(i -> {
 			if (((XmItemAccess) i).xm_modelStateFunc() != null) {
-				targets.add(Registry.ITEM.getKey(i).toString());
+				targets.add(BuiltInRegistries.ITEM.getKey(i).toString());
 			}
 		});
 	}
