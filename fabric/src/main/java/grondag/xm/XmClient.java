@@ -57,7 +57,7 @@ public class XmClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		XmTexturesImpl.init();
 
-		ModelProviderRegistry.registerVariantProvider(r -> new XmVariantProvider());
+		ModelProviderRegistry.registerVariantProvider((m,s) -> new XmVariantProvider());
 		RenderReloadListener.register(XmClient::invalidate);
 		Packets.initializeClient();
 		AbstractPrimitiveModelState.useClientHandler();

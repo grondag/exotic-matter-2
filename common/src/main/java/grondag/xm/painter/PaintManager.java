@@ -284,8 +284,8 @@ public class PaintManager implements Consumer<Polygon> {
 	 * coordinates.
 	 */
 	private void contractUVs(int spriteIndex, TextureAtlasSprite sprite, MutablePolygon poly) {
-		final float uPixels = sprite.getWidth() / (sprite.getU1() - sprite.getU0());
-		final float vPixels = sprite.getHeight() / (sprite.getV1() - sprite.getV0());
+		final float uPixels = sprite.contents().width() / (sprite.getU1() - sprite.getU0());
+		final float vPixels = sprite.contents().height() / (sprite.getV1() - sprite.getV0());
 		final float nudge = 4.0f / Math.max(vPixels, uPixels);
 
 		final float u0 = poly.u(0, spriteIndex);
