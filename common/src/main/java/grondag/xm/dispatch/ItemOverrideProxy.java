@@ -40,7 +40,7 @@ public class ItemOverrideProxy extends ItemOverrides {
 	static final ItemOverrideProxy INSTANCE = new ItemOverrideProxy();
 
 	private ItemOverrideProxy() {
-		super(null, null, null, Collections.emptyList());
+		super(null, null, Collections.emptyList());
 	}
 
 	@Override

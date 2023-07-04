@@ -36,7 +36,7 @@ public interface VirtualBlock {
 	 * virtual and visible to the given player.
 	 */
 	default boolean isVirtuallySolid(BlockPos pos, Player player) {
-		return !player.level.getBlockState(pos).getMaterial().isReplaceable();
+		return !player.level().getBlockState(pos).canBeReplaced();
 	}
 
 	/**
@@ -55,7 +55,7 @@ public interface VirtualBlock {
 	 * doesn't implement ISuperBlock.
 	 */
 	static boolean isVirtuallySolidBlock(BlockPos pos, Player player) {
-		return isVirtuallySolidBlock(player.level.getBlockState(pos), pos, player);
+		return isVirtuallySolidBlock(player.level().getBlockState(pos), pos, player);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public interface VirtualBlock {
 	// UGLY: really needed? Seems redundant of isVirtuallySolid, plus have mixins  now
 	static boolean isVirtuallySolidBlock(BlockState state, BlockPos pos, Player player) {
 		final Block block = state.getBlock();
-		return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player) : !state.getMaterial().isReplaceable();
+		return isVirtualBlock(block) ? ((VirtualBlock) block).isVirtuallySolid(pos, player) : !state.canBeReplaced();
 	}
 
 	static BlockState findAppropriateVirtualBlock(ModelState modelState) {

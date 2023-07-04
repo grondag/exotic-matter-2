@@ -178,7 +178,7 @@ public class ExcavationRenderTracker extends WorldMap<Int2ObjectOpenHashMap<Exca
 		private PlayerData(ServerPlayer player) {
 			// FIX: put back when Domains are moved out of Simulator
 			domainID = 1; //DomainManager.instance().getActiveDomain(player).getAssignedNumber();
-			world = player.level;
+			world = player.level();
 		}
 	}
 

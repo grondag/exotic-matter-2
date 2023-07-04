@@ -24,6 +24,7 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
@@ -86,20 +87,20 @@ public class ExcavationRenderer {
 
 	/** Return true if something was drawn. */
 	@Environment(EnvType.CLIENT)
-	public boolean drawBounds(BufferBuilder bufferbuilder, Entity viewEntity, double d0, double d1, double d2, float partialTicks) {
+	public boolean drawBounds(PoseStack poseStack, BufferBuilder bufferbuilder, Entity viewEntity, double d0, double d1, double d2, float partialTicks) {
 		lastEyePosition = viewEntity.getEyePosition(partialTicks);
 
 		if (visibilityBounds.contains(lastEyePosition)) {
 			if (positions == null) {
 				final AABB box = aabb;
-				LevelRenderer.addChainedFilledBoxVertices(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f, 0.3f,
+				LevelRenderer.addChainedFilledBoxVertices(poseStack, bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f, 0.3f,
 					1f);
 			} else {
 				for (final BlockPos pos : positions) {
 					final double x = pos.getX() - d0;
 					final double y = pos.getY() - d1;
 					final double z = pos.getZ() - d2;
-					LevelRenderer.addChainedFilledBoxVertices(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 1f);
+					LevelRenderer.addChainedFilledBoxVertices(poseStack, bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 1f);
 				}
 			}
 
@@ -119,18 +120,18 @@ public class ExcavationRenderer {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void drawBox(BufferBuilder bufferbuilder, double d0, double d1, double d2) {
+	public void drawBox(PoseStack poseStack, BufferBuilder bufferbuilder, double d0, double d1, double d2) {
 		if (didDrawBoundsLastTime) {
 			if (positions == null) {
 				final AABB box = aabb;
-				LevelRenderer.addChainedFilledBoxVertices(bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f,
+				LevelRenderer.addChainedFilledBoxVertices(poseStack, bufferbuilder, box.minX - d0, box.minY - d1, box.minZ - d2, box.maxX - d0, box.maxY - d1, box.maxZ - d2, 1f, 0.3f,
 					0.3f, 0.3f);
 			} else {
 				for (final BlockPos pos : positions) {
 					final double x = pos.getX() - d0;
 					final double y = pos.getY() - d1;
 					final double z = pos.getZ() - d2;
-					LevelRenderer.addChainedFilledBoxVertices(bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 0.3f);
+					LevelRenderer.addChainedFilledBoxVertices(poseStack, bufferbuilder, x, y, z, x + 1, y + 1, z + 1, 1f, 0.3f, 0.3f, 0.3f);
 				}
 			}
 		}

@@ -3,7 +3,7 @@ project.group = 'grondag'
 ext.author = 'Grondag'
 ext.title = 'Exotic Matter'
 ext.mod_name = 'exotic-matter'
-ext.mod_version = '3.0'
+ext.mod_version = '20.0'
 
 ext.github_repository_owner = 'grondag'
 ext.github_repository = 'exotic-matter-2'

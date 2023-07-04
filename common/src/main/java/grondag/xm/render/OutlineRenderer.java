@@ -21,12 +21,12 @@
 package grondag.xm.render;
 
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;

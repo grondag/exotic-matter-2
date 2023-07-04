@@ -23,11 +23,11 @@ package grondag.xm.terrain;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 
 @Internal
 public class DepletedFluidBlock extends Block {
 	public DepletedFluidBlock() {
-		super(Properties.of(Material.STRUCTURAL_AIR));
+		super(Properties.of().mapColor(MapColor.NONE).replaceable());
 	}
 }

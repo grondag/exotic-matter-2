@@ -474,7 +474,7 @@ public class IntegerBox {
 	}
 
 	public BlockPos getCenter() {
-		return new BlockPos(minX + (maxX - minX) * 0.5D, minY + (maxY - minY) * 0.5D,
+		return BlockPos.containing(minX + (maxX - minX) * 0.5D, minY + (maxY - minY) * 0.5D,
 			minZ + (maxZ - minZ) * 0.5D);
 	}
 }
